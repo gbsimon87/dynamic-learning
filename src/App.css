@@ -1,0 +1,150 @@
+:root {
+  --light-bg: #F6E8EA;
+  --light-text: #22181C;
+  --light-accent: #EF626C;
+  --light-panel: #ffffff;
+
+  --dark-bg: #22181C;
+  --dark-text: #F6E8EA;
+  --dark-accent: #84DCCF;
+  --dark-panel: #312F2F;
+}
+
+body {
+  margin: 0;
+}
+
+.App {
+  min-height: 100vh;
+  padding: 1rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.App.light {
+  background-color: var(--light-bg);
+  color: var(--light-text);
+}
+
+.App.dark {
+  background-color: var(--dark-bg);
+  color: var(--dark-text);
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.app-title {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.theme-toggle {
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+.clock-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.clock-btn {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: var(--light-accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.App.dark .clock-btn {
+  background-color: var(--dark-accent);
+}
+
+.clock-btn:hover {
+  filter: brightness(0.9);
+}
+
+.clock-btn:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.option-list {
+  display: grid; /* [CHANGED!] using CSS Grid */
+  grid-template-columns: 1fr 1fr; /* [CHANGED!] exactly two columns */
+  gap: 1rem 2rem;
+  max-width: 500px;
+  margin: 1rem auto;
+  width: 100%;
+}
+
+@media (max-width: 400px) {
+  .option-list {
+    grid-template-columns: 1fr; /* [CHANGED!] stack on very small screens */
+  }
+}
+
+.option-list label {
+  position: relative;
+  font-size: 0.95rem;
+  cursor: pointer;
+  user-select: none;
+  color: inherit;
+  line-height: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.option-list input[type="checkbox"] {
+  appearance: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid var(--light-accent);
+  border-radius: 3px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.App.dark .option-list input[type="checkbox"] {
+  border-color: var(--dark-accent);
+  background-color: #222;
+}
+
+.option-list input[type="checkbox"]:checked {
+  background-color: var(--light-accent);
+  border-color: var(--light-accent);
+}
+
+.App.dark .option-list input[type="checkbox"]:checked {
+  background-color: var(--dark-accent);
+  border-color: var(--dark-accent);
+}
+
+.option-list input[type="checkbox"]:checked::after {
+  content: '✔';
+  color: white;
+  position: absolute;
+  top: -0.2rem;
+  left: 0.15rem;
+  font-size: 0.9rem;
+}
+
+.App.dark .option-list input[type="checkbox"]:checked::after {
+  color: black;
+}
