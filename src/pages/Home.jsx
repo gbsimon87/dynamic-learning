@@ -10,6 +10,9 @@ function Home() {
       <Link to="/clock-generator" className="clock-nav-btn">
         Clock Generator
       </Link>
+      <Link to="/counting-numbers" className="clock-nav-btn">
+        Counting Numbers
+      </Link>
     </div>
   );
 }

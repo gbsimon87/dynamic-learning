@@ -1,0 +1,65 @@
+.counting-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.input-row {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.range-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 0.95rem;
+}
+
+.range-group input {
+  padding: 0.3rem;
+  font-size: 1rem;
+  width: 120px;
+  border: 2px solid var(--light-accent);
+  border-radius: 5px;
+  background-color: white;
+  color: black;
+}
+
+body.dark .range-group input {
+  background-color: #222;
+  border-color: var(--dark-accent);
+  color: white;
+}
+
+.display-mode {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.display-mode label {
+  cursor: pointer;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.output-box {
+  margin-top: 1rem;
+  padding: 1.2rem 2rem;
+  border-radius: 8px;
+  color: var(--light-text);
+  text-align: center;
+  font-size: 1.25rem;
+}
+
+body.dark .output-box {
+  background-color: var(--dark-accent);
+  color: black;
+}

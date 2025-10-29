@@ -5,6 +5,8 @@ import { ThemeProvider } from './context/ThemeContext';
 import RootLayout from './layouts/RootLayout';
 import Home from './pages/Home';
 import ClockGenerator from './pages/ClockGenerator';
+import CountingNumbers from './pages/CountingNumbers';
+
 
 import './App.css';
 import './index.css'
@@ -17,6 +19,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: 'clock-generator', element: <ClockGenerator /> },
+      { path: 'counting-numbers', element: <CountingNumbers /> }, //<-! [CHANGED! new route]
     ],
   },
 ]);
