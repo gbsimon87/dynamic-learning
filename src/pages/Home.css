@@ -1,0 +1,24 @@
+/* Homepage */
+.home-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.clock-nav-btn {
+  background-color: #EF626C;
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  font-size: 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+body.dark .clock-nav-btn {
+  background-color: #84DCCF;
+  color: black;
+}

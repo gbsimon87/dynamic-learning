@@ -1,0 +1,30 @@
+nav.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: inherit;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: top 0.3s ease-in-out;
+}
+
+.navbar.hidden {
+  top: -80px;
+}
+
+.logo {
+  text-decoration: none;
+  color: inherit;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.theme-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: inherit;
+}

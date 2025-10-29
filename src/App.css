@@ -11,7 +11,21 @@
 }
 
 body {
+  height: 100dvh;
   margin: 0;
+  font-family: "ABeeZee", sans-serif;
+  font-weight: 400;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body.light {
+  background-color: #F6E8EA;
+  color: #22181C;
+}
+
+body.dark {
+  background-color: #22181C;
+  color: #F6E8EA;
 }
 
 .App {
@@ -54,7 +68,6 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
 }
 
 .clock-btn {
