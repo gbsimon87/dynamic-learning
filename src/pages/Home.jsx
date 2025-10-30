@@ -13,6 +13,9 @@ function Home() {
       <Link to="/counting-numbers" className="clock-nav-btn">
         Counting Numbers
       </Link>
+      <Link to="/multiplication-table" className="clock-nav-btn">
+        Multiplication Table
+      </Link>
     </div>
   );
 }

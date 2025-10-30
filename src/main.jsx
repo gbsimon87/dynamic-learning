@@ -6,6 +6,7 @@ import RootLayout from './layouts/RootLayout';
 import Home from './pages/Home';
 import ClockGenerator from './pages/ClockGenerator';
 import CountingNumbers from './pages/CountingNumbers';
+import MultiplicationTable from './pages/MultiplicationTable';
 
 
 import './App.css';
@@ -19,7 +20,8 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: 'clock-generator', element: <ClockGenerator /> },
-      { path: 'counting-numbers', element: <CountingNumbers /> }, //<-! [CHANGED! new route]
+      { path: 'counting-numbers', element: <CountingNumbers /> },
+      { path: 'multiplication-table', element: <MultiplicationTable /> },
     ],
   },
 ]);
