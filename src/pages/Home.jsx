@@ -16,6 +16,10 @@ function Home() {
       <Link to="/multiplication-table" className="clock-nav-btn">
         Multiplication Table
       </Link>
+      <Link to="/shapes" className="clock-nav-btn">
+        Shape Explorer
+      </Link>
+
     </div>
   );
 }
