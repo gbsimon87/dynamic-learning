@@ -19,6 +19,9 @@ function Home() {
       <Link to="/shapes" className="clock-nav-btn">
         Shape Explorer
       </Link>
+      <Link to="/word-builder" className="clock-nav-btn">
+        Word Builder
+      </Link>
 
     </div>
   );

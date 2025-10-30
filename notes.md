@@ -7,7 +7,7 @@ These features are designed as modular mini-apps, aligned with key early learnin
 ## ⏰ 1. Clock Generator
 **Route:** `/clock-generator`  
 **Skills:** Reading analog time  
-**Modes:** Random time generation, hands toggling, live mode  
+**Modes:** Random time generation, hands toggling, live mode
 ✅ *Already built*
 
 ---
@@ -16,6 +16,22 @@ These features are designed as modular mini-apps, aligned with key early learnin
 **Route:** `/counting-numbers`  
 **Skills:** Reading and writing numbers  
 **Modes:** Show number, written form, or both  
+✅ *Already built*
+
+## 🔷 5. Shape Explorer
+**Route:** `/shapes`  
+**Skills:** Recognize and name 2D shapes  
+**Modes:**
+🎯 Builds visual geometry understanding
+✅ *Already built*
+
+## 📝 7. Word Builder
+**Route:** `/word-builder`  
+**Skills:** Early spelling, phonics, sight words  
+**Modes:**
+- Drag letters to form CVC words
+- Fill in missing letters  
+🎯 Supports early literacy development
 ✅ *Already built*
 
 ---
@@ -39,19 +55,6 @@ These features are designed as modular mini-apps, aligned with key early learnin
 - Drag to complete sequence  
 🎯 Supports sequencing & multiplication prep
 
----
-
-## 🔷 5. Shape Explorer
-**Route:** `/shapes`  
-**Skills:** Recognize and name 2D shapes  
-**Modes:**
-- Match shape names to visuals
-- Drag-and-drop shapes
-- Count sides/corners  
-🎯 Builds visual geometry understanding
-
----
-
 ## 🧠 6. Compare Numbers
 **Route:** `/compare-numbers`  
 **Skills:** Comparing values using >, <, =  
@@ -60,17 +63,6 @@ These features are designed as modular mini-apps, aligned with key early learnin
 - Arrange in order
 - Fill in the blank (`7 __ 12`)  
 🎯 Reinforces number sense and logical reasoning
-
----
-
-## 📝 7. Word Builder
-**Route:** `/word-builder`  
-**Skills:** Early spelling, phonics, sight words  
-**Modes:**
-- Drag letters to form CVC words
-- Match audio to word
-- Fill in missing letters  
-🎯 Supports early literacy development
 
 ---
 

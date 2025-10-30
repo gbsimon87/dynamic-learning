@@ -8,6 +8,7 @@ import ClockGenerator from './pages/ClockGenerator';
 import CountingNumbers from './pages/CountingNumbers';
 import MultiplicationTable from './pages/MultiplicationTable';
 import ShapeExplorer from './pages/ShapeExplorer';
+import WordBuilder from './pages/WordBuilder';
 
 import './App.css';
 import './index.css'
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
       { path: 'counting-numbers', element: <CountingNumbers /> },
       { path: 'multiplication-table', element: <MultiplicationTable /> },
       { path: 'shapes', element: <ShapeExplorer /> },
+      { path: 'word-builder', element: <WordBuilder /> },
     ],
   },
 ]);
