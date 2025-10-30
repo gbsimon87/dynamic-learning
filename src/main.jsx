@@ -10,9 +10,11 @@ import MultiplicationTable from './pages/MultiplicationTable';
 import ShapeExplorer from './pages/ShapeExplorer';
 import WordBuilder from './pages/WordBuilder';
 import MathPractice from './pages/MathPractice';
+import WorldMap from './pages/WorldMap';
 
 import './App.css';
 import './index.css'
+import 'leaflet/dist/leaflet.css';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +28,7 @@ const router = createBrowserRouter([
       { path: 'shapes', element: <ShapeExplorer /> },
       { path: 'word-builder', element: <WordBuilder /> },
       { path: 'arithmetic-practice', element: <MathPractice /> },
+      { path: 'world-map', element: <WorldMap /> },
     ],
   },
 ]);

@@ -25,7 +25,9 @@ function Home() {
       <Link to="/arithmetic-practice" className="clock-nav-btn">
         Arithmetic Practice
       </Link>
-
+      <Link to="/world-map" className="clock-nav-btn">
+        Find the Country
+      </Link>
     </div>
   );
 }
