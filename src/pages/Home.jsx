@@ -22,6 +22,9 @@ function Home() {
       <Link to="/word-builder" className="clock-nav-btn">
         Word Builder
       </Link>
+      <Link to="/arithmetic-practice" className="clock-nav-btn">
+        Arithmetic Practice
+      </Link>
 
     </div>
   );

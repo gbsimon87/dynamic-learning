@@ -9,10 +9,10 @@ import CountingNumbers from './pages/CountingNumbers';
 import MultiplicationTable from './pages/MultiplicationTable';
 import ShapeExplorer from './pages/ShapeExplorer';
 import WordBuilder from './pages/WordBuilder';
+import MathPractice from './pages/MathPractice';
 
 import './App.css';
 import './index.css'
-// import App from './App.jsx'
 
 const router = createBrowserRouter([
   {
@@ -25,6 +25,7 @@ const router = createBrowserRouter([
       { path: 'multiplication-table', element: <MultiplicationTable /> },
       { path: 'shapes', element: <ShapeExplorer /> },
       { path: 'word-builder', element: <WordBuilder /> },
+      { path: 'arithmetic-practice', element: <MathPractice /> },
     ],
   },
 ]);

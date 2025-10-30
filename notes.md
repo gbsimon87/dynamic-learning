@@ -36,8 +36,8 @@ These features are designed as modular mini-apps, aligned with key early learnin
 
 ---
 
-## ➕ 3. Math Practice
-**Route:** `/math-practice`  
+## ➕ 3. Aritmetic Practice
+**Route:** `/arithmetic-practice`  
 **Skills:** Basic operations — Addition, Subtraction (+ optionally Multiplication & Division)  
 **Modes:**
 - Practice (user types answer)
