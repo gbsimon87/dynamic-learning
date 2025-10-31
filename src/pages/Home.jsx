@@ -28,6 +28,9 @@ function Home() {
       <Link to="/world-map" className="clock-nav-btn">
         Find the Country
       </Link>
+      <Link to="/missing-number" className="clock-nav-btn">
+        Find the Missing Number
+      </Link>
     </div>
   );
 }

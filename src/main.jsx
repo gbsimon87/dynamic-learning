@@ -11,6 +11,7 @@ import ShapeExplorer from './pages/ShapeExplorer';
 import WordBuilder from './pages/WordBuilder';
 import MathPractice from './pages/MathPractice';
 import WorldMap from './pages/WorldMap';
+import FindTheMissingNumber from './pages/FindTheMissingNumber';
 
 import './App.css';
 import './index.css'
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
       { path: 'word-builder', element: <WordBuilder /> },
       { path: 'arithmetic-practice', element: <MathPractice /> },
       { path: 'world-map', element: <WorldMap /> },
+      { path: '/missing-number', element: <FindTheMissingNumber /> },
     ],
   },
 ]);

@@ -1,31 +1,25 @@
 # 📚 High-Impact Learning Features for 6-Year-Olds
 
-These features are designed as modular mini-apps, aligned with key early learning outcomes (approx. age 6 / Grade 1).
-
----
-
-## ⏰ 1. Clock Generator
+## Clock Generator
 **Route:** `/clock-generator`  
 **Skills:** Reading analog time  
 **Modes:** Random time generation, hands toggling, live mode
 ✅ *Already built*
 
----
-
-## 🔢 2. Counting Numbers
+## Counting Numbers
 **Route:** `/counting-numbers`  
 **Skills:** Reading and writing numbers  
 **Modes:** Show number, written form, or both  
 ✅ *Already built*
 
-## 🔷 5. Shape Explorer
+## Shape Explorer
 **Route:** `/shapes`  
 **Skills:** Recognize and name 2D shapes  
 **Modes:**
 🎯 Builds visual geometry understanding
 ✅ *Already built*
 
-## 📝 7. Word Builder
+## Word Builder
 **Route:** `/word-builder`  
 **Skills:** Early spelling, phonics, sight words  
 **Modes:**
@@ -34,9 +28,17 @@ These features are designed as modular mini-apps, aligned with key early learnin
 🎯 Supports early literacy development
 ✅ *Already built*
 
----
+## World Map
+Designed to help kids learn geography by recognizing countries.
+It displays a world map, prompts the user to find a specific country, and gives instant feedback — highlighting correct answers in green and showing the correct location when they’re wrong.
+**Route:** `/world-map`  
+**Skills:** Basic operations — Addition, Subtraction (+ optionally Multiplication & Division)  
+**Modes:**
+- Practice (user chooses a answer)
+🎯 Helps with number fluency and recall
+✅ *Already built*
 
-## ➕ 3. Aritmetic Practice
+## Aritmetic Practice
 **Route:** `/arithmetic-practice`  
 **Skills:** Basic operations — Addition, Subtraction (+ optionally Multiplication & Division)  
 **Modes:**
@@ -44,27 +46,15 @@ These features are designed as modular mini-apps, aligned with key early learnin
 - Multiple Choice
 - Timed Challenges  
 🎯 Helps with number fluency and recall
+✅ *Already built*
 
----
-
-## 🔁 4. Number Patterns
-**Route:** `/number-patterns`  
+## 🔁 4. Find the Missing Number
+**Route:** `/find-the-missing-number`  
 **Skills:** Skip counting (2s, 5s, 10s), number sequences  
 **Modes:**
 - Fill in the blank
-- Drag to complete sequence  
 🎯 Supports sequencing & multiplication prep
-
-## 🧠 6. Compare Numbers
-**Route:** `/compare-numbers`  
-**Skills:** Comparing values using >, <, =  
-**Modes:**
-- Pick biggest/smallest
-- Arrange in order
-- Fill in the blank (`7 __ 12`)  
-🎯 Reinforces number sense and logical reasoning
-
----
+✅ *Already built*
 
 ## 💰 8. Money Practice
 **Route:** `/money`  
