@@ -1,24 +1,109 @@
-/* Homepage */
+/* === General Page Layout === */
 .home-page {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 3rem 1rem;
+  padding-top: 0;
+  text-align: center;
   gap: 2rem;
-  padding: 2rem;
+  background-color: var(--light-bg);
+  color: var(--light-text);
 }
 
-.clock-nav-btn {
-  background-color: #EF626C;
+body.dark .home-page {
+  background-color: var(--dark-bg);
+  color: var(--dark-text);
+}
+
+.home-title {
+  font-size: 2.5rem;
+  color: var(--light-text);
+  margin-top: 0;
+  transition: color 0.3s ease;
+}
+
+body.dark .home-title {
+  color: var(--dark-text);
+}
+
+/* === Category Container === */
+.category-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1400px;
+}
+
+/* === Individual Category Sections === */
+.category-section {
+  background-color: var(--light-panel);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  flex: 1 1 300px;
+  transition: transform 0.2s ease, background-color 0.3s, color 0.3s;
+}
+
+.category-section:hover {
+  transform: translateY(-3px);
+}
+
+body.dark .category-section {
+  background-color: var(--dark-panel);
+  color: var(--dark-text);
+}
+
+/* === Category Titles === */
+.category-title {
+  font-size: 1.5rem;
+  color: var(--light-text);
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--light-accent);
+  padding-bottom: 0.5rem;
+  transition: color 0.3s, border-color 0.3s;
+}
+
+body.dark .category-title {
+  color: var(--dark-text);
+  border-bottom: 2px solid var(--dark-accent);
+}
+
+/* === Feature Grid === */
+.link-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+/* === Buttons === */
+.nav-btn {
+  background-color: var(--light-accent);
   color: white;
-  padding: 1rem 2rem;
+  padding: 0.8rem 1rem;
   border: none;
-  font-size: 1rem;
   border-radius: 8px;
+  font-size: 1rem;
   text-decoration: none;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.2s, color 0.3s;
+  text-align: center;
 }
 
-body.dark .clock-nav-btn {
-  background-color: #84DCCF;
-  color: black;
+.nav-btn:hover {
+  background-color: #d44e58;
+  transform: scale(1.05);
+}
+
+/* === Dark Mode Buttons === */
+body.dark .nav-btn {
+  background-color: var(--dark-accent);
+  color: var(--light-text);
+}
+
+body.dark .nav-btn:hover {
+  background-color: #6ec8ba;
 }

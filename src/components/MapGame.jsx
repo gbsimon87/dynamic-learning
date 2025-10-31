@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import L from 'leaflet';
 
 const normalizeName = str =>
@@ -22,6 +22,12 @@ export default function MapGame({ geoJson }) {
   const [lastWrong, setLastWrong] = useState(null);
   const [continentFilter, setContinentFilter] = useState('All');
 
+  // Ref to always have current target value in event handlers
+  const targetRef = useRef(target);
+  useEffect(() => {
+    targetRef.current = target;
+  }, [target]);
+
   // --- Countries list with continent ---
   const countries = useMemo(() => {
     if (!geoJson?.features) return [];
@@ -43,10 +49,10 @@ export default function MapGame({ geoJson }) {
   const pickRandomTarget = useCallback((filter, revealedSet) => {
     let available = countries.filter(c => !revealedSet.has(c.name));
     if (filter !== 'All') {
-  available = available.filter(
-    c => c.continent.toLowerCase() === filter.toLowerCase()
-  );
-}
+      available = available.filter(
+        c => c.continent.toLowerCase() === filter.toLowerCase()
+      );
+    }
 
     if (!available.length) return null;
     const idx = Math.floor(Math.random() * available.length);
@@ -114,37 +120,48 @@ export default function MapGame({ geoJson }) {
       layer.on('mouseout', () => layer.setStyle(styleFeature(feature)));
 
       layer.on('click', () => {
-        if (isLocked || !target) return;
+        if (isLocked || !targetRef.current) return;  // ← changed
         const clickedName = name;
-        console.log(feature)
+        const currentTarget = targetRef.current;     // ← add this
         setIsLocked(true);
 
-        if (normalizeName(clickedName) === normalizeName(target)) {
-          setMessage(`✅ Correct! That is ${target}.`);
+
+        if (normalizeName(clickedName) === normalizeName(currentTarget)) {  // ← use currentTarget
+          setMessage(`✅ Correct! That is ${currentTarget}.`);
           setScore(s => s + 1);
-          setRevealed(prev => new Set(prev).add(target));
           setLastWrong(null);
-          setTimeout(() => {
-            setRound(r => r + 1);
-            const next = pickRandomTarget(continentFilter, new Set(revealed).add(target));
-            setTarget(next);
-            setMessage('Click the correct country!');
-            setIsLocked(false);
-          }, 700);
+
+          // Update revealed and pick next based on the new set
+          setRevealed(prev => {
+            const updated = new Set(prev).add(target);
+            setTimeout(() => {
+              setRound(r => r + 1);
+              const next = pickRandomTarget(continentFilter, updated);
+              setTarget(next);
+              setMessage('Click the correct country!');
+              setIsLocked(false);
+            }, 700);
+            return updated;
+          });
         } else {
           // ❌ Wrong
           setMessage(`❌ Not quite — you clicked ${clickedName}.`);
           setLastWrong(clickedName);
-          setRevealed(prev => new Set(prev).add(target));
-          setTimeout(() => {
-            setLastWrong(null);
-            setRound(r => r + 1);
-            const next = pickRandomTarget(continentFilter, new Set(revealed).add(target));
-            setTarget(next);
-            setMessage('Click the correct country!');
-            setIsLocked(false);
-          }, 900);
+
+          setRevealed(prev => {
+            const updated = new Set(prev).add(target);
+            setTimeout(() => {
+              setLastWrong(null);
+              setRound(r => r + 1);
+              const next = pickRandomTarget(continentFilter, updated);
+              setTarget(next);
+              setMessage('Click the correct country!');
+              setIsLocked(false);
+            }, 900);
+            return updated;
+          });
         }
+
       });
     },
     [isLocked, pickRandomTarget, styleFeature, target, revealed, continentFilter]
@@ -188,10 +205,10 @@ export default function MapGame({ geoJson }) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <GeoJSON
-  data={geoJson}
-  style={styleFeature}
-  onEachFeature={onEachFeature}
-/>
+          data={geoJson}
+          style={styleFeature}
+          onEachFeature={onEachFeature}
+        />
       </MapContainer>
     </div>
   );
