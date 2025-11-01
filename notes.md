@@ -56,6 +56,21 @@ It displays a world map, prompts the user to find a specific country, and gives 
 🎯 Supports sequencing & multiplication prep
 ✅ *Already built*
 
+🌍 Geography & World Knowledge Features
+16. Flag Finder
+Route: /flag-finder
+Skills: Recognizing national flags
+Idea: Show a flag, ask “Which country is this?”
+🎯 Reinforces country identification.
+✅ *Already built*
+
+18. Math Sentence Builder
+Route: /math-sentences
+Skills: Word problem interpretation
+Idea: Convert sentences like “Tom has 2 apples, eats 1” into equations.
+🎯 Connects math with language comprehension.
+✅ *Already built*
+
 ## 💰 8. Money Practice
 **Route:** `/money`  
 **Skills:** Counting coins, understanding values  
@@ -187,12 +202,6 @@ Skills: Tens and ones understanding
 Idea: Drag blocks (10s and 1s) to build numbers.
 🎯 Introduces base-10 concept.
 
-18. Math Sentence Builder
-
-Route: /math-sentences
-Skills: Word problem interpretation
-Idea: Convert sentences like “Tom has 2 apples, eats 1” into equations.
-🎯 Connects math with language comprehension.
 
 19. Estimate It!
 
@@ -228,21 +237,18 @@ Idea: Display an image and ask the child to pick the correct word from a set of 
 🎯 Builds image–word association.
 
 3. Alphabet Adventure
-
 Route: /alphabet-adventure
 Skills: Letter identification & ordering
 Idea: Interactive alphabet chart or mini-games like “find the letter that comes after D.”
 🎯 Reinforces alphabet sequencing.
 
 4. Sentence Builder
-
 Route: /sentence-builder
 Skills: Grammar & sentence structure
 Idea: Kids drag words into correct order to form a meaningful sentence.
 🎯 Early grammar practice.
 
 5. Story Sequencer
-
 Route: /story-sequencer
 Skills: Comprehension & sequencing
 Idea: Present 3–4 picture cards; user arranges them in the correct story order.
@@ -318,14 +324,6 @@ Route: /math-bingo
 Skills: Quick recall of math facts
 Idea: Solve equations to fill bingo grid squares.
 🎯 Fun reinforcement of math fluency.
-
-🌍 Geography & World Knowledge Features
-16. Flag Finder
-
-Route: /flag-finder
-Skills: Recognizing national flags
-Idea: Show a flag, ask “Which country is this?”
-🎯 Reinforces country identification.
 
 17. Continents Explorer
 

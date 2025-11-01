@@ -13,6 +13,7 @@ import MathPractice from './pages/MathPractice';
 import WorldMap from './pages/WorldMap';
 import FindTheMissingNumber from './pages/FindTheMissingNumber';
 import FlagFinder from './pages/FlagFinder';
+import SentenceBuilder from './pages/SentenceBuilder';
 
 import './App.css';
 import './index.css'
@@ -33,6 +34,8 @@ const router = createBrowserRouter([
       { path: 'world-map', element: <WorldMap /> },
       { path: '/missing-number', element: <FindTheMissingNumber /> },
       { path: '/flag-finder', element: <FlagFinder /> },
+      { path: '/sentence-builder', element: <SentenceBuilder /> },
+
     ],
   },
 ]);

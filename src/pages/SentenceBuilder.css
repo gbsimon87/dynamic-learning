@@ -1,0 +1,135 @@
+.sentence-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.sentence-score {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--light-text);
+}
+body.dark .sentence-score {
+  color: var(--dark-text);
+}
+
+.sentence-prompt {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--light-text);
+}
+body.dark .sentence-prompt {
+  color: var(--dark-text);
+}
+
+.sentence-area {
+  background-color: var(--light-panel);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+body.dark .sentence-area {
+  background-color: var(--dark-panel);
+}
+
+.word-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.word-chip {
+  background-color: var(--light-panel);
+  border: 2px solid var(--light-accent);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: grab;
+  user-select: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  color: var(--light-text);
+}
+body.dark .word-chip {
+  background-color: var(--dark-panel);
+  border-color: var(--dark-accent);
+  color: var(--dark-text);
+}
+
+.word-chip.correct {
+  background-color: var(--light-accent);
+  color: white;
+  border-color: var(--light-accent);
+}
+body.dark .word-chip.correct {
+  background-color: var(--dark-accent);
+  color: var(--dark-bg);
+}
+
+.word-chip.wrong {
+  background-color: #888;
+  color: white;
+  border-color: #888;
+}
+body.dark .word-chip.wrong {
+  background-color: #555;
+  color: white;
+  border-color: #555;
+}
+
+.sentence-feedback {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.sentence-feedback.correct {
+  color: var(--light-accent);
+}
+.sentence-feedback.wrong {
+  color: #888;
+}
+body.dark .sentence-feedback.correct {
+  color: var(--dark-accent);
+}
+body.dark .sentence-feedback.wrong {
+  color: #aaa;
+}
+
+.check-btn {
+  font-size: 1.2rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  border: 2px solid var(--light-accent);
+  background-color: var(--light-panel);
+  color: var(--light-text);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+.check-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(239, 98, 108, 0.3);
+}
+.check-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+body.dark .check-btn {
+  background-color: var(--dark-panel);
+  border-color: var(--dark-accent);
+  color: var(--dark-text);
+}
+body.dark .check-btn:hover:not(:disabled) {
+  box-shadow: 0 4px 8px rgba(132, 220, 207, 0.3);
+}
