@@ -57,18 +57,25 @@ It displays a world map, prompts the user to find a specific country, and gives 
 ✅ *Already built*
 
 🌍 Geography & World Knowledge Features
-16. Flag Finder
+## Flag Finder
 Route: /flag-finder
 Skills: Recognizing national flags
 Idea: Show a flag, ask “Which country is this?”
 🎯 Reinforces country identification.
 ✅ *Already built*
 
-18. Math Sentence Builder
+## Math Sentence Builder
 Route: /math-sentences
 Skills: Word problem interpretation
 Idea: Convert sentences like “Tom has 2 apples, eats 1” into equations.
 🎯 Connects math with language comprehension.
+✅ *Already built*
+
+## Parts of Speech Sorter
+Route: /word-sorter
+Skills: Nouns, verbs, adjectives
+Idea: Drag words into the correct category bucket.
+🎯 Early grammar awareness.
 ✅ *Already built*
 
 ## 💰 8. Money Practice
@@ -96,12 +103,6 @@ Skills: Vocabulary expansion
 Idea: Choose words with similar meanings (e.g., happy ↔ glad).
 🎯 Builds richer word understanding.
 
-3. Parts of Speech Sorter
-
-Route: /word-sorter
-Skills: Nouns, verbs, adjectives
-Idea: Drag words into the correct category bucket.
-🎯 Early grammar awareness.
 
 4. Listening & Repeat
 
