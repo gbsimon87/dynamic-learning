@@ -15,6 +15,7 @@ import FindTheMissingNumber from './pages/FindTheMissingNumber';
 import FlagFinder from './pages/FlagFinder';
 import SentenceBuilder from './pages/SentenceBuilder';
 import WordSorter from './pages/WordSorter';
+import OppositeMatch from './pages/OppositeMatch';
 
 import './App.css';
 import './index.css'
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
       { path: '/flag-finder', element: <FlagFinder /> },
       { path: '/sentence-builder', element: <SentenceBuilder /> },
       { path: '/word-sorter', element: <WordSorter /> },
+      { path: '/opposite-match', element: <OppositeMatch /> },
     ],
   },
 ]);

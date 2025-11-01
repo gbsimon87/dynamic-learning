@@ -1,0 +1,120 @@
+.match-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.match-score {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--light-text);
+}
+body.dark .match-score {
+  color: var(--dark-text);
+}
+
+.match-prompt {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--light-text);
+}
+body.dark .match-prompt {
+  color: var(--dark-text);
+}
+
+.match-area {
+  display: flex;
+  gap: 3rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.left-column,
+.right-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 1rem;
+}
+
+.word-chip,
+.drop-zone {
+  background-color: var(--light-panel);
+  border: 2px solid var(--light-accent);
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  cursor: grab;
+  text-align: center;
+  transition: all 0.2s ease;
+  min-width: 100px;
+}
+
+.word-chip:hover {
+  transform: scale(1.05);
+}
+
+.drop-zone {
+  cursor: default;
+}
+
+body.dark .word-chip,
+body.dark .drop-zone {
+  background-color: var(--dark-panel);
+  border-color: var(--dark-accent);
+  color: var(--dark-text);
+}
+
+.word-chip.matched,
+.drop-zone.matched {
+  background-color: var(--light-accent);
+  border-color: var(--light-accent);
+  color: white;
+  cursor: default;
+}
+body.dark .word-chip.matched,
+body.dark .drop-zone.matched {
+  background-color: var(--dark-accent);
+  border-color: var(--dark-accent);
+  color: var(--dark-bg);
+}
+
+.drop-zone.hover {
+  background-color: rgba(239,98,108,0.2);
+  border-color: var(--light-accent);
+}
+body.dark .drop-zone.hover {
+  background-color: rgba(132,220,207,0.2);
+}
+
+.locked {
+  font-weight: bold;
+}
+
+.match-feedback {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.match-feedback.correct {
+  color: var(--light-accent);
+}
+.match-feedback.wrong {
+  color: #888;
+  animation: shake 0.3s;
+}
+body.dark .match-feedback.correct {
+  color: var(--dark-accent);
+}
+body.dark .match-feedback.wrong {
+  color: #aaa;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}

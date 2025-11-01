@@ -78,6 +78,13 @@ Idea: Drag words into the correct category bucket.
 🎯 Early grammar awareness.
 ✅ *Already built*
 
+## Opposite Match
+Route: /opposite-match
+Skills: Vocabulary & antonyms
+Idea: Match pairs like hot ↔ cold, big ↔ small.
+🎯 Reinforces word meaning through contrast.
+✅ *Already built*
+
 ## 💰 8. Money Practice
 **Route:** `/money`  
 **Skills:** Counting coins, understanding values  
@@ -89,13 +96,6 @@ Idea: Drag words into the correct category bucket.
 
 
 🧩 ENGLISH & LITERACY FEATURES (Language, Reading & Writing)
-1. Opposite Match
-
-Route: /opposite-match
-Skills: Vocabulary & antonyms
-Idea: Match pairs like hot ↔ cold, big ↔ small.
-🎯 Reinforces word meaning through contrast.
-
 2. Synonym Safari
 
 Route: /synonym-safari

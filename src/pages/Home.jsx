@@ -25,6 +25,7 @@ function Home() {
             <Link to="/word-builder" className="nav-btn">Word Builder</Link>
             <Link to="/word-sorter" className="nav-btn">Word Sorter</Link>
             <Link to="/sentence-builder" className="nav-btn">Sentence Builder</Link>
+            <Link to="/opposite-match" className="nav-btn">Opposite Match</Link>
           </div>
         </section>
 
