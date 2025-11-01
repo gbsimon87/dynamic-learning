@@ -39,6 +39,7 @@ function Home() {
           <h2 className="category-title">🌍 Geography</h2>
           <div className="link-grid">
             <Link to="/world-map" className="nav-btn">World Map</Link>
+            <Link to="/flag-finder" className="nav-btn">Flag Finder</Link>
           </div>
         </section>
       </div>

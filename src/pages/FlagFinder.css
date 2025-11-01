@@ -1,0 +1,133 @@
+.flag-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.flag-score {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--light-text);
+}
+body.dark .flag-score {
+  color: var(--dark-text);
+}
+
+.flag-prompt {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--light-text);
+  margin: 0;
+}
+body.dark .flag-prompt {
+  color: var(--dark-text);
+}
+
+.flag-card {
+  background-color: var(--light-panel);
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+body.dark .flag-card {
+  background-color: var(--dark-panel);
+}
+
+.flag-image {
+  width: 240px;
+  height: 160px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.flag-feedback {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.flag-feedback.correct {
+  color: var(--light-accent);
+}
+.flag-feedback.wrong {
+  color: #888;
+}
+body.dark .flag-feedback.correct {
+  color: var(--dark-accent);
+}
+body.dark .flag-feedback.wrong {
+  color: #aaa;
+}
+
+.flag-options {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.flag-optionBtn {
+  font-size: 1.1rem;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid var(--light-accent);
+  border-radius: 8px;
+  background-color: var(--light-panel);
+  color: var(--light-text);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+  min-width: 120px;
+}
+.flag-optionBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(239,98,108,0.3);
+}
+.flag-optionBtn:disabled {
+  cursor: default;
+}
+
+body.dark .flag-optionBtn {
+  background-color: var(--dark-panel);
+  border-color: var(--dark-accent);
+  color: var(--dark-text);
+}
+body.dark .flag-optionBtn:hover:not(:disabled) {
+  box-shadow: 0 4px 8px rgba(132,220,207,0.3);
+}
+
+.flag-optionBtn.correct {
+  background-color: var(--light-accent);
+  color: white;
+  border-color: var(--light-accent);
+  transform: scale(1.05);
+}
+body.dark .flag-optionBtn.correct {
+  background-color: var(--dark-accent);
+  color: var(--dark-bg);
+  border-color: var(--dark-accent);
+}
+
+.flag-optionBtn.wrong {
+  background-color: #888;
+  color: white;
+  border-color: #888;
+}
+body.dark .flag-optionBtn.wrong {
+  background-color: #555;
+  color: white;
+  border-color: #555;
+}
+
+.flag-optionBtn.dimmed {
+  opacity: 0.4;
+}
+
+.flag-loading {
+  color: var(--light-text);
+  padding: 2rem;
+}
+body.dark .flag-loading {
+  color: var(--dark-text);
+}
