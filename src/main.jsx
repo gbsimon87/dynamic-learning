@@ -16,6 +16,7 @@ import FlagFinder from './pages/FlagFinder';
 import SentenceBuilder from './pages/SentenceBuilder';
 import WordSorter from './pages/WordSorter';
 import OppositeMatch from './pages/OppositeMatch';
+import SynonymSafari from './pages/SynonymSafari';
 
 import './App.css';
 import './index.css'
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
       { path: '/sentence-builder', element: <SentenceBuilder /> },
       { path: '/word-sorter', element: <WordSorter /> },
       { path: '/opposite-match', element: <OppositeMatch /> },
+      { path: '/synonym-match', element: <SynonymSafari /> },
     ],
   },
 ]);
