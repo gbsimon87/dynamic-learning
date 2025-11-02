@@ -17,6 +17,7 @@ import SentenceBuilder from './pages/SentenceBuilder';
 import WordSorter from './pages/WordSorter';
 import OppositeMatch from './pages/OppositeMatch';
 import SynonymSafari from './pages/SynonymSafari';
+import NumberBonds from './pages/NumberBonds';
 
 import './App.css';
 import './index.css'
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
       { path: '/word-sorter', element: <WordSorter /> },
       { path: '/opposite-match', element: <OppositeMatch /> },
       { path: '/synonym-match', element: <SynonymSafari /> },
+      { path: '/number-bonds', element: <NumberBonds /> },
     ],
   },
 ]);

@@ -1,0 +1,288 @@
+.bonds-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* Header adjustments */
+.bonds-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.75rem;
+}
+
+.bonds-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--light-text);
+  margin: 0;
+}
+body.dark .bonds-title {
+  color: var(--dark-text);
+}
+
+.bonds-select {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.bonds-select label {
+  color: var(--light-text);
+}
+body.dark .bonds-select label {
+  color: var(--dark-text);
+}
+
+.bonds-select select {
+  border: 2px solid var(--light-accent);
+  background-color: var(--light-panel);
+  border-radius: 8px;
+  padding: 0.3rem 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+body.dark .bonds-select select {
+  border-color: var(--dark-accent);
+  background-color: var(--dark-panel);
+  color: var(--dark-text);
+}
+
+.bonds-score {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--light-text);
+}
+body.dark .bonds-score {
+  color: var(--dark-text);
+}
+
+.bonds-prompt {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--light-text);
+}
+body.dark .bonds-prompt {
+  color: var(--dark-text);
+}
+
+.bonds-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 500px;
+  justify-items: center;
+}
+
+.bonds-card {
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+/* Card resizing logic */
+.bonds-card-inner {
+  width: clamp(70px, 20vw, 100px);
+  height: clamp(70px, 20vw, 100px);
+}
+
+.bonds-card.flipped .bonds-card-inner {
+  transform: rotateY(180deg);
+}
+
+.bonds-card-front,
+.bonds-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+.bonds-card-front {
+  background-color: var(--light-panel);
+  border: 2px solid var(--light-accent);
+  color: var(--light-accent);
+}
+body.dark .bonds-card-front {
+  background-color: var(--dark-panel);
+  border-color: var(--dark-accent);
+  color: var(--dark-accent);
+}
+
+.bonds-card-back {
+  background-color: var(--light-accent);
+  color: white;
+  transform: rotateY(180deg);
+}
+body.dark .bonds-card-back {
+  background-color: var(--dark-accent);
+  color: var(--dark-bg);
+}
+
+.bonds-card.matched .bonds-card-back {
+  opacity: 0.7;
+}
+
+.bonds-feedback {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.bonds-feedback.correct {
+  color: var(--light-accent);
+}
+.bonds-feedback.wrong {
+  color: #888;
+  animation: shake 0.3s;
+}
+body.dark .bonds-feedback.correct {
+  color: var(--dark-accent);
+}
+body.dark .bonds-feedback.wrong {
+  color: #aaa;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+/* PRACTICE MODE STYLES */
+.practice-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.practice-equation {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--light-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+body.dark .practice-equation {
+  color: var(--dark-text);
+}
+
+.practice-input {
+  width: 60px;
+  font-size: 1.8rem;
+  text-align: center;
+  font-weight: 700;
+  border: 2px solid var(--light-accent);
+  border-radius: 8px;
+  padding: 0.3rem;
+  background: var(--light-panel);
+  color: var(--light-text);
+}
+.practice-input:focus {
+  outline: none;
+  border-color: var(--light-accent);
+}
+body.dark .practice-input {
+  background: var(--dark-panel);
+  border-color: var(--dark-accent);
+  color: var(--dark-text);
+}
+
+.bonds-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.practice-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.practice-btn {
+  background-color: var(--light-accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.practice-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.practice-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+body.dark .practice-btn {
+  background-color: var(--dark-accent);
+  color: var(--dark-bg);
+}
+
+.bonds-custom-input {
+  width: 80px;
+  font-weight: 600;
+  font-size: 1rem;
+  border: 2px solid var(--light-accent);
+  border-radius: 8px;
+  padding: 0.25rem 0.4rem;
+  background-color: var(--light-panel);
+  color: var(--light-text);
+  text-align: center;
+}
+
+body.dark .bonds-custom-input {
+  border-color: var(--dark-accent);
+  background-color: var(--dark-panel);
+  color: var(--dark-text);
+}
+
+/* On very small screens */
+@media (max-width: 480px) {
+  .bonds-grid {
+    gap: 0.6rem;
+  }
+  .bonds-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .bonds-controls {
+    justify-content: center;
+  }
+  .bonds-title {
+    text-align: center;
+    width: 100%;
+  }
+  .bonds-card-inner {
+    width: 70px;
+    height: 70px;
+  }
+}

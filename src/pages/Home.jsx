@@ -15,6 +15,7 @@ function Home() {
             <Link to="/counting-numbers" className="nav-btn">Counting Numbers</Link>
             <Link to="/arithmetic-practice" className="nav-btn">Arithmetic Practice</Link>
             <Link to="/missing-number" className="nav-btn">Find the Missing Number</Link>
+            <Link to="/number-bonds" className="nav-btn">Number Bonds</Link>
           </div>
         </section>
 

@@ -92,7 +92,12 @@ Idea: Choose words with similar meanings (e.g., happy ↔ glad).
 🎯 Builds richer word understanding.
 ✅ *Already built*
 
-
+## Number Bonds
+Route: /number-bonds
+Skills: Addition & subtraction pairs
+Idea: Find pairs of numbers that add up to 10 (or another target).
+🎯 Builds arithmetic fluency.
+✅ *Already built*
 
 💰 8. Money Practice
 **Route:** `/money`  
@@ -111,8 +116,6 @@ Idea: Convert sentences like “Tom has 2 apples, eats 1” into equations.
 
 
 🧩 ENGLISH & LITERACY FEATURES (Language, Reading & Writing)
-
-
 
 4. Listening & Repeat
 Route: /listening-repeat
@@ -151,11 +154,6 @@ Idea: Tap to break words into syllables (e.g., “ba–na–na”).
 🎯 Improves decoding and pronunciation.
 
 🔢 MATH FEATURES (Numbers, Logic, Problem Solving)
-11. Number Bonds
-Route: /number-bonds
-Skills: Addition & subtraction pairs
-Idea: Find pairs of numbers that add up to 10 (or another target).
-🎯 Builds arithmetic fluency.
 
 12. Fraction Fun
 Route: /fraction-fun
