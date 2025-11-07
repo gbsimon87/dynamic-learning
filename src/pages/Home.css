@@ -17,7 +17,7 @@ body.dark .home-page {
 }
 
 .home-title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   color: var(--light-text);
   margin-top: 0;
   transition: color 0.3s ease;

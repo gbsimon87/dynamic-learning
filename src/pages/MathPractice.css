@@ -8,25 +8,28 @@
   margin: 0 auto;
 }
 
-.score {
-  font-size: 1.2rem;
+/* ---------- Typography & Layout ---------- */
+
+.score,
+.prompt {
   font-weight: 600;
   color: var(--light-text);
 }
 
-body.dark .score {
-  color: var(--dark-text);
+.score {
+  font-size: 1.2rem;
 }
 
 .prompt {
   font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--light-text);
 }
 
+body.dark .score,
 body.dark .prompt {
   color: var(--dark-text);
 }
+
+/* ---------- Question Display ---------- */
 
 .word {
   font-size: 2.5rem;
@@ -43,6 +46,8 @@ body.dark .word {
   color: var(--dark-text);
   background-color: var(--dark-panel);
 }
+
+/* ---------- Feedback ---------- */
 
 .feedback {
   font-size: 1.25rem;
@@ -64,6 +69,8 @@ body.dark .feedback.correct {
 body.dark .feedback.wrong {
   color: #aaa;
 }
+
+/* ---------- Options ---------- */
 
 .options {
   display: flex;
@@ -110,7 +117,6 @@ body.dark .optionBtn:hover:not(:disabled) {
 body.dark .optionBtn.correct {
   background-color: var(--dark-accent);
   color: var(--dark-bg);
-  border-color: var(--dark-accent);
 }
 
 .optionBtn.wrong {
@@ -121,13 +127,13 @@ body.dark .optionBtn.correct {
 
 body.dark .optionBtn.wrong {
   background-color: #555;
-  color: white;
-  border-color: #555;
 }
 
 .optionBtn.dimmed {
   opacity: 0.4;
 }
+
+/* ---------- Settings Panel ---------- */
 
 .settingsGroup {
   display: flex;
@@ -146,11 +152,7 @@ body.dark .settingsGroup label {
   color: var(--dark-text);
 }
 
-select,
-input[type='range'] {
-  width: 80%;
-  max-width: 300px;
-}
+/* ---------- Buttons ---------- */
 
 .startBtn,
 .restartBtn {
@@ -175,4 +177,118 @@ body.dark .startBtn,
 body.dark .restartBtn {
   background-color: var(--dark-accent);
   color: var(--dark-bg);
+}
+
+/* ---------- Enhanced Select Styling ---------- */
+
+select {
+  width: 80%;
+  max-width: 300px;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 2px solid var(--light-accent);
+  background-color: var(--light-panel);
+  color: var(--light-text);
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+select:hover,
+select:focus {
+  border-color: var(--light-accent);
+  box-shadow: 0 0 8px rgba(239, 98, 108, 0.3);
+  outline: none;
+}
+
+body.dark select {
+  background-color: var(--dark-panel);
+  color: var(--dark-text);
+  border-color: var(--dark-accent);
+}
+
+body.dark select:hover,
+body.dark select:focus {
+  box-shadow: 0 0 8px rgba(132, 220, 207, 0.3);
+}
+
+/* ---------- Custom Range Slider ---------- */
+
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 80%;
+  max-width: 300px;
+  height: 6px;
+  border-radius: 5px;
+  background: linear-gradient(
+    to right,
+    var(--light-accent),
+    rgba(239, 98, 108, 0.3)
+  );
+  outline: none;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--light-accent);
+  box-shadow: 0 0 4px rgba(239, 98, 108, 0.4);
+  transition: transform 0.2s ease;
+}
+
+input[type='range']::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+body.dark input[type='range'] {
+  background: linear-gradient(
+    to right,
+    var(--dark-accent),
+    rgba(132, 220, 207, 0.3)
+  );
+}
+
+body.dark input[type='range']::-webkit-slider-thumb {
+  background: var(--dark-accent);
+  box-shadow: 0 0 4px rgba(132, 220, 207, 0.4);
+}
+
+/* Firefox support */
+input[type='range']::-moz-range-track {
+  height: 6px;
+  border-radius: 5px;
+  background: linear-gradient(
+    to right,
+    var(--light-accent),
+    rgba(239, 98, 108, 0.3)
+  );
+}
+
+body.dark input[type='range']::-moz-range-track {
+  background: linear-gradient(
+    to right,
+    var(--dark-accent),
+    rgba(132, 220, 207, 0.3)
+  );
+}
+
+input[type='range']::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--light-accent);
+  border: none;
+  box-shadow: 0 0 4px rgba(239, 98, 108, 0.4);
+}
+
+body.dark input[type='range']::-moz-range-thumb {
+  background: var(--dark-accent);
+  box-shadow: 0 0 4px rgba(132, 220, 207, 0.4);
 }

@@ -51,6 +51,7 @@ body.dark .bonds-select label {
   padding: 0.3rem 0.5rem;
   font-weight: 600;
   cursor: pointer;
+  color: var(--light-text);
 }
 body.dark .bonds-select select {
   border-color: var(--dark-accent);

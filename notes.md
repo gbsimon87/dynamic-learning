@@ -1,3 +1,11 @@
+## Fix counting numbers game, there is a bug that does not let you advance
+Found it when doing the subtraction mode
+
+## Fix number bonds game, when switching the game mode the cards aren't flipping
+
+## Fix word sorter
+If a word is placed in a category, be able to take it back out
+
 # 📚 High-Impact Learning Features for 6-Year-Olds
 
 ## Clock Generator
@@ -99,6 +107,20 @@ Idea: Find pairs of numbers that add up to 10 (or another target).
 🎯 Builds arithmetic fluency.
 ✅ *Already built*
 
+## Fraction Fun
+Route: /fraction-fun
+Skills: Understanding parts of a whole
+Idea: Show pies or bars divided into halves, thirds, quarters.
+🎯 Early introduction to fractions.
+✅ *Already built*
+
+## Sight Word Pop
+Route: /sight-word-pop
+Skills: Sight word recognition
+Idea: Words appear as “bubbles”; tap the target sight word before it disappears.
+🎯 Encourages reading fluency.
+✅ *Already built*
+
 💰 8. Money Practice
 **Route:** `/money`  
 **Skills:** Counting coins, understanding values  
@@ -154,12 +176,6 @@ Idea: Tap to break words into syllables (e.g., “ba–na–na”).
 🎯 Improves decoding and pronunciation.
 
 🔢 MATH FEATURES (Numbers, Logic, Problem Solving)
-
-12. Fraction Fun
-Route: /fraction-fun
-Skills: Understanding parts of a whole
-Idea: Show pies or bars divided into halves, thirds, quarters.
-🎯 Early introduction to fractions.
 
 13. Compare the Numbers
 Route: /compare-numbers
@@ -246,12 +262,7 @@ Skills: Phonics practice
 Idea: Play a sound (“/b/”) and have the child choose which word starts with that sound.
 🎯 Strengthens phonemic decoding.
 
-7. Sight Word Pop
 
-Route: /sight-word-pop
-Skills: Sight word recognition
-Idea: Words appear as “bubbles”; tap the target sight word before it disappears.
-🎯 Encourages reading fluency.
 
 🔢 Math & Logic Features
 8. Number Line Jump
@@ -276,28 +287,24 @@ Idea: Match 3D objects with their names or silhouettes.
 🎯 Expands geometry knowledge.
 
 11. Measurement Match
-
 Route: /measurement-match
 Skills: Size, length, comparison
 Idea: Compare two objects: “Which is longer?” / “Which is heavier?”
 🎯 Visual estimation & comparison.
 
 12. Money Basics
-
 Route: /money-basics
 Skills: Recognizing coins & simple sums
 Idea: Drag coins to make a specific total (e.g., “Make 10p”).
 🎯 Introduces early financial literacy.
 
 13. Pattern Play
-
 Route: /pattern-play
 Skills: Pattern recognition (ABAB, AABB, etc.)
 Idea: Complete or extend colorful visual patterns.
 🎯 Develops reasoning and prediction.
 
 14. Tally Marks Trainer
-
 Route: /tally-trainer
 Skills: Counting & grouping
 Idea: Convert numbers to tally marks or vice versa.

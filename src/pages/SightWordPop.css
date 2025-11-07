@@ -1,0 +1,158 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.score {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--light-text);
+  text-align: center;
+}
+
+body.dark .score {
+  color: var(--dark-text);
+}
+
+.prompt {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--light-text);
+  text-align: center;
+}
+
+body.dark .prompt {
+  color: var(--dark-text);
+}
+
+.instructions {
+  font-size: 1rem;
+  color: var(--light-text);
+  text-align: center;
+  opacity: 0.85;
+}
+
+body.dark .instructions {
+  color: var(--dark-text);
+}
+
+.targetWord {
+  color: var(--light-accent);
+  font-weight: 700;
+}
+
+body.dark .targetWord {
+  color: var(--dark-accent);
+}
+
+/* ---------- Settings ---------- */
+.settingsGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.settingsGroup label {
+  font-weight: 600;
+  color: var(--light-text);
+}
+
+body.dark .settingsGroup label {
+  color: var(--dark-text);
+}
+
+.settingsGroup input[type='range'] {
+  width: 80%;
+  max-width: 300px;
+}
+
+/* ---------- Bubble Field ---------- */
+.bubbleField {
+  position: relative;
+  width: 100%;
+  height: 440px;
+  overflow: hidden;
+}
+
+/* ---------- Bubbles ---------- */
+.bubbleBtn {
+  position: absolute;
+  bottom: -110px;
+  padding: 1rem 1.2rem;
+  border-radius: 50%;
+  border: 3px solid var(--light-accent);
+  background-color: var(--light-panel);
+  color: var(--light-text);
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+  animation: floatUp 3s linear forwards;
+  aspect-ratio: 1 / 1;
+}
+
+.bubbleBtn:hover {
+  transform: scale(1.07);
+}
+
+body.dark .bubbleBtn {
+  background-color: var(--dark-panel);
+  border-color: var(--dark-accent);
+  color: var(--dark-text);
+  box-shadow: 0 2px 6px rgba(132, 220, 207, 0.15);
+}
+
+/* Float-up animation */
+@keyframes floatUp {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  85% {
+    transform: translateY(-430px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-460px);
+    opacity: 0;
+  }
+}
+
+/* ---------- Buttons ---------- */
+.startBtn,
+.restartBtn {
+  padding: 0.75rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: var(--light-accent);
+  color: white;
+  border: none;
+  transition: all 0.2s;
+}
+
+.startBtn:hover,
+.restartBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(239, 98, 108, 0.3);
+}
+
+body.dark .startBtn,
+body.dark .restartBtn {
+  background-color: var(--dark-accent);
+  color: var(--dark-bg);
+}
