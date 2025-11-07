@@ -1,5 +1,6 @@
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
+import * as turf from '@turf/turf';
 import L from 'leaflet';
 
 const normalizeName = str =>
@@ -11,7 +12,7 @@ const normalizeName = str =>
     .toLowerCase()
     .trim();
 
-export default function MapGame({ geoJson }) {
+export default function MapGame({ geoJson, mode }) {
   // Game state
   const [target, setTarget] = useState(null);
   const [score, setScore] = useState(0);
@@ -39,6 +40,15 @@ export default function MapGame({ geoJson }) {
       .filter(c => c.name);
   }, [geoJson]);
 
+  // When in continent mode, the "targets" are continents instead of countries
+  const possibleTargets = useMemo(() => {
+    if (mode === 'continents') {
+      const set = new Set(countries.map(c => c.continent).filter(Boolean));
+      return Array.from(set);
+    }
+    return countries.map(c => c.name);
+  }, [mode, countries]);
+
   // --- Unique list of continents for dropdown ---
   const continents = useMemo(() => {
     const set = new Set(countries.map(c => c.continent).filter(Boolean));
@@ -47,17 +57,87 @@ export default function MapGame({ geoJson }) {
 
   // --- Pick random country helper ---
   const pickRandomTarget = useCallback((filter, revealedSet) => {
-    let available = countries.filter(c => !revealedSet.has(c.name));
-    if (filter !== 'All') {
-      available = available.filter(
-        c => c.continent.toLowerCase() === filter.toLowerCase()
-      );
+    if (mode === 'continents') {
+      const remaining = possibleTargets.filter(t => !revealedSet.has(t));
+      if (!remaining.length) return null;
+      return remaining[Math.floor(Math.random() * remaining.length)];
+    } else {
+      let available = countries.filter(c => !revealedSet.has(c.name));
+      if (filter !== 'All') {
+        available = available.filter(
+          c => c.continent.toLowerCase() === filter.toLowerCase()
+        );
+      }
+      if (!available.length) return null;
+      return available[Math.floor(Math.random() * available.length)].name;
     }
+  }, [countries, mode, possibleTargets]);
 
-    if (!available.length) return null;
-    const idx = Math.floor(Math.random() * available.length);
-    return available[idx].name;
-  }, [countries]);
+  // --- Combined continent polygons for continent mode ---
+const continentGeoJson = useMemo(() => {
+  if (mode !== 'continents' || !geoJson?.features) return null;
+
+  const grouped = {};
+  for (const f of geoJson.features) {
+    const cont = f.properties?.CONTINENT || 'Unknown';
+    (grouped[cont] ||= []).push(f);
+  }
+
+  const merged = [];
+
+  for (const [cont, feats] of Object.entries(grouped)) {
+    try {
+      if (feats.length === 1) {
+        merged.push({
+          type: 'Feature',
+          properties: { name: cont },
+          geometry: feats[0].geometry,
+        });
+        continue;
+      }
+
+      // Combine all geometries into one Multi*
+      const combined = turf.combine({
+        type: 'FeatureCollection',
+        features: feats,
+      });
+
+      // Prefer the combined MultiPolygon (or Polygon) directly
+      const multi = combined?.features?.[0];
+      if (multi?.geometry && (multi.geometry.type === 'MultiPolygon' || multi.geometry.type === 'Polygon')) {
+        merged.push({
+          type: 'Feature',
+          properties: { name: cont },
+          geometry: multi.geometry,
+        });
+        continue;
+      }
+
+      // Fallback: manually assemble a MultiPolygon from parts
+      const polyParts = [];
+      for (const feat of feats) {
+        const g = feat.geometry;
+        if (!g) continue;
+        if (g.type === 'Polygon') polyParts.push(g.coordinates);
+        else if (g.type === 'MultiPolygon') polyParts.push(...g.coordinates);
+      }
+      if (polyParts.length) {
+        merged.push({
+          type: 'Feature',
+          properties: { name: cont },
+          geometry: { type: 'MultiPolygon', coordinates: polyParts },
+        });
+      }
+    } catch (e) {
+      console.warn(`⚠️ Failed to combine continent ${cont}`, e);
+    }
+  }
+
+  return { type: 'FeatureCollection', features: merged };
+}, [geoJson, mode]);
+
+
+
 
   // --- Initialize target once when data loads ---
   useEffect(() => {
@@ -76,96 +156,182 @@ export default function MapGame({ geoJson }) {
     setRound(1);
     setRevealed(new Set());
     setLastWrong(null);
-    setMessage('Click the correct country!');
-
+    setMessage(
+      mode === 'continents'
+        ? 'Tap the correct continent!'
+        : 'Click the correct country!'
+    );
     // pick new target (using stable pickRandomTarget)
     const next = pickRandomTarget(continentFilter, new Set());
     setTarget(next);
-  }, [continentFilter, countries, pickRandomTarget]);
+  }, [continentFilter, countries, pickRandomTarget, mode]);
 
   // --- Handle "game complete" ---
   useEffect(() => {
     if (target === null && revealed.size > 0) {
-      setMessage(`🎉 Game Complete! You found all ${revealed.size} countries!`);
+      setMessage(
+        mode === 'continents'
+          ? `🎉 Great job! You found all ${revealed.size} continents!`
+          : `🎉 Game Complete! You found all ${revealed.size} countries!`
+      );
       setIsLocked(true);
     }
-  }, [target, revealed.size]);
+  }, [target, revealed.size, mode]);
+
 
   // --- Feature style ---
   const styleFeature = useCallback(
     (feature) => {
-      const name = feature?.properties?.ADMIN || feature?.properties?.NAME || feature?.properties?.name;
-      const isCorrect = revealed.has(name);
-      const isWrong = name === lastWrong;
-      return {
-        weight: isWrong ? 2 : 0.8,
-        color: isWrong ? '#b91c1c' : '#666',
-        fillColor: isCorrect ? '#22c55e' : '#d1d5db',
-        fillOpacity: isCorrect ? 0.85 : 0.7
-      };
+      // In continent mode, the merged features only have properties.name (the continent name)
+      // In country mode, features have ADMIN/NAME (country name) and CONTINENT
+
+      if (mode === 'continents') {
+        const continentName = feature?.properties?.name || '';
+        const isRevealed = revealed.has(continentName);
+
+        return {
+          weight: 1,
+          color: '#555',
+          fillColor: isRevealed ? '#22c55e' : '#bde0fe',
+          fillOpacity: isRevealed ? 0.85 : 0.8,
+        };
+      } else {
+        // Country mode
+        const countryName =
+          feature?.properties?.ADMIN ||
+          feature?.properties?.NAME ||
+          feature?.properties?.name;
+
+        const isRevealed = revealed.has(countryName);
+        const isWrong = countryName === lastWrong;
+
+        return {
+          weight: isWrong ? 1.5 : 0.6,
+          color: isWrong ? '#b91c1c' : '#666',
+          fillColor: isRevealed ? '#22c55e' : '#d1d5db',
+          fillOpacity: isRevealed ? 0.85 : 0.8,
+        };
+      }
     },
-    [revealed, lastWrong]
+    [revealed, lastWrong, mode]
   );
 
   // --- Feature interactivity ---
   const onEachFeature = useCallback(
     (feature, layer) => {
-      const name = feature?.properties?.ADMIN || feature?.properties?.NAME || feature?.properties?.name;
+      if (mode === 'continents') {
+        // Continent mode: merged features only have properties.name
+        const continentName = feature?.properties?.name || '';
 
-      layer.on('mouseover', () => {
-        if (!revealed.has(name)) {
-          layer.setStyle({ weight: 1.5, color: '#000' });
-        }
-      });
-      layer.on('mouseout', () => layer.setStyle(styleFeature(feature)));
+        // Hover (optional subtle effect for continents)
+        layer.on('mouseover', () => {
+          if (!revealed.has(continentName)) {
+            layer.setStyle({ weight: 2, color: '#333' });
+          }
+        });
+        layer.on('mouseout', () => layer.setStyle(styleFeature(feature)));
 
-      layer.on('click', () => {
-        if (isLocked || !targetRef.current) return;  // ← changed
-        const clickedName = name;
-        const currentTarget = targetRef.current;     // ← add this
-        setIsLocked(true);
+        layer.on('click', () => {
+          if (isLocked || !targetRef.current) return;
 
+          const currentTarget = targetRef.current;
+          setIsLocked(true);
 
-        if (normalizeName(clickedName) === normalizeName(currentTarget)) {  // ← use currentTarget
-          setMessage(`✅ Correct! That is ${currentTarget}.`);
-          setScore(s => s + 1);
-          setLastWrong(null);
+          const isCorrect = normalizeName(continentName) === normalizeName(currentTarget);
 
-          // Update revealed and pick next based on the new set
-          setRevealed(prev => {
-            const updated = new Set(prev).add(target);
-            setTimeout(() => {
-              setRound(r => r + 1);
-              const next = pickRandomTarget(continentFilter, updated);
-              setTarget(next);
-              setMessage('Click the correct country!');
-              setIsLocked(false);
-            }, 700);
-            return updated;
-          });
-        } else {
-          // ❌ Wrong
-          setMessage(`❌ Not quite — you clicked ${clickedName}.`);
-          setLastWrong(clickedName);
+          if (isCorrect) {
+            setMessage(`✅ Correct! That is ${continentName}.`);
+            setScore((s) => s + 1);
 
-          setRevealed(prev => {
-            const updated = new Set(prev).add(target);
-            setTimeout(() => {
-              setLastWrong(null);
-              setRound(r => r + 1);
-              const next = pickRandomTarget(continentFilter, updated);
-              setTarget(next);
-              setMessage('Click the correct country!');
-              setIsLocked(false);
-            }, 900);
-            return updated;
-          });
-        }
+            setRevealed((prev) => {
+              const updated = new Set(prev).add(currentTarget);
+              setTimeout(() => {
+                setRound((r) => r + 1);
+                const next = pickRandomTarget(continentFilter, updated);
+                setTarget(next);
+                setMessage('Tap the correct continent!');
+                setIsLocked(false);
+              }, 700);
+              return updated;
+            });
+          } else {
+            setMessage(`❌ Not quite — you clicked ${continentName}.`);
 
-      });
+            setRevealed((prev) => {
+              const updated = new Set(prev).add(currentTarget);
+              setTimeout(() => {
+                setRound((r) => r + 1);
+                const next = pickRandomTarget(continentFilter, updated);
+                setTarget(next);
+                setMessage('Tap the correct continent!');
+                setIsLocked(false);
+              }, 900);
+              return updated;
+            });
+          }
+        });
+      } else {
+        // Country mode: features have ADMIN/NAME properties
+        const countryName =
+          feature?.properties?.ADMIN ||
+          feature?.properties?.NAME ||
+          feature?.properties?.name;
+
+        // Hover
+        layer.on('mouseover', () => {
+          if (!revealed.has(countryName)) {
+            layer.setStyle({ weight: 1.5, color: '#000' });
+          }
+        });
+        layer.on('mouseout', () => layer.setStyle(styleFeature(feature)));
+
+        layer.on('click', () => {
+          if (isLocked || !targetRef.current) return;
+
+          const currentTarget = targetRef.current;
+          setIsLocked(true);
+
+          const isCorrect = normalizeName(countryName) === normalizeName(currentTarget);
+
+          if (isCorrect) {
+            setMessage(`✅ Correct! That is ${countryName}.`);
+            setScore((s) => s + 1);
+            setLastWrong(null);
+
+            setRevealed((prev) => {
+              const updated = new Set(prev).add(currentTarget);
+              setTimeout(() => {
+                setRound((r) => r + 1);
+                const next = pickRandomTarget(continentFilter, updated);
+                setTarget(next);
+                setMessage('Click the correct country!');
+                setIsLocked(false);
+              }, 700);
+              return updated;
+            });
+          } else {
+            setMessage(`❌ Not quite — you clicked ${countryName}.`);
+            setLastWrong(countryName);
+
+            setRevealed((prev) => {
+              const updated = new Set(prev).add(currentTarget);
+              setTimeout(() => {
+                setLastWrong(null);
+                setRound((r) => r + 1);
+                const next = pickRandomTarget(continentFilter, updated);
+                setTarget(next);
+                setMessage('Click the correct country!');
+                setIsLocked(false);
+              }, 900);
+              return updated;
+            });
+          }
+        });
+      }
     },
-    [isLocked, pickRandomTarget, styleFeature, target, revealed, continentFilter]
+    [isLocked, pickRandomTarget, styleFeature, revealed, continentFilter, mode]
   );
+
 
   // --- Manual reset ---
   const reset = () => {
@@ -173,8 +339,11 @@ export default function MapGame({ geoJson }) {
     setRound(1);
     setRevealed(new Set());
     setLastWrong(null);
-    setMessage('Click the correct country!');
-    const next = pickRandomTarget(continentFilter, new Set());
+    setMessage(
+      mode === 'continents'
+        ? 'Tap the correct continent!'
+        : 'Click the correct country!'
+    ); const next = pickRandomTarget(continentFilter, new Set());
     setTarget(next);
   };
 
@@ -189,6 +358,7 @@ export default function MapGame({ geoJson }) {
         continents={continents}
         continentFilter={continentFilter}
         setContinentFilter={setContinentFilter}
+        mode={mode}
       />
 
       <MapContainer
@@ -201,21 +371,29 @@ export default function MapGame({ geoJson }) {
         zoomControl={false}
       >
         <TileLayer
-          attribution='&copy; OpenStreetMap contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          key={mode}
+          attribution="&copy; OpenStreetMap contributors"
+          url={
+            mode === 'continents'
+              ? 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png'
+              : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+          }
         />
+
         <GeoJSON
-          data={geoJson}
+          key={mode}
+          data={mode === 'continents' ? continentGeoJson : geoJson}
           style={styleFeature}
           onEachFeature={onEachFeature}
         />
+
       </MapContainer>
     </div>
   );
 }
 
 // --- Top Bar ---
-function TopBar({ target, score, round, message, onReset, continents, continentFilter, setContinentFilter }) {
+function TopBar({ target, score, round, message, onReset, continents, continentFilter, setContinentFilter, mode }) {
   return (
     <div
       style={{
@@ -245,15 +423,18 @@ function TopBar({ target, score, round, message, onReset, continents, continentF
       </span>
 
       <select
+        disabled={mode === 'continents'}
         value={continentFilter}
-        onChange={e => setContinentFilter(e.target.value)}
+        onChange={(e) => setContinentFilter(e.target.value)}
         style={{
           border: '1px solid #ccc',
           borderRadius: 8,
           padding: '6px 8px',
-          cursor: 'pointer'
+          cursor: mode === 'continents' ? 'not-allowed' : 'pointer',
+          opacity: mode === 'continents' ? 0.6 : 1,
         }}
       >
+
         {continents.map(cont => (
           <option key={cont} value={cont}>{cont}</option>
         ))}
