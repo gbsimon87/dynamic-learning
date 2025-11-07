@@ -18,6 +18,8 @@
     "react-dom": "^19.1.1",
     "react-leaflet": "^5.0.0",
     "react-router": "^7.9.5",
+    "three": "^0.181.0",
+    "tweakpane": "^4.0.5",
     "written-number": "^0.11.1"
   },
   "devDependencies": {

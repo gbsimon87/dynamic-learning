@@ -1,0 +1,107 @@
+[
+  {
+    "name": "Paris",
+    "country": "France",
+    "coordinates": [48.8566, 2.3522],
+    "image": "/images/landmarks/landmark_paris_eiffel_tower.webp",
+    "hint": "Look for the tall iron tower"
+  },
+  {
+    "name": "London",
+    "country": "United Kingdom",
+    "coordinates": [51.5074, -0.1278],
+    "image": "/images/landmarks/landmark_london_clock_tower.webp",
+    "hint": "The clock-tower beside the Thames"
+  },
+  {
+    "name": "Rome",
+    "country": "Italy",
+    "coordinates": [41.9028, 12.4964],
+    "image": "/images/landmarks/landmark_rome_colleseum.webp",
+    "hint": "Where gladiators once fought"
+  },
+  {
+    "name": "New York",
+    "country": "USA",
+    "coordinates": [40.7128, -74.006],
+    "image": "/images/landmarks/landmark_new_york_liberty_tower.webp",
+    "hint": "Lady Liberty stands here"
+  },
+  {
+    "name": "Tokyo",
+    "country": "Japan",
+    "coordinates": [35.6895, 139.6917],
+    "image": "/images/landmarks/landmark_tokyo_red_tower.webp",
+    "hint": "A red tower that lights up at night"
+  },
+  {
+    "name": "Sydney",
+    "country": "Australia",
+    "coordinates": [-33.8688, 151.2093],
+    "image": "/images/landmarks/landmark_sydney_opera_house.webp",
+    "hint": "The sails by the harbour"
+  },
+  {
+    "name": "San Francisco",
+    "country": "USA",
+    "coordinates": [37.7749, -122.4194],
+    "image": "/images/landmarks/landmark_san_francisco_red_bridge.webp",
+    "hint": "A red bridge in the fog"
+  },
+  {
+    "name": "Dubai",
+    "country": "UAE",
+    "coordinates": [25.2048, 55.2708],
+    "image": "/images/landmarks/landmark_dubai_burj_khalifa.webp",
+    "hint": "The tallest tower in the sky"
+  },
+  {
+    "name": "Cairo",
+    "country": "Egypt",
+    "coordinates": [30.0444, 31.2357],
+    "image": "/images/landmarks/landmark_cairo_great_pyramid.webp",
+    "hint": "Ancient stones near the Nile"
+  },
+  {
+    "name": "Cape Town",
+    "country": "South Africa",
+    "coordinates": [-33.9249, 18.4241],
+    "image": "/images/landmarks/landmark_cape_town_mountain.webp",
+    "hint": "Flat-topped mountain above the city"
+  },
+  {
+    "name": "Beijing",
+    "country": "China",
+    "coordinates": [39.9042, 116.4074],
+    "image": "/images/landmarks/landmark_beijing_palace.webp",
+    "hint": "A palace with golden roofs"
+  },
+  {
+    "name": "Athens",
+    "country": "Greece",
+    "coordinates": [37.9838, 23.7275],
+    "image": "/images/landmarks/landmark_greece_ruins.webp",
+    "hint": "Temple on the hill in the ancient city"
+  },
+  {
+    "name": "Moscow",
+    "country": "Russia",
+    "coordinates": [55.7558, 37.6173],
+    "image": "/images/landmarks/landmark_moscow_castle.webp",
+    "hint": "Colourful onion domes in Red Square"
+  },
+  {
+    "name": "Istanbul",
+    "country": "Turkey",
+    "coordinates": [41.0082, 28.9784],
+    "image": "/images/landmarks/landmark_istanbul_byzantine_ottoman.webp",
+    "hint": "Where Byzantine meets Ottoman in a dome"
+  },
+  {
+    "name": "Rio de Janeiro",
+    "country": "Brazil",
+    "coordinates": [-22.9068, -43.1729],
+    "image": "/images/landmarks/landmark_rio_christ.jpg",
+    "hint": "Open-armed statue looking over the beach"
+  }
+]

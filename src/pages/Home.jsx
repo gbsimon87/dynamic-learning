@@ -46,8 +46,10 @@ function Home() {
         <section className="category-section">
           <h2 className="category-title">🌍 Geography</h2>
           <div className="link-grid">
+            <Link to="/solar-system" className="nav-btn">Solar System</Link>
             <Link to="/world-map" className="nav-btn">World Map</Link>
             <Link to="/flag-finder" className="nav-btn">Flag Finder</Link>
+            <Link to="/city-spotlight" className="nav-btn">City Spotlight</Link>
           </div>
         </section>
       </div>

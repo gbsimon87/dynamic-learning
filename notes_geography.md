@@ -1,10 +1,19 @@
 🗺️ MAP-BASED LEARNING GAMES
 
-1. Continents Explorer
+## Continents Explorer
 Route: /continents-explorer
 Skills: Recognize continents and oceans
 Idea: Show a simplified world map — “Tap Africa!” → highlights correct region.
 🎯 Builds spatial world awareness.
+✅ *Already built*
+
+🏙️ PEOPLE & PLACES
+## City Spotlight
+Route: /city-spotlight
+Skills: Recognize famous cities
+Idea: “Find London on the map” or “Match picture to city name.”
+🎯 Introduces global awareness.
+✅ *Already built*
 
 2. Find the Ocean
 Route: /find-the-ocean
@@ -59,13 +68,6 @@ Route: /natural-wonders
 Skills: Famous landmarks & nature
 Idea: Quiz: “Where is the Grand Canyon?” → tap on North America.
 🎯 Combines geography with exploration.
-
-🏙️ PEOPLE & PLACES
-11. City Spotlight
-Route: /city-spotlight
-Skills: Recognize famous cities
-Idea: “Find London on the map” or “Match picture to city name.”
-🎯 Introduces global awareness.
 
 12. Cultural Dress-Up
 Route: /cultural-dress

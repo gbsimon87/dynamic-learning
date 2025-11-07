@@ -20,6 +20,8 @@ import SynonymSafari from './pages/SynonymSafari';
 import NumberBonds from './pages/NumberBonds';
 import FractionFun from './pages/FractionFun';
 import SightWordPop from './pages/SightWordPop';
+import CitySpotlight from './pages/CitySpotlight';
+import ThreeSolarSystem from './pages/SolarSystem';
 
 import './App.css';
 import './index.css'
@@ -47,6 +49,8 @@ const router = createBrowserRouter([
       { path: '/number-bonds', element: <NumberBonds /> },
       { path: '/fraction-fun', element: <FractionFun /> },
       { path: '/sight-word-pop', element: <SightWordPop /> },
+      { path: '/city-spotlight', element: <CitySpotlight /> },
+      { path: '/solar-system', element: <ThreeSolarSystem /> },
     ],
   },
 ]);
