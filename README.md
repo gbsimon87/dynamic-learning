@@ -1,16 +1,53 @@
-# React + Vite
+# 🌟 Dynamic Learning App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, interactive learning platform built with **React** and **Vite**.  
+The app combines playful *skills-based games* with a structured *curriculum system* that helps learners progress through challenges step-by-step.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Overview
 
-## React Compiler
+Dynamic Learning is designed for primary-level learners to explore topics like **Math**, **English**, **Geometry**, and **Geography** through two distinct learning modes:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. **Skills Mode** — independent, interactive games that let users freely explore and practice topics.  
+2. **Curriculum Mode** — a structured, progressive system where learners complete challenges in order to unlock new topics and categories.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🧠 Features
+
+### 🎯 Skills Mode
+- Fun and focused mini-games for:
+  - 🧮 **Math**: Counting, Arithmetic, Number Bonds, Fractions, etc.
+  - 📚 **English**: Word Builder, Sentence Builder, Synonyms, Opposites, etc.
+  - 🔺 **Geometry**: Shape Explorer.
+  - 🌍 **Geography**: World Map, City Spotlight, Flag Finder, Solar System.
+- Each skill is accessible instantly via the Skills dashboard.
+
+### 📘 Curriculum Mode
+- Year-based structured learning system (currently **Year 2 Mathematics**).
+- Learners progress through:
+  - **Categories** → **Subcategories** → **Challenges**.
+- Each challenge must be completed to unlock the next.
+- Progress is **persisted in localStorage**:
+  - Tracks completed challenges, topics, and categories.
+  - Resumes progress automatically on reload.
+
+### 🌓 Themes
+- Built-in **light/dark mode** with a global `ThemeContext`.
+- Smooth transitions and accessibility-friendly colors.
+
+### 💾 Persistent Progress
+- Curriculum completion state is stored locally in the browser.
+- Automatic unlocking of next challenges and categories.
+
+### 🗺️ Educational Games & Visuals
+- Geography lessons enhanced with interactive maps and city landmarks.
+- Solar System 3D scenes using texture maps and static assets.
+
+---
+
+## 🏗️ Project Structure
+
+The app is modular and organized by **domain** — separating curriculum logic from skills and shared UI components.
+
