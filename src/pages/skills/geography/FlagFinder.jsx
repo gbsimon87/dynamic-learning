@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { ThemeContext } from '../context/ThemeContext';
+import { ThemeContext } from '../../../context/ThemeContext';
 import './FlagFinder.css'; // We'll mirror your WordBuilder.css approach
 
 function shuffleArray(array) {

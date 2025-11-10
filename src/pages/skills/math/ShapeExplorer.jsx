@@ -1,5 +1,5 @@
 import React from 'react';
-import ShapeQuiz from '../components/ShapeQuiz';
+import ShapeQuiz from '../../../components/ShapeQuiz';
 
 function ShapeExplorer() {
   return (

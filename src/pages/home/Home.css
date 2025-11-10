@@ -16,15 +16,24 @@ body.dark .home-page {
   color: var(--dark-text);
 }
 
-.home-title {
-  font-size: 2rem;
-  color: var(--light-text);
-  margin-top: 0;
-  transition: color 0.3s ease;
+/* === Header === */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-flow: column;
+  width: 100%;
+  justify-content: flex-end;
 }
 
-body.dark .home-title {
-  color: var(--dark-text);
+.view-selector {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  background-color: #fff;
+  cursor: pointer;
+  width: 100%;
 }
 
 /* === Category Container === */
@@ -106,4 +115,12 @@ body.dark .nav-btn {
 
 body.dark .nav-btn:hover {
   background-color: #6ec8ba;
+}
+
+@media screen and (min-width: 768px) {
+  .header {
+    flex-flow: row;
+    gap: 1rem;
+  }
+
 }

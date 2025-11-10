@@ -1,0 +1,108 @@
+.curriculum-page {
+  padding: 2rem;
+  text-align: center;
+  animation: fadeIn 0.6s ease-in-out;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* === HEADINGS & TEXT === */
+.curriculum-page h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--light-text); /* light mode uses dark text */
+  transition: color 0.3s;
+}
+
+.App.dark .curriculum-page h2 {
+  color: var(--light-text); /* dark mode uses light text */
+}
+
+.curriculum-page p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  color: var(--light-text);
+  transition: color 0.3s;
+}
+
+.App.dark .curriculum-page p {
+  color: var(--light-text);
+}
+
+/* === CURRICULUM CARDS === */
+.curriculum-page ul {
+  list-style: none;
+  padding: 0;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.curriculum-page li {
+  background-color: var(--light-panel);
+  border: 2px solid var(--light-accent);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: var(--light-text);
+  font-weight: 500;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s, border-color 0.3s;
+}
+
+.App.dark .curriculum-page li {
+  background-color: var(--dark-panel);
+  border-color: var(--dark-accent);
+  color: var(--light-text); /* dark mode text */
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+}
+
+.curriculum-page li:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
+/* === ANIMATION === */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+.curriculum-category {
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.curriculum-category h3 {
+  color: var(--light-accent);
+  margin-bottom: 0.5rem;
+}
+
+.App.dark .curriculum-category h3 {
+  color: var(--dark-accent);
+}
+
+.curriculum-topic.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.curriculum-topic.completed {
+  text-decoration: line-through;
+  color: var(--dark-accent);
+}
+
+.curriculum-topic {
+  cursor: pointer;
+  transition: transform 0.2s, color 0.3s;
+}
+
+.curriculum-topic:hover {
+  transform: scale(1.02);
+}

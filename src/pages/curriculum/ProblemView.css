@@ -1,0 +1,17 @@
+.problem-page {
+  padding: 2rem;
+  text-align: center;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.problem-page h2 {
+  color: var(--light-accent);
+}
+
+.App.dark .problem-page h2 {
+  color: var(--dark-accent);
+}
+
+.problem-page button {
+  margin-top: 1.5rem;
+}

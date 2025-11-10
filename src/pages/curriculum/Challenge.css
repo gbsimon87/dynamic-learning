@@ -1,0 +1,32 @@
+.challenge {
+  margin-top: 1.5rem;
+  background-color: var(--light-panel);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.App.dark .challenge {
+  background-color: var(--dark-panel);
+  color: var(--light-text);
+}
+
+.challenge input {
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--light-accent);
+  width: 200px;
+  margin-right: 0.5rem;
+}
+
+.App.dark .challenge input {
+  border-color: var(--dark-accent);
+  background-color: #222;
+  color: var(--light-text);
+}
+
+.feedback {
+  margin-top: 0.75rem;
+  font-weight: bold;
+}

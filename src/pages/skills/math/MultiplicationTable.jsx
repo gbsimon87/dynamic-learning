@@ -1,5 +1,4 @@
-import React from 'react';
-import MultiplicationGrid from '../components/MultiplicationGrid';
+import MultiplicationGrid from '../../../components/MultiplicationGrid';
 
 function MultiplicationTable() {
   return (

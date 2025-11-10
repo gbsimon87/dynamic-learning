@@ -1,6 +1,6 @@
 // /src/components/Navbar.jsx
 import React, { useContext, useEffect, useState } from 'react';
-import { ThemeContext } from '../context/ThemeContext';
+import { ThemeContext } from '../../context/ThemeContext';
 import { Link, useLocation } from 'react-router';
 import './Navbar.css';
 

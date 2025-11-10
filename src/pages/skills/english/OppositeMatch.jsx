@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { ThemeContext } from '../context/ThemeContext';
+import { ThemeContext } from '../../../context/ThemeContext';
 import './OppositeMatch.css';
 
 const PAIRS = [

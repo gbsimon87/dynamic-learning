@@ -1100,7 +1100,7 @@ export default function ThreeSolarSystem() {
     }, []);
 
     return (
-        <div ref={containerRef} style={{ width: "100%", height: "calc(100vh - 66px)", minHeight: "100dvh", position: "relative" }}>
+        <div ref={containerRef} style={{ width: "100%", height: "calc(80vh - 66px)", minHeight: "100dvh", position: "relative" }}>
             <canvas ref={canvasRef} style={{ display: "block", width: "100%", height: "100%" }} />
         </div>
     );

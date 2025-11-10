@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import cities from '../data/cities.json';
+import cities from '../../../data/cities.json';
 import './CitySpotlight.css';
 
 function shuffle(array) {

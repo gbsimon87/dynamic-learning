@@ -1,6 +1,4 @@
-// /src/pages/ClockGenerator.jsx
-import React from 'react';
-import ClockPanel from '../components/ClockPanel';
+import ClockPanel from '../../../components/ClockPanel';
 
 function ClockGenerator() {
   return (

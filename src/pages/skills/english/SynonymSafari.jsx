@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
-import { ThemeContext } from '../context/ThemeContext';
+import { ThemeContext } from '../../../context/ThemeContext';
 import './SynonymSafari.css';
 
 const SYNONYM_PAIRS = [

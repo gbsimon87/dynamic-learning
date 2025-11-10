@@ -1,5 +1,5 @@
 import React from 'react';
-import CountingNumbersPanel from '../components/CountingNumbersPanel';
+import CountingNumbersPanel from '../../../components/CountingNumbersPanel';
 
 function CountingNumbers() {
   return (

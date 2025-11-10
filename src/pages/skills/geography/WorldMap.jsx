@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import MapGame from '../components/MapGame';
+import MapGame from '../../../components/MapGame';
 
 export default function WorldMap() {
   const [countries, setCountries] = useState(null);
