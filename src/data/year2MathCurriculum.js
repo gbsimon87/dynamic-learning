@@ -91,7 +91,8 @@ export const year2MathCurriculum = rawCurriculum.map(category => ({
     challenges: [
       { id: 1, title: "Challenge 1" },
       { id: 2, title: "Challenge 2" },
-      { id: 3, title: "Challenge 3" }
+      { id: 3, title: "Challenge 3" },
+      { id: 4, title: "Challenge 4" }
     ]
   }))
 }));

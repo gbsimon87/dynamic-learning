@@ -1,0 +1,94 @@
+/* ===============================
+   Number Sequence Layout
+   =============================== */
+
+.number-sequence {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 1.5rem auto;
+}
+
+/* Uniform 50x50 boxes and inputs */
+.number-box,
+.number-input {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  border: 2px solid var(--light-accent);
+  text-align: center;
+  font-size: 1.1rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+/* Filled boxes (given numbers) */
+.number-box.filled {
+  background-color: var(--light-panel);
+  color: var(--light-text);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Empty input fields (user answers) */
+.number-input {
+  background-color: var(--light-bg);
+  color: var(--light-text);
+}
+
+.number-input:focus {
+  outline: none;
+  border-color: var(--light-accent);
+  background-color: var(--light-panel);
+}
+
+.submit-btn {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+/* Add a slight hover lift for desktop */
+@media (hover: hover) {
+  .number-box:hover,
+  .number-input:hover {
+    transform: scale(1.05);
+  }
+}
+
+/* ===============================
+   Dark mode support
+   (assuming your app toggles a .dark or [data-theme="dark"] class)
+   =============================== */
+
+.dark .number-box,
+[data-theme="dark"] .number-box,
+.dark .number-input,
+[data-theme="dark"] .number-input {
+  border-color: var(--dark-accent);
+}
+
+.dark .number-box.filled,
+[data-theme="dark"] .number-box.filled {
+  background-color: var(--dark-panel);
+  color: var(--dark-text);
+}
+
+.dark .number-input,
+[data-theme="dark"] .number-input {
+  background-color: var(--dark-bg);
+  color: var(--dark-text);
+}
+
+.dark .number-input:focus,
+[data-theme="dark"] .number-input:focus {
+  border-color: var(--dark-accent);
+  background-color: var(--dark-panel);
+}

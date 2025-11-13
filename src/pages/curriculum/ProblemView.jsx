@@ -19,40 +19,51 @@ function ProblemView() {
   const handleComplete = () => {
     const saved = JSON.parse(localStorage.getItem(`${subject}Progress_year${year}`) || "{}");
     const existingTopic = saved[categoryId]?.topics?.[topicId] || {};
-    const updated = {
-      ...saved,
-      [categoryId]: {
-        ...saved[categoryId],
-        topics: {
-          ...saved[categoryId]?.topics,
-          [topicId]: {
-            ...existingTopic,
-            completedChallenges: [
-              ...(existingTopic.completedChallenges || []),
-              Number(challengeId),
-            ],
+    const completedChallenges = existingTopic.completedChallenges || [];
+
+    // ✅ Only add if not already completed
+    if (!completedChallenges.includes(Number(challengeId))) {
+      const updatedCompleted = [...completedChallenges, Number(challengeId)];
+
+      const updated = {
+        ...saved,
+        [categoryId]: {
+          ...saved[categoryId],
+          topics: {
+            ...saved[categoryId]?.topics,
+            [topicId]: {
+              ...existingTopic,
+              completedChallenges: updatedCompleted,
+            },
           },
         },
-      },
-    };
-    localStorage.setItem(`${subject}Progress_year${year}`, JSON.stringify(updated));
-    setCompleted(true);
-    setTimeout(() => navigate("/", { state: { view: "Curriculum" } }), 1000);
+      };
+
+      localStorage.setItem(`${subject}Progress_year${year}`, JSON.stringify(updated));
+      setCompleted(true);
+    }
+
+    // ✅ Navigate back after a short delay
+    setTimeout(() => {
+      navigate("/", { state: { view: "Curriculum" } });
+    }, 1000);
   };
 
   return (
     <div className="problem-page">
       <h2>🧩 Challenge {challengeId}</h2>
-      <p>This page dynamically loads each challenge.</p>
 
-      {completed ? (
-        <p>✅ You’ve already completed this challenge!</p>
-      ) : (
-        <Challenge
-          challengeId={challengeId}
-          onComplete={handleComplete}
-        />
+      {completed && (
+        <p className="replay-info">
+          ✅ You’ve already completed this challenge — but you can try again for practice!
+        </p>
       )}
+
+      <Challenge
+        challengeId={challengeId}
+        onComplete={handleComplete}
+        alreadyCompleted={completed}
+      />
     </div>
   );
 }
