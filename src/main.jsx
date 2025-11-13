@@ -32,6 +32,10 @@ import SolarSystem from "./pages/skills/geography/SolarSystem";
 // === CURRICULUM ===
 import ProblemView from "./pages/curriculum/ProblemView";
 
+// === SKILLS ===
+import SkillsPage from "./pages/skills/SkillsPage";
+import CurriculumPage from "./pages/curriculum/CurriculumPage";
+
 import "./App.css";
 import "./index.css";
 import "leaflet/dist/leaflet.css";
@@ -42,6 +46,12 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { index: true, element: <Home /> },
+
+      // === Skills Hub ===
+      { path: "skills", element: <SkillsPage /> },
+
+      // === Curriculum Main Page ===
+      { path: "curriculum", element: <CurriculumPage /> },
 
       // === Math Skills ===
       { path: "clock-generator", element: <ClockGenerator /> },
@@ -67,7 +77,7 @@ const router = createBrowserRouter([
       { path: "city-spotlight", element: <CitySpotlight /> },
       { path: "solar-system", element: <SolarSystem /> },
 
-      // === Curriculum ===
+      // === Curriculum Problem View ===
       {
         path: "year/:year/:subject/problem/:categoryId/:topicId/:challengeId",
         element: <ProblemView />,

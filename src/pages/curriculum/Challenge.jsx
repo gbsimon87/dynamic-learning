@@ -57,7 +57,7 @@ function Challenge({ onComplete }) {
   useEffect(() => {
     if (!error) return;
     if (countdown <= 0) {
-      navigate("/", { state: { view: "Curriculum" } });
+      navigate("/curriculum");
       return;
     }
     const timer = setTimeout(() => setCountdown((prev) => prev - 1), 1000);

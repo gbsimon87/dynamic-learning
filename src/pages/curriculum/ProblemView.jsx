@@ -45,7 +45,7 @@ function ProblemView() {
 
     // ✅ Navigate back after a short delay
     setTimeout(() => {
-      navigate("/", { state: { view: "Curriculum" } });
+      navigate("/curriculum");
     }, 1000);
   };
 

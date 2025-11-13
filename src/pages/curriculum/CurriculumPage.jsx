@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router";
 import { year2MathCurriculum } from "../../data/year2MathCurriculum";
-import "./Curriculum.css";
+import "./CurriculumPage.css";
 
-function Curriculum({ year = 2, subject = "math" }) {
+function CurriculumPage({ year = 2, subject = "math" }) {
   const location = useLocation();
   const storageKey = `${subject}Progress_year${year}`;
 
@@ -58,7 +58,7 @@ function Curriculum({ year = 2, subject = "math" }) {
   };
 
   return (
-    <div className="curriculum-page">
+    <div className="curriculum-page page">
       <h2>
         📘 Year {year} {subject.charAt(0).toUpperCase() + subject.slice(1)} Curriculum
       </h2>
@@ -154,4 +154,4 @@ function Curriculum({ year = 2, subject = "math" }) {
   );
 }
 
-export default Curriculum;
+export default CurriculumPage;
