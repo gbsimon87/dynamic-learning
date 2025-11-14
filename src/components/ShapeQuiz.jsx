@@ -8,7 +8,12 @@ const shapes = [
   { name: 'Diamond', id: 'diamond' },
   { name: 'Pentagon', id: 'pentagon' },
   { name: 'Hexagon', id: 'hexagon' },
+  { name: 'Star', id: 'star' },
+  { name: 'Heart', id: 'heart' },
+  { name: 'Oval', id: 'oval' },
+  { name: 'Trapezoid', id: 'trapezoid' }
 ];
+
 
 function shuffleArray(array) {
   const newArray = [...array];
@@ -22,13 +27,13 @@ function shuffleArray(array) {
 // Returns a complete question object with shape and options synchronized
 function generateQuestion() {
   const correctShape = shapes[Math.floor(Math.random() * shapes.length)];
-  
+
   const incorrectShapes = shapes.filter(s => s.id !== correctShape.id);
   const shuffledIncorrect = shuffleArray(incorrectShapes);
   const selectedIncorrect = shuffledIncorrect.slice(0, 3);
-  
+
   const allOptions = shuffleArray([...selectedIncorrect, correctShape]);
-  
+
   return {
     shape: correctShape,
     options: allOptions
@@ -53,7 +58,7 @@ function ShapeQuiz() {
 
   function handleSelect(option) {
     if (selected !== null) return;
-    
+
     setSelected(option.id);
     setTotal(total + 1);
     if (option.id === question.shape.id) {
@@ -79,7 +84,7 @@ function ShapeQuiz() {
             ...baseStyle
           }} />
         );
-      
+
       case 'square':
         return (
           <div style={{
@@ -89,7 +94,7 @@ function ShapeQuiz() {
             ...baseStyle
           }} />
         );
-      
+
       case 'rectangle':
         return (
           <div style={{
@@ -99,7 +104,7 @@ function ShapeQuiz() {
             ...baseStyle
           }} />
         );
-      
+
       case 'triangle':
         return (
           <div style={{
@@ -111,7 +116,7 @@ function ShapeQuiz() {
             ...baseStyle
           }} />
         );
-      
+
       case 'diamond':
         return (
           <div style={{
@@ -122,7 +127,7 @@ function ShapeQuiz() {
             ...baseStyle
           }} />
         );
-      
+
       case 'pentagon':
         return (
           <div style={{
@@ -133,7 +138,7 @@ function ShapeQuiz() {
             ...baseStyle
           }} />
         );
-      
+
       case 'hexagon':
         return (
           <div style={{
@@ -144,7 +149,88 @@ function ShapeQuiz() {
             ...baseStyle
           }} />
         );
-      
+
+      case 'star':
+        return (
+          <div style={{
+            width: '100px',
+            height: '100px',
+            backgroundColor: shapeColor,
+            clipPath:
+              'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
+            ...baseStyle
+          }} />
+        );
+
+case 'heart':
+  return (
+    <div style={{
+      position: 'relative',
+      width: '120px',
+      height: '110px',
+      ...baseStyle
+    }}>
+      {/* Left lobe */}
+      <div style={{
+        position: 'absolute',
+        width: '60px',
+        height: '60px',
+        backgroundColor: shapeColor,
+        borderRadius: '50%',
+        top: '0',
+        left: '15px'
+      }} />
+
+      {/* Right lobe */}
+      <div style={{
+        position: 'absolute',
+        width: '60px',
+        height: '60px',
+        backgroundColor: shapeColor,
+        borderRadius: '50%',
+        top: '0',
+        right: '15px'
+      }} />
+
+      {/* Bottom point — clipped so no side edges show */}
+      <div style={{
+        position: 'absolute',
+        width: '58px',       // narrower → hides edges
+        height: '58px',      // smaller → only the tip shows
+        backgroundColor: shapeColor,
+        transform: 'rotate(45deg)',
+        bottom: '35px',       // moved upward to tuck under lobes
+        left: '5%',
+        transformOrigin: 'center',
+        marginLeft: '25px', // centers the diamond
+      }} />
+    </div>
+  );
+
+
+      case 'oval':
+        return (
+          <div style={{
+            width: '130px',
+            height: '80px',
+            backgroundColor: shapeColor,
+            borderRadius: '50%',
+            ...baseStyle
+          }} />
+        );
+
+      case 'trapezoid':
+        return (
+          <div style={{
+            width: '120px',
+            height: '0',
+            borderBottom: `80px solid ${shapeColor}`,
+            borderLeft: '30px solid transparent',
+            borderRight: '30px solid transparent',
+            ...baseStyle
+          }} />
+        );
+
       default:
         return null;
     }
