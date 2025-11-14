@@ -7,11 +7,7 @@ function CurriculumPage({ year = 2, subject = "math" }) {
   const location = useLocation();
   const storageKey = `${subject}Progress_year${year}`;
 
-  // Track whether we've loaded from storage to avoid overwriting with {}
   const [hydrated, setHydrated] = useState(false);
-
-  // Initialize with whatever is currently in storage (prevents a flash),
-  // but we'll still fully re-hydrate below when storageKey or navigation changes.
   const [progress, setProgress] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem(storageKey) || "{}");
@@ -20,7 +16,7 @@ function CurriculumPage({ year = 2, subject = "math" }) {
     }
   });
 
-  // ✅ Re-hydrate on first mount AND whenever the storageKey or location changes
+  // Load storage
   useEffect(() => {
     try {
       const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
@@ -31,14 +27,12 @@ function CurriculumPage({ year = 2, subject = "math" }) {
     setHydrated(true);
   }, [storageKey, location.key]);
 
-  // ✅ Only save AFTER we’ve hydrated (prevents writing `{}` over real data)
+  // Save updates
   useEffect(() => {
     if (!hydrated) return;
     try {
       localStorage.setItem(storageKey, JSON.stringify(progress));
-    } catch {
-      // no-op (storage might be unavailable)
-    }
+    } catch {}
   }, [progress, storageKey, hydrated]);
 
   const isFirstTimeUser = hydrated && Object.keys(progress).length === 0;
@@ -51,105 +45,139 @@ function CurriculumPage({ year = 2, subject = "math" }) {
     );
   };
 
-  const isCategoryComplete = (category) => {
-    return category.topics.every((topic) =>
+  const isCategoryComplete = (category) =>
+    category.topics.every((topic) =>
       isTopicComplete(category.id, topic.id, topic)
     );
-  };
 
   return (
     <div className="curriculum-page page">
-      <h2>
-        📘 Year {year} {subject.charAt(0).toUpperCase() + subject.slice(1)} Curriculum
-      </h2>
+      {/* Hero Header */}
+      <section className="curriculum-hero">
+        <h1 className="curriculum-title">📘 Year {year} Curriculum</h1>
+        <p className="curriculum-subtitle">
+          Follow the UK National Curriculum through fun challenges!
+        </p>
+      </section>
 
-      {year2MathCurriculum.map((category, catIndex) => {
-        const categoryLocked =
-          (isFirstTimeUser && catIndex > 0) ||
-          (catIndex > 0 && !isCategoryComplete(year2MathCurriculum[catIndex - 1]));
+      {/* Category Cards Grid */}
+      <div className="curriculum-grid">
+        {year2MathCurriculum.map((category, catIndex) => {
+          const categoryLocked =
+            (isFirstTimeUser && catIndex > 0) ||
+            (catIndex > 0 &&
+              !isCategoryComplete(year2MathCurriculum[catIndex - 1]));
 
-        return (
-          <div
-            key={category.id}
-            className={`curriculum-category ${categoryLocked ? "locked" : ""}`}
-          >
-            <h3>
-              {category.title} {isCategoryComplete(category) && "✅"}
-            </h3>
-            <ul>
-              {category.topics.map((topic, topicIndex) => {
-                const topicLocked =
-                  (isFirstTimeUser && (catIndex > 0 || topicIndex > 0)) ||
-                  (topicIndex > 0 &&
-                    !isTopicComplete(
-                      category.id,
-                      category.topics[topicIndex - 1].id,
-                      category.topics[topicIndex - 1]
-                    ));
+          return (
+            <section
+              key={category.id}
+              className={`curriculum-card ${categoryLocked ? "locked" : ""}`}
+            >
+              <div className="curriculum-card-header">
+                <h2 className="curriculum-card-title">
+                  {category.title}
+                </h2>
+                {isCategoryComplete(category) && (
+                  <span className="curriculum-badge">✅ Completed</span>
+                )}
+                {categoryLocked && (
+                  <span className="curriculum-badge locked">🔒 Locked</span>
+                )}
+              </div>
 
-                const topicComplete = isTopicComplete(category.id, topic.id, topic);
+              {/* Topic List */}
+              <div className="topic-grid">
+                {category.topics.map((topic, topicIndex) => {
+                  const topicLocked =
+                    categoryLocked ||
+                    (topicIndex > 0 &&
+                      !isTopicComplete(
+                        category.id,
+                        category.topics[topicIndex - 1].id,
+                        category.topics[topicIndex - 1]
+                      ));
 
-                return (
-                  <li key={topic.id} className="topic-block">
+                  const topicComplete = isTopicComplete(
+                    category.id,
+                    topic.id,
+                    topic
+                  );
+
+                  return (
                     <div
-                      className={`topic-header ${
+                      key={topic.id}
+                      className={`topic-card ${
                         topicLocked ? "locked" : topicComplete ? "completed" : ""
                       }`}
                     >
-                      {topic.name} {topicLocked ? "🔒" : topicComplete ? "✅" : ""}
+                      <div className="topic-card-header">
+                        <h3 className="topic-title">{topic.name}</h3>
+
+                        {topicLocked && <span className="topic-badge locked">🔒</span>}
+                        {topicComplete && <span className="topic-badge">✅</span>}
+                      </div>
+
+                      {/* Challenges */}
+                      {!topicLocked && (
+                        <div className="challenge-grid">
+                          {topic.challenges.map((challenge, challengeIndex) => {
+                            const completedChallenges =
+                              progress[category.id]?.topics?.[topic.id]
+                                ?.completedChallenges || [];
+
+                            let challengeLocked;
+
+                            // FULL LOCK PROTECTION
+                            if (categoryLocked || topicLocked) {
+                              challengeLocked = true;
+                            } else {
+                              const numCompleted = completedChallenges.length;
+
+                              // Unlock logic
+                              if (numCompleted === 0) {
+                                challengeLocked = challengeIndex !== 0;
+                              } else {
+                                if (completedChallenges.includes(challenge.id)) {
+                                  challengeLocked = false;
+                                } else if (challengeIndex === numCompleted) {
+                                  challengeLocked = false;
+                                } else {
+                                  challengeLocked = true;
+                                }
+                              }
+                            }
+
+                            const isCompleted =
+                              completedChallenges.includes(challenge.id);
+
+                            return challengeLocked ? (
+                              <button
+                                key={challenge.id}
+                                className="skill-btn locked-btn"
+                                disabled
+                              >
+                                {challenge.title} 🔒
+                              </button>
+                            ) : (
+                              <Link
+                                key={challenge.id}
+                                className={`skill-btn ${isCompleted ? "completed-btn" : ""}`}
+                                to={`/year/${year}/${subject}/problem/${category.id}/${topic.id}/${challenge.id}`}
+                              >
+                                {challenge.title} {isCompleted && "✅"}
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
-
-                    {!topicLocked && (
-                      <ul className="challenge-list">
-                        {topic.challenges.map((challenge, challengeIndex) => {
-                          const completedChallenges =
-                            progress[category.id]?.topics?.[topic.id]?.completedChallenges || [];
-
-                          const challengeLocked =
-                            (isFirstTimeUser &&
-                              (catIndex > 0 || topicIndex > 0 || challengeIndex > 0)) ||
-                            (challengeIndex > 0 &&
-                              !completedChallenges.includes(
-                                topic.challenges[challengeIndex - 1].id
-                              ));
-
-                          const isCompleted = completedChallenges.includes(challenge.id);
-
-                          return (
-                            <li
-                              key={challenge.id}
-                              className={`challenge-item ${
-                                challengeLocked ? "locked" : isCompleted ? "completed" : ""
-                              }`}
-                            >
-                              {challengeLocked ? (
-                                <span>{challenge.title} 🔒</span>
-                              ) : (
-                                <Link
-                                  to={`/year/${year}/${subject}/problem/${category.id}/${topic.id}/${challenge.id}`}
-                                  state={{
-                                    categoryId: category.id,
-                                    topicId: topic.id,
-                                    challengeId: challenge.id,
-                                    year,
-                                    subject,
-                                  }}
-                                >
-                                  {challenge.title} {isCompleted && "✅"}
-                                </Link>
-                              )}
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        );
-      })}
+                  );
+                })}
+              </div>
+            </section>
+          );
+        })}
+      </div>
     </div>
   );
 }

@@ -1,14 +1,9 @@
-/* === General Page Layout === */
+/* ===== PAGE LAYOUT ===== */
 .home-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 3rem 1rem;
-  padding-top: 0;
   text-align: center;
-  gap: 2rem;
-  background-color: var(--light-bg);
+  animation: fadeIn 0.6s ease-in-out;
   color: var(--light-text);
+  background-color: var(--light-bg);
 }
 
 body.dark .home-page {
@@ -16,111 +11,178 @@ body.dark .home-page {
   color: var(--dark-text);
 }
 
-/* === Header === */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-flow: column;
-  width: 100%;
-  justify-content: flex-end;
+/* ===== HERO SECTION ===== */
+.hero-section {
+  margin-bottom: 3rem;
 }
 
-.view-selector {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  background-color: #fff;
-  cursor: pointer;
-  width: 100%;
+.hero-title {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--light-accent);
 }
 
-/* === Category Container === */
-.category-container {
+body.dark .hero-title {
+  color: var(--dark-accent);
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  max-width: 550px;
+  margin: 0 auto 1.5rem;
+}
+
+.hero-buttons {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 2rem;
-  width: 100%;
-  max-width: 1400px;
-}
-
-/* === Individual Category Sections === */
-.category-section {
-  background-color: var(--light-panel);
-  border-radius: 16px;
-  padding: 1.5rem 2rem;
-  width: 100%;
-  max-width: 600px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  flex: 1 1 300px;
-  transition: transform 0.2s ease, background-color 0.3s, color 0.3s;
-}
-
-.category-section:hover {
-  transform: translateY(-3px);
-}
-
-body.dark .category-section {
-  background-color: var(--dark-panel);
-  color: var(--dark-text);
-}
-
-/* === Category Titles === */
-.category-title {
-  font-size: 1.5rem;
-  color: var(--light-text);
-  margin-bottom: 1rem;
-  border-bottom: 2px solid var(--light-accent);
-  padding-bottom: 0.5rem;
-  transition: color 0.3s, border-color 0.3s;
-}
-
-body.dark .category-title {
-  color: var(--dark-text);
-  border-bottom: 2px solid var(--dark-accent);
-}
-
-/* === Feature Grid === */
-.link-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
-/* === Buttons === */
-.nav-btn {
+.hero-btn {
   background-color: var(--light-accent);
   color: white;
-  padding: 0.8rem 1rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
+  padding: 0.9rem 1.4rem;
+  border-radius: 12px;
+  font-size: 1.2rem;
   text-decoration: none;
-  transition: background-color 0.3s, transform 0.2s, color 0.3s;
-  text-align: center;
+  font-weight: bold;
+  transition: transform 0.2s, background-color 0.3s;
 }
 
-.nav-btn:hover {
-  background-color: #d44e58;
+.hero-btn:hover {
   transform: scale(1.05);
+  background-color: #d44e58;
 }
 
-/* === Dark Mode Buttons === */
-body.dark .nav-btn {
+body.dark .hero-btn {
   background-color: var(--dark-accent);
   color: var(--light-text);
 }
 
-body.dark .nav-btn:hover {
+body.dark .hero-btn:hover {
   background-color: #6ec8ba;
 }
 
-@media screen and (min-width: 768px) {
-  .header {
-    flex-flow: row;
-    gap: 1rem;
-  }
+/* ===== FEATURES SECTION ===== */
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
 
+.features-section {
+  margin-bottom: 3rem;
+}
+
+.features-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background-color: var(--light-panel);
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s, background-color 0.3s;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+}
+
+body.dark .feature-card {
+  background-color: var(--dark-panel);
+  color: var(--dark-text);
+}
+
+.feature-icon {
+  font-size: 2.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.small-btn {
+  margin-top: 1rem;
+  display: inline-block;
+  padding: 0.6rem 1rem;
+  background-color: var(--light-accent);
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.small-btn:hover {
+  background-color: #d44e58;
+}
+
+body.dark .small-btn {
+  background-color: var(--dark-accent);
+  color: var(--light-text);
+}
+
+body.dark .small-btn:hover {
+  background-color: #6ec8ba;
+}
+
+/* ===== CURRICULUM SECTION ===== */
+.curriculum-section {
+  margin-top: 3rem;
+  padding: 2rem;
+  background-color: var(--light-panel);
+  border-radius: 20px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+body.dark .curriculum-section {
+  background-color: var(--dark-panel);
+}
+
+.curriculum-text {
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+  font-size: 1.1rem;
+}
+
+.curriculum-btn {
+  background-color: var(--light-accent);
+  color: white;
+  padding: 1rem 1.4rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: transform 0.2s, background-color 0.3s;
+}
+
+.curriculum-btn:hover {
+  transform: scale(1.05);
+  background-color: #d44e58;
+}
+
+body.dark .curriculum-btn {
+  background-color: var(--dark-accent);
+  color: var(--light-text);
+}
+
+body.dark .curriculum-btn:hover {
+  background-color: #6ec8ba;
+}
+
+/* ===== ANIMATION ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

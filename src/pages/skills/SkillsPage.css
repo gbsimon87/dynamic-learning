@@ -1,0 +1,135 @@
+/* ===========================================================
+   PAGE BASE
+=========================================================== */
+.skills-page {
+  text-align: center;
+  padding: 2rem 1rem;
+  animation: fadeIn 0.6s ease-in-out;
+  color: var(--light-text);
+}
+
+body.dark .skills-page {
+  color: var(--dark-text);
+}
+
+/* ===========================================================
+   HERO
+=========================================================== */
+.skills-hero {
+  margin-bottom: 2rem;
+}
+
+.skills-title {
+  font-size: 2.4rem;
+  color: var(--light-accent);
+}
+
+body.dark .skills-title {
+  color: var(--dark-accent);
+}
+
+.skills-subtitle {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0.5rem auto;
+  opacity: 0.9;
+}
+
+/* ===========================================================
+   SKILLS GRID
+=========================================================== */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ===========================================================
+   INDIVIDUAL SKILLS CARDS
+=========================================================== */
+.skills-card {
+  background-color: var(--light-panel);
+  padding: 1.5rem;
+  border-radius: 18px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s, background-color 0.3s;
+}
+
+.skills-card:hover {
+  transform: translateY(-4px);
+}
+
+body.dark .skills-card {
+  background-color: var(--dark-panel);
+}
+
+.skills-icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.skills-card-title {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+  color: var(--light-text);
+}
+
+body.dark .skills-card-title {
+  color: var(--dark-text);
+}
+
+.skills-card-text {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  opacity: 0.9;
+}
+
+/* ===========================================================
+   BUTTONS INSIDE CARDS
+=========================================================== */
+.skills-links {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.skill-btn {
+  background-color: var(--light-accent);
+  color: white;
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 1rem;
+  max-width: 100%;
+  display: inline-block;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.skill-btn:hover {
+  background-color: #d44e58;
+  transform: scale(1.04);
+}
+
+body.dark .skill-btn {
+  background-color: var(--dark-accent);
+  color: var(--light-text);
+}
+
+body.dark .skill-btn:hover {
+  background-color: #6ec8ba;
+}
+
+/* ===========================================================
+   ANIMATION
+=========================================================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
