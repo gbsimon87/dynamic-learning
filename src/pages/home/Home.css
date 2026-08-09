@@ -89,6 +89,8 @@ body.dark .hero-btn:hover {
   border-radius: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s, background-color 0.3s;
+  display: flex;
+  flex-direction: column;
 }
 
 .feature-card:hover {
@@ -105,8 +107,12 @@ body.dark .feature-card {
   margin-bottom: 0.5rem;
 }
 
+.feature-card p {
+  margin-bottom: 1rem;
+}
+
 .small-btn {
-  margin-top: 1rem;
+  margin-top: auto;
   display: inline-block;
   padding: 0.6rem 1rem;
   background-color: var(--light-accent);
