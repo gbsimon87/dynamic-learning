@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { Link, Navigate, useLocation, useParams } from "react-router";
+import { Link, Navigate, useParams } from "react-router";
 import {
   getSubjectName,
   isCurriculumAvailable,
   loadCurriculum,
 } from "../../data/curriculumRegistry";
+import { useProgress } from "../../hooks/useProgress";
 import "./CurriculumPage.css";
 import "./CurriculumSelectPage.css";
 
@@ -12,38 +12,9 @@ function CurriculumPage() {
   const params = useParams();
   const year = Number(params.year);
   const subject = params.subject;
-  const location = useLocation();
-  const storageKey = `${subject}Progress_year${year}`;
 
-  const [hydrated, setHydrated] = useState(false);
-  const [progress, setProgress] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem(storageKey) || "{}");
-    } catch {
-      return {};
-    }
-  });
-
-  // Load storage
-  useEffect(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
-      setProgress(saved || {});
-    } catch {
-      setProgress({});
-    }
-    setHydrated(true);
-  }, [storageKey, location.key]);
-
-  // Save updates
-  useEffect(() => {
-    if (!hydrated) return;
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(progress));
-    } catch {
-      // Storage full or unavailable — progress stays in memory for this session
-    }
-  }, [progress, storageKey, hydrated]);
+  const { progress, hydrated, isTopicComplete, isCategoryComplete } =
+    useProgress(year, subject);
 
   // Unknown or not-yet-built year/subject → back to the picker
   if (!isCurriculumAvailable(year, subject)) {
@@ -53,19 +24,6 @@ function CurriculumPage() {
   const curriculum = loadCurriculum(year, subject);
 
   const isFirstTimeUser = hydrated && Object.keys(progress).length === 0;
-
-  const isTopicComplete = (categoryId, topicId, topic) => {
-    const topicProgress = progress[categoryId]?.topics?.[topicId];
-    return (
-      topicProgress &&
-      topicProgress.completedChallenges?.length === topic.challenges.length
-    );
-  };
-
-  const isCategoryComplete = (category) =>
-    category.topics.every((topic) =>
-      isTopicComplete(category.id, topic.id, topic)
-    );
 
   return (
     <div className="curriculum-page page">

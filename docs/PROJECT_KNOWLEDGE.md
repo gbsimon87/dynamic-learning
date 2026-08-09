@@ -75,6 +75,8 @@ src/
 │   └── RootLayout.jsx        # Navbar + <Outlet />
 ├── context/
 │   └── ThemeContext.jsx      # Global light/dark theme
+├── hooks/
+│   └── useProgress.js        # Shared curriculum-progress storage hook
 ├── components/               # Shared, reusable pieces
 │   ├── ui/Navbar.jsx
 │   ├── ClockPanel.jsx, ReadingNumbersPanel.jsx, DualLabelClock.jsx,
@@ -176,15 +178,25 @@ Progress is stored in `localStorage` under the key `` `${subject}Progress_year${
 }
 ```
 
-Unlock rules (implemented in [CurriculumPage.jsx](../src/pages/curriculum/CurriculumPage.jsx)):
+All reading and writing of this key goes through the shared
+[useProgress](../src/hooks/useProgress.js) hook — `useProgress(year, subject)`
+returns `{ progress, hydrated, isTopicComplete, isCategoryComplete,
+isChallengeComplete, completeChallenge }`. This replaced logic previously
+duplicated across `CurriculumPage.jsx` and `ProblemView.jsx` (see §6, resolved).
+The shape above is still unversioned — that remains a known gap (§6).
+
+Unlock rules (implemented in [CurriculumPage.jsx](../src/pages/curriculum/CurriculumPage.jsx),
+consuming the hook's `progress`/`isTopicComplete`/`isCategoryComplete` rather
+than reading storage directly):
 - **Category** unlocks when the previous category is fully complete.
 - **Topic** unlocks when the previous topic in the same category is complete.
 - **Challenge** unlocks when it is the next uncompleted challenge in its topic;
   completed challenges stay replayable.
 - A brand-new user has only the first category unlocked.
 
-Writes happen in [ProblemView.jsx](../src/pages/curriculum/ProblemView.jsx) on
-`onComplete`, then it navigates back to `/curriculum` after ~1s.
+Writes happen in [ProblemView.jsx](../src/pages/curriculum/ProblemView.jsx) via
+`completeChallenge()` on `onComplete`, then it navigates back to `/curriculum`
+after ~1s.
 
 ### 4.6 Theming
 [ThemeContext.jsx](../src/context/ThemeContext.jsx) stores `light`/`dark` in
@@ -263,11 +275,25 @@ without a changelog note or the report was inaccurate.
    needed manual `mouse.move`/`down`/`up` sequencing with pauses).
 4. **No tests** — there is no test framework or a single test in the repo.
 5. **Fragile IDs** — renaming a curriculum title changes its kebab-case ID and
-   orphans existing `localStorage` progress. No migration path exists.
-6. **Duplicated progress logic** — read/write of `localStorage` progress is
-   implemented separately in `CurriculumPage.jsx` and `ProblemView.jsx`.
+   orphans existing `localStorage` progress. No migration path exists. The
+   `useProgress` extraction (item 6) did not add schema versioning or a
+   migration mechanism — that was deliberately scoped out as its own
+   follow-up given the risk of touching irreplaceable learner data twice.
+6. ~~**Duplicated progress logic**~~ **Fixed 2026-08-09.** Read/write of
+   `localStorage` progress was implemented separately in `CurriculumPage.jsx`
+   and `ProblemView.jsx`; extracted into [useProgress](../src/hooks/useProgress.js)
+   (§4.5). Stored shape, hydration guard, merge-not-replace writes, and all
+   unlock rules verified unchanged via the `curriculum-progress` skill's full
+   manual checklist.
 7. **No accessibility pass** — drag-and-drop interactions have no keyboard or
    screen-reader alternative; no audio support for pre-readers.
+8. **Numbers and Counting Challenge 3 rejects correct answers** — found
+   2026-08-09 while manually verifying the `useProgress` extraction above.
+   `NumbersAndCountingChallenge3.jsx` shows "❌ Not quite!" even when every
+   blank is filled with the visibly-correct sequence value. Confirmed
+   pre-existing (file unmodified vs `dev`) and unrelated to the hook work.
+   Not yet root-caused; suspect the `missingIndices`/`sequence` `useMemo`s or
+   a stale closure in `handleSubmit`. See idea #4 in `PROJECT_IDEAS.md`.
 
 **Resolved since last review:** `Challenge.jsx` no longer uses
 `/* @vite-ignore */` — it now resolves challenges through a static

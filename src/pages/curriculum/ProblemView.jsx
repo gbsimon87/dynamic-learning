@@ -1,47 +1,22 @@
 import { useNavigate, useParams } from "react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Challenge from "./Challenge";
+import { useProgress } from "../../hooks/useProgress";
 import "./ProblemView.css";
 
 function ProblemView() {
   const { year, subject, categoryId, topicId, challengeId } = useParams();
   const navigate = useNavigate();
-  const [completed, setCompleted] = useState(false);
+  const { isChallengeComplete, completeChallenge } = useProgress(year, subject);
 
-  // Load current challenge completion state
-  useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem(`${subject}Progress_year${year}`) || "{}");
-    const completedChallenges =
-      saved[categoryId]?.topics?.[topicId]?.completedChallenges || [];
-    setCompleted(completedChallenges.includes(Number(challengeId)));
-  }, [categoryId, topicId, challengeId, year, subject]);
+  const [justCompleted, setJustCompleted] = useState(false);
+
+  const completed =
+    justCompleted || isChallengeComplete(categoryId, topicId, challengeId);
 
   const handleComplete = () => {
-    const saved = JSON.parse(localStorage.getItem(`${subject}Progress_year${year}`) || "{}");
-    const existingTopic = saved[categoryId]?.topics?.[topicId] || {};
-    const completedChallenges = existingTopic.completedChallenges || [];
-
-    // ✅ Only add if not already completed
-    if (!completedChallenges.includes(Number(challengeId))) {
-      const updatedCompleted = [...completedChallenges, Number(challengeId)];
-
-      const updated = {
-        ...saved,
-        [categoryId]: {
-          ...saved[categoryId],
-          topics: {
-            ...saved[categoryId]?.topics,
-            [topicId]: {
-              ...existingTopic,
-              completedChallenges: updatedCompleted,
-            },
-          },
-        },
-      };
-
-      localStorage.setItem(`${subject}Progress_year${year}`, JSON.stringify(updated));
-      setCompleted(true);
-    }
+    completeChallenge(categoryId, topicId, challengeId);
+    setJustCompleted(true);
 
     // ✅ Navigate back after a short delay
     setTimeout(() => {
