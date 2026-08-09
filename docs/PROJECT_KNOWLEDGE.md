@@ -51,9 +51,20 @@ decision made in this codebase:
 | Clock UI | **react-clock** | Clock Generator |
 | Number words | **written-number** | Converts `42` → "forty-two" |
 | Linting | **ESLint 9** flat config | `npm run lint` |
+| External APIs | **REST Countries** (`restcountries.com`) | Country names & flags for Flag Finder skill game |
 
 **No backend. No database. No auth. No test framework.** Everything is
-client-side and state lives in `localStorage`.
+client-side and state lives in `localStorage`. External data is fetched from public APIs
+(currently just REST Countries for the Flag Finder geography game).
+
+### External API: REST Countries
+
+The [Flag Finder](../src/pages/skills/geography/FlagFinder.jsx) geography skill game
+fetches live country data from [REST Countries API](https://restcountries.com/):
+- **Endpoint:** `https://api.restcountries.com/countries/v5`
+- **Fields used:** `names.common` (country name), `flag.url_png` (flag image URL)
+- **Authentication:** Optional API key via `VITE_REST_COUNTRIES_API_KEY` env var
+- **Usage:** Generates unique country name + flag questions with 4-option multiple choice
 
 ### Scripts
 ```bash
