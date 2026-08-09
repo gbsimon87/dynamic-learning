@@ -1,0 +1,65 @@
+.notfound-page {
+  padding: 3rem 2rem;
+  text-align: center;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.notfound-emoji {
+  font-size: 4rem;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+
+.notfound-title {
+  color: var(--light-accent);
+  margin-bottom: 0.5rem;
+}
+
+.App.dark .notfound-title {
+  color: var(--dark-accent);
+}
+
+.notfound-message {
+  max-width: 34rem;
+  margin: 0 auto 2rem;
+  line-height: 1.5;
+}
+
+.notfound-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.notfound-btn {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  border: 2px solid var(--light-accent);
+  color: var(--light-text);
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.notfound-btn:hover {
+  background-color: var(--light-accent);
+  color: var(--light-bg);
+}
+
+.notfound-btn-primary {
+  background-color: var(--light-accent);
+  color: var(--light-bg);
+}
+
+.App.dark .notfound-btn {
+  border-color: var(--dark-accent);
+  color: var(--dark-text);
+}
+
+.App.dark .notfound-btn:hover,
+.App.dark .notfound-btn-primary {
+  background-color: var(--dark-accent);
+  color: var(--dark-bg);
+}

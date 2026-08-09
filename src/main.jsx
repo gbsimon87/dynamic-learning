@@ -36,6 +36,7 @@ import ProblemView from "./pages/curriculum/ProblemView";
 import SkillsPage from "./pages/skills/SkillsPage";
 import CurriculumPage from "./pages/curriculum/CurriculumPage";
 import CurriculumSelectPage from "./pages/curriculum/CurriculumSelectPage";
+import NotFound from "./pages/NotFound";
 
 import "./App.css";
 import "./index.css";
@@ -45,6 +46,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
+    errorElement: <NotFound />,
     children: [
       { index: true, element: <Home /> },
 
@@ -86,6 +88,9 @@ const router = createBrowserRouter([
         path: "year/:year/:subject/problem/:categoryId/:topicId/:challengeId",
         element: <ProblemView />,
       },
+
+      // === Catch-all: any unmatched path ===
+      { path: "*", element: <NotFound /> },
     ],
   },
 ]);

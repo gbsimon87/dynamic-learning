@@ -3,14 +3,26 @@ import { useEffect, useState, Suspense } from "react";
 import "./Challenge.css";
 
 /**
+ * Every challenge module, resolved at build time.
+ *
+ * This must be a static glob: Vite can only bundle dynamic imports it can
+ * analyse. A fully-variable `import(path)` compiles to a bare runtime import
+ * of a source path that does not exist in a production build, so challenges
+ * would 404 once built.
+ *
+ * Keys look like:
+ * ../skills/math/challenges/year2/numbers-and-counting/NumbersAndCountingChallenge1.jsx
+ */
+const challengeModules = import.meta.glob(
+  "../skills/*/challenges/year*/*/*Challenge*.jsx"
+);
+
+/**
  * Dynamically loads a challenge component based on route parameters:
  * - subject
  * - year
  * - topicId
  * - challengeId
- *
- * Example expected path:
- * src/pages/skills/math/challenges/year2/numbers-and-counting/NumbersAndCountingChallenge1.jsx
  */
 function Challenge({ onComplete }) {
   const { subject, year, topicId, challengeId } = useParams();
@@ -25,13 +37,16 @@ function Challenge({ onComplete }) {
 
     async function loadChallenge() {
       try {
-        // Construct dynamic import path
         const path = `../skills/${subject}/challenges/year${year}/${topicId}/${capitalizeTopicId(
           topicId
         )}Challenge${challengeId}.jsx`;
 
-        // Dynamic import
-        const module = await import(/* @vite-ignore */ path);
+        const loader = challengeModules[path];
+        if (!loader) {
+          throw new Error(`No challenge module registered at ${path}`);
+        }
+
+        const module = await loader();
         if (isMounted) setChallengeComponent(() => module.default);
       } catch (err) {
         console.error("Failed to load challenge:", err);
