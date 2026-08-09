@@ -75,25 +75,43 @@ export default function WordSorter() {
     const source = result.source.droppableId;
     const dest = result.destination.droppableId;
 
-    // same bucket reorder
+    // same bucket/bank reorder
     if (source === dest) return;
 
-    const draggedWord = words.find((w) => w.word === result.draggableId);
-    if (!draggedWord) return;
+    const draggableId = result.draggableId;
 
-    // Move word into bucket
-    setBuckets((prev) => ({
-      ...prev,
-      [dest]: [...prev[dest], draggedWord],
-    }));
-    setWords((prev) => prev.filter((w) => w.word !== draggedWord.word));
+    if (source === 'words') {
+      // word bank → bucket
+      const draggedWord = words.find((w) => w.word === draggableId);
+      if (!draggedWord) return;
+
+      setBuckets((prev) => ({
+        ...prev,
+        [dest]: [...prev[dest], draggedWord],
+      }));
+      setWords((prev) => prev.filter((w) => w.word !== draggedWord.word));
+    } else {
+      // bucket → word bank, or bucket → bucket
+      const draggedWord = buckets[source].find((w) => w.word === draggableId);
+      if (!draggedWord) return;
+
+      setBuckets((prev) => ({
+        ...prev,
+        [source]: prev[source].filter((w) => w.word !== draggableId),
+        ...(dest !== 'words' ? { [dest]: [...prev[dest], draggedWord] } : {}),
+      }));
+
+      if (dest === 'words') {
+        setWords((prev) => [...prev, draggedWord]);
+      }
+    }
   }
 
   // Check if all sorted → give feedback
   useEffect(() => {
     const totalPlaced =
       buckets.noun.length + buckets.verb.length + buckets.adjective.length;
-    if (totalPlaced === 6) {
+    if (totalPlaced === 6 && !completed) {
       const allSorted = [...buckets.noun, ...buckets.verb, ...buckets.adjective];
       const correctCount = allSorted.filter((w) => w.type === getTypeOfBucket(w, buckets)).length;
 
@@ -113,7 +131,7 @@ export default function WordSorter() {
 
       return () => clearTimeout(timer);
     }
-  }, [buckets]);
+  }, [buckets, completed]);
 
   function getTypeOfBucket(word, allBuckets) {
     if (allBuckets.noun.includes(word)) return 'noun';
@@ -174,9 +192,23 @@ export default function WordSorter() {
                     {type.charAt(0).toUpperCase() + type.slice(1)}s
                   </h3>
                   {buckets[type].map((item, index) => (
-                    <div key={item.word + index} className="word-tile small">
-                      {item.word}
-                    </div>
+                    <Draggable
+                      key={item.word}
+                      draggableId={item.word}
+                      index={index}
+                      isDragDisabled={completed}
+                    >
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className="word-tile small"
+                        >
+                          {item.word}
+                        </div>
+                      )}
+                    </Draggable>
                   ))}
                   {provided.placeholder}
                 </div>

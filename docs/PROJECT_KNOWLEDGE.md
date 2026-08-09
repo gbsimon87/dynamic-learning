@@ -250,10 +250,17 @@ without a changelog note or the report was inaccurate.
    underneath. Added `position: relative; transform-style: preserve-3d;` to
    `.bonds-card-inner` in `NumberBonds.css`; verified flip, match, and score
    flow in-browser.
-3. **Word Sorter** — a word placed into a category can't be removed again.
-   **Confirmed still present.** `WordSorter.jsx`'s `handleDragEnd` only
-   handles word-bank → bucket moves; bucket tiles render as plain `<div>`s,
-   not `Draggable`s, so a sorted word can never be dragged again.
+3. ~~**Word Sorter** — a word placed into a category can't be removed
+   again.~~ **Fixed 2026-08-09.** Root cause: bucket tiles rendered as plain
+   `<div>`s instead of `Draggable`s (no drag handle), and `handleDragEnd`
+   only had a branch for word-bank → bucket moves. Wrapped bucket items in
+   `Draggable` and extended `handleDragEnd` to branch on `result.source`:
+   bank → bucket, bucket → bank, and bucket → bucket all now update state
+   correctly. Also guarded the round-completion effect with `!completed` so
+   a bucket-to-bucket move after all 6 words are placed doesn't re-trigger
+   scoring. Verified with simulated real mouse drags in-browser (Playwright's
+   synthetic `dragTo` doesn't trigger `@hello-pangea/dnd`'s pointer sensor —
+   needed manual `mouse.move`/`down`/`up` sequencing with pauses).
 4. **No tests** — there is no test framework or a single test in the repo.
 5. **Fragile IDs** — renaming a curriculum title changes its kebab-case ID and
    orphans existing `localStorage` progress. No migration path exists.
