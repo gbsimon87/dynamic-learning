@@ -83,7 +83,7 @@ Nothing else in the app needs to change — the picker un-greys the card automat
 | 7 | Add "Change year or subject" link | `CurriculumPage.jsx` | ✅ Done | Returns to the picker |
 | 8 | Register new routes | `src/main.jsx` | ✅ Done | Picker + `curriculum/year/:year/:subject` |
 | 9 | Fix post-challenge redirects | `ProblemView.jsx`, `Challenge.jsx` | ✅ Done | Were `/curriculum` (picker); now return to the learner's own curriculum |
-| 10 | Update Home page copy | `Home.jsx` | ✅ Done | "Choose Your Curriculum →"; links unchanged |
+| 10 | Update Home page copy | `Home.jsx` | ✅ Done | "Begin Your Journey →"; links unchanged |
 | 11 | Verify production build | Build | ✅ Done | `npm run build` succeeds |
 | 12 | Verify picker in browser | Manual QA | ✅ Done | Years 1/3 and non-Maths subjects greyed and unclickable |
 | 13 | Verify Year 2 Maths still works | Manual QA | ✅ Done | Renders "Year 2 Maths"; lock/unlock state preserved |

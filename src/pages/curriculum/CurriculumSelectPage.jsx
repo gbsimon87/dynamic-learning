@@ -36,9 +36,8 @@ function CurriculumSelectPage() {
               <button
                 key={year}
                 type="button"
-                className={`select-card year-card ${selected ? "selected" : ""} ${
-                  available ? "" : "locked"
-                }`}
+                className={`select-card year-card ${selected ? "selected" : ""} ${available ? "" : "locked"
+                  }`}
                 disabled={!available}
                 onClick={() => setSelectedYear(year)}
               >

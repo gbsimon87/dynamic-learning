@@ -4,12 +4,14 @@
   animation: fadeIn 0.6s ease-in-out;
   color: var(--light-text);
   background-color: var(--light-bg);
+  padding: 1rem;
 }
 
 body.dark .home-page {
   background-color: var(--dark-bg);
   color: var(--dark-text);
 }
+
 
 /* ===== HERO SECTION ===== */
 .hero-section {
@@ -29,52 +31,76 @@ body.dark .hero-title {
 .hero-subtitle {
   font-size: 1.2rem;
   max-width: 550px;
-  margin: 0 auto 1.5rem;
+  margin: 0 auto;
 }
 
-.hero-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
 
-.hero-btn {
-  background-color: var(--light-accent);
-  color: white;
-  padding: 0.9rem 1.4rem;
-  border-radius: 12px;
-  font-size: 1.2rem;
-  text-decoration: none;
-  font-weight: bold;
-  transition: transform 0.2s, background-color 0.3s;
-}
-
-.hero-btn:hover {
-  transform: scale(1.05);
-  background-color: #d44e58;
-}
-
-body.dark .hero-btn {
-  background-color: var(--dark-accent);
-  color: var(--light-text);
-}
-
-body.dark .hero-btn:hover {
-  background-color: #6ec8ba;
-}
-
-/* ===== FEATURES SECTION ===== */
+/* ===== SHARED SECTION TITLE ===== */
 .section-title {
   font-size: 2rem;
   margin-bottom: 1rem;
 }
 
-.features-section {
-  margin-bottom: 3rem;
+
+/* ===== CURRICULUM / MAIN SECTIONS ===== */
+.curriculum-section {
   margin-top: 3rem;
+  padding: 2rem;
+  background-color: var(--light-panel);
+  border-radius: 20px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+body.dark .curriculum-section {
+  background-color: var(--dark-panel);
+}
+
+
+/* ===== CURRICULUM TEXT ===== */
+.curriculum-text {
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+  font-size: 1.1rem;
+}
+
+
+/* ===== CURRICULUM BUTTON ===== */
+.curriculum-btn {
+  display: inline-block;
+  background-color: var(--light-accent);
+  color: white;
+  padding: 1rem 1.4rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: transform 0.2s, background-color 0.3s;
+}
+
+.curriculum-btn:hover {
+  transform: scale(1.05);
+  background-color: #d44e58;
+}
+
+body.dark .curriculum-btn {
+  background-color: var(--dark-accent);
+  color: var(--light-text);
+}
+
+body.dark .curriculum-btn:hover {
+  background-color: #6ec8ba;
+}
+
+
+/* ===== EXPLORE SKILLS SECTION ===== */
+.skills-section .features-grid {
+  margin-top: 2rem;
+}
+
+/* ===== FEATURE CARDS ===== */
 .features-grid {
   display: grid;
   gap: 1.5rem;
@@ -102,15 +128,21 @@ body.dark .feature-card {
   color: var(--dark-text);
 }
 
+
+/* ===== FEATURE ICON ===== */
 .feature-icon {
   font-size: 2.8rem;
   margin-bottom: 0.5rem;
 }
 
+
+/* ===== FEATURE CARD TEXT ===== */
 .feature-card p {
   margin-bottom: 1rem;
 }
 
+
+/* ===== SMALL BUTTONS ===== */
 .small-btn {
   margin-top: auto;
   display: inline-block;
@@ -135,52 +167,6 @@ body.dark .small-btn:hover {
   background-color: #6ec8ba;
 }
 
-/* ===== CURRICULUM SECTION ===== */
-.curriculum-section {
-  margin-top: 3rem;
-  padding: 2rem;
-  background-color: var(--light-panel);
-  border-radius: 20px;
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-body.dark .curriculum-section {
-  background-color: var(--dark-panel);
-}
-
-.curriculum-text {
-  max-width: 600px;
-  margin: 0 auto 1.5rem;
-  font-size: 1.1rem;
-}
-
-.curriculum-btn {
-  background-color: var(--light-accent);
-  color: white;
-  padding: 1rem 1.4rem;
-  font-size: 1.2rem;
-  font-weight: bold;
-  border-radius: 12px;
-  text-decoration: none;
-  transition: transform 0.2s, background-color 0.3s;
-}
-
-.curriculum-btn:hover {
-  transform: scale(1.05);
-  background-color: #d44e58;
-}
-
-body.dark .curriculum-btn {
-  background-color: var(--dark-accent);
-  color: var(--light-text);
-}
-
-body.dark .curriculum-btn:hover {
-  background-color: #6ec8ba;
-}
 
 /* ===== ANIMATION ===== */
 @keyframes fadeIn {
