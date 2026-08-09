@@ -231,10 +231,17 @@ without a changelog note or the report was inaccurate.
    generates a random number and displays it. Either the component was
    rewritten since this was reported, or the report described a different
    game. Needs a human check before being removed entirely.
-2. ~~**Number Bonds** — cards don't flip when switching game mode.~~ **Could
-   not reproduce.** `NumberBonds.jsx`'s `useEffect` resets `cards`/`flipped`
-   state whenever `mode` changes, and flipping works normally afterward.
-   Appears already fixed.
+2. ~~**Number Bonds** — clicking a card in Match Mode flipped the "?" but
+   nothing else happened.~~ **Fixed 2026-08-09.** Root cause was CSS, not
+   the React state logic: `.bonds-card-inner` (the element `rotateY(180deg)`
+   is applied to) had no `transform-style: preserve-3d`, so its absolutely
+   positioned `.bonds-card-front`/`.bonds-card-back` children were flattened
+   into the parent's rotation instead of rotating independently within a 3D
+   context — the back face rendered mirrored/illegible, making the flip look
+   broken even though `flipped`/`matched`/scoring state updated correctly
+   underneath. Added `position: relative; transform-style: preserve-3d;` to
+   `.bonds-card-inner` in `NumberBonds.css`; verified flip, match, and score
+   flow in-browser.
 3. **Word Sorter** — a word placed into a category can't be removed again.
    **Confirmed still present.** `WordSorter.jsx`'s `handleDragEnd` only
    handles word-bank → bucket moves; bucket tiles render as plain `<div>`s,
