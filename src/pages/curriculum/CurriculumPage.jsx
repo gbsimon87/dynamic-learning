@@ -40,7 +40,9 @@ function CurriculumPage() {
     if (!hydrated) return;
     try {
       localStorage.setItem(storageKey, JSON.stringify(progress));
-    } catch {}
+    } catch {
+      // Storage full or unavailable — progress stays in memory for this session
+    }
   }, [progress, storageKey, hydrated]);
 
   // Unknown or not-yet-built year/subject → back to the picker
