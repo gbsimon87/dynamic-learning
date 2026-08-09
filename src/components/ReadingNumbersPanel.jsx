@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 import writtenNumber from 'written-number';
-import './CountingNumbersPanel.css';
+import './ReadingNumbersPanel.css';
 
-function CountingNumbersPanel() {
-  console.log(`CountingNumbersPanel is running`);
+const MAX_ALLOWED = 775840;
+
+function ReadingNumbersPanel() {
+  console.log(`ReadingNumbersPanel is running`);
 
   const [min, setMin] = useState(1);
   const [max, setMax] = useState(100);
   const [displayMode, setDisplayMode] = useState('both'); // number | text | both
   const [generated, setGenerated] = useState(null);
+
+  function clampMax(value) {
+    return Math.min(parseInt(value, 10) || 0, MAX_ALLOWED);
+  }
 
   function handleGenerate() {
     console.log(`handleGenerate is running with min: ${min}, max: ${max}`);
@@ -24,11 +30,11 @@ function CountingNumbersPanel() {
       <div className="input-row">
         <div className="range-group">
           <label>Min:</label>
-          <input type="number" min="1" max="1000000" value={min} onChange={(e) => setMin(e.target.value)} />
+          <input type="number" min="1" max={MAX_ALLOWED} value={min} onChange={(e) => setMin(clampMax(e.target.value))} />
         </div>
         <div className="range-group">
           <label>Max:</label>
-          <input type="number" min="1" max="1000000" value={max} onChange={(e) => setMax(e.target.value)} />
+          <input type="number" min="1" max={MAX_ALLOWED} value={max} onChange={(e) => setMax(clampMax(e.target.value))} />
         </div>
       </div>
 
@@ -80,4 +86,4 @@ function CountingNumbersPanel() {
   );
 }
 
-export default CountingNumbersPanel;
+export default ReadingNumbersPanel;

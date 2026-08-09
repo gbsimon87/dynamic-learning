@@ -77,7 +77,7 @@ src/
 │   └── ThemeContext.jsx      # Global light/dark theme
 ├── components/               # Shared, reusable pieces
 │   ├── ui/Navbar.jsx
-│   ├── ClockPanel.jsx, CountingNumbersPanel.jsx, DualLabelClock.jsx,
+│   ├── ClockPanel.jsx, ReadingNumbersPanel.jsx, DualLabelClock.jsx,
 │   ├── MapGame.jsx, MultiplicationGrid.jsx, ShapeQuiz.jsx
 ├── data/
 │   ├── year2MathCurriculum.js   # Curriculum tree (categories → topics)
@@ -197,7 +197,7 @@ driven by CSS variables in [index.css](../src/index.css) so both themes work.
 ## 5. What Currently Exists
 
 ### Skills Mode — built games
-**Maths:** Clock Generator, Counting Numbers, Multiplication Grid, Arithmetic
+**Maths:** Clock Generator, Reading Numbers, Multiplication Grid, Arithmetic
 Practice, Find the Missing Number, Number Bonds, Fraction Fun
 **Geometry:** Shape Explorer
 **English:** Word Builder, Word Sorter, Sentence Builder, Opposite Match,
@@ -226,11 +226,19 @@ and are marked below rather than silently dropped, in case they were fixed
 without a changelog note or the report was inaccurate.
 
 1. ~~**Counting Numbers game** — a bug prevents advancing in subtraction
-   mode.~~ **Could not reproduce.** `CountingNumbersPanel.jsx` has no operation
-   modes (addition/subtraction/etc.) or "advance" step at all — it only
-   generates a random number and displays it. Either the component was
-   rewritten since this was reported, or the report described a different
-   game. Needs a human check before being removed entirely.
+   mode.~~ **Closed 2026-08-09, renamed instead of fixed.** The component has
+   no operation modes (addition/subtraction/etc.) or "advance" step at all —
+   it only generates and displays a random number in a chosen range, so the
+   subtraction-mode report never mapped onto this component. The game was
+   renamed **Reading Numbers** (route `/reading-numbers`, component
+   `ReadingNumbersPanel.jsx`) to match what it actually does, closing the
+   mismatch rather than inventing subtraction behaviour that was never in
+   scope.
+   **Known limitation:** the generated number is capped at **775,840**
+   (`MAX_ALLOWED` in `ReadingNumbersPanel.jsx`) — the `written-number` package
+   used for the text representation does not reliably render numbers above
+   this. Both the `min`/`max` range inputs clamp to it in JS, not just via the
+   HTML `max` attribute.
 2. ~~**Number Bonds** — clicking a card in Match Mode flipped the "?" but
    nothing else happened.~~ **Fixed 2026-08-09.** Root cause was CSS, not
    the React state logic: `.bonds-card-inner` (the element `rotateY(180deg)`

@@ -7,7 +7,7 @@ import Home from "./pages/home/Home";
 
 // === SKILLS: Math ===
 import ClockGenerator from "./pages/skills/math/ClockGenerator";
-import CountingNumbers from "./pages/skills/math/CountingNumbers";
+import ReadingNumbers from "./pages/skills/math/ReadingNumbers";
 import MultiplicationTable from "./pages/skills/math/MultiplicationTable";
 import MathPractice from "./pages/skills/math/MathPractice";
 import FindTheMissingNumber from "./pages/skills/math/FindTheMissingNumber";
@@ -61,7 +61,7 @@ const router = createBrowserRouter([
 
       // === Math Skills ===
       { path: "clock-generator", element: <ClockGenerator /> },
-      { path: "counting-numbers", element: <CountingNumbers /> },
+      { path: "reading-numbers", element: <ReadingNumbers /> },
       { path: "multiplication-table", element: <MultiplicationTable /> },
       { path: "arithmetic-practice", element: <MathPractice /> },
       { path: "missing-number", element: <FindTheMissingNumber /> },

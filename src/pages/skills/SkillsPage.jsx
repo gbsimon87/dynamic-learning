@@ -26,7 +26,7 @@ function SkillsPage() {
           <div className="skills-links">
             <Link to="/clock-generator" className="skill-btn">Clock Generator</Link>
             <Link to="/multiplication-table" className="skill-btn">Multiplication Grid</Link>
-            <Link to="/counting-numbers" className="skill-btn">Counting Numbers</Link>
+            <Link to="/reading-numbers" className="skill-btn">Reading Numbers</Link>
             <Link to="/arithmetic-practice" className="skill-btn">Arithmetic Practice</Link>
             <Link to="/missing-number" className="skill-btn">Find the Missing Number</Link>
             <Link to="/number-bonds" className="skill-btn">Number Bonds</Link>

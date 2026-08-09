@@ -80,7 +80,7 @@ adds a capability the summary doesn't cover, extend it.
 
 ## Reuse before building
 
-Check `src/components/` first. `ClockPanel`, `CountingNumbersPanel`,
+Check `src/components/` first. `ClockPanel`, `ReadingNumbersPanel`,
 `DualLabelClock`, `MapGame`, `MultiplicationGrid` and `ShapeQuiz` already exist
 and several are general enough to back a new game. A map-based game should build
 on `MapGame` and the GeoJSON already in `public/`, not a fresh Leaflet setup.
