@@ -162,50 +162,50 @@ function ShapeQuiz() {
           }} />
         );
 
-case 'heart':
-  return (
-    <div style={{
-      position: 'relative',
-      width: '120px',
-      height: '110px',
-      ...baseStyle
-    }}>
-      {/* Left lobe */}
-      <div style={{
-        position: 'absolute',
-        width: '60px',
-        height: '60px',
-        backgroundColor: shapeColor,
-        borderRadius: '50%',
-        top: '0',
-        left: '15px'
-      }} />
+      case 'heart':
+        return (
+          <div style={{
+            position: 'relative',
+            width: '120px',
+            height: '110px',
+            ...baseStyle
+          }}>
+            {/* Left lobe */}
+            <div style={{
+              position: 'absolute',
+              width: '60px',
+              height: '60px',
+              backgroundColor: shapeColor,
+              borderRadius: '50%',
+              top: '0',
+              left: '15px'
+            }} />
 
-      {/* Right lobe */}
-      <div style={{
-        position: 'absolute',
-        width: '60px',
-        height: '60px',
-        backgroundColor: shapeColor,
-        borderRadius: '50%',
-        top: '0',
-        right: '15px'
-      }} />
+            {/* Right lobe */}
+            <div style={{
+              position: 'absolute',
+              width: '60px',
+              height: '60px',
+              backgroundColor: shapeColor,
+              borderRadius: '50%',
+              top: '0',
+              right: '15px'
+            }} />
 
-      {/* Bottom point — clipped so no side edges show */}
-      <div style={{
-        position: 'absolute',
-        width: '58px',       // narrower → hides edges
-        height: '58px',      // smaller → only the tip shows
-        backgroundColor: shapeColor,
-        transform: 'rotate(45deg)',
-        bottom: '35px',       // moved upward to tuck under lobes
-        left: '5%',
-        transformOrigin: 'center',
-        marginLeft: '25px', // centers the diamond
-      }} />
-    </div>
-  );
+            {/* Bottom point — clipped so no side edges show */}
+            <div style={{
+              position: 'absolute',
+              width: '58px',       // narrower → hides edges
+              height: '58px',      // smaller → only the tip shows
+              backgroundColor: shapeColor,
+              transform: 'rotate(45deg)',
+              bottom: '35px',       // moved upward to tuck under lobes
+              left: '5%',
+              transformOrigin: 'center',
+              marginLeft: '25px', // centers the diamond
+            }} />
+          </div>
+        );
 
 
       case 'oval':
@@ -295,7 +295,9 @@ case 'heart':
             fontWeight: '500',
             backgroundColor: '#ffffff',
             color: '#22181C',
-            border: '2px solid #EF626C',
+            borderWidth: '2px',
+            borderStyle: 'solid',
+            borderColor: '#EF626C',
             borderRadius: '8px',
             cursor: selected ? 'default' : 'pointer',
             transition: 'all 0.2s',
@@ -334,14 +336,14 @@ case 'heart':
               disabled={selected !== null}
               onMouseEnter={(e) => {
                 if (selected === null) {
-                  e.target.style.borderColor = '#6366f1';
-                  e.target.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.borderColor = '#6366f1';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
                 }
               }}
               onMouseLeave={(e) => {
                 if (selected === null) {
-                  e.target.style.borderColor = '#e2e8f0';
-                  e.target.style.transform = 'translateY(0)';
+                  e.currentTarget.style.borderColor = '#EF626C';
+                  e.currentTarget.style.transform = 'translateY(0)';
                 }
               }}
             >
