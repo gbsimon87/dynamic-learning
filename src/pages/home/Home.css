@@ -72,6 +72,7 @@ body.dark .hero-btn:hover {
 
 .features-section {
   margin-bottom: 3rem;
+  margin-top: 3rem;
 }
 
 .features-grid {
@@ -86,7 +87,7 @@ body.dark .hero-btn:hover {
   background-color: var(--light-panel);
   padding: 1.5rem;
   border-radius: 16px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s, background-color 0.3s;
 }
 
@@ -137,7 +138,7 @@ body.dark .small-btn:hover {
   max-width: 900px;
   margin-left: auto;
   margin-right: auto;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 body.dark .curriculum-section {
@@ -181,6 +182,7 @@ body.dark .curriculum-btn:hover {
     opacity: 0;
     transform: translateY(15px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
