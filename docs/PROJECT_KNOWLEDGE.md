@@ -220,22 +220,39 @@ Only **Year 2 Mathematics** exists, and only two topics have challenges built:
 
 ## 6. Known Issues / Debt
 
-Carried over from [notes.md](../notes.md) and code review:
+Carried over from [notes.md](notes.md) and code review. Verified against source
+on 2026-08-09 — two previously-reported bugs no longer reproduce in current code
+and are marked below rather than silently dropped, in case they were fixed
+without a changelog note or the report was inaccurate.
 
-1. **Counting Numbers game** — a bug prevents advancing in subtraction mode.
-2. **Number Bonds** — cards don't flip when switching game mode.
+1. ~~**Counting Numbers game** — a bug prevents advancing in subtraction
+   mode.~~ **Could not reproduce.** `CountingNumbersPanel.jsx` has no operation
+   modes (addition/subtraction/etc.) or "advance" step at all — it only
+   generates a random number and displays it. Either the component was
+   rewritten since this was reported, or the report described a different
+   game. Needs a human check before being removed entirely.
+2. ~~**Number Bonds** — cards don't flip when switching game mode.~~ **Could
+   not reproduce.** `NumberBonds.jsx`'s `useEffect` resets `cards`/`flipped`
+   state whenever `mode` changes, and flipping works normally afterward.
+   Appears already fixed.
 3. **Word Sorter** — a word placed into a category can't be removed again.
+   **Confirmed still present.** `WordSorter.jsx`'s `handleDragEnd` only
+   handles word-bank → bucket moves; bucket tiles render as plain `<div>`s,
+   not `Draggable`s, so a sorted word can never be dragged again.
 4. **No tests** — there is no test framework or a single test in the repo.
 5. **Fragile IDs** — renaming a curriculum title changes its kebab-case ID and
    orphans existing `localStorage` progress. No migration path exists.
-6. **Vite dynamic-import warning** — `Challenge.jsx` uses `/* @vite-ignore */`
-   with a fully dynamic path; this bypasses Vite's static analysis and relies on
-   the dev server/runtime resolving the module. Worth revisiting with an explicit
-   `import.meta.glob` registry.
-7. **Duplicated progress logic** — read/write of `localStorage` progress is
+6. **Duplicated progress logic** — read/write of `localStorage` progress is
    implemented separately in `CurriculumPage.jsx` and `ProblemView.jsx`.
-8. **No accessibility pass** — drag-and-drop interactions have no keyboard or
+7. **No accessibility pass** — drag-and-drop interactions have no keyboard or
    screen-reader alternative; no audio support for pre-readers.
+
+**Resolved since last review:** `Challenge.jsx` no longer uses
+`/* @vite-ignore */` — it now resolves challenges through a static
+`import.meta.glob("../skills/*/challenges/year*/*/*Challenge*.jsx")` registry,
+so missing files are detectable and Vite can statically analyse the import.
+This was previously listed here and as idea #10 in
+[PROJECT_IDEAS.md](PROJECT_IDEAS.md); both are now updated.
 
 ---
 
