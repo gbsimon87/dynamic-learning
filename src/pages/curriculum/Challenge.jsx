@@ -57,12 +57,12 @@ function Challenge({ onComplete }) {
   useEffect(() => {
     if (!error) return;
     if (countdown <= 0) {
-      navigate("/curriculum");
+      navigate(`/curriculum/year/${year}/${subject}`);
       return;
     }
     const timer = setTimeout(() => setCountdown((prev) => prev - 1), 1000);
     return () => clearTimeout(timer);
-  }, [countdown, error, navigate]);
+  }, [countdown, error, navigate, year, subject]);
 
   if (error) {
     return (

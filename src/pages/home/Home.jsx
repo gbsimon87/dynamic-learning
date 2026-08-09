@@ -22,11 +22,11 @@ function Home() {
           <h2 className="section-title">📗 Follow the Curriculum</h2>
           <p className="curriculum-text">
             Work through structured challenges following the UK National Curriculum.
-            Unlock topics one by one and progress through Year 2 learning!
+            Choose your year group and subject, then unlock topics one by one!
           </p>
 
           <Link to="/curriculum" className="curriculum-btn">
-            Start Curriculum Journey →
+            Choose Your Curriculum →
           </Link>
         </section>
 

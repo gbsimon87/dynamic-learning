@@ -35,6 +35,7 @@ import ProblemView from "./pages/curriculum/ProblemView";
 // === SKILLS ===
 import SkillsPage from "./pages/skills/SkillsPage";
 import CurriculumPage from "./pages/curriculum/CurriculumPage";
+import CurriculumSelectPage from "./pages/curriculum/CurriculumSelectPage";
 
 import "./App.css";
 import "./index.css";
@@ -50,8 +51,11 @@ const router = createBrowserRouter([
       // === Skills Hub ===
       { path: "skills", element: <SkillsPage /> },
 
-      // === Curriculum Main Page ===
-      { path: "curriculum", element: <CurriculumPage /> },
+      // === Curriculum: year/subject picker ===
+      { path: "curriculum", element: <CurriculumSelectPage /> },
+
+      // === Curriculum: a specific year + subject ===
+      { path: "curriculum/year/:year/:subject", element: <CurriculumPage /> },
 
       // === Math Skills ===
       { path: "clock-generator", element: <ClockGenerator /> },

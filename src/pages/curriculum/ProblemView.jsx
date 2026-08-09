@@ -45,7 +45,7 @@ function ProblemView() {
 
     // ✅ Navigate back after a short delay
     setTimeout(() => {
-      navigate("/curriculum");
+      navigate(`/curriculum/year/${year}/${subject}`);
     }, 1000);
   };
 

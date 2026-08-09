@@ -1,9 +1,17 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router";
-import { year2MathCurriculum } from "../../data/year2MathCurriculum";
+import { Link, Navigate, useLocation, useParams } from "react-router";
+import {
+  getSubjectName,
+  isCurriculumAvailable,
+  loadCurriculum,
+} from "../../data/curriculumRegistry";
 import "./CurriculumPage.css";
+import "./CurriculumSelectPage.css";
 
-function CurriculumPage({ year = 2, subject = "math" }) {
+function CurriculumPage() {
+  const params = useParams();
+  const year = Number(params.year);
+  const subject = params.subject;
   const location = useLocation();
   const storageKey = `${subject}Progress_year${year}`;
 
@@ -35,6 +43,13 @@ function CurriculumPage({ year = 2, subject = "math" }) {
     } catch {}
   }, [progress, storageKey, hydrated]);
 
+  // Unknown or not-yet-built year/subject → back to the picker
+  if (!isCurriculumAvailable(year, subject)) {
+    return <Navigate to="/curriculum" replace />;
+  }
+
+  const curriculum = loadCurriculum(year, subject);
+
   const isFirstTimeUser = hydrated && Object.keys(progress).length === 0;
 
   const isTopicComplete = (categoryId, topicId, topic) => {
@@ -54,19 +69,24 @@ function CurriculumPage({ year = 2, subject = "math" }) {
     <div className="curriculum-page page">
       {/* Hero Header */}
       <section className="curriculum-hero">
-        <h1 className="curriculum-title">📘 Year {year} Curriculum</h1>
+        <h1 className="curriculum-title">
+          📘 Year {year} {getSubjectName(subject)}
+        </h1>
         <p className="curriculum-subtitle">
           Follow the UK National Curriculum through fun challenges!
         </p>
+        <Link to="/curriculum" className="curriculum-change-link">
+          ← Change year or subject
+        </Link>
       </section>
 
       {/* Category Cards Grid */}
       <div className="curriculum-grid">
-        {year2MathCurriculum.map((category, catIndex) => {
+        {curriculum.map((category, catIndex) => {
           const categoryLocked =
             (isFirstTimeUser && catIndex > 0) ||
             (catIndex > 0 &&
-              !isCategoryComplete(year2MathCurriculum[catIndex - 1]));
+              !isCategoryComplete(curriculum[catIndex - 1]));
 
           return (
             <section
