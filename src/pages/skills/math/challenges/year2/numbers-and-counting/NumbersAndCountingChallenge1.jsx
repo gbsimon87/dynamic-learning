@@ -3,11 +3,26 @@ import { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import "./NumbersAndCountingChallenge1.css";
 
+/**
+ * Five DISTINCT numbers from 1-100.
+ *
+ * Plain random draws repeated a value roughly 10% of the time. Ordering is then
+ * genuinely ambiguous for the child (two identical tiles), and the value can no
+ * longer serve as a stable drag id. Bounded by construction - it walks a
+ * shuffled pool rather than re-rolling until distinct.
+ */
+function pickDistinctNumbers(count) {
+  const pool = Array.from({ length: 100 }, (_, i) => i + 1);
+  for (let i = pool.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, count);
+}
+
 function NumbersAndCountingChallenge1({ onComplete }) {
   // 1️⃣ Generate 5 random numbers between 1 and 100
-  const [numbers, setNumbers] = useState(
-    Array.from({ length: 5 }, () => Math.floor(Math.random() * 100) + 1)
-  );
+  const [numbers, setNumbers] = useState(() => pickDistinctNumbers(5));
   const [feedback, setFeedback] = useState(null);
 
   // 2️⃣ Handle reorder logic
@@ -45,8 +60,8 @@ function NumbersAndCountingChallenge1({ onComplete }) {
             >
               {numbers.map((num, index) => (
                 <Draggable
-                  key={num + "-" + index}
-                  draggableId={num + "-" + index}
+                  key={String(num)}
+                  draggableId={String(num)}
                   index={index}
                 >
                   {(provided) => (

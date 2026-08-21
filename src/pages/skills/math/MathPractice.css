@@ -292,3 +292,51 @@ body.dark input[type='range']::-moz-range-thumb {
   background: var(--dark-accent);
   box-shadow: 0 0 4px rgba(132, 220, 207, 0.4);
 }
+
+/* === Operation multi-select (R3) === */
+.opGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.5rem 1rem;
+  width: 100%;
+}
+
+.opCheck {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--light-text);
+}
+
+.opCheck input {
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: var(--light-accent);
+  cursor: pointer;
+}
+
+.opCheck input:disabled {
+  cursor: default;
+}
+
+.opCheck:has(input:disabled) {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.settingsHint {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  color: var(--light-text);
+}
+
+body.dark .opCheck,
+body.dark .settingsHint {
+  color: var(--dark-text);
+}
+
+body.dark .opCheck input {
+  accent-color: var(--dark-accent);
+}

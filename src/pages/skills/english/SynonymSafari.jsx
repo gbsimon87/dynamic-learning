@@ -15,7 +15,7 @@ const SYNONYM_PAIRS = [
   ['help', 'assist'],
   ['sad', 'unhappy'],
   ['cold', 'chilly'],
-  ['hot', 'warm'],
+  ['hot', 'boiling'],
   ['easy', 'simple'],
   ['hard', 'difficult'],
   ['old', 'ancient'],

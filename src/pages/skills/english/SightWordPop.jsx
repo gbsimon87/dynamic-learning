@@ -8,14 +8,6 @@ const SIGHT_WORDS = [
 
 // util
 const rand = (n) => Math.floor(Math.random() * n);
-const shuffle = (arr) => {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-};
 const pickRandom = (arr) => arr[rand(arr.length)];
 
 function SightWordPop() {
@@ -43,6 +35,7 @@ function SightWordPop() {
     return base;
   }, []);
   const laneBusyRef = useRef(new Set()); // lane indexes with active bubbles
+  const fieldRef = useRef(null);
 
   // internal refs for intervals/timeouts
   const spawnRef = useRef(null);
@@ -51,12 +44,26 @@ function SightWordPop() {
   const sinceTargetRef = useRef(0); // to ensure a target appears at least every ~5 bubbles
 
   // ---------- HELPERS ----------
-  const scheduleRemove = (id, lane, lifeMs) => {
-    setTimeout(() => {
-      setBubbles((prev) => prev.filter((b) => b.id !== id));
-      // free the lane
+  // Removal timers by bubble id, so they can be cancelled on pop/unmount.
+  const removeTimersRef = useRef(new Map());
+
+  // lane -> owning bubble id, so a stale timeout can't free a reused lane.
+  const laneOwnerRef = useRef(new Map());
+
+  const releaseLane = (lane, id) => {
+    if (laneOwnerRef.current.get(lane) === id) {
+      laneOwnerRef.current.delete(lane);
       laneBusyRef.current.delete(lane);
+    }
+  };
+
+  const scheduleRemove = (id, lane, lifeMs) => {
+    const timer = setTimeout(() => {
+      removeTimersRef.current.delete(id);
+      setBubbles((prev) => prev.filter((b) => b.id !== id));
+      releaseLane(lane, id);
     }, lifeMs);
+    removeTimersRef.current.set(id, timer);
   };
 
   const chooseLane = () => {
@@ -75,13 +82,21 @@ function SightWordPop() {
     });
   };
 
+  // Read by the spawn loop via refs, so the interval isn't rebuilt on each tick.
+  const timeLeftRef = useRef(timeLeft);
+  const targetsShownRef = useRef(targetsShown);
+  const targetWordRef = useRef(targetWord);
+  useEffect(() => { timeLeftRef.current = timeLeft; }, [timeLeft]);
+  useEffect(() => { targetsShownRef.current = targetsShown; }, [targetsShown]);
+  useEffect(() => { targetWordRef.current = targetWord; }, [targetWord]);
+
   // ---------- SPAWNING LOOP ----------
   useEffect(() => {
     if (!started || started === "end") return;
 
     // spawn loop
     spawnRef.current = setInterval(() => {
-      if (timeLeft <= 0 || targetsShown >= settings.targetTotal) return;
+      if (timeLeftRef.current <= 0 || targetsShownRef.current >= settings.targetTotal) return;
 
       const lane = chooseLane();
       if (lane === null) return; // wait for a lane to free to avoid overlap
@@ -92,20 +107,26 @@ function SightWordPop() {
       if (sinceTargetRef.current >= 4) isTarget = true;
 
       // If we already showed all targets we needed, stop spawning target bubbles.
-      if (targetsShown >= settings.targetTotal) isTarget = false;
+      if (targetsShownRef.current >= settings.targetTotal) isTarget = false;
 
-      const word = isTarget ? targetWord : pickRandom(SIGHT_WORDS.filter((w) => w !== targetWord));
+      const currentTarget = targetWordRef.current;
+      const word = isTarget
+        ? currentTarget
+        : pickRandom(SIGHT_WORDS.filter((w) => w !== currentTarget));
 
       const id = ++idCounter.current;
       const createdAt = Date.now();
 
-      // mark lane busy
+      // mark lane busy, recording which bubble owns it
       laneBusyRef.current.add(lane);
+      laneOwnerRef.current.set(lane, id);
 
       // small horizontal jitter (±2.5%)
       const jitter = (Math.random() * 5) - 2.5;
       const bubbleWidthPx = Math.max(70, word.length * 18);
-      const bubbleHalfPct = (bubbleWidthPx / window.innerWidth) * 50; // convert px to %
+      // Clamp against the field, not the viewport.
+      const fieldWidthPx = fieldRef.current?.clientWidth || window.innerWidth;
+      const bubbleHalfPct = (bubbleWidthPx / fieldWidthPx) * 50;
       const baseLeft = lanes[lane] + jitter;
 
       // Clamp so bubble never leaves the screen
@@ -131,8 +152,18 @@ function SightWordPop() {
     }, settings.spawnEveryMs);
 
     return () => clearInterval(spawnRef.current);
+    // timeLeft/targetsShown/targetWord are read via refs, deliberately not deps.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [started, timeLeft, targetsShown, targetWord, settings]);
+  }, [started, settings]);
+
+  // Cancel every pending bubble-removal timer on unmount.
+  useEffect(
+    () => () => {
+      removeTimersRef.current.forEach((t) => clearTimeout(t));
+      removeTimersRef.current.clear();
+    },
+    []
+  );
 
   // ---------- TIMER LOOP ----------
   useEffect(() => {
@@ -179,7 +210,14 @@ function SightWordPop() {
   const handleBubbleClick = (bubble) => {
     // prevent double scoring; remove bubble and free lane immediately
     setBubbles((prev) => prev.filter((b) => b.id !== bubble.id));
-    laneBusyRef.current.delete(bubble.lane);
+
+    // Cancel the pending removal so it can't free a reused lane.
+    const pending = removeTimersRef.current.get(bubble.id);
+    if (pending) {
+      clearTimeout(pending);
+      removeTimersRef.current.delete(bubble.id);
+    }
+    releaseLane(bubble.lane, bubble.id);
 
     if (bubble.isTarget) {
       setScore((s) => s + 1);
@@ -249,7 +287,7 @@ function SightWordPop() {
         Pop the word: <span className="targetWord">{targetWord}</span>
       </h2>
 
-      <div className="bubbleField">
+      <div className="bubbleField" ref={fieldRef}>
         {bubbles.map((b) => (
           <button
             key={b.id}

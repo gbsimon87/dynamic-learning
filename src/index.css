@@ -3,14 +3,44 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* No unconditional `color` / `background-color` here.
+     This block used to force `rgba(255,255,255,0.87)` on `#242424` regardless of
+     theme, while App.css only ever repaints `body.light` / `body.dark`. Anything
+     escaping the body cascade inherited near-white text, and the dark :root
+     painted before ThemeContext's effect ran - a visible flash on every load,
+     stretched to 300ms by App.css's background transition.
+
+     `color-scheme` is also deliberately not set to `light dark`: that made native
+     controls (selects, number inputs) follow the OS rather than the app theme. */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Paint the page from the OS preference immediately, so there is no flash before
+   the ThemeContext effect adds body.light / body.dark. Once that class lands, the
+   `body.light` / `body.dark` rules in App.css take over and win, because they
+   target a more specific element than <html>. */
+html {
+  background-color: #f6e8ea;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: #22181c;
+  }
+}
+
+/* Keep <html> in step with the explicit choice, so the area behind the body
+   (visible during overscroll) never contradicts the theme. */
+html:has(body.light) {
+  background-color: #f6e8ea;
+}
+
+html:has(body.dark) {
+  background-color: #22181c;
 }
 
 .abeezee-regular {

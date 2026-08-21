@@ -78,14 +78,19 @@ body.dark .settingsGroup label {
 .bubbleField {
   position: relative;
   width: 100%;
-  height: 440px;
+  /* Was a hard 440px: on a 667px-tall phone the header plus field forced page
+     scroll, so the top of the field (where bubbles are about to pop) sat
+     off-screen while the child was tapping. `--field-h` also drives the float
+     distance below, so the two can no longer drift apart. */
+  --field-h: clamp(260px, 52vh, 440px);
+  height: var(--field-h);
   overflow: hidden;
 }
 
 /* ---------- Bubbles ---------- */
 .bubbleBtn {
   position: absolute;
-  bottom: -110px;
+  bottom: calc(-0.25 * var(--field-h, 440px));
   padding: 1rem 1.2rem;
   border-radius: 50%;
   border: 3px solid var(--light-accent);
@@ -116,17 +121,20 @@ body.dark .bubbleBtn {
 }
 
 /* Float-up animation */
+/* Distances are relative to the field height, so a bubble always fades out just
+   past the top edge regardless of device - the old fixed -430/-460px was
+   unrelated to the container. */
 @keyframes floatUp {
   0% {
     transform: translateY(0);
     opacity: 1;
   }
   85% {
-    transform: translateY(-430px);
+    transform: translateY(calc(-0.98 * var(--field-h, 440px)));
     opacity: 1;
   }
   100% {
-    transform: translateY(-460px);
+    transform: translateY(calc(-1.05 * var(--field-h, 440px)));
     opacity: 0;
   }
 }

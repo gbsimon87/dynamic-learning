@@ -4,23 +4,41 @@ import './ReadingNumbersPanel.css';
 
 const MAX_ALLOWED = 775840;
 
-function ReadingNumbersPanel() {
-  console.log(`ReadingNumbersPanel is running`);
+const MIN_ALLOWED = 1;
 
+// Clamp to 1..MAX_ALLOWED. `parseInt(v) || 0` used to let a cleared field
+// become 0, contradicting the advertised min of 1.
+function clampBound(value) {
+  const parsed = parseInt(value, 10);
+  if (Number.isNaN(parsed)) return MIN_ALLOWED;
+  return Math.min(Math.max(parsed, MIN_ALLOWED), MAX_ALLOWED);
+}
+
+function ReadingNumbersPanel() {
   const [min, setMin] = useState(1);
   const [max, setMax] = useState(100);
   const [displayMode, setDisplayMode] = useState('both'); // number | text | both
   const [generated, setGenerated] = useState(null);
 
-  function clampMax(value) {
-    return Math.min(parseInt(value, 10) || 0, MAX_ALLOWED);
+  // Keep the bounds ordered: min > max made the range expression negative, so
+  // the generated number ignored the stated range entirely.
+  function handleMinChange(value) {
+    const next = clampBound(value);
+    setMin(next);
+    setMax((prev) => Math.max(prev, next));
+  }
+
+  function handleMaxChange(value) {
+    const next = clampBound(value);
+    setMax(next);
+    setMin((prev) => Math.min(prev, next));
   }
 
   function handleGenerate() {
-    console.log(`handleGenerate is running with min: ${min}, max: ${max}`);
-    const rand = Math.floor(Math.random() * (max - min + 1)) + parseInt(min);
-    setGenerated(rand);
-    console.log(`handleGenerate is returning ${rand}`);
+    // Defensive ordering.
+    const lo = Math.min(min, max);
+    const hi = Math.max(min, max);
+    setGenerated(Math.floor(Math.random() * (hi - lo + 1)) + lo);
   }
 
   const written = generated !== null ? writtenNumber(generated) : '';
@@ -30,11 +48,11 @@ function ReadingNumbersPanel() {
       <div className="input-row">
         <div className="range-group">
           <label>Min:</label>
-          <input type="number" min="1" max={MAX_ALLOWED} value={min} onChange={(e) => setMin(clampMax(e.target.value))} />
+          <input type="number" min="1" max={MAX_ALLOWED} value={min} onChange={(e) => handleMinChange(e.target.value)} />
         </div>
         <div className="range-group">
           <label>Max:</label>
-          <input type="number" min="1" max={MAX_ALLOWED} value={max} onChange={(e) => setMax(clampMax(e.target.value))} />
+          <input type="number" min="1" max={MAX_ALLOWED} value={max} onChange={(e) => handleMaxChange(e.target.value)} />
         </div>
       </div>
 

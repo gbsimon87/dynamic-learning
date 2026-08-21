@@ -1,0 +1,16 @@
+
+/* === Fit the map to one viewport, minus the sticky navbar (I20) === */
+.worldmap-shell {
+  height: calc(100dvh - var(--navbar-height, 56px));
+  min-height: 24rem;
+  overflow: hidden;
+}
+
+/* Keep the HUD compact on small screens so it doesn't blanket the map (I20). */
+@media (max-width: 600px) {
+  .mapgame-hud {
+    font-size: 0.85rem;
+    gap: 6px !important;
+    padding: 8px 10px !important;
+  }
+}

@@ -64,7 +64,6 @@ function WordBuilder() {
     .join('');
 
   const isCorrect = selected === question.correctLetter;
-  const isWrong = selected !== null && !isCorrect;
 
   return (
     <div className="wrapper">

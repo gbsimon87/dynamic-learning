@@ -73,7 +73,7 @@ export default function CitySpotlight() {
   // ---- Render ----
   if (!started) {
     return (
-      <div className="wrapper">
+      <div className="city-spotlight">
         <h2>City Spotlight</h2>
         <div className="settingsGroup">
           <label>Select mode:</label>
@@ -91,7 +91,7 @@ export default function CitySpotlight() {
 
   if (current === null) {
     return (
-      <div className="wrapper">
+      <div className="city-spotlight">
         <h2>🎉 Finished!</h2>
         <div className="score">
           Score: {score} / {total}
@@ -129,7 +129,7 @@ export default function CitySpotlight() {
   }
 
   return (
-    <div className="wrapper">
+    <div className="city-spotlight">
       <div className="score">
         Score: {score} / {total}
       </div>

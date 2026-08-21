@@ -9,7 +9,7 @@
   color: var(--light-accent);
 }
 
-.App.dark .problem-page h2 {
+body.dark .problem-page h2 {
   color: var(--dark-accent);
 }
 

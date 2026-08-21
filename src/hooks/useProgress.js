@@ -51,18 +51,57 @@ export function useProgress(year, subject) {
     }
   }, [progress, storageKey, hydrated]);
 
+  // Membership check, not a length check: [9,9,9,9] must not complete a topic.
   const isTopicComplete = (categoryId, topicId, topic) => {
-    const topicProgress = progress[categoryId]?.topics?.[topicId];
-    return (
-      topicProgress &&
-      topicProgress.completedChallenges?.length === topic.challenges.length
+    const completed = progress[categoryId]?.topics?.[topicId]?.completedChallenges;
+    if (!Array.isArray(completed) || completed.length === 0) return false;
+    const done = new Set(completed.map(Number));
+    return topic.challenges.every((challenge) => done.has(Number(challenge.id)));
+  };
+
+  // Unlocks when everything before it is done. Gap-tolerant by design: a
+  // count-based rule bricked the curriculum permanently on any gap.
+  const isChallengeUnlocked = (
+    categoryId,
+    topicId,
+    topic,
+    challengeIndex,
+    skipChallenge
+  ) => {
+    const completed = progress[categoryId]?.topics?.[topicId]?.completedChallenges || [];
+    const done = new Set(completed.map(Number));
+    return topic.challenges
+      .slice(0, challengeIndex)
+      // An unbuilt challenge can never be completed, so it must not block the
+      // ones after it.
+      .filter((challenge) => !(skipChallenge && skipChallenge(challenge)))
+      .every((challenge) => done.has(Number(challenge.id)));
+  };
+
+  // `skipTopic` excludes topics with no built challenges.
+  const isCategoryComplete = (category, skipTopic) => {
+    const completable = category.topics.filter(
+      (topic) => !(skipTopic && skipTopic(topic))
+    );
+    // A category with nothing built in it is not "complete" - it is empty.
+    // Returning true there would badge every unbuilt category as finished.
+    if (completable.length === 0) return false;
+    return completable.every((topic) =>
+      isTopicComplete(category.id, topic.id, topic)
     );
   };
 
-  const isCategoryComplete = (category) =>
-    category.topics.every((topic) =>
+  // Gating only. Distinct from complete: an empty category must not block, but
+  // must not be badged finished either.
+  const isCategoryPassable = (category, skipTopic) => {
+    const completable = category.topics.filter(
+      (topic) => !(skipTopic && skipTopic(topic))
+    );
+    if (completable.length === 0) return true; // nothing to do - don't block
+    return completable.every((topic) =>
       isTopicComplete(category.id, topic.id, topic)
     );
+  };
 
   /**
    * True if the given challenge is already recorded as complete.
@@ -110,7 +149,9 @@ export function useProgress(year, subject) {
     progress,
     hydrated,
     isTopicComplete,
+    isChallengeUnlocked,
     isCategoryComplete,
+    isCategoryPassable,
     isChallengeComplete,
     completeChallenge,
   };

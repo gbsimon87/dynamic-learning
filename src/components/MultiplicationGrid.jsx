@@ -1,15 +1,29 @@
 import React, { useState } from 'react';
 import './MultiplicationGrid.css';
 
-function MultiplicationGrid() {
-  console.log(`MultiplicationGrid is running`);
+const MIN_VAL = 1;
+const MAX_VAL = 20;
 
+/**
+ * Clamp a size input to a usable whole number.
+ *
+ * The `max` attribute on a number input is only a spinner hint - typing or
+ * pasting `500` is accepted, and the nested render loops then built
+ * 501 x 501 = 251,001 <td> elements and locked the main thread. An empty field
+ * gave `parseInt('') === NaN`, and `r <= NaN` is false, so the table rendered as
+ * a blank box with no explanation.
+ */
+function clampSize(value) {
+  const parsed = parseInt(value, 10);
+  if (Number.isNaN(parsed)) return MIN_VAL;
+  return Math.min(MAX_VAL, Math.max(MIN_VAL, parsed));
+}
+
+function MultiplicationGrid() {
   const [rows, setRows] = useState(10);
   const [cols, setCols] = useState(10);
   const [hoveredRow, setHoveredRow] = useState(null);
   const [hoveredCol, setHoveredCol] = useState(null);
-
-  const maxVal = 20;
 
   function handleMouseEnter(r, c) {
     setHoveredRow(r);
@@ -55,11 +69,10 @@ function MultiplicationGrid() {
     table.push(<tr key={`row-${r}`}>{row}</tr>);
   }
 
-  const showCalculation = hoveredRow && hoveredCol
-    ? `${hoveredRow} × ${hoveredCol} = ${hoveredRow * hoveredCol}`
-    : '';
-
-  console.log(`MultiplicationGrid has run with rows: ${rows}, cols: ${cols}`);
+  const showCalculation =
+    hoveredRow !== null && hoveredCol !== null
+      ? `${hoveredRow} × ${hoveredCol} = ${hoveredRow * hoveredCol}`
+      : '';
 
   return (
     <div className="multiplication-panel">
@@ -68,20 +81,20 @@ function MultiplicationGrid() {
           Rows:
           <input
             type="number"
-            min="1"
-            max={maxVal}
+            min={MIN_VAL}
+            max={MAX_VAL}
             value={rows}
-            onChange={(e) => setRows(parseInt(e.target.value))}
+            onChange={(e) => setRows(clampSize(e.target.value))}
           />
         </label>
         <label>
           Columns:
           <input
             type="number"
-            min="1"
-            max={maxVal}
+            min={MIN_VAL}
+            max={MAX_VAL}
             value={cols}
-            onChange={(e) => setCols(parseInt(e.target.value))}
+            onChange={(e) => setCols(clampSize(e.target.value))}
           />
         </label>
       </div>

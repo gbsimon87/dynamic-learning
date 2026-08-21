@@ -54,6 +54,10 @@ body.dark .range-group input {
   margin-top: 1rem;
   padding: 1.2rem 2rem;
   border-radius: 8px;
+  /* Light mode had no background at all, so the answer card rendered on the bare
+     page while dark mode drew a proper panel. */
+  background-color: var(--light-panel);
+  border: 2px solid var(--light-accent);
   color: var(--light-text);
   text-align: center;
   font-size: 1.25rem;

@@ -131,3 +131,49 @@ body.dark .flag-optionBtn.wrong {
 body.dark .flag-loading {
   color: var(--dark-text);
 }
+
+/* === Continent picker (R6) === */
+.flag-continentPicker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.flag-continentPicker label {
+  font-weight: 600;
+  color: var(--light-text);
+}
+
+.flag-continentPicker select {
+  width: 100%;
+  max-width: 280px;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 2px solid var(--light-accent);
+  background-color: var(--light-panel);
+  color: var(--light-text);
+  cursor: pointer;
+}
+
+.flag-continentPicker select:focus {
+  outline: 3px solid var(--light-accent);
+  outline-offset: 2px;
+}
+
+body.dark .flag-continentPicker label {
+  color: var(--dark-text);
+}
+
+body.dark .flag-continentPicker select {
+  background-color: var(--dark-panel);
+  color: var(--dark-text);
+  border-color: var(--dark-accent);
+}
+
+body.dark .flag-continentPicker select:focus {
+  outline-color: var(--dark-accent);
+}

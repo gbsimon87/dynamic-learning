@@ -18,15 +18,20 @@ function generatePattern(skip) {
   const missingIndex = Math.floor(Math.random() * sequence.length);
   const correctAnswer = sequence[missingIndex];
 
-  // generate incorrect options
-  const incorrect = [];
-  while (incorrect.length < 3) {
-    const delta = Math.floor(Math.random() * 5) - 2; // nearby distractors
+  // Enumerate the pool up front. Sampling in a loop froze the tab when the
+  // answer was 1: only {2,3} qualified, for a loop demanding three.
+  const candidates = [];
+  for (let delta = -2; delta <= 2; delta += 1) {
     const wrong = correctAnswer + delta;
-    if (wrong > 0 && wrong !== correctAnswer && !incorrect.includes(wrong)) {
-      incorrect.push(wrong);
-    }
+    if (delta !== 0 && wrong > 0) candidates.push(wrong);
   }
+  // Widen upward if the window can't supply 3.
+  let next = correctAnswer + 3;
+  while (candidates.length < 3) {
+    candidates.push(next);
+    next += 1;
+  }
+  const incorrect = shuffleArray(candidates).slice(0, 3);
 
   const allOptions = shuffleArray([...incorrect, correctAnswer]);
 
@@ -73,7 +78,6 @@ function FindTheMissingNumber() {
   }
 
   const isCorrect = selected === question.correctAnswer;
-  const isWrong = selected !== null && !isCorrect;
 
   if (!started) {
     return (
@@ -118,7 +122,7 @@ function FindTheMissingNumber() {
         <div className={`feedback ${isCorrect ? 'correct' : 'wrong'}`}>
           {isCorrect
             ? '✓ Correct!'
-            : `✗ Wrong! It was ${question.correctAnswer}`}
+            : `✗ Shucks! It was ${question.correctAnswer}`}
         </div>
       )}
 

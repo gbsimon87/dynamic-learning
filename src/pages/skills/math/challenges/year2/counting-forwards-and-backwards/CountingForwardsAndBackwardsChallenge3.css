@@ -16,8 +16,8 @@
 }
 
 .sequence-box {
-  background: #f1f1f1;
-  border: 2px solid #ccc;
+  background-color: var(--light-panel);
+  border: 2px solid var(--light-accent);
   border-radius: 8px;
   padding: 12px;
   font-size: 1.2rem;
@@ -32,19 +32,48 @@
   color: var(--light-text);
 }
 
+/* Declared its own colour is essential here: with only `background:
+   transparent` the value inherited body.dark's near-white #F6E8EA and sat on the
+   hardcoded #f1f1f1 box - measured 1.05:1. The given numbers stayed readable
+   while only the child's own typing vanished. */
 .sequence-input {
   width: 100%;
   text-align: center;
   font-size: 1.2rem;
+  font-weight: 700;
   border: none;
   border-bottom: 2px solid var(--light-accent);
   background: transparent;
+  color: var(--light-text);
   outline: none;
   padding: 4px;
 }
 
 .sequence-input:focus {
+  outline: 3px solid var(--light-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+body.dark .sequence-box {
+  background-color: var(--dark-panel);
   border-color: var(--dark-accent);
+}
+
+body.dark .sequence-value,
+body.dark .challenge-container h3,
+body.dark .challenge-container p,
+body.dark .feedback {
+  color: var(--dark-text);
+}
+
+body.dark .sequence-input {
+  color: var(--dark-text);
+  border-bottom-color: var(--dark-accent);
+}
+
+body.dark .sequence-input:focus {
+  outline-color: var(--dark-accent);
 }
 
 .submit-button {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import MapGame from '../../../components/MapGame';
+import './WorldMap.css';
 
 export default function WorldMap() {
   const [countries, setCountries] = useState(null);
@@ -28,7 +29,14 @@ export default function WorldMap() {
   if (error) return <div style={{ padding: 24, color: 'crimson' }}>{error}</div>;
 
   return (
-    <div style={{ height: '100dvh', display: 'grid', gridTemplateRows: 'auto 1fr' }}>
+    // `100dvh` overflowed: this sits below the sticky navbar, so the document
+    // became navbar + 100dvh and the page scrolled - which then triggered the
+    // navbar's hide-on-scroll and made the map jitter. `100dvh - navbar` keeps
+    // the map exactly one viewport tall.
+    <div
+      className="worldmap-shell"
+      style={{ display: 'grid', gridTemplateRows: 'auto 1fr' }}
+    >
       <Header mode={mode} onModeChange={setMode} />
       <MapGame geoJson={countries} mode={mode} />
     </div>
@@ -40,7 +48,7 @@ function Header({ mode, onModeChange }) {
     <header
       style={{
         padding: '12px 16px',
-        borderBottom: '1px solid #eee',
+        borderBottom: '1px solid var(--map-border)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -52,7 +60,7 @@ function Header({ mode, onModeChange }) {
         <h1 style={{ margin: 0, fontSize: 18 }}>
           {mode === 'countries' ? '🌍 Country Finder' : '🗺️ Continent Finder'}
         </h1>
-        <span style={{ color: '#666' }}>
+        <span style={{ color: 'var(--map-muted)' }}>
           {mode === 'countries'
             ? 'Click the correct country on the map'
             : 'Tap the correct continent!'}
@@ -64,8 +72,10 @@ function Header({ mode, onModeChange }) {
           onClick={() => onModeChange('countries')}
           style={{
             padding: '6px 10px',
-            background: mode === 'countries' ? '#ef626c' : '#eee',
-            color: mode === 'countries' ? '#fff' : '#333',
+            background:
+              mode === 'countries' ? 'var(--map-accent)' : 'var(--map-chip)',
+            color:
+              mode === 'countries' ? 'var(--map-on-accent)' : 'var(--map-text)',
             border: 'none',
             borderRadius: 6,
             cursor: 'pointer',
@@ -77,8 +87,10 @@ function Header({ mode, onModeChange }) {
           onClick={() => onModeChange('continents')}
           style={{
             padding: '6px 10px',
-            background: mode === 'continents' ? '#ef626c' : '#eee',
-            color: mode === 'continents' ? '#fff' : '#333',
+            background:
+              mode === 'continents' ? 'var(--map-accent)' : 'var(--map-chip)',
+            color:
+              mode === 'continents' ? 'var(--map-on-accent)' : 'var(--map-text)',
             border: 'none',
             borderRadius: 6,
             cursor: 'pointer',

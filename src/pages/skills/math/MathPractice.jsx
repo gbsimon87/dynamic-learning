@@ -1,66 +1,21 @@
 import { useState, useEffect } from 'react';
 import './MathPractice.css';
+import { generateQuestion, OPERATIONS } from './generateQuestion';
 
-function shuffleArray(array) {
-  const newArray = [...array];
-  for (let i = newArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-  }
-  return newArray;
-}
+const VALUE_FLOOR = 1;
+const VALUE_CEILING = 100;
 
-function generateQuestion({ type, operands, min, max }) {
-  const numbers = Array.from({ length: operands }, () =>
-    Math.floor(Math.random() * (max - min + 1)) + min
-  );
-
-  let questionText = '';
-  let correctAnswer = 0;
-
-  switch (type) {
-    case 'addition':
-      questionText = numbers.join(' + ');
-      correctAnswer = numbers.reduce((a, b) => a + b, 0);
-      break;
-    case 'subtraction':
-      questionText = numbers.join(' - ');
-      correctAnswer = numbers.reduce((a, b) => a - b);
-      break;
-    case 'multiplication':
-      questionText = numbers.join(' × ');
-      correctAnswer = numbers.reduce((a, b) => a * b, 1);
-      break;
-    case 'division':
-      // Ensure whole number results
-      const divisor = Math.floor(Math.random() * (max - min + 1)) + min || 1;
-      const quotient = Math.floor(Math.random() * (max - min + 1)) + min;
-      const dividend = divisor * quotient;
-      questionText = `${dividend} ÷ ${divisor}`;
-      correctAnswer = quotient;
-      break;
-    default:
-      break;
-  }
-
-  // Generate incorrect answers
-  const incorrectAnswers = [];
-  while (incorrectAnswers.length < 3) {
-    const delta = Math.floor(Math.random() * 10) - 5; // ±5 range
-    const wrong = correctAnswer + delta;
-    if (wrong !== correctAnswer && !incorrectAnswers.includes(wrong) && wrong >= 0) {
-      incorrectAnswers.push(wrong);
-    }
-  }
-
-  const allOptions = shuffleArray([...incorrectAnswers, correctAnswer]);
-
-  return { questionText, correctAnswer, options: allOptions };
-}
+const OPERATION_LABELS = {
+  addition: 'Addition',
+  subtraction: 'Subtraction',
+  multiplication: 'Multiplication',
+  division: 'Division',
+};
 
 function MathPractice() {
   const [settings, setSettings] = useState({
-    type: 'addition',
+    types: ['addition'],
+    mixOperations: false,
     operands: 2,
     min: 1,
     max: 10,
@@ -80,7 +35,42 @@ function MathPractice() {
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [selected, started]);
+    // Safe dep: settings can't change mid-run (sliders are pre-start only).
+  }, [selected, started, settings]);
+
+  // Keep at least one operation selected.
+  function toggleOperation(operation) {
+    setSettings((prev) => {
+      const types = prev.types.includes(operation)
+        ? prev.types.filter((t) => t !== operation)
+        : [...prev.types, operation];
+      if (types.length === 0) return prev;
+      return {
+        ...prev,
+        types,
+        // Mixing needs two or more operations.
+        mixOperations: types.length < 2 ? false : prev.mixOperations,
+      };
+    });
+  }
+
+  // Both sliders share one track; clamp in state, never via a reactive DOM min.
+  function handleMinChange(nextMin) {
+    setSettings((prev) => ({
+      ...prev,
+      min: nextMin,
+      // Nudge Max only when Min would overtake it.
+      max: Math.max(prev.max, nextMin),
+    }));
+  }
+
+  function handleMaxChange(nextMax) {
+    setSettings((prev) => ({
+      ...prev,
+      max: nextMax,
+      min: Math.min(prev.min, nextMax),
+    }));
+  }
 
   function startPractice() {
     setStarted(true);
@@ -110,16 +100,38 @@ function MathPractice() {
         <h2 className="prompt">Arithmetic Setup</h2>
 
         <div className="settingsGroup">
-          <label>Operation Type:</label>
-          <select
-            value={settings.type}
-            onChange={(e) => setSettings({ ...settings, type: e.target.value })}
-          >
-            <option value="addition">Addition</option>
-            <option value="subtraction">Subtraction</option>
-            <option value="multiplication">Multiplication</option>
-            <option value="division">Division</option>
-          </select>
+          <label>Operation Types:</label>
+          <div className="opGrid">
+            {OPERATIONS.map((operation) => (
+              <label key={operation} className="opCheck">
+                <input
+                  type="checkbox"
+                  checked={settings.types.includes(operation)}
+                  onChange={() => toggleOperation(operation)}
+                />
+                {OPERATION_LABELS[operation]}
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div className="settingsGroup">
+          <label className="opCheck">
+            <input
+              type="checkbox"
+              checked={settings.mixOperations}
+              disabled={settings.types.length < 2}
+              onChange={(e) =>
+                setSettings({ ...settings, mixOperations: e.target.checked })
+              }
+            />
+            Mix operations in one problem
+          </label>
+          <small className="settingsHint">
+            {settings.types.length < 2
+              ? 'Pick two or more operations to mix them.'
+              : 'Questions like 4 + (5 × 2). Brackets show what to work out first.'}
+          </small>
         </div>
 
         <div className="settingsGroup">
@@ -139,12 +151,10 @@ function MathPractice() {
           <label>Min Value: {settings.min}</label>
           <input
             type="range"
-            min="1"
-            max="50"
+            min={VALUE_FLOOR}
+            max={VALUE_CEILING}
             value={settings.min}
-            onChange={(e) =>
-              setSettings({ ...settings, min: parseInt(e.target.value) })
-            }
+            onChange={(e) => handleMinChange(parseInt(e.target.value))}
           />
         </div>
 
@@ -152,12 +162,10 @@ function MathPractice() {
           <label>Max Value: {settings.max}</label>
           <input
             type="range"
-            min={settings.min + 1}
-            max="100"
+            min={VALUE_FLOOR}
+            max={VALUE_CEILING}
             value={settings.max}
-            onChange={(e) =>
-              setSettings({ ...settings, max: parseInt(e.target.value) })
-            }
+            onChange={(e) => handleMaxChange(parseInt(e.target.value))}
           />
         </div>
 
@@ -169,7 +177,6 @@ function MathPractice() {
   }
 
   const isCorrect = selected === question?.correctAnswer;
-  const isWrong = selected !== null && !isCorrect;
 
   return (
     <div className="wrapper">
@@ -185,7 +192,7 @@ function MathPractice() {
         <div className={`feedback ${isCorrect ? 'correct' : 'wrong'}`}>
           {isCorrect
             ? '✓ Correct!'
-            : `✗ Wrong! It was ${question.correctAnswer}`}
+            : `✗ Shucks! It was ${question.correctAnswer}`}
         </div>
       )}
 

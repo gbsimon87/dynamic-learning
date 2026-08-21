@@ -58,9 +58,39 @@ const PAIRS = [
 ];
 
 
+function shuffle(list) {
+  const next = [...list];
+  for (let i = next.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [next[i], next[j]] = [next[j], next[i]];
+  }
+  return next;
+}
+
+/**
+ * Pick `count` pairs, never two that share a word.
+ *
+ * `old` is the right-hand word of both ['young','old'] and ['new','old']. When a
+ * round drew both, `rightWords` contained "old" twice - and that word is used as
+ * the React key AND the dnd `droppableId`, which must be globally unique. One
+ * drop zone went inert, matching was done by value so dropping onto either
+ * marked BOTH as matched, and the round could never reach completion: a dead end
+ * with no restart control. Deduping the round makes it structurally impossible
+ * while keeping both (individually correct) pairs in the bank.
+ */
 function getRandomPairs(count = 5) {
-  const shuffled = [...PAIRS].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count);
+  const chosen = [];
+  const used = new Set();
+
+  for (const pair of shuffle(PAIRS)) {
+    if (chosen.length === count) break;
+    if (used.has(pair[0]) || used.has(pair[1])) continue;
+    chosen.push(pair);
+    used.add(pair[0]);
+    used.add(pair[1]);
+  }
+
+  return chosen;
 }
 
 export default function OppositeMatch() {
@@ -75,8 +105,8 @@ export default function OppositeMatch() {
 
   // Setup words each round
   useEffect(() => {
-    setLeftWords(pairs.map(p => p[0]).sort(() => Math.random() - 0.5));
-    setRightWords(pairs.map(p => p[1]).sort(() => Math.random() - 0.5));
+    setLeftWords(shuffle(pairs.map((p) => p[0])));
+    setRightWords(shuffle(pairs.map((p) => p[1])));
   }, [pairs]);
 
   // Handle drag end
@@ -86,7 +116,7 @@ export default function OppositeMatch() {
     const dragged = result.draggableId;       // left word
     const target = result.destination.droppableId; // right word
 
-    const pair = pairs.find(([a, b]) => a === dragged);
+    const pair = pairs.find(([a]) => a === dragged);
     const correct = pair && pair[1] === target;
 
     setTotal(prev => prev + 1);

@@ -79,3 +79,6 @@ desktop.ini
 # project configuration. Only personal, machine-local overrides are ignored.
 .claude/settings.local.json
 .claude/*.local.json
+
+# Playwright MCP session artifacts
+.playwright-mcp/

@@ -10,8 +10,17 @@
 
 .challenge-prompt {
   margin: 1rem 0;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
+  line-height: 1.5;
   color: var(--light-text);
+}
+
+/* Was pinned to --light-text (#22181C) on the dark page background (#22181C):
+   contrast 1.00:1, so the entire question was invisible in dark mode. */
+body.dark .challenge-prompt,
+body.dark .challenge-container h3,
+body.dark .feedback {
+  color: var(--dark-text);
 }
 
 /* Options styled similar to draggable items */
@@ -23,24 +32,37 @@
 }
 
 .option-button {
-  background: #f1f1f1;
-  border: 2px solid #ccc;
+  background-color: var(--light-panel);
+  border: 2px solid var(--light-accent);
   border-radius: 8px;
   padding: 10px;
   font-size: 1.2rem;
+  color: var(--light-text);
   cursor: pointer;
   transition: transform 0.1s ease;
 }
 
 .option-button:hover {
-  background: #e7e7e7;
+  filter: brightness(0.96);
+}
+
+body.dark .option-button {
+  background-color: var(--dark-panel);
+  border-color: var(--dark-accent);
+  color: var(--dark-text);
 }
 
 .option-button.selected {
-  background: var(--light-accent);
+  background-color: var(--light-accent);
   border-color: var(--light-accent);
-  color: var(--light-panel);
+  color: #ffffff;
   transform: scale(1.05);
+}
+
+body.dark .option-button.selected {
+  background-color: var(--dark-accent);
+  border-color: var(--dark-accent);
+  color: var(--dark-bg);
 }
 
 .submit-button {

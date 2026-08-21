@@ -3,7 +3,10 @@ import "./CountingForwardsAndBackwardsChallenge2.css";
 
 const QUESTIONS = [
   {
-    prompt: "26 fish are swimming in a pond. Five fish swim away and hide in weeds. How many fish are not hiding in weeds?",
+    // Was: "26 fish are swimming in a pond. Five fish swim away and hide in
+    // weeds. How many fish are not hiding in weeds?" - 20 words, mixed "26"
+    // with the word "Five", and the negative framing inverted the arithmetic.
+    prompt: "26 fish are in a pond. 5 swim away. How many are left?",
     answer: 21,
     options: [21, 19, 23],
   },

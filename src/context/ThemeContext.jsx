@@ -15,7 +15,9 @@ export function ThemeProvider({ children }) {
 
   useEffect(() => {
     localStorage.setItem('theme', theme);
-    document.body.className = ''; // clear any existing
+    // Remove only OUR classes. Assigning `className = ''` destroyed classes set
+    // by other code - Leaflet puts `leaflet-dragging` on <body> while panning.
+    document.body.classList.remove('light', 'dark');
     document.body.classList.add(theme);
   }, [theme]);
 

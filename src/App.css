@@ -8,6 +8,49 @@
   --dark-text: #F6E8EA;
   --dark-accent: #84DCCF;
   --dark-panel: #312F2F;
+
+  /* Readable text ON an accent-filled surface.
+     White on --light-accent measures only 3.17:1 and --light-bg on it 2.66:1,
+     both below the WCAG AA 4.5:1 minimum. The dark ink reaches 5.46:1 on the
+     same pink, so the brand colour is kept and only the label changes.
+     (--dark-accent is light enough that dark ink already gives 10.79:1.) */
+  --on-light-accent: #22181C;
+  --on-dark-accent: #22181C;
+
+  /* ShapeQuiz builds its shapes with inline styles, which cannot carry
+     `body.dark` overrides. These two tokens give it theme-aware colours without
+     threading ThemeContext through every style object. Light values here; the
+     body.dark block below swaps them. */
+  --sq-text: var(--light-text);
+  --sq-panel: var(--light-panel);
+
+  /* World Map / MapGame draw their header and HUD with inline styles, so they
+     need tokens too. The old hardcoded values (#eee borders, #666 muted text,
+     an rgba(255,255,255,.95) HUD) stayed light in dark mode - #666 on the dark
+     background measured 3.01:1, below AA for instructions a child must read. */
+  --map-border: #e6dcde;
+  --map-muted: #5c5157;
+  --map-text: var(--light-text);
+  --map-chip: #f0e6e8;
+  --map-accent: var(--light-accent);
+  --map-on-accent: var(--on-light-accent);
+  --map-hud: rgba(255, 255, 255, 0.95);
+
+  /* Height of the sticky navbar, so full-viewport pages can subtract it. */
+  --navbar-height: 56px;
+}
+
+body.dark {
+  --sq-text: var(--dark-text);
+  --sq-panel: var(--dark-panel);
+
+  --map-border: #443b3f;
+  --map-muted: #bdb0b4;
+  --map-text: var(--dark-text);
+  --map-chip: #3a3437;
+  --map-accent: var(--dark-accent);
+  --map-on-accent: var(--on-dark-accent);
+  --map-hud: rgba(34, 24, 28, 0.95);
 }
 
 body {
@@ -28,41 +71,13 @@ body.dark {
   color: #F6E8EA;
 }
 
-.App {
-  min-height: 100vh;
-  padding: 1rem;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.App.light {
-  background-color: var(--light-bg);
-  color: var(--light-text);
-}
-
-.App.dark {
+body.dark {
   background-color: var(--dark-bg);
   color: var(--dark-text);
 }
 
-.app-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
 
-.app-title {
-  font-size: 2rem;
-  margin: 0;
-}
 
-.theme-toggle {
-  font-size: 1.5rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: inherit;
-}
 
 .clock-panel {
   display: flex;
@@ -81,7 +96,7 @@ body.dark {
   transition: background-color 0.3s;
 }
 
-.App.dark .clock-btn {
+body.dark .clock-btn {
   background-color: var(--dark-accent);
 }
 
@@ -134,7 +149,7 @@ body.dark {
   position: relative;
 }
 
-.App.dark .option-list input[type="checkbox"] {
+body.dark .option-list input[type="checkbox"] {
   border-color: var(--dark-accent);
   background-color: #222;
 }
@@ -144,7 +159,7 @@ body.dark {
   border-color: var(--light-accent);
 }
 
-.App.dark .option-list input[type="checkbox"]:checked {
+body.dark .option-list input[type="checkbox"]:checked {
   background-color: var(--dark-accent);
   border-color: var(--dark-accent);
 }
@@ -158,6 +173,6 @@ body.dark {
   font-size: 0.9rem;
 }
 
-.App.dark .option-list input[type="checkbox"]:checked::after {
+body.dark .option-list input[type="checkbox"]:checked::after {
   color: black;
 }

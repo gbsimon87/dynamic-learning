@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { ThemeContext } from '../../../context/ThemeContext';
 import './FractionFun.css';
 
@@ -23,18 +23,37 @@ export default function FractionFun() {
     setSelected(newSet);
   };
 
+  // Tracked so a pending timer can be cancelled on unmount, and so a second
+  // check can't stack timers.
+  const timerRef = useRef(null);
+
+  useEffect(
+    () => () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    },
+    []
+  );
+
+  const schedule = (action, delay) => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      timerRef.current = null;
+      action();
+    }, delay);
+  };
+
   const handleCheck = () => {
     const correctCount = fraction.numerator;
     if (selected.size === correctCount) {
       setFeedback('correct');
-      setTimeout(() => {
+      schedule(() => {
         setFraction(generateFraction());
         setSelected(new Set());
         setFeedback(null);
       }, 1200);
     } else {
       setFeedback('wrong');
-      setTimeout(() => setFeedback(null), 800);
+      schedule(() => setFeedback(null), 800);
     }
   };
 

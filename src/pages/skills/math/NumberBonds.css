@@ -290,3 +290,15 @@ body.dark .bonds-custom-input {
     height: 70px;
   }
 }
+/* Small-target warning (I13) */
+.bonds-notice {
+  margin: 0 auto 0.5rem;
+  max-width: 32rem;
+  font-size: 0.9rem;
+  opacity: 0.85;
+  color: var(--light-text);
+}
+
+body.dark .bonds-notice {
+  color: var(--dark-text);
+}

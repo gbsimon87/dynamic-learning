@@ -1,5 +1,5 @@
 /* === Wrapper === */
-.wrapper {
+.city-spotlight {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -8,51 +8,65 @@
   max-width: 700px;
   margin: 0 auto;
   text-align: center;
+  width: 100%;
 }
 
 /* === Score & Prompt === */
-.score {
+.city-spotlight .score {
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--light-text);
 }
 
-.prompt {
+.city-spotlight .prompt {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--light-text);
 }
 
-body.dark .score,
-body.dark .prompt {
+body.dark .city-spotlight .score,
+body.dark .city-spotlight .prompt {
   color: var(--dark-text);
 }
 
-/* === City Image === */
-.cityImage {
+/* === City Image ===
+   A fixed 4:3 box at every breakpoint. The source photos range from 2.12:1
+   (Sydney) to 0.75:1 (portrait Tokyo), so without a fixed ratio the card height
+   jumps between questions. `object-fit: cover` crops to fill rather than
+   letterboxing, and `aspect-ratio` reserves the space before the image loads so
+   the layout does not shift. */
+.city-spotlight .cityImage {
   width: 100%;
   max-width: 500px;
-  max-height: 15rem;
+  aspect-ratio: 4 / 3;
+  height: auto;
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
   object-fit: cover;
+  object-position: center;
+  background-color: var(--light-panel);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.cityImage:hover {
+body.dark .city-spotlight .cityImage {
+  background-color: var(--dark-panel);
+}
+
+.city-spotlight .cityImage:hover {
   transform: scale(1.03);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
 }
 
 /* === Options (Image Mode) === */
-.options {
+.city-spotlight .options {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   justify-content: center;
+  width: 100%;
 }
 
-.optionBtn {
+.city-spotlight .optionBtn {
   font-size: 1.2rem;
   padding: 0.8rem 1.5rem;
   border-radius: 10px;
@@ -65,52 +79,52 @@ body.dark .prompt {
   min-width: 130px;
 }
 
-.optionBtn:hover:not(:disabled) {
+.city-spotlight .optionBtn:hover:not(:disabled) {
   background-color: var(--light-accent);
   color: white;
   transform: translateY(-2px);
 }
 
-.optionBtn.correct {
+.city-spotlight .optionBtn.correct {
   background-color: var(--light-accent);
   color: white;
   border-color: var(--light-accent);
   transform: scale(1.05);
 }
 
-.optionBtn.wrong {
+.city-spotlight .optionBtn.wrong {
   background-color: #888;
   color: white;
   border-color: #888;
 }
 
-.optionBtn.dimmed {
+.city-spotlight .optionBtn.dimmed {
   opacity: 0.4;
   cursor: default;
 }
 
-body.dark .optionBtn {
+body.dark .city-spotlight .optionBtn {
   border-color: var(--dark-accent);
   background-color: var(--dark-panel);
   color: var(--dark-text);
 }
 
-body.dark .optionBtn:hover:not(:disabled) {
+body.dark .city-spotlight .optionBtn:hover:not(:disabled) {
   background-color: var(--dark-accent);
   color: var(--dark-bg);
 }
 
-body.dark .optionBtn.correct {
+body.dark .city-spotlight .optionBtn.correct {
   background-color: var(--dark-accent);
   color: var(--dark-bg);
 }
 
-body.dark .optionBtn.wrong {
+body.dark .city-spotlight .optionBtn.wrong {
   background-color: #555;
 }
 
 /* === Map Mode === */
-.mapContainer {
+.city-spotlight .mapContainer {
   width: 100%;
   max-width: 700px;
   height: 400px;
@@ -120,7 +134,7 @@ body.dark .optionBtn.wrong {
   margin-top: 0.5rem;
 }
 
-.leaflet-container {
+.city-spotlight .leaflet-container {
   width: 100%;
   height: 100%;
   cursor: pointer;
@@ -128,19 +142,19 @@ body.dark .optionBtn.wrong {
 }
 
 /* === Info/Feedback === */
-.info {
+.city-spotlight .info {
   font-size: 1.2rem;
   font-weight: 600;
   color: var(--light-accent);
   margin-top: 0.5rem;
 }
 
-body.dark .info {
+body.dark .city-spotlight .info {
   color: var(--dark-accent);
 }
 
 /* === Settings Panel (Start Screen) === */
-.settingsGroup {
+.city-spotlight .settingsGroup {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -148,18 +162,18 @@ body.dark .info {
   width: 100%;
 }
 
-.settingsGroup label {
+.city-spotlight .settingsGroup label {
   font-weight: 600;
   color: var(--light-text);
 }
 
-body.dark .settingsGroup label {
+body.dark .city-spotlight .settingsGroup label {
   color: var(--dark-text);
 }
 
 /* === Buttons === */
-.startBtn,
-.restartBtn {
+.city-spotlight .startBtn,
+.city-spotlight .restartBtn {
   padding: 0.9rem 2rem;
   font-size: 1.2rem;
   font-weight: 600;
@@ -171,20 +185,20 @@ body.dark .settingsGroup label {
   transition: all 0.25s ease;
 }
 
-.startBtn:hover,
-.restartBtn:hover {
+.city-spotlight .startBtn:hover,
+.city-spotlight .restartBtn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(239, 98, 108, 0.3);
 }
 
-body.dark .startBtn,
-body.dark .restartBtn {
+body.dark .city-spotlight .startBtn,
+body.dark .city-spotlight .restartBtn {
   background-color: var(--dark-accent);
   color: var(--dark-bg);
 }
 
 /* === Dropdown === */
-select {
+.city-spotlight select {
   width: 80%;
   max-width: 250px;
   padding: 0.6rem 1rem;
@@ -197,42 +211,40 @@ select {
   cursor: pointer;
 }
 
-select:hover,
-select:focus {
+.city-spotlight select:hover,
+.city-spotlight select:focus {
   border-color: var(--light-accent);
   box-shadow: 0 0 8px rgba(239, 98, 108, 0.3);
   outline: none;
 }
 
-body.dark select {
+body.dark .city-spotlight select {
   background-color: var(--dark-panel);
   color: var(--dark-text);
   border-color: var(--dark-accent);
 }
 
-body.dark select:hover,
-body.dark select:focus {
+body.dark .city-spotlight select:hover,
+body.dark .city-spotlight select:focus {
   box-shadow: 0 0 8px rgba(132, 220, 207, 0.3);
 }
 
 /* === Responsive Layout === */
 @media (max-width: 600px) {
-  .cityImage {
-    max-width: 90%;
+  .city-spotlight .cityImage {
+    max-width: 100%;
   }
 
-  .optionBtn {
+  .city-spotlight .optionBtn {
     font-size: 1.1rem;
     padding: 0.6rem 1.2rem;
   }
 
-  .mapContainer {
+  .city-spotlight .mapContainer {
     height: 300px;
   }
 }
 
-@media screen and (min-width: 768px) {
-  .cityImage {
-    max-height: none;
-  }
-}
+/* No desktop max-height override: `aspect-ratio` above governs the box at every
+   width. The previous `max-height: none` here is what let each image fall back
+   to its own natural aspect ratio on desktop. */

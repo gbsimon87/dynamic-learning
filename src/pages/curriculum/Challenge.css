@@ -7,7 +7,7 @@
   transition: all 0.3s ease;
 }
 
-.App.dark .challenge {
+body.dark .challenge {
   background-color: var(--dark-panel);
   color: var(--light-text);
 }
@@ -20,7 +20,7 @@
   margin-right: 0.5rem;
 }
 
-.App.dark .challenge input {
+body.dark .challenge input {
   border-color: var(--dark-accent);
   background-color: #222;
   color: var(--light-text);

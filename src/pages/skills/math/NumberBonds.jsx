@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { ThemeContext } from '../../../context/ThemeContext';
 import './NumberBonds.css';
 
@@ -12,6 +12,19 @@ function shuffle(array) {
   return newArr;
 }
 
+const MAX_PAIRS = 6;
+// Below this many pairs the memory game is trivial, so the UI warns instead.
+const MIN_USEFUL_PAIRS = 3;
+
+/** How many distinct bond pairs a target actually has. */
+function pairCountForTarget(target) {
+  let count = 0;
+  for (let a = 1; a < target; a += 1) {
+    if (a <= target - a) count += 1;
+  }
+  return count;
+}
+
 // Generate number bond cards
 function generateCards(target) {
   const nums = Array.from({ length: target }, (_, i) => i + 1);
@@ -20,7 +33,10 @@ function generateCards(target) {
     .map(n => [n, target - n])
     .filter(([a, b]) => a <= b);
 
-  const selected = shuffle(pairs).slice(0, 6);
+  // Cap by what actually exists. `slice(0, 6)` assumed 6 pairs were always
+  // available, but target 5 has only 2 and targets 2-3 have just 1 - producing a
+  // 2-card "memory game" that auto-completes on the first flip.
+  const selected = shuffle(pairs).slice(0, Math.min(MAX_PAIRS, pairs.length));
   const cards = selected.flatMap(([a, b]) => [
     { id: `${a}-${Math.random()}`, value: a, pair: b },
     { id: `${b}-${Math.random()}`, value: b, pair: a },
@@ -31,7 +47,29 @@ function generateCards(target) {
 export default function NumberBonds() {
   const { theme } = useContext(ThemeContext);
   const [target, setTarget] = useState(10);
-  const [isCustom, setIsCustom] = useState(false);  // ← ADD THIS LINE
+  const [isCustom, setIsCustom] = useState(false);
+  // Draft text for the custom-target box. The input used to be uncontrolled and
+  // committed on every keystroke, so typing "100" regenerated the board three
+  // times (target 1 -> 10 -> 100) and the practice question visibly flickered.
+  const [customDraft, setCustomDraft] = useState('');
+  const practiceTimerRef = useRef(null);
+
+  useEffect(
+    () => () => {
+      if (practiceTimerRef.current) clearTimeout(practiceTimerRef.current);
+    },
+    []
+  );
+
+  // Commit the draft on blur/Enter, clamped to the range the input advertises
+  // (min/max attributes alone are not enforced).
+  const commitCustomTarget = () => {
+    const parsed = parseInt(customDraft, 10);
+    if (Number.isNaN(parsed)) return;
+    const clamped = Math.min(100, Math.max(2, parsed));
+    setCustomDraft(String(clamped));
+    setTarget(clamped);
+  };
   const [mode, setMode] = useState('match');
   const [cards, setCards] = useState(() => generateCards(10));
   const [flipped, setFlipped] = useState([]);
@@ -119,7 +157,13 @@ export default function NumberBonds() {
     e.preventDefault();
     if (parseInt(answer) === question.correct) {
       setPracticeFeedback('correct');
-      setTimeout(() => generateQuestion(), 1000);
+      // Tracked: previously this fired even after switching to Match Mode,
+      // calling setQuestion on a component no longer showing a question.
+      if (practiceTimerRef.current) clearTimeout(practiceTimerRef.current);
+      practiceTimerRef.current = setTimeout(() => {
+        practiceTimerRef.current = null;
+        generateQuestion();
+      }, 1000);
     } else {
       setPracticeFeedback('wrong');
     }
@@ -153,16 +197,21 @@ export default function NumberBonds() {
               <option value="custom">Custom</option>
             </select>
 
-            {isCustom && (    // ← CHANGE THIS LINE ONLY
+            {isCustom && (
               <input
                 type="number"
                 min="2"
                 max="100"
                 placeholder="Enter number"
                 className="bonds-custom-input"
-                onChange={(e) => {
-                  const customVal = parseInt(e.target.value);
-                  if (!isNaN(customVal) && customVal > 1) setTarget(customVal);
+                value={customDraft}
+                onChange={(e) => setCustomDraft(e.target.value)}
+                onBlur={commitCustomTarget}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    commitCustomTarget();
+                  }
                 }}
               />
             )}
@@ -190,6 +239,14 @@ export default function NumberBonds() {
           </div>
 
           <p className="bonds-prompt">Find two numbers that add up to <strong>{target}</strong></p>
+
+          {pairCountForTarget(target) < MIN_USEFUL_PAIRS && (
+            <p className="bonds-notice">
+              Only {pairCountForTarget(target)}{' '}
+              {pairCountForTarget(target) === 1 ? 'pair adds' : 'pairs add'} up to{' '}
+              {target} — pick a bigger target for a longer game.
+            </p>
+          )}
 
           <div className="bonds-grid">
             {cards.map((card) => {

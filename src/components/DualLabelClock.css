@@ -1,15 +1,21 @@
 .clock-wrapper {
   position: relative;
-  width: 250px;
-  height: 250px;
+  /* Was a hard 250px square: too small for the 0.65rem dual labels to be legible
+     for a 6-year-old, and unable to grow on a tablet. */
+  width: clamp(250px, 60vmin, 420px);
+  aspect-ratio: 1;
+  height: auto;
   margin: 2rem auto;
 }
 
 .dual-label {
   position: absolute;
-  width: 30px;
+  width: 12%;
   text-align: center;
-  font-size: 0.65rem;
+  /* Scales with the clock, with a legible floor. */
+  font-size: clamp(0.72rem, 2.2vmin, 0.95rem);
+  line-height: 1.15;
+  font-weight: 600;
   transform: translate(-50%, -50%);
   pointer-events: none;
   color: inherit; /*<-! [CHANGED! allows text to follow theme]*/

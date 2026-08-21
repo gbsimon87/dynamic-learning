@@ -1,7 +1,15 @@
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import * as turf from '@turf/turf';
-import L from 'leaflet';
+
+/**
+ * `CONTINENT` values in countries.geojson that must never be asked as a
+ * continent. "Seven seas (open ocean)" is a single feature rendering as
+ * scattered ocean specks - the prompt "Tap the correct continent: Seven seas
+ * (open ocean)" is nonsense and near-impossible to tap. Antarctica is one
+ * feature with no countries to name.
+ */
+const EXCLUDED_CONTINENTS = new Set(['Seven seas (open ocean)', 'Antarctica']);
 
 const normalizeName = str =>
   str
@@ -29,6 +37,33 @@ export default function MapGame({ geoJson, mode }) {
     targetRef.current = target;
   }, [target]);
 
+  // Live `revealed`, so handlers don't compute it inside a state updater.
+  const revealedRef = useRef(revealed);
+  useEffect(() => {
+    revealedRef.current = revealed;
+  }, [revealed]);
+
+  // Single tracked round-advance timer, cancellable on click/reset/unmount.
+  const advanceTimerRef = useRef(null);
+
+  const scheduleNext = useCallback((action, delay) => {
+    if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
+    advanceTimerRef.current = setTimeout(() => {
+      advanceTimerRef.current = null;
+      setRound((r) => r + 1);
+      action();
+      setIsLocked(false);
+    }, delay);
+  }, []);
+
+  // Cancel any pending advance on unmount.
+  useEffect(
+    () => () => {
+      if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
+    },
+    []
+  );
+
   // --- Countries list with continent ---
   const countries = useMemo(() => {
     if (!geoJson?.features) return [];
@@ -43,7 +78,11 @@ export default function MapGame({ geoJson, mode }) {
   // When in continent mode, the "targets" are continents instead of countries
   const possibleTargets = useMemo(() => {
     if (mode === 'continents') {
-      const set = new Set(countries.map(c => c.continent).filter(Boolean));
+      const set = new Set(
+        countries
+          .map(c => c.continent)
+          .filter(name => name && !EXCLUDED_CONTINENTS.has(name))
+      );
       return Array.from(set);
     }
     return countries.map(c => c.name);
@@ -51,7 +90,11 @@ export default function MapGame({ geoJson, mode }) {
 
   // --- Unique list of continents for dropdown ---
   const continents = useMemo(() => {
-    const set = new Set(countries.map(c => c.continent).filter(Boolean));
+    const set = new Set(
+      countries
+        .map(c => c.continent)
+        .filter(name => name && !EXCLUDED_CONTINENTS.has(name))
+    );
     return ['All', ...Array.from(set).sort()];
   }, [countries]);
 
@@ -191,7 +234,7 @@ const continentGeoJson = useMemo(() => {
 
         return {
           weight: 1,
-          color: '#555',
+          color: 'var(--map-text)',
           fillColor: isRevealed ? '#22c55e' : '#bde0fe',
           fillOpacity: isRevealed ? 0.85 : 0.8,
         };
@@ -207,7 +250,7 @@ const continentGeoJson = useMemo(() => {
 
         return {
           weight: isWrong ? 1.5 : 0.6,
-          color: isWrong ? '#b91c1c' : '#666',
+          color: isWrong ? '#b91c1c' : 'var(--map-muted)',
           fillColor: isRevealed ? '#22c55e' : '#d1d5db',
           fillOpacity: isRevealed ? 0.85 : 0.8,
         };
@@ -217,6 +260,35 @@ const continentGeoJson = useMemo(() => {
   );
 
   // --- Feature interactivity ---
+  // Make a Leaflet vector layer focusable, named and Enter/Space activatable.
+  const makeAccessible = useCallback((layer, name, activate) => {
+    // onEachFeature runs before the path exists, so getElement() is null here.
+    const apply = () => {
+      const el = layer.getElement?.();
+      if (!el || el.dataset.a11yReady === '1') return;
+      el.dataset.a11yReady = '1';
+      applyTo(el);
+    };
+
+    const applyTo = (el) => {
+    el.setAttribute('tabindex', '0');
+    el.setAttribute('role', 'button');
+    el.setAttribute('aria-label', name);
+    el.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') {
+        event.preventDefault();
+        activate();
+      }
+    });
+    el.addEventListener('focus', () => layer.setStyle({ weight: 3 }));
+    el.addEventListener('blur', () => layer.setStyle(styleFeature(layer.feature)));
+    };
+
+    // Child layers never emit their own `add`, so retry next frame.
+    if (layer.getElement?.()) apply();
+    else requestAnimationFrame(apply);
+  }, [styleFeature]);
+
   const onEachFeature = useCallback(
     (feature, layer) => {
       if (mode === 'continents') {
@@ -231,7 +303,7 @@ const continentGeoJson = useMemo(() => {
         });
         layer.on('mouseout', () => layer.setStyle(styleFeature(feature)));
 
-        layer.on('click', () => {
+        const activateContinent = () => {
           if (isLocked || !targetRef.current) return;
 
           const currentTarget = targetRef.current;
@@ -239,37 +311,32 @@ const continentGeoJson = useMemo(() => {
 
           const isCorrect = normalizeName(continentName) === normalizeName(currentTarget);
 
+          // Only a correct answer retires the target.
+          const updated = isCorrect
+            ? new Set(revealedRef.current).add(currentTarget)
+            : new Set(revealedRef.current);
+
           if (isCorrect) {
             setMessage(`✅ Correct! That is ${continentName}.`);
             setScore((s) => s + 1);
-
-            setRevealed((prev) => {
-              const updated = new Set(prev).add(currentTarget);
-              setTimeout(() => {
-                setRound((r) => r + 1);
-                const next = pickRandomTarget(continentFilter, updated);
-                setTarget(next);
-                setMessage('Tap the correct continent!');
-                setIsLocked(false);
-              }, 700);
-              return updated;
-            });
+            setRevealed(updated);
           } else {
-            setMessage(`❌ Not quite — you clicked ${continentName}.`);
-
-            setRevealed((prev) => {
-              const updated = new Set(prev).add(currentTarget);
-              setTimeout(() => {
-                setRound((r) => r + 1);
-                const next = pickRandomTarget(continentFilter, updated);
-                setTarget(next);
-                setMessage('Tap the correct continent!');
-                setIsLocked(false);
-              }, 900);
-              return updated;
-            });
+            setMessage(`❌ Not quite — that is ${continentName}. Try again!`);
           }
-        });
+
+          // Outside the state updater: StrictMode runs updaters twice.
+          scheduleNext(
+            () => {
+              const next = pickRandomTarget(continentFilter, updated);
+              setTarget(next);
+              setMessage('Tap the correct continent!');
+            },
+            isCorrect ? 700 : 1200
+          );
+        };
+
+        layer.on('click', activateContinent);
+        makeAccessible(layer, continentName, activateContinent);
       } else {
         // Country mode: features have ADMIN/NAME properties
         const countryName =
@@ -285,7 +352,7 @@ const continentGeoJson = useMemo(() => {
         });
         layer.on('mouseout', () => layer.setStyle(styleFeature(feature)));
 
-        layer.on('click', () => {
+        const activateCountry = () => {
           if (isLocked || !targetRef.current) return;
 
           const currentTarget = targetRef.current;
@@ -293,43 +360,37 @@ const continentGeoJson = useMemo(() => {
 
           const isCorrect = normalizeName(countryName) === normalizeName(currentTarget);
 
+          // Only a correct answer reveals.
+          const updated = isCorrect
+            ? new Set(revealedRef.current).add(currentTarget)
+            : new Set(revealedRef.current);
+
           if (isCorrect) {
             setMessage(`✅ Correct! That is ${countryName}.`);
             setScore((s) => s + 1);
             setLastWrong(null);
-
-            setRevealed((prev) => {
-              const updated = new Set(prev).add(currentTarget);
-              setTimeout(() => {
-                setRound((r) => r + 1);
-                const next = pickRandomTarget(continentFilter, updated);
-                setTarget(next);
-                setMessage('Click the correct country!');
-                setIsLocked(false);
-              }, 700);
-              return updated;
-            });
+            setRevealed(updated);
           } else {
-            setMessage(`❌ Not quite — you clicked ${countryName}.`);
+            setMessage(`❌ Not quite — that is ${countryName}. Try again!`);
             setLastWrong(countryName);
-
-            setRevealed((prev) => {
-              const updated = new Set(prev).add(currentTarget);
-              setTimeout(() => {
-                setLastWrong(null);
-                setRound((r) => r + 1);
-                const next = pickRandomTarget(continentFilter, updated);
-                setTarget(next);
-                setMessage('Click the correct country!');
-                setIsLocked(false);
-              }, 900);
-              return updated;
-            });
           }
-        });
+
+          scheduleNext(
+            () => {
+              setLastWrong(null);
+              const next = pickRandomTarget(continentFilter, updated);
+              setTarget(next);
+              setMessage('Click the correct country!');
+            },
+            isCorrect ? 700 : 1200
+          );
+        };
+
+        layer.on('click', activateCountry);
+        makeAccessible(layer, countryName, activateCountry);
       }
     },
-    [isLocked, pickRandomTarget, styleFeature, revealed, continentFilter, mode]
+    [isLocked, pickRandomTarget, styleFeature, revealed, continentFilter, mode, scheduleNext, makeAccessible]
   );
 
 
@@ -371,7 +432,7 @@ const continentGeoJson = useMemo(() => {
         zoomControl={false}
       >
         <TileLayer
-          key={mode}
+          key={`tiles-${mode}`}
           attribution="&copy; OpenStreetMap contributors"
           url={
             mode === 'continents'
@@ -396,12 +457,13 @@ const continentGeoJson = useMemo(() => {
 function TopBar({ target, score, round, message, onReset, continents, continentFilter, setContinentFilter, mode }) {
   return (
     <div
+      className="mapgame-hud"
       style={{
         position: 'absolute',
         top: 12,
         left: '50%',
         transform: 'translateX(-50%)',
-        background: 'rgba(255,255,255,0.95)',
+        background: 'var(--map-hud)',
         padding: '10px 14px',
         borderRadius: 10,
         boxShadow: '0 6px 20px rgba(0,0,0,0.08)',
@@ -409,6 +471,13 @@ function TopBar({ target, score, round, message, onReset, continents, continentF
         gap: 12,
         alignItems: 'center',
         flexWrap: 'wrap',
+        justifyContent: 'center',
+        // Without a max width, a long target name ("Democratic Republic of the
+        // Congo") pushed the HUD past the viewport edge; without a height cap it
+        // wrapped to 5-6 rows on a phone and covered the map the child must tap.
+        maxWidth: 'min(calc(100% - 24px), 640px)',
+        maxHeight: '40%',
+        overflowY: 'auto',
         zIndex: 1000
       }}
       aria-live="polite"
@@ -453,7 +522,7 @@ function TopBar({ target, score, round, message, onReset, continents, continentF
         Reset
       </button>
 
-      <em style={{ color: '#555' }}>{message}</em>
+      <em style={{ color: 'var(--map-text)' }}>{message}</em>
     </div>
   );
 }

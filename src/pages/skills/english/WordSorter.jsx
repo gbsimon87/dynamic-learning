@@ -49,11 +49,27 @@ const WORD_BANK = [
 ];
 
 
-// Pick random 6 words (2 of each type ideally)
-function generateSet() {
-  const shuffled = [...WORD_BANK].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, 6);
+const TYPES = ['noun', 'verb', 'adjective'];
+const PER_TYPE = 2;
+
+function shuffle(array) {
+  const newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
 }
+
+// Even 2-of-each-type deal, so every bucket is always fillable.
+function generateSet() {
+  const picked = TYPES.flatMap((type) =>
+    shuffle(WORD_BANK.filter((w) => w.type === type)).slice(0, PER_TYPE)
+  );
+  return shuffle(picked);
+}
+
+const WORDS_PER_ROUND = TYPES.length * PER_TYPE;
 
 export default function WordSorter() {
   const { theme } = useContext(ThemeContext);
@@ -67,6 +83,14 @@ export default function WordSorter() {
   const [total, setTotal] = useState(0);
   const [feedback, setFeedback] = useState(null);
   const [completed, setCompleted] = useState(false);
+
+  // Used by both the auto-advance and the manual button.
+  function startNewRound() {
+    setWords(generateSet());
+    setBuckets({ noun: [], verb: [], adjective: [] });
+    setFeedback(null);
+    setCompleted(false);
+  }
 
   // Handle drag end logic
   function handleDragEnd(result) {
@@ -109,9 +133,8 @@ export default function WordSorter() {
 
   // Check if all sorted → give feedback
   useEffect(() => {
-    const totalPlaced =
-      buckets.noun.length + buckets.verb.length + buckets.adjective.length;
-    if (totalPlaced === 6 && !completed) {
+    const totalPlaced = TYPES.reduce((n, type) => n + buckets[type].length, 0);
+    if (totalPlaced === WORDS_PER_ROUND && !completed) {
       const allSorted = [...buckets.noun, ...buckets.verb, ...buckets.adjective];
       const correctCount = allSorted.filter((w) => w.type === getTypeOfBucket(w, buckets)).length;
 
@@ -121,23 +144,22 @@ export default function WordSorter() {
       const isPerfect = correctCount === allSorted.length;
       setFeedback(isPerfect ? 'correct' : 'wrong');
       setCompleted(true);
-
-      const timer = setTimeout(() => {
-        setWords(generateSet());
-        setBuckets({ noun: [], verb: [], adjective: [] });
-        setFeedback(null);
-        setCompleted(false);
-      }, 2000);
-
-      return () => clearTimeout(timer);
     }
   }, [buckets, completed]);
 
+  // Must be its own effect keyed on `completed`: scheduling it alongside
+  // setCompleted(true) meant the cleanup cleared the timer before it fired.
+  useEffect(() => {
+    if (!completed) return;
+    const timer = setTimeout(() => startNewRound(), 2000);
+    return () => clearTimeout(timer);
+  }, [completed]);
+
+  // Match by value, not object identity.
   function getTypeOfBucket(word, allBuckets) {
-    if (allBuckets.noun.includes(word)) return 'noun';
-    if (allBuckets.verb.includes(word)) return 'verb';
-    if (allBuckets.adjective.includes(word)) return 'adjective';
-    return null;
+    return (
+      TYPES.find((type) => allBuckets[type].some((w) => w.word === word.word)) ?? null
+    );
   }
 
   return (
@@ -223,6 +245,10 @@ export default function WordSorter() {
           {feedback === 'correct' ? '✓ Perfect sorting!' : '✗ Some are incorrect'}
         </div>
       )}
+
+      <button className="sorter-newBtn" onClick={startNewRound} disabled={completed}>
+        🔄 New words
+      </button>
     </div>
   );
 }

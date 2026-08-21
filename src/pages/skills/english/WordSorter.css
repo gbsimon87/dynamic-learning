@@ -131,3 +131,36 @@ body.dark .sorter-feedback.correct {
 body.dark .sorter-feedback.wrong {
   color: #aaa;
 }
+.sorter-newBtn {
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: 2px solid var(--light-accent);
+  background-color: var(--light-panel);
+  color: var(--light-text);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sorter-newBtn:hover:not(:disabled) {
+  background-color: var(--light-accent);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.sorter-newBtn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+body.dark .sorter-newBtn {
+  border-color: var(--dark-accent);
+  background-color: var(--dark-panel);
+  color: var(--dark-text);
+}
+
+body.dark .sorter-newBtn:hover:not(:disabled) {
+  background-color: var(--dark-accent);
+  color: var(--dark-bg);
+}

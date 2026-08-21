@@ -15,7 +15,7 @@
   margin-bottom: 0.5rem;
 }
 
-.App.dark .notfound-title {
+body.dark .notfound-title {
   color: var(--dark-accent);
 }
 
@@ -50,16 +50,16 @@
 
 .notfound-btn-primary {
   background-color: var(--light-accent);
-  color: var(--light-bg);
+  color: var(--on-light-accent);
 }
 
-.App.dark .notfound-btn {
+body.dark .notfound-btn {
   border-color: var(--dark-accent);
   color: var(--dark-text);
 }
 
-.App.dark .notfound-btn:hover,
-.App.dark .notfound-btn-primary {
+body.dark .notfound-btn:hover,
+body.dark .notfound-btn-primary {
   background-color: var(--dark-accent);
   color: var(--dark-bg);
 }

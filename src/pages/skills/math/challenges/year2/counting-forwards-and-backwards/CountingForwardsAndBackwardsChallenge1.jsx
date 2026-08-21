@@ -31,11 +31,8 @@ function CountingForwardsAndBackwardsChallenge1({ onComplete }) {
 
   return (
     <div className="challenge-container">
-      <h3>Counting Backwards Practice</h3>
-      <p>
-        Use the number line below to help you count. Start at{" "}
-        <strong>{startNumber}</strong> and count back the numbers shown.
-      </p>
+      <h3>Count back from {startNumber}</h3>
+      <p>Use the number line to help you.</p>
 
       {/* --- Number line reference --- */}
       <div className="number-line">
@@ -56,8 +53,7 @@ function CountingForwardsAndBackwardsChallenge1({ onComplete }) {
         {countBacks.map((n, i) => (
           <div key={i} className="count-question">
             <span>
-              Start at <strong>{startNumber}</strong> and count back{" "}
-              <strong>{n}</strong>:
+              back <strong>{n}</strong>
             </span>
             <input
               type="text"

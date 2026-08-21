@@ -114,10 +114,15 @@ body.dark .topic-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
 .topic-title {
   font-size: 1.2rem;
+  /* Let the title give way before the nowrap badge is pushed out. */
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .topic-badge {
@@ -141,7 +146,7 @@ body.dark .topic-card {
 
 .skill-btn {
   background-color: var(--light-accent);
-  color: white;
+  color: var(--on-light-accent);
   padding: 0.7rem;
   border-radius: 10px;
   text-decoration: none;
@@ -151,16 +156,20 @@ body.dark .topic-card {
 
 .skill-btn:hover {
   transform: scale(1.04);
-  background-color: #d44e58;
+  /* Lighter, not darker: keeps the dark ink above AA (6.27:1 vs 4.14:1). */
+  background-color: #F2757E;
 }
 
 .completed-btn {
-  background-color: #4caf50 !important;
-  color: white;
+  background-color: #2e7d32 !important; /* darker green: white text reaches 5.4:1 */
+  color: #ffffff;
 }
 
 .locked-btn {
-  background-color: gray !important;
+  /* `gray` (#808080) carried the inherited dark ink at ~3.4:1. A darker grey with
+     explicit white ink reads clearly while still looking disabled. */
+  background-color: #5f5f5f !important;
+  color: #ffffff !important;
   cursor: not-allowed;
 }
 
@@ -175,4 +184,30 @@ body.dark .topic-card {
   to {
     opacity: 1;
   }
+}
+
+/* === Not-yet-built challenges / topics (I3) === */
+.skill-btn.soon-btn {
+  /* Muted via colour rather than `opacity`, which would also wash out the label
+     and drop it below the contrast floor. */
+  background-color: #5f5f5f !important;
+  color: #ffffff !important;
+  border: 2px dashed #9a9a9a;
+  cursor: not-allowed;
+}
+
+.topic-badge.soon {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  border: 1px dashed var(--light-accent);
+  color: var(--light-text);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+body.dark .topic-badge.soon {
+  border-color: var(--dark-accent);
+  color: var(--dark-text);
 }

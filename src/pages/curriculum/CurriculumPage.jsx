@@ -5,6 +5,10 @@ import {
   loadCurriculum,
 } from "../../data/curriculumRegistry";
 import { useProgress } from "../../hooks/useProgress";
+import {
+  isChallengeImplemented,
+  isTopicUnbuilt,
+} from "../../data/challengeAvailability";
 import "./CurriculumPage.css";
 import "./CurriculumSelectPage.css";
 
@@ -13,8 +17,14 @@ function CurriculumPage() {
   const year = Number(params.year);
   const subject = params.subject;
 
-  const { progress, hydrated, isTopicComplete, isCategoryComplete } =
-    useProgress(year, subject);
+  const {
+    progress,
+    hydrated,
+    isTopicComplete,
+    isChallengeUnlocked,
+    isCategoryComplete,
+    isCategoryPassable,
+  } = useProgress(year, subject);
 
   // Unknown or not-yet-built year/subject → back to the picker
   if (!isCurriculumAvailable(year, subject)) {
@@ -43,10 +53,17 @@ function CurriculumPage() {
       {/* Category Cards Grid */}
       <div className="curriculum-grid">
         {curriculum.map((category, catIndex) => {
+          // Unbuilt topics must not count against their category.
+          const skipUnbuilt = (topic) =>
+            isTopicUnbuilt(subject, year, topic.id, topic.challenges);
+
+          // Every earlier category must be passable, not just the previous one:
+          // an empty category reports passable, which would reopen the chain.
           const categoryLocked =
             (isFirstTimeUser && catIndex > 0) ||
-            (catIndex > 0 &&
-              !isCategoryComplete(curriculum[catIndex - 1]));
+            curriculum
+              .slice(0, catIndex)
+              .some((earlier) => !isCategoryPassable(earlier, skipUnbuilt));
 
           return (
             <section
@@ -57,7 +74,7 @@ function CurriculumPage() {
                 <h2 className="curriculum-card-title">
                   {category.title}
                 </h2>
-                {isCategoryComplete(category) && (
+                {isCategoryComplete(category, skipUnbuilt) && (
                   <span className="curriculum-badge">✅ Completed</span>
                 )}
                 {categoryLocked && (
@@ -68,14 +85,32 @@ function CurriculumPage() {
               {/* Topic List */}
               <div className="topic-grid">
                 {category.topics.map((topic, topicIndex) => {
-                  const topicLocked =
-                    categoryLocked ||
-                    (topicIndex > 0 &&
-                      !isTopicComplete(
-                        category.id,
-                        category.topics[topicIndex - 1].id,
-                        category.topics[topicIndex - 1]
-                      ));
+                  // An unbuilt topic can't be completed, so it must not gate
+                  // the next one.
+                  const previousTopic =
+                    topicIndex > 0 ? category.topics[topicIndex - 1] : null;
+                  const previousBlocks =
+                    previousTopic &&
+                    !isTopicUnbuilt(
+                      subject,
+                      year,
+                      previousTopic.id,
+                      previousTopic.challenges
+                    ) &&
+                    !isTopicComplete(
+                      category.id,
+                      previousTopic.id,
+                      previousTopic
+                    );
+
+                  const topicUnbuilt = isTopicUnbuilt(
+                    subject,
+                    year,
+                    topic.id,
+                    topic.challenges
+                  );
+
+                  const topicLocked = categoryLocked || Boolean(previousBlocks);
 
                   const topicComplete = isTopicComplete(
                     category.id,
@@ -92,6 +127,9 @@ function CurriculumPage() {
                     >
                       <div className="topic-card-header">
                         <h3 className="topic-title">{topic.name}</h3>
+                        {topicUnbuilt && !topicLocked && (
+                          <span className="topic-badge soon">🚧 Coming soon</span>
+                        )}
 
                         {topicLocked && <span className="topic-badge locked">🔒</span>}
                         {topicComplete && <span className="topic-badge">✅</span>}
@@ -105,32 +143,49 @@ function CurriculumPage() {
                               progress[category.id]?.topics?.[topic.id]
                                 ?.completedChallenges || [];
 
-                            let challengeLocked;
+                            // Open once everything before it is done, or if
+                            // already done itself.
+                            const challengeLocked =
+                              categoryLocked ||
+                              topicLocked ||
+                              !(
+                                completedChallenges.includes(challenge.id) ||
+                                isChallengeUnlocked(
+                                  category.id,
+                                  topic.id,
+                                  topic,
+                                  challengeIndex,
+                                  (c) =>
+                                    !isChallengeImplemented(
+                                      subject,
+                                      year,
+                                      topic.id,
+                                      c.id
+                                    )
+                                )
+                              );
 
-                            // FULL LOCK PROTECTION
-                            if (categoryLocked || topicLocked) {
-                              challengeLocked = true;
-                            } else {
-                              const numCompleted = completedChallenges.length;
-
-                              // Unlock logic
-                              if (numCompleted === 0) {
-                                challengeLocked = challengeIndex !== 0;
-                              } else {
-                                if (completedChallenges.includes(challenge.id)) {
-                                  challengeLocked = false;
-                                } else if (challengeIndex === numCompleted) {
-                                  challengeLocked = false;
-                                } else {
-                                  challengeLocked = true;
-                                }
-                              }
-                            }
+                            // Not built yet: don't link to a dead page.
+                            const challengeMissing = !isChallengeImplemented(
+                              subject,
+                              year,
+                              topic.id,
+                              challenge.id
+                            );
 
                             const isCompleted =
                               completedChallenges.includes(challenge.id);
 
-                            return challengeLocked ? (
+                            return challengeMissing && !challengeLocked ? (
+                              <button
+                                key={challenge.id}
+                                className="skill-btn soon-btn"
+                                disabled
+                                title="This challenge hasn't been built yet"
+                              >
+                                {challenge.title} 🚧
+                              </button>
+                            ) : challengeLocked ? (
                               <button
                                 key={challenge.id}
                                 className="skill-btn locked-btn"

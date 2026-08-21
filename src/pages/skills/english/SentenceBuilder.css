@@ -133,3 +133,54 @@ body.dark .check-btn {
 body.dark .check-btn:hover:not(:disabled) {
   box-shadow: 0 4px 8px rgba(132, 220, 207, 0.3);
 }
+
+/* === Settings screen (R4) === */
+.sentence-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 380px;
+}
+
+.sentence-settingsGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.sentence-settingsGroup label {
+  font-weight: 600;
+  color: var(--light-text);
+}
+
+.sentence-settingsGroup input[type='range'] {
+  width: 100%;
+  accent-color: var(--light-accent);
+  cursor: pointer;
+}
+
+.sentence-poolCount {
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.8;
+  color: var(--light-text);
+}
+
+.sentence-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+body.dark .sentence-settingsGroup label,
+body.dark .sentence-poolCount {
+  color: var(--dark-text);
+}
+
+body.dark .sentence-settingsGroup input[type='range'] {
+  accent-color: var(--dark-accent);
+}

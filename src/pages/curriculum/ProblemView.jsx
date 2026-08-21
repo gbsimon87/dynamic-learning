@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Challenge from "./Challenge";
 import { useProgress } from "../../hooks/useProgress";
 import "./ProblemView.css";
@@ -14,12 +14,25 @@ function ProblemView() {
   const completed =
     justCompleted || isChallengeComplete(categoryId, topicId, challengeId);
 
+  // Tracked so Back doesn't get overridden by a pending navigation.
+  const navigateTimerRef = useRef(null);
+
+  useEffect(
+    () => () => {
+      if (navigateTimerRef.current) clearTimeout(navigateTimerRef.current);
+    },
+    []
+  );
+
   const handleComplete = () => {
+    // Idempotent: a double-submit must not navigate twice.
+    if (navigateTimerRef.current) return;
+
     completeChallenge(categoryId, topicId, challengeId);
     setJustCompleted(true);
 
-    // ✅ Navigate back after a short delay
-    setTimeout(() => {
+    navigateTimerRef.current = setTimeout(() => {
+      navigateTimerRef.current = null;
       navigate(`/curriculum/year/${year}/${subject}`);
     }, 1000);
   };

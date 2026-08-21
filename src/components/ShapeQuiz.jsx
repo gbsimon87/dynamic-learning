@@ -237,7 +237,6 @@ function ShapeQuiz() {
   }
 
   const isCorrect = selected === question.shape.id;
-  const isWrong = selected !== null && !isCorrect;
 
   return (
     <div style={{
@@ -253,7 +252,7 @@ function ShapeQuiz() {
       <div style={{
         fontSize: '1.2rem',
         fontWeight: '600',
-        color: '#22181C'
+        color: 'var(--sq-text)'
       }}>
         Score: {score} / {total}
       </div>
@@ -264,7 +263,7 @@ function ShapeQuiz() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#ffffff',
+        backgroundColor: 'var(--sq-panel)',
         borderRadius: '12px',
         padding: '2rem',
         boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
@@ -275,7 +274,7 @@ function ShapeQuiz() {
       <div style={{
         fontSize: '1.5rem',
         fontWeight: '600',
-        color: '#22181C',
+        color: 'var(--sq-text)',
         marginTop: '1rem'
       }}>
         What shape is this?
@@ -293,8 +292,8 @@ function ShapeQuiz() {
             padding: '1rem',
             fontSize: '1rem',
             fontWeight: '500',
-            backgroundColor: '#ffffff',
-            color: '#22181C',
+            backgroundColor: 'var(--sq-panel)',
+            color: 'var(--sq-text)',
             borderWidth: '2px',
             borderStyle: 'solid',
             borderColor: '#EF626C',
@@ -360,7 +359,7 @@ function ShapeQuiz() {
           color: isCorrect ? '#10b981' : '#ef4444',
           marginTop: '0.5rem'
         }}>
-          {isCorrect ? '✓ Correct!' : `✗ Wrong! It was a ${question.shape.name}`}
+          {isCorrect ? '✓ Correct!' : `✗ Shucks! It was a ${question.shape.name}`}
         </div>
       )}
     </div>

@@ -28,3 +28,78 @@ nav.navbar {
   cursor: pointer;
   color: inherit;
 }
+
+/* === Hub links + toggle (I24) === */
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.navbar-link {
+  text-decoration: none;
+  color: inherit;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.45rem 0.7rem;
+  border-radius: 8px;
+  /* Comfortable tap target on a phone. */
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.navbar-link:hover,
+.navbar-link:focus-visible {
+  background-color: rgba(239, 98, 108, 0.14);
+}
+
+.navbar-link.active {
+  background-color: rgba(239, 98, 108, 0.22);
+}
+
+body.dark .navbar-link:hover,
+body.dark .navbar-link:focus-visible {
+  background-color: rgba(132, 220, 207, 0.16);
+}
+
+body.dark .navbar-link.active {
+  background-color: rgba(132, 220, 207, 0.26);
+}
+
+.theme-btn {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+@media (max-width: 420px) {
+  .navbar-link {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.5rem;
+  }
+}
+
+/* Keep the bar to a single row: wrapping made it 90px tall on a phone, which
+   then ate into full-viewport pages like the World Map. */
+nav.navbar {
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+}
+
+.logo {
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  nav.navbar {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .logo {
+    font-size: 1rem;
+  }
+
+  .navbar-link {
+    min-height: 40px;
+  }
+}

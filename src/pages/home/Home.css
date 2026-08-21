@@ -71,7 +71,7 @@ body.dark .curriculum-section {
 .curriculum-btn {
   display: inline-block;
   background-color: var(--light-accent);
-  color: white;
+  color: var(--on-light-accent);
   padding: 1rem 1.4rem;
   font-size: 1.2rem;
   font-weight: bold;
@@ -82,7 +82,7 @@ body.dark .curriculum-section {
 
 .curriculum-btn:hover {
   transform: scale(1.05);
-  background-color: #d44e58;
+  background-color: #F2757E; /* lighter, not darker: keeps dark ink at 6.27:1 (was 4.14) */
 }
 
 body.dark .curriculum-btn {
@@ -148,14 +148,14 @@ body.dark .feature-card {
   display: inline-block;
   padding: 0.6rem 1rem;
   background-color: var(--light-accent);
-  color: white;
+  color: var(--on-light-accent);
   border-radius: 8px;
   text-decoration: none;
   transition: background-color 0.3s;
 }
 
 .small-btn:hover {
-  background-color: #d44e58;
+  background-color: #F2757E; /* lighter, not darker: keeps dark ink at 6.27:1 (was 4.14) */
 }
 
 body.dark .small-btn {

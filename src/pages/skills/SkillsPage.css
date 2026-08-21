@@ -96,7 +96,7 @@ body.dark .skills-card-title {
 
 .skill-btn {
   background-color: var(--light-accent);
-  color: white;
+  color: var(--on-light-accent);
   padding: 0.7rem 1rem;
   border-radius: 10px;
   text-decoration: none;
@@ -107,7 +107,7 @@ body.dark .skills-card-title {
 }
 
 .skill-btn:hover {
-  background-color: #d44e58;
+  background-color: #F2757E; /* lighter, not darker: keeps dark ink at 6.27:1 (was 4.14) */
   transform: scale(1.04);
 }
 
