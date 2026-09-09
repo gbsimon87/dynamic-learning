@@ -1,0 +1,103 @@
+:root {
+  --reader-backdrop: rgba(34, 24, 28, 0.72);
+  --reader-surface: var(--light-panel);
+}
+
+body.dark {
+  --reader-backdrop: rgba(10, 6, 8, 0.82);
+  --reader-surface: var(--dark-panel);
+}
+
+.ro-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  overflow-y: auto;
+  background-color: var(--reader-backdrop);
+  box-sizing: border-box;
+}
+
+.ro-panel {
+  position: relative;
+  width: min(56rem, 100%);
+  min-height: min(32rem, calc(100dvh - 2rem));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 3.5rem 1.5rem 1.5rem;
+  border-radius: 18px;
+  background-color: var(--reader-surface);
+  color: var(--light-text);
+  box-sizing: border-box;
+  box-shadow: 0 1rem 3rem rgba(34, 24, 28, 0.28);
+}
+
+body.dark .ro-panel {
+  color: var(--dark-text);
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.45);
+}
+
+.ro-close {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.ro-close:hover {
+  background-color: var(--map-chip);
+}
+
+.ro-panel:focus-visible,
+.ro-panel :focus-visible {
+  outline: 3px solid var(--light-accent);
+  outline-offset: 3px;
+}
+
+body.dark .ro-panel:focus-visible,
+body.dark .ro-panel :focus-visible {
+  outline-color: var(--dark-accent);
+}
+
+@media (max-width: 40rem) {
+  .ro-backdrop {
+    align-items: stretch;
+    padding: 0;
+  }
+
+  .ro-panel {
+    width: 100%;
+    min-height: 100dvh;
+    padding: 3.75rem 1rem 1.25rem;
+    border-radius: 0;
+  }
+}
+
+@media (max-height: 36rem) and (min-width: 40.001rem) {
+  .ro-backdrop {
+    align-items: flex-start;
+  }
+
+  .ro-panel {
+    min-height: calc(100dvh - 2rem);
+  }
+}

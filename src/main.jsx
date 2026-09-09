@@ -22,6 +22,7 @@ import SentenceBuilder from "./pages/skills/english/SentenceBuilder";
 import OppositeMatch from "./pages/skills/english/OppositeMatch";
 import SynonymSafari from "./pages/skills/english/SynonymSafari";
 import SightWordPop from "./pages/skills/english/SightWordPop";
+import SpeedReader from "./pages/skills/english/SpeedReader";
 
 // === SKILLS: Geography ===
 import WorldMap from "./pages/skills/geography/WorldMap";
@@ -76,6 +77,7 @@ const router = createBrowserRouter([
       { path: "opposite-match", element: <OppositeMatch /> },
       { path: "synonym-match", element: <SynonymSafari /> },
       { path: "sight-word-pop", element: <SightWordPop /> },
+      { path: "speed-reader", element: <SpeedReader /> },
 
       // === Geography Skills ===
       { path: "world-map", element: <WorldMap /> },

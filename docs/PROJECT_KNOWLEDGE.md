@@ -17,7 +17,7 @@
 > file reflects it. Also update [PROJECT_IDEAS.md](PROJECT_IDEAS.md) when an idea
 > moves between statuses.
 
-**Last reviewed:** 2026-08-21
+**Last reviewed:** 2026-09-10
 
 ---
 
@@ -224,7 +224,7 @@ driven by CSS variables in [index.css](../src/index.css) so both themes work.
 Practice, Find the Missing Number, Number Bonds, Fraction Fun
 **Geometry:** Shape Explorer
 **English:** Word Builder, Word Sorter, Sentence Builder, Opposite Match,
-Synonym Safari, Sight Word Pop
+Synonym Safari, Sight Word Pop, Speed Reader
 **Geography:** Solar System (3D), World Map, Flag Finder, City Spotlight
 
 ### Curriculum Mode — built challenges
@@ -284,7 +284,9 @@ without a changelog note or the report was inaccurate.
    scoring. Verified with simulated real mouse drags in-browser (Playwright's
    synthetic `dragTo` doesn't trigger `@hello-pangea/dnd`'s pointer sensor —
    needed manual `mouse.move`/`down`/`up` sequencing with pauses).
-4. **No tests** — there is no test framework or a single test in the repo.
+4. **No component-test framework** — pure Speed Reader pacing and story data use
+   Node's built-in `node:test` via `npm test`, with no added dependency. React
+   component tests still need a deliberate Vitest/jsdom/Testing Library setup.
 5. **Fragile IDs** — renaming a curriculum title changes its kebab-case ID and
    orphans existing `localStorage` progress. No migration path exists. The
    `useProgress` extraction (item 6) did not add schema versioning or a
@@ -316,6 +318,19 @@ This was previously listed here and as idea #10 in
 ---
 
 ## 7. How To Add Things (playbooks)
+
+### Pure-logic tests
+
+`npm test` runs Node's built-in test discovery. Keep these tests React-free.
+Component tests remain deferred until the project deliberately adopts a
+browser-like test environment.
+
+### Modal / overlay pattern
+
+`src/pages/skills/english/ReaderOverlay.jsx` is the app's first modal. It remains
+local to Speed Reader and accepts only `children`, `onClose`, and `label`. When a
+second game needs a modal, move and generalise this implementation under
+`src/components/ui/` instead of creating a second focus/scroll-lock pattern.
 
 ### Add a new Skill game
 1. Create `src/pages/skills/<subject>/<GameName>.jsx` + `<GameName>.css`.

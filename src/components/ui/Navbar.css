@@ -103,3 +103,30 @@ nav.navbar {
     min-height: 40px;
   }
 }
+
+/* At 320px the two labelled hub links plus the brand exceed the viewport.
+   Keep their accessible names, but show the familiar icons in the tightest
+   layout so every page remains free of horizontal scrolling. */
+@media (max-width: 360px) {
+  .navbar-link {
+    width: 40px;
+    min-width: 40px;
+    padding-inline: 0;
+    justify-content: center;
+    font-size: 0;
+  }
+
+  .navbar-link[href="/skills"]::before {
+    content: "🎮";
+    font-size: 1rem;
+  }
+
+  .navbar-link[href="/curriculum"]::before {
+    content: "📘";
+    font-size: 1rem;
+  }
+
+  .theme-btn {
+    min-width: 40px;
+  }
+}

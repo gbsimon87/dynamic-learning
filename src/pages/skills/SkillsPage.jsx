@@ -48,6 +48,7 @@ function SkillsPage() {
             <Link to="/opposite-match" className="skill-btn">Opposite Match</Link>
             <Link to="/synonym-match" className="skill-btn">Synonym Safari</Link>
             <Link to="/sight-word-pop" className="skill-btn">Sight Word Pop</Link>
+            <Link to="/speed-reader" className="skill-btn">Speed Reader</Link>
           </div>
         </section>
 

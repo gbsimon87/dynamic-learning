@@ -5,7 +5,7 @@
 > dropped, update its **Status** row here and reflect the change in
 > [PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md).
 
-**Last reviewed:** 2026-08-09
+**Last reviewed:** 2026-09-10
 
 ### Context for prioritisation
 - The app currently contains **only UK Year 2** education content.
@@ -43,7 +43,7 @@ Both tables below are ordered **easiest → hardest** to implement.
 | # | Idea | Description | Status |
 |---|---|---|---|
 | 1 | **Robust challenge registry** | ✅ **Done.** `Challenge.jsx` now resolves challenges via a static `import.meta.glob("../skills/*/challenges/year*/*/*Challenge*.jsx")` registry instead of a fully-dynamic `/* @vite-ignore */` import, so Vite can statically analyse and code-split challenges and missing files fail with a clear error. | ✅ Done |
-| 2 | **Automated test setup** | Add Vitest + React Testing Library and cover the highest-risk logic first: unlock rules, progress persistence, and the challenge dynamic loader. Zero tests exist today. | ⚪ Idea |
+| 2 | **Automated component test setup** | Add Vitest + React Testing Library and cover the highest-risk UI and React logic first: unlock rules, progress persistence, and the challenge loader. Pure Speed Reader logic now has dependency-free `node:test` coverage, but no component test environment exists. | ⚪ Idea |
 | 3 | **Shared progress hook (`useProgress`)** | Done 2026-08-09: extracted the duplicated `localStorage` read/write logic out of `CurriculumPage` and `ProblemView` into `src/hooks/useProgress.js`. It owns the storage key, hydration guard, and the `isTopicComplete`/`isCategoryComplete`/`isChallengeComplete`/`completeChallenge` predicates; unlock-rule computation (`categoryLocked`/`topicLocked`/`challengeLocked`) stays in `CurriculumPage` since it's UI-adjacent, not storage. Stored shape and all behavior preserved exactly — verified against every check in the `curriculum-progress` skill's checklist (fresh user, single completion, persistence, topic cascade, category cascade, replay-without-duplication). **Deliberately deferred:** the versioned schema and ID-rename migration path mentioned in the original idea — that's a separate design decision with its own risk profile on irreplaceable learner data, tracked as its own follow-up rather than bundled into this extraction. | ✅ Done (extraction); versioning/migration deferred |
 | 4 | **Content authoring format** | Move challenge question data out of hand-written JSX into declarative JSON/JS content files, so new challenges can be authored without writing a component each time. Would dramatically speed up ideas #6 and #8 below. | ⚪ Idea |
 | 5 | **Place Value Blocks** | Drag tens and ones blocks to build a number. Backs the Year 2 *Place Value* topic and scales to hundreds for Year 3. | ⚪ Idea |
@@ -67,6 +67,7 @@ Both tables below are ordered **easiest → hardest** to implement.
 | 23 | **Year 3 Maths challenges** | Build challenges for Year 3 topics: numbers to 1000, column addition/subtraction, 3/4/8 times tables, tenths, mm/cm/m, perimeter, right angles, time to the minute. Depends on #22. | 🔵 Planned |
 | 24 | **Year selector / learner profile** | Let a learner pick their year group (2 or 3) and remember it. Drives which curriculum is shown and keeps progress namespaced per year. Depends on #22. | 🔵 Planned |
 | 25 | **Cloud sync & multi-device profiles** | Optional accounts so progress follows the learner across devices, replacing `localStorage` as the only store. Requires the first backend — significant architectural change. | ⚪ Idea |
+| 26 | **Speed Reader (spritz)** | Done 2026-09-10. English & Words game at `/speed-reader` with six built-in stories and comprehension questions plus custom text. Supports 1–3-word chunks, 60–300 WPM, pivot highlighting, punctuation-aware pacing, pause/step/live-speed controls, and a read-again-faster loop. Pure pacing and content-shape logic is covered by `node:test`. | ✅ Done |
 
 ---
 

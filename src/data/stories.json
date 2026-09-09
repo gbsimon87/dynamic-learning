@@ -1,0 +1,146 @@
+[
+  {
+    "id": "lost-egg",
+    "title": "The Lost Egg",
+    "emoji": "🐉",
+    "band": "easy",
+    "text": "Mia found a big blue egg under the old oak tree. It was warm. Something moved inside! Crack went the shell. A tiny green dragon looked up at Mia and sneezed a puff of smoke. Mia laughed and named him Pip.",
+    "questions": [
+      {
+        "q": "What did Mia find under the tree?",
+        "options": ["A shoe", "An egg", "A rock"],
+        "answer": 1
+      },
+      {
+        "q": "What came out of the shell?",
+        "options": ["A bird", "A frog", "A tiny dragon"],
+        "answer": 2
+      },
+      {
+        "q": "What did Mia name him?",
+        "options": ["Pip", "Max", "Sam"],
+        "answer": 0
+      }
+    ]
+  },
+  {
+    "id": "the-cat-and-the-kite",
+    "title": "The Cat and the Kite",
+    "emoji": "🪁",
+    "band": "easy",
+    "text": "Sam flew his red kite in the park. The wind pulled hard. Up went the kite, over the trees! Then the string snapped. The kite landed in a hedge, right on top of a very cross cat.",
+    "questions": [
+      {
+        "q": "What colour was the kite?",
+        "options": ["Blue", "Green", "Red"],
+        "answer": 2
+      },
+      {
+        "q": "What happened to the string?",
+        "options": ["It snapped", "It got wet", "It was too short"],
+        "answer": 0
+      },
+      {
+        "q": "Where did the kite land?",
+        "options": ["On a roof", "In a hedge", "In a pond"],
+        "answer": 1
+      }
+    ]
+  },
+  {
+    "id": "rock-pool",
+    "title": "Rock Pool",
+    "emoji": "🌊",
+    "band": "medium",
+    "text": "Tess and Grandad walked down to the beach when the tide went out. In a rock pool they found a small green crab. It waved one claw at them and then hid under a stone. Next to it a red starfish clung to the rock, holding on tight. Tess counted its five arms. Grandad said the pool was like a tiny town, busy with little animals, and that the sea would come back to cover it again by teatime.",
+    "questions": [
+      {
+        "q": "What did Tess and Grandad find first in the pool?",
+        "options": ["A shell", "A small green crab", "A fish"],
+        "answer": 1
+      },
+      {
+        "q": "How many arms did the starfish have?",
+        "options": ["Eight", "Three", "Five"],
+        "answer": 2
+      },
+      {
+        "q": "What did Grandad say the rock pool was like?",
+        "options": ["A tiny town", "A big bath", "A rainy day"],
+        "answer": 0
+      }
+    ]
+  },
+  {
+    "id": "library-cat",
+    "title": "The Library Cat",
+    "emoji": "📚",
+    "band": "medium",
+    "text": "Every morning the library cat sat on the same sunny windowsill. Her name was Comma, because she always curled up in a little curve. Children read to her and she never once interrupted. One Tuesday a boy called Ravi read her a story about a lion. Comma listened to every word. When Ravi closed the book she stretched, yawned, and put one paw on the cover, as if she were asking for it again.",
+    "questions": [
+      {
+        "q": "Why was the cat called Comma?",
+        "options": ["She liked books", "She curled up in a little curve", "She was very small"],
+        "answer": 1
+      },
+      {
+        "q": "What was Ravi's story about?",
+        "options": ["A boat", "A dragon", "A lion"],
+        "answer": 2
+      },
+      {
+        "q": "What did Comma do when the book closed?",
+        "options": ["Put one paw on the cover", "Ran away", "Went to sleep"],
+        "answer": 0
+      }
+    ]
+  },
+  {
+    "id": "moon-picnic",
+    "title": "Moon Picnic",
+    "emoji": "🚀",
+    "band": "longer",
+    "text": "Nadia packed jam sandwiches, two apples and a flask of tea, because you should never visit the moon on an empty stomach. Her rocket was made from an old bathtub and a great deal of tape. It rattled all the way up, past the clouds, past the aeroplanes, past a very surprised seagull. On the moon everything was grey and quiet and covered in soft dust. Nadia laid out her blanket in a crater and poured the tea. It floated straight out of the cup in wobbling golden balls. She caught one in her mouth, which is the only sensible way to drink tea on the moon, and decided she would come back on Sunday.",
+    "questions": [
+      {
+        "q": "What was Nadia's rocket made from?",
+        "options": ["A cardboard box", "An old bathtub and tape", "A barrel"],
+        "answer": 1
+      },
+      {
+        "q": "What did the tea do when she poured it?",
+        "options": ["It froze solid", "It disappeared", "It floated in wobbling balls"],
+        "answer": 2
+      },
+      {
+        "q": "When did Nadia decide to come back?",
+        "options": ["On Sunday", "On Monday", "Never again"],
+        "answer": 0
+      }
+    ]
+  },
+  {
+    "id": "winter-bus",
+    "title": "The Winter Bus",
+    "emoji": "🚌",
+    "band": "longer",
+    "text": "The number nine bus broke down at the top of Hill Road on the coldest morning of the year. Everybody groaned. Mr Okafor, the driver, stood up and said that since they were all going to be late anyway, they might as well be late together. He opened his flask and shared it out in paper cups. A woman with a violin played three songs. Two boys cleared the snow from the windscreen without being asked. By the time the new bus arrived, forty minutes later, nobody on board could remember being cross. Mr Okafor said it was the best breakdown of his entire career, and he had had eleven.",
+    "questions": [
+      {
+        "q": "Where did the bus break down?",
+        "options": ["Outside the school", "At the top of Hill Road", "By the river"],
+        "answer": 1
+      },
+      {
+        "q": "What did the woman with the violin do?",
+        "options": ["Fell asleep", "Called for help", "Played three songs"],
+        "answer": 2
+      },
+      {
+        "q": "How many breakdowns had Mr Okafor had?",
+        "options": ["Eleven", "Nine", "Two"],
+        "answer": 0
+      }
+    ]
+  }
+]
