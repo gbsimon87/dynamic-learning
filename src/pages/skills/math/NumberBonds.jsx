@@ -1,5 +1,5 @@
-import { useState, useEffect, useContext, useRef } from 'react';
-import { ThemeContext } from '../../../context/ThemeContext';
+import { useState, useEffect, useContext, useRef, useCallback } from 'react';
+import { ThemeContext } from '../../../context/theme-context';
 import './NumberBonds.css';
 
 // Utility: shuffle array
@@ -84,16 +84,21 @@ export default function NumberBonds() {
   const [practiceFeedback, setPracticeFeedback] = useState(null);
 
   // 🎯 Generate new question for Practice Mode
-  const generateQuestion = () => {
+  const generateQuestion = useCallback(() => {
     const a = Math.floor(Math.random() * (target - 1)) + 1;
     const correct = target - a;
     setQuestion({ a, correct });
     setAnswer('');
     setPracticeFeedback(null);
-  };
+  }, [target]);
 
   // Reset when target or mode changes
   useEffect(() => {
+    if (practiceTimerRef.current) {
+      clearTimeout(practiceTimerRef.current);
+      practiceTimerRef.current = null;
+    }
+
     if (mode === 'match') {
       setCards(generateCards(target));
       setFlipped([]);
@@ -104,7 +109,7 @@ export default function NumberBonds() {
     } else {
       generateQuestion();
     }
-  }, [target, mode]);
+  }, [target, mode, generateQuestion]);
 
   // 🔹 Flip logic for Match Mode
   const handleFlip = (id) => {

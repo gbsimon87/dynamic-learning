@@ -938,7 +938,7 @@ All four now hold their timer in a ref, clear it on unmount, and supersede rathe
 | File | Was |
 |---|---|
 | [ProblemView.jsx](../src/pages/curriculum/ProblemView.jsx) | Navigated the child away 1s after they pressed Back |
-| [NumberBonds.jsx](../src/pages/skills/math/NumberBonds.jsx) | Fired into Match Mode after switching from Practice |
+| [NumberBonds.jsx](../src/pages/skills/math/NumberBonds.jsx) | Fired into Match Mode after switching from Practice; the timer is now cleared on unmount and whenever target/mode changes |
 | [FractionFun.jsx](../src/pages/skills/math/FractionFun.jsx) | Same pattern, two sites |
 | [SightWordPop.jsx](../src/pages/skills/english/SightWordPop.jsx) | See [I27](#i27--sight-word-pop-spawn-cadence-is-unstable-) |
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import cities from '../../../data/cities.json';
 import './CitySpotlight.css';
@@ -26,13 +26,6 @@ export default function CitySpotlight() {
     setPool(shuffle(cities));
   }, []);
 
-  useEffect(() => {
-    if (started && current && selected !== null) {
-      const timer = setTimeout(() => nextRound(), 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [started, selected, current]);
-
   const options = useMemo(() => {
     if (!current) return [];
     const other = shuffle(cities.filter(c => c.name !== current.name)).slice(0, 3);
@@ -48,7 +41,7 @@ export default function CitySpotlight() {
     loadNext();
   }
 
-  function loadNext() {
+  const loadNext = useCallback(() => {
     if (pool.length === 0) {
       setCurrent(null);
       return;
@@ -58,11 +51,14 @@ export default function CitySpotlight() {
     setPool(rest);
     setSelected(null);
     setTotal(t => t + 1);
-  }
+  }, [pool]);
 
-  function nextRound() {
-    loadNext();
-  }
+  useEffect(() => {
+    if (started && current && selected !== null) {
+      const timer = setTimeout(loadNext, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [started, selected, current, loadNext]);
 
   function handleSelect(answerName) {
     if (selected !== null) return;

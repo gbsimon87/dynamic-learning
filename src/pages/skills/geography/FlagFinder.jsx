@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useContext } from 'react';
-import { ThemeContext } from '../../../context/ThemeContext';
+import { ThemeContext } from '../../../context/theme-context';
 import './FlagFinder.css';
 
 const ALL_CONTINENTS = 'all';

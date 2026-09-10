@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext, useRef } from 'react';
-import { ThemeContext } from '../../../context/ThemeContext';
+import { ThemeContext } from '../../../context/theme-context';
 import './FractionFun.css';
 
 // Utility to generate a random fraction

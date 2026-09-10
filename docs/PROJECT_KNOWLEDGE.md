@@ -85,7 +85,8 @@ src/
 ├── layouts/
 │   └── RootLayout.jsx        # Navbar + <Outlet />
 ├── context/
-│   └── ThemeContext.jsx      # Global light/dark theme
+│   ├── ThemeContext.jsx      # Global light/dark theme provider
+│   └── theme-context.js      # Context object, split out for Fast Refresh
 ├── hooks/
 │   └── useProgress.js        # Shared curriculum-progress storage hook
 ├── components/               # Shared, reusable pieces
@@ -211,9 +212,12 @@ after ~1s.
 
 ### 4.6 Theming
 [ThemeContext.jsx](../src/context/ThemeContext.jsx) stores `light`/`dark` in
-`localStorage` (key: `theme`), defaulting to the OS `prefers-color-scheme`. It
-applies the theme by setting `document.body.className`. All colours should be
-driven by CSS variables in [index.css](../src/index.css) so both themes work.
+`localStorage` (key: `theme`), defaulting to the OS `prefers-color-scheme`. The
+context object lives separately in
+[theme-context.js](../src/context/theme-context.js), keeping the provider module
+compatible with React Fast Refresh. The provider applies the theme by setting
+classes on `document.body`. All colours should be driven by CSS variables in
+[index.css](../src/index.css) so both themes work.
 
 ---
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useMemo } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { ThemeContext } from '../../../context/ThemeContext';
+import { ThemeContext } from '../../../context/theme-context';
 import './SentenceBuilder.css';
 
 // 3-11 words so every slider range has usable sentences. Each must read
