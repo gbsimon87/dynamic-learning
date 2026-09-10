@@ -16,7 +16,9 @@ import "./SolarSystem.css";
 export default function ThreeSolarSystem() {
     const containerRef = useRef(null); // container div we control sizing from
     const canvasRef = useRef(null); // managed <canvas>
+    const tourApiRef = useRef(null);
     const [selectedPlanet, setSelectedPlanet] = useState(null);
+    const [tourState, setTourState] = useState({ active: false, index: 0, total: 0, muted: false });
 
     useEffect(() => {
         if (!containerRef.current || !canvasRef.current) return;
@@ -125,6 +127,7 @@ export default function ThreeSolarSystem() {
                 material: materials.mercury,
                 tilt: "0",
                 moons: [],
+                tourNarration: "Mercury is our first stop and the closest planet to the Sun. It is a small, rocky world with a huge iron core and some of the most extreme temperature changes in the Solar System.",
                 facts: [
                     "Mercury is the smallest planet in our solar system.",
                     "A day on Mercury (sunrise to sunrise) lasts about 176 Earth days.",
@@ -141,6 +144,7 @@ export default function ThreeSolarSystem() {
                 material: materials.venus,
                 tilt: "177.4",
                 moons: [],
+                tourNarration: "Venus is wrapped in thick clouds that trap heat, making it the hottest planet. It also turns in the opposite direction to most planets, and one Venus day lasts longer than its year.",
                 facts: [
                     "Venus spins backwards — it has a retrograde rotation compared to most planets.",
                     "It’s the hottest planet, with surface temperatures around 465°C (869°F).",
@@ -157,6 +161,7 @@ export default function ThreeSolarSystem() {
                 material: materials.earth,
                 tilt: "23.44",
                 moons: [{ name: "Moon", radius: 0.12, distance: 3, speed: 0.015 }],
+                tourNarration: "Earth is our ocean world and the only place where we know life exists. Its atmosphere, magnetic field, and unusually stable climate help living things thrive.",
                 facts: [
                     "Earth is the only known planet to support life.",
                     "About 71% of Earth's surface is covered by water.",
@@ -176,6 +181,7 @@ export default function ThreeSolarSystem() {
                     { name: "Phobos", radius: 0.05, distance: 2, speed: 0.02 },
                     { name: "Deimos", radius: 0.07, distance: 3, speed: 0.015 },
                 ],
+                tourNarration: "Mars is a cold desert world coloured red by rusty iron minerals. It preserves signs of ancient rivers and is home to Olympus Mons, the tallest volcano in the Solar System.",
                 facts: [
                     "Mars is home to the tallest volcano in the solar system — Olympus Mons.",
                     "It has a thin atmosphere composed mostly of carbon dioxide.",
@@ -198,6 +204,7 @@ export default function ThreeSolarSystem() {
                     { name: "Callisto", radius: 0.35, distance: 11, speed: 0.014, color: 0x888888 },
                     { name: "Amalthea", radius: 0.15, distance: 4, speed: 0.022, color: 0xffbb66 },
                 ],
+                tourNarration: "Jupiter is the giant of the Solar System, with enough room for more than a thousand Earths. Its swirling clouds contain enormous storms, including the centuries-old Great Red Spot.",
                 facts: [
                     "Jupiter is the largest planet in the solar system — over 1,300 Earths could fit inside it.",
                     "It has a giant storm called the Great Red Spot that has raged for centuries.",
@@ -225,6 +232,7 @@ export default function ThreeSolarSystem() {
                     { name: "Hyperion", radius: 0.1, distance: 17, speed: 0.017, color: 0x999999 },
                     { name: "Phoebe", radius: 0.1, distance: 24, speed: 0.011, color: 0x777777 },
                 ],
+                tourNarration: "Saturn is a gas giant surrounded by thousands of icy ringlets. The gaps and bands in its rings are shaped by gravity from Saturn and its many moons.",
                 facts: [
                     "Saturn is famous for its beautiful ring system, made mostly of ice and rock.",
                     "It’s the second-largest planet in the solar system.",
@@ -247,6 +255,7 @@ export default function ThreeSolarSystem() {
                     { name: "Ariel", radius: 0.18, distance: 4, speed: 0.02, color: 0xffffff },
                     { name: "Miranda", radius: 0.12, distance: 3, speed: 0.022, color: 0xeeeeee },
                 ],
+                tourNarration: "Uranus is an ice giant that rolls around the Sun almost on its side. Methane in its atmosphere absorbs red light and gives the planet its pale blue-green colour.",
                 facts: [
                     "Uranus rotates on its side — its tilt is over 97 degrees.",
                     "It appears blue due to methane in its atmosphere.",
@@ -266,6 +275,7 @@ export default function ThreeSolarSystem() {
                     { name: "Triton", radius: 0.35, distance: 5, speed: 0.018, color: 0xccccff },
                     { name: "Nereid", radius: 0.12, distance: 7, speed: 0.014, color: 0xaaaaff },
                 ],
+                tourNarration: "Neptune is the distant blue ice giant and the windiest planet we know. Although it receives little sunlight, its atmosphere drives storms with incredibly fast winds.",
                 facts: [
                     "Neptune is the windiest planet, with storms reaching up to 2,100 km/h (1,300 mph).",
                     "It has a deep blue color caused by methane absorption and unknown atmospheric particles.",
@@ -282,6 +292,7 @@ export default function ThreeSolarSystem() {
                 material: new THREE.MeshStandardMaterial({ color: 0xaaaaaa }),
                 tilt: "122.5",
                 moons: [{ name: "Charon", radius: 0.05, distance: 2.5, speed: 0.018, color: 0xffffff }],
+                tourNarration: "Pluto closes our tour at the edge of the planetary neighbourhood. It is a dwarf planet with icy mountains, a heart-shaped plain, and a large companion moon called Charon.",
                 facts: [
                     "Pluto was reclassified as a dwarf planet in 2006.",
                     "It orbits the Sun once every 248 Earth years.",
@@ -401,6 +412,7 @@ export default function ThreeSolarSystem() {
             const planetLabel = createLabel(planet.name, 64, "#ffffff");
             planetLabel.userData.labelOffset = planet.radius + 1;
             planetLabel.userData.owner = root;
+            planetLabel.userData.planetSystem = root;
 
             if (planet.hasRings) {
                 axialGroup.add(createSaturnRings(planet.radius));
@@ -796,17 +808,26 @@ export default function ThreeSolarSystem() {
 
         const cameraFolder = pane.addFolder({ title: "Navigation" });
         const cameraSettings = { focus: "Overview" };
+        let updatingCameraFocus = false;
+        function updateCameraFocus(value) {
+            updatingCameraFocus = true;
+            cameraSettings.focus = value;
+            pane.refresh();
+            queueMicrotask(() => { updatingCameraFocus = false; });
+        }
         cameraFolder
             .addBinding(cameraSettings, "focus", {
                 label: "Focus",
                 options: Object.fromEntries(["Overview", ...planetData.map(({ name }) => name)].map((name) => [name, name])),
             })
             .on("change", ({ value }) => {
+                if (updatingCameraFocus) return;
                 if (value === "Overview") resetView();
                 else flyToPlanet(planetSystems[planetData.findIndex(({ name }) => name === value)]);
             });
         const stopBtnApi = cameraFolder.addButton({ title: "Stop Following" });
         cameraFolder.addButton({ title: "Reset View" }).on("click", () => resetView());
+        cameraFolder.addButton({ title: "Start Guided Tour" }).on("click", () => visitTourPlanet(0));
 
         const glowFolder = pane.addFolder({ title: "Sun Glow", expanded: false });
         glowFolder.addBinding(glowSettings, "enabled", { label: "Visible" });
@@ -849,6 +870,9 @@ export default function ThreeSolarSystem() {
         let followSystem = null;
         let followDesiredDistance = 50;
         const previousFollowPosition = new THREE.Vector3();
+        let tourActive = false;
+        let tourIndex = 0;
+        let tourMuted = false;
 
         let followBlendT = 0;
         const followBlendDuration = 1.1;
@@ -864,19 +888,62 @@ export default function ThreeSolarSystem() {
             desiredControlsTarget.copy(controls.target);
         }
 
+        function stopNarration() {
+            if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+        }
+
+        function speakPlanet(planet) {
+            if (tourMuted || !("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) return;
+            stopNarration();
+            const utterance = new SpeechSynthesisUtterance(`${planet.name}. ${planet.tourNarration}`);
+            utterance.lang = "en-GB";
+            utterance.rate = 0.95;
+            utterance.pitch = 1.02;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function stopTour(hideCard = false) {
+            tourActive = false;
+            stopNarration();
+            setTourState((current) => ({ ...current, active: false }));
+            if (hideCard) setSelectedPlanet(null);
+        }
+
         function resetView() {
             stopFollowing();
-            setSelectedPlanet(null);
+            stopTour(true);
             followBlendT = 0;
             desiredCameraPosition.set(0, 72, 128);
             desiredControlsTarget.set(0, 0, 0);
             zoomAnimating = true;
-            cameraSettings.focus = "Overview";
-            pane.refresh();
+            updateCameraFocus("Overview");
         }
 
-        function flyToPlanet(system) {
+        function createPlanetInfo(planet, planetIndex) {
+            const order = planetIndex + 1;
+            const ordinalSuffix = order % 10 === 1 && order !== 11
+                ? "st"
+                : order % 10 === 2 && order !== 12
+                    ? "nd"
+                    : order % 10 === 3 && order !== 13
+                        ? "rd"
+                        : "th";
+            return {
+                name: planet.name,
+                classification: planet.name === "Pluto"
+                    ? "Dwarf planet"
+                    : `${order}${ordinalSuffix} planet from the Sun`,
+                moonSummary: planet.moons.length === 0
+                    ? "No featured moons"
+                    : `${planet.moons.length} featured moon${planet.moons.length === 1 ? "" : "s"}`,
+                narration: planet.tourNarration,
+                facts: planet.facts,
+            };
+        }
+
+        function flyToPlanet(system, fromTour = false) {
             if (!system) return;
+            if (!fromTour && tourActive) stopTour();
             followActive = true;
             followSystem = system;
             zoomAnimating = false;
@@ -893,27 +960,42 @@ export default function ThreeSolarSystem() {
             previousFollowPosition.copy(planetPos);
             const planet = system.userData.planet;
             const planetIndex = planetData.indexOf(planet);
-            const order = planetIndex + 1;
-            const ordinalSuffix = order % 10 === 1 && order !== 11
-                ? "st"
-                : order % 10 === 2 && order !== 12
-                    ? "nd"
-                    : order % 10 === 3 && order !== 13
-                        ? "rd"
-                        : "th";
-            setSelectedPlanet({
-                name: planet.name,
-                classification: planet.name === "Pluto"
-                    ? "Dwarf planet"
-                    : `${order}${ordinalSuffix} planet from the Sun`,
-                moonSummary: planet.moons.length === 0
-                    ? "No featured moons"
-                    : `${planet.moons.length} featured moon${planet.moons.length === 1 ? "" : "s"}`,
-                facts: planet.facts,
-            });
-            cameraSettings.focus = planet.name;
-            pane.refresh();
+            setSelectedPlanet(createPlanetInfo(planet, planetIndex));
+            updateCameraFocus(planet.name);
         }
+
+        function visitTourPlanet(nextIndex) {
+            const clampedIndex = THREE.MathUtils.clamp(nextIndex, 0, planetSystems.length - 1);
+            tourActive = true;
+            tourIndex = clampedIndex;
+            setTourState({
+                active: true,
+                index: clampedIndex,
+                total: planetSystems.length,
+                muted: tourMuted,
+            });
+            flyToPlanet(planetSystems[clampedIndex], true);
+            speakPlanet(planetData[clampedIndex]);
+        }
+
+        function toggleTourNarration() {
+            tourMuted = !tourMuted;
+            setTourState((current) => ({ ...current, muted: tourMuted }));
+            if (tourMuted) stopNarration();
+            else if (tourActive) speakPlanet(planetData[tourIndex]);
+        }
+
+        tourApiRef.current = {
+            start: () => visitTourPlanet(0),
+            previous: () => visitTourPlanet(tourIndex - 1),
+            next: () => {
+                if (tourIndex >= planetSystems.length - 1) stopTour();
+                else visitTourPlanet(tourIndex + 1);
+            },
+            replay: () => speakPlanet(planetData[tourIndex]),
+            toggleNarration: toggleTourNarration,
+            exit: (hideCard = false) => stopTour(hideCard),
+        };
 
         function onClick(event) {
             const rect = renderer.domElement.getBoundingClientRect();
@@ -980,7 +1062,7 @@ export default function ThreeSolarSystem() {
         function onKeyDown(e) {
             if (e.key === "Escape") {
                 stopFollowing();
-                setSelectedPlanet(null);
+                stopTour(true);
             }
         }
 
@@ -1035,7 +1117,7 @@ export default function ThreeSolarSystem() {
                 label.position.y += label.userData.labelOffset;
                 label.visible = label.userData.isMoonLabel
                     ? simulation.showMoonLabels && followActive && label.userData.planetSystem === followSystem
-                    : simulation.showLabels;
+                    : simulation.showLabels && !followActive;
             });
 
             if (followActive && followSystem) {
@@ -1100,6 +1182,8 @@ export default function ThreeSolarSystem() {
         // Cleanup
         // ================================================================
         return () => {
+            stopNarration();
+            tourApiRef.current = null;
             cancelAnimationFrame(animationFrameId);
             ro.disconnect();
             renderer.domElement.removeEventListener("click", onClick, true);
@@ -1137,34 +1221,102 @@ export default function ThreeSolarSystem() {
                 aria-label="Interactive model of the Solar System"
                 style={{ display: "block", width: "100%", height: "100%", cursor: "grab" }}
             />
+            {!selectedPlanet && !tourState.active && (
+                <button
+                    type="button"
+                    className="solar-tour-launch"
+                    onClick={() => tourApiRef.current?.start()}
+                >
+                    <span aria-hidden="true">▶</span>
+                    Tour the Solar System
+                </button>
+            )}
             {selectedPlanet && (
                 <aside
-                    className="solar-info-card"
+                    className={`solar-info-card${tourState.active ? " solar-info-card--tour" : ""}`}
                     aria-label={`${selectedPlanet.name} information`}
                     aria-live="polite"
                 >
                     <div className="solar-info-card__header">
                         <div>
-                            <span className="solar-info-card__eyebrow">Planet profile</span>
+                            <span className="solar-info-card__eyebrow">
+                                {tourState.active
+                                    ? `Tour stop ${tourState.index + 1} of ${tourState.total}`
+                                    : "Planet profile"}
+                            </span>
                             <h2>{selectedPlanet.name}</h2>
                         </div>
                         <button
                             type="button"
                             className="solar-info-card__close"
                             aria-label={`Hide ${selectedPlanet.name} information`}
-                            onClick={() => setSelectedPlanet(null)}
+                            onClick={() => {
+                                if (tourState.active) tourApiRef.current?.exit(true);
+                                else setSelectedPlanet(null);
+                            }}
                         >
                             ×
                         </button>
                     </div>
-                    <div className="solar-info-card__meta">
-                        <span>{selectedPlanet.classification}</span>
-                        <span>{selectedPlanet.moonSummary}</span>
+                    <div className="solar-info-card__body">
+                        <div className="solar-info-card__meta">
+                            <span>{selectedPlanet.classification}</span>
+                            <span>{selectedPlanet.moonSummary}</span>
+                        </div>
+                        {tourState.active && (
+                            <div className="solar-tour-narration">
+                                <span aria-hidden="true">{tourState.muted ? "◼" : "♪"}</span>
+                                <p>{selectedPlanet.narration}</p>
+                            </div>
+                        )}
+                        <h3>{tourState.active ? "More to discover" : "Did you know?"}</h3>
+                        <ul>
+                            {selectedPlanet.facts.map((fact) => <li key={fact}>{fact}</li>)}
+                        </ul>
                     </div>
-                    <h3>Did you know?</h3>
-                    <ul>
-                        {selectedPlanet.facts.map((fact) => <li key={fact}>{fact}</li>)}
-                    </ul>
+                    {tourState.active ? (
+                        <div className="solar-tour-controls" aria-label="Tour navigation">
+                            <div className="solar-tour-controls__audio">
+                                <button type="button" onClick={() => tourApiRef.current?.replay()} disabled={tourState.muted}>
+                                    Replay narration
+                                </button>
+                                <button type="button" onClick={() => tourApiRef.current?.toggleNarration()}>
+                                    {tourState.muted ? "Turn sound on" : "Mute"}
+                                </button>
+                            </div>
+                            <div className="solar-tour-controls__nav">
+                                <button
+                                    type="button"
+                                    onClick={() => tourApiRef.current?.previous()}
+                                    disabled={tourState.index === 0}
+                                >
+                                    ← Previous
+                                </button>
+                                <button
+                                    type="button"
+                                    className="solar-tour-controls__next"
+                                    onClick={() => tourApiRef.current?.next()}
+                                >
+                                    {tourState.index === tourState.total - 1 ? "Finish tour" : "Next →"}
+                                </button>
+                            </div>
+                            <button
+                                type="button"
+                                className="solar-tour-controls__exit"
+                                onClick={() => tourApiRef.current?.exit()}
+                            >
+                                Exit guided tour
+                            </button>
+                        </div>
+                    ) : (
+                        <button
+                            type="button"
+                            className="solar-info-card__tour-button"
+                            onClick={() => tourApiRef.current?.start()}
+                        >
+                            Start guided tour
+                        </button>
+                    )}
                 </aside>
             )}
             <div

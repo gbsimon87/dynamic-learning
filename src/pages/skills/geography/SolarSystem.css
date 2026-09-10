@@ -1,11 +1,13 @@
 .solar-info-card {
   position: absolute;
+  display: flex;
+  flex-direction: column;
   z-index: 50;
   left: 1rem;
   bottom: 4.75rem;
   width: calc(100% - 2rem);
   max-height: min(48%, 26rem);
-  overflow-y: auto;
+  overflow: hidden;
   padding: 1rem;
   border: 1px solid rgba(255, 210, 132, 0.3);
   border-radius: 1.25rem;
@@ -20,11 +22,64 @@
   animation: solar-card-enter 220ms ease-out;
 }
 
+.solar-info-card--tour {
+  top: 4.25rem;
+  bottom: auto;
+  max-height: min(46%, 24rem);
+}
+
+.solar-tour-launch {
+  position: absolute;
+  z-index: 45;
+  top: 4.25rem;
+  left: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 0.95rem;
+  border: 1px solid rgba(255, 205, 117, 0.42);
+  border-radius: 999px;
+  background: rgba(13, 18, 34, 0.9);
+  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font: 700 0.8rem/1 system-ui, sans-serif;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.solar-tour-launch span {
+  color: #f6bd68;
+  font-size: 0.7rem;
+}
+
+.solar-tour-launch:hover {
+  border-color: #f6bd68;
+  background: rgba(31, 37, 55, 0.94);
+  transform: translateY(-1px);
+}
+
+.solar-tour-launch:focus-visible {
+  outline: 2px solid #f6bd68;
+  outline-offset: 3px;
+}
+
 .solar-info-card__header {
   display: flex;
+  flex: 0 0 auto;
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
+}
+
+.solar-info-card__body {
+  min-height: 0;
+  margin-right: -0.45rem;
+  padding-right: 0.45rem;
+  overflow-y: auto;
+  scrollbar-color: rgba(246, 189, 104, 0.45) transparent;
+  scrollbar-width: thin;
 }
 
 .solar-info-card__eyebrow {
@@ -112,7 +167,112 @@
   color: #f6bd68;
 }
 
+.solar-tour-narration {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.65rem;
+  margin-top: 0.85rem;
+  padding: 0.8rem;
+  border: 1px solid rgba(246, 189, 104, 0.2);
+  border-radius: 0.85rem;
+  background: rgba(246, 189, 104, 0.08);
+}
+
+.solar-tour-narration span {
+  color: #f6bd68;
+  font-weight: 800;
+}
+
+.solar-tour-narration p {
+  margin: 0;
+  color: #f5f7fb;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.solar-info-card__tour-button,
+.solar-tour-controls button {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 0.65rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font: 700 0.75rem/1 system-ui, sans-serif;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, opacity 160ms ease;
+}
+
+.solar-info-card__tour-button {
+  flex: 0 0 auto;
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-color: rgba(246, 189, 104, 0.38);
+  background: rgba(246, 189, 104, 0.14);
+}
+
+.solar-info-card__tour-button:hover,
+.solar-tour-controls button:hover:not(:disabled) {
+  border-color: rgba(246, 189, 104, 0.55);
+  background: rgba(246, 189, 104, 0.18);
+}
+
+.solar-info-card__tour-button:focus-visible,
+.solar-tour-controls button:focus-visible {
+  outline: 2px solid #f6bd68;
+  outline-offset: 2px;
+}
+
+.solar-tour-controls {
+  display: grid;
+  flex: 0 0 auto;
+  gap: 0.6rem;
+  margin: 0.9rem -1rem -1rem;
+  padding: 0.8rem 1rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(4, 8, 19, 0.88);
+}
+
+.solar-tour-controls__audio,
+.solar-tour-controls__nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.solar-tour-controls button {
+  min-height: 2.25rem;
+  padding: 0.55rem 0.7rem;
+}
+
+.solar-tour-controls button:disabled {
+  opacity: 0.36;
+  cursor: not-allowed;
+}
+
+.solar-tour-controls .solar-tour-controls__next {
+  border-color: #e9ab53;
+  background: #e9ab53;
+  color: #121621;
+}
+
+.solar-tour-controls .solar-tour-controls__next:hover:not(:disabled) {
+  border-color: #f6c77e;
+  background: #f6c77e;
+}
+
+.solar-tour-controls .solar-tour-controls__exit {
+  min-height: auto;
+  padding: 0.25rem;
+  border: 0;
+  background: transparent;
+  color: #aeb7c5;
+  font-weight: 600;
+}
+
 @media (min-width: 720px) {
+  .solar-tour-launch {
+    top: 1rem;
+  }
+
   .solar-info-card {
     top: 1rem;
     bottom: auto;
@@ -123,6 +283,15 @@
 
   .solar-info-card ul {
     font-size: 0.88rem;
+  }
+
+  .solar-tour-controls {
+    margin-right: -1.25rem;
+    margin-bottom: -1.25rem;
+    margin-left: -1.25rem;
+    padding-right: 1.25rem;
+    padding-bottom: 1.25rem;
+    padding-left: 1.25rem;
   }
 }
 
