@@ -1,7 +1,8 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Pane } from "tweakpane";
+import "./SolarSystem.css";
 
 /**
  * ThreeSolarSystem.jsx
@@ -15,6 +16,7 @@ import { Pane } from "tweakpane";
 export default function ThreeSolarSystem() {
     const containerRef = useRef(null); // container div we control sizing from
     const canvasRef = useRef(null); // managed <canvas>
+    const [selectedPlanet, setSelectedPlanet] = useState(null);
 
     useEffect(() => {
         if (!containerRef.current || !canvasRef.current) return;
@@ -864,6 +866,7 @@ export default function ThreeSolarSystem() {
 
         function resetView() {
             stopFollowing();
+            setSelectedPlanet(null);
             followBlendT = 0;
             desiredCameraPosition.set(0, 72, 128);
             desiredControlsTarget.set(0, 0, 0);
@@ -888,7 +891,27 @@ export default function ThreeSolarSystem() {
             if (followOffset.lengthSq() < 0.001) followOffset.set(0, radius * 2, radius * 6);
             followOffset.setLength(followDesiredDistance);
             previousFollowPosition.copy(planetPos);
-            cameraSettings.focus = system.userData.planet.name;
+            const planet = system.userData.planet;
+            const planetIndex = planetData.indexOf(planet);
+            const order = planetIndex + 1;
+            const ordinalSuffix = order % 10 === 1 && order !== 11
+                ? "st"
+                : order % 10 === 2 && order !== 12
+                    ? "nd"
+                    : order % 10 === 3 && order !== 13
+                        ? "rd"
+                        : "th";
+            setSelectedPlanet({
+                name: planet.name,
+                classification: planet.name === "Pluto"
+                    ? "Dwarf planet"
+                    : `${order}${ordinalSuffix} planet from the Sun`,
+                moonSummary: planet.moons.length === 0
+                    ? "No featured moons"
+                    : `${planet.moons.length} featured moon${planet.moons.length === 1 ? "" : "s"}`,
+                facts: planet.facts,
+            });
+            cameraSettings.focus = planet.name;
             pane.refresh();
         }
 
@@ -955,7 +978,10 @@ export default function ThreeSolarSystem() {
         }
 
         function onKeyDown(e) {
-            if (e.key === "Escape") stopFollowing();
+            if (e.key === "Escape") {
+                stopFollowing();
+                setSelectedPlanet(null);
+            }
         }
 
         renderer.domElement.addEventListener("click", onClick, true);
@@ -1097,6 +1123,7 @@ export default function ThreeSolarSystem() {
     return (
         <div
             ref={containerRef}
+            className="solar-system"
             style={{
                 width: "100%",
                 height: "max(420px, calc(100dvh - 66px))",
@@ -1110,7 +1137,38 @@ export default function ThreeSolarSystem() {
                 aria-label="Interactive model of the Solar System"
                 style={{ display: "block", width: "100%", height: "100%", cursor: "grab" }}
             />
+            {selectedPlanet && (
+                <aside
+                    className="solar-info-card"
+                    aria-label={`${selectedPlanet.name} information`}
+                    aria-live="polite"
+                >
+                    <div className="solar-info-card__header">
+                        <div>
+                            <span className="solar-info-card__eyebrow">Planet profile</span>
+                            <h2>{selectedPlanet.name}</h2>
+                        </div>
+                        <button
+                            type="button"
+                            className="solar-info-card__close"
+                            aria-label={`Hide ${selectedPlanet.name} information`}
+                            onClick={() => setSelectedPlanet(null)}
+                        >
+                            ×
+                        </button>
+                    </div>
+                    <div className="solar-info-card__meta">
+                        <span>{selectedPlanet.classification}</span>
+                        <span>{selectedPlanet.moonSummary}</span>
+                    </div>
+                    <h3>Did you know?</h3>
+                    <ul>
+                        {selectedPlanet.facts.map((fact) => <li key={fact}>{fact}</li>)}
+                    </ul>
+                </aside>
+            )}
             <div
+                className="solar-system__hint"
                 style={{
                     position: "absolute",
                     left: "1rem",
