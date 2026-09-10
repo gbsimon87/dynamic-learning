@@ -49,12 +49,10 @@ export default function ThreeSolarSystem() {
             neptune: textureLoader.load("/static/2k_neptune.jpg"),
         };
 
-        const flareSettings = {
+        const glowSettings = {
             enabled: true,
-            intensity: 1.0,
-            glareSize: 28,
-            streakSize: 60,
-            occlusion: true,
+            intensity: 0.42,
+            size: 16,
         };
 
         Object.values(textures).forEach((tex) => {
@@ -215,15 +213,15 @@ export default function ThreeSolarSystem() {
                 tilt: "26.73",
                 hasRings: true,
                 moons: [
-                    { name: "Titan", radius: 0.4, distance: 6, speed: 0.015, color: 0xffd27f },
-                    { name: "Rhea", radius: 0.2, distance: 8, speed: 0.017, color: 0xffffff },
-                    { name: "Enceladus", radius: 0.1, distance: 4.5, speed: 0.02, color: 0xe0f7fa },
-                    { name: "Mimas", radius: 0.1, distance: 3.5, speed: 0.021, color: 0xaaaaaa },
-                    { name: "Tethys", radius: 0.12, distance: 5, speed: 0.019, color: 0xdddddd },
-                    { name: "Dione", radius: 0.15, distance: 6.5, speed: 0.018, color: 0xcccccc },
-                    { name: "Iapetus", radius: 0.18, distance: 9.5, speed: 0.013, color: 0xbbbbbb },
-                    { name: "Hyperion", radius: 0.1, distance: 7.5, speed: 0.017, color: 0x999999 },
-                    { name: "Phoebe", radius: 0.1, distance: 11.5, speed: 0.011, color: 0x777777 },
+                    { name: "Titan", radius: 0.4, distance: 15, speed: 0.015, color: 0xffd27f },
+                    { name: "Rhea", radius: 0.2, distance: 12, speed: 0.017, color: 0xffffff },
+                    { name: "Enceladus", radius: 0.1, distance: 8, speed: 0.02, color: 0xe0f7fa },
+                    { name: "Mimas", radius: 0.1, distance: 7, speed: 0.021, color: 0xaaaaaa },
+                    { name: "Tethys", radius: 0.12, distance: 9.2, speed: 0.019, color: 0xdddddd },
+                    { name: "Dione", radius: 0.15, distance: 10.5, speed: 0.018, color: 0xcccccc },
+                    { name: "Iapetus", radius: 0.18, distance: 20, speed: 0.013, color: 0xbbbbbb },
+                    { name: "Hyperion", radius: 0.1, distance: 17, speed: 0.017, color: 0x999999 },
+                    { name: "Phoebe", radius: 0.1, distance: 24, speed: 0.011, color: 0x777777 },
                 ],
                 facts: [
                     "Saturn is famous for its beautiful ring system, made mostly of ice and rock.",
@@ -305,16 +303,24 @@ export default function ThreeSolarSystem() {
         function createLabel(text, fontSize = 64, color = "#ffffff") {
             const canvas = document.createElement("canvas");
             const context = canvas.getContext("2d");
-            const padding = 20;
+            const paddingX = 30;
+            const paddingY = 18;
 
-            context.font = `${fontSize}px Arial`;
+            context.font = `600 ${fontSize}px system-ui, sans-serif`;
             const textWidth = context.measureText(text).width;
 
-            canvas.width = textWidth + padding * 2;
-            canvas.height = fontSize + padding * 2;
+            canvas.width = Math.ceil(textWidth + paddingX * 2);
+            canvas.height = fontSize + paddingY * 2;
 
             // Reapply font after resizing the canvas
-            context.font = `${fontSize}px Arial`;
+            context.font = `600 ${fontSize}px system-ui, sans-serif`;
+            context.fillStyle = "rgba(5, 10, 24, 0.72)";
+            context.beginPath();
+            context.roundRect(1, 1, canvas.width - 2, canvas.height - 2, canvas.height / 2);
+            context.fill();
+            context.strokeStyle = "rgba(255, 255, 255, 0.22)";
+            context.lineWidth = 2;
+            context.stroke();
             context.fillStyle = color;
             context.textAlign = "center";
             context.textBaseline = "middle";
@@ -323,50 +329,82 @@ export default function ThreeSolarSystem() {
             const texture = new THREE.CanvasTexture(canvas);
             texture.minFilter = THREE.LinearFilter;
 
-            const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
+            const material = new THREE.SpriteMaterial({
+                map: texture,
+                transparent: true,
+                depthTest: false,
+                depthWrite: false,
+            });
             const sprite = new THREE.Sprite(material);
+            sprite.renderOrder = 20;
+            sprite.userData.isLabel = true;
 
             const aspect = canvas.width / canvas.height;
-            sprite.scale.set(2 * aspect, 2, 1);
+            sprite.scale.set(1.75 * aspect, 1.75, 1);
 
             return sprite;
         }
 
-        function createSaturnRings(innerRadius, outerRadius) {
-            const ringGeometry = new THREE.RingGeometry(innerRadius, outerRadius, 128);
-            const ringMaterial = new THREE.MeshBasicMaterial({
-                color: 0xccc7aa,
-                side: THREE.DoubleSide,
-                transparent: true,
-                opacity: 0.6,
+        function createSaturnRings(radius) {
+            const ringGroup = new THREE.Group();
+            const bands = [
+                [1.22, 1.30, 0xb4a98c, 0.18],
+                [1.32, 1.42, 0xc9bea1, 0.28],
+                [1.44, 1.53, 0xe0d2ad, 0.5],
+                [1.54, 1.60, 0xbcae91, 0.38],
+                // Cassini Division: the deliberate gap between the B and A rings.
+                [1.66, 1.72, 0xd8cbaa, 0.4],
+                [1.73, 1.80, 0xa99e86, 0.26],
+            ];
+
+            bands.forEach(([inner, outer, color, opacity]) => {
+                const geometry = new THREE.RingGeometry(radius * inner, radius * outer, 192);
+                const material = new THREE.MeshStandardMaterial({
+                    color,
+                    emissive: new THREE.Color(color),
+                    emissiveIntensity: 0.12,
+                    side: THREE.DoubleSide,
+                    transparent: true,
+                    opacity,
+                    roughness: 0.85,
+                    metalness: 0,
+                    depthWrite: false,
+                });
+                const band = new THREE.Mesh(geometry, material);
+                band.userData.isRing = true;
+                band.receiveShadow = true;
+                ringGroup.add(band);
             });
 
-            const ring = new THREE.Mesh(ringGeometry, ringMaterial);
-            ring.rotation.x = Math.PI / 2.5;
-            ring.position.set(0, 0, 0);
-            ring.userData.isRing = true;
-            return ring;
+            ringGroup.rotation.x = Math.PI / 2;
+            ringGroup.userData.isRing = true;
+            return ringGroup;
         }
 
         const createPlanetSystem = (planet) => {
-            const planetMesh = new THREE.Mesh(sphereGeometry, planet.material);
-            planetMesh.scale.setScalar(planet.radius);
-            planetMesh.position.x = planet.distance;
-            planetMesh.rotation.z = THREE.MathUtils.degToRad(planet.tilt || 0);
-            planetMesh.castShadow = true;
-            planetMesh.receiveShadow = true;
+            const root = new THREE.Group();
+            root.position.x = planet.distance;
+
+            const axialGroup = new THREE.Group();
+            axialGroup.rotation.z = THREE.MathUtils.degToRad(planet.tilt || 0);
+            root.add(axialGroup);
+
+            const body = new THREE.Mesh(sphereGeometry, planet.material);
+            body.scale.setScalar(planet.radius);
+            body.castShadow = true;
+            body.receiveShadow = true;
+            body.userData.isPlanetBody = true;
+            axialGroup.add(body);
 
             const planetLabel = createLabel(planet.name, 64, "#ffffff");
-            planetLabel.position.set(0, planet.radius + 1, 0);
-            planetMesh.add(planetLabel);
+            planetLabel.userData.labelOffset = planet.radius + 1;
+            planetLabel.userData.owner = root;
 
             if (planet.hasRings) {
-                const rings = createSaturnRings(planet.radius * 1.4, planet.radius * 2.4);
-                rings.receiveShadow = true;
-                planetMesh.add(rings);
+                axialGroup.add(createSaturnRings(planet.radius));
             }
 
-            planet.moons.forEach((moon) => {
+            const moons = planet.moons.map((moon, moonIndex) => {
                 const moonMaterial = moon.color
                     ? new THREE.MeshStandardMaterial({ color: moon.color })
                     : materials.moon;
@@ -377,12 +415,19 @@ export default function ThreeSolarSystem() {
                 moonMesh.receiveShadow = true;
 
                 const moonLabel = createLabel(moon.name, 48, "#cccccc");
-                moonLabel.position.set(0, moon.radius + 1.5, 0);
-                moonMesh.add(moonLabel);
-                planetMesh.add(moonMesh);
+                moonLabel.userData.labelOffset = moon.radius + 1.25;
+                moonLabel.userData.owner = moonMesh;
+                moonLabel.userData.isMoonLabel = true;
+                moonLabel.userData.planetSystem = root;
+                root.add(moonMesh);
+                const phase = planet.moons.length > 0
+                    ? (moonIndex / planet.moons.length) * Math.PI * 2
+                    : 0;
+                return { mesh: moonMesh, label: moonLabel, data: moon, phase };
             });
 
-            return planetMesh;
+            root.userData = { body, axialGroup, planet, planetLabel, moons };
+            return root;
         };
 
         function createOrbitPath(radius, segments = 128, color = 0x888888) {
@@ -515,10 +560,19 @@ export default function ThreeSolarSystem() {
         const sun = createMesh(sphereGeometry, materials.sun, 5);
         scene.add(sun);
 
-        const planetMeshes = planetData.map((planet) => {
-            const mesh = createPlanetSystem(planet);
-            scene.add(mesh);
-            return mesh;
+        const planetSystems = planetData.map((planet) => {
+            const system = createPlanetSystem(planet);
+            scene.add(system);
+            scene.add(system.userData.planetLabel);
+            system.userData.moons.forEach(({ label }) => scene.add(label));
+            return system;
+        });
+        const planetBodies = planetSystems.map((system) => system.userData.body);
+        planetBodies.forEach((body, planetIndex) => { body.userData.planetIndex = planetIndex; });
+        const labelSprites = planetSystems.flatMap((system, planetIndex) => {
+            const labels = [system.userData.planetLabel, ...system.userData.moons.map(({ label }) => label)];
+            labels.forEach((label) => { label.userData.planetIndex = planetIndex; });
+            return labels;
         });
 
         const orbitPaths = planetData.map((planet) => {
@@ -533,18 +587,19 @@ export default function ThreeSolarSystem() {
         createAsteroidBelt();
 
         // ================================================================
-        // Lens flare sprites anchored at the Sun
+        // Subtle, physical-looking corona anchored at the Sun
         // ================================================================
-        let sunGlareSprite, sunStreakSprite;
-        function makeRadialGlowTexture(size = 512) {
+        let sunGlowSprite;
+        function makeSunGlowTexture(size = 512) {
             const c = document.createElement("canvas");
             c.width = c.height = size;
             const ctx = c.getContext("2d");
             const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-            g.addColorStop(0.0, "rgba(255, 245, 200, 1)");
-            g.addColorStop(0.3, "rgba(255, 200, 120, 0.6)");
-            g.addColorStop(0.7, "rgba(255, 160, 80, 0.15)");
-            g.addColorStop(1.0, "rgba(255, 140, 60, 0)");
+            g.addColorStop(0.0, "rgba(255, 248, 215, 0.08)");
+            g.addColorStop(0.54, "rgba(255, 220, 145, 0.12)");
+            g.addColorStop(0.64, "rgba(255, 185, 80, 0.34)");
+            g.addColorStop(0.78, "rgba(255, 145, 45, 0.12)");
+            g.addColorStop(1.0, "rgba(255, 105, 25, 0)");
             ctx.fillStyle = g;
             ctx.fillRect(0, 0, size, size);
             const tex = new THREE.CanvasTexture(c);
@@ -555,97 +610,27 @@ export default function ThreeSolarSystem() {
             return tex;
         }
 
-        function makeHorizontalStreakTexture(w = 1024, h = 256) {
-            const c = document.createElement("canvas");
-            c.width = w;
-            c.height = h;
-            const ctx = c.getContext("2d");
-            const g = ctx.createLinearGradient(0, h / 2, w, h / 2);
-            g.addColorStop(0.0, "rgba(255,200,120,0)");
-            g.addColorStop(0.45, "rgba(255,220,160,0.9)");
-            g.addColorStop(0.5, "rgba(255,240,200,1)");
-            g.addColorStop(0.55, "rgba(255,220,160,0.9)");
-            g.addColorStop(1.0, "rgba(255,200,120,0)");
-            ctx.fillStyle = g;
-            ctx.fillRect(0, 0, w, h);
-            const tex = new THREE.CanvasTexture(c);
-            tex.colorSpace = THREE.SRGBColorSpace;
-            tex.minFilter = THREE.LinearMipMapLinearFilter;
-            tex.magFilter = THREE.LinearFilter;
-            return tex;
-        }
-
         {
-            const glareTex = makeRadialGlowTexture(512);
-            const streakTex = makeHorizontalStreakTexture(1024, 256);
-
-            const glareMat = new THREE.SpriteMaterial({
-                map: glareTex,
-                color: 0xffffff,
-                transparent: true,
-                depthWrite: false,
-                depthTest: false,
-                blending: THREE.AdditiveBlending,
-                opacity: 0.0,
-            });
-            const streakMat = new THREE.SpriteMaterial({
-                map: streakTex,
+            const glowMaterial = new THREE.SpriteMaterial({
+                map: makeSunGlowTexture(),
                 color: 0xffffff,
                 transparent: true,
                 depthWrite: false,
                 blending: THREE.AdditiveBlending,
-                opacity: 0.0,
+                opacity: glowSettings.intensity,
             });
 
-            sunGlareSprite = new THREE.Sprite(glareMat);
-            sunStreakSprite = new THREE.Sprite(streakMat);
-            sunGlareSprite.renderOrder = 999;
-            sunStreakSprite.renderOrder = 999;
-            sun.add(sunGlareSprite);
-            sun.add(sunStreakSprite);
-            sunGlareSprite.scale.setScalar(materials.sun ? 5 * flareSettings.glareSize : 120);
-            sunStreakSprite.scale.set(200, 30, 1);
+            sunGlowSprite = new THREE.Sprite(glowMaterial);
+            sunGlowSprite.scale.setScalar(glowSettings.size);
+            sunGlowSprite.userData.isSunGlow = true;
+            scene.add(sunGlowSprite);
         }
 
-        function updateLensFlare(camera) {
-            if (!flareSettings.enabled || !sunGlareSprite || !sunStreakSprite) {
-                if (sunGlareSprite) sunGlareSprite.material.opacity = 0;
-                if (sunStreakSprite) sunStreakSprite.material.opacity = 0;
-                return;
-            }
-            const camDir = new THREE.Vector3();
-            camera.getWorldDirection(camDir);
-            const sunWorld = sun.getWorldPosition(new THREE.Vector3());
-            const toSun = new THREE.Vector3().subVectors(sunWorld, camera.position);
-            const dist = toSun.length();
-            const dirToSun = toSun.clone().normalize();
-            const ndot = camDir.dot(dirToSun);
-            const angleFactor = THREE.MathUtils.clamp((ndot - 0.1) / 0.9, 0, 1);
-            const distFactor = THREE.MathUtils.smoothstep(0, 400, 400 - Math.min(dist, 400));
-
-            let occFactor = 1.0;
-            if (flareSettings.occlusion) {
-                const ray = new THREE.Raycaster(camera.position, dirToSun, 0, dist - 0.5);
-                // Only test against planet meshes that are actually Mesh objects, not sprites
-                const meshesToTest = planetMeshes.filter(m => m && m.type === 'Mesh');
-                const hits = ray
-                    .intersectObjects(meshesToTest, false) // false = don't traverse children
-                    .filter(
-                        (h) => h.object !== sun && h.object.type === 'Mesh' && !h.object.userData?.isRing
-                    );
-                if (hits.length > 0) occFactor = 0.0;
-            }
-
-            const a = flareSettings.intensity * angleFactor * Math.max(0.4, distFactor) * occFactor;
-            const sunSize = sun.scale.x;
-            const glareScale = sunSize * flareSettings.glareSize;
-            const streakW = sunSize * flareSettings.streakSize;
-            const streakH = streakW * 0.15;
-
-            sunGlareSprite.scale.set(glareScale, glareScale, 1);
-            sunStreakSprite.scale.set(streakW, streakH, 1);
-            sunGlareSprite.material.opacity = a;
-            sunStreakSprite.material.opacity = a * 0.7;
+        function updateSunGlow() {
+            if (!sunGlowSprite) return;
+            sunGlowSprite.visible = glowSettings.enabled;
+            sunGlowSprite.material.opacity = glowSettings.intensity;
+            sunGlowSprite.scale.setScalar(glowSettings.size);
         }
 
         // ================================================================
@@ -690,7 +675,7 @@ export default function ThreeSolarSystem() {
         // ================================================================
         // Lights
         // ================================================================
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.12);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.28);
         scene.add(ambientLight);
         const sunLight = new THREE.PointLight(0xffffff, 400, 0, 2);
         sunLight.position.set(0, 0, 0);
@@ -704,7 +689,7 @@ export default function ThreeSolarSystem() {
         // Camera & Renderer
         // ================================================================
         const camera = new THREE.PerspectiveCamera(50, getAspect(), 0.1, 5000);
-        camera.position.z = 100;
+        camera.position.set(0, 72, 128);
         scene.add(camera);
 
         const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current, antialias: true });
@@ -724,19 +709,23 @@ export default function ThreeSolarSystem() {
         // ================================================================
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
+        controls.dampingFactor = 0.075;
         controls.enablePan = true;
-        controls.enableZoom = false; // custom zoom
-        controls.minDistance = 0.1;
+        controls.enableZoom = true; // retained for touch pinch gestures
+        controls.zoomToCursor = true;
+        controls.screenSpacePanning = true;
+        controls.rotateSpeed = 0.65;
+        controls.zoomSpeed = 0.8;
+        controls.minDistance = 1.5;
         controls.maxDistance = 3000;
 
         const raycaster = new THREE.Raycaster();
         const mouse = new THREE.Vector2();
         const zoomPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
-        const targetPosition = new THREE.Vector3();
-        let smoothTarget = new THREE.Vector3().copy(controls.target);
-        let lastHitObject = null;
-        const lerpFactor = 0.15;
+        const zoomFocus = new THREE.Vector3();
+        const desiredCameraPosition = camera.position.clone();
+        const desiredControlsTarget = controls.target.clone();
+        let zoomAnimating = false;
 
         function updateZoomPlane() {
             const cameraDirection = new THREE.Vector3();
@@ -744,14 +733,14 @@ export default function ThreeSolarSystem() {
             zoomPlane.setFromNormalAndCoplanarPoint(cameraDirection.negate(), controls.target);
         }
 
-        function filterMeshes(intersects) {
+        function filterZoomTargets(intersects) {
             return intersects.filter((hit) => {
                 const obj = hit.object;
                 return (
                     obj.type === "Mesh" &&
                     !obj.userData.isOrbit &&
                     !obj.userData.isRing &&
-                    obj.material.type !== "SpriteMaterial"
+                    !obj.userData.isSunGlow
                 );
             });
         }
@@ -759,28 +748,40 @@ export default function ThreeSolarSystem() {
         // ================================================================
         // Simulation Settings & Tweakpane
         // ================================================================
-        const simulation = { orbitSpeedMultiplier: 1, rotationSpeedMultiplier: 1 };
-        simulation.showOrbits = true;
-        simulation.enableTilt = true;
+        const simulation = {
+            orbitSpeedMultiplier: 1,
+            rotationSpeedMultiplier: 1,
+            showOrbits: true,
+            showLabels: true,
+            showMoonLabels: false,
+            enableTilt: true,
+        };
 
-        const pane = new Pane();
+        const pane = new Pane({
+            container: containerRef.current,
+            title: "Solar System",
+            expanded: window.innerWidth >= 720,
+        });
 
         pane.element.style.position = "absolute";
-        pane.element.style.top = "4rem";
-        pane.element.style.right = "1rem";   // move to top-right
-        pane.element.style.zIndex = "100";   // ensure it’s above the canvas
+        pane.element.style.top = "1rem";
+        pane.element.style.right = "1rem";
+        pane.element.style.width = "min(256px, calc(100% - 2rem))";
+        pane.element.style.zIndex = "100";
 
         const simulationFolder = pane.addFolder({ title: "Simulation Controls" });
         simulationFolder.addBinding(simulation, "orbitSpeedMultiplier", { label: "Orbit Speed", min: 1, max: 100, step: 0.1 });
         simulationFolder.addBinding(simulation, "rotationSpeedMultiplier", { label: "Rotation Speed", min: 1, max: 100, step: 0.1 });
         simulationFolder.addBinding(simulation, "showOrbits", { label: "Show Orbits" });
+        simulationFolder.addBinding(simulation, "showLabels", { label: "Show Labels" });
+        simulationFolder.addBinding(simulation, "showMoonLabels", { label: "Moon Labels" });
         simulationFolder.addBinding(simulation, "enableTilt", { label: "Axial Tilt" });
 
-        const lightingFolder = pane.addFolder({ title: "Lighting" });
+        const lightingFolder = pane.addFolder({ title: "Lighting", expanded: false });
         lightingFolder.addBinding(sunLight, "intensity", { min: 20, max: 400, step: 1, label: "Sun Intensity" });
-        lightingFolder.addBinding(ambientLight, "intensity", { min: 0, max: 0.4, step: 0.01, label: "Ambient" });
+        lightingFolder.addBinding(ambientLight, "intensity", { min: 0, max: 0.8, step: 0.01, label: "Ambient" });
 
-        const starsFolder = pane.addFolder({ title: "Background Stars" });
+        const starsFolder = pane.addFolder({ title: "Background Stars", expanded: false });
         starsFolder
             .addBinding(starSettings, "count", { label: "Star Count", min: 0, max: 10000, step: 100 })
             .on("change", () => createStars());
@@ -791,34 +792,26 @@ export default function ThreeSolarSystem() {
                 scene.background = ev.value ? backgroundTexture : null;
             });
 
-        const cameraFolder = pane.addFolder({ title: "Camera" });
+        const cameraFolder = pane.addFolder({ title: "Navigation" });
+        const cameraSettings = { focus: "Overview" };
+        cameraFolder
+            .addBinding(cameraSettings, "focus", {
+                label: "Focus",
+                options: Object.fromEntries(["Overview", ...planetData.map(({ name }) => name)].map((name) => [name, name])),
+            })
+            .on("change", ({ value }) => {
+                if (value === "Overview") resetView();
+                else flyToPlanet(planetSystems[planetData.findIndex(({ name }) => name === value)]);
+            });
         const stopBtnApi = cameraFolder.addButton({ title: "Stop Following" });
+        cameraFolder.addButton({ title: "Reset View" }).on("click", () => resetView());
 
-        const flareFolder = pane.addFolder({ title: "Sun Flares" });
-        flareFolder.addBinding(flareSettings, "enabled", { label: "Enabled" });
-        flareFolder.addBinding(flareSettings, "intensity", { label: "Intensity", min: 0, max: 3, step: 0.01 });
-        flareFolder
-            .addBinding(flareSettings, "glareSize", { label: "Glare Size", min: 5, max: 80, step: 1 })
-            .on("change", () => {
-                if (sunGlareSprite) {
-                    const sunSize = sun.scale.x;
-                    const glareScale = sunSize * flareSettings.glareSize;
-                    sunGlareSprite.scale.set(glareScale, glareScale, 1);
-                }
-            });
-        flareFolder
-            .addBinding(flareSettings, "streakSize", { label: "Streak Size", min: 10, max: 150, step: 1 })
-            .on("change", () => {
-                if (sunStreakSprite) {
-                    const sunSize = sun.scale.x;
-                    const w = sunSize * flareSettings.streakSize;
-                    const h = w * 0.15;
-                    sunStreakSprite.scale.set(w, h, 1);
-                }
-            });
-        flareFolder.addBinding(flareSettings, "occlusion", { label: "Occlude by Planets" });
+        const glowFolder = pane.addFolder({ title: "Sun Glow", expanded: false });
+        glowFolder.addBinding(glowSettings, "enabled", { label: "Visible" });
+        glowFolder.addBinding(glowSettings, "intensity", { label: "Intensity", min: 0, max: 0.8, step: 0.01 });
+        glowFolder.addBinding(glowSettings, "size", { label: "Size", min: 12, max: 24, step: 0.5 });
 
-        const beltFolder = pane.addFolder({ title: "Asteroid Belt" });
+        const beltFolder = pane.addFolder({ title: "Asteroid Belt", expanded: false });
         beltFolder
             .addBinding(beltSettings, "enabled", { label: "Visible" })
             .on("change", () => {
@@ -850,52 +843,53 @@ export default function ThreeSolarSystem() {
         const clickRaycaster = new THREE.Raycaster();
         const clickMouse = new THREE.Vector2();
 
-        const labelSprites = [];
-        planetMeshes.forEach((planetMesh, i) => {
-            planetMesh.traverse((child) => {
-                if (child.material?.type === "SpriteMaterial") {
-                    child.userData.planetIndex = i;
-                    labelSprites.push(child);
-                }
-            });
-        });
-
         let followActive = false;
-        let followMesh = null;
-        let followRadius = 50;
-        let followAzimuth = 0;
-        let followElevation = 0.35;
-        let followAngularSpeed = 0.2;
+        let followSystem = null;
+        let followDesiredDistance = 50;
+        const previousFollowPosition = new THREE.Vector3();
 
         let followBlendT = 0;
-        let followBlendDuration = 1.5;
-        let followBlendCamStart = new THREE.Vector3();
-        let followBlendTargetStart = new THREE.Vector3();
+        const followBlendDuration = 1.1;
+        const followBlendCamStart = new THREE.Vector3();
+        const followBlendTargetStart = new THREE.Vector3();
+        const followOffset = new THREE.Vector3();
 
         function stopFollowing() {
-            if (!followActive) return;
             followActive = false;
-            followMesh = null;
-            smoothTarget.copy(controls.target);
-            lastHitObject = null;
+            followSystem = null;
+            zoomAnimating = false;
+            desiredCameraPosition.copy(camera.position);
+            desiredControlsTarget.copy(controls.target);
         }
 
-        function flyToPlanet(planetMesh) {
+        function resetView() {
+            stopFollowing();
+            followBlendT = 0;
+            desiredCameraPosition.set(0, 72, 128);
+            desiredControlsTarget.set(0, 0, 0);
+            zoomAnimating = true;
+            cameraSettings.focus = "Overview";
+            pane.refresh();
+        }
+
+        function flyToPlanet(system) {
+            if (!system) return;
             followActive = true;
-            followMesh = planetMesh;
+            followSystem = system;
+            zoomAnimating = false;
             followBlendT = 0;
             followBlendCamStart.copy(camera.position);
             followBlendTargetStart.copy(controls.target);
             const planetPos = new THREE.Vector3();
-            planetMesh.getWorldPosition(planetPos);
-            const rel = new THREE.Vector3().subVectors(camera.position, planetPos);
-            const sph = new THREE.Spherical().setFromVector3(rel);
-            const tightFraming = planetMesh.scale.x * 6;
-            followRadius = tightFraming;
-            followAzimuth = sph.theta;
-            followElevation = THREE.MathUtils.clamp(sph.phi, 0.2, Math.PI - 0.2);
-            smoothTarget.copy(planetPos);
-            followAngularSpeed = 0.6;
+            system.getWorldPosition(planetPos);
+            const radius = system.userData.planet.radius;
+            followDesiredDistance = Math.max(radius * 6, 4);
+            followOffset.subVectors(camera.position, planetPos);
+            if (followOffset.lengthSq() < 0.001) followOffset.set(0, radius * 2, radius * 6);
+            followOffset.setLength(followDesiredDistance);
+            previousFollowPosition.copy(planetPos);
+            cameraSettings.focus = system.userData.planet.name;
+            pane.refresh();
         }
 
         function onClick(event) {
@@ -903,73 +897,61 @@ export default function ThreeSolarSystem() {
             clickMouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
             clickMouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
             clickRaycaster.setFromCamera(clickMouse, camera);
-            const intersects = clickRaycaster.intersectObjects(labelSprites, false);
+            const visibleLabels = labelSprites.filter((label) => label.visible);
+            const intersects = clickRaycaster.intersectObjects([...visibleLabels, ...planetBodies], false);
             if (intersects.length > 0) {
-                const clickedLabel = intersects[0].object;
-                const planetIndex = clickedLabel.userData.planetIndex;
-                const planetMesh = planetMeshes[planetIndex];
-                flyToPlanet(planetMesh);
+                const planetIndex = intersects[0].object.userData.planetIndex;
+                flyToPlanet(planetSystems[planetIndex]);
             } else {
-                const paneEl = document.querySelector(".tp-dfwv");
-                if (paneEl && paneEl.contains(event.target)) return;
                 stopFollowing();
             }
         }
 
         function onWheel(event) {
             event.preventDefault();
+            event.stopImmediatePropagation();
+
+            const zoomFactor = Math.exp(THREE.MathUtils.clamp(event.deltaY, -120, 120) * 0.0025);
+            if (followActive && followSystem) {
+                const radius = followSystem.userData.planet.radius;
+                followDesiredDistance = THREE.MathUtils.clamp(
+                    followDesiredDistance * zoomFactor,
+                    Math.max(radius * 2.2, 1.5),
+                    Math.max(radius * 80, 40),
+                );
+                return;
+            }
+
             const rect = renderer.domElement.getBoundingClientRect();
             mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
             mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
             updateZoomPlane();
             raycaster.setFromCamera(mouse, camera);
             const allIntersects = raycaster.intersectObjects(scene.children, true);
-            const meshIntersects = filterMeshes(allIntersects);
-            let targetSet = false;
+            const meshIntersects = filterZoomTargets(allIntersects);
+            if (meshIntersects.length > 0) zoomFocus.copy(meshIntersects[0].point);
+            else if (!raycaster.ray.intersectPlane(zoomPlane, zoomFocus)) zoomFocus.copy(controls.target);
 
-            if (meshIntersects.length > 0) {
-                const hit = meshIntersects[0];
-                targetPosition.copy(hit.point);
-                lastHitObject = hit.object;
-                targetSet = true;
-            } else if (lastHitObject) {
-                lastHitObject.getWorldPosition(targetPosition);
-                targetSet = true;
-            } else {
-                raycaster.ray.intersectPlane(zoomPlane, targetPosition);
-                targetSet = true;
+            if (!zoomAnimating) {
+                desiredCameraPosition.copy(camera.position);
+                desiredControlsTarget.copy(controls.target);
             }
 
-            if (targetSet) {
-                const currentDistance = camera.position.distanceTo(targetPosition);
-                const baseZoomSpeed = 0.15;
-                const adaptiveSpeed = baseZoomSpeed * Math.max(0.3, Math.min(2, currentDistance / 50));
-                const deltaZoom = event.deltaY * -0.001 * adaptiveSpeed;
+            const currentDistance = desiredCameraPosition.distanceTo(desiredControlsTarget);
+            const clampedFactor = THREE.MathUtils.clamp(
+                zoomFactor,
+                controls.minDistance / currentDistance,
+                controls.maxDistance / currentDistance,
+            );
+            desiredCameraPosition.sub(zoomFocus).multiplyScalar(clampedFactor).add(zoomFocus);
+            desiredControlsTarget.sub(zoomFocus).multiplyScalar(clampedFactor).add(zoomFocus);
+            zoomAnimating = true;
+        }
 
-                if (followActive && followMesh) {
-                    const planetPos = new THREE.Vector3();
-                    followMesh.getWorldPosition(planetPos);
-                    smoothTarget.copy(planetPos);
-                    followRadius = Math.max(followMesh.scale.x * 2, followRadius * (1 + deltaZoom));
-                    updateLensFlare(camera);
-                    controls.update();
-                    return;
-                }
-
-                const interpolationStrength = meshIntersects.length > 0 ? 0.3 : 0.1;
-                smoothTarget.lerp(targetPosition, interpolationStrength);
-                const direction = new THREE.Vector3().subVectors(camera.position, smoothTarget).normalize();
-                const distance = camera.position.distanceTo(smoothTarget);
-                let minDistance = 0.5;
-                if (lastHitObject && lastHitObject.geometry?.boundingSphere) {
-                    const objRadius = lastHitObject.geometry.boundingSphere.radius * lastHitObject.scale.x;
-                    minDistance = objRadius * 1.5;
-                }
-                const newDistance = Math.max(minDistance, distance * (1 + deltaZoom));
-                camera.position.copy(smoothTarget.clone().add(direction.multiplyScalar(newDistance)));
-                controls.target.lerp(smoothTarget, lerpFactor);
-            }
-            controls.update();
+        function onControlsStart() {
+            zoomAnimating = false;
+            desiredCameraPosition.copy(camera.position);
+            desiredControlsTarget.copy(controls.target);
         }
 
         function onKeyDown(e) {
@@ -977,8 +959,9 @@ export default function ThreeSolarSystem() {
         }
 
         renderer.domElement.addEventListener("click", onClick, true);
-        renderer.domElement.addEventListener("wheel", onWheel, { passive: false });
+        renderer.domElement.addEventListener("wheel", onWheel, { passive: false, capture: true });
         window.addEventListener("keydown", onKeyDown);
+        controls.addEventListener("start", onControlsStart);
         stopBtnApi.on("click", () => stopFollowing());
 
         // ================================================================
@@ -987,6 +970,10 @@ export default function ThreeSolarSystem() {
         const clock = new THREE.Clock();
         let prevTime = performance.now() / 1000;
 
+        const labelWorldPosition = new THREE.Vector3();
+        const currentFollowPosition = new THREE.Vector3();
+        let animationFrameId = 0;
+
         function animate() {
             const now = performance.now() / 1000;
             let dt = now - prevTime;
@@ -994,75 +981,81 @@ export default function ThreeSolarSystem() {
             dt = Math.min(dt, 0.1);
             const elapsed = clock.getElapsedTime();
 
-            planetMeshes.forEach((planet, i) => {
+            planetSystems.forEach((system, i) => {
                 const data = planetData[i];
                 const orbitSpeed = data.speed * simulation.orbitSpeedMultiplier;
-                planet.position.x = Math.sin(elapsed * orbitSpeed) * data.distance;
-                planet.position.z = Math.cos(elapsed * orbitSpeed) * data.distance;
+                system.position.x = Math.sin(elapsed * orbitSpeed) * data.distance;
+                system.position.z = Math.cos(elapsed * orbitSpeed) * data.distance;
 
                 const rotationSpeed = data.speed * simulation.rotationSpeedMultiplier;
-                if (data.name !== "Saturn") {
-                    if (simulation.enableTilt) {
-                        planet.rotateY(rotationSpeed);
-                    } else {
-                        planet.rotation.z = 0;
-                        planet.rotation.y += rotationSpeed;
-                    }
-                }
+                system.userData.axialGroup.rotation.z = simulation.enableTilt
+                    ? THREE.MathUtils.degToRad(data.tilt || 0)
+                    : 0;
+                system.userData.body.rotation.y += rotationSpeed * dt * 60;
 
-                if (data.name === "Saturn") {
-                    planet.children.forEach((child) => {
-                        if (child.userData?.isRing) child.rotation.x += 0.005;
-                    });
-                }
-
-                let moonIdx = 0;
-                planet.children.forEach((child) => {
-                    if (child.userData?.isRing) return;
-                    const moonData = data.moons[moonIdx++];
-                    if (!moonData) return;
+                system.userData.moons.forEach(({ mesh, data: moonData, phase }) => {
                     const moonOrbitSpeed = moonData.speed * simulation.orbitSpeedMultiplier;
-                    child.rotation.y += moonOrbitSpeed * simulation.rotationSpeedMultiplier;
-                    child.position.x = Math.sin(elapsed * moonOrbitSpeed) * moonData.distance;
-                    child.position.z = Math.cos(elapsed * moonOrbitSpeed) * moonData.distance;
+                    mesh.rotation.y += moonData.speed * simulation.rotationSpeedMultiplier * dt * 60;
+                    mesh.position.x = Math.sin(elapsed * moonOrbitSpeed + phase) * moonData.distance;
+                    mesh.position.z = Math.cos(elapsed * moonOrbitSpeed + phase) * moonData.distance;
                 });
             });
 
             orbitPaths.forEach((orbit) => (orbit.visible = simulation.showOrbits));
 
-            if (!followActive) controls.target.lerp(smoothTarget, lerpFactor);
+            labelSprites.forEach((label) => {
+                label.userData.owner.getWorldPosition(labelWorldPosition);
+                label.position.copy(labelWorldPosition);
+                label.position.y += label.userData.labelOffset;
+                label.visible = label.userData.isMoonLabel
+                    ? simulation.showMoonLabels && followActive && label.userData.planetSystem === followSystem
+                    : simulation.showLabels;
+            });
 
-            if (followActive && followMesh) {
-                followAngularSpeed = THREE.MathUtils.lerp(followAngularSpeed, 0.2, 0.05);
-                followAzimuth += followAngularSpeed * dt;
-                const planetPos = new THREE.Vector3();
-                followMesh.getWorldPosition(planetPos);
-                const desired = new THREE.Vector3()
-                    .setFromSphericalCoords(followRadius, followElevation, followAzimuth)
-                    .add(planetPos);
+            if (followActive && followSystem) {
+                followSystem.getWorldPosition(currentFollowPosition);
 
                 if (followBlendT < 1) {
                     followBlendT = Math.min(1, followBlendT + dt / followBlendDuration);
                     const eased = followBlendT * followBlendT * (3 - 2 * followBlendT);
+                    const desired = currentFollowPosition.clone().add(followOffset);
                     camera.position.lerpVectors(followBlendCamStart, desired, eased);
                     const blendedTarget = new THREE.Vector3().lerpVectors(
                         followBlendTargetStart,
-                        planetPos,
+                        currentFollowPosition,
                         eased
                     );
                     controls.target.copy(blendedTarget);
                 } else {
-                    camera.position.copy(desired);
-                    controls.target.copy(planetPos);
+                    camera.position.add(currentFollowPosition.clone().sub(previousFollowPosition));
+                    controls.target.copy(currentFollowPosition);
+                    const currentOffset = camera.position.clone().sub(currentFollowPosition);
+                    const distanceAlpha = 1 - Math.exp(-10 * dt);
+                    const distance = THREE.MathUtils.lerp(currentOffset.length(), followDesiredDistance, distanceAlpha);
+                    if (currentOffset.lengthSq() > 0.0001) {
+                        camera.position.copy(currentFollowPosition).add(currentOffset.setLength(distance));
+                    }
                 }
-                smoothTarget.copy(planetPos);
+                previousFollowPosition.copy(currentFollowPosition);
+            } else if (zoomAnimating) {
+                const zoomAlpha = 1 - Math.exp(-12 * dt);
+                camera.position.lerp(desiredCameraPosition, zoomAlpha);
+                controls.target.lerp(desiredControlsTarget, zoomAlpha);
+                if (
+                    camera.position.distanceToSquared(desiredCameraPosition) < 0.0001 &&
+                    controls.target.distanceToSquared(desiredControlsTarget) < 0.0001
+                ) {
+                    camera.position.copy(desiredCameraPosition);
+                    controls.target.copy(desiredControlsTarget);
+                    zoomAnimating = false;
+                }
             }
 
             controls.update();
             updateAsteroidBelt(dt, elapsed);
-            updateLensFlare(camera);
+            updateSunGlow();
             renderer.render(scene, camera);
-            requestAnimationFrame(animate);
+            animationFrameId = requestAnimationFrame(animate);
         }
         animate();
 
@@ -1081,10 +1074,12 @@ export default function ThreeSolarSystem() {
         // Cleanup
         // ================================================================
         return () => {
+            cancelAnimationFrame(animationFrameId);
             ro.disconnect();
             renderer.domElement.removeEventListener("click", onClick, true);
-            renderer.domElement.removeEventListener("wheel", onWheel);
+            renderer.domElement.removeEventListener("wheel", onWheel, true);
             window.removeEventListener("keydown", onKeyDown);
+            controls.removeEventListener("start", onControlsStart);
             pane.dispose();
             controls.dispose();
             // dispose scene resources (shallow)
@@ -1100,8 +1095,39 @@ export default function ThreeSolarSystem() {
     }, []);
 
     return (
-        <div ref={containerRef} style={{ width: "100%", height: "calc(80vh - 66px)", minHeight: "100dvh", position: "relative" }}>
-            <canvas ref={canvasRef} style={{ display: "block", width: "100%", height: "100%" }} />
+        <div
+            ref={containerRef}
+            style={{
+                width: "100%",
+                height: "max(420px, calc(100dvh - 66px))",
+                position: "relative",
+                overflow: "hidden",
+                background: "#02040a",
+            }}
+        >
+            <canvas
+                ref={canvasRef}
+                aria-label="Interactive model of the Solar System"
+                style={{ display: "block", width: "100%", height: "100%", cursor: "grab" }}
+            />
+            <div
+                style={{
+                    position: "absolute",
+                    left: "1rem",
+                    bottom: "1rem",
+                    maxWidth: "calc(100% - 2rem)",
+                    padding: "0.5rem 0.75rem",
+                    border: "1px solid rgba(255,255,255,0.14)",
+                    borderRadius: "999px",
+                    background: "rgba(3, 8, 20, 0.72)",
+                    color: "rgba(255,255,255,0.78)",
+                    font: "500 0.75rem/1.25 system-ui, sans-serif",
+                    pointerEvents: "none",
+                    backdropFilter: "blur(8px)",
+                }}
+            >
+                Drag to orbit · Pinch or scroll to zoom · Select a planet to follow
+            </div>
         </div>
     );
 }
