@@ -1,7 +1,9 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Pane } from "tweakpane";
+import { matchBodies } from "./solarSearch.js";
+import { moonFacts } from "./moonFacts.js";
 import "./SolarSystem.css";
 
 /**
@@ -13,12 +15,33 @@ import "./SolarSystem.css";
  * - This component is self-contained; mount it full-screen or inside any sized parent.
  */
 
+// The ⌕ character has patchy font coverage, so draw the glyph instead.
+function SearchGlyph() {
+    return (
+        <svg className="solar-search__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="10.5" cy="10.5" r="6.5" />
+            <line x1="15.4" y1="15.4" x2="21" y2="21" />
+        </svg>
+    );
+}
+
 export default function ThreeSolarSystem() {
     const containerRef = useRef(null); // container div we control sizing from
     const canvasRef = useRef(null); // managed <canvas>
-    const tourApiRef = useRef(null);
+    const sceneApiRef = useRef(null);
+    const searchInputRef = useRef(null);
     const [selectedPlanet, setSelectedPlanet] = useState(null);
     const [tourState, setTourState] = useState({ active: false, index: 0, total: 0, muted: false });
+    // Serialisable mirror of the scene's searchable bodies; the Object3D refs
+    // they map to stay inside the effect.
+    const [searchBodies, setSearchBodies] = useState([]);
+    const [focusedId, setFocusedId] = useState(null);
+    const [query, setQuery] = useState("");
+    const [searchOpen, setSearchOpen] = useState(false);
+    // Narrow screens keep the field collapsed behind its magnifier until tapped;
+    // above 720px CSS keeps it permanently expanded and this is inert.
+    const [searchExpanded, setSearchExpanded] = useState(false);
+    const [activeIndex, setActiveIndex] = useState(0);
 
     useEffect(() => {
         if (!containerRef.current || !canvasRef.current) return;
@@ -589,6 +612,46 @@ export default function ThreeSolarSystem() {
             return labels;
         });
 
+        // Flat index of every body the search box can jump to: each planet root
+        // plus each moon mesh, keyed by a namespaced id so moon names can repeat.
+        const searchEntries = planetSystems.flatMap((system, planetIndex) => {
+            const planet = planetData[planetIndex];
+            return [
+                {
+                    id: planet.name,
+                    name: planet.name,
+                    kind: "planet",
+                    kindLabel: planet.name === "Pluto" ? "Dwarf planet" : "Planet",
+                    parentName: null,
+                    object3d: system,
+                    radius: planet.radius,
+                    planetSystem: system,
+                    planetIndex,
+                    moon: null,
+                },
+                ...system.userData.moons.map(({ mesh, data }) => ({
+                    id: `${planet.name}/${data.name}`,
+                    name: data.name,
+                    kind: "moon",
+                    kindLabel: `Moon · ${planet.name}`,
+                    parentName: planet.name,
+                    object3d: mesh,
+                    radius: data.radius,
+                    planetSystem: system,
+                    planetIndex,
+                    moon: data,
+                })),
+            ];
+        });
+        const searchEntriesById = new Map(searchEntries.map((entry) => [entry.id, entry]));
+        setSearchBodies(searchEntries.map(({ id, name, kind, kindLabel, parentName }) => ({
+            id,
+            name,
+            kind,
+            kindLabel,
+            parentName,
+        })));
+
         const orbitPaths = planetData.map((planet) => {
             let color = 0x888888;
             if (planet.material && planet.material.color) color = planet.material.color.getHex();
@@ -780,8 +843,19 @@ export default function ThreeSolarSystem() {
         pane.element.style.position = "absolute";
         pane.element.style.top = "1rem";
         pane.element.style.right = "1rem";
-        pane.element.style.width = "min(256px, calc(100% - 2rem))";
         pane.element.style.zIndex = "100";
+
+        // Narrow screens share the pane's row with the tour button, so the pane
+        // gives up the space that button needs. Set here rather than in CSS
+        // because Tweakpane's own injected width rule would otherwise win.
+        const wideQuery = window.matchMedia("(min-width: 720px)");
+        const applyPaneWidth = () => {
+            pane.element.style.width = wideQuery.matches
+                ? "min(256px, calc(100% - 2rem))"
+                : "min(232px, calc(100% - 8.5rem))";
+        };
+        applyPaneWidth();
+        wideQuery.addEventListener("change", applyPaneWidth);
 
         const simulationFolder = pane.addFolder({ title: "Simulation Controls" });
         simulationFolder.addBinding(simulation, "orbitSpeedMultiplier", { label: "Orbit Speed", min: 1, max: 100, step: 0.1 });
@@ -867,7 +941,10 @@ export default function ThreeSolarSystem() {
         const clickMouse = new THREE.Vector2();
 
         let followActive = false;
-        let followSystem = null;
+        let followSystem = null; // planet root owning the focused body; scopes moon labels
+        let followTarget = null; // the object the camera actually tracks
+        let followRadius = 1;
+        let forceMoonLabels = false; // on while a moon is followed, without touching the user's toggle
         let followDesiredDistance = 50;
         const previousFollowPosition = new THREE.Vector3();
         let tourActive = false;
@@ -883,6 +960,9 @@ export default function ThreeSolarSystem() {
         function stopFollowing() {
             followActive = false;
             followSystem = null;
+            followTarget = null;
+            forceMoonLabels = false;
+            setFocusedId(null);
             zoomAnimating = false;
             desiredCameraPosition.copy(camera.position);
             desiredControlsTarget.copy(controls.target);
@@ -929,6 +1009,7 @@ export default function ThreeSolarSystem() {
                         ? "rd"
                         : "th";
             return {
+                kind: "planet",
                 name: planet.name,
                 classification: planet.name === "Pluto"
                     ? "Dwarf planet"
@@ -938,30 +1019,71 @@ export default function ThreeSolarSystem() {
                     : `${planet.moons.length} featured moon${planet.moons.length === 1 ? "" : "s"}`,
                 narration: planet.tourNarration,
                 facts: planet.facts,
+                factsHeading: "Did you know?",
+                summary: null,
+                parentName: null,
+                parentId: null,
             };
         }
 
-        function flyToPlanet(system, fromTour = false) {
-            if (!system) return;
+        function createMoonInfo(entry) {
+            const planet = planetData[entry.planetIndex];
+            // Every moon in planetData has an entry; the fallbacks only guard a
+            // future moon added without one.
+            const details = moonFacts[entry.id];
+            return {
+                kind: "moon",
+                name: entry.moon.name,
+                classification: details?.label ?? "Moon",
+                moonSummary: details?.diameter ?? `${planet.name} system`,
+                narration: details?.summary ?? planet.tourNarration,
+                summary: details?.summary ?? null,
+                facts: details?.facts ?? planet.facts,
+                factsHeading: "Did you know?",
+                parentName: planet.name,
+                parentId: planet.name,
+            };
+        }
+
+        function createFocusInfo(entry) {
+            return entry.kind === "moon"
+                ? createMoonInfo(entry)
+                : createPlanetInfo(planetData[entry.planetIndex], entry.planetIndex);
+        }
+
+        function focusEntry(entry, fromTour = false) {
+            if (!entry) return;
             if (!fromTour && tourActive) stopTour();
+            const isMoon = entry.kind === "moon";
             followActive = true;
-            followSystem = system;
+            followSystem = entry.planetSystem;
+            followTarget = entry.object3d;
+            followRadius = entry.radius;
+            forceMoonLabels = isMoon;
             zoomAnimating = false;
             followBlendT = 0;
             followBlendCamStart.copy(camera.position);
             followBlendTargetStart.copy(controls.target);
-            const planetPos = new THREE.Vector3();
-            system.getWorldPosition(planetPos);
-            const radius = system.userData.planet.radius;
-            followDesiredDistance = Math.max(radius * 6, 4);
-            followOffset.subVectors(camera.position, planetPos);
-            if (followOffset.lengthSq() < 0.001) followOffset.set(0, radius * 2, radius * 6);
+            const targetPos = new THREE.Vector3();
+            entry.object3d.getWorldPosition(targetPos);
+            // Moons are tiny, so frame them tighter — but stay clear of minDistance.
+            followDesiredDistance = isMoon
+                ? Math.max(entry.radius * 8, 1.8)
+                : Math.max(entry.radius * 6, 4);
+            followOffset.subVectors(camera.position, targetPos);
+            if (followOffset.lengthSq() < 0.001) {
+                followOffset.set(0, entry.radius * 2, entry.radius * 6);
+            }
             followOffset.setLength(followDesiredDistance);
-            previousFollowPosition.copy(planetPos);
-            const planet = system.userData.planet;
-            const planetIndex = planetData.indexOf(planet);
-            setSelectedPlanet(createPlanetInfo(planet, planetIndex));
-            updateCameraFocus(planet.name);
+            previousFollowPosition.copy(targetPos);
+            setSelectedPlanet(createFocusInfo(entry));
+            setFocusedId(entry.id);
+            updateCameraFocus(isMoon ? entry.parentName : entry.name);
+        }
+
+        function flyToPlanet(system, fromTour = false) {
+            if (!system) return;
+            focusEntry(searchEntriesById.get(system.userData.planet.name), fromTour);
         }
 
         function visitTourPlanet(nextIndex) {
@@ -985,7 +1107,9 @@ export default function ThreeSolarSystem() {
             else if (tourActive) speakPlanet(planetData[tourIndex]);
         }
 
-        tourApiRef.current = {
+        sceneApiRef.current = {
+            focusById: (id) => focusEntry(searchEntriesById.get(id)),
+            resetView,
             start: () => visitTourPlanet(0),
             previous: () => visitTourPlanet(tourIndex - 1),
             next: () => {
@@ -1017,12 +1141,11 @@ export default function ThreeSolarSystem() {
             event.stopImmediatePropagation();
 
             const zoomFactor = Math.exp(THREE.MathUtils.clamp(event.deltaY, -120, 120) * 0.0025);
-            if (followActive && followSystem) {
-                const radius = followSystem.userData.planet.radius;
+            if (followActive && followTarget) {
                 followDesiredDistance = THREE.MathUtils.clamp(
                     followDesiredDistance * zoomFactor,
-                    Math.max(radius * 2.2, 1.5),
-                    Math.max(radius * 80, 40),
+                    Math.max(followRadius * 2.2, 1.5),
+                    Math.max(followRadius * 80, 40),
                 );
                 return;
             }
@@ -1060,10 +1183,11 @@ export default function ThreeSolarSystem() {
         }
 
         function onKeyDown(e) {
-            if (e.key === "Escape") {
-                stopFollowing();
-                stopTour(true);
-            }
+            if (e.key !== "Escape") return;
+            // Escape inside the search field clears the field instead of the view.
+            if (e.target?.closest?.(".solar-toolbar")) return;
+            stopFollowing();
+            stopTour(true);
         }
 
         renderer.domElement.addEventListener("click", onClick, true);
@@ -1116,12 +1240,16 @@ export default function ThreeSolarSystem() {
                 label.position.copy(labelWorldPosition);
                 label.position.y += label.userData.labelOffset;
                 label.visible = label.userData.isMoonLabel
-                    ? simulation.showMoonLabels && followActive && label.userData.planetSystem === followSystem
+                    ? (simulation.showMoonLabels || forceMoonLabels)
+                        && followActive
+                        && label.userData.planetSystem === followSystem
+                        // The followed body needs no label of its own.
+                        && label.userData.owner !== followTarget
                     : simulation.showLabels && !followActive;
             });
 
-            if (followActive && followSystem) {
-                followSystem.getWorldPosition(currentFollowPosition);
+            if (followActive && followTarget) {
+                followTarget.getWorldPosition(currentFollowPosition);
 
                 if (followBlendT < 1) {
                     followBlendT = Math.min(1, followBlendT + dt / followBlendDuration);
@@ -1183,12 +1311,13 @@ export default function ThreeSolarSystem() {
         // ================================================================
         return () => {
             stopNarration();
-            tourApiRef.current = null;
+            sceneApiRef.current = null;
             cancelAnimationFrame(animationFrameId);
             ro.disconnect();
             renderer.domElement.removeEventListener("click", onClick, true);
             renderer.domElement.removeEventListener("wheel", onWheel, true);
             window.removeEventListener("keydown", onKeyDown);
+            wideQuery.removeEventListener("change", applyPaneWidth);
             controls.removeEventListener("start", onControlsStart);
             pane.dispose();
             controls.dispose();
@@ -1203,6 +1332,48 @@ export default function ThreeSolarSystem() {
             renderer.dispose();
         };
     }, []);
+
+    useEffect(() => {
+        if (searchExpanded) searchInputRef.current?.focus();
+    }, [searchExpanded]);
+
+    const matches = useMemo(() => matchBodies(searchBodies, query), [searchBodies, query]);
+    const highlighted = matches.length === 0 ? -1 : Math.min(activeIndex, matches.length - 1);
+    const resultsVisible = searchOpen && query.trim().length > 0;
+
+    const collapseSearch = () => {
+        setQuery("");
+        setSearchOpen(false);
+        setSearchExpanded(false);
+        setActiveIndex(0);
+    };
+
+    const jumpTo = (id) => {
+        sceneApiRef.current?.focusById(id);
+        collapseSearch();
+        searchInputRef.current?.blur();
+    };
+
+    const onSearchKeyDown = (event) => {
+        if (event.key === "Escape") {
+            // Keep the window-level Escape handler from also resetting the view.
+            event.stopPropagation();
+            collapseSearch();
+            searchInputRef.current?.blur();
+            return;
+        }
+        if (!resultsVisible || matches.length === 0) return;
+        if (event.key === "ArrowDown") {
+            event.preventDefault();
+            setActiveIndex((current) => (Math.min(current, matches.length - 1) + 1) % matches.length);
+        } else if (event.key === "ArrowUp") {
+            event.preventDefault();
+            setActiveIndex((current) => (Math.min(current, matches.length - 1) + matches.length - 1) % matches.length);
+        } else if (event.key === "Enter") {
+            event.preventDefault();
+            jumpTo(matches[highlighted].id);
+        }
+    };
 
     return (
         <div
@@ -1221,14 +1392,102 @@ export default function ThreeSolarSystem() {
                 aria-label="Interactive model of the Solar System"
                 style={{ display: "block", width: "100%", height: "100%", cursor: "grab" }}
             />
+            {!tourState.active && (
+                <div className={`solar-toolbar${searchExpanded ? " solar-toolbar--searching" : ""}`}>
+                    <button
+                        type="button"
+                        className="solar-search-toggle"
+                        aria-label="Search planets and moons"
+                        aria-expanded={searchExpanded}
+                        onClick={() => setSearchExpanded(true)}
+                    >
+                        <SearchGlyph />
+                    </button>
+                    <div
+                        className="solar-search"
+                        onBlur={(event) => {
+                            if (event.currentTarget.contains(event.relatedTarget)) return;
+                            collapseSearch();
+                        }}
+                    >
+                        <span className="solar-search__icon">
+                            <SearchGlyph />
+                        </span>
+                        <input
+                            ref={searchInputRef}
+                            className="solar-search__input"
+                            type="search"
+                            role="combobox"
+                            aria-label="Search planets and moons"
+                            aria-expanded={resultsVisible}
+                            aria-controls="solar-search-results"
+                            aria-autocomplete="list"
+                            aria-activedescendant={
+                                resultsVisible && highlighted >= 0
+                                    ? `solar-search-option-${highlighted}`
+                                    : undefined
+                            }
+                            placeholder="Search planets & moons"
+                            value={query}
+                            onChange={(event) => {
+                                setQuery(event.target.value);
+                                setActiveIndex(0);
+                                setSearchOpen(true);
+                            }}
+                            onFocus={() => setSearchOpen(true)}
+                            onKeyDown={onSearchKeyDown}
+                        />
+                        {resultsVisible && (
+                            <div
+                                className="solar-search__results"
+                                id="solar-search-results"
+                                role="listbox"
+                                aria-label="Matching bodies"
+                                onMouseDown={(event) => event.preventDefault()} /* keeps focus on the input */
+                            >
+                                {matches.length === 0 ? (
+                                    <p className="solar-search__empty">
+                                        Nothing matches “{query.trim()}”
+                                    </p>
+                                ) : (
+                                    matches.map((body, index) => (
+                                        <div
+                                            key={body.id}
+                                            id={`solar-search-option-${index}`}
+                                            role="option"
+                                            aria-selected={index === highlighted}
+                                            className={`solar-search__result${index === highlighted ? " solar-search__result--active" : ""}`}
+                                            onClick={() => jumpTo(body.id)}
+                                            onMouseEnter={() => setActiveIndex(index)}
+                                        >
+                                            <span className="solar-search__result-name">{body.name}</span>
+                                            <span className="solar-search__result-kind">{body.kindLabel}</span>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        )}
+                    </div>
+                    {(focusedId || selectedPlanet) && (
+                        <button
+                            type="button"
+                            className="solar-overview-button"
+                            onClick={() => sceneApiRef.current?.resetView()}
+                        >
+                            <span aria-hidden="true">⟲</span>
+                            Overview
+                        </button>
+                    )}
+                </div>
+            )}
             {!selectedPlanet && !tourState.active && (
                 <button
                     type="button"
                     className="solar-tour-launch"
-                    onClick={() => tourApiRef.current?.start()}
+                    onClick={() => sceneApiRef.current?.start()}
                 >
-                    <span aria-hidden="true">▶</span>
-                    Tour the Solar System
+                    <span className="solar-tour-launch__icon" aria-hidden="true">▶</span>
+                    Tour<span className="solar-tour-launch__full"> the Solar System</span>
                 </button>
             )}
             {selectedPlanet && (
@@ -1242,7 +1501,9 @@ export default function ThreeSolarSystem() {
                             <span className="solar-info-card__eyebrow">
                                 {tourState.active
                                     ? `Tour stop ${tourState.index + 1} of ${tourState.total}`
-                                    : "Planet profile"}
+                                    : selectedPlanet.kind === "moon"
+                                        ? `Moon of ${selectedPlanet.parentName}`
+                                        : "Planet profile"}
                             </span>
                             <h2>{selectedPlanet.name}</h2>
                         </div>
@@ -1251,7 +1512,7 @@ export default function ThreeSolarSystem() {
                             className="solar-info-card__close"
                             aria-label={`Hide ${selectedPlanet.name} information`}
                             onClick={() => {
-                                if (tourState.active) tourApiRef.current?.exit(true);
+                                if (tourState.active) sceneApiRef.current?.exit(true);
                                 else setSelectedPlanet(null);
                             }}
                         >
@@ -1263,13 +1524,16 @@ export default function ThreeSolarSystem() {
                             <span>{selectedPlanet.classification}</span>
                             <span>{selectedPlanet.moonSummary}</span>
                         </div>
+                        {selectedPlanet.summary && !tourState.active && (
+                            <p className="solar-info-card__summary">{selectedPlanet.summary}</p>
+                        )}
                         {tourState.active && (
                             <div className="solar-tour-narration">
                                 <span aria-hidden="true">{tourState.muted ? "◼" : "♪"}</span>
                                 <p>{selectedPlanet.narration}</p>
                             </div>
                         )}
-                        <h3>{tourState.active ? "More to discover" : "Did you know?"}</h3>
+                        <h3>{tourState.active ? "More to discover" : selectedPlanet.factsHeading}</h3>
                         <ul>
                             {selectedPlanet.facts.map((fact) => <li key={fact}>{fact}</li>)}
                         </ul>
@@ -1277,17 +1541,17 @@ export default function ThreeSolarSystem() {
                     {tourState.active ? (
                         <div className="solar-tour-controls" aria-label="Tour navigation">
                             <div className="solar-tour-controls__audio">
-                                <button type="button" onClick={() => tourApiRef.current?.replay()} disabled={tourState.muted}>
+                                <button type="button" onClick={() => sceneApiRef.current?.replay()} disabled={tourState.muted}>
                                     Replay narration
                                 </button>
-                                <button type="button" onClick={() => tourApiRef.current?.toggleNarration()}>
+                                <button type="button" onClick={() => sceneApiRef.current?.toggleNarration()}>
                                     {tourState.muted ? "Turn sound on" : "Mute"}
                                 </button>
                             </div>
                             <div className="solar-tour-controls__nav">
                                 <button
                                     type="button"
-                                    onClick={() => tourApiRef.current?.previous()}
+                                    onClick={() => sceneApiRef.current?.previous()}
                                     disabled={tourState.index === 0}
                                 >
                                     ← Previous
@@ -1295,7 +1559,7 @@ export default function ThreeSolarSystem() {
                                 <button
                                     type="button"
                                     className="solar-tour-controls__next"
-                                    onClick={() => tourApiRef.current?.next()}
+                                    onClick={() => sceneApiRef.current?.next()}
                                 >
                                     {tourState.index === tourState.total - 1 ? "Finish tour" : "Next →"}
                                 </button>
@@ -1303,16 +1567,24 @@ export default function ThreeSolarSystem() {
                             <button
                                 type="button"
                                 className="solar-tour-controls__exit"
-                                onClick={() => tourApiRef.current?.exit()}
+                                onClick={() => sceneApiRef.current?.exit()}
                             >
                                 Exit guided tour
                             </button>
                         </div>
+                    ) : selectedPlanet.kind === "moon" ? (
+                        <button
+                            type="button"
+                            className="solar-info-card__tour-button"
+                            onClick={() => sceneApiRef.current?.focusById(selectedPlanet.parentId)}
+                        >
+                            View {selectedPlanet.parentName}
+                        </button>
                     ) : (
                         <button
                             type="button"
                             className="solar-info-card__tour-button"
-                            onClick={() => tourApiRef.current?.start()}
+                            onClick={() => sceneApiRef.current?.start()}
                         >
                             Start guided tour
                         </button>
@@ -1336,7 +1608,7 @@ export default function ThreeSolarSystem() {
                     backdropFilter: "blur(8px)",
                 }}
             >
-                Drag to orbit · Pinch or scroll to zoom · Select a planet to follow
+                Drag to orbit · Pinch or scroll to zoom · Search or select a body to follow
             </div>
         </div>
     );

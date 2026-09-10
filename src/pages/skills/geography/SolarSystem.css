@@ -31,12 +31,12 @@
 .solar-tour-launch {
   position: absolute;
   z-index: 45;
-  top: 4.25rem;
+  top: 1rem;
   left: 1rem;
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
-  padding: 0.7rem 0.95rem;
+  gap: 0.45rem;
+  padding: 0.72rem 0.8rem;
   border: 1px solid rgba(255, 205, 117, 0.42);
   border-radius: 999px;
   background: rgba(13, 18, 34, 0.9);
@@ -49,9 +49,14 @@
   transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
 }
 
-.solar-tour-launch span {
+.solar-tour-launch__icon {
   color: #f6bd68;
   font-size: 0.7rem;
+}
+
+/* Only the desktop pill has room for the full wording. */
+.solar-tour-launch__full {
+  display: none;
 }
 
 .solar-tour-launch:hover {
@@ -61,6 +66,211 @@
 }
 
 .solar-tour-launch:focus-visible {
+  outline: 2px solid #f6bd68;
+  outline-offset: 3px;
+}
+
+/* ============================================================
+   Search + Back to overview toolbar
+   ============================================================ */
+
+.solar-toolbar {
+  position: absolute;
+  z-index: 46;
+  top: 4.25rem;
+  left: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-family: system-ui, sans-serif;
+}
+
+.solar-search-toggle {
+  display: grid;
+  flex: 0 0 auto;
+  width: 2.65rem;
+  height: 2.65rem;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(5, 10, 24, 0.9);
+  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.3);
+  color: #f6bd68;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.solar-search-toggle:hover {
+  border-color: rgba(246, 189, 104, 0.6);
+  background: rgba(31, 37, 55, 0.94);
+}
+
+.solar-search-toggle:focus-visible {
+  outline: 2px solid #f6bd68;
+  outline-offset: 3px;
+}
+
+.solar-search__glyph {
+  width: 1.05rem;
+  height: 1.05rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+/* Collapsed by default so a phone keeps the row to a single tap target. */
+.solar-search {
+  position: relative;
+  display: none;
+  flex: 1 1 auto;
+  min-width: 0;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(5, 10, 24, 0.9);
+  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: border-color 160ms ease;
+}
+
+.solar-search:focus-within {
+  border-color: rgba(246, 189, 104, 0.6);
+}
+
+.solar-toolbar--searching .solar-search-toggle {
+  display: none;
+}
+
+.solar-toolbar--searching .solar-search {
+  display: flex;
+}
+
+.solar-search__icon {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  color: #f6bd68;
+}
+
+.solar-search__input {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 2.5rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #f8fafc;
+  font: 600 0.82rem/1 system-ui, sans-serif;
+}
+
+.solar-search__input::placeholder {
+  color: rgba(174, 183, 197, 0.9);
+  font-weight: 500;
+}
+
+.solar-search__input:focus {
+  outline: none;
+}
+
+.solar-search__input::-webkit-search-cancel-button {
+  filter: invert(1) opacity(0.5);
+}
+
+.solar-search__results {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  right: 0;
+  max-height: 17rem;
+  overflow-y: auto;
+  padding: 0.35rem;
+  border: 1px solid rgba(255, 210, 132, 0.28);
+  border-radius: 0.9rem;
+  background: rgba(5, 10, 24, 0.96);
+  box-shadow: 0 1.25rem 3rem rgba(0, 0, 0, 0.45);
+  scrollbar-color: rgba(246, 189, 104, 0.45) transparent;
+  scrollbar-width: thin;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.solar-search__result {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 0.6rem;
+  cursor: pointer;
+}
+
+.solar-search__result--active {
+  background: rgba(246, 189, 104, 0.16);
+}
+
+.solar-search__result-name {
+  color: #fff;
+  font: 700 0.85rem/1.2 system-ui, sans-serif;
+}
+
+.solar-search__result-kind {
+  flex: 0 0 auto;
+  color: #aeb7c5;
+  font: 600 0.68rem/1.2 system-ui, sans-serif;
+}
+
+.solar-search__result--active .solar-search__result-kind {
+  color: #f6bd68;
+}
+
+.solar-search__empty {
+  margin: 0;
+  padding: 0.55rem 0.65rem;
+  color: #aeb7c5;
+  font: 600 0.78rem/1.35 system-ui, sans-serif;
+}
+
+.solar-overview-button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.65rem;
+  padding: 0 0.9rem;
+  border: 1px solid rgba(246, 189, 104, 0.42);
+  border-radius: 999px;
+  background: rgba(13, 18, 34, 0.9);
+  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font: 700 0.78rem/1 system-ui, sans-serif;
+  white-space: nowrap;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.solar-overview-button span {
+  color: #f6bd68;
+  font-size: 0.95rem;
+}
+
+.solar-overview-button:hover {
+  border-color: #f6bd68;
+  background: rgba(31, 37, 55, 0.94);
+  transform: translateY(-1px);
+}
+
+.solar-overview-button:focus-visible {
   outline: 2px solid #f6bd68;
   outline-offset: 3px;
 }
@@ -167,6 +377,14 @@
   color: #f6bd68;
 }
 
+.solar-info-card__summary {
+  margin: 0.85rem 0 0;
+  color: #f5f7fb;
+  font-size: 0.86rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
 .solar-tour-narration {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -269,16 +487,44 @@
 }
 
 @media (min-width: 720px) {
+  .solar-toolbar {
+    top: 1rem;
+    left: 14.5rem;
+    right: 17.5rem;
+    justify-content: flex-start;
+  }
+
+  /* Room enough to keep the field open permanently. */
+  .solar-search-toggle {
+    display: none;
+  }
+
+  .solar-search {
+    display: flex;
+    flex: 0 1 20rem;
+  }
+
   .solar-tour-launch {
     top: 1rem;
+    gap: 0.55rem;
+    padding: 0.7rem 0.95rem;
+  }
+
+  .solar-tour-launch__full {
+    display: inline;
   }
 
   .solar-info-card {
-    top: 1rem;
+    top: 4.75rem;
     bottom: auto;
     width: min(22rem, calc(100% - 19rem));
-    max-height: calc(100% - 5.5rem);
+    max-height: calc(100% - 9.25rem);
     padding: 1.25rem;
+  }
+
+  .solar-info-card--tour {
+    top: 4.75rem;
+    max-height: calc(100% - 9.25rem);
   }
 
   .solar-info-card ul {
@@ -310,5 +556,10 @@
 @media (prefers-reduced-motion: reduce) {
   .solar-info-card {
     animation: none;
+  }
+
+  .solar-overview-button:hover,
+  .solar-tour-launch:hover {
+    transform: none;
   }
 }
