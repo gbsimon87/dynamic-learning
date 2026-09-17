@@ -354,13 +354,32 @@ parent admin screen (`/parent`). Local-only; see §4.7. Curriculum Mode now requ
 selected child profile; Skills Mode does not.
 
 ### Curriculum Mode — built challenges
-Only **Year 2 Mathematics** exists, and only two topics have challenges built:
+Only **Year 2 Mathematics** exists, and only three topics have challenges built:
 
 | Category | Topic | Challenges built |
 |---|---|---|
 | Number – Number and Place Value | Numbers and Counting | 1, 2, 3, 4 ✅ |
 | Number – Number and Place Value | Counting Forwards and Backwards | 1, 2, 3, 4 ✅ |
-| *(all other 33 topics)* | — | 0 — falls back to "not yet available" |
+| Number – Number and Place Value | Counting in Steps of 2, 3, 5 and 10 | 1, 2, 3, 4 ✅ |
+| *(all other 36 topics)* | — | 0 — falls back to "not yet available" |
+
+The "Counting in Steps" set is the first built on the **shared challenge kit**
+(`src/components/challenge/`): `ChallengeShell` owns the run loop and the single
+`onComplete()`, with `ChoiceGrid`, `NumberLine`, `DragToOrder` and `NumberInput`
+as interactions, all themed once from `challenge-kit.css`. Its question
+generators live in `src/data/challenges/countingInSteps.js` and are unit-tested.
+New topics should compose the kit rather than copy an existing challenge.
+
+### Curriculum Mode — progress display
+`CurriculumPage` shows a year progress bar plus a per-topic `x/y` counter, both
+computed by `src/data/curriculumProgressStats.js`. Denominators count only
+*built* challenges so 100% is reachable; `datasetTotal` carries the full
+curriculum count so the UI can say "12 of 12 available · 12 of 156 in the full
+curriculum" rather than letting 100% read as "year finished".
+
+The dataset holds **39 topics across 8 categories = 156 challenge slots**.
+Earlier revisions of these docs said 35 topics; that was wrong, and was caught
+2026-09-18 by reading the count off the running app.
 
 **Year 3 does not exist yet.** Adding it is a major planned workstream (see
 [PROJECT_IDEAS.md](PROJECT_IDEAS.md)).

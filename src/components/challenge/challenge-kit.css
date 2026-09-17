@@ -1,0 +1,305 @@
+/* ===========================================================
+   SHARED CHALLENGE KIT
+   Every colour comes from the App.css theme tokens, so both
+   themes are solved once here rather than per challenge.
+=========================================================== */
+:root,
+body.light {
+  --ck-panel: var(--light-panel);
+  --ck-text: var(--light-text);
+  --ck-accent: var(--light-accent);
+  --ck-on-accent: var(--on-light-accent);
+  --ck-muted: rgba(34, 24, 28, 0.08);
+  --ck-border: rgba(34, 24, 28, 0.18);
+}
+
+body.dark {
+  --ck-panel: var(--dark-panel);
+  --ck-text: var(--dark-text);
+  --ck-accent: var(--dark-accent);
+  --ck-on-accent: var(--on-dark-accent);
+  --ck-muted: rgba(246, 232, 234, 0.1);
+  --ck-border: rgba(246, 232, 234, 0.25);
+}
+
+.challenge-container {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  border-radius: 16px;
+  background: var(--ck-panel);
+  color: var(--ck-text);
+  box-shadow: 0 4px 16px var(--panel-shadow);
+  text-align: center;
+}
+
+.challenge-progress {
+  font-size: 0.95rem;
+  opacity: 0.7;
+}
+
+.challenge-title {
+  margin: 0.5rem 0 1.2rem;
+  font-size: 1.35rem;
+  line-height: 1.4;
+}
+
+.challenge-prompt {
+  font-size: 1.2rem;
+  margin-bottom: 1.2rem;
+}
+
+/* The sequence IS the question, so it gets more weight than a sentence. */
+.sequence-strip {
+  margin-bottom: 1.6rem;
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- feedback --- */
+.feedback {
+  margin-top: 1.2rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  min-height: 1.6em; /* reserve the line so the layout never jumps */
+}
+
+/* --- choice grid --- */
+.choice-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* Generous: shoulder-to-shoulder cards read as one bar, not as choices. */
+  gap: 1.4rem;
+  margin-bottom: 1.6rem;
+}
+
+.choice-btn {
+  min-width: 84px;
+  min-height: 64px; /* large target: the audience is 6-8 */
+  padding: 0.6rem 1.2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  border: 3px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.choice-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.choice-btn.selected {
+  border-color: var(--ck-accent);
+  background: var(--ck-accent);
+  color: var(--ck-on-accent);
+}
+
+.choice-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* --- number line --- */
+.number-line {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 1.6rem;
+}
+
+.number-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+  min-height: 64px;
+  padding: 0.4rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  border: 3px solid transparent;
+  border-radius: 12px;
+}
+
+.number-cell.gap {
+  cursor: pointer;
+  border-style: dashed;
+  border-color: var(--ck-border);
+  background: transparent;
+}
+
+.number-cell.gap.filled {
+  background: var(--ck-muted);
+  border-style: solid;
+}
+
+.number-cell.gap.active {
+  border-color: var(--ck-accent);
+  border-style: solid;
+}
+
+/* --- drag strip --- */
+.drag-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.2rem;
+  min-height: 84px;
+  /* Hugs its cards instead of stretching the full card width with the row
+     marooned in the middle. */
+  width: fit-content;
+  max-width: 100%;
+  padding: 0.9rem 1.1rem;
+  margin: 0 auto 1.6rem;
+  border: 3px dashed var(--ck-border);
+  border-radius: 14px;
+}
+
+.drag-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 68px;
+  min-height: 68px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  border: 3px solid var(--ck-border);
+  border-radius: 12px;
+  box-shadow: 0 2px 6px var(--panel-shadow);
+  cursor: grab;
+  user-select: none;
+}
+
+.drag-card.dragging {
+  transform: rotate(-3deg);
+}
+
+.drag-card:focus-visible {
+  outline: 3px solid var(--ck-text);
+  outline-offset: 2px;
+}
+
+/* --- number input --- */
+.number-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+  margin-bottom: 1.4rem;
+}
+
+.number-input-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.number-input-caption {
+  font-size: 1.05rem;
+  opacity: 0.8;
+}
+
+.number-input-field {
+  width: 120px;
+  padding: 0.1rem 0.6rem 0.15rem;
+  font-size: 2.1rem;
+  font-weight: 700;
+  /* Tight, so the digits sit ON the rule rather than floating above it. */
+  line-height: 1.15;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: var(--ck-text);
+  background: transparent;
+  border: none;
+  /* Underline, not a box: an empty box reads as a broken panel, an empty
+     line reads as somewhere to write. */
+  border-bottom: 4px solid var(--ck-border);
+  border-radius: 0;
+}
+
+.number-input-field::placeholder {
+  color: var(--ck-text);
+  opacity: 0.3;
+}
+
+.number-input-field:focus {
+  outline: none;
+  border-bottom-color: var(--ck-accent);
+}
+
+/* Two rows, not three: the keypad was taller than the question it served. */
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.6rem;
+  max-width: 430px;
+  width: 100%;
+}
+
+.keypad-btn {
+  min-height: 54px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  border: 2px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.keypad-btn:hover:not(:disabled) {
+  border-color: var(--ck-border);
+}
+
+.keypad-btn.action {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.keypad-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* --- submit --- */
+.submit-btn {
+  min-height: 56px;
+  padding: 0.7rem 2.2rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ck-on-accent);
+  background: var(--ck-accent);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.submit-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .choice-btn,
+  .drag-card {
+    transition: none;
+  }
+
+  .choice-btn:hover:not(:disabled) {
+    transform: none;
+  }
+}
