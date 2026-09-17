@@ -12,7 +12,7 @@ services:
     runtime: node
     plan: free
     region: frankfurt
-    branch: main
+    branch: dev
 
     # `npm ci` for a reproducible install from package-lock.json. Dev
     # dependencies are needed because Vite itself builds the client.
