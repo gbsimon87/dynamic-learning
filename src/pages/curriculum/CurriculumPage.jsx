@@ -9,6 +9,10 @@ import {
   isChallengeImplemented,
   isTopicUnbuilt,
 } from "../../data/challengeAvailability";
+import {
+  getTopicStats,
+  getYearStats,
+} from "../../data/curriculumProgressStats";
 import "./CurriculumPage.css";
 import "./CurriculumSelectPage.css";
 
@@ -35,6 +39,12 @@ function CurriculumPage() {
 
   const isFirstTimeUser = hydrated && Object.keys(progress).length === 0;
 
+  // Only challenges with a component file count, so 100% stays reachable.
+  const isBuilt = (topicId, challengeId) =>
+    isChallengeImplemented(subject, year, topicId, challengeId);
+
+  const yearStats = getYearStats(progress, curriculum, isBuilt);
+
   return (
     <div className="curriculum-page page">
       {/* Hero Header */}
@@ -45,6 +55,38 @@ function CurriculumPage() {
         <p className="curriculum-subtitle">
           Follow the UK National Curriculum through fun challenges!
         </p>
+
+        {/* Held back until hydration so it never flashes 0% at a learner who
+            has real progress saved. */}
+        {hydrated && yearStats.total > 0 && (
+          <div className="year-progress">
+            <div
+              className="year-progress-bar"
+              role="progressbar"
+              aria-valuenow={yearStats.percent}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label={`Year ${year} ${getSubjectName(subject)} progress`}
+            >
+              <div
+                className="year-progress-fill"
+                style={{ width: `${yearStats.percent}%` }}
+              />
+            </div>
+            <p className="year-progress-label">
+              {yearStats.completed} of {yearStats.total} available ·{" "}
+              {yearStats.percent}%
+            </p>
+            {/* Most of the curriculum isn't built yet, so a bare 100% would
+                read as "Year finished". Name the full dataset alongside it. */}
+            {yearStats.datasetTotal > yearStats.total && (
+              <p className="year-progress-note">
+                {yearStats.completed} of {yearStats.datasetTotal} in the full
+                curriculum — more challenges coming soon!
+              </p>
+            )}
+          </div>
+        )}
         <Link to="/curriculum" className="curriculum-change-link">
           ← Change year or subject
         </Link>
@@ -118,6 +160,13 @@ function CurriculumPage() {
                     topic
                   );
 
+                  const topicStats = getTopicStats(
+                    progress,
+                    category.id,
+                    topic,
+                    isBuilt
+                  );
+
                   return (
                     <div
                       key={topic.id}
@@ -129,6 +178,12 @@ function CurriculumPage() {
                         <h3 className="topic-title">{topic.name}</h3>
                         {topicUnbuilt && !topicLocked && (
                           <span className="topic-badge soon">🚧 Coming soon</span>
+                        )}
+
+                        {hydrated && !topicLocked && topicStats.total > 0 && (
+                          <span className="topic-count">
+                            {topicStats.completed}/{topicStats.total}
+                          </span>
                         )}
 
                         {topicLocked && <span className="topic-badge locked">🔒</span>}

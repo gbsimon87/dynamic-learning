@@ -29,6 +29,51 @@ body.dark .curriculum-title {
 }
 
 /* ===========================================================
+   YEAR PROGRESS
+=========================================================== */
+.year-progress {
+  /* Wide enough that the "full curriculum" note stays on one line. */
+  max-width: 560px;
+  margin: 1.2rem auto 0;
+}
+
+.year-progress-bar {
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+body.dark .year-progress-bar {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.year-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #4caf50, #8bc34a);
+  transition: width 0.4s ease;
+}
+
+.year-progress-label {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  opacity: 0.85;
+}
+
+.year-progress-note {
+  margin-top: 0.2rem;
+  font-size: 0.9rem;
+  opacity: 0.65;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .year-progress-fill {
+    transition: none;
+  }
+}
+
+/* ===========================================================
    CATEGORY GRID
 =========================================================== */
 .curriculum-grid {
@@ -133,6 +178,20 @@ body.dark .topic-card {
 
 .topic-badge.locked {
   background: gray;
+}
+
+/* Sits beside the badges: how far through this topic the learner is. */
+.topic-count {
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+body.dark .topic-count {
+  background: rgba(255, 255, 255, 0.15);
 }
 
 /* ===========================================================
