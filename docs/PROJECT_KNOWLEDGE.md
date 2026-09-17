@@ -353,6 +353,12 @@ Parent sign-up/sign-in (`/signup`, `/login`), child profile picker (`/profiles`)
 parent admin screen (`/parent`). Local-only; see §4.7. Curriculum Mode now requires a
 selected child profile; Skills Mode does not.
 
+### Curriculum Mode — the source material
+`docs/curriculum/` holds the National Curriculum programmes of study verbatim,
+with every topic in our dataset mapped to the statutory requirement it serves,
+and a list of requirements no topic covers yet. Read the relevant row before
+authoring questions for a topic.
+
 ### Curriculum Mode — built challenges
 Only **Year 2 Mathematics** exists, and six topics have challenges built — the
 whole of the first category:

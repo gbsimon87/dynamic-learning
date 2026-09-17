@@ -61,6 +61,22 @@ console.log(toKebab(name), cap(toKebab(name)));'
 Category ids keep their dashes, so `"Number - Number and Place Value"` becomes
 `number---number-and-place-value` — **three** dashes. Compute it; do not type it.
 
+## Read the programme of study first
+
+`docs/curriculum/year-<n>-<subject>.md` holds the statutory text verbatim, plus
+a table mapping every topic in our dataset to the requirement it serves. Find
+your topic's row before designing anything. It sets the **boundary** of the
+topic, which is what stops a well-built challenge being off-spec:
+
+- Year 2 counts in steps of 2, 3 and 5 **from 0**, but in 10s from any number.
+- Year 2 fractions are 1/3, 1/4, 2/4, 3/4 and 1/2 — nothing else.
+- Year 2 tells time to **five minutes**, not to the minute.
+- Year 2 money problems stay within **one unit** — never mix pounds and pence.
+
+The non-statutory "notes and guidance" are where the good question ideas live:
+arrays and repeated addition, the 5 times table on a clock face, partitioning 23
+as both 20 + 3 and 10 + 13, pictograms with one symbol standing for 2, 5 or 10.
+
 ## Design the four slots
 
 1. Gentlest — the rule is stated and visually supported.

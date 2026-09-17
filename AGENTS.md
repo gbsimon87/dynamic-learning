@@ -18,6 +18,8 @@ and are plain Markdown — **read the relevant one before starting**:
 
 Background on architecture and current state: `docs/PROJECT_KNOWLEDGE.md`.
 Backlog: `docs/PROJECT_IDEAS.md`.
+**Curriculum content: `docs/curriculum/` — the statutory programmes of study,
+verbatim, with each of our topics mapped to the requirement it serves.**
 
 ## Non-negotiables
 
@@ -35,6 +37,11 @@ Backlog: `docs/PROJECT_IDEAS.md`.
 5. **Both themes, every time.** Drive colour from the `--light-*` / `--dark-*`
    tokens in `App.css` and check light and dark before calling anything done.
 6. **Touch targets are large.** The audience is 6–8 years old.
+7. **Teach what the curriculum actually says.** Before writing questions for a
+   topic, read its row in `docs/curriculum/year-<n>-<subject>.md`. The statutory
+   wording sets the boundary — steps of 2, 3 and 5 start from 0; Year 2 fractions
+   are 1/3, 1/4, 2/4, 3/4 only; time is told to five minutes, not the minute.
+   Never paraphrase the statutory text when saving a new programme of study.
 
 ## Commands
 
