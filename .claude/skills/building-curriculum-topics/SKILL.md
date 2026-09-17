@@ -42,6 +42,10 @@ negative option for Year 2.
 Build questions once per mount with `useMemo(() => build(Math.random), [])`, and
 key the inner component on the question index so typed state never carries over.
 
+**Update state functionally, never from the prop.** Two taps land in the same
+React batch, so `onChange(value + key)` makes the second overwrite the first —
+a child double-tapping loses a digit. Write `onChange((prev) => prev + key)`.
+
 ## Name the files by computing, not by spelling
 
 Getting this wrong fails **silently** — the learner sees "not yet available".
@@ -92,7 +96,9 @@ async () => {
 ```
 
 This also proves the generators: if the correct answer is ever missing from the
-options, the loop reports it.
+options, the loop reports it. It is worth doing even when a topic "obviously"
+works — the batching bug above was found this way and nothing else would have
+caught it, because there is no component test runner.
 
 **Confirm before claiming done:** a wrong answer retries without advancing; a
 full run redirects to the curriculum page and increments the topic counter;

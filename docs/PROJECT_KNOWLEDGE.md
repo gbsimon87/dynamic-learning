@@ -354,21 +354,32 @@ parent admin screen (`/parent`). Local-only; see §4.7. Curriculum Mode now requ
 selected child profile; Skills Mode does not.
 
 ### Curriculum Mode — built challenges
-Only **Year 2 Mathematics** exists, and only three topics have challenges built:
+Only **Year 2 Mathematics** exists, and six topics have challenges built — the
+whole of the first category:
 
 | Category | Topic | Challenges built |
 |---|---|---|
 | Number – Number and Place Value | Numbers and Counting | 1, 2, 3, 4 ✅ |
 | Number – Number and Place Value | Counting Forwards and Backwards | 1, 2, 3, 4 ✅ |
 | Number – Number and Place Value | Counting in Steps of 2, 3, 5 and 10 | 1, 2, 3, 4 ✅ |
-| *(all other 36 topics)* | — | 0 — falls back to "not yet available" |
+| Number – Number and Place Value | Counting More and Less | 1, 2, 3, 4 ✅ |
+| Number – Number and Place Value | Place Value | 1, 2, 3, 4 ✅ |
+| Number – Number and Place Value | Less Than, Greater Than and Equal To | 1, 2, 3, 4 ✅ |
+| *(all other 33 topics)* | — | 0 — falls back to "not yet available" |
 
-The "Counting in Steps" set is the first built on the **shared challenge kit**
+Every one of these is built on the **shared challenge kit**
 (`src/components/challenge/`): `ChallengeShell` owns the run loop and the single
 `onComplete()`, with `ChoiceGrid`, `NumberLine`, `DragToOrder` and `NumberInput`
 as interactions, all themed once from `challenge-kit.css`. Its question
 generators live in `src/data/challenges/countingInSteps.js` and are unit-tested.
-New topics should compose the kit rather than copy an existing challenge.
+New topics should compose the kit rather than copy an existing challenge — see
+the `building-curriculum-topics` skill. The kit has since grown a highlighted
+number-line cell, a rule machine, base-ten blocks and a comparison statement
+row, all added as later topics needed them.
+
+Locked topics still list their challenges (each rendered locked and
+unclickable). Hiding them left a locked topic as a bare padlock, with no sign
+of what it held or how much of it there was.
 
 ### Curriculum Mode — progress display
 `CurriculumPage` shows a year progress bar plus a per-topic `x/y` counter, both
