@@ -1,0 +1,105 @@
+---
+name: building-curriculum-topics
+description: Use when building all four challenges for a Year 2+ Maths curriculum topic in the Dynamic Learning app - covers the shared challenge kit, the pure generator pattern, the computed file names the loader depends on, and how to verify a topic in the browser without clicking through it by hand.
+---
+
+# Building a Curriculum Topic
+
+A topic is **4 challenge components** that escalate. Build them on the shared
+kit in `src/components/challenge/` — never by copy-pasting an existing
+challenge.
+
+**REQUIRED BACKGROUND:** `add-curriculum-challenge` owns the path convention and
+the `onComplete` contract. This skill assumes it.
+
+## The kit
+
+| Component | Use for |
+|---|---|
+| `ChallengeShell` | Always. Owns question index, feedback, the 1s success lock, and the single `onComplete()`. |
+| `ChoiceGrid` | Pick one of N. |
+| `NumberLine` | A sequence with blanks to fill. |
+| `DragToOrder` | Arrange items into an order. Keyboard-operable (space, arrows, space). |
+| `NumberInput` | Typed numeric answer. Pass `hideField` when the answer already shows elsewhere. |
+
+`challenge-kit.css` themes all of them from the `--light-*` / `--dark-*` tokens
+in App.css. **Do not write per-challenge CSS for anything the kit already
+styles** — that is how 140 files drift apart. Extend the kit instead.
+
+Children report an attempt with `submit(isCorrect)`. The shell decides whether
+to advance, so no challenge can complete early.
+
+## Question data goes in a pure module
+
+Put generators in `src/data/challenges/<topic>.js`: no React, and take `rng` as
+a parameter so challenges randomise per mount while tests stay deterministic.
+Unit-test them with `node --test` (the project has no component test runner).
+
+**Distractors must be plausible near-misses** — one step short, one step long,
+off-by-ones. Random numbers get eliminated without doing the maths. Never emit a
+negative option for Year 2.
+
+Build questions once per mount with `useMemo(() => build(Math.random), [])`, and
+key the inner component on the question index so typed state never carries over.
+
+## Name the files by computing, not by spelling
+
+Getting this wrong fails **silently** — the learner sees "not yet available".
+
+```bash
+node -e '
+const toKebab=(s)=>s.toLowerCase().replace(/[^a-z0-9\s-]/g,"").trim().replace(/\s+/g,"-");
+const cap=(id)=>id.split("-").map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join("");
+const name="<Topic Name From The Dataset>";
+console.log(toKebab(name), cap(toKebab(name)));'
+```
+
+Category ids keep their dashes, so `"Number - Number and Place Value"` becomes
+`number---number-and-place-value` — **three** dashes. Compute it; do not type it.
+
+## Design the four slots
+
+1. Gentlest — the rule is stated and visually supported.
+2. The rule must be inferred.
+3. Whole-structure work (order, build, match), not one more term.
+4. Applied — word problems, typed answers, nothing to eliminate.
+
+Four multiple-choice screens is a weak topic. Vary the interaction. Keep Year 2
+inside 100, short sentences, digits not number words.
+
+## Verify without clicking 24 times
+
+Dev server may be on 5174 if 5173 is taken. The URL is:
+
+`/year/{year}/{subject}/problem/{categoryId}/{topicId}/{n}`
+
+Curriculum routes are behind `RequireChild`, so a child profile must be
+selected. The default store is localStorage, so no backend is needed.
+
+Drive a whole challenge in one `browser_evaluate` call — read the question from
+the DOM, compute the answer, click, wait past the 1s lock:
+
+```js
+async () => {
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  for (let q = 0; q < 6; q++) {
+    /* read the prompt, compute the answer, click the right control */
+    document.querySelector('.submit-btn').click();
+    await sleep(1400);
+  }
+  return location.pathname; // '/curriculum/year/2/math' once complete
+}
+```
+
+This also proves the generators: if the correct answer is ever missing from the
+options, the loop reports it.
+
+**Confirm before claiming done:** a wrong answer retries without advancing; a
+full run redirects to the curriculum page and increments the topic counter;
+`npm run lint`, `npm test` and `npm run build` pass; and the topic is legible in
+**both** themes.
+
+## Finally
+
+Update the table in `docs/PROJECT_KNOWLEDGE.md` §5 and idea #20 in
+`docs/PROJECT_IDEAS.md`. A topic is not done until the docs reflect it.
