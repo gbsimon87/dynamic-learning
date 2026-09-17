@@ -180,7 +180,7 @@ function CurriculumPage() {
                           <span className="topic-badge soon">🚧 Coming soon</span>
                         )}
 
-                        {hydrated && !topicLocked && topicStats.total > 0 && (
+                        {hydrated && topicStats.total > 0 && (
                           <span className="topic-count">
                             {topicStats.completed}/{topicStats.total}
                           </span>
@@ -190,9 +190,11 @@ function CurriculumPage() {
                         {topicComplete && <span className="topic-badge">✅</span>}
                       </div>
 
-                      {/* Challenges */}
-                      {!topicLocked && (
-                        <div className="challenge-grid">
+                      {/* Challenges. Rendered for locked topics too: hiding
+                          them left a locked topic as a bare padlock, with no
+                          sign of what it contains or how much of it there is.
+                          Each one still renders locked and unclickable. */}
+                      <div className="challenge-grid">
                           {topic.challenges.map((challenge, challengeIndex) => {
                             const completedChallenges =
                               progress[category.id]?.topics?.[topic.id]
@@ -258,8 +260,7 @@ function CurriculumPage() {
                               </Link>
                             );
                           })}
-                        </div>
-                      )}
+                      </div>
                     </div>
                   );
                 })}
