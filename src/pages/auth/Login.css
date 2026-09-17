@@ -1,0 +1,141 @@
+/* ===========================================================
+   LOGIN — parent-facing sign in
+   CSS is global here (PROJECT_KNOWLEDGE §9): every rule is scoped under the
+   unique root class `.login-page`. No colour literals — the local `--lg-*`
+   tokens all resolve to App.css / index.css variables that have light+dark pairs.
+=========================================================== */
+.login-page {
+  --lg-bg: var(--light-bg);
+  --lg-text: var(--light-text);
+  --lg-panel: var(--light-panel);
+  --lg-accent: var(--light-accent);
+  --lg-on-accent: var(--on-light-accent);
+  --lg-border: var(--map-border);
+  --lg-muted: var(--map-muted);
+  --lg-danger: var(--danger-text);
+  --lg-shadow: var(--panel-shadow);
+
+  min-height: calc(100dvh - var(--navbar-height));
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem 1rem 3rem;
+  color: var(--lg-text);
+  background-color: var(--lg-bg);
+}
+
+body.dark .login-page {
+  --lg-bg: var(--dark-bg);
+  --lg-text: var(--dark-text);
+  --lg-panel: var(--dark-panel);
+  --lg-accent: var(--dark-accent);
+  --lg-on-accent: var(--on-dark-accent);
+}
+
+.login-page .login-card {
+  width: 100%;
+  max-width: 26rem;
+  background-color: var(--lg-panel);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 4px 14px var(--lg-shadow);
+}
+
+.login-page .login-title {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.login-page .login-intro {
+  font-size: 0.95rem;
+  color: var(--lg-muted);
+  margin-bottom: 1.5rem;
+}
+
+.login-page .login-form {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.login-page .login-field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.login-page .login-label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.login-page .login-input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  border: 2px solid var(--lg-border);
+  background-color: var(--lg-panel);
+  color: var(--lg-text);
+  transition: border-color 0.2s;
+}
+
+.login-page .login-input:focus {
+  outline: none;
+  border-color: var(--lg-accent);
+}
+
+.login-page .login-input.invalid {
+  border-color: var(--lg-danger);
+}
+
+.login-page .login-error {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--lg-danger);
+}
+
+.login-page .login-submit {
+  min-height: 48px;
+  margin-top: 0.4rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  background-color: var(--lg-accent);
+  color: var(--lg-on-accent);
+  transition: filter 0.2s;
+}
+
+/* Lighten the accent on hover — darkening drops the ink below AA. */
+.login-page .login-submit:hover:not(:disabled),
+.login-page .login-submit:focus-visible:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.login-page .login-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.login-page .login-switch {
+  margin-top: 1.4rem;
+  font-size: 0.95rem;
+  text-align: center;
+  color: var(--lg-muted);
+}
+
+.login-page .login-switch a {
+  color: var(--lg-text);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+@media (max-width: 420px) {
+  .login-page {
+    padding: 1.25rem 0.75rem 2rem;
+  }
+
+  .login-page .login-card {
+    padding: 1.5rem 1.1rem;
+  }
+}

@@ -114,3 +114,31 @@ textarea,
 select {
   font: inherit;
 }
+
+/* ---------------------------------------
+   Child profile colours
+   ---------------------------------------
+   Token pairs for PROFILE_COLOURS in src/data/avatars.js. A profile stores the
+   variable NAME, never a literal, so the same saved profile repaints correctly
+   when the theme flips (PROJECT_KNOWLEDGE §9 - inline styles need tokens).
+   Every value here is light enough that the app's dark ink (--on-light-accent,
+   #22181C) clears WCAG AA 4.5:1 on it in BOTH themes, so a profile chip can use
+   one ink colour regardless of theme.
+---------------------------------------- */
+:root {
+  --profile-colour-coral: #f7b3b7;
+  --profile-colour-sky: #a9cdf0;
+  --profile-colour-mint: #a8e0cf;
+  --profile-colour-sun: #f6d98a;
+  --profile-colour-lilac: #cdbdec;
+  --profile-colour-peach: #f8c49b;
+}
+
+body.dark {
+  --profile-colour-coral: #d98d92;
+  --profile-colour-sky: #8ab2d8;
+  --profile-colour-mint: #8ac6b5;
+  --profile-colour-sun: #d9bd72;
+  --profile-colour-lilac: #b0a0d0;
+  --profile-colour-peach: #dca87f;
+}

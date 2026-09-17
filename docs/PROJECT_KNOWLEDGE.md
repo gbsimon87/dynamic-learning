@@ -17,7 +17,7 @@
 > file reflects it. Also update [PROJECT_IDEAS.md](PROJECT_IDEAS.md) when an idea
 > moves between statuses.
 
-**Last reviewed:** 2026-09-10
+**Last reviewed:** 2026-09-15
 
 ---
 
@@ -50,12 +50,25 @@ decision made in this codebase:
 | 3D | **three** (+ **tweakpane** for dev controls) | Solar System scene |
 | Clock UI | **react-clock** | Clock Generator |
 | Number words | **written-number** | Converts `42` → "forty-two" |
+| Accounts | **Parent email + child profiles** | PBKDF2 password hashing, behind a swappable async store — see §4.7 |
+| Backend | **Express + MongoDB Atlas** | `server/` — optional: the app still runs fully local. See §4.8 |
+| Hosting | **Render.com** | One Web Service serves the API and the built SPA — see [DEPLOYMENT.md](DEPLOYMENT.md) |
 | Linting | **ESLint 9** flat config | `npm run lint` |
 | External APIs | **REST Countries** (`restcountries.com`) | Country names & flags for Flag Finder skill game |
 
-**No backend. No database. No auth. No test framework.** Everything is
+**No backend. No database. No component-test framework.** Everything is
 client-side and state lives in `localStorage`. External data is fetched from public APIs
 (currently just REST Countries for the Flag Finder geography game).
+
+**The backend is optional.** As of 2026-09-15 there are two interchangeable storage
+drivers (§4.7). By default everything still lives in this browser's `localStorage` and
+the app needs no server at all. Set `VITE_USE_API=true` at build time and the same app
+talks to the Express + MongoDB backend in `server/` instead (§4.8), with no component
+changes. In local mode: Password hashing is real (PBKDF2-SHA-256, 150k iterations) but it runs
+client-side, so it protects nothing against someone holding the device; it exists so the
+data shape and call sites already match what a real backend expects. All account access
+goes through the async store in §4.7, which is the designed seam for a future MongoDB
+backend.
 
 ### External API: REST Countries
 
@@ -86,20 +99,28 @@ src/
 │   └── RootLayout.jsx        # Navbar + <Outlet />
 ├── context/
 │   ├── ThemeContext.jsx      # Global light/dark theme provider
-│   └── theme-context.js      # Context object, split out for Fast Refresh
+│   ├── theme-context.js      # Context object, split out for Fast Refresh
+│   ├── AuthContext.jsx       # Parent account + child profile provider (§4.7)
+│   └── auth-context.js       # Context object, split out for Fast Refresh
 ├── hooks/
-│   └── useProgress.js        # Shared curriculum-progress storage hook
+│   └── useProgress.js        # Shared curriculum-progress hook (account-aware, §4.5)
 ├── components/               # Shared, reusable pieces
+│   ├── RequireChild.jsx      # Route guard for Curriculum Mode (§4.7)
 │   ├── ui/Navbar.jsx
 │   ├── ClockPanel.jsx, ReadingNumbersPanel.jsx, DualLabelClock.jsx,
 │   ├── MapGame.jsx, MultiplicationGrid.jsx, ShapeQuiz.jsx
 ├── data/
 │   ├── year2MathCurriculum.js   # Curriculum tree (categories → topics)
+│   ├── avatars.js               # Child profile emoji + colour tokens
+│   ├── store/                   # THE BACKEND SEAM (§4.7)
+│   │   ├── index.js             # Swap point: re-exports the active store
+│   │   ├── localStorageStore.js # Current driver
 │   └── cities.json
 ├── utils/
 │   └── toKebabCase.js        # Generates the IDs used in URLs + storage keys
 ├── pages/
 │   ├── home/Home.jsx
+│   ├── auth/                 # Login, SignUp, Profiles, ParentArea
 │   ├── skills/
 │   │   ├── SkillsPage.jsx    # Skills hub — links to every skill game
 │   │   ├── math/             # Skill games, grouped by subject
@@ -177,8 +198,9 @@ Every challenge component:
 - uses a `.challenge-container` root and a `.feedback` element for messages
 
 ### 4.5 Progress & unlocking
-Progress is stored in `localStorage` under the key `` `${subject}Progress_year${year}` ``
-(e.g. `mathProgress_year2`), shaped as:
+Progress is **per child profile** as of 2026-09-15. It is stored via the store layer
+(§4.7) as one document per `(childId, year, subject)` in the `dl.progress` collection,
+with the progress tree itself under that document's `data` field, shaped as:
 
 ```js
 {
@@ -190,7 +212,12 @@ Progress is stored in `localStorage` under the key `` `${subject}Progress_year${
 }
 ```
 
-All reading and writing of this key goes through the shared
+The legacy pre-accounts key `` `${subject}Progress_year${year}` `` (e.g.
+`mathProgress_year2`) is **no longer read or written**. Any such key left in a
+browser is simply ignored — there is deliberately **no migration path**, removed
+2026-09-15 as an explicit product decision. Do not reintroduce one.
+
+All reading and writing of progress goes through the shared
 [useProgress](../src/hooks/useProgress.js) hook — `useProgress(year, subject)`
 returns `{ progress, hydrated, isTopicComplete, isCategoryComplete,
 isChallengeComplete, completeChallenge }`. This replaced logic previously
@@ -210,6 +237,12 @@ Writes happen in [ProblemView.jsx](../src/pages/curriculum/ProblemView.jsx) via
 `completeChallenge()` on `onComplete`, then it navigates back to `/curriculum`
 after ~1s.
 
+⚠️ **The hook is inert with no active child** — empty progress, and it never writes.
+It also refuses to save unless the in-memory progress came from the document currently
+loaded (tracked in a ref). Without that guard, switching profile writes the *outgoing*
+child's progress into the *incoming* child's document: the load effect resets state, but
+the save effect still fires once with the previous render's value. Do not remove it.
+
 ### 4.6 Theming
 [ThemeContext.jsx](../src/context/ThemeContext.jsx) stores `light`/`dark` in
 `localStorage` (key: `theme`), defaulting to the OS `prefers-color-scheme`. The
@@ -218,6 +251,90 @@ context object lives separately in
 compatible with React Fast Refresh. The provider applies the theme by setting
 classes on `document.body`. All colours should be driven by CSS variables in
 [index.css](../src/index.css) so both themes work.
+
+### 4.7 Accounts, profiles & the store seam
+
+A **parent account** (email + password) owns one or more **child profiles** (name, emoji
+avatar, colour). Children never type a password — they tap their avatar on `/profiles`.
+
+Everything account-shaped goes through one async interface,
+[src/data/store/index.js](../src/data/store/index.js):
+
+```
+createParent · findParentByEmail · verifyParent
+listChildren · getChild · createChild · deleteChild
+getProgress(childId, year, subject) · saveProgress(childId, year, subject, data)
+```
+
+**Every method is `async` even though localStorage is synchronous.** That is deliberate
+and load-bearing: it is what lets a future `mongoStore.js` implement the same interface
+against a real API and be swapped in by changing the single re-export in `index.js`.
+Do not "simplify" these to synchronous calls.
+
+Documents are deliberately Mongo-shaped, `_id` from `crypto.randomUUID()`, one
+localStorage key per collection (`dl.parents`, `dl.children`, `dl.progress`):
+
+```js
+parents:  { _id, email, passwordHash, passwordSalt, iterations, createdAt }
+children: { _id, parentId, name, avatar, colour, createdAt }
+progress: { _id, childId, year, subject, schemaVersion: 1, data: {...}, createdAt, updatedAt }
+```
+
+Session: `dl.session` = `{ parentId, childId, email }`. The `email` is a **display hint
+only** — identity always re-validates `parentId` against the store. It exists because the
+store has no `getParent(parentId)`; adding one lets the field be dropped.
+
+`verifyParent` returns `null` identically for "no such account" and "wrong password", so
+the login screen cannot be used to enumerate accounts. Keep it that way.
+
+**No migration, by decision.** Old pre-accounts progress is not carried into a
+profile, and local accounts are not uploaded to the backend. This was considered and
+deliberately dropped on 2026-09-15; `migrateLegacyProgress.js` and its tests were
+deleted. A new profile starts empty.
+
+**Gating:** `RequireChild` wraps only the Curriculum routes — signed out → `/login`, no
+child selected → `/profiles`. Home and all of Skills Mode stay ungated, because Skills
+Mode never tracked progress.
+
+### 4.8 The backend (`server/`)
+Express + MongoDB, added 2026-09-15. **Optional** — the app runs fully local unless
+built with `VITE_USE_API=true`. Deployed as a SINGLE Render Web Service that serves both
+`/api/*` and the built `dist/`, so the SPA and API share an origin. That is what lets
+the session be a plain HTTP-only cookie with no CORS handling anywhere.
+
+```
+server/index.js      entry; fails fast if MONGODB_URI or SESSION_SECRET is missing
+server/app.js        app construction, split out so tests need no port
+server/db.js         ONE MongoClient, connected once and reused
+server/auth.js       PBKDF2-SHA-256 hashing + JWT session cookie `dl_session`
+server/middleware.js requireAuth, requireOwnedChild
+server/routes/       auth, children, progress
+```
+
+Endpoints mirror the store interface exactly; see the table in
+[DEPLOYMENT.md](DEPLOYMENT.md) or `server/routes/`.
+
+**Authorization — the part to not break.** In local mode "whose data is this" is
+answered by the browser holding it. On a server it must be enforced:
+- Ownership lives **in the query filter**, never a post-fetch `if`. `requireOwnedChild`
+  queries `{_id: childId, parentId: <session parent>}`, so a handler can never hold a
+  document it is not allowed to see. Progress routes use `req.child._id`, already proven
+  owned — never the raw `childId` from the URL.
+- `requireAuth` re-reads the parent from the DB rather than trusting the JWT payload, so
+  a deleted parent's still-valid token is not a session.
+- Another family's resource returns **404, not 403**, and a malformed id returns the
+  identical 404 — ids cannot be probed.
+- Unknown email and wrong password return an identical 401: no account enumeration.
+- **Duplicate emails are enforced in application code**, because the Atlas index on
+  `parents.email` is NOT unique (see §6 item 8). There is a pre-insert check plus a
+  post-insert reconciliation that deletes its own row if a concurrent signup won.
+
+Password hashing stays PBKDF2-SHA-256 via `node:crypto` — not for migration (there is
+none, §4.7), but because it needs no native build step on Render's free tier.
+
+⚠️ Passwords are hashed **client-side in local mode and server-side in API mode**. Local
+mode's hashing protects nothing against someone holding the device; it is data-shape
+correctness, not security.
 
 ---
 
@@ -230,6 +347,11 @@ Practice, Find the Missing Number, Number Bonds, Fraction Fun
 **English:** Word Builder, Word Sorter, Sentence Builder, Opposite Match,
 Synonym Safari, Sight Word Pop, Speed Reader
 **Geography:** Solar System (3D), World Map, Flag Finder, City Spotlight
+
+### Accounts — built 2026-09-15
+Parent sign-up/sign-in (`/signup`, `/login`), child profile picker (`/profiles`), and a
+parent admin screen (`/parent`). Local-only; see §4.7. Curriculum Mode now requires a
+selected child profile; Skills Mode does not.
 
 ### Curriculum Mode — built challenges
 Only **Year 2 Mathematics** exists, and only two topics have challenges built:
@@ -292,19 +414,33 @@ without a changelog note or the report was inaccurate.
    Node's built-in `node:test` via `npm test`, with no added dependency. React
    component tests still need a deliberate Vitest/jsdom/Testing Library setup.
 5. **Fragile IDs** — renaming a curriculum title changes its kebab-case ID and
-   orphans existing `localStorage` progress. No migration path exists. The
-   `useProgress` extraction (item 6) did not add schema versioning or a
-   migration mechanism — that was deliberately scoped out as its own
-   follow-up given the risk of touching irreplaceable learner data twice.
+   orphans existing progress. Still true, and still with no migration path.
+   **Partially addressed 2026-09-15:** progress documents now carry
+   `schemaVersion: 1` (§4.7), so a future migration has something to branch on —
+   but nothing reads that field yet and the kebab-case IDs inside `data` are
+   exactly as fragile as before.
 6. ~~**Duplicated progress logic**~~ **Fixed 2026-08-09.** Read/write of
    `localStorage` progress was implemented separately in `CurriculumPage.jsx`
    and `ProblemView.jsx`; extracted into [useProgress](../src/hooks/useProgress.js)
    (§4.5). Stored shape, hydration guard, merge-not-replace writes, and all
    unlock rules verified unchanged via the `curriculum-progress` skill's full
    manual checklist.
-7. **No accessibility pass** — drag-and-drop interactions have no keyboard or
+7. **Local mode has no security boundary** — with `VITE_USE_API` unset (the default),
+   accounts live in `localStorage` and the PBKDF2 hashing runs client-side. It protects
+   nothing against anyone holding the device, and progress neither syncs nor survives
+   clearing site data. Fine for a single family device; not an account system.
+8. **The Atlas indexes are NOT unique** — `parents.email` and the
+   `{childId, year, subject}` triple were created through a tool that could not set
+   `unique`. The server compensates in application code (§4.8), but the database itself
+   would still accept duplicates. Run, once:
+   `db.parents.createIndex({email:1},{unique:true})` and
+   `db.progress.createIndex({childId:1,year:1,subject:1},{unique:true})`.
+9. **`apiStore` has no unit tests** — it was verified end-to-end in a browser against a
+   real server (signup → profile → challenge → logout → login → progress intact), but
+   has no `fetch`-mocked test file of its own.
+10. **No accessibility pass** — drag-and-drop interactions have no keyboard or
    screen-reader alternative; no audio support for pre-readers.
-8. **Numbers and Counting Challenge 3 rejects correct answers** — found
+11. **Numbers and Counting Challenge 3 rejects correct answers** — found
    2026-08-09 while manually verifying the `useProgress` extraction above.
    `NumbersAndCountingChallenge3.jsx` shows "❌ Not quite!" even when every
    blank is filled with the visibly-correct sequence value. Confirmed
@@ -413,6 +549,15 @@ dark in `body.dark`) and reference them from the inline style.
 Any stylesheet scoped to `.App.dark` was **dead** — that element no longer renders. Use
 `body.dark`. And when setting the class, use `classList.remove(...)` / `add(...)`, never
 `className = ''` (which destroys Leaflet's own body classes).
+
+### The accent colour is a BACKGROUND, never body text
+Found again 2026-09-15 on the new `/profiles` heading, which used
+`color: var(--pf-accent)` and measured **2.66:1** in light theme — the exact figure
+already documented in `App.css`. The accent pink only works as a *fill*, with
+`--on-*-accent` ink on top. Reach for `--*-text` for headings and copy.
+
+Both agents that wrote this screen computed contrast from the token values and believed
+it passed; only measuring the live computed styles caught it. Measure, don't derive.
 
 ### Text on the accent colour must use `--on-*-accent`
 `white` on `--light-accent` is only 3.17:1. The dark ink reaches 5.46:1 on the same pink. Also

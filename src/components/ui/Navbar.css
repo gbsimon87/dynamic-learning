@@ -130,3 +130,95 @@ nav.navbar {
     min-width: 40px;
   }
 }
+
+/* ===========================================================
+   ACCOUNT SLOT — active-child chip / sign-in link
+   These class names are prefixed `navbar-` so they cannot collide with the
+   generic selectors defined elsewhere in the app (PROJECT_KNOWLEDGE §9).
+   No colour literals: the chip's colour arrives as the inline
+   `--navbar-chip-colour` custom property (a `--profile-colour-*` token that has
+   a light and a dark value), and its ink uses `--on-light-accent`, which clears
+   WCAG AA on every profile colour in BOTH themes (see index.css).
+=========================================================== */
+.navbar-auth-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  color: var(--on-light-accent);
+  background-color: var(--light-accent);
+  transition: filter 0.2s;
+}
+
+body.dark .navbar-auth-link {
+  color: var(--on-dark-accent);
+  background-color: var(--dark-accent);
+}
+
+/* Lighten the accent on hover, never darken it, or the ink drops below AA. */
+.navbar-auth-link:hover,
+.navbar-auth-link:focus-visible {
+  filter: brightness(1.08);
+}
+
+.navbar-avatar-chip {
+  --navbar-chip-colour: var(--map-chip);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  max-width: 10rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  background-color: var(--map-chip);
+  color: var(--map-text);
+  transition: filter 0.2s, transform 0.2s;
+}
+
+/* Only a chip that actually carries a profile colour takes the dark ink: the
+   neutral "Pick profile" chip sits on --map-chip, which is dark in dark mode. */
+.navbar-avatar-chip.has-child {
+  background-color: var(--navbar-chip-colour);
+  color: var(--on-light-accent);
+}
+
+.navbar-avatar-chip:hover,
+.navbar-avatar-chip:focus-visible {
+  filter: brightness(1.06);
+  transform: scale(1.03);
+}
+
+.navbar-avatar-emoji {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.navbar-avatar-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Keep the bar a single row on a phone: drop the name, keep the emoji, and keep
+   the accessible name on the link's `title`. */
+@media (max-width: 560px) {
+  .navbar-avatar-name {
+    display: none;
+  }
+
+  .navbar-avatar-chip {
+    padding: 0.3rem 0.55rem;
+  }
+
+  .navbar-auth-link {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+  }
+}

@@ -1,0 +1,48 @@
+# Render Blueprint — one Web Service that serves BOTH the built React app and
+# the /api routes from the same origin. Same origin is load-bearing: the session
+# is an HTTP-only cookie, so a split static-site + API deployment would need CORS
+# and third-party-cookie handling that this setup avoids entirely.
+#
+# Usage: commit this file, then Render dashboard > New > Blueprint > pick this
+# repo. See docs/DEPLOYMENT.md.
+
+services:
+  - type: web
+    name: dynamic-learning
+    runtime: node
+    plan: free
+    region: frankfurt
+    branch: main
+
+    # `npm ci` for a reproducible install from package-lock.json. Dev
+    # dependencies are needed because Vite itself builds the client.
+    buildCommand: npm ci && npm run build
+    startCommand: node server/index.js
+
+    # "/" serves the built index.html. Deliberately NOT an /api/auth route:
+    # /api/auth/me answers 401 when signed out, and Render treats a non-2xx
+    # health check as a failed deploy.
+    healthCheckPath: /
+
+    envVars:
+      - key: NODE_VERSION
+        value: "22.11.0"
+
+      - key: NODE_ENV
+        value: production
+
+      # VITE_USE_API is read at BUILD time and inlined into the bundle, so it
+      # must be set here (not just at runtime) for the deployed app to talk to
+      # the API instead of localStorage.
+      - key: VITE_USE_API
+        value: "true"
+
+      # sync: false = Render prompts for these in the dashboard and stores them
+      # there. They are never committed to this repo.
+      - key: MONGODB_URI
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
+
+      # PORT is injected by Render; server/index.js reads process.env.PORT and
+      # falls back to 3001 locally. Do not set it here.

@@ -36,11 +36,21 @@
   --map-on-accent: var(--on-light-accent);
   --map-hud: rgba(255, 255, 255, 0.95);
 
+  /* Error/validation ink and panel shadow, used by the account screens.
+     Defined here (light) with a body.dark pair below so no page has to inline a
+     colour literal (PROJECT_KNOWLEDGE §9). #b3261e measures 6.0:1 on
+     --light-panel; the dark pair measures 8.3:1 on --dark-panel. */
+  --danger-text: #b3261e;
+  --panel-shadow: rgba(34, 24, 28, 0.12);
+
   /* Height of the sticky navbar, so full-viewport pages can subtract it. */
   --navbar-height: 56px;
 }
 
 body.dark {
+  --danger-text: #ffb4ab;
+  --panel-shadow: rgba(0, 0, 0, 0.4);
+
   --sq-text: var(--dark-text);
   --sq-panel: var(--dark-panel);
 

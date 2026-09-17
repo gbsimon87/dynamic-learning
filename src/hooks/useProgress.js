@@ -1,14 +1,21 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { AuthContext } from "../context/auth-context";
+import { store } from "../data/store";
 
 /**
- * Shared curriculum-progress storage hook.
+ * Shared curriculum-progress hook — now account-aware.
  *
- * Single source of truth for reading/writing the `${subject}Progress_year${year}`
- * localStorage key, replacing the logic previously duplicated across
- * CurriculumPage.jsx and ProblemView.jsx. See .claude/skills/curriculum-progress
- * for the full data contract and non-negotiables this preserves.
+ * Progress belongs to the ACTIVE CHILD PROFILE, not to the browser. The
+ * signature, the return shape and every unlock rule below are unchanged from
+ * the localStorage-only version (CurriculumPage.jsx / ProblemView.jsx need no
+ * edits); only the read/write path moved:
  *
- * Shape (unversioned, unchanged from before this hook existed):
+ *   read   localStorage[`${subject}Progress_year${year}`]
+ *          -> await store.getProgress(childId, year, subject) -> doc.data
+ *   write  localStorage.setItem(...)
+ *          -> await store.saveProgress(childId, year, subject, data)
+ *
+ * The stored `data` payload keeps the exact same (unversioned) shape:
  * {
  *   [categoryId]: {
  *     topics: {
@@ -16,40 +23,83 @@ import { useEffect, useState } from "react";
  *     }
  *   }
  * }
+ *
+ * See .claude/skills/curriculum-progress for the full data contract and the
+ * non-negotiables this preserves.
  */
 export function useProgress(year, subject) {
-  const storageKey = `${subject}Progress_year${year}`;
+  const auth = useContext(AuthContext);
+  const childId = auth?.child?._id ?? null;
+
+  // Identifies which document the in-memory `progress` was loaded from.
+  // Without it, a child switch would write the OUTGOING child's progress into
+  // the INCOMING child's document: the load effect resets state, but the save
+  // effect below still runs once with the previous render's `progress`.
+  const documentKey = `${childId ?? "none"}|${year}|${subject}`;
+  const loadedKeyRef = useRef(null);
+  const lastSavedRef = useRef(null);
 
   const [hydrated, setHydrated] = useState(false);
-  const [progress, setProgress] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem(storageKey) || "{}");
-    } catch {
-      return {};
-    }
-  });
+  const [progress, setProgress] = useState({});
 
-  // Re-read whenever the key changes (year/subject switch), and on mount.
+  // Load the active child's document. Re-runs on child / year / subject change.
   useEffect(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
-      setProgress(saved || {});
-    } catch {
-      setProgress({});
-    }
-    setHydrated(true);
-  }, [storageKey]);
+    let cancelled = false;
 
-  // Save updates — guarded by `hydrated` so the initial empty state never
-  // overwrites real saved progress before the read effect above has run.
-  useEffect(() => {
-    if (!hydrated) return;
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(progress));
-    } catch {
-      // Storage full or unavailable — progress stays in memory for this session
+    // Anything currently in memory belongs to the PREVIOUS document.
+    loadedKeyRef.current = null;
+    lastSavedRef.current = null;
+    setHydrated(false);
+    setProgress({});
+
+    if (!childId) {
+      // No active child: be completely inert — empty progress, never a write.
+      loadedKeyRef.current = null;
+      setHydrated(true);
+      return () => {
+        cancelled = true;
+      };
     }
-  }, [progress, storageKey, hydrated]);
+
+    (async () => {
+      let data = {};
+      try {
+        const doc = await store.getProgress(childId, year, subject);
+        // A missing document is a brand-new learner, not an error.
+        if (doc && doc.data && typeof doc.data === "object") data = doc.data;
+      } catch {
+        // Unreadable store degrades to an empty object, never a white screen.
+        data = {};
+      }
+      if (cancelled) return;
+
+      lastSavedRef.current = JSON.stringify(data);
+      loadedKeyRef.current = documentKey;
+      setProgress(data);
+      setHydrated(true);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [childId, year, subject, documentKey]);
+
+  // Persist updates — guarded by `hydrated` AND by `loadedKeyRef` so neither
+  // the initial empty state nor another child's state can ever overwrite real
+  // saved progress before the async load has resolved.
+  useEffect(() => {
+    if (!hydrated || !childId) return;
+    if (loadedKeyRef.current !== documentKey) return;
+
+    const serialised = JSON.stringify(progress);
+    // Skip the no-op write that would otherwise fire right after hydration.
+    if (serialised === lastSavedRef.current) return;
+    lastSavedRef.current = serialised;
+
+    store.saveProgress(childId, year, subject, progress).catch(() => {
+      // Write failed — progress stays in memory for this session.
+    });
+  }, [progress, hydrated, childId, year, subject, documentKey]);
 
   // Membership check, not a length check: [9,9,9,9] must not complete a topic.
   const isTopicComplete = (categoryId, topicId, topic) => {

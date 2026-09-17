@@ -5,7 +5,7 @@
 > dropped, update its **Status** row here and reflect the change in
 > [PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md).
 
-**Last reviewed:** 2026-09-10
+**Last reviewed:** 2026-09-15
 
 ### Context for prioritisation
 - The app currently contains **only UK Year 2** education content.
@@ -66,7 +66,8 @@ Both tables below are ordered **easiest → hardest** to implement.
 | 22 | **UK Year 3 curriculum data model** | Author `year3MathCurriculum.js` from the UK National Curriculum programme of study, and generalise `CurriculumPage` to select a dataset by `year`/`subject` prop instead of the hard-coded Year 2 import. Prerequisite for all Year 3 content. | 🔵 Planned |
 | 23 | **Year 3 Maths challenges** | Build challenges for Year 3 topics: numbers to 1000, column addition/subtraction, 3/4/8 times tables, tenths, mm/cm/m, perimeter, right angles, time to the minute. Depends on #22. | 🔵 Planned |
 | 24 | **Year selector / learner profile** | Let a learner pick their year group (2 or 3) and remember it. Drives which curriculum is shown and keeps progress namespaced per year. Depends on #22. | 🔵 Planned |
-| 25 | **Cloud sync & multi-device profiles** | Optional accounts so progress follows the learner across devices, replacing `localStorage` as the only store. Requires the first backend — significant architectural change. | ⚪ Idea |
+| 25 | **MongoDB backend for accounts & progress** | 🟡 **Built 2026-09-15, not yet deployed.** Express + MongoDB Atlas API in `server/`, deployed as a single Render Web Service that serves both `/api/*` and the built SPA from one origin (so the session is an HTTP-only cookie, no CORS). Client driver `src/data/store/apiStore.js` implements the identical async store interface; `src/data/store/index.js` picks it when built with `VITE_USE_API=true`, defaulting to localStorage, so **no consuming component changed**. Atlas database `dynamic_learning` holds `parents`/`children`/`progress`. Verified end-to-end in a browser against a live server: signup, profile creation, completing a real curriculum challenge, sign-out, sign-in, progress intact — and 13 server authorization tests incl. a cross-account probe. **Remaining before it is live:** (a) deploy to Render and set `MONGODB_URI` + `SESSION_SECRET` there, (b) allow-list Render's outbound IPs in Atlas Network Access, (c) build with `VITE_USE_API=true` — note it is a BUILD-time switch, (d) add the two unique indexes (see `PROJECT_KNOWLEDGE.md` §6 item 8), (e) rotate the dev Atlas password. See [DEPLOYMENT.md](DEPLOYMENT.md). **No data migration** — dropped by decision; a Mongo-backed install starts empty. | 🟡 Deployment pending |
+| 27 | **Parent accounts & child profiles (local)** | Done 2026-09-15. Parent signs up with email + password (PBKDF2-SHA-256, 150k iterations, Web Crypto, no dependency); child profiles are name + emoji avatar + colour, picked by tapping an avatar on `/profiles` — children never type a password. Curriculum Mode is gated behind `RequireChild`; Skills Mode stays open. Progress moved from the single `mathProgress_year2` key to one document per `(childId, year, subject)`. A legacy-progress migration was built and then **deliberately removed on 2026-09-15** — there is no migration path and new profiles start empty. **All storage is local** — see #25 for the outstanding backend. Built behind a deliberately async store interface (`src/data/store/`) so the backend swap is a driver change; see `PROJECT_KNOWLEDGE.md` §4.7. Verified in-browser: gating, profile isolation on switch, reload persistence, and measured AA contrast in both themes. | ✅ Done (local only) |
 | 26 | **Speed Reader (spritz)** | Done 2026-09-10. English & Words game at `/speed-reader` with six built-in stories and comprehension questions plus custom text. Supports 1–3-word chunks, 60–300 WPM, pivot highlighting, punctuation-aware pacing, pause/step/live-speed controls, and a read-again-faster loop. Pure pacing and content-shape logic is covered by `node:test`. | ✅ Done |
 
 ---
@@ -78,3 +79,6 @@ Both tables below are ordered **easiest → hardest** to implement.
 3. **Fill Year 2:** Idea #20, supported by the topic-aligned games #5–#9.
 4. **Open Year 3:** #22 → #23 → #24.
 5. **Broaden and polish:** #14, #13, #12, #19 and beyond.
+
+**Outstanding for Simon:** #25 (MongoDB backend) — accounts exist but are local-only
+until that lands.

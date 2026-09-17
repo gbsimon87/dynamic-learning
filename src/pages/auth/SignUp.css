@@ -1,0 +1,151 @@
+/* ===========================================================
+   SIGN UP — parent-facing account creation
+   CSS is global in this project (PROJECT_KNOWLEDGE §9), so EVERY rule below is
+   scoped under the unique root class `.signup-page`.
+   All colours come from tokens; the local `--su-*` tokens are defined as a
+   light/dark pair so they survive the `body.dark` flip.
+=========================================================== */
+.signup-page {
+  --su-bg: var(--light-bg);
+  --su-text: var(--light-text);
+  --su-panel: var(--light-panel);
+  --su-accent: var(--light-accent);
+  --su-on-accent: var(--on-light-accent);
+  --su-border: var(--map-border);
+  --su-muted: var(--map-muted);
+  --su-danger: var(--danger-text);
+  --su-shadow: var(--panel-shadow);
+
+  min-height: calc(100dvh - var(--navbar-height));
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem 1rem 3rem;
+  color: var(--su-text);
+  background-color: var(--su-bg);
+}
+
+body.dark .signup-page {
+  --su-bg: var(--dark-bg);
+  --su-text: var(--dark-text);
+  --su-panel: var(--dark-panel);
+  --su-accent: var(--dark-accent);
+  --su-on-accent: var(--on-dark-accent);
+}
+
+.signup-page .signup-card {
+  width: 100%;
+  max-width: 26rem;
+  background-color: var(--su-panel);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 4px 14px var(--su-shadow);
+}
+
+.signup-page .signup-title {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.signup-page .signup-intro {
+  font-size: 0.95rem;
+  color: var(--su-muted);
+  margin-bottom: 1.5rem;
+}
+
+.signup-page .signup-form {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.signup-page .signup-field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.signup-page .signup-label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.signup-page .signup-input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  border: 2px solid var(--su-border);
+  background-color: var(--su-panel);
+  color: var(--su-text);
+  transition: border-color 0.2s;
+}
+
+.signup-page .signup-input:focus {
+  outline: none;
+  border-color: var(--su-accent);
+}
+
+.signup-page .signup-input.invalid {
+  border-color: var(--su-danger);
+}
+
+.signup-page .signup-hint {
+  font-size: 0.85rem;
+  color: var(--su-muted);
+}
+
+.signup-page .signup-error {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--su-danger);
+}
+
+.signup-page .signup-form-error {
+  margin-top: 0.25rem;
+}
+
+.signup-page .signup-submit {
+  min-height: 48px;
+  margin-top: 0.4rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  background-color: var(--su-accent);
+  color: var(--su-on-accent);
+  transition: filter 0.2s, transform 0.2s;
+}
+
+/* Lighten, never darken, an accent hover — darkening drops the ink below AA. */
+.signup-page .signup-submit:hover:not(:disabled),
+.signup-page .signup-submit:focus-visible:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.signup-page .signup-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.signup-page .signup-switch {
+  margin-top: 1.4rem;
+  font-size: 0.95rem;
+  text-align: center;
+  color: var(--su-muted);
+}
+
+.signup-page .signup-switch a {
+  color: var(--su-text);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+@media (max-width: 420px) {
+  .signup-page {
+    padding: 1.25rem 0.75rem 2rem;
+  }
+
+  .signup-page .signup-card {
+    padding: 1.5rem 1.1rem;
+  }
+}

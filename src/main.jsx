@@ -2,6 +2,8 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router";
 import { ThemeProvider } from "./context/ThemeContext";
+import { AuthProvider } from "./context/AuthContext";
+import RequireChild from "./components/RequireChild";
 import RootLayout from "./layouts/RootLayout";
 import Home from "./pages/home/Home";
 
@@ -33,6 +35,12 @@ import SolarSystem from "./pages/skills/geography/SolarSystem";
 // === CURRICULUM ===
 import ProblemView from "./pages/curriculum/ProblemView";
 
+// === AUTH: parent accounts + child profiles ===
+import Login from "./pages/auth/Login";
+import SignUp from "./pages/auth/SignUp";
+import Profiles from "./pages/auth/Profiles";
+import ParentArea from "./pages/auth/ParentArea";
+
 // === SKILLS ===
 import SkillsPage from "./pages/skills/SkillsPage";
 import CurriculumPage from "./pages/curriculum/CurriculumPage";
@@ -54,11 +62,30 @@ const router = createBrowserRouter([
       // === Skills Hub ===
       { path: "skills", element: <SkillsPage /> },
 
-      // === Curriculum: year/subject picker ===
-      { path: "curriculum", element: <CurriculumSelectPage /> },
+      // === Auth: ungated, these are how you get an account in the first place ===
+      { path: "login", element: <Login /> },
+      { path: "signup", element: <SignUp /> },
+      { path: "profiles", element: <Profiles /> },
+      { path: "parent", element: <ParentArea /> },
 
-      // === Curriculum: a specific year + subject ===
-      { path: "curriculum/year/:year/:subject", element: <CurriculumPage /> },
+      // === Curriculum: gated — progress belongs to a specific child profile ===
+      // Skills Mode and Home stay completely ungated.
+      {
+        element: <RequireChild />,
+        children: [
+          // Curriculum: year/subject picker
+          { path: "curriculum", element: <CurriculumSelectPage /> },
+
+          // Curriculum: a specific year + subject
+          { path: "curriculum/year/:year/:subject", element: <CurriculumPage /> },
+
+          // Curriculum Problem View
+          {
+            path: "year/:year/:subject/problem/:categoryId/:topicId/:challengeId",
+            element: <ProblemView />,
+          },
+        ],
+      },
 
       // === Math Skills ===
       { path: "clock-generator", element: <ClockGenerator /> },
@@ -85,12 +112,6 @@ const router = createBrowserRouter([
       { path: "city-spotlight", element: <CitySpotlight /> },
       { path: "solar-system", element: <SolarSystem /> },
 
-      // === Curriculum Problem View ===
-      {
-        path: "year/:year/:subject/problem/:categoryId/:topicId/:challengeId",
-        element: <ProblemView />,
-      },
-
       // === Catch-all: any unmatched path ===
       { path: "*", element: <NotFound /> },
     ],
@@ -100,7 +121,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ThemeProvider>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </ThemeProvider>
   </StrictMode>
 );

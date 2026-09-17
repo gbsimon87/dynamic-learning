@@ -1,0 +1,227 @@
+/* ===========================================================
+   PARENT AREA — plain adult UI for the signed-in account
+
+   CSS is global in this project (PROJECT_KNOWLEDGE §9): every selector below is
+   scoped under the unique root class `.parent-area-page`. No colour literals —
+   the `--pa-*` tokens resolve to App.css / index.css variables that carry a
+   `body.dark` pair, and the per-child colour arrives as the inline
+   `--parent-chip-colour` custom property rather than a literal.
+=========================================================== */
+.parent-area-page {
+  --pa-bg: var(--light-bg);
+  --pa-text: var(--light-text);
+  --pa-panel: var(--light-panel);
+  --pa-accent: var(--light-accent);
+  --pa-on-accent: var(--on-light-accent);
+  --pa-border: var(--map-border);
+  --pa-muted: var(--map-muted);
+  --pa-danger: var(--danger-text);
+  --pa-shadow: var(--panel-shadow);
+
+  /* Every --profile-colour-* value clears AA with this dark ink in both themes
+     (see the note in index.css), so one ink works for the chips. */
+  --pa-on-colour: var(--on-light-accent);
+
+  min-height: calc(100dvh - var(--navbar-height));
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem 3rem;
+  color: var(--pa-text);
+  background-color: var(--pa-bg);
+}
+
+body.dark .parent-area-page {
+  --pa-bg: var(--dark-bg);
+  --pa-text: var(--dark-text);
+  --pa-panel: var(--dark-panel);
+  --pa-accent: var(--dark-accent);
+  --pa-on-accent: var(--on-dark-accent);
+}
+
+.parent-area-page .parent-area-loading {
+  padding: 3rem 1rem;
+}
+
+.parent-area-page .parent-area-card {
+  width: 100%;
+  max-width: 38rem;
+  background-color: var(--pa-panel);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 4px 14px var(--pa-shadow);
+}
+
+.parent-area-page .parent-area-title {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.parent-area-page .parent-area-account {
+  font-size: 0.95rem;
+  color: var(--pa-muted);
+  overflow-wrap: anywhere;
+}
+
+.parent-area-page .parent-area-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--pa-border);
+}
+
+.parent-area-page .parent-area-section-title {
+  font-size: 1.15rem;
+  margin-bottom: 1rem;
+}
+
+.parent-area-page .parent-area-empty {
+  font-size: 0.95rem;
+  color: var(--pa-muted);
+  margin-bottom: 1rem;
+}
+
+.parent-area-page .parent-area-empty a {
+  color: var(--pa-text);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.parent-area-page .parent-area-list {
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.parent-area-page .parent-area-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--pa-border);
+  border-radius: 12px;
+}
+
+.parent-area-page .parent-area-chip {
+  --parent-chip-colour: var(--profile-colour-sky);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  font-weight: 700;
+  background-color: var(--parent-chip-colour);
+  color: var(--pa-on-colour);
+}
+
+.parent-area-page .parent-area-chip-name {
+  overflow-wrap: anywhere;
+}
+
+.parent-area-page .parent-area-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  flex: 1 1 16rem;
+}
+
+.parent-area-page .parent-area-confirm-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--pa-danger);
+}
+
+.parent-area-page .parent-area-confirm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.parent-area-page .parent-area-primary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 1.2rem;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  background-color: var(--pa-accent);
+  color: var(--pa-on-accent);
+  transition: filter 0.2s;
+}
+
+/* Lighten rather than darken, so the ink keeps its AA contrast. */
+.parent-area-page .parent-area-primary-btn:hover,
+.parent-area-page .parent-area-primary-btn:focus-visible {
+  filter: brightness(1.08);
+}
+
+.parent-area-page .parent-area-secondary-btn {
+  min-height: 44px;
+  padding: 0 1rem;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--pa-border);
+  background-color: var(--pa-panel);
+  color: var(--pa-text);
+  transition: border-color 0.2s;
+}
+
+.parent-area-page .parent-area-secondary-btn:hover,
+.parent-area-page .parent-area-secondary-btn:focus-visible {
+  border-color: var(--pa-accent);
+}
+
+.parent-area-page .parent-area-danger-btn {
+  min-height: 44px;
+  padding: 0 1rem;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  background-color: var(--pa-panel);
+  color: var(--pa-danger);
+  border: 2px solid var(--pa-danger);
+  transition: opacity 0.2s;
+}
+
+.parent-area-page .parent-area-danger-btn:hover,
+.parent-area-page .parent-area-danger-btn:focus-visible {
+  opacity: 0.85;
+}
+
+.parent-area-page .parent-area-signout-btn {
+  min-height: 48px;
+  padding: 0 1.2rem;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 2px solid var(--pa-border);
+  background-color: var(--pa-panel);
+  color: var(--pa-text);
+  transition: border-color 0.2s;
+}
+
+.parent-area-page .parent-area-signout-btn:hover,
+.parent-area-page .parent-area-signout-btn:focus-visible {
+  border-color: var(--pa-accent);
+}
+
+@media (max-width: 480px) {
+  .parent-area-page {
+    padding: 1.25rem 0.75rem 2rem;
+  }
+
+  .parent-area-page .parent-area-card {
+    padding: 1.5rem 1.1rem;
+  }
+
+  .parent-area-page .parent-area-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
