@@ -23,12 +23,26 @@ Manual, if you'd rather not use the Blueprint — create a **Web Service** with:
 | Setting | Value |
 | --- | --- |
 | Runtime | Node |
-| Build command | `npm ci && npm run build` |
+| Build command | `npm ci --include=dev && npm run build` |
 | Start command | `node server/index.js` |
 | Health check path | `/` |
 
-`npm ci` (not `npm install`) so the build matches `package-lock.json`. Dev
-dependencies are required — Vite is what builds the client.
+`npm ci` (not `npm install`) so the build matches `package-lock.json`.
+
+⚠️ **`--include=dev` is required and must not be dropped.** `NODE_ENV=production`
+is set on this service (the server needs it at runtime for `secure` cookies), and
+npm omits devDependencies whenever `NODE_ENV=production`. Vite is a devDependency,
+so a plain `npm ci` installs 149 packages instead of 181, leaving no `vite` binary
+and failing the build with:
+
+```
+vite build
+sh: 1: vite: not found
+==> Build failed
+```
+
+This already happened once, on 2026-09-17. If you ever see that error again, this
+flag is the first thing to check.
 
 ---
 

@@ -14,9 +14,12 @@ services:
     region: frankfurt
     branch: dev
 
-    # `npm ci` for a reproducible install from package-lock.json. Dev
-    # dependencies are needed because Vite itself builds the client.
-    buildCommand: npm ci && npm run build
+    # `npm ci` for a reproducible install from package-lock.json.
+    # `--include=dev` is REQUIRED and must not be removed: NODE_ENV=production
+    # is set below (the server needs it at runtime for secure cookies), and npm
+    # omits devDependencies whenever NODE_ENV=production. Vite is a
+    # devDependency, so without this the build fails with "vite: not found".
+    buildCommand: npm ci --include=dev && npm run build
     startCommand: node server/index.js
 
     # "/" serves the built index.html. Deliberately NOT an /api/auth route:
