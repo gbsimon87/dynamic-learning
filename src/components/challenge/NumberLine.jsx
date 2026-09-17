@@ -6,9 +6,10 @@ import "./challenge-kit.css";
  * `terms`    the full sequence
  * `gaps`     indices rendered as blanks
  * `values`   { [index]: string } current answers for the blanks
- * `active`   which blank is being answered, highlighted
+ * `active`    which blank is being answered, highlighted
+ * `highlight` a non-gap index to mark as the number under discussion
  */
-function NumberLine({ terms, gaps, values, active, onFocusGap, disabled }) {
+function NumberLine({ terms, gaps, values, active, onFocusGap, disabled, highlight }) {
   const gapSet = new Set(gaps);
 
   return (
@@ -29,7 +30,11 @@ function NumberLine({ terms, gaps, values, active, onFocusGap, disabled }) {
             {values[index] || "?"}
           </button>
         ) : (
-          <span key={index} role="listitem" className="number-cell">
+          <span
+            key={index}
+            role="listitem"
+            className={`number-cell ${highlight === index ? "highlight" : ""}`}
+          >
             {term}
           </span>
         )

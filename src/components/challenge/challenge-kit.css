@@ -131,6 +131,14 @@ body.dark {
   border-radius: 12px;
 }
 
+/* The number the question is about, when the line is context rather than a
+   thing to fill in. */
+.number-cell.highlight {
+  border-color: var(--ck-accent);
+  background: var(--ck-accent);
+  color: var(--ck-on-accent);
+}
+
 .number-cell.gap {
   cursor: pointer;
   border-style: dashed;
@@ -146,6 +154,80 @@ body.dark {
 .number-cell.gap.active {
   border-color: var(--ck-accent);
   border-style: solid;
+}
+
+/* --- rule machine: in/out pairs the learner infers a rule from --- */
+.machine {
+  display: inline-grid;
+  grid-template-columns: auto auto auto;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.machine-arrow {
+  opacity: 0.55;
+}
+
+.machine-out.unknown {
+  color: var(--ck-accent);
+}
+
+/* --- base-ten blocks --- */
+.blocks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 1.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.blocks-group {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.4rem;
+}
+
+.block-ten {
+  width: 22px;
+  height: 92px;
+  background: var(--ck-accent);
+  border-radius: 4px;
+}
+
+.block-one {
+  width: 22px;
+  height: 22px;
+  background: var(--ck-accent);
+  border-radius: 4px;
+  opacity: 0.75;
+}
+
+/* --- comparison statement --- */
+.statement {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
+  font-size: 2.2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.statement-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 68px;
+  min-height: 68px;
+  border: 3px dashed var(--ck-border);
+  border-radius: 12px;
+  color: var(--ck-accent);
 }
 
 /* --- drag strip --- */
