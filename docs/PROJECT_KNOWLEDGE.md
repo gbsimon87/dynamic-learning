@@ -370,8 +370,8 @@ and a list of requirements no topic covers yet. Read the relevant row before
 authoring questions for a topic.
 
 ### Curriculum Mode — built challenges
-Only **Year 2 Mathematics** exists, and twenty topics have challenges built —
-every Number category:
+Only **Year 2 Mathematics** exists, and twenty-seven topics have challenges
+built — every Number category, and Measurement:
 
 | Category | Topic | Challenges built |
 |---|---|---|
@@ -395,13 +395,26 @@ every Number category:
 | Number – Fractions | What is a Fraction? | 1, 2, 3, 4 ✅ |
 | Number – Fractions | Fractions of Numbers | 1, 2, 3, 4 ✅ |
 | Number – Fractions | Finding Fractions of Larger Groups | 1, 2, 3, 4 ✅ |
-| *(all other 19 topics)* | — | 0 — falls back to "not yet available" |
+| Measurement | Measuring Length and Height | 1, 2, 3, 4 ✅ |
+| Measurement | Measuring Weight and Volume | 1, 2, 3, 4 ✅ |
+| Measurement | Comparing Measurements | 1, 2, 3, 4 ✅ |
+| Measurement | Measuring Temperature | 1, 2, 3, 4 ✅ |
+| Measurement | Measuring Time | 1, 2, 3, 4 ✅ |
+| Measurement | Standard Units of Money | 1, 2, 3, 4 ✅ |
+| Measurement | Money Problems | 1, 2, 3, 4 ✅ |
+| *(all other 12 topics)* | — | 0 — falls back to "not yet available" |
 
-All twenty are built on the **shared challenge kit**
+All twenty-seven are built on the **shared challenge kit**
 (`src/components/challenge/`): `ChallengeShell` owns the run loop and the single
 `onComplete()`, with `ChoiceGrid`, `NumberLine`, `DragToOrder` and `NumberInput`
 as interactions, all themed once from `challenge-kit.css`. Its question
 generators live in `src/data/challenges/countingInSteps.js` and are unit-tested.
+Measurement added four richer games to the kit: `ScaleReader` (one component
+dressed as a ruler, thermometer, jug and kitchen scale), `MeasureDrag` (the same
+scale, learner-set, click/keys/drag), `CoinTray` (real UK coins, tap only) and
+`ClockFace`/`TimeSetter` (wrapping the existing DualLabelClock, minutes in
+fives).
+
 New topics should compose the kit rather than copy an existing challenge — see
 the `building-curriculum-topics` skill. The kit has since grown a highlighted
 number-line cell, a rule machine, base-ten blocks and a comparison statement

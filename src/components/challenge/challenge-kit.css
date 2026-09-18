@@ -266,6 +266,299 @@ body.dark {
   background: var(--ck-accent);
 }
 
+/* ===========================================================
+   MEASUREMENT GAMES
+=========================================================== */
+
+/* --- scale: ruler, thermometer, jug, kitchen scale --- */
+.scale {
+  margin: 0 auto 1.6rem;
+}
+
+.scale-track {
+  position: relative;
+  background: var(--ck-muted);
+  border: 3px solid var(--ck-border);
+  border-radius: 10px;
+}
+
+.scale-horizontal .scale-track {
+  width: min(460px, 100%);
+  height: 56px;
+  margin: 0 auto 2.4rem;
+}
+
+.scale-vertical .scale-track {
+  width: 74px;
+  height: 260px;
+  margin: 0 auto 1rem;
+}
+
+.scale-fill {
+  position: absolute;
+  background: var(--ck-accent);
+  opacity: 0.35;
+}
+
+.scale-horizontal .scale-fill {
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.scale-vertical .scale-fill {
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.scale-tick {
+  position: absolute;
+}
+
+.scale-horizontal .scale-tick {
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--ck-border);
+  transform: translateX(-1px);
+}
+
+.scale-vertical .scale-tick {
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--ck-border);
+  transform: translateY(1px);
+}
+
+.scale-tick-label {
+  position: absolute;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.8;
+  white-space: nowrap;
+}
+
+.scale-horizontal .scale-tick-label {
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding-top: 0.3rem;
+}
+
+.scale-vertical .scale-tick-label {
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  padding-left: 0.4rem;
+}
+
+.scale-pointer {
+  position: absolute;
+  background: var(--ck-accent);
+  border-radius: 3px;
+}
+
+.scale-horizontal .scale-pointer {
+  top: -10px;
+  bottom: -10px;
+  width: 6px;
+  transform: translateX(-3px);
+}
+
+.scale-vertical .scale-pointer {
+  left: -10px;
+  right: -10px;
+  height: 6px;
+  transform: translateY(3px);
+}
+
+.scale-unit {
+  font-size: 1rem;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+/* Jug and thermometer read better with a rounded bottom. */
+.scale.jug .scale-track,
+.scale.thermometer .scale-track {
+  border-radius: 10px 10px 22px 22px;
+}
+
+/* --- the learner-set version --- */
+.scale-interactive .scale-track {
+  cursor: pointer;
+  touch-action: none;
+}
+
+.scale-interactive .scale-track:focus-visible {
+  outline: 3px solid var(--ck-accent);
+  outline-offset: 4px;
+}
+
+.scale-pointer.draggable {
+  box-shadow: 0 0 0 3px var(--ck-panel);
+}
+
+.scale-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.6rem;
+}
+
+.scale-step-btn {
+  min-width: 56px;
+  min-height: 48px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  border: 2px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.scale-step-btn:hover:not(:disabled) {
+  border-color: var(--ck-border);
+}
+
+.scale-step-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.scale-readout {
+  min-width: 110px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- coins --- */
+.coin-tray {
+  margin-bottom: 1.5rem;
+}
+
+.coin-row,
+.coin-picked {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem;
+}
+
+.coin-picked {
+  min-height: 72px;
+  align-items: center;
+  margin-top: 1.1rem;
+  padding: 0.6rem;
+  border: 3px dashed var(--ck-border);
+  border-radius: 14px;
+}
+
+.coin {
+  min-width: 62px;
+  min-height: 62px;
+  padding: 0.3rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  border: 3px solid var(--ck-border);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Silver and copper, so the coins are told apart by more than their label. */
+.coin-1,
+.coin-2 {
+  background: #c98a5e;
+  color: #22181c;
+}
+
+.coin-100,
+.coin-200 {
+  background: #d9bd72;
+  color: #22181c;
+}
+
+.coin.picked {
+  border-style: solid;
+  border-color: var(--ck-accent);
+}
+
+.coin:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.coin-empty {
+  opacity: 0.65;
+}
+
+.coin-total {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+}
+
+.coin-total.matched {
+  color: var(--ck-accent);
+  font-weight: 700;
+}
+
+/* --- clock --- */
+.clock-face {
+  position: relative;
+  width: min(250px, 72vw);
+  aspect-ratio: 1;
+  margin: 0 auto 1.4rem;
+}
+
+/* DualLabelClock sizes itself to clamp(250px, 60vmin, 420px) and adds its own
+   2rem margins — fine standalone, far too big inside a challenge card, where it
+   pushed the controls off the screen. Pin it to this wrapper instead. */
+.clock-face .clock-wrapper {
+  width: 100%;
+  margin: 0;
+}
+
+.clock-hour-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 1rem;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.time-setter {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.6rem;
+  margin-bottom: 1.4rem;
+}
+
+.time-setter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.time-setter-value {
+  min-width: 52px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.time-setter-label {
+  font-size: 0.95rem;
+  opacity: 0.75;
+}
+
 /* --- comparison statement --- */
 .statement {
   display: flex;

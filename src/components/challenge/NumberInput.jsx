@@ -11,12 +11,14 @@ const DIGITS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
  *
  * The field stays a real editable input so a physical keyboard still works.
  */
-function NumberInput({ value, onChange, disabled, label, hideField }) {
+function NumberInput({ value, onChange, disabled, label, hideField, maxDigits = 3 }) {
   // Functional updates, not `value + key`: two quick taps land in the same
   // React batch, and reading the prop would make the second one overwrite the
   // first instead of appending to it. A child double-tapping loses a digit.
-  // Three digits covers every Year 2 answer; more just overflows the display.
-  const press = (key) => onChange((prev) => (prev + key).slice(0, 3));
+  // Three digits covers most Year 2 answers, but Measurement needs four for
+  // 1000 g and 1000 ml, so the cap is a prop rather than a constant. Without
+  // it those questions are unanswerable.
+  const press = (key) => onChange((prev) => (prev + key).slice(0, maxDigits));
   const backspace = () => onChange((prev) => prev.slice(0, -1));
 
   return (
@@ -33,7 +35,7 @@ function NumberInput({ value, onChange, disabled, label, hideField }) {
             value={value}
             disabled={disabled}
             onChange={(e) =>
-              onChange(e.target.value.replace(/\D/g, "").slice(0, 3))
+              onChange(e.target.value.replace(/\D/g, "").slice(0, maxDigits))
             }
           />
         </label>
