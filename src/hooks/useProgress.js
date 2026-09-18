@@ -1,6 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../context/auth-context";
 import { store } from "../data/store";
+import * as rules from "../data/progressRules";
 
 /**
  * Shared curriculum-progress hook — now account-aware.
@@ -101,98 +102,48 @@ export function useProgress(year, subject) {
     });
   }, [progress, hydrated, childId, year, subject, documentKey]);
 
-  // Membership check, not a length check: [9,9,9,9] must not complete a topic.
-  const isTopicComplete = (categoryId, topicId, topic) => {
-    const completed = progress[categoryId]?.topics?.[topicId]?.completedChallenges;
-    if (!Array.isArray(completed) || completed.length === 0) return false;
-    const done = new Set(completed.map(Number));
-    return topic.challenges.every((challenge) => done.has(Number(challenge.id)));
-  };
+  // Every predicate below is the pure rule from ../data/progressRules bound to
+  // this hook's state. The rules live there so the curriculum screen's lock
+  // state and the next-challenge resolver cannot drift apart from what gets
+  // written here. Signatures are unchanged from the inline versions.
 
-  // Unlocks when everything before it is done. Gap-tolerant by design: a
-  // count-based rule bricked the curriculum permanently on any gap.
+  const isTopicComplete = (categoryId, topicId, topic) =>
+    rules.isTopicComplete(progress, categoryId, topicId, topic);
+
   const isChallengeUnlocked = (
     categoryId,
     topicId,
     topic,
     challengeIndex,
     skipChallenge
-  ) => {
-    const completed = progress[categoryId]?.topics?.[topicId]?.completedChallenges || [];
-    const done = new Set(completed.map(Number));
-    return topic.challenges
-      .slice(0, challengeIndex)
-      // An unbuilt challenge can never be completed, so it must not block the
-      // ones after it.
-      .filter((challenge) => !(skipChallenge && skipChallenge(challenge)))
-      .every((challenge) => done.has(Number(challenge.id)));
-  };
+  ) =>
+    rules.isChallengeUnlocked(
+      progress,
+      categoryId,
+      topicId,
+      topic,
+      challengeIndex,
+      skipChallenge
+    );
 
-  // `skipTopic` excludes topics with no built challenges.
-  const isCategoryComplete = (category, skipTopic) => {
-    const completable = category.topics.filter(
-      (topic) => !(skipTopic && skipTopic(topic))
-    );
-    // A category with nothing built in it is not "complete" - it is empty.
-    // Returning true there would badge every unbuilt category as finished.
-    if (completable.length === 0) return false;
-    return completable.every((topic) =>
-      isTopicComplete(category.id, topic.id, topic)
-    );
-  };
+  const isCategoryComplete = (category, skipTopic) =>
+    rules.isCategoryComplete(progress, category, skipTopic);
 
-  // Gating only. Distinct from complete: an empty category must not block, but
-  // must not be badged finished either.
-  const isCategoryPassable = (category, skipTopic) => {
-    const completable = category.topics.filter(
-      (topic) => !(skipTopic && skipTopic(topic))
-    );
-    if (completable.length === 0) return true; // nothing to do - don't block
-    return completable.every((topic) =>
-      isTopicComplete(category.id, topic.id, topic)
-    );
-  };
+  const isCategoryPassable = (category, skipTopic) =>
+    rules.isCategoryPassable(progress, category, skipTopic);
+
+  const isChallengeComplete = (categoryId, topicId, challengeId) =>
+    rules.isChallengeComplete(progress, categoryId, topicId, challengeId);
 
   /**
-   * True if the given challenge is already recorded as complete.
-   */
-  const isChallengeComplete = (categoryId, topicId, challengeId) => {
-    const numericId = Number(challengeId);
-    const completedChallenges =
-      progress[categoryId]?.topics?.[topicId]?.completedChallenges || [];
-    return completedChallenges.includes(numericId);
-  };
-
-  /**
-   * Marks a challenge complete. No-op if it was already completed — never
-   * duplicates an entry (duplicates would inflate the topic-completion
-   * length check and mark a topic complete early).
+   * Marks a challenge complete. The reducer returns the SAME object when it was
+   * already complete, so React bails out of the update and the save effect
+   * never fires a duplicate write.
    */
   const completeChallenge = (categoryId, topicId, challengeId) => {
-    const numericId = Number(challengeId);
-
-    setProgress((prev) => {
-      const prevTopic = prev[categoryId]?.topics?.[topicId] || {};
-      const prevCompleted = prevTopic.completedChallenges || [];
-
-      if (prevCompleted.includes(numericId)) {
-        return prev;
-      }
-
-      return {
-        ...prev,
-        [categoryId]: {
-          ...prev[categoryId],
-          topics: {
-            ...prev[categoryId]?.topics,
-            [topicId]: {
-              ...prevTopic,
-              completedChallenges: [...prevCompleted, numericId],
-            },
-          },
-        },
-      };
-    });
+    setProgress((prev) =>
+      rules.completeChallenge(prev, categoryId, topicId, challengeId)
+    );
   };
 
   return {

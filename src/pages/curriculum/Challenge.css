@@ -30,3 +30,70 @@ body.dark .challenge input {
   margin-top: 0.75rem;
   font-weight: bold;
 }
+
+/* ---------------------------------------
+   Load-failure state
+
+   Distinct from "not yet built": the challenge exists but couldn't be fetched
+   (challenges are lazy-loaded, so a dropped connection lands here). The learner
+   keeps their place and retries rather than being redirected away.
+   --------------------------------------- */
+
+.challenge-error-hint {
+  opacity: 0.85;
+  font-size: 0.95rem;
+}
+
+.challenge-error-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.challenge-retry-btn {
+  background-color: var(--light-accent);
+  color: var(--on-light-accent);
+  padding: 0.7rem 1.75rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.3s;
+}
+
+body.dark .challenge-retry-btn {
+  background-color: var(--dark-accent);
+  color: var(--on-dark-accent);
+}
+
+.challenge-retry-btn:hover,
+.challenge-retry-btn:focus-visible {
+  transform: scale(1.04);
+  /* Lighter, not darker: keeps the dark ink above AA. */
+  background-color: #f2757e;
+}
+
+body.dark .challenge-retry-btn:hover,
+body.dark .challenge-retry-btn:focus-visible {
+  background-color: #9be7dc;
+}
+
+.challenge-error-link {
+  color: var(--light-text);
+  text-decoration: underline;
+  font-size: 0.95rem;
+}
+
+body.dark .challenge-error-link {
+  color: var(--dark-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .challenge-retry-btn:hover,
+  .challenge-retry-btn:focus-visible {
+    transform: none;
+  }
+}

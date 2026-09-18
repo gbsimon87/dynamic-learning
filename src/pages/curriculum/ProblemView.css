@@ -16,3 +16,88 @@ body.dark .problem-page h2 {
 .problem-page button {
   margin-top: 1.5rem;
 }
+
+/* ---------------------------------------
+   Completion panel
+
+   Shown in place of the challenge once it's finished. This replaced an
+   automatic redirect back to the topic screen, so the learner chooses when to
+   move on and can carry straight into the next challenge.
+   --------------------------------------- */
+
+.challenge-complete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 28rem;
+  margin: 2rem auto 0;
+  padding: 2rem 1.5rem;
+  border-radius: 16px;
+  background-color: rgba(0, 0, 0, 0.04);
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+body.dark .challenge-complete {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.challenge-complete-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--light-text);
+}
+
+body.dark .challenge-complete-title {
+  color: var(--dark-text);
+}
+
+.challenge-complete-note {
+  margin: 0;
+  color: var(--light-text);
+}
+
+body.dark .challenge-complete-note {
+  color: var(--dark-text);
+}
+
+.challenge-next-btn {
+  /* Same green the curriculum screen uses for a completed challenge; white ink
+     on it measures 5.4:1, so it holds up in both themes without a variant. */
+  background-color: #2e7d32;
+  color: #ffffff;
+  padding: 0.85rem 2rem;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s, background-color 0.3s;
+}
+
+.challenge-next-btn:hover,
+.challenge-next-btn:focus-visible {
+  transform: scale(1.04);
+  background-color: #276b2a;
+}
+
+.challenge-back-link {
+  color: var(--light-text);
+  text-decoration: underline;
+  font-size: 0.95rem;
+}
+
+body.dark .challenge-back-link {
+  color: var(--dark-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .challenge-complete {
+    animation: none;
+  }
+
+  .challenge-next-btn:hover,
+  .challenge-next-btn:focus-visible {
+    transform: none;
+  }
+}

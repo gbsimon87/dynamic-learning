@@ -219,23 +219,57 @@ browser is simply ignored — there is deliberately **no migration path**, remov
 
 All reading and writing of progress goes through the shared
 [useProgress](../src/hooks/useProgress.js) hook — `useProgress(year, subject)`
-returns `{ progress, hydrated, isTopicComplete, isCategoryComplete,
-isChallengeComplete, completeChallenge }`. This replaced logic previously
-duplicated across `CurriculumPage.jsx` and `ProblemView.jsx` (see §6, resolved).
-The shape above is still unversioned — that remains a known gap (§6).
+returns `{ progress, hydrated, isTopicComplete, isChallengeUnlocked,
+isCategoryComplete, isCategoryPassable, isChallengeComplete, completeChallenge }`.
+This replaced logic previously duplicated across `CurriculumPage.jsx` and
+`ProblemView.jsx` (see §6, resolved). The shape above is still unversioned —
+that remains a known gap (§6).
 
-Unlock rules (implemented in [CurriculumPage.jsx](../src/pages/curriculum/CurriculumPage.jsx),
-consuming the hook's `progress`/`isTopicComplete`/`isCategoryComplete` rather
-than reading storage directly):
-- **Category** unlocks when the previous category is fully complete.
-- **Topic** unlocks when the previous topic in the same category is complete.
+**The rules themselves are pure and live outside React** (2026-09-18):
+
+| Module | Owns |
+|---|---|
+| [progressRules.js](../src/data/progressRules.js) | The predicates — complete / unlocked / passable — plus `completeChallenge` as a reducer. `useProgress` is a thin binding layer over these. |
+| [curriculumLocks.js](../src/data/curriculumLocks.js) | `buildLockState({curriculum, progress, isBuilt, bypassLocks})` → every category/topic/challenge flagged `locked`/`complete`/`missing` in one pass. |
+| [curriculumNavigation.js](../src/data/curriculumNavigation.js) | `findNextChallenge(lockState, position)` — the first playable challenge after the one just finished. |
+
+They take availability as an `isBuilt` callback rather than importing
+`challengeAvailability`, which uses `import.meta.glob` and so cannot load under
+`node --test`. All three are covered by pure tests.
+
+Unlock rules (computed by `buildLockState`, consumed by both
+[CurriculumPage.jsx](../src/pages/curriculum/CurriculumPage.jsx) and
+[ProblemView.jsx](../src/pages/curriculum/ProblemView.jsx) — a second copy is how
+a learner silently gets sent to a locked challenge):
+- **Category** unlocks when every earlier category is passable. (Passable, not
+  complete: a category with nothing built must not block the chain, but must not
+  be badged finished either.)
+- **Topic** unlocks when the previous topic in the same category is complete,
+  where "complete" counts only *built* challenges. A fully unbuilt topic is
+  skipped entirely, since it can never be completed. Before 2026-09-18 a topic
+  holding even one unbuilt challenge could never complete and so gated the next
+  topic forever — while the screen showed the learner "2/2 done", because the
+  progress count already ignored unbuilt challenges. The two now agree.
 - **Challenge** unlocks when it is the next uncompleted challenge in its topic;
-  completed challenges stay replayable.
+  completed challenges stay replayable. Unbuilt challenges don't block the ones
+  after them.
 - A brand-new user has only the first category unlocked.
 
+Challenges are **lazy-loaded on demand** by
+[Challenge.jsx](../src/pages/curriculum/Challenge.jsx), which distinguishes two
+failures that look identical from the outside: a challenge with no registered
+module ("not yet available", permanent, returns the learner to the curriculum),
+and a registered module that could not be fetched or evaluated (temporary — a
+dropped connection or a stopped dev server — which offers a retry and keeps the
+learner where they are). Conflating them told children a challenge they can
+actually play does not exist, and ejected them from it.
+
 Writes happen in [ProblemView.jsx](../src/pages/curriculum/ProblemView.jsx) via
-`completeChallenge()` on `onComplete`, then it navigates back to `/curriculum`
-after ~1s.
+`completeChallenge()` on `onComplete`. It then shows a **completion panel** whose
+primary action is the next playable challenge, resolved through
+`findNextChallenge`; "Back to topics" is the secondary action, and the only one
+offered when nothing playable remains. This replaced an automatic ~1s redirect
+back to `/curriculum`.
 
 ⚠️ **The hook is inert with no active child** — empty progress, and it never writes.
 It also refuses to save unless the in-memory progress came from the document currently
@@ -573,20 +607,18 @@ without a changelog note or the report was inaccurate.
    has no `fetch`-mocked test file of its own.
 10. **No accessibility pass** — drag-and-drop interactions have no keyboard or
    screen-reader alternative; no audio support for pre-readers.
-11. **Numbers and Counting Challenge 3 rejects correct answers** — found
-   2026-08-09 while manually verifying the `useProgress` extraction above.
-   `NumbersAndCountingChallenge3.jsx` shows "❌ Not quite!" even when every
-   blank is filled with the visibly-correct sequence value. Confirmed
-   pre-existing (file unmodified vs `dev`) and unrelated to the hook work.
-   Not yet root-caused; suspect the `missingIndices`/`sequence` `useMemo`s or
-   a stale closure in `handleSubmit`. See idea #4 in `PROJECT_IDEAS.md`.
+**Resolved since last review:**
 
-**Resolved since last review:** `Challenge.jsx` no longer uses
-`/* @vite-ignore */` — it now resolves challenges through a static
-`import.meta.glob("../skills/*/challenges/year*/*/*Challenge*.jsx")` registry,
-so missing files are detectable and Vite can statically analyse the import.
-This was previously listed here and as idea #10 in
-[PROJECT_IDEAS.md](PROJECT_IDEAS.md); both are now updated.
+- **Numbers and Counting Challenge 3 rejected correct answers** (found
+  2026-08-09, fixed 2026-09-18). `handleSubmit` compared
+  `answers[i] === sequence[i].toString()` — a STRING comparison — so an answer
+  padded with a leading zero ("043" for 43) was rejected while looking correct
+  on screen. Fixed by rebuilding the topic on the shared kit and comparing by
+  value via `isCorrectNumber`, which is unit-tested.
+- **`Challenge.jsx` no longer uses `/* @vite-ignore */`** — it now resolves
+  challenges through a static
+  `import.meta.glob("../skills/*/challenges/year*/*/*Challenge*.jsx")` registry,
+  so missing files are detectable and Vite can statically analyse the import.
 
 ---
 

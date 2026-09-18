@@ -178,5 +178,7 @@ full run redirects to the curriculum page and increments the topic counter;
 
 ## Finally
 
-Update the table in `docs/PROJECT_KNOWLEDGE.md` §5 and idea #20 in
-`docs/PROJECT_IDEAS.md`. A topic is not done until the docs reflect it.
+Update the table in `docs/PROJECT_KNOWLEDGE.md` §5. If an idea in
+`docs/PROJECT_IDEAS.md` covered this work, **delete its row** — that file tracks
+upcoming work only, and history belongs in `PROJECT_KNOWLEDGE.md`. A topic is
+not done until the docs reflect it.

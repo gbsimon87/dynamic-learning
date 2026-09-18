@@ -14,16 +14,28 @@ highest-risk area in the repo.
 
 | File | Responsibility |
 |---|---|
-| `src/pages/curriculum/ProblemView.jsx` | **Writes** — records a completed challenge on `onComplete` |
-| `src/pages/curriculum/CurriculumPage.jsx` | **Reads** — hydrates, saves, and computes all lock state |
+| `src/data/progressRules.js` | **The rules** — pure predicates plus `completeChallenge` as a reducer. The single source of truth. |
+| `src/data/curriculumLocks.js` | `buildLockState(...)` — every category/topic/challenge flagged `locked`/`complete`/`missing`, in one pass. |
+| `src/data/curriculumNavigation.js` | `findNextChallenge(...)` — the next playable challenge after the one just finished. |
+| `src/hooks/useProgress.js` | **Storage** — loads/saves the active child's document; binds the pure rules to that state. |
+| `src/pages/curriculum/ProblemView.jsx` | **Writes** — records a completed challenge on `onComplete`, then offers the next one. |
+| `src/pages/curriculum/CurriculumPage.jsx` | **Reads** — renders from `buildLockState`. |
 
-The read/write logic is **duplicated across these two files**. They must agree on
-the key and the shape exactly. If you change one, change the other in the same
-edit — or better, extract the shared hook (idea #9 in `docs/PROJECT_IDEAS.md`).
+Rules and storage are deliberately separate, and the rules are duplicated
+nowhere: a second copy of gating logic is how a learner silently gets sent to a
+locked challenge. Change `progressRules.js`, not a caller.
+
+The pure modules take availability as an `isBuilt(topicId, challengeId)`
+callback rather than importing `challengeAvailability`, which uses
+`import.meta.glob` and cannot load under `node --test`. Keep it that way — it is
+what makes these rules testable.
 
 ## The data contract
 
-Key: `` `${subject}Progress_year${year}` `` — e.g. `mathProgress_year2`.
+Stored via the store layer as one document per `(childId, year, subject)` in the
+`dl.progress` collection, with the tree under that document's `data` field. The
+pre-accounts key `` `${subject}Progress_year${year}` `` is **no longer read or
+written**, and there is deliberately no migration path.
 
 ```js
 {
@@ -51,12 +63,17 @@ Non-negotiables:
 
 ## The unlock rules
 
-Implemented in `CurriculumPage.jsx`. Any change must preserve all of these:
+Computed by `buildLockState` in `src/data/curriculumLocks.js` and consumed by
+both curriculum screens. Any change must preserve all of these:
 
-- **Topic complete** ⟺ `completedChallenges.length === topic.challenges.length`.
-- **Category complete** ⟺ every topic in it is complete.
-- **Category unlocked** ⟺ it is the first category, or the previous category is
-  complete.
+- **Topic complete** ⟺ every *built* challenge in it is in `completedChallenges`.
+  A membership check, never a length check: `[9,9,9,9]` must not complete a
+  topic. Unbuilt challenges are excluded — counting them made a partially-built
+  topic impossible to finish and so a permanent wall.
+- **Category complete** ⟺ every topic in it with something built is complete.
+- **Category unlocked** ⟺ every earlier category is *passable*. Passable and
+  complete deliberately differ on an empty category: it must not block the
+  chain, but must not be badged finished either.
 - **Topic unlocked** ⟺ its category is unlocked, and it is the first topic or the
   previous topic in that category is complete.
 - **Challenge unlocked** ⟺ its topic is unlocked, and it is either already
@@ -69,13 +86,15 @@ finished.
 
 ## Hydration ordering
 
-`CurriculumPage` guards its save effect with a `hydrated` flag. This exists to
+`useProgress` guards its save effect with a `hydrated` flag. This exists to
 stop the initial empty state from being written over real saved progress on
 mount. **Do not remove or reorder that guard.** If you add state that persists,
 it needs the same protection.
 
-The read effect also re-runs on `location.key`, so returning from a challenge
-refreshes lock state. Preserve that if you refactor the effects.
+It also refuses to save unless the in-memory progress came from the document
+currently loaded (tracked in a ref). Without that guard, switching profile
+writes the *outgoing* child's progress into the *incoming* child's document.
+Do not remove it.
 
 ## Rules for changing this code
 
@@ -93,7 +112,9 @@ refreshes lock state. Preserve that if you refactor the effects.
 
 ## Verify before claiming completion
 
-Manual verification is mandatory; there are no tests covering this. Confirm:
+`npm test` covers the pure rules, lock state and navigation. That is necessary
+but NOT sufficient — the storage and hydration path has no automated coverage,
+so manual verification is still mandatory. Confirm:
 
 1. **Fresh user:** clear the key → only the first category is unlocked, only the
    first topic within it, only Challenge 1 within that.
