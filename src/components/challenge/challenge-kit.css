@@ -218,6 +218,29 @@ body.dark {
   opacity: 0.75;
 }
 
+/* --- arrays: rows and columns of dots --- */
+.array-grid {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding: 0.8rem 1rem;
+  border: 3px solid var(--ck-border);
+  border-radius: 14px;
+}
+
+.array-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.array-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--ck-accent);
+}
+
 /* --- comparison statement --- */
 .statement {
   display: flex;

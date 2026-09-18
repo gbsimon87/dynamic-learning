@@ -116,6 +116,26 @@ options, the loop reports it. It is worth doing even when a topic "obviously"
 works — the batching bug above was found this way and nothing else would have
 caught it, because there is no component test runner.
 
+## Static checks that catch what a playthrough would
+
+When a browser pass is not on the table, these are what stand in for it. Each
+has caught a real bug in this project:
+
+- **Ordering challenges must have no tied answers.** If two cards evaluate to
+  the same number, several arrangements are correct but the validator accepts
+  only one, so a learner who is right is told they are wrong. Evaluate every set
+  and assert the values are distinct.
+- **Every hand-written option list must contain its own answer**, or the
+  question is unanswerable.
+- **Recompute every word-problem answer** in a throwaway script rather than
+  trusting the number typed in the data.
+- **Re-derive the file name** with the loader's own `capitalizeTopicId` and
+  check each file exists and has a `export default`.
+- **A topic id starting with a digit** (`2-5-and-10-...` →
+  `25And10MultiplicationTables`) is not a valid JS identifier. The FILE must
+  still carry that name; give the function a different one and let the default
+  export connect them.
+
 **Confirm before claiming done:** a wrong answer retries without advancing; a
 full run redirects to the curriculum page and increments the topic counter;
 `npm run lint`, `npm test` and `npm run build` pass; and the topic is legible in
