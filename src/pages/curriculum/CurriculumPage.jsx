@@ -13,6 +13,7 @@ import {
   getTopicStats,
   getYearStats,
 } from "../../data/curriculumProgressStats";
+import { shouldBypassLocks } from "../../data/devUnlock";
 import "./CurriculumPage.css";
 import "./CurriculumSelectPage.css";
 
@@ -44,6 +45,10 @@ function CurriculumPage() {
     isChallengeImplemented(subject, year, topicId, challengeId);
 
   const yearStats = getYearStats(progress, curriculum, isBuilt);
+
+  // Dev-only: VITE_UNLOCK_ALL opens every built challenge. See devUnlock.js.
+  // `import.meta.env` is undefined outside Vite, hence the optional chain.
+  const bypassLocks = shouldBypassLocks(import.meta.env);
 
   return (
     <div className="curriculum-page page">
@@ -87,6 +92,14 @@ function CurriculumPage() {
             )}
           </div>
         )}
+        {/* Say so loudly: without this a real gating bug looks exactly like
+            the flag working. */}
+        {bypassLocks && (
+          <p className="dev-unlock-banner">
+            🔓 Dev mode — every built challenge is unlocked (VITE_UNLOCK_ALL)
+          </p>
+        )}
+
         <Link to="/curriculum" className="curriculum-change-link">
           ← Change year or subject
         </Link>
@@ -102,10 +115,11 @@ function CurriculumPage() {
           // Every earlier category must be passable, not just the previous one:
           // an empty category reports passable, which would reopen the chain.
           const categoryLocked =
-            (isFirstTimeUser && catIndex > 0) ||
-            curriculum
-              .slice(0, catIndex)
-              .some((earlier) => !isCategoryPassable(earlier, skipUnbuilt));
+            !bypassLocks &&
+            ((isFirstTimeUser && catIndex > 0) ||
+              curriculum
+                .slice(0, catIndex)
+                .some((earlier) => !isCategoryPassable(earlier, skipUnbuilt)));
 
           return (
             <section
@@ -152,7 +166,8 @@ function CurriculumPage() {
                     topic.challenges
                   );
 
-                  const topicLocked = categoryLocked || Boolean(previousBlocks);
+                  const topicLocked =
+                    !bypassLocks && (categoryLocked || Boolean(previousBlocks));
 
                   const topicComplete = isTopicComplete(
                     category.id,
@@ -203,7 +218,8 @@ function CurriculumPage() {
                             // Open once everything before it is done, or if
                             // already done itself.
                             const challengeLocked =
-                              categoryLocked ||
+                              !bypassLocks &&
+                              (categoryLocked ||
                               topicLocked ||
                               !(
                                 completedChallenges.includes(challenge.id) ||
@@ -220,7 +236,7 @@ function CurriculumPage() {
                                       c.id
                                     )
                                 )
-                              );
+                              ));
 
                             // Not built yet: don't link to a dead page.
                             const challengeMissing = !isChallengeImplemented(

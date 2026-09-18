@@ -73,6 +73,20 @@ body.dark .year-progress-bar {
   }
 }
 
+.dev-unlock-banner {
+  display: inline-block;
+  margin: 1rem auto 0;
+  padding: 0.4rem 0.9rem;
+  border: 2px dashed var(--light-accent);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+body.dark .dev-unlock-banner {
+  border-color: var(--dark-accent);
+}
+
 /* ===========================================================
    CATEGORY GRID
 =========================================================== */

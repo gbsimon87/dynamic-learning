@@ -353,6 +353,16 @@ Parent sign-up/sign-in (`/signup`, `/login`), child profile picker (`/profiles`)
 parent admin screen (`/parent`). Local-only; see §4.7. Curriculum Mode now requires a
 selected child profile; Skills Mode does not.
 
+### Curriculum Mode — dev unlock switch
+`VITE_UNLOCK_ALL=true` opens every built challenge in the picker, bypassing the
+sequential unlock rules (`src/data/devUnlock.js`). It is a BUILD-time switch
+like `VITE_USE_API`, so a production build made without it has no bypass at
+all — which is why it is an env var and not a URL parameter. It changes only
+what `CurriculumPage` offers: `useProgress`, the completion rules and the
+stored data are untouched, and unbuilt challenges stay unavailable. A banner
+shows while it is active, so a genuine gating bug is never mistaken for the
+flag working.
+
 ### Curriculum Mode — the source material
 `docs/curriculum/` holds the National Curriculum programmes of study verbatim,
 with every topic in our dataset mapped to the statutory requirement it serves,
