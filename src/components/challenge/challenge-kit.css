@@ -559,6 +559,60 @@ body.dark {
   opacity: 0.75;
 }
 
+/* ===========================================================
+   SHAPES
+=========================================================== */
+.shape-figure,
+.solid-figure {
+  display: block;
+  width: min(210px, 62vw);
+  height: auto;
+  margin: 0 auto 1.5rem;
+}
+
+.shape-outline {
+  fill: var(--ck-accent);
+  fill-opacity: 0.35;
+  stroke: var(--ck-accent);
+  stroke-width: 4;
+  stroke-linejoin: round;
+}
+
+.shape-vertex {
+  fill: var(--ck-text);
+}
+
+.shape-symmetry-line {
+  stroke: var(--ck-text);
+  stroke-width: 3;
+  stroke-dasharray: 8 6;
+  opacity: 0.75;
+}
+
+.solid-face {
+  fill: var(--ck-accent);
+  fill-opacity: 0.28;
+  stroke: var(--ck-accent);
+  stroke-width: 3.5;
+  stroke-linejoin: round;
+}
+
+.solid-edge {
+  fill: none;
+  stroke: var(--ck-accent);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
+/* Dashed rather than omitted, so every edge can still be counted. */
+.solid-hidden {
+  fill: none;
+  stroke: var(--ck-accent);
+  stroke-width: 2.5;
+  stroke-dasharray: 6 5;
+  opacity: 0.55;
+}
+
 /* --- comparison statement --- */
 .statement {
   display: flex;

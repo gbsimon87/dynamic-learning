@@ -370,8 +370,8 @@ and a list of requirements no topic covers yet. Read the relevant row before
 authoring questions for a topic.
 
 ### Curriculum Mode — built challenges
-Only **Year 2 Mathematics** exists, and twenty-seven topics have challenges
-built — every Number category, and Measurement:
+Only **Year 2 Mathematics** exists, and thirty topics have challenges built —
+every Number category, Measurement, and Geometry – Properties of Shapes:
 
 | Category | Topic | Challenges built |
 |---|---|---|
@@ -402,9 +402,12 @@ built — every Number category, and Measurement:
 | Measurement | Measuring Time | 1, 2, 3, 4 ✅ |
 | Measurement | Standard Units of Money | 1, 2, 3, 4 ✅ |
 | Measurement | Money Problems | 1, 2, 3, 4 ✅ |
-| *(all other 12 topics)* | — | 0 — falls back to "not yet available" |
+| Geometry – Properties of Shapes | 2-D Shapes | 1, 2, 3, 4 ✅ |
+| Geometry – Properties of Shapes | 3-D Shapes | 1, 2, 3, 4 ✅ |
+| Geometry – Properties of Shapes | Different Shapes | 1, 2, 3, 4 ✅ |
+| *(all other 9 topics)* | — | 0 — falls back to "not yet available" |
 
-All twenty-seven are built on the **shared challenge kit**
+All thirty are built on the **shared challenge kit**
 (`src/components/challenge/`): `ChallengeShell` owns the run loop and the single
 `onComplete()`, with `ChoiceGrid`, `NumberLine`, `DragToOrder` and `NumberInput`
 as interactions, all themed once from `challenge-kit.css`. Its question
@@ -414,6 +417,13 @@ dressed as a ruler, thermometer, jug and kitchen scale), `MeasureDrag` (the same
 scale, learner-set, click/keys/drag), `CoinTray` (real UK coins, tap only) and
 `ClockFace`/`TimeSetter` (wrapping the existing DualLabelClock, minutes in
 fives).
+
+Geometry added `ShapeFigure` and `SolidFigure`, both SVG. SVG rather than CSS
+clip-path because the topic is about properties: the same vertex list draws the
+outline, dots each corner and places the line of symmetry, and a test asserts
+that a shape claiming five sides has five corners. The older
+`src/components/ShapeQuiz.jsx` draws shapes with hardcoded inline colours and
+does not theme; it belongs to Skills Mode and was left alone.
 
 New topics should compose the kit rather than copy an existing challenge — see
 the `building-curriculum-topics` skill. The kit has since grown a highlighted
