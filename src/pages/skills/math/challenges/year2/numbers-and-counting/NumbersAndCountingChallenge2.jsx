@@ -1,92 +1,69 @@
-import { useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import "./NumbersAndCountingChallenge1.css"; // reuse the same styles
+import { useMemo, useState } from "react";
+import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
+import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
+import { numberInWords } from "../../../../../../data/challenges/numbersAndCounting";
+import { shuffle } from "../../../../../../data/challenges/countingInSteps";
 
 /**
- * Five DISTINCT numbers from 1-100.
+ * Challenge 2 - numbers written in words.
  *
- * Plain random draws repeated a value roughly 10% of the time. Ordering is then
- * genuinely ambiguous for the child (two identical tiles), and the value can no
- * longer serve as a stable drag id. Bounded by construction - it walks a
- * shuffled pool rather than re-rolling until distinct.
+ * "Read and write numbers to at least 100 in numerals AND IN WORDS" is
+ * statutory, and nothing in the app covered the words half. Reading the word
+ * and choosing the numeral comes before writing it (challenge 4).
+ *
+ * Distractors are the digit swap and the neighbouring ten, so the word has to
+ * be read properly: "forty-seven" against 74 and 57.
  */
-function pickDistinctNumbers(count) {
-  const pool = Array.from({ length: 100 }, (_, i) => i + 1);
-  for (let i = pool.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [pool[i], pool[j]] = [pool[j], pool[i]];
-  }
-  return pool.slice(0, count);
+
+const NUMBERS = [47, 63, 28, 91, 16, 75];
+
+function buildQuestions(rng) {
+  return shuffle(NUMBERS, rng).map((value) => {
+    const tens = Math.floor(value / 10);
+    const ones = value % 10;
+    const options = shuffle([value, ones * 10 + tens, value + 10], rng);
+    return { value, words: numberInWords(value), options };
+  });
 }
 
 function NumbersAndCountingChallenge2({ onComplete }) {
-  // Generate 5 random numbers between 1–100
-  const [numbers, setNumbers] = useState(() => pickDistinctNumbers(5));
-  const [feedback, setFeedback] = useState(null);
-
-  // Handle reordering
-  const handleDragEnd = (result) => {
-    if (!result.destination) return;
-    const items = Array.from(numbers);
-    const [moved] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, moved);
-    setNumbers(items);
-  };
-
-  // Check order: greatest → lowest
-  const handleSubmit = () => {
-    const sorted = [...numbers].sort((a, b) => b - a);
-    const isCorrect = numbers.every((num, i) => num === sorted[i]);
-    if (isCorrect) {
-      setFeedback("✅ Correct! Well done!");
-      setTimeout(() => onComplete(), 1000);
-    } else {
-      setFeedback("❌ Not quite! Try again.");
-    }
-  };
+  const questions = useMemo(() => buildQuestions(Math.random), []);
 
   return (
-    <div className="challenge-container">
-      <h3>Arrange the numbers from greatest to lowest</h3>
+    <ChallengeShell
+      questions={questions}
+      onComplete={onComplete}
+      title="Which number is this?"
+      render={({ question, submit, locked, index }) => (
+        <WordToNumeral key={index} question={question} submit={submit} locked={locked} />
+      )}
+    />
+  );
+}
 
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="numbers">
-          {(provided) => (
-            <ul
-              className="numbers-list"
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {numbers.map((num, index) => (
-                <Draggable
-                  key={String(num)}
-                  draggableId={String(num)}
-                  index={index}
-                >
-                  {(provided) => (
-                    <li
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className="number-item"
-                    >
-                      {num}
-                    </li>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </ul>
-          )}
-        </Droppable>
-      </DragDropContext>
+function WordToNumeral({ question, submit, locked }) {
+  const [selected, setSelected] = useState(null);
 
-      <button className="submit-btn" onClick={handleSubmit}>
-        Submit
+  return (
+    <>
+      <p className="sequence-strip">{question.words}</p>
+
+      <ChoiceGrid
+        options={question.options}
+        selected={selected}
+        onSelect={setSelected}
+        disabled={locked}
+      />
+
+      <button
+        type="button"
+        className="submit-btn"
+        disabled={locked || selected === null}
+        onClick={() => submit(selected === question.value)}
+      >
+        Check my answer
       </button>
-
-      {feedback && <p className="feedback">{feedback}</p>}
-    </div>
+    </>
   );
 }
 

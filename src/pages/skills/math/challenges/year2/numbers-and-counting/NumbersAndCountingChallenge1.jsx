@@ -1,93 +1,69 @@
-// NumbersAndCountingChallenge1.jsx
-import { useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import "./NumbersAndCountingChallenge1.css";
+import { useMemo, useState } from "react";
+import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
+import NumberLine from "../../../../../../components/challenge/NumberLine";
+import NumberInput from "../../../../../../components/challenge/NumberInput";
+import { buildSequenceWithGaps, isCorrectNumber } from "../../../../../../data/challenges/numbersAndCounting";
+import { shuffle } from "../../../../../../data/challenges/countingInSteps";
 
 /**
- * Five DISTINCT numbers from 1-100.
+ * Challenge 1 - read and write numbers by filling a run of the number line.
  *
- * Plain random draws repeated a value roughly 10% of the time. Ordering is then
- * genuinely ambiguous for the child (two identical tiles), and the value can no
- * longer serve as a stable drag id. Bounded by construction - it walks a
- * shuffled pool rather than re-rolling until distinct.
+ * One blank at a time so the keypad always has an unambiguous target, and the
+ * run is consecutive, which keeps this about reading numerals rather than
+ * spotting a step (that is the Counting in Steps topic).
  */
-function pickDistinctNumbers(count) {
-  const pool = Array.from({ length: 100 }, (_, i) => i + 1);
-  for (let i = pool.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [pool[i], pool[j]] = [pool[j], pool[i]];
-  }
-  return pool.slice(0, count);
+
+const LENGTH = 8;
+const STARTS = [13, 27, 46, 58, 71, 89];
+
+function buildQuestions(rng) {
+  return shuffle(STARTS, rng).map((start) => {
+    const { terms, gaps } = buildSequenceWithGaps(start, LENGTH, 1, rng);
+    return { terms, gaps, answer: terms[gaps[0]] };
+  });
 }
 
 function NumbersAndCountingChallenge1({ onComplete }) {
-  // 1️⃣ Generate 5 random numbers between 1 and 100
-  const [numbers, setNumbers] = useState(() => pickDistinctNumbers(5));
-  const [feedback, setFeedback] = useState(null);
-
-  // 2️⃣ Handle reorder logic
-  const handleDragEnd = (result) => {
-    if (!result.destination) return;
-    const items = Array.from(numbers);
-    const [reordered] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reordered);
-    setNumbers(items);
-  };
-
-  // 3️⃣ Validate the order
-  const handleSubmit = () => {
-    const sorted = [...numbers].sort((a, b) => a - b);
-    const isCorrect = numbers.every((num, i) => num === sorted[i]);
-    if (isCorrect) {
-      setFeedback("✅ Correct! Well done!");
-      setTimeout(onComplete, 1000);
-    } else {
-      setFeedback("❌ Not quite! Try again.");
-    }
-  };
+  const questions = useMemo(() => buildQuestions(Math.random), []);
 
   return (
-    <div className="challenge-container">
-      <h3>Arrange the numbers from lowest to highest</h3>
+    <ChallengeShell
+      questions={questions}
+      onComplete={onComplete}
+      title="Which number is missing?"
+      render={({ question, submit, locked, index }) => (
+        <FillGap key={index} question={question} submit={submit} locked={locked} />
+      )}
+    />
+  );
+}
 
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="numbers">
-          {(provided) => (
-            <ul
-              className="numbers-list"
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {numbers.map((num, index) => (
-                <Draggable
-                  key={String(num)}
-                  draggableId={String(num)}
-                  index={index}
-                >
-                  {(provided) => (
-                    <li
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className="number-item"
-                    >
-                      {num}
-                    </li>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </ul>
-          )}
-        </Droppable>
-      </DragDropContext>
+function FillGap({ question, submit, locked }) {
+  const [value, setValue] = useState("");
+  const gapIndex = question.gaps[0];
 
-      <button className="submit-btn" onClick={handleSubmit}>
-        Submit
+  return (
+    <>
+      <NumberLine
+        terms={question.terms}
+        gaps={question.gaps}
+        values={{ [gapIndex]: value }}
+        active={gapIndex}
+        onFocusGap={() => {}}
+        disabled={locked}
+      />
+
+      <NumberInput hideField value={value} onChange={setValue} disabled={locked} />
+
+      <button
+        type="button"
+        className="submit-btn"
+        disabled={locked || value === ""}
+        onClick={() => submit(isCorrectNumber(value, question.answer))}
+      >
+        Check my answer
       </button>
-
-      {feedback && <p className="feedback">{feedback}</p>}
-    </div>
+    </>
   );
 }
 

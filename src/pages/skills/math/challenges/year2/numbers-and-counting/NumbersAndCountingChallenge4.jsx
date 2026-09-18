@@ -1,77 +1,58 @@
-import { useState, useMemo } from "react";
-import "./NumbersAndCountingChallenge3.css"; // reuse same styling
+import { useMemo, useState } from "react";
+import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
+import NumberInput from "../../../../../../components/challenge/NumberInput";
+import { isCorrectNumber, numberInWords } from "../../../../../../data/challenges/numbersAndCounting";
+import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+
+/**
+ * Challenge 4 - write the numeral from the words, with nothing to choose from.
+ *
+ * The hardest shape of the statutory "read and write numbers ... in numerals
+ * and in words": no options to eliminate, and the tens-and-ones order has to
+ * come out of the word itself.
+ */
+
+const NUMBERS = [34, 82, 19, 57, 100, 46, 73, 65];
 
 function NumbersAndCountingChallenge4({ onComplete }) {
-  // Random start 1–50 and step from [2,5,10]
-  const startNum = useMemo(() => Math.floor(Math.random() * 50) + 1, []);
-  const step = useMemo(() => [2, 5, 10][Math.floor(Math.random() * 3)], []);
-  const sequence = useMemo(
-    () => Array.from({ length: 10 }, (_, i) => startNum + i * step),
-    [startNum, step]
+  const questions = useMemo(
+    () =>
+      shuffle(NUMBERS, Math.random)
+        .slice(0, 6)
+        .map((value) => ({ value, words: numberInWords(value) })),
+    []
   );
 
-  // Choose 3–5 blanks
-  const missingIndices = useMemo(() => {
-    const indices = Array.from({ length: 10 }, (_, i) => i);
-    const shuffled = indices.sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, Math.floor(Math.random() * 3) + 3).sort((a, b) => a - b);
-  }, []);
+  return (
+    <ChallengeShell
+      questions={questions}
+      onComplete={onComplete}
+      title="Write this number in digits."
+      render={({ question, submit, locked, index }) => (
+        <WriteNumeral key={index} question={question} submit={submit} locked={locked} />
+      )}
+    />
+  );
+}
 
-  const [answers, setAnswers] = useState({});
-  const [feedback, setFeedback] = useState(null);
-
-  const handleChange = (index, value) => {
-    setAnswers((prev) => ({
-      ...prev,
-      [index]: value.replace(/\D/g, ""),
-    }));
-  };
-
-  const handleSubmit = () => {
-    const allCorrect = missingIndices.every((i) => {
-      const expected = sequence[i].toString();
-      return answers[i] === expected;
-    });
-
-    if (allCorrect && Object.keys(answers).length === missingIndices.length) {
-      setFeedback(`✅ Correct! Step size was +${step}. Great job!`);
-      setTimeout(onComplete, 1000);
-    } else {
-      setFeedback("❌ Not quite! Try again.");
-    }
-  };
+function WriteNumeral({ question, submit, locked }) {
+  const [value, setValue] = useState("");
 
   return (
-    <div className="challenge-container">
-      <h3>
-        Fill in the missing numbers.
-      </h3>
+    <>
+      <p className="sequence-strip">{question.words}</p>
 
-      <div className="number-sequence">
-        {sequence.map((num, i) =>
-          missingIndices.includes(i) ? (
-            <input
-              key={i}
-              type="text"
-              value={answers[i] || ""}
-              onChange={(e) => handleChange(i, e.target.value)}
-              className="number-input"
-              maxLength={3}
-            />
-          ) : (
-            <div key={i} className="number-box filled">
-              {num}
-            </div>
-          )
-        )}
-      </div>
+      <NumberInput label="In digits" value={value} onChange={setValue} disabled={locked} />
 
-      <button className="submit-btn" onClick={handleSubmit}>
-        Submit
+      <button
+        type="button"
+        className="submit-btn"
+        disabled={locked || value === ""}
+        onClick={() => submit(isCorrectNumber(value, question.value))}
+      >
+        Check my answer
       </button>
-
-      {feedback && <p className="feedback">{feedback}</p>}
-    </div>
+    </>
   );
 }
 

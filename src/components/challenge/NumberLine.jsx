@@ -11,9 +11,12 @@ import "./challenge-kit.css";
  */
 function NumberLine({ terms, gaps, values, active, onFocusGap, disabled, highlight }) {
   const gapSet = new Set(gaps);
+  // A long line must stay one line: wrapped onto two rows it stops reading as
+  // a number line at all.
+  const dense = terms.length > 8;
 
   return (
-    <div className="number-line" role="list">
+    <div className={`number-line ${dense ? "dense" : ""}`} role="list">
       {terms.map((term, index) =>
         gapSet.has(index) ? (
           <button

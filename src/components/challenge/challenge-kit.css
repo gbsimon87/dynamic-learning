@@ -139,6 +139,17 @@ body.dark {
   color: var(--ck-on-accent);
 }
 
+/* Long scales (0-100 in tens) shrink rather than wrap. */
+.number-line.dense {
+  gap: 0.4rem;
+}
+
+.number-line.dense .number-cell {
+  min-width: 44px;
+  min-height: 48px;
+  font-size: 1.05rem;
+}
+
 .number-cell.gap {
   cursor: pointer;
   border-style: dashed;

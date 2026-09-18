@@ -373,7 +373,7 @@ whole of the first category:
 | Number – Number and Place Value | Less Than, Greater Than and Equal To | 1, 2, 3, 4 ✅ |
 | *(all other 33 topics)* | — | 0 — falls back to "not yet available" |
 
-Every one of these is built on the **shared challenge kit**
+All six are built on the **shared challenge kit**
 (`src/components/challenge/`): `ChallengeShell` owns the run loop and the single
 `onComplete()`, with `ChoiceGrid`, `NumberLine`, `DragToOrder` and `NumberInput`
 as interactions, all themed once from `challenge-kit.css`. Its question
@@ -382,6 +382,13 @@ New topics should compose the kit rather than copy an existing challenge — see
 the `building-curriculum-topics` skill. The kit has since grown a highlighted
 number-line cell, a rule machine, base-ten blocks and a comparison statement
 row, all added as later topics needed them.
+
+"Numbers and Counting" and "Counting Forwards and Backwards" were rebuilt on
+the kit 2026-09-18, replacing the original bespoke components. That rewrite
+fixed a long-standing bug: the old sequence challenge compared typed answers as
+**strings**, so "043" was rejected for 43 — visibly correct, marked wrong, and
+since it sat at challenge 3 of the first topic it walled off the whole
+curriculum. Answers are now compared by value (`isCorrectNumber`).
 
 Locked topics still list their challenges (each rendered locked and
 unclickable). Hiding them left a locked topic as a bare padlock, with no sign
