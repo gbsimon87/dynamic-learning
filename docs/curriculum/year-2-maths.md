@@ -313,6 +313,14 @@ one calculation.
 
 **Guidance worth using:** pictograms should use many-to-one correspondence with
 simple ratios of 2, 5 and 10 — one symbol standing for more than one thing.
+✅ covered 2026-09-18: Pictograms challenge 1 uses 1:2 with the key stated,
+challenges 2–4 use 1:5 and 1:10, and challenge 3 has the learner build one.
+
+**Convention note:** the pictograms here use whole symbols only. Half symbols
+are common in published schemes but need a fraction of a quantity read off a
+picture, which sits beyond this year's fractions work; every value is therefore
+a whole number of symbols, and `symbolCount` throws rather than silently
+rounding if a dataset breaks that.
 
 ---
 

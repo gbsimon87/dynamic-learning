@@ -370,8 +370,8 @@ and a list of requirements no topic covers yet. Read the relevant row before
 authoring questions for a topic.
 
 ### Curriculum Mode — built challenges
-Only **Year 2 Mathematics** exists, and thirty-four topics have challenges
-built — everything except Statistics:
+Only **Year 2 Mathematics** exists, and **all thirty-nine topics** have
+challenges built — the year is complete:
 
 | Category | Topic | Challenges built |
 |---|---|---|
@@ -409,9 +409,13 @@ built — everything except Statistics:
 | Geometry – Position and Direction | Sequences | 1, 2, 3, 4 ✅ |
 | Geometry – Position and Direction | Quarter Turns and Half Turns | 1, 2, 3, 4 ✅ |
 | Geometry – Position and Direction | Right-Angle Turns | 1, 2, 3, 4 ✅ |
-| *(the 5 Statistics topics)* | — | 0 — falls back to "not yet available" |
+| Statistics | Pictograms | 1, 2, 3, 4 ✅ |
+| Statistics | Tally Charts | 1, 2, 3, 4 ✅ |
+| Statistics | Block Diagrams | 1, 2, 3, 4 ✅ |
+| Statistics | Tables | 1, 2, 3, 4 ✅ |
+| Statistics | Gathering Information and Using Data | 1, 2, 3, 4 ✅ |
 
-All thirty-four are built on the **shared challenge kit**
+All thirty-nine are built on the **shared challenge kit**
 (`src/components/challenge/`): `ChallengeShell` owns the run loop and the single
 `onComplete()`, with `ChoiceGrid`, `NumberLine`, `DragToOrder` and `NumberInput`
 as interactions, all themed once from `challenge-kit.css`. Its question
@@ -434,6 +438,27 @@ Position and Direction added five more: `PatternStrip`, `OrientationPicker`,
 own example of programming with right angles; its position always comes from
 the unit-tested `runProgram`, so the drawing cannot drift from the answer.
 
+Statistics added the last five: `PictogramChart` (with the key that carries
+many-to-one correspondence at ratios 2, 5 and 10), `TallyChart` (real gates of
+five, the fifth mark struck across the other four), `BlockDiagram` (countable
+bricks against a labelled axis, not a smooth bar), `DataTable` (the one
+representation with no picture) and `SurveyTray` (an unsorted pile — data
+before anyone organised it, which is what makes "count the objects in each
+category" askable at all). All five read and build, so the same component
+serves "interpret" and "construct".
+
+Two rules that module enforces, both learnt the hard way elsewhere in the kit:
+
+* **An ambiguous dataset answers `null`.** `mostPopular`, `leastPopular` and
+  `sortByQuantity` return `null` on a tie rather than picking a winner, because
+  a tie gives a question several correct answers while the challenge accepts
+  one — a correct learner marked wrong.
+* **Stepping controls report a step, never a total.** The +/− buttons on a
+  pictogram or tally chart emit `+1`/`−1` and the challenge applies it to its
+  own previous state. A total computed from the rendered value is computed from
+  stale props, and two fast taps in one React batch lose one — the same bug
+  `NumberInput` had.
+
 New topics should compose the kit rather than copy an existing challenge — see
 the `building-curriculum-topics` skill. The kit has since grown a highlighted
 number-line cell, a rule machine, base-ten blocks and a comparison statement
@@ -445,6 +470,15 @@ fixed a long-standing bug: the old sequence challenge compared typed answers as
 **strings**, so "043" was rejected for 43 — visibly correct, marked wrong, and
 since it sat at challenge 3 of the first topic it walled off the whole
 curriculum. Answers are now compared by value (`isCorrectNumber`).
+
+`.problem-page button { margin-top: 1.5rem }` in `ProblemView.css` reaches
+**every** button inside a challenge, including the ten block slots in each
+`BlockDiagram` column — which pulled the bricks 24px apart and left the stack
+no longer lining up with its own axis. The kit neutralises it for its own
+tightly-packed controls (`.block-stack .block-slot`, `.survey-tray
+.survey-item`, `.pictogram-controls .chart-step-btn`); two classes outrank one
+class plus a type, so the kit wins without naming the host. Any future kit
+component that renders a dense row or column of buttons needs the same line.
 
 Locked topics still list their challenges (each rendered locked and
 unclickable). Hiding them left a locked topic as a bare padlock, with no sign

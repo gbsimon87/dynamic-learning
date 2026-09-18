@@ -21,6 +21,8 @@ the `onComplete` contract. This skill assumes it.
 | `NumberLine` | A sequence with blanks to fill. |
 | `DragToOrder` | Arrange items into an order. Keyboard-operable (space, arrows, space). |
 | `NumberInput` | Typed numeric answer. Pass `hideField` when the answer already shows elsewhere. |
+| `PictogramChart`, `TallyChart`, `BlockDiagram`, `DataTable` | Read **or build** a chart. Pass the step/set callback and the same component becomes the construct half. |
+| `SurveyTray` | An unsorted pile of things — data before anyone organised it. |
 
 `challenge-kit.css` themes all of them from the `--light-*` / `--dark-*` tokens
 in App.css. **Do not write per-challenge CSS for anything the kit already
@@ -35,12 +37,26 @@ Put generators in `src/data/challenges/<topic>.js`: no React, and take `rng` as
 a parameter so challenges randomise per mount while tests stay deterministic.
 Unit-test them with `node --test` (the project has no component test runner).
 
+**An ambiguous dataset must answer `null`, not a guess.** Two rows on the same
+count give "which has most?" two correct answers while the challenge accepts
+one, so a correct learner is marked wrong. Make the generator return `null` for
+a tie (see `mostPopular` / `sortByQuantity` in `statistics.js`) and check the
+datasets against it — a tie that reaches the screen is invisible until a child
+hits it.
+
 **Distractors must be plausible near-misses** — one step short, one step long,
 off-by-ones. Random numbers get eliminated without doing the maths. Never emit a
 negative option for Year 2.
 
 Build questions once per mount with `useMemo(() => build(Math.random), [])`, and
 key the inner component on the question index so typed state never carries over.
+
+**A control that accumulates reports a STEP, never a total.** A `+` button that
+hands back `value + 1` computed it from the render's props; two fast taps land
+in one React batch and the second overwrites the first, so a tap is silently
+lost. Emit `+1` / `-1`, apply it in the challenge with
+`setState(prev => ...)`, and clamp there. `NumberInput` had this bug and so did
+the first cut of `TallyChart`.
 
 **Update state functionally, never from the prop.** Two taps land in the same
 React batch, so `onChange(value + key)` makes the second overwrite the first —
@@ -112,7 +128,26 @@ async () => {
 ```
 
 This also proves the generators: if the correct answer is ever missing from the
-options, the loop reports it. It is worth doing even when a topic "obviously"
+options, the loop reports it.
+
+**Read the answer off the DRAWING, not the data.** Count the rendered symbols,
+marks or blocks and work the answer out from those. A loop that reads the
+challenge's own numbers only proves the challenge agrees with itself; one that
+reads the picture proves the picture and the logic agree — which is the half no
+unit test can reach.
+
+Two things only a real render shows, both found this way:
+
+* **The wording must identify what is being asked.** With nothing highlighted,
+  "How many books read?" over columns labelled Mon/Tue/Wed has no answer at
+  all. If your driver cannot tell which row a prompt means, neither can a
+  seven-year-old. Have the driver match the prompt against the row labels and
+  fail when it matches none or several.
+* **The host page restyles your buttons.** `.problem-page button` in
+  `ProblemView.css` puts `margin-top: 1.5rem` on every button inside a
+  challenge. Any kit component that renders a dense row or column of buttons
+  must neutralise it with two classes (`.block-stack .block-slot`), or its
+  layout quietly comes apart. It is worth doing even when a topic "obviously"
 works — the batching bug above was found this way and nothing else would have
 caught it, because there is no component test runner.
 

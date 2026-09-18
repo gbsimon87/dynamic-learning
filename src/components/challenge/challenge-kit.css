@@ -984,3 +984,366 @@ body.dark {
     transform: none;
   }
 }
+
+/* ===========================================================
+   STATISTICS
+   Five games for reading and building data: pictogram, tally
+   chart, block diagram, table, and a tray of unsorted things.
+   All five are charts, so they share one set of row/label rules.
+=========================================================== */
+
+/* Marks and symbols are pictures to a screen reader; the number behind them
+   is the fact, so every chart also exposes its count as text. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.pictogram,
+.tally-chart,
+.block-diagram,
+.data-table,
+.survey-tray {
+  margin: 0 auto 1.6rem;
+}
+
+.pictogram-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+  padding: 0.45rem 0.9rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  background: var(--ck-muted);
+  border: 2px solid var(--ck-border);
+  border-radius: 10px;
+}
+
+/* --- pictogram --- */
+.pictogram-table,
+.tally-chart {
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+.pictogram-table th,
+.tally-chart th {
+  padding: 0.5rem 1rem 0.5rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.pictogram-symbols {
+  padding: 0.35rem 0;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.pictogram-symbol {
+  font-size: 1.7rem;
+  line-height: 1.2;
+}
+
+/* Symbols must not touch, or a row reads as one long shape rather than as
+   countable objects. */
+.pictogram-symbols .pictogram-symbol {
+  margin-right: 0.35rem;
+}
+
+.pictogram-empty {
+  font-size: 0.95rem;
+  font-style: italic;
+  opacity: 0.55;
+}
+
+.pictogram-table tr.highlight th,
+.pictogram-table tr.highlight td,
+.tally-chart tr.highlight th,
+.tally-chart tr.highlight td {
+  background: var(--ck-muted);
+}
+
+.pictogram-controls {
+  padding-left: 0.8rem;
+  white-space: nowrap;
+}
+
+.chart-step-btn {
+  width: 46px;
+  height: 46px;
+  margin-left: 0.35rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  border: 2px solid var(--ck-border);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.chart-step-btn:hover:not(:disabled) {
+  border-color: var(--ck-accent);
+}
+
+.chart-step-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* --- tally chart --- */
+.tally-marks {
+  padding: 0.45rem 0;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* A gate is one unit: the group carries the spacing, the marks inside it do
+   not, so five-and-five-and-two is visible at a glance. */
+.tally-group {
+  position: relative;
+  display: inline-block;
+  height: 34px;
+  margin-right: 1.1rem;
+}
+
+.tally-mark {
+  display: inline-block;
+  width: 3px;
+  height: 34px;
+  margin-right: 5px;
+  background: var(--ck-text);
+  border-radius: 2px;
+}
+
+/* The fifth mark strikes across the other four rather than standing beside
+   them — that stroke is what makes the group read as five. */
+.tally-mark.across {
+  position: absolute;
+  top: 15px;
+  left: -3px;
+  width: 38px;
+  height: 3px;
+  margin: 0;
+  transform: rotate(-20deg);
+}
+
+.tally-count {
+  padding-left: 0.8rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The marks cell is a fixed width - wide enough for 20 marks, which is the
+   chart's cap. Stretching it instead lined the counts up at the far right,
+   a long way from the marks they belong to. */
+.tally-chart .tally-marks {
+  width: 240px;
+}
+
+/* --- block diagram --- */
+.block-diagram {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.block-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* Padded by the height of the column labels, so the zero tick sits on the
+     baseline the blocks stand on. */
+  padding-bottom: 1.9rem;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
+}
+
+/* Ticks label the LINES between blocks, not the blocks, so each one collapses
+   onto a block boundary. */
+.block-tick {
+  height: 0;
+  line-height: 0;
+}
+
+.block-columns {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.7rem;
+}
+
+.block-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.block-stack {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 3px solid var(--ck-border);
+}
+
+.block-slot {
+  display: block;
+  width: 54px;
+  height: 26px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--ck-border);
+  border-bottom: none;
+}
+
+/* ProblemView wraps every challenge in `.problem-page`, which carries a
+   blanket `.problem-page button { margin-top: 1.5rem }` for the submit button
+   that legacy challenges relied on. That reaches ten block slots per column
+   and pulled every brick 24px apart, so the stack no longer lined up with its
+   own axis. Two classes beat one class plus a type, so this wins without the
+   kit having to know the host's class name. */
+.block-stack .block-slot {
+  margin-top: 0;
+}
+
+button.block-slot {
+  cursor: pointer;
+}
+
+button.block-slot:hover:not(:disabled) {
+  background: var(--ck-muted);
+}
+
+.block-slot.filled {
+  background: var(--ck-accent);
+  border-color: var(--ck-accent);
+}
+
+button.block-slot.filled:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.block-label {
+  margin-top: 0.55rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.block-column.highlight .block-label {
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 4px;
+}
+
+/* --- data table --- */
+.data-table {
+  border-collapse: collapse;
+}
+
+.data-caption {
+  margin-bottom: 0.7rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.data-table th,
+.data-table td {
+  min-width: 78px;
+  padding: 0.6rem 0.9rem;
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+  border: 2px solid var(--ck-border);
+}
+
+.data-table thead th,
+.data-table tbody th {
+  font-weight: 700;
+  background: var(--ck-muted);
+}
+
+.data-corner {
+  border: none;
+}
+
+.data-table th.highlight,
+.data-table td.highlight {
+  color: var(--ck-on-accent);
+  background: var(--ck-accent);
+}
+
+.data-table td.blank {
+  font-weight: 700;
+  border-style: dashed;
+  border-color: var(--ck-accent);
+}
+
+/* --- survey tray --- */
+.survey-tray {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  max-width: 520px;
+  padding: 1.1rem;
+  background: var(--ck-muted);
+  border: 2px dashed var(--ck-border);
+  border-radius: 14px;
+}
+
+/* Big enough to tap at six years old, even sitting at an angle. */
+.survey-item {
+  width: 52px;
+  height: 52px;
+  font-size: 1.8rem;
+  line-height: 52px;
+  text-align: center;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 50%;
+}
+
+/* Same blanket margin as the block slots - see the note there. Untreated it
+   shunts every ticked-off object down and breaks the pile's rows. */
+.survey-tray .survey-item,
+.pictogram-controls .chart-step-btn {
+  margin-top: 0;
+}
+
+button.survey-item {
+  cursor: pointer;
+}
+
+button.survey-item:hover:not(:disabled) {
+  border-color: var(--ck-border);
+}
+
+/* Ticked off while counting. Dimming alone would read as "gone", so the ring
+   stays: the object is still in the pile, it has just been counted. */
+.survey-item.counted {
+  background: var(--ck-panel);
+  border-color: var(--ck-accent);
+  opacity: 0.55;
+}
+
+@media (max-width: 560px) {
+  .block-slot {
+    width: 38px;
+    height: 22px;
+  }
+
+  .data-table th,
+  .data-table td {
+    min-width: 0;
+    padding: 0.45rem 0.55rem;
+    font-size: 1rem;
+  }
+}
