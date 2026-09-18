@@ -370,8 +370,8 @@ and a list of requirements no topic covers yet. Read the relevant row before
 authoring questions for a topic.
 
 ### Curriculum Mode — built challenges
-Only **Year 2 Mathematics** exists, and seventeen topics have challenges built —
-the whole of the first three categories:
+Only **Year 2 Mathematics** exists, and twenty topics have challenges built —
+every Number category:
 
 | Category | Topic | Challenges built |
 |---|---|---|
@@ -392,9 +392,12 @@ the whole of the first three categories:
 | Number – Multiplication and Division | Connecting Multiplication and Division | 1, 2, 3, 4 ✅ |
 | Number – Multiplication and Division | Doubling and Halving using Multiplication and Division | 1, 2, 3, 4 ✅ |
 | Number – Multiplication and Division | Solving Multiplication and Division Problems | 1, 2, 3, 4 ✅ |
-| *(all other 22 topics)* | — | 0 — falls back to "not yet available" |
+| Number – Fractions | What is a Fraction? | 1, 2, 3, 4 ✅ |
+| Number – Fractions | Fractions of Numbers | 1, 2, 3, 4 ✅ |
+| Number – Fractions | Finding Fractions of Larger Groups | 1, 2, 3, 4 ✅ |
+| *(all other 19 topics)* | — | 0 — falls back to "not yet available" |
 
-All seventeen are built on the **shared challenge kit**
+All twenty are built on the **shared challenge kit**
 (`src/components/challenge/`): `ChallengeShell` owns the run loop and the single
 `onComplete()`, with `ChoiceGrid`, `NumberLine`, `DragToOrder` and `NumberInput`
 as interactions, all themed once from `challenge-kit.css`. Its question
