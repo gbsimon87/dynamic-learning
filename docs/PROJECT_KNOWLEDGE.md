@@ -370,8 +370,8 @@ and a list of requirements no topic covers yet. Read the relevant row before
 authoring questions for a topic.
 
 ### Curriculum Mode — built challenges
-Only **Year 2 Mathematics** exists, and thirty topics have challenges built —
-every Number category, Measurement, and Geometry – Properties of Shapes:
+Only **Year 2 Mathematics** exists, and thirty-four topics have challenges
+built — everything except Statistics:
 
 | Category | Topic | Challenges built |
 |---|---|---|
@@ -405,9 +405,13 @@ every Number category, Measurement, and Geometry – Properties of Shapes:
 | Geometry – Properties of Shapes | 2-D Shapes | 1, 2, 3, 4 ✅ |
 | Geometry – Properties of Shapes | 3-D Shapes | 1, 2, 3, 4 ✅ |
 | Geometry – Properties of Shapes | Different Shapes | 1, 2, 3, 4 ✅ |
-| *(all other 9 topics)* | — | 0 — falls back to "not yet available" |
+| Geometry – Position and Direction | Patterns | 1, 2, 3, 4 ✅ |
+| Geometry – Position and Direction | Sequences | 1, 2, 3, 4 ✅ |
+| Geometry – Position and Direction | Quarter Turns and Half Turns | 1, 2, 3, 4 ✅ |
+| Geometry – Position and Direction | Right-Angle Turns | 1, 2, 3, 4 ✅ |
+| *(the 5 Statistics topics)* | — | 0 — falls back to "not yet available" |
 
-All thirty are built on the **shared challenge kit**
+All thirty-four are built on the **shared challenge kit**
 (`src/components/challenge/`): `ChallengeShell` owns the run loop and the single
 `onComplete()`, with `ChoiceGrid`, `NumberLine`, `DragToOrder` and `NumberInput`
 as interactions, all themed once from `challenge-kit.css`. Its question
@@ -424,6 +428,11 @@ outline, dots each corner and places the line of symmetry, and a test asserts
 that a shape claiming five sides has five corners. The older
 `src/components/ShapeQuiz.jsx` draws shapes with hardcoded inline colours and
 does not theme; it belongs to Skills Mode and was left alone.
+
+Position and Direction added five more: `PatternStrip`, `OrientationPicker`,
+`RotationDial`, `RobotGrid` and `PositionBoard`. The robot is the guidance's
+own example of programming with right angles; its position always comes from
+the unit-tested `runProgram`, so the drawing cannot drift from the answer.
 
 New topics should compose the kit rather than copy an existing challenge — see
 the `building-curriculum-topics` skill. The kit has since grown a highlighted

@@ -613,6 +613,199 @@ body.dark {
   opacity: 0.55;
 }
 
+/* ===========================================================
+   POSITION AND DIRECTION GAMES
+=========================================================== */
+
+/* --- repeating pattern strip --- */
+.pattern-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.6rem;
+}
+
+.pattern-cell {
+  width: 66px;
+  height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+}
+
+/* The shapes inside a strip are small, so override the standalone figure size. */
+.pattern-cell .shape-figure,
+.orientation-option .shape-figure,
+.pattern-cell .solid-figure {
+  width: 54px;
+  margin: 0;
+}
+
+.pattern-cell.gap {
+  border: 3px dashed var(--ck-border);
+}
+
+.pattern-question {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--ck-accent);
+}
+
+/* --- same shape, different orientations --- */
+.orientation-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.2rem;
+  margin-bottom: 1.6rem;
+}
+
+.orientation-option {
+  width: 92px;
+  height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ck-muted);
+  border: 3px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+.orientation-option.selected {
+  border-color: var(--ck-accent);
+}
+
+.orientation-option:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.orientation-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- rotation dial --- */
+.rotation-dial {
+  margin-bottom: 1.5rem;
+}
+
+.dial-face {
+  position: relative;
+  width: min(190px, 60vw);
+  aspect-ratio: 1;
+  margin: 0 auto 1rem;
+  border: 3px solid var(--ck-border);
+  border-radius: 50%;
+}
+
+/* Right-angle guides, so a quarter turn is visibly a quarter. */
+.dial-cross::before,
+.dial-cross::after {
+  content: "";
+  position: absolute;
+  background: var(--ck-border);
+  opacity: 0.6;
+}
+
+.dial-cross::before {
+  left: 50%;
+  top: 6%;
+  bottom: 6%;
+  width: 2px;
+  transform: translateX(-1px);
+}
+
+.dial-cross::after {
+  top: 50%;
+  left: 6%;
+  right: 6%;
+  height: 2px;
+  transform: translateY(-1px);
+}
+
+.dial-arrow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  /* An arrow drawn with borders, pointing up before any rotation. */
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-bottom: 62px solid var(--ck-accent);
+  transform-origin: 50% 100%;
+  margin: -62px 0 0 -14px;
+  transition: transform 0.45s ease;
+}
+
+.dial-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.dial-readout {
+  margin-top: 0.7rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* --- robot grid --- */
+.robot-grid,
+.position-board {
+  display: grid;
+  gap: 4px;
+  width: min(280px, 78vw);
+  margin: 0 auto 1.5rem;
+}
+
+.robot-cell,
+.position-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ck-muted);
+  border-radius: 8px;
+}
+
+.robot-cell.target {
+  border: 3px dashed var(--ck-accent);
+}
+
+.robot-flag {
+  font-size: 1.5rem;
+  color: var(--ck-accent);
+}
+
+.robot {
+  font-size: 1.7rem;
+  color: var(--ck-accent);
+  transition: transform 0.35s ease;
+}
+
+.position-cell.highlight {
+  border: 3px solid var(--ck-accent);
+}
+
+.position-object {
+  font-size: 1.7rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dial-arrow,
+  .robot {
+    transition: none;
+  }
+}
+
 /* --- comparison statement --- */
 .statement {
   display: flex;
