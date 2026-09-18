@@ -525,12 +525,34 @@ computed by `src/data/curriculumProgressStats.js`. Denominators count only
 curriculum count so the UI can say "12 of 12 available · 12 of 156 in the full
 curriculum" rather than letting 100% read as "year finished".
 
-The dataset holds **39 topics across 8 categories = 156 challenge slots**.
-Earlier revisions of these docs said 35 topics; that was wrong, and was caught
-2026-09-18 by reading the count off the running app.
+The **Year 2** dataset holds **39 topics across 8 categories = 156 challenge
+slots**, all built. Earlier revisions of these docs said 35 topics; that was
+wrong, and was caught 2026-09-18 by reading the count off the running app.
 
-**Year 3 does not exist yet.** Adding it is a major planned workstream (see
-[PROJECT_IDEAS.md](PROJECT_IDEAS.md)).
+**Year 3 Maths exists as of 2026-09-18 — dataset only.**
+[year3MathCurriculum.js](../src/data/year3MathCurriculum.js) holds **44 topics
+across 7 categories = 176 challenge slots**, authored from
+[docs/curriculum/year-3-maths.md](curriculum/year-3-maths.md) (DfE programme of
+study, OGL v3.0). Every topic traces to a statutory bullet.
+
+**Seven categories, not eight:** the Year 3 programme of study has no "Position
+and Direction" strand. Year 3 showing one fewer card than Year 2 is correct.
+
+**No Year 3 challenge components are built**, so every topic renders
+"🚧 Coming soon". That degrades cleanly: a fully unbuilt topic is skipped by the
+gating rules (§4.5), so nothing is wrongly locked and no category is badged
+complete. Year 3 is selectable from `/curriculum` — registered in
+[curriculumRegistry.js](../src/data/curriculumRegistry.js), which was already
+year-aware, so no other code changed.
+
+Progress is namespaced per `(childId, year, subject)`, so Year 2 and Year 3 are
+independent documents; verified in-browser that adding Year 3 leaves existing
+Year 2 progress untouched and writes no Year 3 document until something is
+completed.
+
+Dataset invariants are covered by `src/data/year3MathCurriculum.test.js` —
+notably that topic ids are unique across the whole year, since they become
+challenge directory names and a collision would be silent breakage.
 
 ---
 

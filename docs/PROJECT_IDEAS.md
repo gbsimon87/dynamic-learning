@@ -9,8 +9,9 @@
 **Last reviewed:** 2026-09-18
 
 ### Context for prioritisation
-- The app ships **UK Year 2 Maths** in Curriculum Mode, plus standalone Skills Mode
-  games. **UK Year 3** is the next planned year group and is not started.
+- The app ships **UK Year 2 Maths** complete in Curriculum Mode, plus standalone
+  Skills Mode games. **UK Year 3 Maths** is laid out — 44 topics, 176 challenge
+  slots — but no Year 3 challenges are built yet, so it all reads "Coming soon".
 - Accounts and progress are served by a live backend, so ideas here can assume
   per-child persistence rather than device-local state.
 - Ideas are scoped to serve **both Year 2 and Year 3** where possible.
@@ -34,7 +35,7 @@ Ordered **easiest → hardest** to implement.
 | 3 | **Rewards & motivation system** | Badges, streaks, and unlockable avatars awarded on challenge and topic completion — the persistent layer beneath #1's momentary celebrations. Hooks into the same `onComplete` contract. | ⚪ Idea |
 | 4 | **Automated component test setup** | Add Vitest + React Testing Library. The **unlock rules are now covered** by 37 pure `node:test` cases across `progressRules` / `curriculumLocks` / `curriculumNavigation` (2026-09-18), so the remaining gaps are all things pure tests can't reach: (a) `useProgress` hydration and save guards — the `hydrated` flag and the loaded-document ref that stop one child's progress overwriting another's, currently verified only by hand on irreplaceable data; (b) `Challenge.jsx`'s two failure paths, missing-module vs failed-fetch, and the per-attempt state reset; (c) `src/data/store/apiStore.js`, which has no `fetch`-mocked tests despite being the live data path. | ⚪ Idea |
 | 5 | **Progress schema versioning & migration path** | The stored progress shape has no version field and no migration path, so renaming a category, topic, or challenge ID silently orphans a learner's completions. Add a versioned schema plus a migration step in the store layer (`src/data/store/`) so IDs can be renamed safely. Touches irreplaceable learner data — follow the `curriculum-progress` skill's verification checklist. | ⚪ Idea |
-| 6 | **Content authoring format** | Move challenge question data out of hand-written JSX into declarative JSON/JS content files, so new challenges can be authored without writing a component each time. Makes #18 and #19 substantially cheaper. | ⚪ Idea |
+| 6 | **Content authoring format** | Move challenge question data out of hand-written JSX into declarative JSON/JS content files, so new challenges can be authored without writing a component each time. Makes #17 and #18 substantially cheaper. | ⚪ Idea |
 | 7 | **Accessibility & keyboard pass** | Keyboard alternatives for every drag-and-drop challenge, ARIA labels, focus management, and a colour-contrast audit across both themes. No drag-and-drop interaction currently has a keyboard or screen-reader alternative. | ⚪ Idea |
 | 8 | **Audio & read-aloud support** | Speech synthesis for questions and instructions, so pre-readers aren't blocked by reading ability. Also the foundation for #12. | ⚪ Idea |
 | 9 | **Parent / teacher view** | A summary screen showing time spent, topics mastered, and topics struggled with, plus a reset-progress control. Read-only. Distinct from #2, which is learner-facing. | ⚪ Idea |
@@ -44,10 +45,9 @@ Ordered **easiest → hardest** to implement.
 | 13 | **Story Maker & Story Sequencer** | Pick characters/setting/action to generate a story; arrange picture cards into the right order. Creative writing plus comprehension and sequencing. | ⚪ Idea |
 | 14 | **Offline / PWA support** | Service worker plus manifest so the app installs and works without a connection — valuable on shared or low-connectivity school devices. No manifest, service worker, or PWA plugin exists today. | ⚪ Idea |
 | 15 | **Geography curriculum expansion** | Turn the geography backlog (continents, oceans, landforms, habitats, weather, day/night) into a structured topic path rather than loose games. Source ideas in `notes_geography.md`. [Flag Finder](../src/pages/skills/geography/FlagFinder.jsx) uses the REST Countries API and could filter by continent — "Which African country?" — enabling continent-focused topics. | ⚪ Idea |
-| 16 | **UK Year 3 curriculum data model** | Author `year3MathCurriculum.js` from the UK National Curriculum programme of study, and generalise `CurriculumPage` to select a dataset by `year`/`subject` prop instead of the hard-coded Year 2 import. Prerequisite for all Year 3 content. | 🔵 Planned |
-| 17 | **Year selector / learner profile year** | Let a learner pick their year group and remember it. Drives which curriculum is shown and keeps progress namespaced per year. Depends on #16. | 🔵 Planned |
-| 18 | **English curriculum mode** | Extend Curriculum Mode beyond Maths — author a Year 2 English curriculum tree (phonics, spelling, grammar, comprehension) reusing the same category/topic/challenge machinery. Much cheaper after #6. | ⚪ Idea |
-| 19 | **Year 3 Maths challenges** | Build challenges for Year 3 topics: numbers to 1000, column addition/subtraction, 3/4/8 times tables, tenths, mm/cm/m, perimeter, right angles, time to the minute. Depends on #16. Follow the `building-curriculum-topics` skill and compose the shared kit rather than copying challenges. | 🔵 Planned |
+| 16 | **Remember a learner's year group** | `/curriculum` already has a year picker (`CurriculumSelectPage`) and it offers Year 3 as of 2026-09-18 — what's missing is memory. The choice isn't stored, so every visit starts at the picker and a child can wander into the wrong year group. Store the year on the child profile and land them straight in it, with an obvious way to switch. Progress is already namespaced per `(childId, year, subject)`, so no storage change is needed. | ⚪ Idea |
+| 17 | **English curriculum mode** | Extend Curriculum Mode beyond Maths — author a Year 2 English curriculum tree (phonics, spelling, grammar, comprehension) reusing the same category/topic/challenge machinery. Much cheaper after #6. | ⚪ Idea |
+| 18 | **Year 3 Maths challenges** | Build challenges for Year 3 topics: numbers to 1000, column addition/subtraction, 3/4/8 times tables, tenths, mm/cm/m, perimeter, right angles, time to the minute. Depends on the Year 3 dataset (shipped 2026-09-18). Follow the `building-curriculum-topics` skill and compose the shared kit rather than copying challenges. | 🔵 Planned |
 
 ---
 
@@ -59,6 +59,7 @@ Ordered **easiest → hardest** to implement.
    sequence shipped on 2026-09-18.
 2. **Unblock quality:** #4 (component tests) and #5 (progress schema versioning),
    before more content multiplies the surface area.
-3. **Unblock scale:** #6 (content authoring format) — makes #18 and #19 far cheaper.
-4. **Open Year 3:** #16 → #17 → #19.
+3. **Unblock scale:** #6 (content authoring format) — makes #17 and #18 far cheaper.
+4. **Open Year 3:** the dataset shipped 2026-09-18; next is #18 (Year 3 Maths
+   challenges), with #16 (year selector) alongside it.
 5. **Broaden and polish:** #7, #8, #9, #10 and beyond.

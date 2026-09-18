@@ -1,4 +1,4 @@
-import { toKebabCase } from "../utils/toKebabCase";
+import { toKebabCase } from "../utils/toKebabCase.js";
 
 const rawCurriculum = [
   {

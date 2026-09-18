@@ -1,4 +1,5 @@
 import { year2MathCurriculum } from "./year2MathCurriculum";
+import { year3MathCurriculum } from "./year3MathCurriculum";
 
 /**
  * Single source of truth for which curricula exist.
@@ -24,6 +25,14 @@ const CURRICULA = [
     subject: "math",
     available: true,
     load: () => year2MathCurriculum,
+  },
+  {
+    // The dataset is complete; no challenge components exist yet, so every
+    // topic renders as "Coming soon" until they are built.
+    year: 3,
+    subject: "math",
+    available: true,
+    load: () => year3MathCurriculum,
   },
 ];
 
