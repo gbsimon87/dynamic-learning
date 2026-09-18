@@ -76,13 +76,16 @@ function PlaceChangeRound({ level, question, submit, locked }) {
     return (
       <>
         <p className="challenge-prompt">
-          Start at {question.start}. {question.changes.map((change) =>
-            change > 0 ? `Add ${change}` : `Take away ${Math.abs(change)}`
-          ).join(", then ")}. Build the answer.
+          Start at {question.start}. {question.changes.map((change, index) => {
+            const verb = change > 0 ? "add" : "take away";
+            const phrase = `${verb} ${Math.abs(change)}`;
+            return index === 0 ? phrase[0].toUpperCase() + phrase.slice(1) : phrase;
+          }).join(", then ")}. Build the answer.
         </p>
         <PlaceValueBlocks
           blocks={blocks}
-          onStep={(place, delta) => setBlocks((previous) => stepBlocks(previous, place, delta))}
+          onStep={locked ? undefined : (place, delta) =>
+            setBlocks((previous) => stepBlocks(previous, place, delta))}
           label={`Base-ten blocks now showing ${blockValue(blocks)}`}
         />
         <button

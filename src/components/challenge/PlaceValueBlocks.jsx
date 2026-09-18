@@ -35,7 +35,7 @@ function PlaceValueBlocks({
   ];
 
   return (
-    <div className="pv-blocks" role="img" aria-label={label}>
+    <div className="pv-blocks" role={onStep ? "group" : "img"} aria-label={label}>
       {places.map((place) => (
         <div
           key={place.key}

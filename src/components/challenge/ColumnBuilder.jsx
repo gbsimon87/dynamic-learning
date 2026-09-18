@@ -45,7 +45,7 @@ function ColumnBuilder({
   return (
     <div
       className={`col-sum ${revealed ? "revealed" : ""}`}
-      role="img"
+      role={onColumnFocus ? "group" : "img"}
       aria-label={label || `${top} ${sign} ${bottom}`}
     >
       <div className="col-sum-grid">
@@ -106,8 +106,11 @@ function ColumnBuilder({
                 {filled ? answer[place] : "?"}
               </button>
             ) : (
-              <span key={place} className="col-sum-cell col-sum-slot filled">
-                {answer[place]}
+              <span
+                key={place}
+                className={`col-sum-cell col-sum-slot ${filled ? "filled" : ""}`}
+              >
+                {filled ? answer[place] : "?"}
               </span>
             );
           })}
