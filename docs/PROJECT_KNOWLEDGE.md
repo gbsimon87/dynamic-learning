@@ -568,8 +568,11 @@ Dataset invariants are covered by `src/data/year3MathCurriculum.test.js` —
 notably that topic ids are unique across the whole year, since they become
 challenge directory names and a collision would be silent breakage.
 
-**Year 3 challenges — 1 of 44 topics built (2026-09-18).** *Place Value in
-3-Digit Numbers* is the pattern-setter; the rest are still "Coming soon".
+**Year 3 challenges — 2 of 44 topics built (2026-09-18).** *Place Value in
+3-Digit Numbers* is the pattern-setter, followed by *Counting in Multiples of 4,
+8, 50 and 100*. The rest are still "Coming soon". Building proceeds one category
+at a time, starting with Number - Number and Place Value, because categories
+unlock in order — anything built elsewhere is unreachable from a fresh start.
 
 Five kit components were added for Year 3, all in `src/components/challenge/`:
 

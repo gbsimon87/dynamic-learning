@@ -11,6 +11,11 @@
  * while tests stay deterministic.
  */
 
+// One implementation of "is this typed answer right?", shared with Year 2 —
+// a second copy is how "043" ends up accepted in one topic and rejected in
+// another.
+export { isCorrectNumber } from "./numbersAndCounting.js";
+
 const PLACE_VALUES = { hundreds: 100, tens: 10, ones: 1 };
 
 /** The three digits of a number, by place. */
@@ -134,12 +139,4 @@ export function shuffleValues(values, rng) {
     [copy[i], copy[j]] = [copy[j], copy[i]];
   }
   return copy;
-}
-
-/** Whole numbers only, compared by value — "0146" must count as 146. */
-export function isCorrectNumber(entered, answer) {
-  if (entered === null || entered === undefined) return false;
-  const trimmed = String(entered).trim();
-  if (trimmed === "" || !/^\d+$/.test(trimmed)) return false;
-  return Number(trimmed) === Number(answer);
 }
