@@ -1347,3 +1347,456 @@ button.survey-item:hover:not(:disabled) {
     font-size: 1rem;
   }
 }
+
+/* ===========================================================
+   YEAR 3 ADDITIONS
+
+   Motion here is doing a job, not decorating: a carry that hops
+   shows where it went, blocks that pop in are countable as they
+   arrive, and a traced edge shows perimeter accumulating. Every
+   one of them is switched off under prefers-reduced-motion at
+   the bottom of this block.
+=========================================================== */
+
+/* --- Place value blocks ---------------------------------- */
+
+.pv-blocks {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+
+.pv-column {
+  flex: 1 1 8rem;
+  min-width: 7.5rem;
+  padding: 0.6rem;
+  border: 2px solid var(--ck-border);
+  border-radius: 12px;
+  background: var(--ck-muted);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.pv-column.highlight {
+  border-color: var(--ck-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ck-accent) 30%, transparent);
+}
+
+.pv-column.exchanging {
+  animation: pv-exchange 0.6s ease-in-out;
+}
+
+@keyframes pv-exchange {
+  0%, 100% { transform: scale(1); }
+  40% { transform: scale(1.06); }
+}
+
+.pv-column-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  color: var(--ck-text);
+}
+
+.pv-place-name { font-size: 0.85rem; text-transform: capitalize; }
+.pv-place-count { font-size: 1.25rem; }
+
+.pv-pieces {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 4px;
+  min-height: 3.5rem;
+}
+
+.pv-empty {
+  font-size: 0.8rem;
+  opacity: 0.6;
+  color: var(--ck-text);
+}
+
+/* A flat is 100 cells, a rod is 10 — both countable, so a learner can check
+   that a hundred really is ten tens rather than taking the shape on trust. */
+.pv-flat {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 1px;
+  width: 3.4rem;
+  height: 3.4rem;
+  animation: pv-pop 0.3s ease-out;
+}
+
+.pv-rod {
+  display: grid;
+  grid-template-rows: repeat(10, 1fr);
+  gap: 1px;
+  width: 0.65rem;
+  height: 3.4rem;
+  animation: pv-pop 0.3s ease-out;
+}
+
+.pv-cube {
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 2px;
+  background: var(--ck-accent);
+  border: 1px solid var(--ck-border);
+  animation: pv-pop 0.3s ease-out;
+}
+
+.pv-cell {
+  background: var(--ck-accent);
+  border-radius: 1px;
+}
+
+@keyframes pv-pop {
+  from { transform: scale(0.4); opacity: 0; }
+  60% { transform: scale(1.12); }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.pv-controls {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+
+/* `.problem-page button` adds margin-top: 1.5rem to every button inside a
+   challenge, which pushes dense control rows apart. Neutralise it here. */
+.pv-controls .pv-step-btn,
+.bar-chart-controls .bar-step-btn {
+  margin-top: 0;
+}
+
+.pv-step-btn,
+.bar-step-btn {
+  flex: 1;
+  padding: 0.35rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1;
+  border: 2px solid var(--ck-border);
+  border-radius: 8px;
+  background: var(--ck-panel);
+  color: var(--ck-text);
+  cursor: pointer;
+  transition: transform 0.15s, background-color 0.2s;
+}
+
+.pv-step-btn:hover:not(:disabled),
+.bar-step-btn:hover:not(:disabled) {
+  background: var(--ck-accent);
+  color: var(--ck-on-accent);
+  transform: translateY(-1px);
+}
+
+.pv-step-btn:disabled,
+.bar-step-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* --- Column addition and subtraction --------------------- */
+
+.col-sum {
+  display: flex;
+  justify-content: center;
+  margin: 1.25rem 0;
+}
+
+.col-sum-grid {
+  font-variant-numeric: tabular-nums;
+  font-size: 1.8rem;
+  color: var(--ck-text);
+}
+
+.col-sum-row {
+  display: grid;
+  grid-template-columns: 1.4rem repeat(3, 2.2rem);
+  align-items: center;
+}
+
+.col-sum-cell { text-align: center; }
+.col-sum-sign { text-align: center; font-weight: 700; }
+
+.col-sum-marks {
+  height: 1.3rem;
+  font-size: 0.9rem;
+}
+
+/* The carry hops up into the column it belongs to — the hop IS the teaching. */
+.col-carry {
+  display: inline-block;
+  color: var(--ck-accent);
+  font-weight: 700;
+  animation: col-hop 0.45s ease-out;
+}
+
+@keyframes col-hop {
+  from { transform: translateY(1.4rem) scale(0.7); opacity: 0; }
+  60% { transform: translateY(-0.15rem) scale(1.1); opacity: 1; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.col-exchange {
+  display: inline-block;
+  color: var(--ck-accent);
+  font-weight: 700;
+  animation: col-hop 0.45s ease-out;
+}
+
+/* A digit that has been exchanged away is crossed out, as it is on paper. */
+.col-sum-cell.struck {
+  position: relative;
+  opacity: 0.55;
+}
+
+.col-sum-cell.struck::after {
+  content: "";
+  position: absolute;
+  left: 15%;
+  right: 15%;
+  top: 50%;
+  border-top: 2px solid var(--ck-accent);
+  transform: rotate(-12deg);
+}
+
+.col-sum-rule {
+  height: 3px;
+  background: var(--ck-text);
+  margin: 0.25rem 0;
+  border-radius: 2px;
+}
+
+.col-sum-slot {
+  min-width: 2.2rem;
+  padding: 0.1rem 0;
+  border: 2px dashed var(--ck-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ck-text);
+  font-size: 1.6rem;
+  font-family: inherit;
+  cursor: pointer;
+  margin-top: 0;
+}
+
+.col-sum-slot.active {
+  border-style: solid;
+  border-color: var(--ck-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ck-accent) 25%, transparent);
+}
+
+.col-sum-slot.filled {
+  border-style: solid;
+  font-weight: 700;
+}
+
+/* --- Angles ---------------------------------------------- */
+
+.angle-explorer { display: block; margin: 0.5rem auto; }
+
+.angle-arm {
+  stroke: var(--ck-text);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+/* The arm sweeps rather than jumps: the turn is the idea, not the end point. */
+.angle-arm-moving { transition: all 0.5s ease-in-out; }
+
+.angle-wedge {
+  fill: color-mix(in srgb, var(--ck-accent) 35%, transparent);
+  transition: d 0.5s ease-in-out;
+}
+
+.angle-compare {
+  fill: none;
+  stroke: var(--ck-border);
+  stroke-width: 3;
+  stroke-dasharray: 5 4;
+}
+
+/* Only ever drawn at exactly 90°, so the picture answers the question. */
+.angle-right-marker {
+  fill: none;
+  stroke: var(--ck-accent);
+  stroke-width: 3;
+  animation: angle-snap 0.4s ease-out;
+}
+
+@keyframes angle-snap {
+  from { opacity: 0; transform: scale(0.6); transform-origin: center; }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.angle-vertex { fill: var(--ck-text); }
+
+/* --- Bar chart ------------------------------------------- */
+
+.bar-chart { margin: 1rem 0; }
+
+.bar-chart-plot { display: flex; height: 13rem; }
+
+.bar-chart-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-right: 0.5rem;
+  width: 2.2rem;
+  font-size: 0.8rem;
+  color: var(--ck-text);
+}
+
+.bar-chart-area {
+  position: relative;
+  flex: 1;
+  border-left: 3px solid var(--ck-text);
+  border-bottom: 3px solid var(--ck-text);
+}
+
+.bar-chart-grid {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.bar-chart-gridline { border-top: 1px dashed var(--ck-border); }
+
+.bar-chart-bars {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.6rem;
+  padding: 0 0.6rem;
+}
+
+.bar-chart-column { flex: 1; height: 100%; display: flex; align-items: flex-end; }
+
+/* Bars grow from the axis with a slight overshoot — it reads as the bar being
+   filled rather than appearing already drawn. */
+.bar-chart-bar {
+  width: 100%;
+  background: var(--ck-accent);
+  border-radius: 6px 6px 0 0;
+  transition: height 0.45s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.bar-chart-labels { display: flex; }
+.bar-chart-axis-spacer { width: 2.2rem; }
+
+.bar-chart-label-row {
+  flex: 1;
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.4rem 0.6rem 0;
+}
+
+.bar-chart-label {
+  flex: 1;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--ck-text);
+}
+
+.bar-chart-controls { display: flex; gap: 0.25rem; margin-top: 0.3rem; }
+
+.bar-chart-unit {
+  text-align: center;
+  font-size: 0.85rem;
+  opacity: 0.8;
+  color: var(--ck-text);
+}
+
+/* --- Perimeter ------------------------------------------- */
+
+.perimeter-shape { display: block; margin: 0.5rem auto; max-width: 320px; }
+
+.perimeter-fill {
+  fill: color-mix(in srgb, var(--ck-accent) 14%, transparent);
+  stroke: none;
+}
+
+.perimeter-edge {
+  stroke: var(--ck-border);
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke 0.3s, stroke-width 0.3s;
+}
+
+/* Sides light up one at a time so the total is seen to accumulate. */
+.perimeter-edge.traced {
+  stroke: var(--ck-accent);
+  stroke-width: 7;
+}
+
+.perimeter-length {
+  fill: var(--ck-text);
+  font-size: 15px;
+  font-weight: 600;
+  paint-order: stroke;
+  stroke: var(--ck-panel);
+  stroke-width: 4px;
+  transition: fill 0.3s;
+}
+
+.perimeter-length.traced { fill: var(--ck-accent); font-weight: 800; }
+
+.perimeter-running {
+  fill: var(--ck-text);
+  font-size: 26px;
+  font-weight: 800;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pv-flat,
+  .pv-rod,
+  .pv-cube,
+  .pv-column.exchanging,
+  .col-carry,
+  .col-exchange,
+  .angle-right-marker {
+    animation: none;
+  }
+
+  .angle-arm-moving,
+  .angle-wedge,
+  .bar-chart-bar,
+  .perimeter-edge,
+  .perimeter-length {
+    transition: none;
+  }
+}
+
+/* --- Partition sentence (place value) -------------------- */
+
+.partition-sentence {
+  text-align: center;
+  font-size: 1.6rem;
+  color: var(--ck-text);
+  font-variant-numeric: tabular-nums;
+  margin: 1.25rem 0;
+}
+
+.partition-gap {
+  display: inline-block;
+  min-width: 3rem;
+  padding: 0 0.4rem;
+  border-bottom: 3px solid var(--ck-accent);
+  color: var(--ck-accent);
+  font-weight: 800;
+}
+
+.challenge-running {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--ck-text);
+}

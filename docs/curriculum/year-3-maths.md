@@ -114,3 +114,101 @@ Notes and guidance (non-statutory)
 Pupils understand and use simple scales (for example, 2, 5, 10 units per cm) in pictograms and bar charts with increasing accuracy.
 
 They continue to interpret data presented in many contexts.
+---
+
+# Mapping to our curriculum dataset
+
+Our 44 Year 3 Maths topics (`src/data/year3MathCurriculum.js`) against the
+statutory bullets above. Read the row for a topic **before** designing its four
+challenges: it sets the boundary of what the topic may ask.
+
+**Year 3 boundaries that are easy to overshoot:**
+
+- Numbers go to **1,000** — not beyond, and not into decimals.
+- Money is recorded as **£ and p separately**. Decimal money is Year 4.
+- Times tables are **3, 4 and 8** (plus the 2, 5, 10 already known). Not 6, 7 or 9.
+- Fractions have **small denominators**, and adding/subtracting stays **within
+  one whole** and **same denominator** only.
+- Tenths only — no hundredths.
+- Time is to **the nearest minute**; 24-hour clocks are read, with Roman
+  numerals I–XII on the dial.
+- Column methods are for **up to 3 digits**.
+
+## Number — number and place value
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| Counting in Multiples of 4, 8, 50 and 100 | count from 0 in multiples of 4, 8, 50 and 100 |
+| Finding 10 or 100 More or Less | find 10 or 100 more or less than a given number |
+| Place Value in 3-Digit Numbers | recognise the place value of each digit in a 3-digit number (100s, 10s, 1s) |
+| Comparing and Ordering Numbers to 1000 | compare and order numbers up to 1,000 |
+| Representing and Estimating Numbers | identify, represent and estimate numbers using different representations |
+| Reading and Writing Numbers to 1000 | read and write numbers up to 1,000 in numerals and in words |
+| Number and Place Value Problems | solve number problems and practical problems involving these ideas |
+
+## Number — addition and subtraction
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| Adding and Subtracting Ones, Tens and Hundreds | add and subtract numbers mentally, including a three-digit number and 1s, 10s, 100s |
+| Column Addition | add numbers with up to 3 digits, using formal written columnar addition |
+| Column Subtraction | subtract numbers with up to 3 digits, using formal written columnar subtraction |
+| Estimating and Checking Answers | estimate the answer to a calculation and use inverse operations to check answers |
+| Missing Number Problems | solve problems, including missing number problems, using number facts and place value |
+| Addition and Subtraction Problems | solve problems using number facts, place value, and more complex addition and subtraction |
+
+## Number — multiplication and division
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| 3 and 4 Times Tables | recall and use multiplication and division facts for the 3 and 4 multiplication tables |
+| The 8 Times Table | recall and use multiplication and division facts for the 8 multiplication table |
+| Multiplying and Dividing Two-Digit Numbers | write and calculate mathematical statements for multiplication and division, including two-digit numbers times one-digit numbers |
+| Scaling and Correspondence Problems | solve problems involving positive integer scaling problems and correspondence problems in which n objects are connected to m objects |
+| Multiplication and Division Problems | solve problems, including missing number problems, involving multiplication and division |
+
+## Number — fractions
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| Tenths | count up and down in tenths; recognise that tenths arise from dividing an object into 10 equal parts and in dividing one-digit numbers or quantities by 10 |
+| Fractions of a Set of Objects | recognise, find and write fractions of a discrete set of objects: unit fractions and non-unit fractions with small denominators |
+| Fractions as Numbers | recognise and use fractions as numbers: unit fractions and non-unit fractions with small denominators |
+| Equivalent Fractions | recognise and show, using diagrams, equivalent fractions with small denominators |
+| Adding and Subtracting Fractions | add and subtract fractions with the same denominator within one whole |
+| Comparing and Ordering Fractions | compare and order unit fractions, and fractions with the same denominators |
+| Fraction Problems | solve problems that involve all of the above |
+
+## Measurement
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| Measuring Length in mm, cm and m | measure, compare, add and subtract lengths (m/cm/mm) |
+| Measuring Mass | measure, compare, add and subtract mass (kg/g) |
+| Measuring Volume and Capacity | measure, compare, add and subtract volume/capacity (l/ml) |
+| Adding and Subtracting Measurements | measure, compare, add and subtract lengths, mass and volume, including mixed units |
+| Perimeter of 2-D Shapes | measure the perimeter of simple 2-D shapes |
+| Money and Giving Change | add and subtract amounts of money to give change, using both £ and p in practical contexts |
+| Telling the Time to the Minute | estimate and read time with increasing accuracy to the nearest minute |
+| Roman Numerals and 24-Hour Clocks | tell and write the time from an analogue clock, including using Roman numerals from I to XII, and 12-hour and 24-hour clocks |
+| Units of Time and Durations | know the number of seconds in a minute and the number of days in each month, year and leap year; compare durations of events |
+
+## Geometry — properties of shapes
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| Drawing 2-D Shapes | draw 2-D shapes |
+| Making and Recognising 3-D Shapes | make 3-D shapes using modelling materials; recognise 3-D shapes in different orientations and describe them |
+| Angles as Turns | recognise angles as a property of shape or a description of a turn |
+| Right Angles | identify right angles; recognise that 2 right angles make a half-turn, 3 make three-quarters of a turn and 4 a complete turn |
+| Comparing Angles to a Right Angle | identify whether angles are greater than or less than a right angle |
+| Horizontal, Vertical, Parallel and Perpendicular Lines | identify horizontal and vertical lines and pairs of perpendicular and parallel lines |
+
+## Statistics
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| Bar Charts | interpret and present data using bar charts |
+| Scaled Pictograms | interpret and present data using pictograms; understand and use simple scales (2, 5, 10 units per cm) |
+| Tables | interpret and present data using tables |
+| One-Step and Two-Step Questions | solve one-step and two-step questions using information presented in scaled bar charts, pictograms and tables |

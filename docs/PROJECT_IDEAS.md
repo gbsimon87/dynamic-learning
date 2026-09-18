@@ -19,6 +19,7 @@
 ### Status key
 | Status | Meaning |
 |---|---|
+| 🟡 Partial | Started; some of it exists |
 | 🔵 Planned | Agreed as the next work, not started |
 | ⚪ Idea | Captured, not yet committed to |
 
@@ -47,7 +48,7 @@ Ordered **easiest → hardest** to implement.
 | 15 | **Geography curriculum expansion** | Turn the geography backlog (continents, oceans, landforms, habitats, weather, day/night) into a structured topic path rather than loose games. Source ideas in `notes_geography.md`. [Flag Finder](../src/pages/skills/geography/FlagFinder.jsx) uses the REST Countries API and could filter by continent — "Which African country?" — enabling continent-focused topics. | ⚪ Idea |
 | 16 | **Remember a learner's year group** | `/curriculum` already has a year picker (`CurriculumSelectPage`) and it offers Year 3 as of 2026-09-18 — what's missing is memory. The choice isn't stored, so every visit starts at the picker and a child can wander into the wrong year group. Store the year on the child profile and land them straight in it, with an obvious way to switch. Progress is already namespaced per `(childId, year, subject)`, so no storage change is needed. | ⚪ Idea |
 | 17 | **English curriculum mode** | Extend Curriculum Mode beyond Maths — author a Year 2 English curriculum tree (phonics, spelling, grammar, comprehension) reusing the same category/topic/challenge machinery. Much cheaper after #6. | ⚪ Idea |
-| 18 | **Year 3 Maths challenges** | Build challenges for Year 3 topics: numbers to 1000, column addition/subtraction, 3/4/8 times tables, tenths, mm/cm/m, perimeter, right angles, time to the minute. Depends on the Year 3 dataset (shipped 2026-09-18). Follow the `building-curriculum-topics` skill and compose the shared kit rather than copying challenges. | 🔵 Planned |
+| 18 | **Year 3 Maths challenges** | **1 of 44 topics built** — *Place Value in 3-Digit Numbers* landed 2026-09-18 as the pattern-setter, along with five new kit components (`PlaceValueBlocks`, `ColumnBuilder`, `AngleExplorer`, `BarChart`, `PerimeterShape`). The remaining 43 topics follow the same shape: a pure generator in `src/data/challenges/` with `node:test` coverage, then four challenges that escalate — stated rule, inferred rule, whole-structure work, applied. Read the topic's row in `docs/curriculum/year-3-maths.md` first; it sets the boundary. Three kit gaps remain and each blocks one topic: horizontal/vertical/parallel/perpendicular lines, Roman-numeral and 24-hour clock dials, and correspondence problems. | 🟡 Partial |
 
 ---
 

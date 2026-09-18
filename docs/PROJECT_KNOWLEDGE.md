@@ -554,6 +554,30 @@ Dataset invariants are covered by `src/data/year3MathCurriculum.test.js` —
 notably that topic ids are unique across the whole year, since they become
 challenge directory names and a collision would be silent breakage.
 
+**Year 3 challenges — 1 of 44 topics built (2026-09-18).** *Place Value in
+3-Digit Numbers* is the pattern-setter; the rest are still "Coming soon".
+
+Five kit components were added for Year 3, all in `src/components/challenge/`:
+
+| Component | Serves | Why it isn't an existing component |
+|---|---|---|
+| `PlaceValueBlocks` | 3-digit place value, representing & estimating | Base-ten flats/rods/cubes. Each piece is drawn from its own cells so a learner can count a rod and confirm it is ten. |
+| `ColumnBuilder` | column addition & subtraction, estimating & checking | Carries and exchanges are rendered as their own marks. A component that showed only the finished sum would hide the step being taught. |
+| `AngleExplorer` | angles as turns, right angles, comparing angles | `RotationDial` turns only in whole right angles by design, so "greater or less than a right angle?" has nothing in between to show. |
+| `BarChart` | bar charts, one/two-step questions | `BlockDiagram` deliberately refuses smooth bars — Year 2 counts squares. Year 3 must READ a value off a scale, which is the opposite requirement. |
+| `PerimeterShape` | perimeter, adding & subtracting measurements | `ShapeFigure` has no side labels to sum; `traced` lights sides one at a time so the total is seen to accumulate. |
+
+Their animations are functional, not decorative — a carry hops into its column,
+ten ones pop in as countable pieces, an angle sweeps rather than jumps, bars
+grow from the axis, a perimeter lights up edge by edge. All are disabled under
+`prefers-reduced-motion`.
+
+⚠️ **A picture must not print its own answer.** The first cut of Challenge 1
+asked "how many hundreds?" while `PlaceValueBlocks` displayed "Hundreds 4" above
+the blocks, so the task could be completed without counting. `showCounts={false}`
+fixes it. Only a real render showed this — every unit test and the static checks
+passed, because the challenge agreed with itself.
+
 ---
 
 ## 6. Known Issues / Debt
