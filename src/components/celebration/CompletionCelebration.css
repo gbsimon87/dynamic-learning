@@ -1,0 +1,284 @@
+.completion-celebration {
+  --celebration-ink: var(--light-text);
+  --celebration-surface: var(--light-panel);
+  --celebration-accent: var(--light-accent);
+  --celebration-on-accent: var(--on-light-accent);
+  --celebration-wash: #fff2d7;
+  --celebration-border: #e9c77e;
+  --celebration-muted: #645057;
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: min(720px, calc(100dvh - var(--navbar-height)));
+  padding: 2rem 1rem;
+  overflow: hidden;
+  isolation: isolate;
+  color: var(--celebration-ink);
+  background: radial-gradient(circle at 50% 25%, var(--celebration-wash), transparent 60%);
+}
+
+body.dark .completion-celebration {
+  --celebration-ink: var(--dark-text);
+  --celebration-surface: var(--dark-panel);
+  --celebration-accent: var(--dark-accent);
+  --celebration-on-accent: var(--on-dark-accent);
+  --celebration-wash: #423820;
+  --celebration-border: #aa925f;
+  --celebration-muted: #d5c6c8;
+}
+
+.completion-celebration-year {
+  min-height: calc(100dvh - var(--navbar-height));
+  --celebration-wash: #ffe4a3;
+}
+
+body.dark .completion-celebration-year {
+  --celebration-wash: #584525;
+}
+
+.completion-celebration-card {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 690px);
+  padding: clamp(1.5rem, 5vw, 3.5rem);
+  border: 3px solid var(--celebration-border);
+  border-radius: 32px;
+  background: var(--celebration-surface);
+  box-shadow: 0 18px 50px var(--panel-shadow);
+  text-align: center;
+  animation: completion-card-in 420ms ease-out both;
+}
+
+.completion-celebration-challenge .completion-celebration-card,
+.completion-celebration-practice .completion-celebration-card {
+  max-width: 520px;
+  padding: 1.5rem;
+  border-color: var(--celebration-accent);
+}
+
+.completion-celebration-challenge .completion-celebration-medal,
+.completion-celebration-practice .completion-celebration-medal {
+  width: 105px;
+  margin: 0.8rem auto;
+  border-width: 6px;
+  font-size: 3rem;
+}
+
+.completion-celebration-challenge h1,
+.completion-celebration-practice h1 {
+  font-size: clamp(2rem, 5vw, 2.5rem);
+}
+
+.completion-celebration-year .completion-celebration-card {
+  width: min(100%, 760px);
+  padding: clamp(1.5rem, 3vw, 2rem);
+  border-width: 5px;
+}
+
+.completion-celebration-year .completion-celebration-medal {
+  width: 132px;
+  margin: 0.7rem auto;
+}
+
+.completion-celebration-year .completion-celebration-stats {
+  margin-top: 1rem;
+  padding: 0.7rem;
+}
+
+.completion-celebration-year .completion-celebration-actions {
+  margin-top: 1rem;
+}
+
+.completion-celebration-eyebrow {
+  color: var(--celebration-muted);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.completion-celebration-medal {
+  display: grid;
+  place-items: center;
+  width: clamp(100px, 20vw, 150px);
+  aspect-ratio: 1;
+  margin: 1.2rem auto;
+  border: 8px solid var(--celebration-border);
+  border-radius: 50%;
+  background: var(--celebration-wash);
+  box-shadow: 0 8px 0 var(--celebration-border);
+  font-size: clamp(3rem, 9vw, 5rem);
+  line-height: 1;
+  animation: completion-medal-in 580ms 120ms cubic-bezier(.2, 1.5, .5, 1) both;
+}
+
+.completion-celebration h1 {
+  margin: 0.5rem 0 0;
+  color: var(--celebration-ink);
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  line-height: 1.15;
+}
+
+.completion-celebration-message {
+  max-width: 34rem;
+  margin: 0.8rem auto 0;
+  font-size: clamp(1.05rem, 2.5vw, 1.3rem);
+  line-height: 1.5;
+}
+
+.completion-celebration-earned {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
+}
+
+.completion-celebration-earned span {
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  background: var(--celebration-wash);
+  color: var(--celebration-ink);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.completion-celebration-stats {
+  display: flex;
+  justify-content: center;
+  gap: clamp(0.8rem, 4vw, 2.5rem);
+  margin: 1.6rem auto 0;
+  padding: 1rem;
+  border-top: 2px solid var(--celebration-border);
+  border-bottom: 2px solid var(--celebration-border);
+}
+
+.completion-celebration-stat {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 4rem;
+}
+
+.completion-celebration-stat strong {
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  line-height: 1.1;
+}
+
+.completion-celebration-stat span {
+  color: var(--celebration-muted);
+  font-size: 0.85rem;
+}
+
+.completion-celebration-actions {
+  display: grid;
+  justify-items: center;
+  gap: 0.7rem;
+  margin-top: 1.8rem;
+}
+
+.completion-celebration-primary,
+.completion-celebration-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 54px;
+  min-width: min(100%, 230px);
+  padding: 0.8rem 1.4rem;
+  border-radius: 14px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 160ms ease, filter 160ms ease;
+}
+
+.completion-celebration-primary {
+  gap: 0.7rem;
+  background: var(--celebration-accent);
+  color: var(--celebration-on-accent);
+}
+
+.completion-celebration-secondary {
+  color: var(--celebration-ink);
+  text-decoration: underline;
+}
+
+.completion-celebration-primary:hover,
+.completion-celebration-secondary:hover {
+  transform: translateY(-2px);
+}
+
+.completion-celebration-primary:focus-visible,
+.completion-celebration-secondary:focus-visible,
+.completion-celebration-skip:focus-visible {
+  outline: 3px solid var(--celebration-ink);
+  outline-offset: 3px;
+}
+
+.completion-celebration-skip {
+  min-height: 44px;
+  margin-top: 0.7rem;
+  padding: 0.4rem 0.9rem;
+  border: 0;
+  background: transparent;
+  color: var(--celebration-muted);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.completion-celebration-confetti {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.completion-celebration-confetti i {
+  position: absolute;
+  top: -1rem;
+  left: calc(4% + var(--piece-index) * 4%);
+  width: 10px;
+  height: 17px;
+  border-radius: 2px;
+  background: #ef626c;
+  animation: completion-confetti-fall 3s ease-in calc(var(--piece-index) * 35ms) both;
+}
+
+.completion-celebration-confetti i:nth-child(3n) { background: #e0a833; }
+.completion-celebration-confetti i:nth-child(3n + 1) { background: #52a99d; }
+.completion-celebration-confetti i:nth-child(even) { width: 8px; height: 12px; }
+.completion-celebration-challenge .completion-celebration-confetti i:nth-child(n+9) { display: none; }
+.completion-celebration-topic .completion-celebration-confetti i:nth-child(n+17) { display: none; }
+
+@keyframes completion-card-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes completion-medal-in {
+  from { opacity: 0; transform: scale(0.65) rotate(-12deg); }
+  to { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@keyframes completion-confetti-fall {
+  0% { opacity: 0; transform: translateY(-1rem) rotate(0); }
+  8% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(90vh) rotate(560deg); }
+}
+
+@media (max-width: 500px) {
+  .completion-celebration { padding: 1rem 0.75rem; }
+  .completion-celebration-card { border-radius: 22px; }
+  .completion-celebration-primary,
+  .completion-celebration-secondary { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .completion-celebration-card,
+  .completion-celebration-medal,
+  .completion-celebration-confetti i { animation: none; }
+  .completion-celebration-confetti { display: none; }
+  .completion-celebration-skip { display: none; }
+  .completion-celebration-primary,
+  .completion-celebration-secondary { transition: none; }
+}

@@ -167,3 +167,18 @@ letter, capital letter
 word, singular, plural
 sentence
 punctuation, full stop, question mark, exclamation mark
+
+---
+
+Spelling – work for year 1
+Revision of reception work
+Statutory requirements
+The boundary between revision of work covered in Reception and the introduction of
+new work may vary according to the programme used, but basic revision should include:
+ all letters of the alphabet and the sounds which they most commonly represent
+ consonant digraphs which have been taught and the sounds which they represent
+ vowel digraphs which have been taught and the sounds which they represent
+ the process of segmenting spoken words into sounds before choosing graphemes to
+represent the sounds
+ words with adjacent consonants
+ guidance and rules which have been taught

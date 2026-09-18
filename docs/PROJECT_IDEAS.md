@@ -31,9 +31,8 @@ Ordered **easiest → hardest** to implement.
 
 | # | Idea | Description | Status |
 |---|---|---|---|
-| 1 | **Celebration moments (challenge, section, year)** | Every completion ends in the same quiet screen, so nothing marks the difference between finishing one challenge and finishing a whole year. Add three escalating celebrations: a light one per **challenge** (confetti burst / stamp / sound), a bigger one per **section** — topic and category — and a full-screen Duolingo-style moment for a **year**, with a summary of what was completed. Hooks into the `onComplete` contract so it can be one shared component rather than per-challenge code. Must honour `prefers-reduced-motion`, stay skippable, and never block the **Next challenge** action already on the completion panel. | ⚪ Idea |
 | 2 | **Progress visibility (per year, per topic)** | A learner has no way to see how far through a year or a topic they are — the state sits in the progress store and is never surfaced. Start on `/profiles`, which already loads every child: percent complete per year on the profile card, then a per-category and per-topic breakdown when a profile is opened. Read through `useProgress` rather than touching storage directly. Grows into a fuller "my journey" view — stars/streaks per topic, percent complete per category, and a "what to play next" hint reusing `findNextChallenge` from `src/data/curriculumNavigation.js`. | ⚪ Idea |
-| 3 | **Rewards & motivation system** | Badges, streaks, and unlockable avatars awarded on challenge and topic completion — the persistent layer beneath #1's momentary celebrations. Hooks into the same `onComplete` contract. | ⚪ Idea |
+| 3 | **Rewards & motivation system** | Badges, streaks, and unlockable avatars awarded on challenge and topic completion — the persistent layer beneath the shipped momentary celebrations. Hooks into the same `onComplete` contract. | ⚪ Idea |
 | 4 | **Automated component test setup** | Add Vitest + React Testing Library. The **unlock rules are now covered** by 37 pure `node:test` cases across `progressRules` / `curriculumLocks` / `curriculumNavigation` (2026-09-18), so the remaining gaps are all things pure tests can't reach: (a) `useProgress` hydration and save guards — the `hydrated` flag and the loaded-document ref that stop one child's progress overwriting another's, currently verified only by hand on irreplaceable data; (b) `Challenge.jsx`'s two failure paths, missing-module vs failed-fetch, and the per-attempt state reset; (c) `src/data/store/apiStore.js`, which has no `fetch`-mocked tests despite being the live data path. | ⚪ Idea |
 | 5 | **Progress schema versioning & migration path** | The stored progress shape has no version field and no migration path, so renaming a category, topic, or challenge ID silently orphans a learner's completions. Add a versioned schema plus a migration step in the store layer (`src/data/store/`) so IDs can be renamed safely. Touches irreplaceable learner data — follow the `curriculum-progress` skill's verification checklist. | ⚪ Idea |
 | 6 | **Content authoring format** | Move challenge question data out of hand-written JSX into declarative JSON/JS content files, so new challenges can be authored without writing a component each time. Makes #17 and #18 substantially cheaper. | ⚪ Idea |
@@ -54,10 +53,9 @@ Ordered **easiest → hardest** to implement.
 
 ## 🎯 Suggested Order
 
-1. **Close the motivation loop:** #1 (celebrations) → #2 (progress visibility) →
-   #3 (rewards). All three build on the `onComplete` contract and the progress
-   store, and are independent of Year 3. The next-challenge flow that opened this
-   sequence shipped on 2026-09-18.
+1. **Close the motivation loop:** #2 (progress visibility) → #3 (rewards).
+   Celebrations and the next-challenge flow shipped on 2026-09-18; these next
+   steps build on the same `onComplete` contract and progress store.
 2. **Unblock quality:** #4 (component tests) and #5 (progress schema versioning),
    before more content multiplies the surface area.
 3. **Unblock scale:** #6 (content authoring format) — makes #17 and #18 far cheaper.

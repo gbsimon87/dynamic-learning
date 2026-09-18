@@ -171,7 +171,7 @@ IDs are derived from titles via `toKebabCase()`. These IDs are used in URLs *and
 as `localStorage` keys, so **renaming a category or topic title silently breaks
 saved progress**. Treat titles as stable identifiers.
 
-Year 2 Maths currently defines **8 categories / 35 topics / 140 challenge slots**.
+Year 2 Maths currently defines **8 categories / 39 topics / 156 challenge slots**.
 
 ### 4.3 Challenge loading (the convention that ties it together)
 [Challenge.jsx](../src/pages/curriculum/Challenge.jsx) resolves a challenge
@@ -232,6 +232,7 @@ that remains a known gap (§6).
 | [progressRules.js](../src/data/progressRules.js) | The predicates — complete / unlocked / passable — plus `completeChallenge` as a reducer. `useProgress` is a thin binding layer over these. |
 | [curriculumLocks.js](../src/data/curriculumLocks.js) | `buildLockState({curriculum, progress, isBuilt, bypassLocks})` → every category/topic/challenge flagged `locked`/`complete`/`missing` in one pass. |
 | [curriculumNavigation.js](../src/data/curriculumNavigation.js) | `findNextChallenge(lockState, position)` — the first playable challenge after the one just finished. |
+| [completionMilestones.js](../src/data/completionMilestones.js) | Read-only milestone detection for a newly completed challenge; reuses the progress reducer and completion rules without writing to storage. |
 
 They take availability as an `isBuilt` callback rather than importing
 `challengeAvailability`, which uses `import.meta.glob` and so cannot load under
@@ -265,11 +266,24 @@ learner where they are). Conflating them told children a challenge they can
 actually play does not exist, and ejected them from it.
 
 Writes happen in [ProblemView.jsx](../src/pages/curriculum/ProblemView.jsx) via
-`completeChallenge()` on `onComplete`. It then shows a **completion panel** whose
-primary action is the next playable challenge, resolved through
-`findNextChallenge`; "Back to topics" is the secondary action, and the only one
-offered when nothing playable remains. This replaced an automatic ~1s redirect
-back to `/curriculum`.
+`completeChallenge()` on `onComplete`. It then shows the shared
+[CompletionCelebration](../src/components/celebration/CompletionCelebration.jsx).
+The moment grows from **challenge → topic → section (category) → subject → year**
+when that completion earns several milestones at once. The screen includes a
+summary at larger milestones, and its primary action stays the next playable
+challenge from `findNextChallenge`; "Back to topics" is the secondary action.
+If there is no next playable challenge, the primary action opens the topics.
+Replaying a finished challenge gets a practice message, not another award.
+
+Milestone detection requires **every planned challenge to be built and done**
+before calling a topic, section, subject, or year finished. This is deliberately
+stricter than the unlock rules, which skip unbuilt challenges to keep the path
+playable. A year award currently applies when its sole registered subject is
+finished; if a second subject is registered for a year, the subject award still
+works and the year award waits for a cross-subject progress read. Confetti is
+brief and skippable; `prefers-reduced-motion` removes its animation. The heading
+receives focus for assistive technology. No completion data or storage keys
+changed.
 
 ⚠️ **The hook is inert with no active child** — empty progress, and it never writes.
 It also refuses to save unless the in-memory progress came from the document currently
