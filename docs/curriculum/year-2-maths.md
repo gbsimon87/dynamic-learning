@@ -327,8 +327,8 @@ nearest topic's four challenges, or add a topic (see the
 |---|---|---|
 | read and write numbers to at least 100 **in words** | Numbers and Counting | ✅ covered 2026-09-18 (challenges 2 and 4) |
 | estimate numbers using different representations | Numbers and Counting | ✅ covered 2026-09-18 (challenge 3) |
-| adding 3 one-digit numbers | Using Two-Digit Numbers | ⚪ open |
-| show that addition is commutative and subtraction is not | Solving Number Problems | ⚪ open |
+| adding 3 one-digit numbers | Using Two-Digit Numbers | ✅ covered 2026-09-18 (challenge 3, as the make-ten strategy) |
+| show that addition is commutative and subtraction is not | Solving Number Problems | ✅ covered 2026-09-18 (challenge 2) |
 | recognising odd and even numbers | 2, 5 and 10 Multiplication Tables | ⚪ open |
 | partition numbers in different ways, e.g. 23 = 20 + 3 and 23 = 10 + 13 (non-statutory guidance, but it underpins subtraction) | Place Value | ⚪ open — Place Value challenge 4 does 73 → 70 + 3 but not 73 → 60 + 13 |
 | count in fractions up to 10 on a number line (non-statutory guidance) | Fractions of Numbers | ⚪ open |

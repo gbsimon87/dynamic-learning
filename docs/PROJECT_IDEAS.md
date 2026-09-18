@@ -9,9 +9,9 @@
 
 ### Context for prioritisation
 - The app currently contains **only UK Year 2** education content.
-- Curriculum Mode has challenges for **6 of 39 Year 2 Maths topics** — the whole
-  of "Number and Place Value". Filling the remaining 33 topics is the single
-  largest body of outstanding work.
+- Curriculum Mode has challenges for **10 of 39 Year 2 Maths topics** — all of
+  "Number and Place Value" and all of "Addition and Subtraction". Filling the
+  remaining 29 topics is the single largest body of outstanding work.
 - **UK Year 3** is the next planned year group and is not started.
 - Ideas below are scoped so they can serve **both Year 2 and Year 3** where possible.
 
@@ -62,7 +62,7 @@ Both tables below are ordered **easiest → hardest** to implement.
 | 17 | **Geography curriculum expansion** | Turn the existing geography ideas backlog (continents, oceans, landforms, habitats, weather, day/night) into a structured topic path rather than loose games. Source ideas in `notes_geography.md`. The existing [Flag Finder](../src/pages/skills/geography/FlagFinder.jsx) uses the REST Countries API and could be easily expanded to filter by continent — e.g. "Which African country?" or "Which European flag?" — enabling continent-focused topics within the geography curriculum. | ⚪ Idea |
 | 18 | **Story Maker & Story Sequencer** | Pick characters/setting/action to generate a story; arrange picture cards into the right order. Creative writing plus comprehension and sequencing. | ⚪ Idea |
 | 19 | **English curriculum mode** | Extend Curriculum Mode beyond Maths — author a Year 2 English curriculum tree (phonics, spelling, grammar, comprehension) reusing the same category/topic/challenge machinery. | ⚪ Idea |
-| 20 | **Complete Year 2 Maths curriculum** | Build challenges 1–4 for the remaining 33 Year 2 Maths topics (place value, addition/subtraction, multiplication/division, fractions, measurement, geometry, statistics). Biggest single body of work; unlocks the whole curriculum path. The first category was completed 2026-09-18 on the shared challenge kit (`src/components/challenge/`); follow the `building-curriculum-topics` skill, composing the kit rather than copying a challenge and extending it when a topic needs an interaction it lacks. | 🟡 Partial (6/39 topics — category 1 complete) |
+| 20 | **Complete Year 2 Maths curriculum** | Build challenges 1–4 for the remaining 29 Year 2 Maths topics (place value, addition/subtraction, multiplication/division, fractions, measurement, geometry, statistics). Biggest single body of work; unlocks the whole curriculum path. The first two categories were completed 2026-09-18 on the shared challenge kit (`src/components/challenge/`); follow the `building-curriculum-topics` skill, composing the kit rather than copying a challenge and extending it when a topic needs an interaction it lacks. | 🟡 Partial (10/39 topics — categories 1 and 2 complete) |
 | 21 | **Offline / PWA support** | Service worker plus manifest so the app installs and works without a connection — valuable on shared or low-connectivity school devices. Not implemented in any form today — no manifest, service worker, or PWA plugin exists in the codebase. | ⚪ Idea |
 | 22 | **UK Year 3 curriculum data model** | Author `year3MathCurriculum.js` from the UK National Curriculum programme of study, and generalise `CurriculumPage` to select a dataset by `year`/`subject` prop instead of the hard-coded Year 2 import. Prerequisite for all Year 3 content. | 🔵 Planned |
 | 23 | **Year 3 Maths challenges** | Build challenges for Year 3 topics: numbers to 1000, column addition/subtraction, 3/4/8 times tables, tenths, mm/cm/m, perimeter, right angles, time to the minute. Depends on #22. | 🔵 Planned |

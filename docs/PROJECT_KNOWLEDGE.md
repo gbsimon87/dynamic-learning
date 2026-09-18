@@ -360,8 +360,8 @@ and a list of requirements no topic covers yet. Read the relevant row before
 authoring questions for a topic.
 
 ### Curriculum Mode — built challenges
-Only **Year 2 Mathematics** exists, and six topics have challenges built — the
-whole of the first category:
+Only **Year 2 Mathematics** exists, and ten topics have challenges built — the
+whole of the first two categories:
 
 | Category | Topic | Challenges built |
 |---|---|---|
@@ -371,9 +371,13 @@ whole of the first category:
 | Number – Number and Place Value | Counting More and Less | 1, 2, 3, 4 ✅ |
 | Number – Number and Place Value | Place Value | 1, 2, 3, 4 ✅ |
 | Number – Number and Place Value | Less Than, Greater Than and Equal To | 1, 2, 3, 4 ✅ |
-| *(all other 33 topics)* | — | 0 — falls back to "not yet available" |
+| Number – Addition and Subtraction | Doubling and Halving using Addition and Subtraction | 1, 2, 3, 4 ✅ |
+| Number – Addition and Subtraction | Solving Number Problems | 1, 2, 3, 4 ✅ |
+| Number – Addition and Subtraction | Using Two-Digit Numbers | 1, 2, 3, 4 ✅ |
+| Number – Addition and Subtraction | Solving Missing Number Problems | 1, 2, 3, 4 ✅ |
+| *(all other 29 topics)* | — | 0 — falls back to "not yet available" |
 
-All six are built on the **shared challenge kit**
+All ten are built on the **shared challenge kit**
 (`src/components/challenge/`): `ChallengeShell` owns the run loop and the single
 `onComplete()`, with `ChoiceGrid`, `NumberLine`, `DragToOrder` and `NumberInput`
 as interactions, all themed once from `challenge-kit.css`. Its question
