@@ -531,6 +531,45 @@ Locked topics still list their challenges (each rendered locked and
 unclickable). Hiding them left a locked topic as a bare padlock, with no sign
 of what it held or how much of it there was.
 
+### Progress visibility — where each figure comes from (2026-09-19)
+
+Four screens show progress, and they all read the **same** two modules, which is
+deliberate: when they each derived their own, two screens could describe the same
+child differently.
+
+| Screen | Shows | Source |
+|---|---|---|
+| Home | current-topic ring, "x of y done", resume card | `useHomeResume` → `pickResume` |
+| `/curriculum/year/:y/:s` | year ring, per-category bar, per-topic counts | `useProgress` + `curriculumProgressStats` |
+| `/profiles` cards | ring + "Year 3 Maths · 12 of 40" | `useChildrenProgress` → `pickResume` |
+| `/parent` per child | year figure, category bars, topic counts | `useChildrenProgress` → `summary.categories` |
+
+- **`src/data/curriculumResume.js`** (was `pages/home/homeResume.js`, moved
+  2026-09-19) picks the most recently stamped curriculum for one child and
+  returns its stats, category breakdown and next challenge. Pure.
+- **`src/data/resumeCandidates.js`** loads the documents `pickResume` consumes.
+  Shared by the homepage and the profile picker so they cannot read different
+  sets of curricula and disagree about where a child is.
+- **`src/hooks/useChildrenProgress.js`** does the same for a LIST of children.
+  It exists because `useProgress` and `useHomeResume` both key off the *active*
+  child, and `/profiles` renders before anyone is selected.
+- **`src/components/ProgressRing.jsx`** is the one ring. It was written out
+  identically twice before this; `prefix` names its classes so each page keeps
+  its own size and colours.
+
+Two rules the UI follows and should keep following:
+
+- **Never render a 0% ring for a learner who has not started.** `/profiles`
+  shows "Ready to start! ✨" instead. An empty dial reads as "you have done
+  nothing", which is the opposite of the intent.
+- **Withhold the figure until it has loaded** rather than showing 0 and jumping.
+  `CurriculumPage` gates on `hydrated`; the profile cards gate on `loading`.
+
+**Cost:** these screens read one document per child per available curriculum —
+2 per child today. Free on localStorage, N×2 HTTP requests against the API. If
+that ever hurts, the fix is a bulk summary endpoint on the server, not caching
+in the hook.
+
 ### Curriculum Mode — progress display
 `CurriculumPage` shows a year progress bar plus a per-topic `x/y` counter, both
 computed by `src/data/curriculumProgressStats.js`. Denominators count only

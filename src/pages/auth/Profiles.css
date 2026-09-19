@@ -25,7 +25,7 @@
 
   /* One variable drives the card size so the avatar, the ring and the grid
      minimum can never drift apart (§9). */
-  --pf-card-size: 10.5rem;
+  --pf-card-size: 11.5rem;
 
   min-height: calc(100dvh - var(--navbar-height));
   padding: 2rem 1rem 3rem;
@@ -167,6 +167,80 @@ body.dark .profiles-page {
   opacity: 0.85;
 }
 
+/* ---------- progress on a card ----------
+   The card's background is the child's own profile colour, so the ring is drawn
+   in --pf-on-colour, the same dark ink the name uses. Every --profile-colour-*
+   clears AA with that ink in BOTH themes (index.css), which is what lets one
+   value serve every card without a per-colour override (§9). */
+.profiles-page .profiles-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 0.1rem;
+}
+
+.profiles-page .pf-ring {
+  flex: none;
+  width: clamp(42px, 11vw, 50px);
+  height: auto;
+}
+
+.profiles-page .pf-ring-track {
+  fill: none;
+  /* A wash of the ink rather than a separate token: it has to sit on six
+     different profile colours and still read as "the empty part". */
+  stroke: var(--pf-on-colour);
+  opacity: 0.22;
+  stroke-width: 13;
+}
+
+.profiles-page .pf-ring-fill {
+  fill: none;
+  stroke: var(--pf-on-colour);
+  stroke-width: 13;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 1.1s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+.profiles-page .pf-ring-text {
+  fill: var(--pf-on-colour);
+  /* User units in a 110-wide viewBox, so this renders around 14px at the width
+     above — the two must be read together. */
+  font-size: 2.6rem;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.profiles-page .profiles-progress-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  line-height: 1.25;
+}
+
+.profiles-page .profiles-progress-where {
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.profiles-page .profiles-progress-count {
+  font-size: 0.7rem;
+  opacity: 0.85;
+}
+
+/* An invitation, never a 0% ring — a fresh profile must not look like a failed
+   one. Sized to match the progress block so cards stay the same height. */
+.profiles-page .profiles-progress-new {
+  font-size: 0.78rem;
+  font-weight: 600;
+  opacity: 0.9;
+  margin-top: 0.1rem;
+}
+
 /* The "add someone new" card uses the panel colour + a dashed edge so it reads
    as an empty slot rather than as somebody's profile. */
 .profiles-page .profiles-add-card {
@@ -194,7 +268,7 @@ body.dark .profiles-page {
 /* ---------- phone ---------- */
 @media (max-width: 480px) {
   .profiles-page {
-    --pf-card-size: 8.75rem;
+    --pf-card-size: 9.75rem;
     padding: 1.5rem 0.75rem 2.5rem;
   }
 
@@ -212,7 +286,8 @@ body.dark .profiles-page {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .profiles-page .profiles-card {
+  .profiles-page .profiles-card,
+  .profiles-page .pf-ring-fill {
     transition: none;
   }
 }

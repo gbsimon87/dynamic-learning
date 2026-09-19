@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { pickResume } from "./homeResume.js";
+import { pickResume } from "./curriculumResume.js";
 
 const curriculum = [
   {

@@ -14,6 +14,7 @@ import {
 } from "../../data/curriculumProgressStats";
 import { shouldBypassLocks } from "../../data/devUnlock";
 import { useReveal } from "../home/useReveal";
+import ProgressRing from "../../components/ProgressRing";
 import "./CurriculumPage.css";
 
 /* ===== DECORATION =====
@@ -68,38 +69,6 @@ function splitTitle(title) {
   const parts = title.split(/\s+[-–—]\s+/);
   if (parts.length < 2) return { kind: null, name: title };
   return { kind: parts[0], name: parts.slice(1).join(" – ") };
-}
-
-/* ===== PROGRESS RING ===== */
-const RING_RADIUS = 46;
-const RING_LENGTH = 2 * Math.PI * RING_RADIUS;
-
-function ProgressRing({ percent, label }) {
-  // Starts empty and fills on mount, so the number is seen arriving rather
-  // than just being there. The transition in CSS carries it.
-  const [drawn, setDrawn] = useState(0);
-
-  useEffect(() => {
-    const frame = requestAnimationFrame(() => setDrawn(percent));
-    return () => cancelAnimationFrame(frame);
-  }, [percent]);
-
-  return (
-    <svg className="cp-ring" viewBox="0 0 110 110" role="img" aria-label={label}>
-      <circle className="cp-ring-track" cx="55" cy="55" r={RING_RADIUS} />
-      <circle
-        className="cp-ring-fill"
-        cx="55"
-        cy="55"
-        r={RING_RADIUS}
-        strokeDasharray={RING_LENGTH}
-        strokeDashoffset={RING_LENGTH - (RING_LENGTH * drawn) / 100}
-      />
-      <text className="cp-ring-text" x="55" y="55">
-        {percent}%
-      </text>
-    </svg>
-  );
 }
 
 /* ===== NEXT CHALLENGE =====
@@ -360,6 +329,7 @@ function CurriculumPage() {
               who has real progress saved. */}
           {hydrated && yearStats.total > 0 && (
             <ProgressRing
+              prefix="cp-ring"
               percent={yearStats.percent}
               label={`${yearStats.percent}% of Year ${year} ${subjectName} complete`}
             />

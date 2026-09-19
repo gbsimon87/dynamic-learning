@@ -2,14 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/auth-context";
 import { store } from "../../data/store";
 import { isChallengeImplemented } from "../../data/challengeAvailability";
-import {
-  CURRICULUM_SUBJECTS,
-  CURRICULUM_YEARS,
-  getSubjectName,
-  isCurriculumAvailable,
-  loadCurriculum,
-} from "../../data/curriculumRegistry";
-import { pickResume } from "./homeResume";
+import { loadResumeCandidates } from "../../data/resumeCandidates";
+import { pickResume } from "../../data/curriculumResume";
 
 /**
  * Feeds the homepage's Keep-going card.
@@ -42,28 +36,7 @@ export function useHomeResume() {
 
     setState({ loading: true, resume: null });
 
-    const pairs = CURRICULUM_YEARS.flatMap((year) =>
-      CURRICULUM_SUBJECTS.filter((subject) =>
-        isCurriculumAvailable(year, subject.id)
-      ).map((subject) => ({ year, subject: subject.id }))
-    );
-
-    Promise.all(
-      pairs.map(async ({ year, subject }) => {
-        const doc = await store.getProgress(childId, year, subject);
-
-        return {
-          year,
-          subject,
-          subjectName: getSubjectName(subject),
-          curriculum: loadCurriculum(year, subject) ?? [],
-          progress: doc?.data ?? {},
-          updatedAt: doc?.updatedAt ?? null,
-          isBuilt: (topicId, challengeId) =>
-            isChallengeImplemented(subject, year, topicId, challengeId),
-        };
-      })
-    )
+    loadResumeCandidates(store, childId, isChallengeImplemented)
       .then((candidates) => {
         if (cancelled) return;
         setState({ loading: false, resume: pickResume(candidates) });

@@ -103,6 +103,110 @@ body.dark .parent-area-page {
   border-radius: 12px;
 }
 
+.parent-area-page .parent-area-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* ---------- per-child progress ----------
+   Bars and counts, no rings and no emoji: this is the adult screen, and the
+   question is "where is this child stuck?", which wants the shape of the
+   progress rather than one headline number.
+
+   `flex-basis: 100%` makes the panel take a whole row of the flex parent above,
+   so it sits UNDER the chip and buttons instead of squeezing in beside them. */
+.parent-area-page .parent-area-progress {
+  flex-basis: 100%;
+  margin-top: 0.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--pa-border);
+}
+
+.parent-area-page .parent-area-progress-head {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.parent-area-page .parent-area-progress-note {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--pa-muted);
+}
+
+.parent-area-page .parent-area-cats {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.parent-area-page .parent-area-cat-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.parent-area-page .parent-area-cat-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.parent-area-page .parent-area-cat-count {
+  flex: none;
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--pa-muted);
+}
+
+.parent-area-page .parent-area-bar {
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  background-color: var(--pa-border);
+}
+
+/* The accent as a FILL, which is the only role it can safely play (§9). */
+.parent-area-page .parent-area-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background-color: var(--pa-accent);
+  transition: width 0.6s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+.parent-area-page .parent-area-topics {
+  display: grid;
+  gap: 0.15rem;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.parent-area-page .parent-area-topic {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--pa-muted);
+}
+
+/* A finished topic reads as finished through WEIGHT, not colour alone — the
+   count beside it says the same thing for anyone who cannot see the change. */
+.parent-area-page .parent-area-topic.is-done {
+  color: var(--pa-text);
+  font-weight: 600;
+}
+
+.parent-area-page .parent-area-topic-count {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+}
+
 .parent-area-page .parent-area-chip {
   --parent-chip-colour: var(--profile-colour-sky);
 
@@ -223,5 +327,11 @@ body.dark .parent-area-page {
   .parent-area-page .parent-area-row {
     flex-direction: column;
     align-items: stretch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .parent-area-page .parent-area-bar-fill {
+    transition: none;
   }
 }

@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../context/auth-context";
+import { useChildrenProgress } from "../../hooks/useChildrenProgress";
 import "./ParentArea.css";
 
 /**
@@ -14,12 +15,121 @@ import "./ParentArea.css";
  * destructive action is two-step: the row swaps to an explicit confirm strip
  * naming the child before anything is removed.
  */
+/**
+ * One child's progress, unfolded under their row.
+ *
+ * Deliberately plain: bars and counts, no emoji and no rings. This is the
+ * grown-up's screen, and the question it answers is "where is this child
+ * stuck?", which wants the SHAPE of the progress — which categories have moved
+ * and which have not — more than it wants a single headline figure.
+ *
+ * Categories with nothing built yet are dropped rather than listed at 0 of 0:
+ * most of Year 3 is unbuilt, and a wall of empty rows would bury the real ones.
+ */
+function ChildProgress({ id, name, summary, loading }) {
+  if (loading) {
+    return (
+      <div className="parent-area-progress" id={id}>
+        <p className="parent-area-progress-note">Loading progress…</p>
+      </div>
+    );
+  }
+
+  if (!summary || summary.stats.total === 0) {
+    return (
+      <div className="parent-area-progress" id={id}>
+        <p className="parent-area-progress-note">
+          {name} has not started a curriculum yet.
+        </p>
+      </div>
+    );
+  }
+
+  const { stats, year, subjectName, categories } = summary;
+  const started = categories.filter((category) => category.total > 0);
+
+  return (
+    <div className="parent-area-progress" id={id}>
+      <p className="parent-area-progress-head">
+        Year {year} {subjectName} — {stats.completed} of {stats.total} built
+        challenges done ({stats.percent}%)
+        {/* Most of the curriculum is not built yet, so a bare 100% would read
+            as "year finished". */}
+        {stats.datasetTotal > stats.total && (
+          <span className="parent-area-progress-note">
+            {" "}
+            · {stats.datasetTotal} planned in total
+          </span>
+        )}
+      </p>
+
+      <ul className="parent-area-cats">
+        {started.map((category) => (
+          <li key={category.id} className="parent-area-cat">
+            <p className="parent-area-cat-head">
+              <span className="parent-area-cat-name">{category.title}</span>
+              <span className="parent-area-cat-count">
+                {category.completed}/{category.total}
+              </span>
+            </p>
+
+            <div
+              className="parent-area-bar"
+              role="progressbar"
+              aria-valuenow={category.percent}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label={`${category.title} progress`}
+            >
+              <div
+                className="parent-area-bar-fill"
+                style={{ width: `${category.percent}%` }}
+              />
+            </div>
+
+            <ul className="parent-area-topics">
+              {category.topics
+                .filter((topic) => topic.total > 0)
+                .map((topic) => (
+                  <li
+                    key={topic.id}
+                    className={`parent-area-topic ${
+                      topic.completed === topic.total ? "is-done" : ""
+                    }`}
+                  >
+                    <span>{topic.name}</span>
+                    <span className="parent-area-topic-count">
+                      {topic.completed}/{topic.total}
+                    </span>
+                  </li>
+                ))}
+            </ul>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function ParentArea() {
   const { parent, children, status, isLearner, signOut, removeChild } =
     useContext(AuthContext);
   const navigate = useNavigate();
 
   const [confirmingId, setConfirmingId] = useState(null);
+
+  // Which child's progress is unfolded. One at a time: a grown-up with three
+
+  // children comparing them needs a short list, not three long ones at once.
+
+  const [openId, setOpenId] = useState(null);
+
+
+  // Read-only. A failed read yields null for that child, which renders as
+
+  // "nothing started yet" rather than blocking profile management.
+
+  const { summaries, loading: loadingProgress } = useChildrenProgress(children);
 
   if (status === "loading") {
     return (
@@ -114,13 +224,35 @@ function ParentArea() {
                       </span>
                     </span>
                   ) : (
-                    <button
-                      type="button"
-                      className="parent-area-secondary-btn"
-                      onClick={() => setConfirmingId(kid._id)}
-                    >
-                      Remove
-                    </button>
+                    <span className="parent-area-row-actions">
+                      <button
+                        type="button"
+                        className="parent-area-secondary-btn"
+                        aria-expanded={openId === kid._id}
+                        aria-controls={`progress-${kid._id}`}
+                        onClick={() =>
+                          setOpenId((was) => (was === kid._id ? null : kid._id))
+                        }
+                      >
+                        {openId === kid._id ? "Hide progress" : "See progress"}
+                      </button>
+                      <button
+                        type="button"
+                        className="parent-area-secondary-btn"
+                        onClick={() => setConfirmingId(kid._id)}
+                      >
+                        Remove
+                      </button>
+                    </span>
+                  )}
+
+                  {openId === kid._id && (
+                    <ChildProgress
+                      id={`progress-${kid._id}`}
+                      name={kid.name}
+                      summary={summaries[kid._id]}
+                      loading={loadingProgress}
+                    />
                   )}
                 </li>
               ))}

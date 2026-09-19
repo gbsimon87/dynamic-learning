@@ -1,5 +1,11 @@
 /**
- * "Where was this child up to?" for the homepage Keep-going card.
+ * "Where was this child up to?" — the most recently touched curriculum for one
+ * child, with its stats and the next challenge to play.
+ *
+ * Read by the homepage Keep-going card AND by the /profiles cards, which need
+ * the same answer for every child at once. It lives here rather than beside the
+ * homepage so the two cannot pick different curricula for the same child and
+ * quietly disagree about where that child is up to.
  *
  * A child's progress lives in one document per year+subject, and nothing
  * records which curriculum they were last on — so the picker reads every
@@ -14,8 +20,12 @@
  * Pure: no React, no storage, no `import.meta.glob`, so it runs under
  * `node --test`. Availability arrives per-candidate as an `isBuilt` callback.
  */
-import { buildLockState } from "../../data/curriculumLocks.js";
-import { getTopicStats, getYearStats } from "../../data/curriculumProgressStats.js";
+import { buildLockState } from "./curriculumLocks.js";
+import {
+  getCategoryBreakdown,
+  getTopicStats,
+  getYearStats,
+} from "./curriculumProgressStats.js";
 
 /** True when this progress document records at least one completed challenge. */
 function hasProgress(progress) {
@@ -89,7 +99,7 @@ function currentTopic(curriculum, progress, isBuilt, position) {
  *
  * @returns {object|null} null when nothing has been started yet — the homepage
  *   shows its "start your journey" invitation instead. Otherwise:
- *   { year, subject, subjectName, stats, topicsHref,
+ *   { year, subject, subjectName, stats, categories, topicsHref,
  *     next: { categoryId, topicId, topicName, challengeId, challengeTitle, href } | null,
  *     topic: { id, name, completed, total, percent } | null }
  *   `next` and `topic` are both null when everything built has been completed.
@@ -112,6 +122,10 @@ export function pickResume(candidates) {
     subject,
     subjectName,
     stats: getYearStats(progress, curriculum, isBuilt),
+    // The grown-up's breakdown. Same cost order as the year figure above, and
+    // computed here so the profile cards and /parent can never describe the
+    // same child from two different reads.
+    categories: getCategoryBreakdown(progress, curriculum, isBuilt),
     topic: currentTopic(curriculum, progress, isBuilt, next),
     topicsHref: `/curriculum/year/${year}/${subject}`,
     next,

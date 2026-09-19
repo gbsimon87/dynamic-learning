@@ -61,3 +61,29 @@ export function getYearStats(progress, curriculum, isBuilt) {
 
   return { ...withPercent(completed, total), datasetTotal };
 }
+
+/**
+ * Per-category and per-topic counts for a whole curriculum, in display order.
+ *
+ * The grown-up's view of "how is this child doing" needs the shape of the
+ * progress, not just its size: 40% spread evenly across eight categories means
+ * something different from 40% concentrated in two. Built-only throughout, for
+ * the same reason `getYearStats` is — a category with nothing built yet reports
+ * 0 of 0 rather than dragging the picture down.
+ *
+ * @returns {Array<{id, title, completed, total, percent, topics: Array}>}
+ */
+export function getCategoryBreakdown(progress, curriculum, isBuilt) {
+  return (curriculum ?? []).map((category) => {
+    const topics = category.topics.map((topic) => ({
+      id: topic.id,
+      name: topic.name,
+      ...getTopicStats(progress, category.id, topic, isBuilt),
+    }));
+
+    const completed = topics.reduce((sum, topic) => sum + topic.completed, 0);
+    const total = topics.reduce((sum, topic) => sum + topic.total, 0);
+
+    return { id: category.id, title: category.title, ...withPercent(completed, total), topics };
+  });
+}

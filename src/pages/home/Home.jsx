@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router";
 import { AuthContext } from "../../context/auth-context";
 import Mascot from "./Mascot";
@@ -6,6 +6,7 @@ import HomeFooter from "./HomeFooter";
 import { useHomeResume } from "./useHomeResume";
 import { useReveal } from "./useReveal";
 import { CURRICULUM_ICON } from "../../data/curriculumRegistry";
+import ProgressRing from "../../components/ProgressRing";
 import "./Home.css";
 
 /* ===== DECORATION =====
@@ -78,36 +79,6 @@ const SUBJECTS = [
     comingSoon: true,
   },
 ];
-
-/* ===== PROGRESS RING ===== */
-const RING_RADIUS = 46;
-const RING_LENGTH = 2 * Math.PI * RING_RADIUS;
-
-function ProgressRing({ percent, label }) {
-  // Starts empty and fills on mount, so the number is seen arriving rather
-  // than just being there. The transition below carries it.
-  const [drawn, setDrawn] = useState(0);
-
-  useEffect(() => {
-    const frame = requestAnimationFrame(() => setDrawn(percent));
-    return () => cancelAnimationFrame(frame);
-  }, [percent]);
-
-  return (
-    <svg className="home-ring" viewBox="0 0 110 110" role="img" aria-label={label}>
-      <circle className="home-ring-track" cx="55" cy="55" r={RING_RADIUS} />
-      <circle
-        className="home-ring-fill"
-        cx="55"
-        cy="55"
-        r={RING_RADIUS}
-        strokeDasharray={RING_LENGTH}
-        strokeDashoffset={RING_LENGTH - (RING_LENGTH * drawn) / 100}
-      />
-      <text className="home-ring-text" x="55" y="55">{percent}%</text>
-    </svg>
-  );
-}
 
 /* ===== HERO CALL TO ACTION =====
    One focal action, chosen by where the learner actually is. A child mid-way
@@ -284,6 +255,7 @@ function Home() {
             {topic && (
               <div className="home-progress">
                 <ProgressRing
+                  prefix="home-ring"
                   percent={topic.percent}
                   label={`${topic.percent}% of ${topic.name} complete`}
                 />

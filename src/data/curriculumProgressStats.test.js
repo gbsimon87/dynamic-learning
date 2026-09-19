@@ -1,6 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { getTopicStats, getYearStats } from "./curriculumProgressStats.js";
+import {
+  getCategoryBreakdown,
+  getTopicStats,
+  getYearStats,
+} from "./curriculumProgressStats.js";
 
 // Two categories. "counting" has 2 built challenges of 3; "shapes" has none
 // built at all, so it must never appear in a denominator.
@@ -125,4 +129,68 @@ test("the dataset total counts unbuilt topics that are excluded elsewhere", () =
   assert.equal(stats.total, 0);
   assert.equal(stats.percent, 0);
   assert.equal(stats.datasetTotal, 5);
+});
+
+/* ===== CATEGORY BREAKDOWN =====
+   Feeds the per-child panel in the Parent Area. The fixture above is the useful
+   shape for this: one category with something built, one with nothing. */
+
+test("the breakdown keeps categories in curriculum order", () => {
+  const out = getCategoryBreakdown({}, curriculum, isBuilt);
+  assert.deepEqual(
+    out.map((category) => category.id),
+    ["number", "geometry"]
+  );
+});
+
+test("a category reports built-only counts, summed from its topics", () => {
+  const progress = {
+    number: { topics: { counting: { completedChallenges: [1] } } },
+  };
+
+  const [number] = getCategoryBreakdown(progress, curriculum, isBuilt);
+  assert.equal(number.completed, 1);
+  assert.equal(number.total, 2); // 2 built of 3 in the dataset
+  assert.equal(number.percent, 50);
+});
+
+test("a category with nothing built is 0 of 0, never NaN", () => {
+  const [, geometry] = getCategoryBreakdown({}, curriculum, isBuilt);
+  assert.deepEqual(
+    { completed: geometry.completed, total: geometry.total, percent: geometry.percent },
+    { completed: 0, total: 0, percent: 0 }
+  );
+});
+
+test("each category carries its topics with their own counts", () => {
+  const progress = {
+    number: { topics: { counting: { completedChallenges: [1, 2] } } },
+  };
+
+  const [number] = getCategoryBreakdown(progress, curriculum, isBuilt);
+  assert.equal(number.topics.length, 1);
+  assert.deepEqual(number.topics[0], {
+    id: "counting",
+    name: undefined, // the fixture has no names; the real dataset does
+    completed: 2,
+    total: 2,
+    percent: 100,
+  });
+});
+
+test("a completion id for an unbuilt challenge cannot push a category over 100%", () => {
+  // Challenge 3 exists in the dataset but has no component file. A stale or
+  // hand-edited id for it must not count.
+  const progress = {
+    number: { topics: { counting: { completedChallenges: [1, 2, 3] } } },
+  };
+
+  const [number] = getCategoryBreakdown(progress, curriculum, isBuilt);
+  assert.equal(number.completed, 2);
+  assert.equal(number.percent, 100);
+});
+
+test("an empty or missing curriculum yields an empty breakdown", () => {
+  assert.deepEqual(getCategoryBreakdown({}, [], isBuilt), []);
+  assert.deepEqual(getCategoryBreakdown({}, null, isBuilt), []);
 });

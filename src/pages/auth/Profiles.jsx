@@ -2,9 +2,55 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../context/auth-context";
 import ProfileBuilder from "./ProfileBuilder";
+import ProgressRing from "../../components/ProgressRing";
+import { useChildrenProgress } from "../../hooks/useChildrenProgress";
 import "./Profiles.css";
 
 const PICK_DELAY_MS = 700;
+
+/**
+ * The progress line on a profile card.
+ *
+ * Three states, and the distinction between them matters more than the number:
+ *
+ * - LOADING renders nothing. A ring that appears at 0% and then jumps is worse
+ *   than one that simply arrives, and this screen must stay tappable meanwhile.
+ * - NOT STARTED gets an invitation, never a 0% ring. A fresh profile should not
+ *   look like a failed one — an empty dial reads as "you have done nothing".
+ * - STARTED shows the most recently played curriculum only. A child can have
+ *   progress in two year groups, and stacking both makes one card taller than
+ *   its siblings and the grid stops being a row of faces.
+ */
+function ProfileProgress({ summary, loading }) {
+  if (loading) return null;
+
+  if (!summary) {
+    return <span className="profiles-progress-new">Ready to start! ✨</span>;
+  }
+
+  const { stats, year, subjectName } = summary;
+  if (stats.total === 0) {
+    return <span className="profiles-progress-new">Ready to start! ✨</span>;
+  }
+
+  return (
+    <span className="profiles-progress">
+      <ProgressRing
+        prefix="pf-ring"
+        percent={stats.percent}
+        label={`${stats.percent}% of Year ${year} ${subjectName} complete`}
+      />
+      <span className="profiles-progress-text">
+        <span className="profiles-progress-where">
+          Year {year} {subjectName}
+        </span>
+        <span className="profiles-progress-count">
+          {stats.completed} of {stats.total} done
+        </span>
+      </span>
+    </span>
+  );
+}
 
 /**
  * The child-facing screen: pick who is playing.
@@ -26,6 +72,10 @@ function Profiles() {
   const { children, status, isLearner, addChild, selectChild } =
     useContext(AuthContext);
   const navigate = useNavigate();
+
+  // Progress for EVERY child, since this screen renders before one is active.
+  // Read-only, and a failed read simply shows no figure for that child.
+  const { summaries, loading: loadingProgress } = useChildrenProgress(children);
 
   const [adding, setAdding] = useState(false);
   const [formError, setFormError] = useState("");
@@ -119,6 +169,10 @@ function Profiles() {
                 {kid.avatar}
               </span>
               <span className="profiles-name">{kid.name}</span>
+              <ProfileProgress
+                summary={summaries[kid._id]}
+                loading={loadingProgress}
+              />
               <span className="profiles-go">
                 {chosenId === kid._id ? "✅ Let's go!" : "Play ▶"}
               </span>
