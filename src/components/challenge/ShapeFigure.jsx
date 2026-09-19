@@ -11,12 +11,23 @@ import "./challenge-kit.css";
  * `showVertices` dots the corners, for counting them.
  * `showSymmetry` draws the dashed vertical line down the middle — the only
  * line of symmetry Year 2 is asked about.
+ * `drawnSides` turns the outline into a tracing guide and reveals that many
+ * edges, so the same figure can support Year 3 drawing work.
+ * `highlightSides` emphasises selected edge indexes for line-property work.
  */
 const SIZE = 160;
 const PAD = 14;
 
-function ShapeFigure({ shape, showVertices, showSymmetry, label }) {
+function ShapeFigure({
+  shape,
+  showVertices,
+  showSymmetry,
+  drawnSides,
+  highlightSides = [],
+  label,
+}) {
   const box = SIZE + PAD * 2;
+  const tracing = Number.isInteger(drawnSides) && !shape.curved;
 
   return (
     <svg
@@ -34,7 +45,30 @@ function ShapeFigure({ shape, showVertices, showSymmetry, label }) {
             r={SIZE / 2}
           />
         ) : (
-          <polygon className="shape-outline" points={polygonPoints(shape, SIZE)} />
+          <>
+            <polygon
+              className={`shape-outline ${tracing ? "guide" : ""}`}
+              points={polygonPoints(shape, SIZE)}
+            />
+
+            {shape.vertices.map(([x1, y1], index) => {
+              const [x2, y2] = shape.vertices[(index + 1) % shape.vertices.length];
+              const isDrawn = tracing && index < drawnSides;
+              const isHighlighted = highlightSides.includes(index);
+              if (!isDrawn && !isHighlighted) return null;
+
+              return (
+                <line
+                  key={`edge-${index}`}
+                  className={`shape-edge ${isDrawn ? "drawn" : ""} ${isHighlighted ? "highlighted" : ""}`}
+                  x1={x1 * SIZE}
+                  y1={y1 * SIZE}
+                  x2={x2 * SIZE}
+                  y2={y2 * SIZE}
+                />
+              );
+            })}
+          </>
         )}
 
         {showVertices &&

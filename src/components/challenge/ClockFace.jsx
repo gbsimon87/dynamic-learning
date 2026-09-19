@@ -18,8 +18,9 @@ import "./challenge-kit.css";
  */
 
 const HOURS = Array.from({ length: 12 }, (_, i) => i + 1);
+const ROMAN_HOURS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
 
-function ClockFace({ hour, minute, label }) {
+function ClockFace({ hour, minute, label, numeralStyle = "arabic" }) {
   const value = new Date(2000, 0, 1, hour % 24, minute, 0);
 
   return (
@@ -49,7 +50,7 @@ function ClockFace({ hour, minute, label }) {
               top: `${50 + 40 * Math.sin(angle)}%`,
             }}
           >
-            {h}
+            {numeralStyle === "roman" ? ROMAN_HOURS[h - 1] : h}
           </span>
         );
       })}

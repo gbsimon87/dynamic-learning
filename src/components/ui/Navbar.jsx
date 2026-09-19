@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { ThemeContext } from '../../context/theme-context';
 import { AuthContext } from '../../context/auth-context';
 import { Link, useLocation } from 'react-router';
+import { CURRICULUM_ICON } from '../../data/curriculumRegistry';
 import './Navbar.css';
 
 function Navbar() {
@@ -68,7 +69,7 @@ function Navbar() {
             }`}
           title="Curriculum"
         >
-          <span aria-hidden="true">📘</span>
+          <span aria-hidden="true">{CURRICULUM_ICON}</span>
           <span className="navbar-link-label">Curriculum</span>
         </Link>
         <button

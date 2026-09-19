@@ -19,3 +19,16 @@ body.dark .problem-page h2 {
 @media (prefers-reduced-motion: reduce) {
   .problem-page { animation: none; }
 }
+
+/* Defined here rather than borrowed from whichever other page's stylesheet
+   happens to be loaded — a keyframe only exists while its own file does. */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

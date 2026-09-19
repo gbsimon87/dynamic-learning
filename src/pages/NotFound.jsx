@@ -1,4 +1,5 @@
 import { Link, useRouteError, isRouteErrorResponse } from "react-router";
+import { CURRICULUM_ICON } from "../data/curriculumRegistry";
 import "./NotFound.css";
 
 /**
@@ -31,7 +32,7 @@ function NotFound() {
           🏠 Go Home
         </Link>
         <Link to="/curriculum" className="notfound-btn">
-          📘 Curriculum
+          {CURRICULUM_ICON} Curriculum
         </Link>
         <Link to="/skills" className="notfound-btn">
           🎮 Skills

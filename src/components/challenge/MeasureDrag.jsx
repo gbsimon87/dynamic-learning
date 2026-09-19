@@ -15,6 +15,7 @@ function MeasureDrag({
   min,
   max,
   majorStep,
+  minorStep = majorStep,
   step,
   value,
   unit,
@@ -24,7 +25,7 @@ function MeasureDrag({
   label,
 }) {
   const trackRef = useRef(null);
-  const ticks = tickValues(min, max, majorStep);
+  const ticks = tickValues(min, max, minorStep);
   const percent = ((value - min) / (max - min)) * 100;
 
   const snap = (raw) => {
@@ -79,15 +80,18 @@ function MeasureDrag({
       >
         <div className="scale-fill" style={sizeFor(orientation, percent)} />
 
-        {ticks.map((tick) => (
-          <div
-            key={tick}
-            className="scale-tick"
-            style={offsetFor(orientation, ((tick - min) / (max - min)) * 100)}
-          >
-            <span className="scale-tick-label">{tick}</span>
-          </div>
-        ))}
+        {ticks.map((tick) => {
+          const isMajor = (tick - min) % majorStep === 0;
+          return (
+            <div
+              key={tick}
+              className={`scale-tick ${isMajor ? "major" : "minor"}`}
+              style={offsetFor(orientation, ((tick - min) / (max - min)) * 100)}
+            >
+              {isMajor && <span className="scale-tick-label">{tick}</span>}
+            </div>
+          );
+        })}
 
         <div className="scale-pointer draggable" style={offsetFor(orientation, percent)} />
       </div>

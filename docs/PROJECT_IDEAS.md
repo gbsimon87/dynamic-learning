@@ -6,14 +6,15 @@
 > [PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md), which is where history lives.
 > The same goes for bugs: a fixed bug is deleted here and written up there.
 
-**Last reviewed:** 2026-09-18
+**Last reviewed:** 2026-09-19
 
 ### Context for prioritisation
 - The app ships **UK Year 2 Maths** complete in Curriculum Mode, plus standalone
   Skills Mode games. **UK Year 3 Maths** is laid out — 44 topics, 176 challenge
-  slots. Three categories are complete — Number and Place Value (7), Addition
-  and Subtraction (6) and Fractions (7) — so 20 of 44 topics have challenges;
-  the other 24 still read "Coming soon".
+  slots. Six categories are complete — Number and Place Value (7), Addition
+  and Subtraction (6), Multiplication and Division (5), Fractions (7),
+  Measurement (9), and Properties of Shapes (6) — so 40 of 44 topics have
+  challenges; the other 4 still read "Coming soon".
 - Accounts and progress are served by a live backend, so ideas here can assume
   per-child persistence rather than device-local state.
 - Ideas are scoped to serve **both Year 2 and Year 3** where possible.
@@ -49,7 +50,7 @@ Ordered **easiest → hardest** to implement.
 | 14 | **Geography curriculum expansion** | Turn the geography backlog (continents, oceans, landforms, habitats, weather, day/night) into a structured topic path rather than loose games. Source ideas in `notes_geography.md`. [Flag Finder](../src/pages/skills/geography/FlagFinder.jsx) uses the REST Countries API and could filter by continent — "Which African country?" — enabling continent-focused topics. | ⚪ Idea |
 | 15 | **Remember a learner's year group** | `/curriculum` already has a year picker (`CurriculumSelectPage`) and it offers Year 3 as of 2026-09-18 — what's missing is memory. The choice isn't stored, so every visit starts at the picker and a child can wander into the wrong year group. Store the year on the child profile and land them straight in it, with an obvious way to switch. Progress is already namespaced per `(childId, year, subject)`, so no storage change is needed. | ⚪ Idea |
 | 16 | **English curriculum mode** | Extend Curriculum Mode beyond Maths — author a Year 2 English curriculum tree (phonics, spelling, grammar, comprehension) reusing the same category/topic/challenge machinery. Much cheaper after #5. | ⚪ Idea |
-| 17 | **Year 3 Maths challenges** | **20 of 44 topics built** — three categories are complete: Number and Place Value (7 topics), Number - Addition and Subtraction (6) and Fractions (7), 80 challenges, all landed 2026-09-18, along with five new kit components (`PlaceValueBlocks`, `ColumnBuilder`, `AngleExplorer`, `BarChart`, `PerimeterShape`). The remaining 24 topics follow the same shape: a pure generator in `src/data/challenges/` with `node:test` coverage, then four challenges that escalate — stated rule, inferred rule, whole-structure work, applied. Read the topic's row in `docs/curriculum/year-3-maths.md` first; it sets the boundary. Three kit gaps remain and each blocks one topic: horizontal/vertical/parallel/perpendicular lines, Roman-numeral and 24-hour clock dials, and correspondence problems. | 🟡 Partial |
+| 17 | **Year 3 Maths challenges** | **40 of 44 topics built** — six categories are complete: Number and Place Value (7 topics), Number - Addition and Subtraction (6), Number - Multiplication and Division (5), Fractions (7), Measurement (9), and Geometry - Properties of Shapes (6), for 160 challenges. Properties of Shapes landed 2026-09-19 without a new kit component: it extends and composes `ShapeFigure`, `SolidFigure`, `AngleExplorer`, `RotationDial`, and `DragToOrder`, with seeded geometry checks across all six topics. Only the four Statistics topics remain. They should follow the same shape: a pure generator, then four challenges that escalate — stated rule, inferred rule, whole-structure work, applied. | 🟡 Partial |
 
 ---
 

@@ -76,7 +76,7 @@ const FIGURES = {
   ),
 };
 
-function SolidFigure({ solid, label }) {
+function SolidFigure({ solid, label, rotation = 0 }) {
   return (
     <svg
       className="solid-figure"
@@ -84,7 +84,7 @@ function SolidFigure({ solid, label }) {
       role="img"
       aria-label={label ?? `a ${solid.name}`}
     >
-      {FIGURES[solid.id]}
+      <g transform={`rotate(${rotation} 85 72.5)`}>{FIGURES[solid.id]}</g>
     </svg>
   );
 }

@@ -418,8 +418,7 @@ and a list of requirements no topic covers yet. Read the relevant row before
 authoring questions for a topic.
 
 ### Curriculum Mode — built challenges
-Only **Year 2 Mathematics** exists, and **all thirty-nine topics** have
-challenges built — the year is complete:
+**Year 2 Mathematics** has all thirty-nine topics built — the year is complete:
 
 | Category | Topic | Challenges built |
 |---|---|---|
@@ -543,7 +542,7 @@ The **Year 2** dataset holds **39 topics across 8 categories = 156 challenge
 slots**, all built. Earlier revisions of these docs said 35 topics; that was
 wrong, and was caught 2026-09-18 by reading the count off the running app.
 
-**Year 3 Maths exists as of 2026-09-18 — dataset only.**
+**Year 3 Maths exists as of 2026-09-18.**
 [year3MathCurriculum.js](../src/data/year3MathCurriculum.js) holds **44 topics
 across 7 categories = 176 challenge slots**, authored from
 [docs/curriculum/year-3-maths.md](curriculum/year-3-maths.md) (DfE programme of
@@ -565,19 +564,45 @@ Dataset invariants are covered by `src/data/year3MathCurriculum.test.js` —
 notably that topic ids are unique across the whole year, since they become
 challenge directory names and a collision would be silent breakage.
 
-**Year 3 challenges — 20 of 44 topics built (2026-09-18).** Three categories
-are complete. *Number - Fractions* (all seven topics) was built separately and
-is not described below; this section covers the other two. **Number - Number and Place Value** has all seven
+**Year 3 challenges — 40 of 44 topics built (160 of 176 challenges).** Six
+categories are complete. *Number - Fractions* (all seven topics) was built
+separately. **Number - Number and Place Value** has all seven
 topics: place value in 3-digit numbers; counting in multiples of 4, 8, 50 and
 100; finding 10 or 100 more or less; comparing and ordering numbers to 1000;
 representing and estimating numbers; reading and writing numbers to 1000; and
 number and place value problems. **Number - Addition and Subtraction** has all
 six: mental changes to ones, tens and hundreds; column addition; column
 subtraction; estimating and inverse checks; missing numbers; and one- and
-two-step problems. Each topic uses a pure question generator with `node:test`
-coverage. Unbuilt topics still show "Coming soon"; the gating rules (§4.5) skip
-fully unbuilt topics. A fresh learner can now follow a continuous path from the
-first challenge of the year through to the end of Addition and Subtraction.
+two-step problems. **Number - Multiplication and Division** has all five topics:
+
+| Category | Topic | Challenges built |
+|---|---|---|
+| Number - Multiplication and Division | 3 and 4 Times Tables | 1, 2, 3, 4 ✅ |
+| Number - Multiplication and Division | The 8 Times Table | 1, 2, 3, 4 ✅ |
+| Number - Multiplication and Division | Multiplying and Dividing Two-Digit Numbers | 1, 2, 3, 4 ✅ |
+| Number - Multiplication and Division | Scaling and Correspondence Problems | 1, 2, 3, 4 ✅ |
+| Number - Multiplication and Division | Multiplication and Division Problems | 1, 2, 3, 4 ✅ |
+| Measurement | Measuring Length in mm, cm and m | 1, 2, 3, 4 ✅ |
+| Measurement | Measuring Mass | 1, 2, 3, 4 ✅ |
+| Measurement | Measuring Volume and Capacity | 1, 2, 3, 4 ✅ |
+| Measurement | Adding and Subtracting Measurements | 1, 2, 3, 4 ✅ |
+| Measurement | Perimeter of 2-D Shapes | 1, 2, 3, 4 ✅ |
+| Measurement | Money and Giving Change | 1, 2, 3, 4 ✅ |
+| Measurement | Telling the Time to the Minute | 1, 2, 3, 4 ✅ |
+| Measurement | Roman Numerals and 24-Hour Clocks | 1, 2, 3, 4 ✅ |
+| Measurement | Units of Time and Durations | 1, 2, 3, 4 ✅ |
+| Geometry – Properties of Shapes | Drawing 2-D Shapes | 1, 2, 3, 4 ✅ |
+| Geometry – Properties of Shapes | Making and Recognising 3-D Shapes | 1, 2, 3, 4 ✅ |
+| Geometry – Properties of Shapes | Angles as Turns | 1, 2, 3, 4 ✅ |
+| Geometry – Properties of Shapes | Right Angles | 1, 2, 3, 4 ✅ |
+| Geometry – Properties of Shapes | Comparing Angles to a Right Angle | 1, 2, 3, 4 ✅ |
+| Geometry – Properties of Shapes | Horizontal, Vertical, Parallel and Perpendicular Lines | 1, 2, 3, 4 ✅ |
+
+Each topic uses a pure question generator with `node:test` coverage. Unbuilt
+topics still show "Coming soon"; the gating rules (§4.5) skip fully unbuilt
+topics. A fresh learner can now follow a continuous path from the first
+challenge of the year through Properties of Shapes. Only Statistics remains
+unbuilt.
 
 ⚠️ **Two Year 3 topics overlap on paper and must not overlap in practice.**
 *Finding 10 or 100 More or Less* (place value) and *Adding and Subtracting Ones,
@@ -588,7 +613,7 @@ reading a jump backwards from before/after, filling all four neighbours at once,
 and counting chains. The arithmetic topic keeps ±1, the block pictures and the
 story problems. Anyone editing either one should read both first.
 
-Five kit components were added for Year 3, all in `src/components/challenge/`:
+Ten kit components were added for Year 3, all in `src/components/challenge/`:
 
 | Component | Serves | Why it isn't an existing component |
 |---|---|---|
@@ -597,14 +622,19 @@ Five kit components were added for Year 3, all in `src/components/challenge/`:
 | `AngleExplorer` | angles as turns, right angles, comparing angles | `RotationDial` turns only in whole right angles by design, so "greater or less than a right angle?" has nothing in between to show. |
 | `BarChart` | bar charts, one/two-step questions | `BlockDiagram` deliberately refuses smooth bars — Year 2 counts squares. Year 3 must READ a value off a scale, which is the opposite requirement. |
 | `PerimeterShape` | perimeter, adding & subtracting measurements | `ShapeFigure` has no side labels to sum; `traced` lights sides one at a time so the total is seen to accumulate. |
+| `FactTriangle` | multiplication and division fact families | Keeps the product above its two factors so one picture supports both multiplication and inverse division facts. |
+| `PartitionBoard` | two-digit multiplication and division | Shows a calculation split into friendly chunks and lets the learner build those chunks without duplicating the layout. |
+| `ShortMultiplication` | formal two-digit by one-digit multiplication | Gives each answer place its own large selectable slot, keeping the written method aligned by place value. |
+| `CorrespondenceBoard` | all-pairs correspondence problems | Makes every one-from-each-set pairing explicit and keyboard-operable as a matrix of large buttons. |
+| `MixedUnitBuilder` | m/cm, kg/g and l/ml composition | Shows the large-unit whole and small-unit remainder together, with one reusable control for all three conversion families. |
 
 Their animations are functional, not decorative — a carry hops into its column,
 ten ones pop in as countable pieces, an angle sweeps rather than jumps, bars
 grow from the axis, a perimeter lights up edge by edge. All are disabled under
 `prefers-reduced-motion`.
 
-Three existing kit components were **extended** rather than copied for the rest
-of Number and Place Value — a fourth near-identical widget is how 140 files
+Existing kit components were **extended** rather than copied when a new year
+needed finer representations — a near-identical widget is how challenge files
 drift apart:
 
 | Component | Extension | Why |
@@ -612,6 +642,11 @@ drift apart:
 | `NumberLine` | optional `captions` | A row is not always a count. "100 less / 10 less / 342 / 10 more / 100 more" needs each cell to say what it is, or the blanks have no question attached to them. |
 | `ChoiceGrid` | `variant="wordy"` | Four options reading "four hundred and six" at the numeric size fill the screen and stop being comparable at a glance. |
 | `PlaceValueBlocks` | reused as a builder | The same component reads a number (`showCounts={false}`) and builds one (`onStep`), which is what keeps Challenge 1 and Challenge 3 of *Representing and Estimating Numbers* showing the same picture. |
+| `ScaleReader` / `MeasureDrag` | optional `minorStep` | Year 3 rulers and jugs need fine, unlabelled subdivisions while keeping major labels readable; Year 2 retains its previous behaviour by default. |
+| `ClockFace` | `numeralStyle="roman"` | One dial now teaches Arabic and Roman clock faces without duplicating the hand geometry. |
+| `TimeSetter` | optional `minuteStep` | Year 2 still moves in five-minute steps while Year 3 can set a time to the nearest minute. |
+| `ShapeFigure` | optional `drawnSides` and `highlightSides` | The same polygon data now supports tracing a drawing and identifying line relationships without a second shape renderer. |
+| `SolidFigure` | optional `rotation` | A solid can be recognised in another orientation while retaining the same complete edge drawing. |
 
 ⚠️ **A generator that can produce an unanswerable question should refuse.**
 `solveConstraints` in `numberAndPlaceValueProblems.js` brute-forces every

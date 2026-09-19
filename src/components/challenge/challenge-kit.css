@@ -266,6 +266,93 @@ body.dark {
   background: var(--ck-accent);
 }
 
+/* ===========================================================
+   MULTIPLICATION AND DIVISION
+=========================================================== */
+
+/* One fact family: product above, its two factors below. */
+.fact-triangle {
+  width: 190px;
+  margin: 0 auto 1.5rem;
+  font-size: 1.65rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.fact-triangle-line {
+  width: 0;
+  height: 0;
+  margin: 0.2rem auto;
+  border-left: 82px solid transparent;
+  border-right: 82px solid transparent;
+  border-bottom: 78px solid var(--ck-muted);
+  filter: drop-shadow(0 0 1px var(--ck-border));
+}
+
+.fact-triangle-top { margin-bottom: -3.7rem; position: relative; z-index: 1; }
+.fact-triangle-factors { display: flex; justify-content: space-between; align-items: center; margin-top: -2.3rem; padding: 0 0.25rem; position: relative; z-index: 1; }
+.fact-triangle-times { opacity: 0.55; font-size: 1.15rem; }
+.fact-triangle-value { display: inline-flex; align-items: center; justify-content: center; min-width: 52px; min-height: 52px; border-radius: 50%; background: var(--ck-panel); border: 3px solid var(--ck-border); }
+.fact-triangle-value.hidden { color: var(--ck-on-accent); background: var(--ck-accent); border-color: var(--ck-accent); }
+
+/* Partitioning makes 23 × 4 visible as (20 × 4) + (3 × 4). */
+.partition-board { margin: 0 auto 1.5rem; max-width: 430px; font-variant-numeric: tabular-nums; }
+.partition-heading { display: inline-block; padding: 0.5rem 1rem; border-radius: 12px; background: var(--ck-muted); font-size: 1.65rem; font-weight: 800; }
+.partition-arrow { font-size: 1.5rem; color: var(--ck-accent); }
+.partition-cells { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8rem; }
+.partition-cell { min-height: 86px; padding: 0.7rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.35rem; color: var(--ck-text); background: var(--ck-muted); border: 3px solid transparent; border-radius: 12px; font: inherit; font-size: 1.35rem; margin-top: 0; }
+button.partition-cell { cursor: pointer; }
+.partition-cell.active { border-color: var(--ck-accent); }
+.partition-cell-label { font-size: 0.95rem; font-weight: 700; }
+.partition-total { margin-top: 0.8rem; font-size: 1.35rem; font-weight: 800; }
+
+/* Formal two-digit by one-digit multiplication. */
+.short-multiply { width: 210px; margin: 0 auto 1.4rem; font-size: 1.8rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.short-multiply-row { display: grid; grid-template-columns: 1.5rem repeat(3, 2.8rem); justify-content: center; align-items: center; }
+.short-multiply-row.operand { padding-bottom: 0.25rem; }
+.short-multiply-rule { height: 3px; margin: 0 auto 0.35rem; background: var(--ck-text); border-radius: 2px; }
+.short-multiply-slot { min-width: 2.6rem; min-height: 52px; margin-top: 0; padding: 0.1rem; border: 3px dashed var(--ck-border); border-radius: 9px; color: var(--ck-text); background: transparent; font: inherit; cursor: pointer; }
+.short-multiply-slot.active { border-style: solid; border-color: var(--ck-accent); }
+.short-multiply-slot.filled { border-style: solid; }
+
+/* A doubling ladder connects the known 2 and 4 tables to the 8 table. */
+.double-chain { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+.double-chain-step { min-width: 92px; padding: 0.7rem; background: var(--ck-muted); border-radius: 12px; font-weight: 800; }
+.double-chain-arrow { color: var(--ck-accent); font-weight: 800; }
+
+/* Deal one counter to each of eight groups per tap. */
+.share-groups { display: grid; grid-template-columns: repeat(4, minmax(56px, 1fr)); gap: 0.65rem; max-width: 430px; margin: 0 auto 1rem; }
+.share-group { min-height: 66px; display: flex; align-items: center; justify-content: center; padding: 0.35rem; border: 3px solid var(--ck-border); border-radius: 12px; font-size: 0.9rem; letter-spacing: 0.08em; overflow-wrap: anywhere; }
+.deal-btn { min-height: 52px; margin-top: 0; padding: 0.5rem 1rem; border: 2px solid var(--ck-accent); border-radius: 12px; color: var(--ck-text); background: var(--ck-muted); font-size: 1rem; font-weight: 800; cursor: pointer; }
+
+/* Relative bars show the multiplicative, not additive, comparison. */
+.scale-comparison { margin: 0 auto 1.5rem; max-width: 520px; text-align: left; }
+.scale-row { display: grid; grid-template-columns: 7rem 1fr; align-items: center; gap: 0.7rem; margin: 0.65rem 0; }
+.scale-row-label { font-weight: 700; text-align: right; }
+.scale-bar { min-width: 42px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 10px; color: var(--ck-on-accent); background: var(--ck-accent); font-weight: 800; }
+.scale-bar.base { background: color-mix(in srgb, var(--ck-accent) 65%, var(--ck-panel)); }
+
+/* Every selected matrix cell is one correspondence pair. */
+.correspondence-board { margin: 0 auto 1.4rem; max-width: 520px; }
+.correspondence-key { margin: 0 0 0.7rem; font-size: 0.95rem; }
+.correspondence-grid { display: grid; grid-template-columns: 58px repeat(var(--correspondence-columns), minmax(58px, 1fr)); gap: 0.45rem; align-items: stretch; }
+.correspondence-heading, .correspondence-corner { min-height: 52px; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; }
+.correspondence-corner { font-size: 1rem; opacity: 0.55; }
+.correspondence-pair { min-height: 58px; margin-top: 0; padding: 0.25rem; border: 3px solid var(--ck-border); border-radius: 10px; color: var(--ck-text); background: var(--ck-muted); font-size: 1.3rem; font-weight: 800; cursor: pointer; }
+.correspondence-pair.selected { border-color: var(--ck-accent); color: var(--ck-on-accent); background: var(--ck-accent); }
+
+.equation-display { margin: 0 auto 1.4rem; font-size: clamp(1.45rem, 5vw, 2rem); font-weight: 800; font-variant-numeric: tabular-nums; }
+.known-fact { margin: 0 auto 0.65rem; color: var(--ck-text); font-size: 1.1rem; }
+
+@media (max-width: 520px) {
+  .share-groups { grid-template-columns: repeat(2, minmax(56px, 1fr)); }
+  .scale-row { grid-template-columns: 5.5rem 1fr; }
+  .scale-row-label { font-size: 0.85rem; }
+  .correspondence-grid { grid-template-columns: 48px repeat(var(--correspondence-columns), minmax(48px, 1fr)); gap: 0.3rem; }
+  .correspondence-heading, .correspondence-corner { min-height: 44px; font-size: 1.35rem; }
+  .correspondence-pair { min-height: 50px; }
+}
+
 /* --- fraction bar --- */
 .fraction-bar {
   display: flex;
@@ -349,12 +436,22 @@ body.dark {
   transform: translateX(-1px);
 }
 
+.scale-horizontal .scale-tick.minor {
+  top: 50%;
+  background: color-mix(in srgb, var(--ck-text) 45%, transparent);
+}
+
 .scale-vertical .scale-tick {
   left: 0;
   right: 0;
   height: 2px;
   background: var(--ck-border);
   transform: translateY(1px);
+}
+
+.scale-vertical .scale-tick.minor {
+  left: 50%;
+  background: color-mix(in srgb, var(--ck-text) 45%, transparent);
 }
 
 .scale-tick-label {
@@ -584,6 +681,178 @@ body.dark {
   opacity: 0.75;
 }
 
+/* --- mixed units: 1 m 25 cm, 2 kg 300 g, 1 l 500 ml --- */
+.mixed-unit-builder {
+  max-width: 500px;
+  margin: 0 auto 1.5rem;
+}
+
+.mixed-unit-equivalence {
+  margin: 0 0 0.7rem;
+  font-weight: 700;
+}
+
+.mixed-unit-visual {
+  display: flex;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 42px;
+  margin-bottom: 1rem;
+}
+
+.mixed-unit-whole,
+.mixed-unit-part {
+  width: 76px;
+  min-height: 38px;
+  overflow: hidden;
+  border: 3px solid var(--ck-border);
+  border-radius: 9px;
+  background: var(--ck-muted);
+}
+
+.mixed-unit-whole {
+  background: var(--ck-accent);
+}
+
+.mixed-unit-part span {
+  display: block;
+  height: 100%;
+  min-height: 38px;
+  background: var(--ck-accent);
+}
+
+.mixed-unit-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.mixed-unit-control {
+  display: grid;
+  grid-template-columns: 54px minmax(74px, 1fr) 54px;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.mixed-unit-control .mixed-unit-step {
+  min-width: 54px;
+  min-height: 54px;
+  margin-top: 0;
+  border: 2px solid var(--ck-border);
+  border-radius: 10px;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  font-size: 1.4rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.mixed-unit-value {
+  min-height: 58px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--ck-muted);
+}
+
+.mixed-unit-value strong { font-size: 1.55rem; }
+.mixed-unit-value small { font-size: 0.85rem; font-weight: 700; }
+
+.measure-compare {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 64px minmax(0, 1fr);
+  align-items: center;
+  gap: 0.6rem;
+  max-width: 520px;
+  margin: 0 auto 1.4rem;
+  font-size: 1.25rem;
+}
+
+.measure-compare strong {
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border-radius: 12px;
+  background: var(--ck-muted);
+}
+
+.measure-compare-gap {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--ck-accent);
+}
+
+.trace-side-btn {
+  min-height: 52px;
+  margin-top: 0;
+  padding: 0.55rem 1rem;
+  border: 2px solid var(--ck-accent);
+  border-radius: 12px;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.duration-timeline {
+  display: grid;
+  grid-template-columns: auto minmax(70px, 1fr) auto;
+  align-items: center;
+  gap: 0.7rem;
+  max-width: 480px;
+  margin: 0 auto 1.5rem;
+}
+
+.duration-timeline > span {
+  min-width: 82px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.65rem;
+  border: 3px solid var(--ck-border);
+  border-radius: 12px;
+  background: var(--ck-muted);
+}
+
+.duration-timeline strong {
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.duration-timeline small { font-weight: 700; opacity: 0.7; }
+
+.duration-timeline i {
+  position: relative;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--ck-accent);
+}
+
+.duration-timeline i::after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border-top: 4px solid var(--ck-accent);
+  border-right: 4px solid var(--ck-accent);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+@media (max-width: 520px) {
+  .mixed-unit-controls { grid-template-columns: 1fr; }
+  .measure-compare { grid-template-columns: 1fr; }
+  .measure-compare-gap { min-height: 40px; }
+  .duration-timeline { grid-template-columns: auto 1fr auto; gap: 0.35rem; }
+  .duration-timeline > span { min-width: 64px; padding: 0.45rem; }
+}
+
 /* ===========================================================
    SHAPES
 =========================================================== */
@@ -601,6 +870,31 @@ body.dark {
   stroke: var(--ck-accent);
   stroke-width: 4;
   stroke-linejoin: round;
+}
+
+.shape-outline.guide {
+  fill: var(--ck-muted);
+  fill-opacity: 0.35;
+  stroke: var(--ck-border);
+  stroke-width: 3;
+  stroke-dasharray: 7 6;
+}
+
+.shape-edge {
+  stroke: var(--ck-accent);
+  stroke-width: 6;
+  stroke-linecap: round;
+  animation: shape-edge-draw 0.3s ease-out;
+}
+
+.shape-edge.highlighted {
+  stroke-width: 9;
+  filter: drop-shadow(0 0 2px var(--ck-panel));
+}
+
+@keyframes shape-edge-draw {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .shape-vertex {
@@ -1661,6 +1955,44 @@ button.survey-item:hover:not(:disabled) {
 
 .angle-vertex { fill: var(--ck-text); }
 
+.angle-gallery,
+.turn-pair {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.angle-card {
+  min-width: 116px;
+  padding: 0.5rem;
+  border: 2px solid var(--ck-border);
+  border-radius: 14px;
+  background: var(--ck-muted);
+  font-weight: 700;
+}
+
+.angle-card .angle-explorer {
+  margin: 0 auto;
+}
+
+.turn-pair .rotation-dial {
+  width: min(180px, 42vw);
+  margin-bottom: 0;
+}
+
+.turn-pair .dial-face {
+  width: min(130px, 34vw);
+}
+
+.shape-trace-count {
+  margin: -0.75rem 0 1rem;
+  font-weight: 700;
+  color: var(--ck-accent);
+}
+
 /* --- Bar chart ------------------------------------------- */
 
 .bar-chart { margin: 1rem 0; }
@@ -1789,6 +2121,10 @@ button.survey-item:hover:not(:disabled) {
   .col-carry,
   .col-exchange,
   .angle-right-marker {
+    animation: none;
+  }
+
+  .shape-edge {
     animation: none;
   }
 

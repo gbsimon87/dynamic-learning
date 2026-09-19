@@ -5,6 +5,7 @@ import Mascot from "./Mascot";
 import HomeFooter from "./HomeFooter";
 import { useHomeResume } from "./useHomeResume";
 import { useReveal } from "./useReveal";
+import { CURRICULUM_ICON } from "../../data/curriculumRegistry";
 import "./Home.css";
 
 /* ===== DECORATION =====
@@ -239,10 +240,16 @@ function Home() {
           ))}
         </div>
 
-        <div className="home-hero-inner">
+        {/* `is-signed-in` lets the phone layout put the greeting and Bix on
+            one line: the copy block becomes `display: contents` so both are
+            direct grid items. Signed out there is no greeting to pair him
+            with, so that layout stays as it was. */}
+        <div className={`home-hero-inner ${child ? "is-signed-in" : ""}`}>
           <div className="home-hero-copy">
+            {/* The page's h1 when signed in, since the hero title below is
+                dropped for a child who already knows where they are. */}
             {child && (
-              <p className="home-hello">
+              <h1 className="home-hello">
                 <span
                   className="home-hello-avatar"
                   style={{ background: `var(${child.colour})` }}
@@ -257,12 +264,19 @@ function Home() {
                     </span>
                   ))}
                 </span>
-              </p>
+              </h1>
             )}
 
-            <h1 className="home-title">{hero.title}</h1>
-
-            <p className="home-subtitle">{hero.subtitle}</p>
+            {/* Signed out, these introduce the app. Signed in, they are two
+                lines of copy between a child and the button they came for —
+                the greeting above and the CTA below already say who this is
+                and what happens next. */}
+            {!child && (
+              <>
+                <h1 className="home-title">{hero.title}</h1>
+                <p className="home-subtitle">{hero.subtitle}</p>
+              </>
+            )}
 
             {/* Progress through the CURRENT TOPIC, not the year: a year figure
                 reads as 1% after two challenges. Text, never a link, so the
@@ -287,9 +301,22 @@ function Home() {
               <Link className="home-btn home-btn-primary home-btn-big" to={hero.cta.href}>
                 {hero.cta.label} <span aria-hidden="true">→</span>
               </Link>
+              {/* Short labels: on a phone these two sit side by side under
+                  the primary button, and "Practise a skill" wrapped to two
+                  lines there. */}
               <Link className="home-btn home-btn-quiet" to="/skills">
-                🎯 Practise a skill
+                🎯 Skills
               </Link>
+
+              {/* Signed in, the primary button is one challenge deep in the
+                  curriculum — this is the way back out to the whole map.
+                  Omitted when the primary already points there, so the hero
+                  never shows the same destination twice. */}
+              {child && hero.cta.href !== "/curriculum" && (
+                <Link className="home-btn home-btn-quiet" to="/curriculum">
+                  {CURRICULUM_ICON} View curriculum
+                </Link>
+              )}
             </div>
           </div>
 
@@ -325,7 +352,12 @@ function Home() {
                 <i key={step} style={{ "--step-index": step }} />
               ))}
             </span>
-            <h3>Curriculum</h3>
+            <h3>
+              <span className="home-mode-badge" aria-hidden="true">
+                {CURRICULUM_ICON}
+              </span>
+              Curriculum
+            </h3>
             <p>
               A path through your year group. Each challenge you finish unlocks the
               next, and your progress is saved.
@@ -339,7 +371,12 @@ function Home() {
                 <i key={pip} style={{ "--pip-index": index }}>{pip}</i>
               ))}
             </span>
-            <h3>Skills</h3>
+            <h3>
+              <span className="home-mode-badge" aria-hidden="true">
+                🎯
+              </span>
+              Skills
+            </h3>
             <p>
               Jump into any activity, any time. Nothing is locked and nothing
               is scored, so you can practise whatever you like.

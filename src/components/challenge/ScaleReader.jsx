@@ -16,13 +16,14 @@ function ScaleReader({
   min,
   max,
   majorStep,
+  minorStep = majorStep,
   value,
   unit,
   orientation = "horizontal",
   variant = "",
   label,
 }) {
-  const ticks = tickValues(min, max, majorStep);
+  const ticks = tickValues(min, max, minorStep);
   // Position as a percentage of the span, so the same maths serves both
   // orientations and the CSS does the rest.
   const percent = ((value - min) / (max - min)) * 100;
@@ -36,15 +37,18 @@ function ScaleReader({
       <div className="scale-track">
         <div className="scale-fill" style={sizeFor(orientation, percent)} />
 
-        {ticks.map((tick) => (
-          <div
-            key={tick}
-            className="scale-tick"
-            style={offsetFor(orientation, ((tick - min) / (max - min)) * 100)}
-          >
-            <span className="scale-tick-label">{tick}</span>
-          </div>
-        ))}
+        {ticks.map((tick) => {
+          const isMajor = (tick - min) % majorStep === 0;
+          return (
+            <div
+              key={tick}
+              className={`scale-tick ${isMajor ? "major" : "minor"}`}
+              style={offsetFor(orientation, ((tick - min) / (max - min)) * 100)}
+            >
+              {isMajor && <span className="scale-tick-label">{tick}</span>}
+            </div>
+          );
+        })}
 
         <div
           className="scale-pointer"

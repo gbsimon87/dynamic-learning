@@ -144,6 +144,42 @@ body.dark .home-page {
   }
 
   .home-hero-copy { flex-basis: auto; }
+
+  /* Signed in: the greeting and Bix share the top line instead of costing
+     two. `display: contents` on the copy block promotes its children to grid
+     items, so the mascot can sit beside the greeting without moving in the
+     DOM — everything below it still spans the full width. */
+  .home-hero-inner.is-signed-in {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 0.6rem;
+    row-gap: 0.2rem;
+  }
+
+  .home-hero-inner.is-signed-in .home-hero-copy { display: contents; }
+
+  .home-hero-inner.is-signed-in .home-hello {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+    margin-bottom: 0;
+  }
+
+  .home-hero-inner.is-signed-in .home-hero-mascot {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  /* Bix shares a line now, so he shrinks to fit beside a name. */
+  .home-hero-inner.is-signed-in .mascot {
+    width: clamp(88px, 24vw, 130px);
+  }
+
+  .home-hero-inner.is-signed-in .home-progress,
+  .home-hero-inner.is-signed-in .home-hero-actions {
+    grid-column: 1 / -1;
+  }
 }
 
 /* ===== GREETING ===== */
@@ -199,8 +235,25 @@ body.dark .home-page {
   gap: 0.8rem;
 }
 
+/* Phones: the focal button takes its own full-width line, and the two quiet
+   ones share the line under it. */
 @media (max-width: 760px) {
-  .home-hero-actions { justify-content: center; }
+  .home-hero-actions {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .home-btn-big {
+    flex: 1 0 100%;
+    justify-content: center;
+  }
+
+  .home-btn-quiet {
+    flex: 1 1 0;
+    min-width: 0;
+    justify-content: center;
+    padding-inline: 0.9rem;
+  }
 }
 
 /* ===== MASCOT SLOT ===== */
@@ -295,7 +348,12 @@ body.dark .home-page {
 }
 
 @media (max-width: 760px) {
-  .home-progress { justify-content: center; }
+  /* Centred as a block, but its three lines stay left-aligned against the
+     ring — centred text beside a circle reads as misaligned. */
+  .home-progress {
+    justify-content: center;
+    text-align: left;
+  }
 }
 
 .home-progress p { margin: 0; }
@@ -534,8 +592,23 @@ body.dark .home-page {
 .home-mode:active { transform: translateY(0); }
 
 .home-mode h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
   margin: 0.9rem 0 0.4rem;
   font-size: 1.6rem;
+}
+
+/* The mode's icon, in a tile to the left of its name. */
+.home-mode-badge {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 14px;
+  background: var(--mode-hue);
+  font-size: 1.4rem;
 }
 
 .home-mode p {

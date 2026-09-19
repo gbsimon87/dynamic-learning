@@ -3,22 +3,21 @@ import "./challenge-kit.css";
 /**
  * Steppers for setting a time, shown beside a ClockFace.
  *
- * Minutes move in fives because Year 2 tells the time to five minutes, so the
- * control cannot express an answer finer than the curriculum asks for. Hours
- * wrap 12 to 1 and minutes wrap 55 to 0, so a learner can always reach any
- * time by holding one button rather than getting stuck at an end.
+ * Minutes move in curriculum-appropriate steps: five by default for Year 2,
+ * or one for Year 3's nearest-minute work. Both sets of controls wrap, so a
+ * learner can always reach any valid time.
  *
  * Deliberately not draggable hands: dragging a hand to a five-minute position
  * is fussy for small hands and impossible to check without a browser.
  */
-function TimeSetter({ hour, minute, onChange, disabled }) {
+function TimeSetter({ hour, minute, onChange, disabled, minuteStep = 5 }) {
   const setHour = (delta) => {
     const next = ((hour - 1 + delta + 12) % 12) + 1;
     onChange({ hour: next, minute });
   };
 
   const setMinute = (delta) => {
-    const next = (minute + delta * 5 + 60) % 60;
+    const next = (minute + delta * minuteStep + 60) % 60;
     onChange({ hour, minute: next });
   };
 
@@ -36,11 +35,11 @@ function TimeSetter({ hour, minute, onChange, disabled }) {
       </div>
 
       <div className="time-setter-group">
-        <button type="button" className="scale-step-btn" disabled={disabled} onClick={() => setMinute(-1)} aria-label="Five minutes back">
+        <button type="button" className="scale-step-btn" disabled={disabled} onClick={() => setMinute(-1)} aria-label={`${minuteStep} ${minuteStep === 1 ? "minute" : "minutes"} back`}>
           −
         </button>
         <span className="time-setter-value">{String(minute).padStart(2, "0")}</span>
-        <button type="button" className="scale-step-btn" disabled={disabled} onClick={() => setMinute(1)} aria-label="Five minutes forward">
+        <button type="button" className="scale-step-btn" disabled={disabled} onClick={() => setMinute(1)} aria-label={`${minuteStep} ${minuteStep === 1 ? "minute" : "minutes"} forward`}>
           +
         </button>
         <span className="time-setter-label">minutes</span>

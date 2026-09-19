@@ -1,147 +1,588 @@
 /* ===========================================================
-   BASE PAGE
+   CURRICULUM PICKER
+   -----------------------------------------------------------
+   Same visual language as the homepage and the quest map: a thin glyph sky
+   at the top, chunky pressable cards, one colour per subject. Every colour
+   is a token with a body.dark pair (App.css §"Both themes, every time"),
+   and every `deep` fill is dark enough for white ink to clear WCAG AA
+   4.5:1 in both themes.
 =========================================================== */
-.curriculum-select-page {
-  text-align: center;
-  padding: 2rem 1rem;
-  animation: fadeIn 0.6s ease-in-out;
+.cs-page {
+  --cs-ink: var(--light-text);
+  --cs-muted: #645057;
+  --cs-card: var(--light-panel);
+  --cs-edge: #f0dde0;
+  --cs-inset: #faf2f3;
+  --cs-sky-top: #ffe3e7;
+  --cs-sky-bottom: #f8ecee;
+  --cs-glyph: rgba(239, 98, 108, 0.26);
+  --cs-accent: var(--light-accent);
+  --cs-on-deep: #ffffff;
+  --cs-focus: #22181c;
+  --cs-dead: #5f5f5f;
+
+  --cs-hue-math: #ef626c;
+  --cs-hue-english: #9f91e8;
+  --cs-hue-geography: #2fa898;
+  --cs-hue-science: #e39a24;
+  --cs-deep-math: #c33d47;
+  --cs-deep-english: #5e4eb8;
+  --cs-deep-geography: #1f7d70;
+  --cs-deep-science: #8f5900;
+
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem 3rem;
+  color: var(--cs-ink);
+  overflow-x: clip;
+}
+
+body.dark .cs-page {
+  --cs-ink: var(--dark-text);
+  --cs-muted: #c8b9bd;
+  --cs-card: var(--dark-panel);
+  --cs-edge: #46403f;
+  --cs-inset: #3a3437;
+  --cs-sky-top: #33262c;
+  --cs-sky-bottom: #241a1e;
+  --cs-glyph: rgba(132, 220, 207, 0.22);
+  --cs-accent: var(--dark-accent);
+  --cs-dead: #6b6b6b;
+}
+
+/* ===== SCROLL REVEAL =====
+   `reveal-armed` is added by useReveal, never by CSS, so a card can't be
+   left permanently invisible if the observer never runs. */
+.cs-page .reveal-armed {
+  opacity: 0;
+  transform: translateY(24px) scale(0.985);
+  transition:
+    opacity 480ms ease-out,
+    transform 480ms cubic-bezier(0.22, 1.2, 0.36, 1);
+}
+
+.cs-page .reveal-armed.is-revealed {
+  opacity: 1;
+  transform: none;
 }
 
 /* ===========================================================
-   STEP SECTION
+   BAND
 =========================================================== */
-.select-step {
-  max-width: 1100px;
-  margin: 0 auto 2.5rem;
+.cs-hero {
+  position: relative;
+  margin: 0 auto clamp(1.2rem, 4vw, 2rem);
+  padding: clamp(0.7rem, 2vw, 1rem) clamp(0.8rem, 3vw, 1.6rem);
+  border-radius: 0 0 26px 26px;
+  background: linear-gradient(180deg, var(--cs-sky-top), var(--cs-sky-bottom));
+  overflow: hidden;
+  isolation: isolate;
 }
 
-.select-step-title {
-  font-size: 1.5rem;
-  margin-bottom: 1.2rem;
+/* Full-bleed on phones: the sky should reach the screen edges. */
+@media (max-width: 720px) {
+  .cs-page {
+    padding-inline: 0.75rem;
+  }
+
+  .cs-hero {
+    margin-inline: -0.75rem;
+  }
+}
+
+.cs-sky {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.cs-glyph {
+  position: absolute;
+  color: var(--cs-glyph);
+  font-weight: 700;
+  line-height: 1;
+  animation-name: cs-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.cs-bar {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  color: var(--light-accent);
+  gap: clamp(0.6rem, 2vw, 1rem);
 }
 
-body.dark .select-step-title {
-  color: var(--dark-accent);
+.cs-back {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--cs-card);
+  box-shadow: 0 4px 12px var(--panel-shadow);
+  color: var(--cs-ink);
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    transform 160ms ease-out,
+    background-color 200ms ease;
 }
 
-.select-step-number {
-  display: inline-flex;
+.cs-back:hover {
+  transform: translateX(-3px);
+}
+
+.cs-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  font-size: clamp(1.25rem, 4vw, 1.9rem);
+  line-height: 1.15;
+}
+
+/* ===== STEP TRACK =====
+   Two dots instead of "Pick your year group, then choose a subject to start
+   learning!" — a child reads the shape, not the sentence. */
+.cs-track {
+  display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.35rem;
+  flex: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cs-track-step {
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  background: var(--cs-card);
+  color: var(--cs-muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition:
+    background-color 260ms ease,
+    color 260ms ease,
+    transform 260ms cubic-bezier(0.22, 1.2, 0.36, 1);
+}
+
+.cs-track-step.is-done {
+  background: var(--cs-accent);
+  color: var(--on-light-accent);
+  transform: scale(1.06);
+}
+
+.cs-track-line {
+  width: 1.4rem;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--cs-card);
+}
+
+/* ===========================================================
+   STEPS
+=========================================================== */
+.cs-step {
+  margin-bottom: clamp(1.4rem, 4vw, 2.2rem);
+}
+
+.cs-step-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 0.9rem;
+  font-size: clamp(1.1rem, 3vw, 1.4rem);
+}
+
+.cs-step-num {
+  display: grid;
+  place-items: center;
+  flex: none;
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
-  background-color: var(--light-accent);
-  color: #fff;
-  font-size: 1.1rem;
+  background: var(--cs-accent);
+  color: var(--on-light-accent);
+  font-size: 1rem;
 }
 
-body.dark .select-step-number {
-  background-color: var(--dark-accent);
+/* Step 2 before a year is picked: present, but plainly not its turn. */
+.cs-step-num.is-waiting {
+  background: var(--cs-inset);
+  color: var(--cs-muted);
 }
 
-.select-hint {
-  font-size: 1.1rem;
-  opacity: 0.7;
+.cs-step-year {
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  background: var(--cs-inset);
+  color: var(--cs-muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+  animation: cs-pop 420ms cubic-bezier(0.22, 1.4, 0.36, 1);
 }
 
 /* ===========================================================
-   CARD GRID
+   YEARS
 =========================================================== */
-.select-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1.5rem;
-}
-
-/* ===========================================================
-   SELECT CARD
-=========================================================== */
-.select-card {
+.cs-years {
   display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.6rem, 2vw, 1rem);
+}
+
+.cs-years.is-nudged {
+  animation: cs-shake 460ms ease-in-out;
+}
+
+.cs-year {
+  display: flex;
+  flex: 1 1 8.5rem;
   flex-direction: column;
   align-items: center;
-  gap: 0.6rem;
-  padding: 1.8rem 1.2rem;
-  border: 3px solid transparent;
-  border-radius: 18px;
-  background-color: var(--light-panel);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
+  gap: 0.15rem;
+  max-width: 14rem;
+  min-height: 108px;
+  padding: 0.9rem 1rem;
+  border: 3px solid var(--cs-edge);
+  border-radius: 22px;
+  background: var(--cs-card);
+  box-shadow: 0 6px 0 -1px var(--cs-edge);
+  color: var(--cs-ink);
   font-family: inherit;
-  color: inherit;
-  transition: transform 0.2s, background-color 0.3s, border-color 0.2s;
+  cursor: pointer;
+  transition:
+    transform 200ms cubic-bezier(0.22, 1.2, 0.36, 1),
+    border-color 200ms ease,
+    box-shadow 200ms ease;
 }
 
-body.dark .select-card {
-  background-color: var(--dark-panel);
-}
-
-.select-card:hover:not(:disabled) {
+.cs-year:hover {
   transform: translateY(-4px);
 }
 
-.select-card.selected {
-  border-color: var(--light-accent);
+.cs-year:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 -1px var(--cs-edge);
 }
 
-body.dark .select-card.selected {
-  border-color: var(--dark-accent);
+.cs-year-icon {
+  font-size: 2rem;
+  animation: cs-icon-idle 5s ease-in-out infinite;
 }
 
-.select-card.locked {
-  opacity: 0.45;
+.cs-year-label {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.cs-year-state {
+  color: var(--cs-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* Picked: the card fills, so the choice is unmistakable from across a room. */
+.cs-year.is-selected {
+  border-color: var(--cs-accent);
+  background: var(--cs-accent);
+  box-shadow: 0 6px 0 -1px var(--cs-accent);
+  color: var(--on-light-accent);
+}
+
+.cs-year.is-selected .cs-year-state {
+  color: var(--on-light-accent);
+}
+
+.cs-year.is-selected .cs-year-icon {
+  animation: cs-icon-wiggle 700ms ease-in-out infinite;
+}
+
+/* Muted with colour rather than `opacity`, which would also wash out the
+   label and drop it below the contrast floor. */
+.cs-year.is-locked {
+  border-style: dashed;
+  border-color: var(--cs-dead);
+  background: var(--cs-inset);
+  box-shadow: none;
+  color: var(--cs-muted);
   cursor: not-allowed;
-  filter: grayscale(0.8);
 }
 
-.select-card-icon {
-  font-size: 2.4rem;
+.cs-year.is-locked:hover {
+  transform: none;
 }
 
-.select-card-label {
-  font-size: 1.3rem;
-  font-weight: bold;
+.cs-year.is-locked .cs-year-icon {
+  animation: none;
+}
+
+.cs-year.is-nudged,
+.cs-subject.is-nudged {
+  animation: cs-shake 440ms ease-in-out;
 }
 
 /* ===========================================================
-   BADGES
+   SUBJECTS
 =========================================================== */
-.select-badge {
-  font-size: 0.9rem;
+.cs-subjects {
+  display: grid;
+  gap: clamp(0.8rem, 2.5vw, 1.2rem);
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+
+.cs-subject {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1.3rem 1rem 1.1rem;
+  border: 3px solid var(--subject-hue);
+  border-radius: 26px;
+  background: var(--cs-card);
+  box-shadow:
+    0 10px 0 -2px var(--subject-hue),
+    0 16px 30px var(--panel-shadow);
+  color: var(--cs-ink);
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    transform 220ms cubic-bezier(0.22, 1.2, 0.36, 1),
+    box-shadow 220ms ease-out,
+    border-color 220ms ease;
+}
+
+.cs-subject:hover {
+  transform: translateY(-7px) rotate(-1.2deg);
+  box-shadow:
+    0 16px 0 -2px var(--subject-hue),
+    0 24px 40px var(--panel-shadow);
+}
+
+.cs-subject:active {
+  transform: translateY(-1px);
+}
+
+.cs-subject-icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: var(--subject-hue);
+  font-size: 2.1rem;
+  /* No hover on a touch screen, so the tile keeps a life of its own. */
+  animation: cs-icon-idle 4.5s ease-in-out infinite;
+}
+
+.cs-subject:hover .cs-subject-icon {
+  animation: cs-icon-wiggle 700ms ease-in-out infinite;
+}
+
+.cs-subject-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+/* The card's own call to action, filled so white ink stays above AA. */
+.cs-subject-state {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 44px;
+  margin-top: auto;
+  padding: 0.5rem 0.8rem;
+  border-radius: 14px;
+  background: var(--subject-deep);
+  color: var(--cs-on-deep);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+/* Ready: a shimmering flag so the eye lands on a playable subject first. */
+.cs-subject-flag {
+  position: absolute;
+  top: -13px;
+  right: 16px;
   padding: 0.25rem 0.75rem;
   border-radius: 999px;
-  background-color: rgba(0, 0, 0, 0.08);
+  background: var(--subject-deep);
+  color: var(--cs-on-deep);
+  font-size: 0.75rem;
+  font-weight: 700;
+  background-image: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.75) 50%,
+    transparent 70%
+  );
+  background-size: 250% 100%;
+  animation: cs-shimmer 2.8s linear infinite;
 }
 
-body.dark .select-badge {
-  background-color: rgba(255, 255, 255, 0.12);
+/* Waiting on step 1, and not yet ready: same shape, quieter paint, so the
+   grid never collapses or jumps when a year is chosen. */
+.cs-subject.is-waiting,
+.cs-subject.is-locked {
+  border-style: dashed;
+  box-shadow: 0 10px 26px var(--panel-shadow);
+  cursor: not-allowed;
 }
 
-.select-badge.locked {
-  opacity: 0.9;
+.cs-subject.is-waiting:hover,
+.cs-subject.is-locked:hover {
+  transform: none;
+  box-shadow: 0 10px 26px var(--panel-shadow);
+}
+
+.cs-subject.is-waiting .cs-subject-state,
+.cs-subject.is-locked .cs-subject-state {
+  background: none;
+  border: 2px dashed var(--cs-dead);
+  color: var(--cs-muted);
+}
+
+.cs-subject.is-locked .cs-subject-icon,
+.cs-subject.is-waiting .cs-subject-icon {
+  filter: grayscale(0.7);
+  animation: none;
+}
+
+.cs-subject.is-locked:hover .cs-subject-icon,
+.cs-subject.is-waiting:hover .cs-subject-icon {
+  animation: none;
+}
+
+/* ===== FOCUS ===== */
+.cs-back:focus-visible,
+.cs-year:focus-visible,
+.cs-subject:focus-visible {
+  outline: 3px solid var(--cs-focus);
+  outline-offset: 3px;
+}
+
+body.dark .cs-back:focus-visible,
+body.dark .cs-year:focus-visible,
+body.dark .cs-subject:focus-visible {
+  outline-color: var(--dark-accent);
 }
 
 /* ===========================================================
-   CHANGE SELECTION LINK (used on CurriculumPage)
+   KEYFRAMES
 =========================================================== */
-.curriculum-change-link {
-  display: inline-block;
-  margin-top: 0.8rem;
-  font-size: 1rem;
-  text-decoration: none;
-  color: var(--light-accent);
+@keyframes cs-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate3d(13px, -20px, 0) rotate(8deg);
+  }
+  66% {
+    transform: translate3d(-11px, -9px, 0) rotate(-6deg);
+  }
 }
 
-body.dark .curriculum-change-link {
-  color: var(--dark-accent);
+@keyframes cs-icon-idle {
+  0%,
+  88%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  92% {
+    transform: translateY(-6px) rotate(-7deg);
+  }
+  96% {
+    transform: translateY(-3px) rotate(5deg);
+  }
 }
 
-.curriculum-change-link:hover {
-  text-decoration: underline;
+@keyframes cs-icon-wiggle {
+  0%,
+  100% {
+    transform: rotate(-8deg) scale(1.06);
+  }
+  50% {
+    transform: rotate(8deg) scale(1.06);
+  }
+}
+
+@keyframes cs-shimmer {
+  from {
+    background-position: 180% 0;
+  }
+  to {
+    background-position: -80% 0;
+  }
+}
+
+@keyframes cs-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes cs-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-8px) rotate(-1.2deg);
+  }
+  40% {
+    transform: translateX(7px) rotate(1.2deg);
+  }
+  60% {
+    transform: translateX(-4px);
+  }
+  80% {
+    transform: translateX(3px);
+  }
+}
+
+/* ===========================================================
+   REDUCED MOTION
+   Everything decorative stops. Reveals are handled in JS (useReveal marks
+   each item revealed immediately), so nothing here can hide content.
+=========================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .cs-glyph,
+  .cs-year-icon,
+  .cs-year.is-selected .cs-year-icon,
+  .cs-subject-icon,
+  .cs-subject:hover .cs-subject-icon,
+  .cs-subject-flag,
+  .cs-step-year,
+  .cs-years.is-nudged,
+  .cs-year.is-nudged,
+  .cs-subject.is-nudged {
+    animation: none;
+  }
+
+  .cs-back,
+  .cs-year,
+  .cs-subject,
+  .cs-track-step,
+  .cs-page .reveal-armed {
+    transition: none;
+  }
+
+  .cs-back:hover,
+  .cs-year:hover,
+  .cs-subject:hover {
+    transform: none;
+  }
 }
