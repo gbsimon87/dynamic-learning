@@ -696,6 +696,17 @@ component state cannot remember "I came to change it", and the back arrow
 bounced straight back in with the picker unreachable. `CurriculumPage`'s back
 link is therefore `/curriculum?pick=1`; every other link still wants the skip.
 
+### Renaming a child profile (2026-09-19)
+
+Each profile row on `/parent` has a name field and Save name button, including
+on a learner account's "My account" screen. The form rejects blank names,
+reports failed saves beside the field, and calls the existing `updateChild`
+context method. That method refreshes the profile list, the active child, and
+the login screen's welcome-back record. The child ID and progress documents
+stay unchanged. The parent and profile picker pages share a drifting glyph
+backdrop like the Home and Skills hubs. On narrow screens the parent page's name
+form stacks, year buttons wrap, and long names stay inside their profile card.
+
 ### Badges (2026-09-19)
 
 One **rewards document per child**, separate from progress: a badge belongs to

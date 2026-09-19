@@ -4,6 +4,7 @@ import { AuthContext } from "../../context/auth-context";
 import ProfileBuilder from "./ProfileBuilder";
 import ProgressRing from "../../components/ProgressRing";
 import { useChildrenProgress } from "../../hooks/useChildrenProgress";
+import FloatingGlyphBackground from "../../components/FloatingGlyphBackground";
 import "./Profiles.css";
 
 const PICK_DELAY_MS = 700;
@@ -118,7 +119,8 @@ function Profiles() {
 
   if (status === "loading") {
     return (
-      <div className="profiles-page">
+      <div className="profiles-page floating-glyph-page">
+        <FloatingGlyphBackground />
         <p className="profiles-loading">Loading your profiles… ⏳</p>
       </div>
     );
@@ -126,7 +128,8 @@ function Profiles() {
 
   if (status === "signedOut") {
     return (
-      <div className="profiles-page">
+      <div className="profiles-page floating-glyph-page">
+        <FloatingGlyphBackground />
         <div className="profiles-signedout">
           <h1 className="profiles-title">Hello! 👋</h1>
           <p className="profiles-subtitle">
@@ -143,7 +146,8 @@ function Profiles() {
   const list = children ?? [];
 
   return (
-    <div className="profiles-page">
+    <div className="profiles-page floating-glyph-page">
+      <FloatingGlyphBackground />
       <header className="profiles-header">
         <h1 className="profiles-title">
           {isLearner ? "Your profiles 🎈" : "Who's playing today? 🎈"}

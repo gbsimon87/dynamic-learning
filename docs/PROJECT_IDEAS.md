@@ -29,9 +29,10 @@
   precisely because none of them does.
 - **A child profile is editable now.** `store.updateChild(childId, patch)` and
   `PATCH /api/children/:childId` exist as of 2026-09-19, with the writable
-  fields whitelisted in `src/data/childFields.js`. Anything that needs to change
-  a profile goes through those — never a direct write, which could rewrite
-  `parentId` or `_id`.
+  fields whitelisted in `src/data/childFields.js`. Names, pictures and school
+  years can be changed from `/parent` ("My account" for learners). Anything that
+  needs to change a profile goes through the update path — never a direct write,
+  which could rewrite `parentId` or `_id`.
 - **Nothing records per-attempt data.** The progress document stores completions
   only — no timestamps per challenge, no attempt counts, no wrong answers. #9
   and #10 both need that, and it is a new write path on the `onComplete`
@@ -61,7 +62,6 @@ Ordered **easiest → hardest** to implement.
 
 | # | Idea | Description | Status |
 |---|---|---|---|
-| 1 | **Rename a child profile** | A name is typed once, when the profile is created, and can never be changed — so a typo, a nickname a child has outgrown, or a name entered by a sibling is permanent. Everything needed already exists: `store.updateChild` accepts `name`, `normaliseChildPatch` already rejects a blank one, and `/parent` already has the per-child row and the avatar picker to sit beside. This is a text input and a save call, not a new write path. Worth doing alongside it: let a learner account rename its own profile, since for them it is their own name. | ⚪ Idea |
 | 2 | **Automated component test setup** | Add Vitest + React Testing Library; neither is in `package.json` today. The **pure logic is well covered** by `node:test` — unlock rules, progress rules, curriculum navigation, account types, badges, the seed builders, the `dl.lastAccount` record — so the remaining gaps are all things pure tests can't reach: (a) `useProgress` and `useRewards` hydration and save guards — the `hydrated` flag and the loaded-document ref that stop one child's data overwriting another's, currently verified only by hand on irreplaceable data; (b) `Challenge.jsx`'s two failure paths, missing-module vs failed-fetch, and the per-attempt state reset; (c) `src/data/store/apiStore.js`, which has no `fetch`-mocked tests despite being the live data path; (d) the signup wizard's branch logic, including the under-13 dead end. | ⚪ Idea |
 | 3 | **Password reset & account recovery** | There is no way back into an account whose password is forgotten — no reset, no email verification, and an email address that is never proved to belong to anyone. That was survivable when only grown-ups held accounts; now that children hold their own it is the likeliest way someone loses their progress for good. Needs an email transport on the server (none exists), a single-use token with an expiry, and two screens. | ⚪ Idea |
 | 4 | **Progress schema versioning & migration path** | Progress documents carry `schemaVersion: 1` but there is **no migration step that reads it**, so renaming a category, topic, or challenge ID still silently orphans a learner's completions. Rewards documents now carry the same field and the same gap. Add the migration hook in the store layer (`src/data/store/`) so IDs can be renamed safely, and a test per version bump. Touches irreplaceable learner data — follow the `curriculum-progress` skill's verification checklist. | ⚪ Idea |
@@ -82,17 +82,15 @@ Ordered **easiest → hardest** to implement.
 
 ## 🎯 Suggested Order
 
-1. **One afternoon, real annoyance:** #1 (rename a profile). Every piece it
-   needs already shipped; today a typo in a child's name is permanent.
-2. **Unblock quality:** #2 (component tests) and #4 (progress schema migration),
+1. **Unblock quality:** #2 (component tests) and #4 (progress schema migration),
    before more content multiplies the surface area. The auth wizard, the badge
    award path and `updateChild` are all new surface that pure tests only half
    reach.
-3. **Close the account gap:** #3 (password reset). Children hold their own
+2. **Close the account gap:** #3 (password reset). Children hold their own
    accounts, and there is currently no way back into a locked-out one.
-4. **Unblock scale:** #6 (content authoring format) — makes #16 and future
+3. **Unblock scale:** #6 (content authoring format) — makes #16 and future
    curriculum years far cheaper.
-5. **Then the shared prerequisite:** per-attempt data, which #9 (parent/teacher
+4. **Then the shared prerequisite:** per-attempt data, which #9 (parent/teacher
    view) and #10 (adaptive difficulty) both need, and which would also unlock
    streaks on top of the badges shipped 2026-09-19.
-6. **Broaden and polish:** #5, #7, #8 and beyond.
+5. **Broaden and polish:** #5, #7, #8 and beyond.

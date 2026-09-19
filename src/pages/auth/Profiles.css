@@ -3,13 +3,12 @@
 
    CSS is global in this project (PROJECT_KNOWLEDGE §9), so EVERY selector below
    is scoped under the unique root class `.profiles-page`.
-   No colour literals: the `--pf-*` tokens all resolve to App.css / index.css
-   variables that carry a `body.dark` pair, and the per-profile colour arrives as
+   The `--pf-*` tokens resolve to App.css / index.css variables that carry a
+   `body.dark` pair, and the per-profile colour arrives as
    the inline `--profile-card-colour` custom property (never a literal), so a
    profile chosen in light mode still repaints correctly in dark mode.
 =========================================================== */
 .profiles-page {
-  --pf-bg: var(--light-bg);
   --pf-text: var(--light-text);
   --pf-panel: var(--light-panel);
   --pf-accent: var(--light-accent);
@@ -30,12 +29,10 @@
   min-height: calc(100dvh - var(--navbar-height));
   padding: 2rem 1rem 3rem;
   color: var(--pf-text);
-  background-color: var(--pf-bg);
   text-align: center;
 }
 
 body.dark .profiles-page {
-  --pf-bg: var(--dark-bg);
   --pf-text: var(--dark-text);
   --pf-panel: var(--dark-panel);
   --pf-accent: var(--dark-accent);
@@ -269,7 +266,7 @@ body.dark .profiles-page {
 @media (max-width: 480px) {
   .profiles-page {
     --pf-card-size: 9.75rem;
-    padding: 1.5rem 0.75rem 2.5rem;
+    padding: 5.25rem 0.75rem 2.5rem;
   }
 
   .profiles-page .profiles-title {

@@ -2,13 +2,11 @@
    PARENT AREA — plain adult UI for the signed-in account
 
    CSS is global in this project (PROJECT_KNOWLEDGE §9): every selector below is
-   scoped under the unique root class `.parent-area-page`. No colour literals —
-   the `--pa-*` tokens resolve to App.css / index.css variables that carry a
+   scoped under the unique root class `.parent-area-page`. Page colours carry a
    `body.dark` pair, and the per-child colour arrives as the inline
    `--parent-chip-colour` custom property rather than a literal.
 =========================================================== */
 .parent-area-page {
-  --pa-bg: var(--light-bg);
   --pa-text: var(--light-text);
   --pa-panel: var(--light-panel);
   --pa-accent: var(--light-accent);
@@ -27,11 +25,9 @@
   justify-content: center;
   padding: 2rem 1rem 3rem;
   color: var(--pa-text);
-  background-color: var(--pa-bg);
 }
 
 body.dark .parent-area-page {
-  --pa-bg: var(--dark-bg);
   --pa-text: var(--dark-text);
   --pa-panel: var(--dark-panel);
   --pa-accent: var(--dark-accent);
@@ -39,16 +35,20 @@ body.dark .parent-area-page {
 }
 
 .parent-area-page .parent-area-loading {
+  position: relative;
   padding: 3rem 1rem;
 }
 
 .parent-area-page .parent-area-card {
+  position: relative;
   width: 100%;
   max-width: 38rem;
+  min-width: 0;
   background-color: var(--pa-panel);
   border-radius: 16px;
   padding: 2rem 1.5rem;
   box-shadow: 0 4px 14px var(--pa-shadow);
+  overflow-wrap: anywhere;
 }
 
 .parent-area-page .parent-area-title {
@@ -88,12 +88,14 @@ body.dark .parent-area-page {
 .parent-area-page .parent-area-list {
   list-style: none;
   display: grid;
+  min-width: 0;
   gap: 0.75rem;
   margin-bottom: 1.25rem;
 }
 
 .parent-area-page .parent-area-row {
   display: flex;
+  min-width: 0;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
@@ -106,7 +108,51 @@ body.dark .parent-area-page {
 .parent-area-page .parent-area-row-actions {
   display: flex;
   flex-wrap: wrap;
+  min-width: 0;
   gap: 0.5rem;
+}
+
+/* ---------- profile name ---------- */
+.parent-area-page .parent-area-name {
+  flex-basis: 100%;
+  display: grid;
+  min-width: 0;
+  gap: 0.4rem;
+}
+
+.parent-area-page .parent-area-name label {
+  font-size: 0.85rem;
+  color: var(--pa-muted);
+}
+
+.parent-area-page .parent-area-name-row {
+  display: flex;
+  flex-wrap: wrap;
+  min-width: 0;
+  gap: 0.5rem;
+}
+
+.parent-area-page .parent-area-name input {
+  flex: 1 1 12rem;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 0.75rem;
+  border: 1px solid var(--pa-border);
+  border-radius: 10px;
+  background-color: var(--pa-panel);
+  color: var(--pa-text);
+  font: inherit;
+}
+
+.parent-area-page .parent-area-name input:focus-visible {
+  outline: 2px solid var(--pa-accent);
+  outline-offset: 2px;
+}
+
+.parent-area-page .parent-area-name-error {
+  color: var(--pa-danger);
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 /* ---------- school year ----------
@@ -115,6 +161,7 @@ body.dark .parent-area-page {
 .parent-area-page .parent-area-year {
   flex-basis: 100%;
   display: flex;
+  min-width: 0;
   align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem;
@@ -127,6 +174,8 @@ body.dark .parent-area-page {
 
 .parent-area-page .parent-area-year-row {
   display: flex;
+  flex-wrap: wrap;
+  min-width: 0;
   gap: 0.3rem;
 }
 
@@ -172,6 +221,7 @@ body.dark .parent-area-page {
 /* ---------- badges & picture ---------- */
 .parent-area-page .parent-area-rewards {
   flex-basis: 100%;
+  min-width: 0;
   margin-top: 0.25rem;
   padding-top: 0.75rem;
   border-top: 1px solid var(--pa-border);
@@ -273,6 +323,7 @@ body.dark .parent-area-page {
    so it sits UNDER the chip and buttons instead of squeezing in beside them. */
 .parent-area-page .parent-area-progress {
   flex-basis: 100%;
+  min-width: 0;
   margin-top: 0.25rem;
   padding-top: 0.75rem;
   border-top: 1px solid var(--pa-border);
@@ -350,6 +401,12 @@ body.dark .parent-area-page {
   color: var(--pa-muted);
 }
 
+.parent-area-page .parent-area-topic > span:first-child,
+.parent-area-page .parent-area-cat-name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 /* A finished topic reads as finished through WEIGHT, not colour alone — the
    count beside it says the same thing for anyone who cannot see the change. */
 .parent-area-page .parent-area-topic.is-done {
@@ -366,6 +423,8 @@ body.dark .parent-area-page {
   --parent-chip-colour: var(--profile-colour-sky);
 
   display: inline-flex;
+  max-width: 100%;
+  min-width: 0;
   align-items: center;
   gap: 0.5rem;
   padding: 0.4rem 0.9rem;
@@ -376,12 +435,14 @@ body.dark .parent-area-page {
 }
 
 .parent-area-page .parent-area-chip-name {
+  min-width: 0;
   overflow-wrap: anywhere;
 }
 
 .parent-area-page .parent-area-confirm {
   display: flex;
   flex-direction: column;
+  min-width: 0;
   gap: 0.6rem;
   flex: 1 1 16rem;
 }
@@ -390,6 +451,7 @@ body.dark .parent-area-page {
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--pa-danger);
+  overflow-wrap: anywhere;
 }
 
 .parent-area-page .parent-area-confirm-actions {
@@ -400,6 +462,7 @@ body.dark .parent-area-page {
 
 .parent-area-page .parent-area-primary-btn {
   display: inline-flex;
+  max-width: 100%;
   align-items: center;
   justify-content: center;
   min-height: 48px;
@@ -434,6 +497,11 @@ body.dark .parent-area-page {
 .parent-area-page .parent-area-secondary-btn:hover,
 .parent-area-page .parent-area-secondary-btn:focus-visible {
   border-color: var(--pa-accent);
+}
+
+.parent-area-page .parent-area-secondary-btn:disabled {
+  cursor: default;
+  opacity: 0.55;
 }
 
 .parent-area-page .parent-area-danger-btn {
@@ -472,7 +540,7 @@ body.dark .parent-area-page {
 
 @media (max-width: 480px) {
   .parent-area-page {
-    padding: 1.25rem 0.75rem 2rem;
+    padding: 5.25rem 0.75rem 2rem;
   }
 
   .parent-area-page .parent-area-card {
@@ -481,7 +549,29 @@ body.dark .parent-area-page {
 
   .parent-area-page .parent-area-row {
     flex-direction: column;
+    flex-wrap: nowrap;
     align-items: stretch;
+  }
+
+  .parent-area-page .parent-area-name,
+  .parent-area-page .parent-area-year,
+  .parent-area-page .parent-area-rewards,
+  .parent-area-page .parent-area-progress {
+    flex-basis: auto;
+    width: 100%;
+  }
+
+  .parent-area-page .parent-area-name-row > * {
+    width: 100%;
+  }
+
+  .parent-area-page .parent-area-name input {
+    flex-basis: auto;
+  }
+
+  .parent-area-page .parent-area-primary-btn {
+    width: 100%;
+    text-align: center;
   }
 }
 

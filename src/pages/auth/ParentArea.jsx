@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../context/auth-context";
 import { useChildrenProgress } from "../../hooks/useChildrenProgress";
@@ -11,6 +11,7 @@ import {
   unlockedAvatars,
 } from "../../data/badges";
 import { isYearAvailable } from "../../data/curriculumRegistry";
+import FloatingGlyphBackground from "../../components/FloatingGlyphBackground";
 import "./ParentArea.css";
 
 /**
@@ -192,6 +193,69 @@ function YearPicker({ child, onChange }) {
   );
 }
 
+function NameEditor({ child, onChange }) {
+  const [name, setName] = useState(child.name);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    setName(child.name);
+  }, [child.name]);
+
+  const save = async (event) => {
+    event.preventDefault();
+    const trimmed = name.trim();
+    if (!trimmed) {
+      setError("Enter a name before saving.");
+      return;
+    }
+    if (saving || trimmed === child.name) return;
+
+    setSaving(true);
+    setError("");
+    try {
+      const updated = await onChange(child._id, { name: trimmed });
+      setName(updated.name);
+    } catch {
+      setError("That didn't save — please try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <form className="parent-area-name" onSubmit={save}>
+      <label htmlFor={`name-${child._id}`}>Name</label>
+      <div className="parent-area-name-row">
+        <input
+          id={`name-${child._id}`}
+          type="text"
+          value={name}
+          disabled={saving}
+          aria-invalid={Boolean(error)}
+          aria-describedby={error ? `name-error-${child._id}` : undefined}
+          onChange={(event) => {
+            setName(event.target.value);
+            setError("");
+          }}
+        />
+        <button
+          type="submit"
+          className="parent-area-secondary-btn"
+          disabled={saving || name.trim() === child.name}
+        >
+          {saving ? "Saving…" : "Save name"}
+        </button>
+      </div>
+      {error && (
+        <span id={`name-error-${child._id}`} className="parent-area-name-error" role="alert">
+          {error}
+        </span>
+      )}
+    </form>
+  );
+}
+
 /**
  * A child's badges, and the pictures those badges have unlocked.
  *
@@ -303,7 +367,8 @@ function ParentArea() {
 
   if (status === "loading") {
     return (
-      <div className="parent-area-page">
+      <div className="parent-area-page floating-glyph-page">
+        <FloatingGlyphBackground />
         <p className="parent-area-loading">Loading…</p>
       </div>
     );
@@ -311,7 +376,8 @@ function ParentArea() {
 
   if (status === "signedOut") {
     return (
-      <div className="parent-area-page">
+      <div className="parent-area-page floating-glyph-page">
+        <FloatingGlyphBackground />
         <main className="parent-area-card">
           <h1 className="parent-area-title">Parent area</h1>
           <p className="parent-area-intro">
@@ -335,7 +401,8 @@ function ParentArea() {
   };
 
   return (
-    <div className="parent-area-page">
+    <div className="parent-area-page floating-glyph-page">
+      <FloatingGlyphBackground />
       <main className="parent-area-card">
         <h1 className="parent-area-title">
           {isLearner ? "My account" : "Parent area"}
@@ -416,6 +483,7 @@ function ParentArea() {
                     </span>
                   )}
 
+                  <NameEditor child={kid} onChange={editChild} />
                   <YearPicker child={kid} onChange={editChild} />
 
                   {openId === kid._id && (
