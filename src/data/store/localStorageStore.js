@@ -1,4 +1,8 @@
 import { hashPassword, verifyPassword } from "../../utils/passwordHash.js";
+import {
+  normaliseAccountFields,
+  readAccountType,
+} from "../../../shared/accountTypes.js";
 
 /**
  * localStorage-backed implementation of the app's data store.
@@ -83,7 +87,10 @@ function publicParent(parent) {
   if (!parent) return null;
   // eslint-disable-next-line no-unused-vars
   const { passwordHash, passwordSalt, iterations, ...rest } = parent;
-  return clone(rest);
+  // An account stored before `accountType` existed has no such field, and every
+  // one of them is a grown-up's. Resolve it here so no consumer has to treat
+  // `undefined` as a third kind of account.
+  return clone({ ...rest, accountType: readAccountType(rest) });
 }
 
 /* ------------------------------------------------------------------ *
@@ -97,12 +104,17 @@ export const store = {
    * @throws {Error} `EMAIL_TAKEN` when the email is already registered.
    * @returns {Promise<object>} the parent doc *without* credential fields.
    */
-  async createParent({ email, password }) {
+  async createParent({ email, password, accountType, ageBand }) {
     const normalised = normaliseEmail(email);
     if (!normalised) throw new Error("EMAIL_REQUIRED");
     if (typeof password !== "string" || password.length === 0) {
       throw new Error("PASSWORD_REQUIRED");
     }
+
+    // Throws INVALID_ACCOUNT_TYPE / AGE_BAND_REQUIRED / AGE_BAND_TOO_YOUNG.
+    // Shared with the server so both drivers reject the same input the same way;
+    // omitting both fields yields a plain parent, so old callers are unaffected.
+    const account = normaliseAccountFields({ accountType, ageBand });
 
     const parents = readCollection(KEYS.parents);
     if (parents.some((parent) => normaliseEmail(parent.email) === normalised)) {
@@ -117,6 +129,8 @@ export const store = {
       passwordHash: hash,
       passwordSalt: salt,
       iterations,
+      accountType: account.accountType,
+      ageBand: account.ageBand,
       createdAt: now(),
     };
 

@@ -198,4 +198,71 @@ test("route authorization", { skip: URI ? false : "MONGODB_URI not set" }, async
     assert.equal((await a("POST", "/api/auth/logout")).status, 204);
     assert.equal((await a("GET", "/api/auth/me")).status, 401);
   });
+
+  // --- account type + age band --------------------------------------------
+  // The client validates these too, for good error messages. The server
+  // validates because a request is not a trust boundary — these tests are what
+  // stop a hand-rolled POST putting an under-13 age band in the database.
+  await t.test("signup defaults to a parent account", async () => {
+    const s = session();
+    const res = await s("POST", "/api/auth/signup", {
+      email: "default@example.com",
+      password: "password-x",
+    });
+    assert.equal(res.status, 201);
+    assert.equal(res.body.parent.accountType, "parent");
+    assert.equal(res.body.parent.ageBand, null);
+  });
+
+  await t.test("signup creates a learner account with its age band", async () => {
+    const s = session();
+    const res = await s("POST", "/api/auth/signup", {
+      email: "learner@example.com",
+      password: "password-x",
+      accountType: "learner",
+      ageBand: "16-17",
+    });
+    assert.equal(res.status, 201);
+    assert.equal(res.body.parent.accountType, "learner");
+    assert.equal(res.body.parent.ageBand, "16-17");
+  });
+
+  await t.test("signup never leaks credential fields", async () => {
+    const s = session();
+    const res = await s("POST", "/api/auth/signup", {
+      email: "leak-check@example.com",
+      password: "password-x",
+    });
+    for (const field of ["passwordHash", "passwordSalt", "iterations"]) {
+      assert.equal(res.body.parent[field], undefined, field);
+    }
+  });
+
+  await t.test("signup rejects a bad account type or age band", async () => {
+    const cases = [
+      [{ accountType: "admin" }, "INVALID_ACCOUNT_TYPE"],
+      [{ accountType: "learner" }, "AGE_BAND_REQUIRED"],
+      [{ accountType: "learner", ageBand: "under-13" }, "AGE_BAND_TOO_YOUNG"],
+      [{ accountType: "learner", ageBand: "7-9" }, "INVALID_AGE_BAND"],
+    ];
+
+    for (const [extra, code] of cases) {
+      const s = session();
+      const res = await s("POST", "/api/auth/signup", {
+        email: `reject-${code}@example.com`,
+        password: "password-x",
+        ...extra,
+      });
+      assert.equal(res.status, 400, code);
+      assert.equal(res.body.error, code);
+      // Rejected BEFORE the insert — no orphan account left behind.
+      assert.equal(
+        await database
+          .collection("parents")
+          .countDocuments({ email: `reject-${code}@example.com` }),
+        0,
+        `${code} must not create an account`
+      );
+    }
+  });
 });

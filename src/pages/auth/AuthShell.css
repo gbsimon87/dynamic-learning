@@ -1,0 +1,316 @@
+/* ===========================================================
+   AUTH SHELL — the shared frame behind /login and /signup.
+
+   CSS is global in this project (PROJECT_KNOWLEDGE §9), so EVERY rule below is
+   scoped under the unique root class `.auth-page`. All colours come from
+   `--au-*` tokens defined as a light/dark pair, so they survive the `body.dark`
+   flip; no literal ever appears outside those two blocks.
+
+   The shared form furniture (field, input, button, chip, error) lives here too
+   rather than in Login.css and SignUp.css, because it was already duplicated
+   line-for-line between them as `--lg-*` and `--su-*`.
+=========================================================== */
+.auth-page {
+  --au-bg: var(--light-bg);
+  --au-text: var(--light-text);
+  --au-panel: var(--light-panel);
+  --au-accent: var(--light-accent);
+  --au-on-accent: var(--on-light-accent);
+  --au-border: var(--map-border);
+  --au-muted: var(--map-muted);
+  --au-danger: var(--danger-text);
+  --au-shadow: var(--panel-shadow);
+
+  --au-sky-top: #ffe3e7;
+  --au-sky-bottom: #f8ecee;
+  --au-glyph: rgba(239, 98, 108, 0.26);
+  /* A filled button carries white ink, so this fill is dark enough for white to
+     clear AA 4.5:1 on it — the vivid accent is a BACKGROUND, never ink (§9). */
+  --au-cta: #c33d47;
+  --au-on-cta: #ffffff;
+  --au-cta-shade: #92262f;
+  --au-soft: rgba(239, 98, 108, 0.1);
+  /* Positive ink for the password-strength hint. No project-wide success token
+     exists yet, so the pair lives here. Measured, not derived (§9): #1a6b46 is
+     6.49:1 on --light-panel, #7fdba8 is 7.98:1 on --dark-panel. */
+  --au-good: #1a6b46;
+
+  /* ONE variable drives both the step slide distance and anything sized against
+     it, so a transform and a height can never drift apart (§9). */
+  --au-step-distance: 34px;
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: calc(100dvh - var(--navbar-height));
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(1.25rem, 5vw, 3rem) 1rem 3rem;
+  color: var(--au-text);
+  background: linear-gradient(180deg, var(--au-sky-top), var(--au-sky-bottom));
+}
+
+body.dark .auth-page {
+  --au-bg: var(--dark-bg);
+  --au-text: var(--dark-text);
+  --au-panel: var(--dark-panel);
+  --au-accent: var(--dark-accent);
+  --au-on-accent: var(--on-dark-accent);
+
+  --au-sky-top: #33262c;
+  --au-sky-bottom: #241a1e;
+  --au-glyph: rgba(132, 220, 207, 0.22);
+  --au-cta: #1f7d70;
+  --au-on-cta: #ffffff;
+  --au-cta-shade: #13544b;
+  --au-soft: rgba(132, 220, 207, 0.12);
+  --au-good: #7fdba8;
+}
+
+/* ===== SKY ===== */
+.auth-page .auth-sky {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.auth-page .auth-glyph {
+  position: absolute;
+  color: var(--au-glyph);
+  font-weight: 700;
+  line-height: 1;
+  animation-name: auth-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* ===== SCROLL REVEAL =====
+   `reveal-armed` is added by useReveal in JS, never by CSS, so a card can't be
+   left permanently invisible if the observer never runs. */
+.auth-page .reveal-armed {
+  opacity: 0;
+  transform: translateY(20px) scale(0.98);
+  transition: opacity 460ms ease-out,
+    transform 460ms cubic-bezier(0.22, 1.2, 0.36, 1);
+}
+
+.auth-page .reveal-armed.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* ===== CARD ===== */
+.auth-page .auth-card {
+  position: relative;
+  width: 100%;
+  background-color: var(--au-panel);
+  border-radius: 22px;
+  padding: clamp(1.5rem, 4vw, 2.25rem) clamp(1.1rem, 4vw, 1.9rem);
+  box-shadow: 0 10px 30px var(--au-shadow);
+  animation: auth-card-in 520ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
+}
+
+.auth-page .auth-card.is-narrow { max-width: 27rem; }
+.auth-page .auth-card.is-wide { max-width: 40rem; }
+
+/* ===== HEADINGS =====
+   `--au-text`, never `--au-accent`: the accent measures 2.66:1 as ink (§9). */
+.auth-page .auth-title {
+  font-size: clamp(1.45rem, 4.5vw, 1.8rem);
+  line-height: 1.2;
+  margin-bottom: 0.45rem;
+  color: var(--au-text);
+}
+
+.auth-page .auth-intro {
+  font-size: 0.95rem;
+  color: var(--au-muted);
+  margin-bottom: 1.4rem;
+}
+
+/* ===== FORM FURNITURE ===== */
+.auth-page .auth-form {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.auth-page .auth-field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.auth-page .auth-label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.auth-page .auth-input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.6rem 0.75rem;
+  border-radius: 12px;
+  border: 2px solid var(--au-border);
+  background-color: var(--au-panel);
+  color: var(--au-text);
+  font: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.auth-page .auth-input:focus {
+  outline: none;
+  border-color: var(--au-accent);
+  box-shadow: 0 0 0 4px var(--au-soft);
+}
+
+.auth-page .auth-input.invalid { border-color: var(--au-danger); }
+
+/* The password field and its reveal button share one row. */
+.auth-page .auth-input-wrap {
+  position: relative;
+  display: flex;
+}
+
+.auth-page .auth-input-wrap .auth-input { padding-inline-end: 3.6rem; }
+
+.auth-page .auth-peek {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0.3rem;
+  min-width: 44px;
+  border: none;
+  border-radius: 10px;
+  background: none;
+  color: var(--au-muted);
+  font-size: 1.15rem;
+  cursor: pointer;
+}
+
+.auth-page .auth-peek:hover,
+.auth-page .auth-peek:focus-visible { color: var(--au-text); }
+
+.auth-page .auth-hint {
+  font-size: 0.85rem;
+  color: var(--au-muted);
+}
+
+.auth-page .auth-error {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--au-danger);
+}
+
+/* ===== BUTTONS ===== */
+.auth-page .auth-btn {
+  min-height: 52px;
+  padding-inline: 1.2rem;
+  border: none;
+  border-radius: 14px;
+  font: inherit;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  background-color: var(--au-cta);
+  color: var(--au-on-cta);
+  box-shadow: 0 4px 0 var(--au-cta-shade);
+  transition: filter 0.2s, transform 0.15s, box-shadow 0.15s;
+}
+
+/* Lighten, never darken, on hover — darkening drops the ink below AA (§9). */
+.auth-page .auth-btn:hover:not(:disabled),
+.auth-page .auth-btn:focus-visible:not(:disabled) {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 var(--au-cta-shade);
+}
+
+.auth-page .auth-btn:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 var(--au-cta-shade);
+}
+
+.auth-page .auth-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  box-shadow: 0 4px 0 var(--au-cta-shade);
+  transform: none;
+}
+
+.auth-page .auth-btn-quiet {
+  background: none;
+  color: var(--au-text);
+  border: 2px solid var(--au-border);
+  box-shadow: none;
+  font-size: 0.95rem;
+  min-height: 46px;
+}
+
+.auth-page .auth-btn-quiet:hover:not(:disabled),
+.auth-page .auth-btn-quiet:focus-visible:not(:disabled) {
+  border-color: var(--au-accent);
+  box-shadow: none;
+  filter: none;
+}
+
+.auth-page .auth-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.3rem;
+}
+
+.auth-page .auth-actions .auth-btn { flex: 1 1 10rem; }
+
+/* ===== FOOTER LINK ===== */
+.auth-page .auth-switch {
+  margin-top: 1.4rem;
+  font-size: 0.95rem;
+  text-align: center;
+  color: var(--au-muted);
+}
+
+.auth-page .auth-switch a {
+  color: var(--au-text);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* ===== KEYFRAMES ===== */
+@keyframes auth-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  33% { transform: translate3d(12px, -20px, 0) rotate(7deg); }
+  66% { transform: translate3d(-10px, -9px, 0) rotate(-5deg); }
+}
+
+@keyframes auth-card-in {
+  from { opacity: 0; transform: translateY(18px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+
+/* The shake that says "not that" without the page jumping (§9 / DeadButton). */
+@keyframes auth-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px) rotate(-1.2deg); }
+  40% { transform: translateX(7px) rotate(1.2deg); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-page .auth-glyph,
+  .auth-page .auth-card {
+    animation: none;
+  }
+
+  .auth-page .reveal-armed,
+  .auth-page .auth-btn,
+  .auth-page .auth-input {
+    transition: none;
+  }
+
+  .auth-page .auth-btn:hover,
+  .auth-page .auth-btn:active {
+    transform: none;
+  }
+}

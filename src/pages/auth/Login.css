@@ -1,141 +1,120 @@
 /* ===========================================================
-   LOGIN — parent-facing sign in
-   CSS is global here (PROJECT_KNOWLEDGE §9): every rule is scoped under the
-   unique root class `.login-page`. No colour literals — the local `--lg-*`
-   tokens all resolve to App.css / index.css variables that have light+dark pairs.
+   LOGIN — the welcome-back pieces.
+
+   The shell, the card and the shared form furniture live in AuthShell.css; only
+   what is unique to sign-in is here. CSS is global in this project
+   (PROJECT_KNOWLEDGE §9), so every selector is scoped under `.auth-page` and
+   every colour resolves to an `--au-*` token defined there as a light/dark pair.
 =========================================================== */
-.login-page {
-  --lg-bg: var(--light-bg);
-  --lg-text: var(--light-text);
-  --lg-panel: var(--light-panel);
-  --lg-accent: var(--light-accent);
-  --lg-on-accent: var(--on-light-accent);
-  --lg-border: var(--map-border);
-  --lg-muted: var(--map-muted);
-  --lg-danger: var(--danger-text);
-  --lg-shadow: var(--panel-shadow);
 
-  min-height: calc(100dvh - var(--navbar-height));
+/* ===== GREETING =====
+   Letter by letter, the same idea as the homepage hello. `--letter-index` is set
+   inline per span, so the stagger needs no nth-child rules. */
+.auth-page .lg-greeting span {
+  display: inline-block;
+  animation: lg-letter-in 480ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
+  animation-delay: calc(var(--letter-index, 0) * 42ms);
+}
+
+/* ===== THE FACES =====
+   Not buttons. They are recognition, not a control — tapping one cannot sign
+   anyone in, and a card that looks pressable but does nothing is worse than a
+   card that plainly does not. */
+.auth-page .lg-faces {
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 2rem 1rem 3rem;
-  color: var(--lg-text);
-  background-color: var(--lg-bg);
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0 0 1.2rem;
+  padding: 0;
+  list-style: none;
 }
 
-body.dark .login-page {
-  --lg-bg: var(--dark-bg);
-  --lg-text: var(--dark-text);
-  --lg-panel: var(--dark-panel);
-  --lg-accent: var(--dark-accent);
-  --lg-on-accent: var(--on-dark-accent);
+.auth-page .lg-face {
+  --face-colour: var(--profile-colour-sky);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.9rem 0.45rem 0.5rem;
+  border-radius: 999px;
+  font-weight: 700;
+  background-color: var(--face-colour);
+  /* Every --profile-colour-* clears AA with this dark ink in BOTH themes
+     (index.css), so one value works throughout. */
+  color: var(--on-light-accent);
+  animation: lg-face-in 460ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
+  animation-delay: calc(var(--face-index, 0) * 90ms + 180ms);
 }
 
-.login-page .login-card {
-  width: 100%;
-  max-width: 26rem;
-  background-color: var(--lg-panel);
-  border-radius: 16px;
-  padding: 2rem 1.5rem;
-  box-shadow: 0 4px 14px var(--lg-shadow);
-}
-
-.login-page .login-title {
+.auth-page .lg-face-avatar {
   font-size: 1.6rem;
-  margin-bottom: 0.5rem;
+  line-height: 1;
 }
 
-.login-page .login-intro {
-  font-size: 0.95rem;
-  color: var(--lg-muted);
-  margin-bottom: 1.5rem;
+.auth-page .lg-face-name {
+  font-size: 0.98rem;
 }
 
-.login-page .login-form {
-  display: grid;
-  gap: 1.1rem;
-}
-
-.login-page .login-field {
-  display: grid;
-  gap: 0.35rem;
-}
-
-.login-page .login-label {
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-.login-page .login-input {
-  width: 100%;
-  min-height: 48px;
-  padding: 0.6rem 0.75rem;
-  border-radius: 10px;
-  border: 2px solid var(--lg-border);
-  background-color: var(--lg-panel);
-  color: var(--lg-text);
-  transition: border-color 0.2s;
-}
-
-.login-page .login-input:focus {
-  outline: none;
-  border-color: var(--lg-accent);
-}
-
-.login-page .login-input.invalid {
-  border-color: var(--lg-danger);
-}
-
-.login-page .login-error {
+/* ===== REMEMBERED EMAIL ===== */
+.auth-page .lg-as {
+  margin-bottom: 1.2rem;
   font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--lg-danger);
+  color: var(--au-muted);
+  word-break: break-word;
 }
 
-.login-page .login-submit {
-  min-height: 48px;
-  margin-top: 0.4rem;
+.auth-page .lg-as strong { color: var(--au-text); }
+
+/* Kept in the DOM for autofill and for "Not you?", but out of the layout and
+   out of the tab order (the input carries tabIndex={-1}). `display: none` would
+   hide it from password managers too. */
+.auth-page .lg-hidden-field {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ===== NOT YOU ===== */
+.auth-page .lg-not-you {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.6rem;
+  min-height: 44px;
   border: none;
-  border-radius: 10px;
-  font-size: 1.05rem;
-  font-weight: 700;
-  cursor: pointer;
-  background-color: var(--lg-accent);
-  color: var(--lg-on-accent);
-  transition: filter 0.2s;
-}
-
-/* Lighten the accent on hover — darkening drops the ink below AA. */
-.login-page .login-submit:hover:not(:disabled),
-.login-page .login-submit:focus-visible:not(:disabled) {
-  filter: brightness(1.08);
-}
-
-.login-page .login-submit:disabled {
-  cursor: not-allowed;
-  opacity: 0.65;
-}
-
-.login-page .login-switch {
-  margin-top: 1.4rem;
-  font-size: 0.95rem;
-  text-align: center;
-  color: var(--lg-muted);
-}
-
-.login-page .login-switch a {
-  color: var(--lg-text);
-  font-weight: 700;
+  background: none;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--au-muted);
   text-decoration: underline;
+  cursor: pointer;
+  border-radius: 10px;
 }
 
-@media (max-width: 420px) {
-  .login-page {
-    padding: 1.25rem 0.75rem 2rem;
-  }
+.auth-page .lg-not-you:hover,
+.auth-page .lg-not-you:focus-visible {
+  color: var(--au-text);
+  background-color: var(--au-soft);
+}
 
-  .login-page .login-card {
-    padding: 1.5rem 1.1rem;
+/* ===== KEYFRAMES ===== */
+@keyframes lg-letter-in {
+  from { opacity: 0; transform: translateY(12px) rotate(-7deg); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes lg-face-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.9); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-page .lg-greeting span,
+  .auth-page .lg-face {
+    animation: none;
   }
 }

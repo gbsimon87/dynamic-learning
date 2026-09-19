@@ -208,3 +208,101 @@ test("the store never touches keys it does not own", async () => {
   );
   assert.equal(globalThis.localStorage.getItem("theme"), '"dark"');
 });
+
+/* ===== ACCOUNT TYPE + AGE BAND =====
+   A learner account is an older child who signed up for themselves. The fields
+   are validated by `shared/accountTypes.js`, which the server uses too, so the
+   two drivers cannot disagree about what is acceptable. */
+
+test("an account created without an accountType is a parent", async () => {
+  reset();
+  const parent = await store.createParent({
+    email: "plain@example.com",
+    password: "pw123456",
+  });
+
+  assert.equal(parent.accountType, "parent");
+  assert.equal(parent.ageBand, null);
+});
+
+test("a learner account keeps its type and age band", async () => {
+  reset();
+  const learner = await store.createParent({
+    email: "kid@example.com",
+    password: "pw123456",
+    accountType: "learner",
+    ageBand: "13-15",
+  });
+
+  assert.equal(learner.accountType, "learner");
+  assert.equal(learner.ageBand, "13-15");
+
+  // And it survives a sign-in, not just the create call.
+  const signedIn = await store.verifyParent({
+    email: "kid@example.com",
+    password: "pw123456",
+  });
+  assert.equal(signedIn.accountType, "learner");
+  assert.equal(signedIn.ageBand, "13-15");
+});
+
+test("a learner with no age band is rejected and nothing is stored", async () => {
+  reset();
+  await assert.rejects(
+    () =>
+      store.createParent({
+        email: "kid@example.com",
+        password: "pw123456",
+        accountType: "learner",
+      }),
+    /AGE_BAND_REQUIRED/
+  );
+
+  // The whole point of validating before the write: no half-made account.
+  assert.equal(globalThis.localStorage.getItem("dl.parents"), null);
+});
+
+test("an under-13 learner is rejected and nothing is stored", async () => {
+  reset();
+  await assert.rejects(
+    () =>
+      store.createParent({
+        email: "small@example.com",
+        password: "pw123456",
+        accountType: "learner",
+        ageBand: "under-13",
+      }),
+    /AGE_BAND_TOO_YOUNG/
+  );
+
+  assert.equal(globalThis.localStorage.getItem("dl.parents"), null);
+});
+
+test("an unknown account type is rejected", async () => {
+  reset();
+  await assert.rejects(
+    () =>
+      store.createParent({
+        email: "odd@example.com",
+        password: "pw123456",
+        accountType: "admin",
+      }),
+    /INVALID_ACCOUNT_TYPE/
+  );
+});
+
+test("an account stored before the field existed reads back as a parent", async () => {
+  reset();
+  // Exactly the shape the store wrote before `accountType` was added.
+  await store.createParent({ email: "legacy@example.com", password: "pw123456" });
+  const raw = JSON.parse(globalThis.localStorage.getItem("dl.parents"));
+  delete raw[0].accountType;
+  delete raw[0].ageBand;
+  globalThis.localStorage.setItem("dl.parents", JSON.stringify(raw));
+
+  const signedIn = await store.verifyParent({
+    email: "legacy@example.com",
+    password: "pw123456",
+  });
+  assert.equal(signedIn.accountType, "parent");
+});

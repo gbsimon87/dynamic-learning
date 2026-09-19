@@ -1,0 +1,256 @@
+/* ===========================================================
+   PROFILE BUILDER — name, picture and colour.
+
+   CSS is global in this project (PROJECT_KNOWLEDGE §9), so EVERY selector below
+   is scoped under the unique root class `.profile-builder`. It renders inside
+   both `.profiles-page` and `.auth-page`, so it must not depend on either — it
+   defines its own `--pb-*` tokens, each resolving to an App.css / index.css
+   variable that carries a `body.dark` pair.
+
+   The per-profile colour arrives as an inline custom property (`--pb-swatch`,
+   `--pb-chip-colour`), never a literal, so a colour picked in light mode still
+   repaints in dark mode (§9).
+=========================================================== */
+.profile-builder {
+  --pb-text: var(--light-text);
+  --pb-panel: var(--light-panel);
+  --pb-accent: var(--light-accent);
+  --pb-on-accent: var(--on-light-accent);
+  --pb-border: var(--map-border);
+  --pb-danger: var(--danger-text);
+  --pb-shadow: var(--panel-shadow);
+
+  /* Ink used on a profile colour. Every --profile-colour-* value clears AA with
+     this dark ink in BOTH themes (see index.css), so one value works throughout. */
+  --pb-on-colour: var(--on-light-accent);
+
+  /* One variable drives every tap target, so the emoji tiles, the swatches and
+     the buttons cannot drift apart (§9). These are six-year-old fingers, so it
+     stays at or above 64px. */
+  --pb-tap: 64px;
+
+  display: block;
+  text-align: left;
+  color: var(--pb-text);
+}
+
+body.dark .profile-builder {
+  --pb-text: var(--dark-text);
+  --pb-panel: var(--dark-panel);
+  --pb-accent: var(--dark-accent);
+  --pb-on-accent: var(--on-dark-accent);
+}
+
+/* Standalone on /profiles it needs its own panel; inside the auth card it is
+   already on one, so the caller adds `is-bare` to drop the second surface. */
+.profile-builder:not(.is-bare) {
+  max-width: 34rem;
+  margin: 2rem auto 0;
+  padding: 1.5rem 1.25rem;
+  border-radius: 24px;
+  background-color: var(--pb-panel);
+  box-shadow: 0 6px 16px var(--pb-shadow);
+}
+
+.profile-builder .pb-title {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.profile-builder .pb-label {
+  display: block;
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.profile-builder .pb-name-input {
+  width: 100%;
+  min-height: 56px;
+  padding: 0.6rem 0.9rem;
+  font: inherit;
+  font-size: 1.15rem;
+  border-radius: 14px;
+  border: 3px solid var(--pb-border);
+  background-color: var(--pb-panel);
+  color: var(--pb-text);
+  transition: border-color 0.15s ease;
+}
+
+.profile-builder .pb-name-input:focus {
+  outline: none;
+  border-color: var(--pb-accent);
+}
+
+.profile-builder .pb-name-input.invalid {
+  border-color: var(--pb-danger);
+}
+
+/* ---------- picture ---------- */
+.profile-builder .pb-avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--pb-tap), 1fr));
+  gap: 0.6rem;
+}
+
+.profile-builder .pb-avatar-option {
+  min-width: var(--pb-tap);
+  min-height: var(--pb-tap);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  cursor: pointer;
+  border-radius: 18px;
+  border: 3px solid var(--pb-border);
+  background-color: var(--pb-panel);
+  color: var(--pb-text);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.profile-builder .pb-avatar-option:hover,
+.profile-builder .pb-avatar-option:focus-visible {
+  outline: none;
+  transform: scale(1.08);
+  border-color: var(--pb-accent);
+}
+
+/* The accent is a BACKGROUND with --on-*-accent ink on top, never ink (§9). */
+.profile-builder .pb-avatar-option.selected {
+  border-color: var(--pb-accent);
+  background-color: var(--pb-accent);
+  color: var(--pb-on-accent);
+}
+
+/* ---------- colour ---------- */
+.profile-builder .pb-colour-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.profile-builder .pb-colour-option {
+  --pb-swatch: var(--profile-colour-sky);
+
+  width: var(--pb-tap);
+  height: var(--pb-tap);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 4px solid transparent;
+  background-color: var(--pb-swatch);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.profile-builder .pb-colour-option:hover,
+.profile-builder .pb-colour-option:focus-visible {
+  outline: none;
+  transform: scale(1.08);
+}
+
+.profile-builder .pb-colour-option.selected {
+  border-color: var(--pb-accent);
+  transform: scale(1.08);
+}
+
+/* ---------- preview ---------- */
+.profile-builder .pb-preview {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
+}
+
+.profile-builder .pb-preview-label {
+  font-weight: 700;
+}
+
+.profile-builder .pb-preview-chip {
+  --pb-chip-colour: var(--profile-colour-sky);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  background-color: var(--pb-chip-colour);
+  color: var(--pb-on-colour);
+  transition: background-color 0.2s ease;
+}
+
+.profile-builder .pb-error {
+  margin-top: 0.9rem;
+  font-weight: 700;
+  color: var(--pb-danger);
+}
+
+/* ---------- actions ---------- */
+.profile-builder .pb-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.profile-builder .pb-save-btn {
+  flex: 1 1 12rem;
+  min-height: var(--pb-tap);
+  border: none;
+  border-radius: 16px;
+  font: inherit;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  background-color: var(--pb-accent);
+  color: var(--pb-on-accent);
+  transition: filter 0.2s ease;
+}
+
+/* Lighten, never darken, an accent hover — darkening drops the ink below AA. */
+.profile-builder .pb-save-btn:hover:not(:disabled),
+.profile-builder .pb-save-btn:focus-visible:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.profile-builder .pb-save-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.profile-builder .pb-cancel-btn {
+  flex: 0 1 8rem;
+  min-height: var(--pb-tap);
+  border-radius: 16px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 3px solid var(--pb-border);
+  background-color: var(--pb-panel);
+  color: var(--pb-text);
+}
+
+.profile-builder .pb-cancel-btn:hover,
+.profile-builder .pb-cancel-btn:focus-visible {
+  outline: none;
+  border-color: var(--pb-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-builder .pb-avatar-option,
+  .profile-builder .pb-colour-option,
+  .profile-builder .pb-name-input,
+  .profile-builder .pb-preview-chip,
+  .profile-builder .pb-save-btn {
+    transition: none;
+  }
+
+  .profile-builder .pb-avatar-option:hover,
+  .profile-builder .pb-colour-option:hover,
+  .profile-builder .pb-colour-option.selected {
+    transform: none;
+  }
+}

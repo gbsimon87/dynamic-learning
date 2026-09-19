@@ -10,6 +10,7 @@ import {
 } from "../auth.js";
 import { requireAuth } from "../middleware.js";
 import { publicParent } from "../serialize.js";
+import { normaliseAccountFields } from "../../shared/accountTypes.js";
 
 const router = Router();
 
@@ -24,6 +25,20 @@ router.post("/signup", async (req, res, next) => {
       return res.status(400).json({ error: "PASSWORD_REQUIRED" });
     }
 
+    // Shared with both store drivers so the client and the server agree on the
+    // vocabulary. Re-checked here regardless: the client validates for good error
+    // messages, the server validates because a request is not a trust boundary.
+    // Notably this is what stops an under-13 age band ever reaching the database.
+    let account;
+    try {
+      account = normaliseAccountFields({
+        accountType: req.body?.accountType,
+        ageBand: req.body?.ageBand,
+      });
+    } catch (err) {
+      return res.status(400).json({ error: err.message });
+    }
+
     // The `email` index is NOT unique, so uniqueness is enforced here.
     const existing = await db.parents().findOne({ email });
     if (existing) return res.status(409).json({ error: "EMAIL_TAKEN" });
@@ -34,6 +49,8 @@ router.post("/signup", async (req, res, next) => {
       passwordHash: hash,
       passwordSalt: salt,
       iterations,
+      accountType: account.accountType,
+      ageBand: account.ageBand,
       createdAt: new Date().toISOString(),
     };
     const { insertedId } = await db.parents().insertOne(parent);

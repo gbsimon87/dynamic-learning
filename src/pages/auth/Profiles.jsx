@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../context/auth-context";
-import { AVATARS, PROFILE_COLOURS } from "../../data/avatars";
+import ProfileBuilder from "./ProfileBuilder";
 import "./Profiles.css";
 
 const PICK_DELAY_MS = 700;
@@ -15,15 +15,19 @@ const PICK_DELAY_MS = 700;
  * Profile colours are CSS custom-property NAMES, passed through an inline
  * `--profile-card-colour` variable rather than a literal, so a profile picked in
  * light mode still reads in dark mode (§9).
+ *
+ * A LEARNER account (an older child who signed up for themselves) reaches this
+ * screen only when they have more than one profile — with exactly one, the auth
+ * context selects it and they go straight to the curriculum. When they do get
+ * here, the copy is first-person: they are choosing among their own profiles,
+ * not being asked which of their children is playing.
  */
 function Profiles() {
-  const { children, status, addChild, selectChild } = useContext(AuthContext);
+  const { children, status, isLearner, addChild, selectChild } =
+    useContext(AuthContext);
   const navigate = useNavigate();
 
   const [adding, setAdding] = useState(false);
-  const [name, setName] = useState("");
-  const [avatar, setAvatar] = useState(AVATARS[0]);
-  const [colour, setColour] = useState(PROFILE_COLOURS[0]);
   const [formError, setFormError] = useState("");
   const [saving, setSaving] = useState(false);
   const [chosenId, setChosenId] = useState(null);
@@ -48,28 +52,12 @@ function Profiles() {
     }, PICK_DELAY_MS);
   };
 
-  const resetForm = () => {
-    setName("");
-    setAvatar(AVATARS[0]);
-    setColour(PROFILE_COLOURS[0]);
-    setFormError("");
-  };
-
-  const handleAdd = async (event) => {
-    event.preventDefault();
+  const handleAdd = async (profile) => {
     if (saving) return;
-
-    const trimmed = name.trim();
-    if (!trimmed) {
-      setFormError("Please type a name first! ✏️");
-      return;
-    }
-
     setFormError("");
     setSaving(true);
     try {
-      await addChild({ name: trimmed, avatar, colour });
-      resetForm();
+      await addChild(profile);
       setAdding(false);
     } catch {
       setFormError("Oops — that did not save. Please try again.");
@@ -107,7 +95,9 @@ function Profiles() {
   return (
     <div className="profiles-page">
       <header className="profiles-header">
-        <h1 className="profiles-title">Who&apos;s playing today? 🎈</h1>
+        <h1 className="profiles-title">
+          {isLearner ? "Your profiles 🎈" : "Who's playing today? 🎈"}
+        </h1>
         <p className="profiles-subtitle">
           {list.length > 0
             ? "Tap your picture to start learning!"
@@ -142,7 +132,7 @@ function Profiles() {
               type="button"
               className="profiles-card profiles-add-card"
               onClick={() => {
-                resetForm();
+                setFormError("");
                 setAdding(true);
               }}
               disabled={Boolean(chosenId)}
@@ -150,109 +140,37 @@ function Profiles() {
               <span className="profiles-avatar" aria-hidden="true">
                 ➕
               </span>
-              <span className="profiles-name">Add someone new</span>
+              <span className="profiles-name">
+                {isLearner ? "Add another profile" : "Add someone new"}
+              </span>
               <span className="profiles-go">Make a profile</span>
             </button>
           </li>
         )}
       </ul>
 
+      {/* Keyed so re-opening the form starts blank rather than showing whatever
+          was typed into the previous, abandoned attempt. */}
       {adding && (
-        <form className="profiles-form" onSubmit={handleAdd}>
-          <h2 className="profiles-form-title">✨ Make a new profile</h2>
-
-          <label className="profiles-form-label" htmlFor="profiles-name">
-            What&apos;s your name?
-          </label>
-          <input
-            id="profiles-name"
-            className="profiles-name-input"
-            type="text"
-            maxLength={20}
-            autoComplete="off"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Type your name"
-          />
-
-          <p className="profiles-form-label">Pick a picture</p>
-          <div className="profiles-avatar-grid">
-            {AVATARS.map((emoji) => (
-              <button
-                key={emoji}
-                type="button"
-                className={`profiles-avatar-option ${
-                  avatar === emoji ? "selected" : ""
-                }`}
-                onClick={() => setAvatar(emoji)}
-                aria-pressed={avatar === emoji}
-                aria-label={`Choose the ${emoji} picture`}
-              >
-                <span aria-hidden="true">{emoji}</span>
-              </button>
-            ))}
-          </div>
-
-          <p className="profiles-form-label">Pick a colour</p>
-          <div className="profiles-colour-row">
-            {PROFILE_COLOURS.map((token) => (
-              <button
-                key={token}
-                type="button"
-                className={`profiles-colour-option ${
-                  colour === token ? "selected" : ""
-                }`}
-                style={{ "--profile-swatch-colour": `var(${token})` }}
-                onClick={() => setColour(token)}
-                aria-pressed={colour === token}
-                aria-label={`Choose the ${token
-                  .replace("--profile-colour-", "")
-                  .replace(/-/g, " ")} colour`}
-              />
-            ))}
-          </div>
-
-          <div className="profiles-preview">
-            <span className="profiles-preview-label">Your profile:</span>
-            <span
-              className="profiles-preview-chip"
-              style={{ "--profile-card-colour": `var(${colour})` }}
-            >
-              <span aria-hidden="true">{avatar}</span>
-              {name.trim() || "…"}
-            </span>
-          </div>
-
-          {formError && (
-            <p className="profiles-form-error" role="alert">
-              {formError}
-            </p>
-          )}
-
-          <div className="profiles-form-actions">
-            <button
-              type="submit"
-              className="profiles-save-btn"
-              disabled={saving}
-            >
-              {saving ? "Saving…" : "🎉 All done!"}
-            </button>
-            <button
-              type="button"
-              className="profiles-cancel-btn"
-              onClick={() => {
-                resetForm();
-                setAdding(false);
-              }}
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
+        <ProfileBuilder
+          key={list.length}
+          title="✨ Make a new profile"
+          nameLabel="What's your name?"
+          saveLabel="🎉 All done!"
+          saving={saving}
+          error={formError}
+          onSave={handleAdd}
+          onCancel={() => {
+            setFormError("");
+            setAdding(false);
+          }}
+        />
       )}
 
       <p className="profiles-footer">
-        <Link to="/parent">Grown-ups: manage profiles</Link>
+        <Link to="/parent">
+          {isLearner ? "My account" : "Grown-ups: manage profiles"}
+        </Link>
       </p>
     </div>
   );

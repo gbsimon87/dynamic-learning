@@ -4,14 +4,18 @@ import { AuthContext } from "../../context/auth-context";
 import "./ParentArea.css";
 
 /**
- * Grown-ups only: plain adult UI for the signed-in account.
+ * The signed-in account: plain adult UI, no games.
+ *
+ * A LEARNER account (an older child who signed up for themselves) sees the same
+ * screen with first-person headings — it is their account, not a grown-up's, so
+ * "Parent area" would be addressing someone who is not there.
  *
  * Removing a profile deletes that child's progress, which has no backup, so the
  * destructive action is two-step: the row swaps to an explicit confirm strip
  * naming the child before anything is removed.
  */
 function ParentArea() {
-  const { parent, children, status, signOut, removeChild } =
+  const { parent, children, status, isLearner, signOut, removeChild } =
     useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -53,14 +57,18 @@ function ParentArea() {
   return (
     <div className="parent-area-page">
       <main className="parent-area-card">
-        <h1 className="parent-area-title">Parent area</h1>
+        <h1 className="parent-area-title">
+          {isLearner ? "My account" : "Parent area"}
+        </h1>
 
         <p className="parent-area-account">
           Signed in as <strong>{parent?.email}</strong>
         </p>
 
         <section className="parent-area-section">
-          <h2 className="parent-area-section-title">Child profiles</h2>
+          <h2 className="parent-area-section-title">
+            {isLearner ? "My profiles" : "Child profiles"}
+          </h2>
 
           {list.length === 0 ? (
             <p className="parent-area-empty">

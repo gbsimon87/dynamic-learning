@@ -2,6 +2,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AuthContext } from "./auth-context";
 import { store } from "../data/store";
+import { isLearnerAccount } from "../../shared/accountTypes.js";
+import {
+  clearLastAccount,
+  writeLastAccount,
+} from "../data/lastAccount.js";
 
 /**
  * Parent accounts + child profiles.
@@ -94,6 +99,21 @@ async function resolveParent(session) {
   return sessionHintParent(session);
 }
 
+/**
+ * A learner account holds exactly one profile in the ordinary case — its own —
+ * so making them tap "who's playing?" to choose themselves is a screen that asks
+ * a question with one possible answer. Auto-select it, which turns `status` into
+ * "ready" and lets RequireChild pass straight through to the curriculum.
+ *
+ * Deliberately NOT applied to a parent account with one child: a grown-up may be
+ * mid-setup and about to add a second, and the picker is where they do it. Nor
+ * to a learner who has since added more profiles — then the question is real.
+ */
+function autoSelectedProfile(account, profiles) {
+  if (!isLearnerAccount(account)) return null;
+  return (profiles?.length === 1 ? profiles[0] : null) ?? null;
+}
+
 // The provider receives React's own `children` prop AND exposes the parent's
 // child PROFILES. They are deliberately named apart: `subtree` is the React
 // tree, `childProfiles` is the account data.
@@ -145,6 +165,9 @@ export function AuthProvider({ children: subtree }) {
           // The child must still exist AND still belong to this parent.
           if (saved && saved.parentId === session.parentId) activeChild = saved;
         }
+        // A learner's own profile needs no picking, on a reload as much as on a
+        // fresh sign-in.
+        activeChild = activeChild ?? autoSelectedProfile(savedParent, profiles);
 
         setParent(savedParent);
         setChildProfiles(profiles || []);
@@ -155,6 +178,9 @@ export function AuthProvider({ children: subtree }) {
           activeChild?._id ?? null,
           savedParent.email
         );
+        // Kept current on every boot, so the login screen this device eventually
+        // falls back to shows the profiles that actually exist now.
+        writeLastAccount(savedParent, profiles || []);
         setBootstrapped(true);
       } catch {
         // Unreadable store — fall back to signed out rather than half a session.
@@ -174,15 +200,25 @@ export function AuthProvider({ children: subtree }) {
 
   // --- Actions ------------------------------------------------------------
 
-  const signUp = useCallback(async ({ email, password }) => {
+  const signUp = useCallback(async ({ email, password, accountType, ageBand }) => {
     setError(null);
     try {
-      const newParent = await store.createParent({ email, password });
+      // `accountType`/`ageBand` omitted means a grown-up's account, so every
+      // pre-existing caller keeps its current behaviour.
+      const newParent = await store.createParent({
+        email,
+        password,
+        accountType,
+        ageBand,
+      });
       if (!aliveRef.current) return newParent;
       setParent(newParent);
       setChildProfiles([]);
       setChild(null);
       writeSession(newParent._id, null, newParent.email);
+      // No profiles yet — the wizard creates the first one immediately after,
+      // and `addChild` refreshes this record with the face to show next time.
+      writeLastAccount(newParent, []);
       return newParent;
     } catch (err) {
       if (aliveRef.current) setError(err?.message || "SIGNUP_FAILED");
@@ -206,9 +242,14 @@ export function AuthProvider({ children: subtree }) {
       if (!aliveRef.current) return found;
       setParent(found);
       setChildProfiles(profiles || []);
-      // Signing in never auto-selects a child: the grown-up picks who is playing.
-      setChild(null);
-      writeSession(found._id, null, found.email);
+      // A grown-up always picks who is playing. A learner signing into their own
+      // single profile has nothing to pick, so they skip the screen entirely.
+      const auto = autoSelectedProfile(found, profiles);
+      setChild(auto);
+      writeSession(found._id, auto?._id ?? null, found.email);
+      // Refreshed on every sign-in, so a profile renamed or deleted on another
+      // device stops showing a stale face on this one.
+      writeLastAccount(found, profiles || []);
       return found;
     } catch (err) {
       if (aliveRef.current) setError(err?.message || "SIGNIN_FAILED");
@@ -229,6 +270,9 @@ export function AuthProvider({ children: subtree }) {
       }
     }
     clearSession();
+    // Signing out is the one deliberate "forget me" gesture the UI offers, so
+    // the welcome-back faces and the remembered email go with it.
+    clearLastAccount();
     setParent(null);
     setChildProfiles([]);
     setChild(null);
@@ -274,6 +318,7 @@ export function AuthProvider({ children: subtree }) {
         const profiles = await store.listChildren(parent._id);
         if (!aliveRef.current) return created;
         setChildProfiles(profiles || []);
+        writeLastAccount(parent, profiles || []);
 
         if (isFirstChild) {
           setChild(created);
@@ -298,6 +343,8 @@ export function AuthProvider({ children: subtree }) {
         const profiles = await store.listChildren(parent._id);
         if (!aliveRef.current) return true;
         setChildProfiles(profiles || []);
+        // A deleted profile must stop appearing on the login screen too.
+        writeLastAccount(parent, profiles || []);
 
         // Deleting the child who is currently playing drops back to /profiles.
         if (child?._id === childId) {
@@ -323,12 +370,18 @@ export function AuthProvider({ children: subtree }) {
         ? "needsChild"
         : "ready";
 
+  // Derived, never stored, so it cannot disagree with the account it describes.
+  // Three screens read it: the profile picker's copy, the Parent Area's title,
+  // and where signup lands.
+  const isLearner = isLearnerAccount(parent);
+
   const value = useMemo(
     () => ({
       parent,
       children: childProfiles,
       child,
       status,
+      isLearner,
       error,
       signUp,
       signIn,
@@ -342,6 +395,7 @@ export function AuthProvider({ children: subtree }) {
       childProfiles,
       child,
       status,
+      isLearner,
       error,
       signUp,
       signIn,

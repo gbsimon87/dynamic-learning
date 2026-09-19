@@ -27,6 +27,8 @@
  * `AuthContext.signIn` is what converts a null into `INVALID_CREDENTIALS`.
  */
 
+import { normaliseAccountFields } from "../../../shared/accountTypes.js";
+
 const BASE = "/api";
 
 /** Thrown for anything that is not a clean, expected response. */
@@ -97,7 +99,7 @@ export const store = {
    * @throws {Error} `EMAIL_TAKEN` when the email is already registered.
    * @returns {Promise<object>} the parent doc `{_id, email, createdAt}`.
    */
-  async createParent({ email, password }) {
+  async createParent({ email, password, accountType, ageBand }) {
     const normalised = String(email ?? "").trim().toLowerCase();
     // Validated locally too, so the same errors surface as in the local driver
     // rather than depending on the server's wording.
@@ -106,10 +108,20 @@ export const store = {
       throw new ApiError("PASSWORD_REQUIRED");
     }
 
+    // The server validates these again — a client is not a trust boundary — but
+    // checking here keeps the error codes identical across the two drivers and
+    // saves a round trip on input the UI should never have produced.
+    const account = normaliseAccountFields({ accountType, ageBand });
+
     // 409 is not "soft": it must throw Error("EMAIL_TAKEN"), which SignUp reads.
     const { data } = await request("/auth/signup", {
       method: "POST",
-      body: { email: normalised, password },
+      body: {
+        email: normalised,
+        password,
+        accountType: account.accountType,
+        ageBand: account.ageBand,
+      },
       expect: [201],
     });
     return data?.parent ?? null;
