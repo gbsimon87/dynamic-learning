@@ -1,182 +1,759 @@
-/* ===== PAGE LAYOUT ===== */
+/* ===== HOMEPAGE =====
+   Every colour here is a token with a body.dark pair (App.css §"Both themes,
+   every time"). Each subject carries two: a vivid hue for borders and icon
+   tiles, and a deep fill for buttons, dark enough that white ink clears WCAG
+   AA 4.5:1 on it in both themes. */
+
 .home-page {
-  text-align: center;
-  animation: fadeIn 0.6s ease-in-out;
-  color: var(--light-text);
+  --home-ink: var(--light-text);
+  --home-muted: #645057;
+  --home-card: var(--light-panel);
+  --home-card-edge: #f0dde0;
+  --home-sky-top: #ffe3e7;
+  --home-sky-bottom: #f8ecee;
+  --home-glyph: rgba(239, 98, 108, 0.28);
+  --home-accent: var(--light-accent);
+  --home-on-accent: var(--on-light-accent);
+  --home-focus: #22181C;
+
+  /* Filled buttons carry white ink, so every fill below is dark enough for
+     white to clear WCAG AA 4.5:1 on it. The vivid --home-hue-* values stay for
+     borders and icon tiles, where nothing sits on top of them. */
+  --home-cta: #c33d47;
+  --home-on-cta: #ffffff;
+  /* The "thickness" under a pressed button. */
+  --home-accent-shade: #92262f;
+
+  /* Bix */
+  --home-mascot-1: #ffb9bd;
+  --home-mascot-2: #ef626c;
+  --home-mascot-dot: #ffe08a;
+  --home-mascot-cheek: rgba(239, 98, 108, 0.55);
+
+  /* Subject hues: vivid for edges and icon tiles, deep for filled buttons. */
+  --home-hue-math: #ef626c;
+  --home-hue-english: #9f91e8;
+  --home-hue-geography: #2fa898;
+  --home-hue-science: #e39a24;
+  --home-deep-math: #c33d47;
+  --home-deep-english: #5e4eb8;
+  --home-deep-geography: #1f7d70;
+  --home-deep-science: #8f5900;
+  --home-on-deep: #ffffff;
+
+  padding: 0 1rem 4rem;
+  color: var(--home-ink);
   background-color: var(--light-bg);
-  padding: 1rem;
+  overflow-x: clip;
 }
 
 body.dark .home-page {
+  --home-ink: var(--dark-text);
+  --home-muted: #c8b9bd;
+  --home-card: var(--dark-panel);
+  --home-card-edge: #46403f;
+  --home-sky-top: #33262c;
+  --home-sky-bottom: #241a1e;
+  --home-glyph: rgba(132, 220, 207, 0.24);
+  --home-accent: var(--dark-accent);
+  --home-on-accent: var(--on-dark-accent);
+  --home-focus: #84DCCF;
+  --home-cta: #1f7d70;
+  --home-on-cta: #ffffff;
+  --home-accent-shade: #13544b;
+
+  --home-mascot-1: #a9ece2;
+  --home-mascot-2: #4fb4a5;
+  --home-mascot-dot: #ffd166;
+  --home-mascot-cheek: rgba(255, 145, 155, 0.5);
+
   background-color: var(--dark-bg);
-  color: var(--dark-text);
 }
 
-
-/* ===== HERO SECTION ===== */
-.hero-section {
-  margin-bottom: 3rem;
+/* ===== SCROLL REVEAL =====
+   `reveal-armed` is added by useReveal, never by CSS, so content can't be
+   left permanently invisible if the observer never runs. */
+.reveal-armed {
+  opacity: 0;
+  transform: translateY(26px) scale(0.98);
+  transition: opacity 520ms ease-out, transform 520ms cubic-bezier(0.22, 1.2, 0.36, 1);
 }
 
-.hero-title {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
-  color: var(--light-accent);
+.reveal-armed.is-revealed {
+  opacity: 1;
+  transform: none;
 }
 
-body.dark .hero-title {
-  color: var(--dark-accent);
-}
-
-.hero-subtitle {
-  font-size: 1.2rem;
-  max-width: 550px;
+/* ===== HERO ===== */
+.home-hero {
+  position: relative;
+  max-width: 1150px;
   margin: 0 auto;
+  padding: clamp(1.5rem, 5vw, 3.5rem) clamp(1rem, 4vw, 3rem) clamp(2rem, 5vw, 3rem);
+  border-radius: 0 0 40px 40px;
+  background: linear-gradient(180deg, var(--home-sky-top), var(--home-sky-bottom));
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Full-bleed on phones: the sky should reach the screen edges. */
+@media (max-width: 720px) {
+  .home-page { padding-inline: 0.75rem; }
+
+  .home-hero {
+    margin-inline: -0.75rem;
+    /* The character sat right under the navbar before. */
+    padding-top: 3rem;
+    border-radius: 0 0 32px 32px;
+  }
+}
+
+.home-sky {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.home-glyph {
+  position: absolute;
+  color: var(--home-glyph);
+  font-weight: 700;
+  line-height: 1;
+  animation-name: home-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.home-hero-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 4vw, 3rem);
+}
+
+.home-hero-copy {
+  flex: 1 1 380px;
+  max-width: 560px;
+}
+
+@media (max-width: 760px) {
+  .home-hero-inner {
+    flex-direction: column-reverse;
+    text-align: center;
+  }
+
+  .home-hero-copy { flex-basis: auto; }
+}
+
+/* ===== GREETING ===== */
+.home-hello {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 0.6rem;
+  padding: 0.35rem 0.9rem 0.35rem 0.35rem;
+  border-radius: 999px;
+  background: var(--home-card);
+  box-shadow: 0 4px 14px var(--panel-shadow);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.home-hello-avatar {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  font-size: 1.3rem;
+}
+
+.home-hello-name span {
+  display: inline-block;
+  animation: home-letter-in 520ms cubic-bezier(0.22, 1.4, 0.36, 1) both;
+  animation-delay: calc(var(--letter-index) * 45ms);
+}
+
+.home-title {
+  margin: 0.2rem 0 0.6rem;
+  color: var(--home-ink);
+  font-size: clamp(2rem, 6.5vw, 3.4rem);
+  line-height: 1.1;
+}
+
+.home-subtitle {
+  margin: 0 0 1.4rem;
+  max-width: 34ch;
+  color: var(--home-muted);
+  font-size: clamp(1rem, 2.4vw, 1.2rem);
+}
+
+@media (max-width: 760px) {
+  .home-subtitle { margin-inline: auto; }
+}
+
+.home-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+@media (max-width: 760px) {
+  .home-hero-actions { justify-content: center; }
+}
+
+/* ===== MASCOT SLOT ===== */
+.home-hero-mascot {
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
 }
 
 
-/* ===== SHARED SECTION TITLE ===== */
-.section-title {
-  font-size: 2rem;
+/* ===== BUTTONS ===== */
+.home-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 56px;
+  padding: 0.9rem 1.5rem;
+  border-radius: 16px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 140ms ease-out, box-shadow 140ms ease-out,
+    background-color 200ms ease;
+}
+
+.home-btn-big {
+  min-height: 68px;
+  padding: 1.1rem 2rem;
+  font-size: clamp(1.15rem, 3vw, 1.4rem);
+}
+
+/* The depth compresses under the press instead of just changing colour —
+   it reads as a real, pushable button to a 6-year-old. */
+.home-btn-primary {
+  background: var(--home-cta);
+  color: var(--home-on-cta);
+  box-shadow: 0 6px 0 var(--home-accent-shade);
+}
+
+.home-btn-primary:hover { transform: translateY(-2px); }
+
+.home-btn-primary:active {
+  transform: translateY(5px);
+  box-shadow: 0 1px 0 var(--home-accent-shade);
+}
+
+.home-btn-ghost {
+  background: var(--home-card);
+  color: var(--home-ink);
+  box-shadow: 0 6px 0 var(--home-card-edge);
+}
+
+.home-btn-ghost:hover { transform: translateY(-2px); }
+
+.home-btn-ghost:active {
+  transform: translateY(5px);
+  box-shadow: 0 1px 0 var(--home-card-edge);
+}
+
+/* The alternative to the hero's one focal action. Flat and unfilled so the
+   eye lands on the primary button first, but still a 56px target. */
+.home-btn-quiet {
+  background: none;
+  border: 2px solid var(--home-card-edge);
+  color: var(--home-ink);
+  font-size: 1rem;
+}
+
+.home-btn-quiet:hover {
+  background: var(--home-card);
+  border-color: var(--home-cta);
+}
+
+.home-btn-quiet:active { transform: translateY(2px); }
+
+.home-btn:focus-visible,
+.home-chip:focus-visible,
+.home-mode:focus-visible,
+.home-subject:focus-visible {
+  outline: 3px solid var(--home-focus);
+  outline-offset: 3px;
+}
+
+/* ===== HERO PROGRESS =====
+   A read-only cluster, deliberately not a card and not a link: above the fold
+   the only two actions are the buttons underneath it. */
+.home-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 1.3rem;
+}
+
+@media (max-width: 760px) {
+  .home-progress { justify-content: center; }
+}
+
+.home-progress p { margin: 0; }
+
+.home-progress-topic {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.home-progress-count {
+  color: var(--home-muted);
+  font-size: 0.95rem;
+}
+
+.home-eyebrow {
+  margin: 0;
+  color: var(--home-muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ===== PROGRESS RING ===== */
+.home-ring {
+  flex: none;
+  width: clamp(76px, 18vw, 94px);
+  height: auto;
+}
+
+.home-ring-track {
+  fill: none;
+  stroke: var(--home-card-edge);
+  stroke-width: 11;
+}
+
+.home-ring-fill {
+  fill: none;
+  stroke: var(--home-accent);
+  stroke-width: 11;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 1.1s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+.home-ring-text {
+  fill: var(--home-ink);
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+/* ===== SECTIONS ===== */
+.home-section {
+  max-width: 1150px;
+  margin: clamp(2.5rem, 7vw, 4.5rem) auto 0;
+}
+
+.home-section-title {
+  margin: 0 0 1.4rem;
+  font-size: clamp(1.6rem, 5vw, 2.3rem);
+  text-align: center;
+}
+
+/* ===== SUBJECT CARDS ===== */
+.home-subjects {
+  display: grid;
+  gap: 1.2rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.home-subject {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.3rem 1.3rem;
+  border: 3px solid var(--subject-hue);
+  border-radius: 26px;
+  background: var(--home-card);
+  box-shadow: 0 10px 0 -2px var(--subject-hue), 0 16px 30px var(--panel-shadow);
+  transition: transform 220ms cubic-bezier(0.22, 1.2, 0.36, 1),
+    box-shadow 220ms ease-out;
+}
+
+.home-subject:hover {
+  transform: translateY(-8px) rotate(-1.2deg);
+  box-shadow: 0 16px 0 -2px var(--subject-hue), 0 24px 40px var(--panel-shadow);
+}
+
+.home-subject:active { transform: translateY(-2px); }
+
+.home-subject h3 {
+  margin: 0.6rem 0 0.35rem;
+  font-size: 1.5rem;
+}
+
+.home-subject p {
+  margin: 0 0 1rem;
+  color: var(--home-muted);
+}
+
+.home-subject-icon {
+  display: grid;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  border-radius: 22px;
+  background: var(--subject-hue);
+  font-size: 2.2rem;
+  /* No hover on a touch screen, so the icon keeps a life of its own. */
+  animation: home-icon-idle 4.5s ease-in-out infinite;
+}
+
+.home-subject:hover .home-subject-icon {
+  animation: home-icon-wiggle 700ms ease-in-out infinite;
+}
+
+.home-subject-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin-bottom: 1rem;
 }
 
-
-/* ===== CURRICULUM / MAIN SECTIONS ===== */
-.curriculum-section {
-  margin-top: 3rem;
-  padding: 2rem;
-  background-color: var(--light-panel);
-  border-radius: 20px;
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-body.dark .curriculum-section {
-  background-color: var(--dark-panel);
-}
-
-
-/* ===== CURRICULUM TEXT ===== */
-.curriculum-text {
-  max-width: 600px;
-  margin: 0 auto 1.5rem;
-  font-size: 1.1rem;
-}
-
-
-/* ===== CURRICULUM BUTTON ===== */
-.curriculum-btn {
-  display: inline-block;
-  background-color: var(--light-accent);
-  color: var(--on-light-accent);
-  padding: 1rem 1.4rem;
-  font-size: 1.2rem;
-  font-weight: bold;
-  border-radius: 12px;
+.home-chip {
+  padding: 0.5rem 0.85rem;
+  border: 2px solid var(--subject-hue);
+  border-radius: 999px;
+  color: var(--home-ink);
+  font-size: 0.9rem;
+  font-weight: 700;
   text-decoration: none;
-  transition: transform 0.2s, background-color 0.3s;
+  transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
 }
 
-.curriculum-btn:hover {
-  transform: scale(1.05);
-  background-color: #F2757E; /* lighter, not darker: keeps dark ink at 6.27:1 (was 4.14) */
+.home-chip:hover {
+  background: var(--subject-deep);
+  border-color: var(--subject-deep);
+  color: var(--home-on-deep);
+  transform: translateY(-2px);
 }
 
-body.dark .curriculum-btn {
-  background-color: var(--dark-accent);
-  color: var(--light-text);
-}
-
-body.dark .curriculum-btn:hover {
-  background-color: #6ec8ba;
-}
-
-
-/* ===== EXPLORE SKILLS SECTION ===== */
-.skills-section .features-grid {
-  margin-top: 2rem;
-}
-
-/* ===== FEATURE CARDS ===== */
-.features-grid {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.feature-card {
-  background-color: var(--light-panel);
-  padding: 1.5rem;
+.home-subject-go {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 56px;
+  margin-top: auto;
+  padding: 0.85rem 1.2rem;
   border-radius: 16px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, background-color 0.3s;
+  background: var(--subject-deep);
+  color: var(--home-on-deep);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 160ms ease-out;
+}
+
+.home-subject-go:hover { transform: scale(1.03); }
+.home-subject-go:active { transform: scale(0.97); }
+
+/* ===== LOCKED CARD =====
+   Tapping it shakes and says why, rather than doing nothing at all. */
+.home-subject.is-locked {
+  cursor: default;
+  opacity: 0.92;
+  border-style: dashed;
+  box-shadow: 0 10px 30px var(--panel-shadow);
+}
+
+.home-subject.is-locked:hover {
+  transform: none;
+  box-shadow: 0 10px 30px var(--panel-shadow);
+}
+
+.home-subject.is-nudged { animation: home-shake 460ms ease-in-out; }
+
+/* Keeps the locked card the same shape as its siblings instead of leaving a
+   hole where their button sits. */
+.home-subject-locked {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  margin-top: auto;
+  border: 2px dashed var(--subject-hue);
+  border-radius: 16px;
+  color: var(--home-muted);
+  font-weight: 700;
+}
+
+.home-subject-badge {
+  position: absolute;
+  top: -14px;
+  right: 16px;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: var(--subject-deep);
+  color: var(--home-on-deep);
+  font-size: 0.8rem;
+  font-weight: 700;
+  background-image: linear-gradient(100deg,
+    transparent 30%, rgba(255, 255, 255, 0.75) 50%, transparent 70%);
+  background-size: 250% 100%;
+  animation: home-shimmer 2.8s linear infinite;
+}
+
+/* ===== TWO MODES ===== */
+.home-modes {
+  display: grid;
+  gap: 1.3rem;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+}
+
+.home-mode {
+  display: block;
+  padding: 1.6rem;
+  border-radius: 28px;
+  background: var(--home-card);
+  box-shadow: 0 10px 0 -2px var(--mode-hue), 0 16px 30px var(--panel-shadow);
+  color: var(--home-ink);
+  text-decoration: none;
+  transition: transform 220ms cubic-bezier(0.22, 1.2, 0.36, 1);
+}
+
+.home-mode-curriculum { --mode-hue: var(--home-accent); }
+.home-mode-skills { --mode-hue: var(--home-hue-geography); }
+
+.home-mode:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 0 -2px var(--mode-hue), 0 24px 40px var(--panel-shadow);
+}
+.home-mode:active { transform: translateY(0); }
+
+.home-mode h3 {
+  margin: 0.9rem 0 0.4rem;
+  font-size: 1.6rem;
+}
+
+.home-mode p {
+  margin: 0 0 1rem;
+  color: var(--home-muted);
+}
+
+.home-mode-go {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--home-ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Curriculum art: stepping stones that light up in sequence. */
+.home-mode-art {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  height: 60px;
+}
+
+.home-mode-curriculum .home-mode-art i {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--home-card-edge);
+  animation: home-step 3.2s ease-in-out infinite;
+  animation-delay: calc(var(--step-index) * 320ms);
+}
+
+/* Skills art: game pips bouncing out of sync. */
+.home-mode-skills .home-mode-art i {
+  font-size: 1.9rem;
+  font-style: normal;
+  animation: home-pip 2.4s ease-in-out infinite;
+  animation-delay: calc(var(--pip-index) * 160ms);
+}
+
+/* ===== KEYFRAMES ===== */
+@keyframes home-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  33% { transform: translate3d(14px, -22px, 0) rotate(8deg); }
+  66% { transform: translate3d(-12px, -10px, 0) rotate(-6deg); }
+}
+
+@keyframes home-letter-in {
+  from { opacity: 0; transform: translateY(14px) rotate(-8deg); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes home-rocket {
+  0%, 100% { transform: translateY(0) rotate(-8deg); }
+  50% { transform: translateY(-12px) rotate(4deg); }
+}
+
+@keyframes home-icon-idle {
+  0%, 88%, 100% { transform: translateY(0) rotate(0deg); }
+  92% { transform: translateY(-6px) rotate(-7deg); }
+  96% { transform: translateY(-3px) rotate(5deg); }
+}
+
+@keyframes home-icon-wiggle {
+  0%, 100% { transform: rotate(-8deg) scale(1.06); }
+  50% { transform: rotate(8deg) scale(1.06); }
+}
+
+@keyframes home-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-9px) rotate(-1.5deg); }
+  40% { transform: translateX(8px) rotate(1.5deg); }
+  60% { transform: translateX(-5px) rotate(-1deg); }
+  80% { transform: translateX(4px); }
+}
+
+@keyframes home-shimmer {
+  from { background-position: 180% 0; }
+  to { background-position: -80% 0; }
+}
+
+@keyframes home-step {
+  0%, 60%, 100% { background: var(--home-card-edge); transform: scale(1); }
+  25% { background: var(--home-accent); transform: scale(1.22); }
+}
+
+@keyframes home-pip {
+  0%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-12px) rotate(-10deg); }
+}
+
+/* ===== REDUCED MOTION =====
+   Everything decorative stops. Reveals are handled in JS (useReveal marks each
+   item revealed immediately), so nothing here can hide content. */
+@media (prefers-reduced-motion: reduce) {
+  .home-glyph,
+  .home-subject-icon,
+  .home-subject:hover .home-subject-icon,
+  .home-subject-badge,
+  .home-hello-name span,
+  .home-mode-curriculum .home-mode-art i,
+  .home-mode-skills .home-mode-art i {
+    animation: none;
+  }
+
+  .home-subject.is-nudged { animation: none; }
+
+  .home-btn,
+  .home-subject,
+  .home-mode,
+  .home-chip,
+  .home-subject-go,
+  .home-ring-fill,
+  .reveal-armed {
+    transition: none;
+  }
+
+  .home-btn:hover,
+  .home-subject:hover,
+  .home-mode:hover,
+  .home-chip:hover,
+  .home-subject-go:hover {
+    transform: none;
+  }
+}
+
+
+/* ===== FOOTER =====
+   Homepage only (see HomeFooter.jsx). */
+.home-footer {
+  max-width: 1150px;
+  margin: clamp(3rem, 8vw, 5rem) auto 0;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border-radius: 28px;
+  background: var(--home-card);
+  box-shadow: 0 14px 34px var(--panel-shadow);
+}
+
+.home-footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.5rem, 5vw, 4rem);
+  justify-content: space-between;
+}
+
+.home-footer-brand {
+  display: flex;
+  gap: 0.9rem;
+  max-width: 34rem;
+}
+
+.home-footer-mark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--home-cta);
+  color: var(--home-on-cta);
+  font-weight: 700;
+}
+
+.home-footer-name {
+  margin: 0 0 0.25rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.home-footer-tagline {
+  margin: 0;
+  color: var(--home-muted);
+}
+
+.home-footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.5rem, 6vw, 3.5rem);
+}
+
+.home-footer-group {
   display: flex;
   flex-direction: column;
 }
 
-.feature-card:hover {
-  transform: translateY(-4px);
+.home-footer-group h2 {
+  margin: 0 0 0.3rem;
+  color: var(--home-muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
-body.dark .feature-card {
-  background-color: var(--dark-panel);
-  color: var(--dark-text);
-}
-
-
-/* ===== FEATURE ICON ===== */
-.feature-icon {
-  font-size: 2.8rem;
-  margin-bottom: 0.5rem;
-}
-
-
-/* ===== FEATURE CARD TEXT ===== */
-.feature-card p {
-  margin-bottom: 1rem;
-}
-
-
-/* ===== SMALL BUTTONS ===== */
-.small-btn {
-  margin-top: auto;
-  display: inline-block;
-  padding: 0.6rem 1rem;
-  background-color: var(--light-accent);
-  color: var(--on-light-accent);
-  border-radius: 8px;
+.home-footer-group a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  color: var(--home-ink);
+  font-weight: 700;
   text-decoration: none;
-  transition: background-color 0.3s;
 }
 
-.small-btn:hover {
-  background-color: #F2757E; /* lighter, not darker: keeps dark ink at 6.27:1 (was 4.14) */
+.home-footer-group a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
-body.dark .small-btn {
-  background-color: var(--dark-accent);
-  color: var(--light-text);
+.home-footer-group a:focus-visible {
+  outline: 3px solid var(--home-focus);
+  outline-offset: 3px;
+  border-radius: 8px;
 }
 
-body.dark .small-btn:hover {
-  background-color: #6ec8ba;
-}
-
-
-/* ===== ANIMATION ===== */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.home-footer-note {
+  margin: clamp(1.2rem, 4vw, 2rem) 0 0;
+  padding-top: 1.2rem;
+  border-top: 2px solid var(--home-card-edge);
+  color: var(--home-muted);
+  font-size: 0.9rem;
 }

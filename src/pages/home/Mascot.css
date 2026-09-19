@@ -1,0 +1,260 @@
+/* ===== BIX, THE HOMEPAGE CHARACTER =====
+   Pure CSS — no image asset. Colours come from tokens declared by .home-page
+   (Home.css), which has a body.dark pair, so the character restyles with the
+   theme instead of staying light-only. */
+
+.mascot {
+  position: relative;
+  display: grid;
+  place-items: end center;
+  width: clamp(120px, 26vw, 190px);
+  aspect-ratio: 1 / 1.05;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  /* The bob lives on the button so the burst, anchored to it, rides along. */
+  animation: mascot-bob 3.6s ease-in-out infinite;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mascot:focus-visible {
+  outline: 3px solid var(--home-focus);
+  outline-offset: 8px;
+  border-radius: 40%;
+}
+
+/* ===== BODY ===== */
+.mascot-body {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 0.92;
+  border-radius: 48% 52% 44% 56% / 56% 54% 46% 44%;
+  background:
+    radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.55), transparent 46%),
+    linear-gradient(160deg, var(--home-mascot-1), var(--home-mascot-2));
+  box-shadow: inset 0 -12px 22px rgba(34, 24, 28, 0.16);
+  transform-origin: 50% 100%;
+  transition: transform 180ms ease-out;
+}
+
+.mascot:hover .mascot-body {
+  transform: scale(1.04) rotate(-2deg);
+}
+
+.mascot.is-reacting .mascot-body {
+  animation: mascot-squash 1s cubic-bezier(0.25, 1.6, 0.4, 1);
+}
+
+/* ===== ANTENNAE ===== */
+.mascot-antenna {
+  position: absolute;
+  top: -20%;
+  width: 5px;
+  height: 24%;
+  border-radius: 4px;
+  background: var(--home-mascot-2);
+  transform-origin: 50% 100%;
+}
+
+.mascot-antenna::after {
+  content: "";
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 15px;
+  height: 15px;
+  margin-left: -7.5px;
+  border-radius: 50%;
+  background: var(--home-mascot-dot);
+  box-shadow: 0 0 0 3px var(--home-mascot-2);
+}
+
+.mascot-antenna-left {
+  left: 30%;
+  transform: rotate(-16deg);
+  animation: mascot-sway 2.9s ease-in-out infinite;
+}
+
+.mascot-antenna-right {
+  right: 30%;
+  transform: rotate(16deg);
+  animation: mascot-sway 2.9s ease-in-out infinite reverse;
+}
+
+/* ===== FACE ===== */
+.mascot-face {
+  position: absolute;
+  top: 26%;
+  left: 50%;
+  display: flex;
+  gap: 13%;
+  width: 62%;
+  transform: translateX(-50%);
+}
+
+.mascot-eye {
+  position: relative;
+  flex: 1;
+  aspect-ratio: 1 / 1.12;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: inset 0 3px 5px rgba(34, 24, 28, 0.2);
+  overflow: hidden;
+  animation: mascot-blink 5.2s infinite;
+}
+
+.mascot-pupil {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 46%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #22181C;
+  /* --pupil-x / --pupil-y are written by Mascot.jsx on pointermove. */
+  transform: translate(-50%, -50%)
+    translate(var(--pupil-x, 0%), var(--pupil-y, 0%));
+  transition: transform 120ms ease-out;
+}
+
+.mascot-pupil::after {
+  content: "";
+  position: absolute;
+  top: 16%;
+  left: 18%;
+  width: 34%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* ===== CHEEKS + MOUTH ===== */
+.mascot-cheek {
+  position: absolute;
+  top: 52%;
+  width: 16%;
+  aspect-ratio: 1 / 0.7;
+  border-radius: 50%;
+  background: var(--home-mascot-cheek);
+  opacity: 0.75;
+}
+
+.mascot-cheek-left { left: 11%; }
+.mascot-cheek-right { right: 11%; }
+
+.mascot-mouth {
+  position: absolute;
+  top: 58%;
+  left: 50%;
+  width: 26%;
+  aspect-ratio: 2 / 1;
+  border: 4px solid #22181C;
+  border-top: 0;
+  border-radius: 0 0 100px 100px;
+  transform: translateX(-50%);
+  transition: width 200ms ease-out, aspect-ratio 200ms ease-out;
+}
+
+.mascot:hover .mascot-mouth,
+.mascot.is-reacting .mascot-mouth {
+  width: 34%;
+  aspect-ratio: 1.5 / 1;
+}
+
+/* ===== GROUND SHADOW ===== */
+.mascot-shadow {
+  position: absolute;
+  bottom: -4%;
+  left: 50%;
+  width: 56%;
+  height: 7%;
+  border-radius: 50%;
+  background: rgba(34, 24, 28, 0.18);
+  filter: blur(4px);
+  transform: translateX(-50%);
+  animation: mascot-shadow-pulse 3.6s ease-in-out infinite;
+}
+
+/* ===== TAP BURST ===== */
+.mascot-burst {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.mascot-burst span {
+  position: absolute;
+  font-size: 1.5rem;
+  animation: mascot-burst-fly 1s ease-out forwards;
+}
+
+/* ===== KEYFRAMES ===== */
+@keyframes mascot-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes mascot-shadow-pulse {
+  0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.55; }
+  50% { transform: translateX(-50%) scale(0.86); opacity: 0.35; }
+}
+
+@keyframes mascot-sway {
+  0%, 100% { transform: rotate(-16deg); }
+  50% { transform: rotate(-4deg); }
+}
+
+/* Eyelids: shut for a couple of frames, twice, then stay open. */
+@keyframes mascot-blink {
+  0%, 92%, 96%, 100% { transform: scaleY(1); }
+  94%, 98% { transform: scaleY(0.08); }
+}
+
+@keyframes mascot-squash {
+  0% { transform: scale(1, 1); }
+  22% { transform: scale(1.18, 0.78) translateY(6%); }
+  45% { transform: scale(0.88, 1.2) translateY(-14%); }
+  68% { transform: scale(1.08, 0.94) translateY(2%); }
+  100% { transform: scale(1, 1); }
+}
+
+@keyframes mascot-burst-fly {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--burst-angle)) translateY(0) rotate(calc(-1 * var(--burst-angle))) scale(0.3);
+  }
+  20% { opacity: 1; }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--burst-angle)) translateY(calc(-1 * var(--burst-distance)))
+      rotate(calc(-1 * var(--burst-angle))) scale(1.1);
+  }
+}
+
+/* ===== REDUCED MOTION =====
+   The character still draws and the button still responds; it just holds
+   still. JS also refuses to fire a burst, so nothing here has to hide one. */
+@media (prefers-reduced-motion: reduce) {
+  .mascot,
+  .mascot-shadow,
+  .mascot-antenna,
+  .mascot-eye,
+  .mascot.is-reacting .mascot-body {
+    animation: none;
+  }
+
+  .mascot-body,
+  .mascot-mouth,
+  .mascot-pupil {
+    transition: none;
+  }
+
+  .mascot:hover .mascot-body {
+    transform: none;
+  }
+}

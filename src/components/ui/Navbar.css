@@ -3,7 +3,8 @@ nav.navbar {
   top: 0;
   z-index: 100;
   background-color: inherit;
-  padding: 1rem;
+  /* The controls used to sit hard against the screen edge on a phone. */
+  padding: 0.85rem clamp(1rem, 4vw, 1.5rem);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -15,10 +16,30 @@ nav.navbar {
 }
 
 .logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   text-decoration: none;
   color: inherit;
   font-weight: bold;
   font-size: 1.2rem;
+}
+
+.logo-mark {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  background-color: var(--light-accent);
+  color: var(--on-light-accent);
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+}
+
+body.dark .logo-mark {
+  background-color: var(--dark-accent);
+  color: var(--on-dark-accent);
 }
 
 .theme-btn {
@@ -33,20 +54,35 @@ nav.navbar {
 .navbar-links {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
 
 .navbar-link {
   text-decoration: none;
   color: inherit;
-  font-weight: 600;
-  font-size: 0.95rem;
-  padding: 0.45rem 0.7rem;
-  border-radius: 8px;
+  font-size: 1.25rem;
+  border-radius: 12px;
   /* Comfortable tap target on a phone. */
-  min-height: 44px;
+  min-width: 46px;
+  min-height: 46px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+}
+
+/* The label is still read out and still announced on focus; it is only the
+   visible text that goes, because the two icons are self-evident and the
+   labels crowded everything else out of the bar. */
+.navbar-link-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .navbar-link:hover,
@@ -68,22 +104,16 @@ body.dark .navbar-link.active {
 }
 
 .theme-btn {
-  min-width: 44px;
-  min-height: 44px;
-}
-
-@media (max-width: 420px) {
-  .navbar-link {
-    font-size: 0.85rem;
-    padding: 0.4rem 0.5rem;
-  }
+  min-width: 46px;
+  min-height: 46px;
+  border-radius: 12px;
 }
 
 /* Keep the bar to a single row: wrapping made it 90px tall on a phone, which
    then ate into full-viewport pages like the World Map. */
 nav.navbar {
   flex-wrap: nowrap;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
 
 .logo {
@@ -91,43 +121,8 @@ nav.navbar {
 }
 
 @media (max-width: 480px) {
-  nav.navbar {
-    padding: 0.6rem 0.75rem;
-  }
-
   .logo {
     font-size: 1rem;
-  }
-
-  .navbar-link {
-    min-height: 40px;
-  }
-}
-
-/* At 320px the two labelled hub links plus the brand exceed the viewport.
-   Keep their accessible names, but show the familiar icons in the tightest
-   layout so every page remains free of horizontal scrolling. */
-@media (max-width: 360px) {
-  .navbar-link {
-    width: 40px;
-    min-width: 40px;
-    padding-inline: 0;
-    justify-content: center;
-    font-size: 0;
-  }
-
-  .navbar-link[href="/skills"]::before {
-    content: "🎮";
-    font-size: 1rem;
-  }
-
-  .navbar-link[href="/curriculum"]::before {
-    content: "📘";
-    font-size: 1rem;
-  }
-
-  .theme-btn {
-    min-width: 40px;
   }
 }
 

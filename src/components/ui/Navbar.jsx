@@ -43,24 +43,33 @@ function Navbar() {
 
   return (
     <nav ref={navRef} className={`navbar ${hidden ? 'hidden' : ''}`}>
-      <Link to="/" className="logo">Dynamic Learning</Link>
+      {/* Shortened brand: the mark carries the identity in the tight space a
+          phone bar has, and the full name stays as the accessible name. */}
+      <Link to="/" className="logo" aria-label="Dynamic Learning, home">
+        <span className="logo-mark" aria-hidden="true">DL</span>
+      </Link>
 
       {/* The theme toggle used to be the ONLY control here, so from any game the
           only way back to a hub was the browser Back button. */}
       <div className="navbar-links">
+        {/* Icon-only: the labels crowded the bar on a phone. The name stays on
+            the link for screen readers and as a pointer tooltip. */}
         <Link
           to="/skills"
           className={`navbar-link ${location.pathname === '/skills' ? 'active' : ''}`}
+          title="Skills"
         >
-          🎮 Skills
+          <span aria-hidden="true">🎯</span>
+          <span className="navbar-link-label">Skills</span>
         </Link>
         <Link
           to="/curriculum"
-          className={`navbar-link ${
-            location.pathname.startsWith('/curriculum') ? 'active' : ''
-          }`}
+          className={`navbar-link ${location.pathname.startsWith('/curriculum') ? 'active' : ''
+            }`}
+          title="Curriculum"
         >
-          📘 Curriculum
+          <span aria-hidden="true">📘</span>
+          <span className="navbar-link-label">Curriculum</span>
         </Link>
         <button
           onClick={toggleTheme}
