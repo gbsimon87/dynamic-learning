@@ -20,7 +20,7 @@ import "./challenge-kit.css";
  *            so handing back `value + step` would lose the second tap.
  * `unit`     axis caption, e.g. "children"
  */
-function BarChart({ bars, step = 1, max, onStep, unit, label }) {
+function BarChart({ bars, step = 1, max, onStep, unit, label, disabled = false }) {
   const ceiling = Math.max(max ?? 0, ...bars.map((b) => b.value), step);
   const top = Math.ceil(ceiling / step) * step;
   const lines = Array.from({ length: top / step + 1 }, (_, i) => i * step);
@@ -71,7 +71,7 @@ function BarChart({ bars, step = 1, max, onStep, unit, label }) {
                     className="bar-step-btn"
                     aria-label={`Lower the ${bar.label} bar`}
                     onClick={() => onStep(bar.label, -1)}
-                    disabled={bar.value === 0}
+                    disabled={disabled || bar.value === 0}
                   >
                     −
                   </button>
@@ -80,6 +80,7 @@ function BarChart({ bars, step = 1, max, onStep, unit, label }) {
                     className="bar-step-btn"
                     aria-label={`Raise the ${bar.label} bar`}
                     onClick={() => onStep(bar.label, 1)}
+                    disabled={disabled || bar.value >= top}
                   >
                     +
                   </button>

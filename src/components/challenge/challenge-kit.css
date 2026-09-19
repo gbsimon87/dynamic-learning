@@ -1806,6 +1806,11 @@ button.survey-item:hover:not(:disabled) {
   transition: transform 0.15s, background-color 0.2s;
 }
 
+.bar-step-btn {
+  min-width: 44px;
+  min-height: 46px;
+}
+
 .pv-step-btn:hover:not(:disabled),
 .bar-step-btn:hover:not(:disabled) {
   background: var(--ck-accent);
@@ -2065,6 +2070,10 @@ button.survey-item:hover:not(:disabled) {
 }
 
 .bar-chart-controls { display: flex; gap: 0.25rem; margin-top: 0.3rem; }
+
+@media (max-width: 480px) {
+  .bar-chart-controls { flex-direction: column; }
+}
 
 .bar-chart-unit {
   text-align: center;

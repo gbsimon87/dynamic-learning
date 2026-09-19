@@ -11,10 +11,8 @@
 ### Context for prioritisation
 - The app ships **UK Year 2 Maths** complete in Curriculum Mode, plus standalone
   Skills Mode games. **UK Year 3 Maths** is laid out — 44 topics, 176 challenge
-  slots. Six categories are complete — Number and Place Value (7), Addition
-  and Subtraction (6), Multiplication and Division (5), Fractions (7),
-  Measurement (9), and Properties of Shapes (6) — so 40 of 44 topics have
-  challenges; the other 4 still read "Coming soon".
+  slots. All seven categories and all 44 topics now have their 176 challenges,
+  including Statistics (4 topics).
 - Accounts and progress are served by a live backend, so ideas here can assume
   per-child persistence rather than device-local state.
 - Ideas are scoped to serve **both Year 2 and Year 3** where possible.
@@ -38,7 +36,7 @@ Ordered **easiest → hardest** to implement.
 | 2 | **Rewards & motivation system** | Badges, streaks, and unlockable avatars awarded on challenge and topic completion — the persistent layer beneath the shipped momentary celebrations. Hooks into the same `onComplete` contract. | ⚪ Idea |
 | 3 | **Automated component test setup** | Add Vitest + React Testing Library. The **unlock rules are now covered** by 37 pure `node:test` cases across `progressRules` / `curriculumLocks` / `curriculumNavigation` (2026-09-18), so the remaining gaps are all things pure tests can't reach: (a) `useProgress` hydration and save guards — the `hydrated` flag and the loaded-document ref that stop one child's progress overwriting another's, currently verified only by hand on irreplaceable data; (b) `Challenge.jsx`'s two failure paths, missing-module vs failed-fetch, and the per-attempt state reset; (c) `src/data/store/apiStore.js`, which has no `fetch`-mocked tests despite being the live data path. | ⚪ Idea |
 | 4 | **Progress schema versioning & migration path** | The stored progress shape has no version field and no migration path, so renaming a category, topic, or challenge ID silently orphans a learner's completions. Add a versioned schema plus a migration step in the store layer (`src/data/store/`) so IDs can be renamed safely. Touches irreplaceable learner data — follow the `curriculum-progress` skill's verification checklist. | ⚪ Idea |
-| 5 | **Content authoring format** | Move challenge question data out of hand-written JSX into declarative JSON/JS content files, so new challenges can be authored without writing a component each time. Makes #16 and #17 substantially cheaper. | ⚪ Idea |
+| 5 | **Content authoring format** | Move challenge question data out of hand-written JSX into declarative JSON/JS content files, so new challenges can be authored without writing a component each time. Makes #16 and future curriculum years substantially cheaper. | ⚪ Idea |
 | 6 | **Accessibility & keyboard pass** | Keyboard alternatives for every drag-and-drop challenge, ARIA labels, focus management, and a colour-contrast audit across both themes. No drag-and-drop interaction currently has a keyboard or screen-reader alternative. | ⚪ Idea |
 | 7 | **Audio & read-aloud support** | Speech synthesis for questions and instructions, so pre-readers aren't blocked by reading ability. Also the foundation for #11. | ⚪ Idea |
 | 8 | **Parent / teacher view** | A summary screen showing time spent, topics mastered, and topics struggled with, plus a reset-progress control. Read-only. Distinct from #1, which is learner-facing. | ⚪ Idea |
@@ -50,7 +48,6 @@ Ordered **easiest → hardest** to implement.
 | 14 | **Geography curriculum expansion** | Turn the geography backlog (continents, oceans, landforms, habitats, weather, day/night) into a structured topic path rather than loose games. Source ideas in `notes_geography.md`. [Flag Finder](../src/pages/skills/geography/FlagFinder.jsx) uses the REST Countries API and could filter by continent — "Which African country?" — enabling continent-focused topics. | ⚪ Idea |
 | 15 | **Remember a learner's year group** | `/curriculum` already has a year picker (`CurriculumSelectPage`) and it offers Year 3 as of 2026-09-18 — what's missing is memory. The choice isn't stored, so every visit starts at the picker and a child can wander into the wrong year group. Store the year on the child profile and land them straight in it, with an obvious way to switch. Progress is already namespaced per `(childId, year, subject)`, so no storage change is needed. | ⚪ Idea |
 | 16 | **English curriculum mode** | Extend Curriculum Mode beyond Maths — author a Year 2 English curriculum tree (phonics, spelling, grammar, comprehension) reusing the same category/topic/challenge machinery. Much cheaper after #5. | ⚪ Idea |
-| 17 | **Year 3 Maths challenges** | **40 of 44 topics built** — six categories are complete: Number and Place Value (7 topics), Number - Addition and Subtraction (6), Number - Multiplication and Division (5), Fractions (7), Measurement (9), and Geometry - Properties of Shapes (6), for 160 challenges. Properties of Shapes landed 2026-09-19 without a new kit component: it extends and composes `ShapeFigure`, `SolidFigure`, `AngleExplorer`, `RotationDial`, and `DragToOrder`, with seeded geometry checks across all six topics. Only the four Statistics topics remain. They should follow the same shape: a pure generator, then four challenges that escalate — stated rule, inferred rule, whole-structure work, applied. | 🟡 Partial |
 
 ---
 
@@ -61,7 +58,8 @@ Ordered **easiest → hardest** to implement.
    steps build on the same `onComplete` contract and progress store.
 2. **Unblock quality:** #3 (component tests) and #4 (progress schema versioning),
    before more content multiplies the surface area.
-3. **Unblock scale:** #5 (content authoring format) — makes #16 and #17 far cheaper.
-4. **Open Year 3:** the dataset shipped 2026-09-18; next is #17 (Year 3 Maths
-   challenges), with #15 (year selector) alongside it.
+3. **Unblock scale:** #5 (content authoring format) — makes #16 and future
+   curriculum years far cheaper.
+4. **Make Year 3 easier to return to:** its 176 challenges are built; #15 can
+   remember the learner's chosen year.
 5. **Broaden and polish:** #6, #7, #8, #9 and beyond.

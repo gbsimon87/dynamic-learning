@@ -17,7 +17,7 @@
 > file reflects it. Also update [PROJECT_IDEAS.md](PROJECT_IDEAS.md) when an idea
 > moves between statuses.
 
-**Last reviewed:** 2026-09-15
+**Last reviewed:** 2026-09-19
 
 ---
 
@@ -564,7 +564,7 @@ Dataset invariants are covered by `src/data/year3MathCurriculum.test.js` —
 notably that topic ids are unique across the whole year, since they become
 challenge directory names and a collision would be silent breakage.
 
-**Year 3 challenges — 40 of 44 topics built (160 of 176 challenges).** Six
+**Year 3 challenges — all 44 topics built (176 of 176 challenges).** All seven
 categories are complete. *Number - Fractions* (all seven topics) was built
 separately. **Number - Number and Place Value** has all seven
 topics: place value in 3-digit numbers; counting in multiples of 4, 8, 50 and
@@ -597,12 +597,18 @@ two-step problems. **Number - Multiplication and Division** has all five topics:
 | Geometry – Properties of Shapes | Right Angles | 1, 2, 3, 4 ✅ |
 | Geometry – Properties of Shapes | Comparing Angles to a Right Angle | 1, 2, 3, 4 ✅ |
 | Geometry – Properties of Shapes | Horizontal, Vertical, Parallel and Perpendicular Lines | 1, 2, 3, 4 ✅ |
+| Statistics | Bar Charts | 1, 2, 3, 4 ✅ |
+| Statistics | Scaled Pictograms | 1, 2, 3, 4 ✅ |
+| Statistics | Tables | 1, 2, 3, 4 ✅ |
+| Statistics | One-Step and Two-Step Questions | 1, 2, 3, 4 ✅ |
 
-Each topic uses a pure question generator with `node:test` coverage. Unbuilt
-topics still show "Coming soon"; the gating rules (§4.5) skip fully unbuilt
-topics. A fresh learner can now follow a continuous path from the first
-challenge of the year through Properties of Shapes. Only Statistics remains
-unbuilt.
+Each topic uses a pure question generator with `node:test` coverage. A fresh
+learner can now follow a continuous path from the first challenge of the year
+through Statistics. Year 3 Statistics reuses `BarChart`, `PictogramChart`,
+`DataTable`, `ChoiceGrid` and `NumberInput`: learners read, compare, build, then
+solve one- and two-step questions from scales of 2, 5 and 10. `BarChart` now
+locks its controls after success, caps them at the axis top and gives its ±
+buttons large touch targets, including a narrow-screen layout.
 
 ⚠️ **Two Year 3 topics overlap on paper and must not overlap in practice.**
 *Finding 10 or 100 More or Less* (place value) and *Adding and Subtracting Ones,
