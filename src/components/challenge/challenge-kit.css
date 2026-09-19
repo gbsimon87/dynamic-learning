@@ -105,6 +105,12 @@ body.dark {
   cursor: not-allowed;
 }
 
+.choice-grid.wordy .choice-btn {
+  font-size: 1.05rem;
+  line-height: 1.3;
+  max-width: 15rem;
+}
+
 /* --- number line --- */
 .number-line {
   display: flex;
@@ -165,6 +171,25 @@ body.dark {
 .number-cell.gap.active {
   border-color: var(--ck-accent);
   border-style: solid;
+}
+
+/* A captioned row labels each cell — "100 less / 10 less / 342 / 10 more /
+   100 more" is not a count, so every cell has to say what it is. */
+.number-line.captioned .number-cell {
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 88px;
+  min-height: 72px;
+}
+
+.number-cell-caption {
+  /* Small, but not below 12px: it is a label a 7-year-old has to read to know
+     which gap they are answering. */
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.75;
 }
 
 /* --- rule machine: in/out pairs the learner infers a rule from --- */
@@ -1776,6 +1801,24 @@ button.survey-item:hover:not(:disabled) {
   }
 }
 
+/* --- clue list: "I am a number..." puzzles ------------------------------ */
+.clue-list {
+  list-style: none;
+  margin: 1rem auto 1.4rem;
+  padding: 0;
+  max-width: 28rem;
+  text-align: left;
+  color: var(--ck-text);
+}
+
+.clue-list li {
+  padding: 0.45rem 0.9rem;
+  margin-bottom: 0.4rem;
+  font-size: 1.05rem;
+  background: var(--ck-muted);
+  border-radius: 10px;
+}
+
 /* --- Partition sentence (place value) -------------------- */
 
 .partition-sentence {
@@ -1793,6 +1836,17 @@ button.survey-item:hover:not(:disabled) {
   border-bottom: 3px solid var(--ck-accent);
   color: var(--ck-accent);
   font-weight: 800;
+}
+
+/* A named jump inside a chain: "276 → 100 more → 100 more → ?" */
+.chain-jump {
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: var(--ck-muted);
+  color: var(--ck-text);
+  white-space: nowrap;
 }
 
 .challenge-running {
