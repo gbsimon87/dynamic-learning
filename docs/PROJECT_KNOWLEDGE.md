@@ -552,10 +552,7 @@ study, OGL v3.0). Every topic traces to a statutory bullet.
 **Seven categories, not eight:** the Year 3 programme of study has no "Position
 and Direction" strand. Year 3 showing one fewer card than Year 2 is correct.
 
-**No Year 3 challenge components are built**, so every topic renders
-"🚧 Coming soon". That degrades cleanly: a fully unbuilt topic is skipped by the
-gating rules (§4.5), so nothing is wrongly locked and no category is badged
-complete. Year 3 is selectable from `/curriculum` — registered in
+Year 3 is selectable from `/curriculum` — registered in
 [curriculumRegistry.js](../src/data/curriculumRegistry.js), which was already
 year-aware, so no other code changed.
 
@@ -568,11 +565,28 @@ Dataset invariants are covered by `src/data/year3MathCurriculum.test.js` —
 notably that topic ids are unique across the whole year, since they become
 challenge directory names and a collision would be silent breakage.
 
-**Year 3 challenges — 2 of 44 topics built (2026-09-18).** *Place Value in
-3-Digit Numbers* is the pattern-setter, followed by *Counting in Multiples of 4,
-8, 50 and 100*. The rest are still "Coming soon". Building proceeds one category
-at a time, starting with Number - Number and Place Value, because categories
-unlock in order — anything built elsewhere is unreachable from a fresh start.
+**Year 3 challenges — 20 of 44 topics built (2026-09-18).** Three categories
+are complete. *Number - Fractions* (all seven topics) was built separately and
+is not described below; this section covers the other two. **Number - Number and Place Value** has all seven
+topics: place value in 3-digit numbers; counting in multiples of 4, 8, 50 and
+100; finding 10 or 100 more or less; comparing and ordering numbers to 1000;
+representing and estimating numbers; reading and writing numbers to 1000; and
+number and place value problems. **Number - Addition and Subtraction** has all
+six: mental changes to ones, tens and hundreds; column addition; column
+subtraction; estimating and inverse checks; missing numbers; and one- and
+two-step problems. Each topic uses a pure question generator with `node:test`
+coverage. Unbuilt topics still show "Coming soon"; the gating rules (§4.5) skip
+fully unbuilt topics. A fresh learner can now follow a continuous path from the
+first challenge of the year through to the end of Addition and Subtraction.
+
+⚠️ **Two Year 3 topics overlap on paper and must not overlap in practice.**
+*Finding 10 or 100 More or Less* (place value) and *Adding and Subtracting Ones,
+Tens and Hundreds* (addition and subtraction) both change a 3-digit number by a
+power of ten. They are kept apart by scope and by framing: the place value topic
+uses only 10 and 100 and asks which DIGIT moves — a labelled neighbour strip,
+reading a jump backwards from before/after, filling all four neighbours at once,
+and counting chains. The arithmetic topic keeps ±1, the block pictures and the
+story problems. Anyone editing either one should read both first.
 
 Five kit components were added for Year 3, all in `src/components/challenge/`:
 
@@ -588,6 +602,24 @@ Their animations are functional, not decorative — a carry hops into its column
 ten ones pop in as countable pieces, an angle sweeps rather than jumps, bars
 grow from the axis, a perimeter lights up edge by edge. All are disabled under
 `prefers-reduced-motion`.
+
+Three existing kit components were **extended** rather than copied for the rest
+of Number and Place Value — a fourth near-identical widget is how 140 files
+drift apart:
+
+| Component | Extension | Why |
+|---|---|---|
+| `NumberLine` | optional `captions` | A row is not always a count. "100 less / 10 less / 342 / 10 more / 100 more" needs each cell to say what it is, or the blanks have no question attached to them. |
+| `ChoiceGrid` | `variant="wordy"` | Four options reading "four hundred and six" at the numeric size fill the screen and stop being comparable at a glance. |
+| `PlaceValueBlocks` | reused as a builder | The same component reads a number (`showCounts={false}`) and builds one (`onStep`), which is what keeps Challenge 1 and Challenge 3 of *Representing and Estimating Numbers* showing the same picture. |
+
+⚠️ **A generator that can produce an unanswerable question should refuse.**
+`solveConstraints` in `numberAndPlaceValueProblems.js` brute-forces every
+3-digit number and returns null for a clue set with NO solution *and* for one
+with two, because both mark a correct child wrong. `estimateOptions` in
+`representingNumbers.js` refuses any option within 100 of the answer, since two
+options twenty apart make a correct estimate a coin toss. Both are pinned by
+tests; neither failure would ever be visible on screen.
 
 ⚠️ **A picture must not print its own answer.** The first cut of Challenge 1
 asked "how many hundreds?" while `PlaceValueBlocks` displayed "Hundreds 4" above
