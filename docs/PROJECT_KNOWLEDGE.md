@@ -56,9 +56,10 @@ decision made in this codebase:
 | Linting | **ESLint 9** flat config | `npm run lint` |
 | External APIs | **REST Countries** (`restcountries.com`) | Country names & flags for Flag Finder skill game |
 
-**No backend. No database. No component-test framework.** Everything is
-client-side and state lives in `localStorage`. External data is fetched from public APIs
-(currently just REST Countries for the Flag Finder geography game).
+**No component-test framework.** Pure logic is covered by Node's built-in
+`node:test` (`npm test`); React components have no test environment at all —
+see §6 item 4. External data is fetched from public APIs (currently just REST
+Countries for the Flag Finder geography game).
 
 **The backend is optional.** As of 2026-09-15 there are two interchangeable storage
 drivers (§4.7). By default everything still lives in this browser's `localStorage` and
@@ -81,10 +82,14 @@ fetches live country data from [REST Countries API](https://restcountries.com/):
 
 ### Scripts
 ```bash
-npm run dev      # local dev server
-npm run build    # production build
-npm run lint     # eslint
-npm run preview  # preview production build
+npm run dev         # local dev server (Vite)
+npm run build       # production build
+npm run lint        # eslint
+npm run preview     # preview production build
+npm test            # node --test — pure logic only, no browser environment
+npm run server      # the Express API
+npm run dev:server  # the API, watched, reading .env
+npm run seed        # development seed account (see §5, "Development seed")
 ```
 
 ---
@@ -103,19 +108,43 @@ src/
 │   ├── AuthContext.jsx       # Parent account + child profile provider (§4.7)
 │   └── auth-context.js       # Context object, split out for Fast Refresh
 ├── hooks/
-│   └── useProgress.js        # Shared curriculum-progress hook (account-aware, §4.5)
+│   ├── useProgress.js        # Active child's curriculum progress (§4.5)
+│   ├── useRewards.js         # Active child's badges (see "Badges", §5)
+│   ├── useChildrenProgress.js  # Progress for a LIST of children (§5)
+│   └── useChildrenRewards.js   # Badges for a LIST of children
 ├── components/               # Shared, reusable pieces
 │   ├── RequireChild.jsx      # Route guard for Curriculum Mode (§4.7)
+│   ├── ProgressRing.jsx      # The one percent dial, shared by 3 screens
+│   ├── celebration/CompletionCelebration.jsx
+│   ├── challenge/            # The shared challenge kit (39 components)
 │   ├── ui/Navbar.jsx
 │   ├── ClockPanel.jsx, ReadingNumbersPanel.jsx, DualLabelClock.jsx,
 │   ├── MapGame.jsx, MultiplicationGrid.jsx, ShapeQuiz.jsx
 ├── data/
 │   ├── year2MathCurriculum.js   # Curriculum tree (categories → topics)
-│   ├── avatars.js               # Child profile emoji + colour tokens
+│   ├── year3MathCurriculum.js
+│   ├── curriculumRegistry.js    # Which curricula exist — the one source
+│   ├── avatars.js               # Starter profile emoji + colour tokens
+│   ├── badges.js                # Badge catalogue + earnBadges (§5)
+│   ├── childFields.js           # Writable child fields + year rules (§5)
+│   ├── lastAccount.js           # `dl.lastAccount` welcome-back hint (§4.7)
+│   ├── curriculumResume.js      # "Where was this child up to?" (§5)
+│   ├── resumeCandidates.js      # Loads the documents pickResume consumes
+│   ├── curriculumProgressStats.js
+│   ├── progressRules.js, curriculumLocks.js, curriculumNavigation.js
+│   ├── completionMilestones.js
+│   ├── challenges/              # Pure question generators, unit-tested
 │   ├── store/                   # THE BACKEND SEAM (§4.7)
 │   │   ├── index.js             # Swap point: re-exports the active store
-│   │   ├── localStorageStore.js # Current driver
+│   │   ├── localStorageStore.js # Browser driver
+│   │   └── apiStore.js          # HTTP + cookie driver
 │   └── cities.json
+shared/                       # Imported by BOTH src/ and server/
+└── accountTypes.js           # parent vs learner, age bands (§4.7)
+scripts/                      # Dev tooling, Node-only
+├── seed.js                   # Development seed account (§5)
+├── seedData.js               # What it seeds — pure, tested
+└── seedBuilt.js              # Which challenges exist, read from disk
 ├── utils/
 │   └── toKebabCase.js        # Generates the IDs used in URLs + storage keys
 ├── pages/
@@ -302,16 +331,31 @@ classes on `document.body`. All colours should be driven by CSS variables in
 
 ### 4.7 Accounts, profiles & the store seam
 
-A **parent account** (email + password) owns one or more **child profiles** (name, emoji
-avatar, colour). Children never type a password — they tap their avatar on `/profiles`.
+An **account** (email + password) owns one or more **child profiles** (name, emoji
+avatar, colour, year group). Children never type a password — they tap their avatar
+on `/profiles`.
+
+**There are two kinds of account** as of 2026-09-19, distinguished by
+`accountType` and defined once in [shared/accountTypes.js](../shared/accountTypes.js),
+which both store drivers and the server import:
+
+| `accountType` | Who | Notes |
+|---|---|---|
+| `"parent"` | A grown-up setting the app up for their children | The default. **Absent means parent**, so no migration was needed. |
+| `"learner"` | An older child who signed up for themselves | Owns their own profile. Carries an `ageBand`; under-13 never reaches account creation. |
+
+`isLearner` is derived on the auth context and changes exactly three things: a
+learner with one profile skips the "who's playing" screen, `/parent` is titled
+"My account", and profile copy is first-person.
 
 Everything account-shaped goes through one async interface,
 [src/data/store/index.js](../src/data/store/index.js):
 
 ```
-createParent · findParentByEmail · verifyParent
-listChildren · getChild · createChild · deleteChild
+createParent · findParentByEmail · verifyParent · getParent · signOutParent
+listChildren · getChild · createChild · updateChild · deleteChild
 getProgress(childId, year, subject) · saveProgress(childId, year, subject, data)
+getRewards(childId)                 · saveRewards(childId, data)
 ```
 
 **Every method is `async` even though localStorage is synchronous.** That is deliberate
@@ -320,17 +364,30 @@ against a real API and be swapped in by changing the single re-export in `index.
 Do not "simplify" these to synchronous calls.
 
 Documents are deliberately Mongo-shaped, `_id` from `crypto.randomUUID()`, one
-localStorage key per collection (`dl.parents`, `dl.children`, `dl.progress`):
+localStorage key per collection (`dl.parents`, `dl.children`, `dl.progress`,
+`dl.rewards`):
 
 ```js
-parents:  { _id, email, passwordHash, passwordSalt, iterations, createdAt }
-children: { _id, parentId, name, avatar, colour, createdAt }
+parents:  { _id, email, passwordHash, passwordSalt, iterations,
+            accountType, ageBand, createdAt }
+children: { _id, parentId, name, avatar, colour, yearGroup, createdAt }
 progress: { _id, childId, year, subject, schemaVersion: 1, data: {...}, createdAt, updatedAt }
+rewards:  { _id, childId, schemaVersion: 1, data: {...}, createdAt, updatedAt }
 ```
 
-Session: `dl.session` = `{ parentId, childId, email }`. The `email` is a **display hint
-only** — identity always re-validates `parentId` against the store. It exists because the
-store has no `getParent(parentId)`; adding one lets the field be dropped.
+Rewards are **one document per child**, not per year+subject like progress — a
+badge belongs to the learner across every year they study (§4.10).
+
+Two browser-local keys, neither of them identity:
+
+- `dl.session` = `{ parentId, childId, email }`. The `email` is a **display hint
+  only** — identity always re-validates `parentId` against the store.
+- `dl.lastAccount` = `{ email, accountType, profiles: [{id, name, avatar, colour}] }`,
+  written on sign-in so `/login` can greet a returning family by their profile
+  faces and ask for the password alone. **Display data only** — never a
+  credential, hash or token, and a test asserts that. It does not skip
+  authentication; the 30-day session cookie is what usually keeps a family
+  signed in, and when `/login` does appear the password is genuinely required.
 
 `verifyParent` returns `null` identically for "no such account" and "wrong password", so
 the login screen cannot be used to enumerate accounts. Keep it that way.
@@ -356,7 +413,7 @@ server/app.js        app construction, split out so tests need no port
 server/db.js         ONE MongoClient, connected once and reused
 server/auth.js       PBKDF2-SHA-256 hashing + JWT session cookie `dl_session`
 server/middleware.js requireAuth, requireOwnedChild
-server/routes/       auth, children, progress
+server/routes/       auth, children, progress, rewards
 ```
 
 Endpoints mirror the store interface exactly; see the table in
@@ -396,10 +453,39 @@ Practice, Find the Missing Number, Number Bonds, Fraction Fun
 Synonym Safari, Sight Word Pop, Speed Reader
 **Geography:** Solar System (3D), World Map, Flag Finder, City Spotlight
 
-### Accounts — built 2026-09-15
-Parent sign-up/sign-in (`/signup`, `/login`), child profile picker (`/profiles`), and a
-parent admin screen (`/parent`). Local-only; see §4.7. Curriculum Mode now requires a
-selected child profile; Skills Mode does not.
+### Accounts — built 2026-09-15, rebuilt 2026-09-19
+Sign-up (`/signup`), sign-in (`/login`), child profile picker (`/profiles`), and an
+account admin screen (`/parent`). See §4.7. Curriculum Mode requires a selected child
+profile; Skills Mode does not.
+
+**`/signup` is a wizard on one route**, because two different people arrive there
+and the old single screen served only one of them — it greeted a ten-year-old
+with "Create a parent account" and three password fields:
+
+| Step | Grown-up branch | Learner branch |
+|---|---|---|
+| 0 | Two illustrated choice cards | same screen |
+| 0b | — | "How old are you?" age chips. Under 13 → a warm dead end offering "Get a grown-up". **No account is created.** |
+| 1 | Email, password, confirm, show/hide, live strength hint | same, gentler copy |
+| 2 | "Add your first child" (`ProfileBuilder`) | "Make my profile" |
+| → | `/profiles` | `/curriculum` |
+
+⚠️ **The account is created at the end of step 1, not at the end of the wizard**,
+because step 2 calls `addChild`, which needs an authenticated account. So a
+failure at step 2 leaves a real account with no profile — recoverable, and it
+routes to `/profiles`, which is exactly the screen for adding one. There is no
+way back from step 2: the credentials are already saved.
+
+**The age gate is an honest speed bump, not compliance.** A child can tap an
+older age. It is enough for a family project and is deliberately not enough for
+a public launch — see PROJECT_IDEAS.
+
+`AuthShell` gives `/login` and `/signup` one drifting sky, one card and one
+entrance, so moving between them reads as two views of the same place.
+`ProfileBuilder` was lifted out of `Profiles.jsx` so the wizard and the picker
+share one implementation of the name/avatar/colour/year form — they had been
+two copies, which is how a colour picker gets fixed on one screen and not the
+other. It only ever CREATES; editing an existing profile happens in `/parent`.
 
 ### Curriculum Mode — dev unlock switch
 `VITE_UNLOCK_ALL=true` opens every built challenge in the picker, bypassing the
@@ -530,6 +616,56 @@ component that renders a dense row or column of buttons needs the same line.
 Locked topics still list their challenges (each rendered locked and
 unclickable). Hiding them left a locked topic as a bare padlock, with no sign
 of what it held or how much of it there was.
+
+### Development seed (2026-09-19)
+
+```bash
+npm run seed              # create or refresh the test account
+npm run seed -- --purge   # wipe the app's collections first
+npm run seed -- --dry     # print the plan, write nothing
+```
+
+Creates `testuser@gmail.com` / `password` with two children — **Demi** (Year 3,
+well into Year 2 and starting Year 3) and **Liam** (Year 2, the mirror image).
+Their progress differs on purpose: the profile cards, the resume card and the
+parent breakdown all pick "most recently played", and that is only visible when
+two children disagree.
+
+**It seeds both storage modes, because the app has two (§4.7):**
+
+- **MongoDB**, whenever `MONGODB_URI` is set. Read by the app built with
+  `VITE_USE_API=true`.
+- **`dev-seed.json` at the repo root**, always. In the default localStorage
+  mode the browser *is* the database and no Node script can reach it, so the
+  script writes a bundle and prints a console snippet that loads it.
+
+  ⚠️ **It must not live in `public/`.** Everything in `public/` is copied into
+  `dist/`, so a local `npm run build` packaged this test account's password
+  hash into the deployable bundle — caught 2026-09-19 by checking `dist/`
+  after the build. `.gitignore` protects the repo and CI, but not a local
+  build. A dev-only Vite middleware (`devSeedPlugin` in `vite.config.js`,
+  `apply: 'serve'`) serves it at `/dev-seed.json` instead, so it cannot reach
+  a build at all.
+
+Three things to keep:
+
+- **Progress is built in DISPLAY ORDER.** Completing challenges at random would
+  produce a learner the app itself shows as impossible — challenge 3 done while
+  1 and 2 are locked. Walking in order is what makes the seeded state obey the
+  unlock rules in §4.5.
+- **Only built challenges are completed.** `scripts/seedBuilt.js` reads the
+  filesystem, because `challengeAvailability.js` uses `import.meta.glob`, which
+  does not exist outside Vite. The path pattern must stay in step with §4.3 or
+  the seed marks challenges complete that nobody can open.
+- **Badges are replayed, not invented.** Each completion goes through the real
+  `getCompletionMilestones` and `earnBadges`, so a seeded child's badges can
+  never claim something their progress does not support.
+
+⚠️ `--purge` deletes **every** parent, child, progress and rewards document in
+the target database, not only the seeded ones. It refuses when `NODE_ENV` is
+`production`, refuses when the database name matches `/prod|live|production/i`
+without `--i-know-what-i-am-doing`, and prints the cluster host and database
+name with a 3-second pause before acting. Do not remove those.
 
 ### Year group on a profile (2026-09-19)
 
@@ -835,9 +971,12 @@ without a changelog note or the report was inaccurate.
 8. **The Atlas indexes are NOT unique** — `parents.email` and the
    `{childId, year, subject}` triple were created through a tool that could not set
    `unique`. The server compensates in application code (§4.8), but the database itself
-   would still accept duplicates. Run, once:
-   `db.parents.createIndex({email:1},{unique:true})` and
-   `db.progress.createIndex({childId:1,year:1,subject:1},{unique:true})`.
+   would still accept duplicates. The `rewards` collection (added 2026-09-19) has
+   **no index at all**, and its `childId` should be unique for the same reason —
+   the route upserts on it. Run, once:
+   `db.parents.createIndex({email:1},{unique:true})`,
+   `db.progress.createIndex({childId:1,year:1,subject:1},{unique:true})` and
+   `db.rewards.createIndex({childId:1},{unique:true})`.
 9. **`apiStore` has no unit tests** — it was verified end-to-end in a browser against a
    real server (signup → profile → challenge → logout → login → progress intact), but
    has no `fetch`-mocked test file of its own.

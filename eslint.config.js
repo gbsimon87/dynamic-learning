@@ -8,7 +8,7 @@ export default defineConfig([
   globalIgnores(['dist']),
   {
     files: ['**/*.{js,jsx}'],
-    ignores: ['server/**'],
+    ignores: ['server/**', 'scripts/**'],
     extends: [
       js.configs.recommended,
       reactHooks.configs['recommended-latest'],
@@ -27,10 +27,10 @@ export default defineConfig([
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
-  // The Express API. Node globals, no React — so none of the React plugins,
-  // and `globals.browser` would be wrong here.
+  // The Express API and the dev scripts. Node globals, no React — so none of
+  // the React plugins, and `globals.browser` would be wrong here.
   {
-    files: ['server/**/*.js'],
+    files: ['server/**/*.js', 'scripts/**/*.js'],
     extends: [js.configs.recommended],
     languageOptions: {
       globals: globals.node,

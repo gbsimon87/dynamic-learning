@@ -82,3 +82,6 @@ desktop.ini
 
 # Playwright MCP session artifacts
 .playwright-mcp/
+
+# Written by `npm run seed` — a local test account, never committed or shipped.
+dev-seed.json
