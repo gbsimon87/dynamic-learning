@@ -250,6 +250,47 @@ test("route authorization", { skip: URI ? false : "MONGODB_URI not set" }, async
     assert.equal(res.body.error, "INVALID_YEAR_GROUP");
   });
 
+  // --- rewards --------------------------------------------------------------
+  await t.test("rewards are per child, scoped to the owner", async () => {
+    const mine = await a("POST", "/api/children", { name: "Badge Kid" });
+    const id = mine.body.child._id;
+
+    assert.equal((await a("GET", `/api/rewards/${id}`)).body.rewards, null);
+
+    const saved = await a("PUT", `/api/rewards/${id}`, {
+      data: { schemaVersion: 1, badges: [{ id: "first-steps" }], counts: { challenge: 1 } },
+    });
+    assert.equal(saved.status, 200);
+    assert.equal(saved.body.rewards.data.badges.length, 1);
+
+    // Upsert, not insert: a second save must not create a second document.
+    await a("PUT", `/api/rewards/${id}`, { data: { badges: [], counts: {} } });
+    assert.equal(
+      await database.collection("rewards").countDocuments({}),
+      1,
+      "exactly one rewards document"
+    );
+
+    // Another parent cannot read or write them.
+    assert.equal((await b("GET", `/api/rewards/${id}`)).status, 404);
+    assert.equal((await b("PUT", `/api/rewards/${id}`, { data: {} })).status, 404);
+    assert.equal((await anon("GET", `/api/rewards/${id}`)).status, 401);
+  });
+
+  await t.test("deleting a child removes its rewards", async () => {
+    const created = await a("POST", "/api/children", { name: "Temp Kid" });
+    const id = created.body.child._id;
+    await a("PUT", `/api/rewards/${id}`, { data: { badges: [{ id: "first-steps" }] } });
+
+    assert.equal(await database.collection("rewards").countDocuments({}), 2);
+    assert.equal((await a("DELETE", `/api/children/${id}`)).status, 204);
+    assert.equal(
+      await database.collection("rewards").countDocuments({}),
+      1,
+      "a recycled id must not inherit badges"
+    );
+  });
+
   // --- account type + age band --------------------------------------------
   // The client validates these too, for good error messages. The server
   // validates because a request is not a trust boundary — these tests are what

@@ -91,8 +91,9 @@ router.patch("/:childId", requireOwnedChild, async (req, res, next) => {
 router.delete("/:childId", requireOwnedChild, async (req, res, next) => {
   try {
     await db.children().deleteOne({ _id: req.child._id, parentId: req.parent._id });
-    // No orphaned progress left behind for a recycled id to inherit.
+    // No orphaned progress or rewards left behind for a recycled id to inherit.
     await db.progress().deleteMany({ childId: req.child._id });
+    await db.rewards().deleteMany({ childId: req.child._id });
     return res.status(204).end();
   } catch (err) {
     return next(err);

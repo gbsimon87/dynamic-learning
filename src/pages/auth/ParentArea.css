@@ -169,6 +169,101 @@ body.dark .parent-area-page {
   color: var(--pa-danger);
 }
 
+/* ---------- badges & picture ---------- */
+.parent-area-page .parent-area-rewards {
+  flex-basis: 100%;
+  margin-top: 0.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--pa-border);
+}
+
+.parent-area-page .parent-area-rewards-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.parent-area-page .parent-area-rewards-count {
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  color: var(--pa-muted);
+}
+
+.parent-area-page .parent-area-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+
+/* An unearned badge is shown, not hidden — the point is to see what is next.
+   Dimmed AND padlocked AND still named: three signals, so it never depends on
+   colour alone. */
+.parent-area-page .parent-area-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--pa-border);
+  font-size: 0.78rem;
+  opacity: 0.5;
+}
+
+.parent-area-page .parent-area-badge.is-held {
+  opacity: 1;
+  border-color: var(--pa-accent);
+  font-weight: 700;
+}
+
+.parent-area-page .parent-area-badge-icon {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.parent-area-page .parent-area-avatars {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.parent-area-page .parent-area-avatar {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  border-radius: 12px;
+  border: 1px solid var(--pa-border);
+  background-color: var(--pa-panel);
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.parent-area-page .parent-area-avatar:hover:not(:disabled),
+.parent-area-page .parent-area-avatar:focus-visible:not(:disabled) {
+  outline: none;
+  border-color: var(--pa-accent);
+  transform: scale(1.06);
+}
+
+/* A 3px ring rather than an accent fill: an emoji sitting ON the accent loses
+   the contrast the border keeps (§9). */
+.parent-area-page .parent-area-avatar.selected {
+  border: 3px solid var(--pa-accent);
+}
+
+.parent-area-page .parent-area-avatar:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 /* ---------- per-child progress ----------
    Bars and counts, no rings and no emoji: this is the adult screen, and the
    question is "where is this child stuck?", which wants the shape of the
@@ -392,7 +487,12 @@ body.dark .parent-area-page {
 
 @media (prefers-reduced-motion: reduce) {
   .parent-area-page .parent-area-bar-fill,
-  .parent-area-page .parent-area-year-btn {
+  .parent-area-page .parent-area-year-btn,
+  .parent-area-page .parent-area-avatar {
     transition: none;
+  }
+
+  .parent-area-page .parent-area-avatar:hover {
+    transform: none;
   }
 }

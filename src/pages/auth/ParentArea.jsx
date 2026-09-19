@@ -3,6 +3,13 @@ import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../context/auth-context";
 import { useChildrenProgress } from "../../hooks/useChildrenProgress";
 import { CHILD_YEAR_GROUPS, readYearGroup } from "../../data/childFields";
+import { useChildrenRewards } from "../../hooks/useChildrenRewards";
+import { AVATARS } from "../../data/avatars";
+import {
+  BADGES,
+  heldBadgeIds,
+  unlockedAvatars,
+} from "../../data/badges";
 import { isYearAvailable } from "../../data/curriculumRegistry";
 import "./ParentArea.css";
 
@@ -185,6 +192,84 @@ function YearPicker({ child, onChange }) {
   );
 }
 
+/**
+ * A child's badges, and the pictures those badges have unlocked.
+ *
+ * The avatar row lives HERE rather than on /profiles because changing a
+ * picture is an edit, and /profiles is a launchpad — a child heading for a game
+ * should not be one mis-tap away from redecorating. It is also the only place
+ * an existing profile can be edited at all, since the profile builder only ever
+ * creates.
+ *
+ * Read-only for badges: a grown-up can see what was earned, never grant it.
+ */
+function ChildRewards({ child, rewards, onChangeAvatar }) {
+  const [saving, setSaving] = useState(false);
+  const held = heldBadgeIds(rewards);
+  const choices = unlockedAvatars(rewards, AVATARS);
+
+  const pick = async (emoji) => {
+    if (saving || emoji === child.avatar) return;
+    setSaving(true);
+    try {
+      await onChangeAvatar(child._id, { avatar: emoji });
+    } catch {
+      // The row simply stays as it was; the next render shows the truth.
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="parent-area-rewards">
+      <p className="parent-area-rewards-title">
+        Badges
+        <span className="parent-area-rewards-count">
+          {held.size} of {BADGES.length}
+        </span>
+      </p>
+
+      <ul className="parent-area-badges">
+        {BADGES.map((badge) => (
+          <li
+            key={badge.id}
+            className={`parent-area-badge ${held.has(badge.id) ? "is-held" : ""}`}
+            title={held.has(badge.id) ? badge.blurb : `Not earned yet — ${badge.blurb}`}
+          >
+            <span className="parent-area-badge-icon" aria-hidden="true">
+              {held.has(badge.id) ? badge.icon : "🔒"}
+            </span>
+            <span className="parent-area-badge-name">{badge.name}</span>
+          </li>
+        ))}
+      </ul>
+
+      <p className="parent-area-rewards-title" id={`avatar-${child._id}`}>
+        Picture
+      </p>
+      <div
+        className="parent-area-avatars"
+        role="group"
+        aria-labelledby={`avatar-${child._id}`}
+      >
+        {choices.map((emoji) => (
+          <button
+            key={emoji}
+            type="button"
+            className={`parent-area-avatar ${child.avatar === emoji ? "selected" : ""}`}
+            aria-pressed={child.avatar === emoji}
+            aria-label={`Use the ${emoji} picture`}
+            disabled={saving}
+            onClick={() => pick(emoji)}
+          >
+            <span aria-hidden="true">{emoji}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ParentArea() {
   const { parent, children, status, isLearner, signOut, removeChild, updateChild } =
     useContext(AuthContext);
@@ -204,6 +289,17 @@ function ParentArea() {
   // "nothing started yet" rather than blocking profile management.
 
   const { summaries, loading: loadingProgress } = useChildrenProgress(children);
+
+  // Bumped after a profile edit so the badge/avatar row re-reads without a
+  // reload. Progress cannot change from this screen, so it needs no bump.
+  const [rewardsBump, setRewardsBump] = useState(0);
+  const { rewards } = useChildrenRewards(children, rewardsBump);
+
+  const editChild = async (childId, patch) => {
+    const out = await updateChild(childId, patch);
+    setRewardsBump((n) => n + 1);
+    return out;
+  };
 
   if (status === "loading") {
     return (
@@ -320,7 +416,15 @@ function ParentArea() {
                     </span>
                   )}
 
-                  <YearPicker child={kid} onChange={updateChild} />
+                  <YearPicker child={kid} onChange={editChild} />
+
+                  {openId === kid._id && (
+                    <ChildRewards
+                      child={kid}
+                      rewards={rewards[kid._id]}
+                      onChangeAvatar={editChild}
+                    />
+                  )}
 
                   {openId === kid._id && (
                     <ChildProgress

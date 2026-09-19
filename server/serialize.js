@@ -31,3 +31,8 @@ export function publicProgress(doc) {
   if (!doc) return null;
   return { ...withStringId(doc), childId: String(doc.childId), year: Number(doc.year) };
 }
+
+export function publicRewards(doc) {
+  if (!doc) return null;
+  return { ...withStringId(doc), childId: String(doc.childId) };
+}

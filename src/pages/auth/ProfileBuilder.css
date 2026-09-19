@@ -116,6 +116,16 @@ body.dark .profile-builder {
   border-color: var(--pb-accent);
 }
 
+/* Shown, never hidden: a padlock says "there is more here" where an absent
+   tile says nothing. Not a button — it does nothing when tapped, and a control
+   that looks pressable but is inert is worse than one that plainly is not. */
+.profile-builder .pb-avatar-option.is-locked {
+  cursor: default;
+  opacity: 0.55;
+  font-size: 1.5rem;
+  border-style: dashed;
+}
+
 /* The accent is a BACKGROUND with --on-*-accent ink on top, never ink (§9). */
 .profile-builder .pb-avatar-option.selected {
   border-color: var(--pb-accent);

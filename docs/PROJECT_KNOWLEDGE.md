@@ -531,6 +531,67 @@ Locked topics still list their challenges (each rendered locked and
 unclickable). Hiding them left a locked topic as a bare padlock, with no sign
 of what it held or how much of it there was.
 
+### Year group on a profile (2026-09-19)
+
+`yearGroup` lives on the child document; **absent means "not chosen"**, so there
+is no migration and no guessing. A year is never inferred from progress — a
+child who tried Year 3 once must not be labelled Year 3 forever.
+
+Adding it required the write path that did not exist: a profile was
+create-or-delete only. `store.updateChild(childId, patch)` now exists on both
+drivers, with `PATCH /api/children/:childId` behind `requireOwnedChild`.
+
+**`src/data/childFields.js` is not optional.** A patch is the one place a caller
+could set `parentId` (handing a child to another family) or `_id` (orphaning
+every progress document pointing at the old one). Both are silent. The
+whitelist is shared by both drivers and the server and tested from both ends.
+
+**`undefined` means "not supplied"; `null` means "clear it".** Callers build
+patches by destructuring, so `{ name, avatar, colour, yearGroup }` from an
+argument that never mentioned a year still carries a `yearGroup` key holding
+`undefined`. Keying off `in` alone read that as an explicit invalid value and
+broke `createChild` for every caller that did not pass a year — caught by the
+existing store tests.
+
+The curriculum picker **pre-selects** the saved year rather than removing the
+step, and skips itself only when that year has exactly one ready subject. The
+skip needs an escape hatch: leaving a curriculum **remounts** the picker, so
+component state cannot remember "I came to change it", and the back arrow
+bounced straight back in with the picker unreachable. `CurriculumPage`'s back
+link is therefore `/curriculum?pick=1`; every other link still wants the skip.
+
+### Badges (2026-09-19)
+
+One **rewards document per child**, separate from progress: a badge belongs to
+the learner across every year, and keeping them apart means a reward bug can
+never corrupt a completion. `store.getRewards/saveRewards`, `GET`/`PUT
+/api/rewards/:childId`, and deleting a child cascades to both.
+
+`src/data/badges.js` holds the catalogue and `earnBadges`. It hangs off
+`getCompletionMilestones`, which already decides when a topic or category is
+finished — nothing re-derives that.
+
+Two things to keep true:
+
+- **The tally is its own field.** `counts` records milestones *reached*, which
+  is not the same as badges held: "Topic master" needs five topics but only the
+  first awards a badge, so the badge log alone can never count topics. Deriving
+  the count from the log is the bug this shape exists to prevent.
+- **Idempotence comes from upstream.** `getCompletionMilestones` returns
+  `earned: []` for an already-complete challenge, which is what makes replaying
+  a completion — double submit, refresh, a child redoing a topic — award
+  nothing and leave the tally alone. Never call `earnBadges` with invented
+  milestones.
+
+`useRewards` mirrors `useProgress`'s `loadedKeyRef` guard, because the same
+child-switch hazard applies. Unlike progress its write is **explicit**, not an
+effect on state: badges are awarded at exactly one moment.
+
+Unlocked avatars are redeemed in `/parent`, which is the only place an existing
+profile can be edited at all — `ProfileBuilder` only ever creates. Locked
+pictures are still shown, padlocked: a reward nobody knows about motivates
+nobody.
+
 ### Progress visibility — where each figure comes from (2026-09-19)
 
 Four screens show progress, and they all read the **same** two modules, which is

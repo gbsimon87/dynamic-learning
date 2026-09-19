@@ -39,3 +39,4 @@ function getDb() {
 export const parents = () => getDb().collection("parents");
 export const children = () => getDb().collection("children");
 export const progress = () => getDb().collection("progress");
+export const rewards = () => getDb().collection("rewards");

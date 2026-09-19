@@ -13,11 +13,13 @@ import { isChallengeImplemented } from "../../data/challengeAvailability";
 import { buildLockState } from "../../data/curriculumLocks";
 import { findNextChallenge } from "../../data/curriculumNavigation";
 import { getCompletionMilestones } from "../../data/completionMilestones";
+import { useRewards } from "../../hooks/useRewards";
 import { shouldBypassLocks } from "../../data/devUnlock";
 import "./ProblemView.css";
 
 function ProblemView() {
   const { year, subject, categoryId, topicId, challengeId } = useParams();
+  const { award } = useRewards();
   const { progress, hydrated, isChallengeComplete, completeChallenge } =
     useProgress(year, subject);
 
@@ -51,7 +53,14 @@ function ProblemView() {
     // Idempotent: the reducer ignores a repeat, so a double-submit can't
     // duplicate the entry.
     completeChallenge(categoryId, topicId, challengeId);
-    setCompletion({ positionKey, result });
+
+    // Badges ride on the SAME milestones the celebration already reports, so a
+    // badge can never be awarded for something the panel does not announce.
+    // `result.earned` is empty for an already-complete challenge, which is what
+    // makes replaying one award nothing.
+    const badges = award(result.earned, { year, subject });
+
+    setCompletion({ positionKey, result, badges });
   };
 
   // Where to go next. Computed from the SAME lock state the curriculum screen
@@ -75,6 +84,7 @@ function ProblemView() {
     return (
       <CompletionCelebration
         result={completion.result}
+        badges={completion.badges}
         year={year}
         subjectName={getSubjectName(subject)}
         nextHref={next && `/year/${year}/${subject}/problem/${next.categoryId}/${next.topicId}/${next.challengeId}`}

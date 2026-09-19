@@ -401,3 +401,79 @@ test("an empty patch leaves the child exactly as it was", async () => {
   const updated = await store.updateChild(child._id, {});
   assert.deepEqual(updated, child);
 });
+
+/* ===== REWARDS =====
+   One document per child, separate from progress so a reward bug can never
+   corrupt a completion. */
+
+test("a child with no rewards document reads as null", async () => {
+  const { child } = await seedChild();
+  assert.equal(await store.getRewards(child._id), null);
+});
+
+test("rewards round-trip and upsert rather than duplicating", async () => {
+  const { child } = await seedChild();
+
+  const first = await store.saveRewards(child._id, {
+    schemaVersion: 1,
+    badges: [{ id: "first-steps", level: "challenge" }],
+    counts: { challenge: 1 },
+  });
+  assert.equal(first.data.badges.length, 1);
+
+  await store.saveRewards(child._id, {
+    schemaVersion: 1,
+    badges: [
+      { id: "first-steps", level: "challenge" },
+      { id: "topic-finisher", level: "topic" },
+    ],
+    counts: { challenge: 4, topic: 1 },
+  });
+
+  const read = await store.getRewards(child._id);
+  assert.equal(read._id, first._id, "same document, not a second one");
+  assert.equal(read.createdAt, first.createdAt, "createdAt survives an update");
+  assert.equal(read.data.badges.length, 2);
+  assert.equal(read.data.counts.challenge, 4);
+
+  const raw = JSON.parse(globalThis.localStorage.getItem("dl.rewards"));
+  assert.equal(raw.length, 1, "exactly one rewards document");
+});
+
+test("rewards are scoped per child", async () => {
+  const { parent, child } = await seedChild();
+  const sibling = await store.createChild(parent._id, { name: "Sam" });
+
+  await store.saveRewards(child._id, { badges: [{ id: "first-steps" }] });
+  assert.equal(await store.getRewards(sibling._id), null);
+});
+
+test("deleting a child deletes its rewards, and only its own", async () => {
+  const { parent, child } = await seedChild();
+  const sibling = await store.createChild(parent._id, { name: "Sam" });
+
+  await store.saveRewards(child._id, { badges: [{ id: "first-steps" }] });
+  await store.saveRewards(sibling._id, { badges: [{ id: "first-steps" }] });
+
+  await store.deleteChild(child._id);
+
+  // Otherwise a recycled id inherits another child's badges.
+  assert.equal(await store.getRewards(child._id), null);
+  assert.ok(await store.getRewards(sibling._id), "the sibling keeps theirs");
+});
+
+test("saving rewards without a child is rejected", async () => {
+  reset();
+  await assert.rejects(() => store.saveRewards(null, {}), /CHILD_REQUIRED/);
+});
+
+test("stored rewards are a copy, not a live reference", async () => {
+  const { child } = await seedChild();
+  const data = { badges: [{ id: "first-steps" }] };
+  await store.saveRewards(child._id, data);
+
+  data.badges.push({ id: "smuggled" });
+
+  const read = await store.getRewards(child._id);
+  assert.equal(read.data.badges.length, 1);
+});

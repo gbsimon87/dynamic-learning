@@ -13,6 +13,14 @@
  * Use them as `style={{ background: `var(${colour})` }}`.
  */
 
+/**
+ * The pictures every learner starts with.
+ *
+ * A few more are LOCKED behind badges — see `AVATARS_UNLOCKABLE` in
+ * `badges.js`, which owns the badge→avatar link so a picture can never become
+ * unlockable by nothing. Keep the two lists disjoint: an avatar in both would
+ * be offered from the start and still claim to be a reward.
+ */
 export const AVATARS = [
   "🦊",
   "🐼",

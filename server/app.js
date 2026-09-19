@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.js";
 import childrenRoutes from "./routes/children.js";
 import progressRoutes from "./routes/progress.js";
+import rewardsRoutes from "./routes/rewards.js";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.resolve(here, "..", "dist");
@@ -22,6 +23,7 @@ export function createApp({ serveStatic = process.env.NODE_ENV === "production" 
   app.use("/api/auth", authRoutes);
   app.use("/api/children", childrenRoutes);
   app.use("/api/progress", progressRoutes);
+  app.use("/api/rewards", rewardsRoutes);
 
   // Unknown API routes answer as JSON 404s. This sits BEFORE the SPA
   // catch-all so that a typo'd endpoint never silently returns index.html.

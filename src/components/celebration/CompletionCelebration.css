@@ -282,3 +282,78 @@ body.dark .completion-celebration-year {
   .completion-celebration-primary,
   .completion-celebration-secondary { transition: none; }
 }
+
+/* ===== NEW BADGES =====
+   Shown on the completion panel when a challenge earns one. Tokens only, with
+   a light/dark pair, so the panel repaints with the theme (§9). */
+.completion-celebration-badges {
+  --cb-panel: var(--light-panel);
+  --cb-text: var(--light-text);
+  --cb-muted: var(--map-muted);
+  --cb-edge: var(--map-border);
+
+  margin: 1.1rem 0;
+  padding: 0.9rem 1rem;
+  border-radius: 16px;
+  border: 2px dashed var(--cb-edge);
+  background-color: var(--cb-panel);
+  color: var(--cb-text);
+  text-align: left;
+}
+
+body.dark .completion-celebration-badges {
+  --cb-panel: var(--dark-panel);
+  --cb-text: var(--dark-text);
+}
+
+.completion-celebration-badges-title {
+  font-weight: 800;
+  margin-bottom: 0.6rem;
+  text-align: center;
+}
+
+.completion-celebration-badges ul {
+  display: grid;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.completion-celebration-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+}
+
+.completion-celebration-badge-icon {
+  font-size: 2.1rem;
+  line-height: 1;
+  animation: completion-badge-pop 620ms cubic-bezier(0.22, 1.4, 0.36, 1) both;
+}
+
+.completion-celebration-badge-text {
+  display: grid;
+  gap: 0.1rem;
+  font-size: 0.9rem;
+  color: var(--cb-muted);
+}
+
+.completion-celebration-badge-text strong {
+  font-size: 1rem;
+  color: var(--cb-text);
+}
+
+.completion-celebration-badge-unlock {
+  font-weight: 700;
+  color: var(--cb-text);
+}
+
+@keyframes completion-badge-pop {
+  from { opacity: 0; transform: scale(0.4) rotate(-18deg); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .completion-celebration-badge-icon { animation: none; }
+}

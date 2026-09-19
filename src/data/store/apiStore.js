@@ -305,4 +305,34 @@ export const store = {
     );
     return body?.progress ?? null;
   },
+
+  /**
+   * @returns {Promise<object|null>} the rewards doc, or null when the server
+   * explicitly says there is none. A failure throws — see the module comment:
+   * a dropped connection must never look like "this child has no badges", or
+   * the next save would write an empty document over real ones.
+   */
+  async getRewards(childId) {
+    if (!childId) return null;
+    const { status, data } = await request(
+      `/rewards/${encodeURIComponent(childId)}`,
+      { expect: [200], soft: [404] }
+    );
+    if (status === 404) return null;
+    return data?.rewards ?? null;
+  },
+
+  /**
+   * Upsert on childId (the server owns the upsert).
+   * @returns {Promise<object>} the stored rewards doc.
+   */
+  async saveRewards(childId, data) {
+    if (!childId) throw new ApiError("CHILD_REQUIRED");
+
+    const { data: body } = await request(
+      `/rewards/${encodeURIComponent(childId)}`,
+      { method: "PUT", body: { data: data ?? {} }, expect: [200] }
+    );
+    return body?.rewards ?? null;
+  },
 };

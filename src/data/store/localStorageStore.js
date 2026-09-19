@@ -26,7 +26,7 @@ import { normaliseChildPatch } from "../childFields.js";
  * the unversioned legacy progress shape as real debt; this is where versioning
  * starts, and `data` holds the curriculum shape verbatim.
  *
- * Keys owned here: `dl.parents`, `dl.children`, `dl.progress`.
+ * Keys owned here: `dl.parents`, `dl.children`, `dl.progress`, `dl.rewards`.
  * NOT touched: any other key, including `dl.session` (owned by the auth
  * context). The store confines itself to the three keys above.
  */
@@ -35,6 +35,7 @@ const KEYS = {
   parents: "dl.parents",
   children: "dl.children",
   progress: "dl.progress",
+  rewards: "dl.rewards",
 };
 
 /* ------------------------------------------------------------------ *
@@ -252,6 +253,11 @@ export const store = {
       KEYS.progress,
       readCollection(KEYS.progress).filter((doc) => doc.childId !== childId)
     );
+    // Rewards are per-child too, so a recycled id must not inherit badges.
+    writeCollection(
+      KEYS.rewards,
+      readCollection(KEYS.rewards).filter((doc) => doc.childId !== childId)
+    );
   },
 
   /** @returns {Promise<object|null>} progress for one childId+year+subject. */
@@ -296,6 +302,46 @@ export const store = {
 
     const next = index === -1 ? [...docs, doc] : docs.with(index, doc);
     writeCollection(KEYS.progress, next);
+    return clone(doc);
+  },
+
+  /**
+   * @returns {Promise<object|null>} the rewards doc for one child, or null.
+   *
+   * Rewards are a SEPARATE document from progress on purpose: a badge belongs
+   * to the child across every year, and keeping the two apart means a reward
+   * bug can never corrupt a completion.
+   */
+  async getRewards(childId) {
+    if (!childId) return null;
+    const found = readCollection(KEYS.rewards).find(
+      (doc) => doc.childId === childId
+    );
+    return clone(found) ?? null;
+  },
+
+  /**
+   * Upsert on childId — saving twice never creates a second document.
+   * @returns {Promise<object>} the stored rewards doc.
+   */
+  async saveRewards(childId, data) {
+    if (!childId) throw new Error("CHILD_REQUIRED");
+
+    const docs = readCollection(KEYS.rewards);
+    const index = docs.findIndex((doc) => doc.childId === childId);
+    const base = index === -1 ? null : docs[index];
+
+    const doc = {
+      _id: base?._id ?? newId(),
+      childId,
+      schemaVersion: 1,
+      data: structuredClone(data ?? {}),
+      createdAt: base?.createdAt ?? now(),
+      updatedAt: now(),
+    };
+
+    const next = index === -1 ? [...docs, doc] : docs.with(index, doc);
+    writeCollection(KEYS.rewards, next);
     return clone(doc);
   },
 };

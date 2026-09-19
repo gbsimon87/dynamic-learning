@@ -68,6 +68,7 @@ function AchievementStats({ level, summary }) {
 
 export default function CompletionCelebration({
   result,
+  badges = [],
   year,
   subjectName,
   nextHref,
@@ -119,6 +120,36 @@ export default function CompletionCelebration({
             {earned.slice(1).map((milestone) => (
               <span key={milestone}>✓ {milestone === "subject" ? `${subjectName} complete` : LABELS[milestone]}</span>
             ))}
+          </div>
+        )}
+
+        {/* New badges, announced where the child is already looking. Placed
+            ABOVE the stats and below the milestones: a badge is the thing they
+            keep, so it should not be the last item before the buttons where a
+            fast tapper never sees it. */}
+        {badges.length > 0 && (
+          <div className="completion-celebration-badges">
+            <p className="completion-celebration-badges-title">
+              {badges.length === 1 ? "New badge!" : "New badges!"}
+            </p>
+            <ul>
+              {badges.map((badge) => (
+                <li key={badge.id} className="completion-celebration-badge">
+                  <span className="completion-celebration-badge-icon" aria-hidden="true">
+                    {badge.icon}
+                  </span>
+                  <span className="completion-celebration-badge-text">
+                    <strong>{badge.name}</strong>
+                    <span>{badge.blurb}</span>
+                    {badge.unlocksAvatar && (
+                      <span className="completion-celebration-badge-unlock">
+                        Unlocked a new picture: {badge.unlocksAvatar}
+                      </span>
+                    )}
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
 
