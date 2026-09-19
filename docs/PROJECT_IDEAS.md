@@ -20,6 +20,17 @@
   themselves and owns their own profile. `accountType` distinguishes them and
   `isLearner` is exposed on the auth context. Any screen written for "the parent"
   now needs an answer for the learner case.
+- **Progress is now readable from anywhere** (shipped 2026-09-19). Any new
+  feature that needs "how far is this child?" should go through
+  `curriculumProgressStats` (year / category / topic counts, built-only) and
+  `curriculumResume` (most recently played curriculum, its breakdown, the next
+  challenge) — via `useProgress` for the active child or `useChildrenProgress`
+  for a list. Do not read the progress store directly; four screens agree today
+  precisely because none of them does.
+- **Nothing records per-attempt data.** The progress document stores completions
+  only — no timestamps per challenge, no attempt counts, no wrong answers. #10
+  and #11 both need that, and it is a new write path on the `onComplete`
+  contract rather than a new view. Treat it as their shared prerequisite.
 - Ideas are scoped to serve **both Year 2 and Year 3** where possible.
 
 ### Status key
