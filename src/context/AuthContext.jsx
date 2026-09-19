@@ -302,7 +302,7 @@ export function AuthProvider({ children: subtree }) {
   );
 
   const addChild = useCallback(
-    async ({ name, avatar, colour }) => {
+    async ({ name, avatar, colour, yearGroup }) => {
       if (!parent) throw new Error("NOT_SIGNED_IN");
       setError(null);
       try {
@@ -313,6 +313,7 @@ export function AuthProvider({ children: subtree }) {
           name,
           avatar,
           colour,
+          yearGroup,
         });
 
         const profiles = await store.listChildren(parent._id);
@@ -332,6 +333,40 @@ export function AuthProvider({ children: subtree }) {
       }
     },
     [parent]
+  );
+
+  /**
+   * Partial update to one of this parent's profiles.
+   *
+   * Refreshes three things that can otherwise disagree: the profile list, the
+   * ACTIVE child (whose object is held separately, so a rename would show the
+   * old name until the next sign-in), and the welcome-back record on the login
+   * screen.
+   */
+  const updateChild = useCallback(
+    async (childId, patch) => {
+      if (!parent) throw new Error("NOT_SIGNED_IN");
+      setError(null);
+      try {
+        // Ownership is enforced by the store/server, but checking here turns a
+        // 404 into a clear code before a request is even made.
+        const owned = (childProfiles || []).some((kid) => kid._id === childId);
+        if (!owned) throw new Error("CHILD_NOT_FOUND");
+
+        const updated = await store.updateChild(childId, patch);
+        const profiles = await store.listChildren(parent._id);
+        if (!aliveRef.current) return updated;
+
+        setChildProfiles(profiles || []);
+        if (child?._id === childId) setChild(updated);
+        writeLastAccount(parent, profiles || []);
+        return updated;
+      } catch (err) {
+        if (aliveRef.current) setError(err?.message || "UPDATE_CHILD_FAILED");
+        throw err;
+      }
+    },
+    [parent, child, childProfiles]
   );
 
   const removeChild = useCallback(
@@ -388,6 +423,7 @@ export function AuthProvider({ children: subtree }) {
       signOut,
       addChild,
       selectChild,
+      updateChild,
       removeChild,
     }),
     [
@@ -402,6 +438,7 @@ export function AuthProvider({ children: subtree }) {
       signOut,
       addChild,
       selectChild,
+      updateChild,
       removeChild,
     ]
   );

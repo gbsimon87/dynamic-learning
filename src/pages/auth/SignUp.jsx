@@ -496,6 +496,11 @@ function SignUp() {
               title={isLearner ? "That's me!" : "Your child"}
               nameLabel={isLearner ? "What's your name?" : "What's their name?"}
               namePlaceholder={isLearner ? "Type your name" : "Type their name"}
+              yearLabel={
+                isLearner
+                  ? "Which school year are you in?"
+                  : "Which school year are they in?"
+              }
               saveLabel="🎉 All done!"
               saving={submitting}
               onSave={submitProfile}

@@ -306,3 +306,98 @@ test("an account stored before the field existed reads back as a parent", async 
   });
   assert.equal(signedIn.accountType, "parent");
 });
+
+/* ===== UPDATE CHILD =====
+   A profile used to be create-or-delete only. The patch path is the one place a
+   caller could rewrite ownership, so the whitelist is tested as hard as the
+   happy path. */
+
+async function seedChild(extra = {}) {
+  reset();
+  const parent = await store.createParent({
+    email: "p@example.com",
+    password: "pw123456",
+  });
+  const child = await store.createChild(parent._id, {
+    name: "Mia",
+    avatar: "🦊",
+    colour: "--profile-colour-sky",
+    ...extra,
+  });
+  return { parent, child };
+}
+
+test("a child is created with no year group unless one is given", async () => {
+  const { child } = await seedChild();
+  assert.equal(child.yearGroup, null);
+});
+
+test("a child can be created with a year group", async () => {
+  const { child } = await seedChild({ yearGroup: 3 });
+  assert.equal(child.yearGroup, 3);
+});
+
+test("updateChild sets one field and leaves the others alone", async () => {
+  const { child } = await seedChild();
+  const updated = await store.updateChild(child._id, { yearGroup: 2 });
+
+  assert.equal(updated.yearGroup, 2);
+  assert.equal(updated.name, "Mia");
+  assert.equal(updated.avatar, "🦊");
+  assert.equal(updated.colour, "--profile-colour-sky");
+  assert.equal(updated.createdAt, child.createdAt);
+
+  // And it persisted, rather than only being returned.
+  assert.equal((await store.getChild(child._id)).yearGroup, 2);
+});
+
+test("updateChild can clear a year group back to null", async () => {
+  const { child } = await seedChild({ yearGroup: 3 });
+  const updated = await store.updateChild(child._id, { yearGroup: null });
+  assert.equal(updated.yearGroup, null);
+});
+
+test("updateChild cannot rewrite ownership or identity", async () => {
+  const { parent, child } = await seedChild();
+  const updated = await store.updateChild(child._id, {
+    name: "Mia",
+    parentId: "another-family",
+    _id: "hijacked",
+    createdAt: "1999-01-01",
+  });
+
+  assert.equal(updated.parentId, parent._id, "parentId must be untouched");
+  assert.equal(updated._id, child._id, "_id must be untouched");
+  assert.equal(updated.createdAt, child.createdAt, "createdAt must be untouched");
+});
+
+test("updateChild rejects a blank name rather than storing one", async () => {
+  const { child } = await seedChild();
+  await assert.rejects(
+    () => store.updateChild(child._id, { name: "  " }),
+    /NAME_REQUIRED/
+  );
+  assert.equal((await store.getChild(child._id)).name, "Mia");
+});
+
+test("updateChild rejects an unoffered year group", async () => {
+  const { child } = await seedChild();
+  await assert.rejects(
+    () => store.updateChild(child._id, { yearGroup: 9 }),
+    /INVALID_YEAR_GROUP/
+  );
+});
+
+test("updateChild on an unknown child is an error, not a silent no-op", async () => {
+  await seedChild();
+  await assert.rejects(
+    () => store.updateChild("no-such-child", { yearGroup: 2 }),
+    /CHILD_NOT_FOUND/
+  );
+});
+
+test("an empty patch leaves the child exactly as it was", async () => {
+  const { child } = await seedChild({ yearGroup: 3 });
+  const updated = await store.updateChild(child._id, {});
+  assert.deepEqual(updated, child);
+});

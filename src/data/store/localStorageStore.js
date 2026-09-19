@@ -3,6 +3,7 @@ import {
   normaliseAccountFields,
   readAccountType,
 } from "../../../shared/accountTypes.js";
+import { normaliseChildPatch } from "../childFields.js";
 
 /**
  * localStorage-backed implementation of the app's data store.
@@ -188,10 +189,13 @@ export const store = {
   },
 
   /** @returns {Promise<object>} the new child doc. */
-  async createChild(parentId, { name, avatar, colour }) {
+  async createChild(parentId, { name, avatar, colour, yearGroup }) {
     if (!parentId) throw new Error("PARENT_REQUIRED");
     const trimmedName = String(name ?? "").trim();
     if (!trimmedName) throw new Error("NAME_REQUIRED");
+
+    // Throws INVALID_YEAR_GROUP for a year the app cannot serve.
+    const { yearGroup: year = null } = normaliseChildPatch({ yearGroup });
 
     const child = {
       _id: newId(),
@@ -199,11 +203,38 @@ export const store = {
       name: trimmedName,
       avatar: avatar ?? null,
       colour: colour ?? null,
+      yearGroup: year,
       createdAt: now(),
     };
 
     writeCollection(KEYS.children, [...readCollection(KEYS.children), child]);
     return clone(child);
+  },
+
+  /**
+   * Applies a partial update to a child profile.
+   *
+   * A PATCH, not a PUT: only the keys present are touched, so setting a year
+   * group cannot blank the avatar. `normaliseChildPatch` is what stops a caller
+   * writing `parentId` or `_id` — both silent disasters, one handing a child to
+   * another family and the other orphaning every progress document.
+   *
+   * @throws {Error} CHILD_NOT_FOUND | NAME_REQUIRED | INVALID_YEAR_GROUP
+   * @returns {Promise<object>} the updated child doc.
+   */
+  async updateChild(childId, patch) {
+    if (!childId) throw new Error("CHILD_REQUIRED");
+
+    const fields = normaliseChildPatch(patch);
+    const docs = readCollection(KEYS.children);
+    const index = docs.findIndex((child) => child._id === childId);
+    if (index === -1) throw new Error("CHILD_NOT_FOUND");
+
+    const updated = { ...docs[index], ...fields };
+    const next = [...docs];
+    next[index] = updated;
+    writeCollection(KEYS.children, next);
+    return clone(updated);
   },
 
   /**

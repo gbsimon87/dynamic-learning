@@ -153,6 +153,56 @@ body.dark .profile-builder {
   transform: scale(1.08);
 }
 
+/* ---------- school year ----------
+   Offered as chips rather than a <select>: the same reason the avatars are a
+   grid. A grown-up fills this in, but on a phone, often one-handed. */
+.profile-builder .pb-year-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.profile-builder .pb-year {
+  display: grid;
+  gap: 0.1rem;
+  justify-items: center;
+  min-height: 52px;
+  padding: 0.5rem 0.9rem;
+  border-radius: 14px;
+  border: 3px solid var(--pb-border);
+  background-color: var(--pb-panel);
+  color: var(--pb-text);
+  font: inherit;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.profile-builder .pb-year:hover,
+.profile-builder .pb-year:focus-visible {
+  outline: none;
+  transform: scale(1.04);
+  border-color: var(--pb-accent);
+}
+
+/* The accent as a FILL with --on-*-accent ink, never as coloured text (§9). */
+.profile-builder .pb-year.selected {
+  border-color: var(--pb-accent);
+  background-color: var(--pb-accent);
+  color: var(--pb-on-accent);
+}
+
+.profile-builder .pb-year-name {
+  font-weight: 700;
+  font-size: 0.98rem;
+}
+
+/* Not disabled: a child really is in Year 1, and refusing to record that would
+   be worse than recording it and saying the content isn't ready. */
+.profile-builder .pb-year-note {
+  font-size: 0.68rem;
+  opacity: 0.8;
+}
+
 /* ---------- preview ---------- */
 .profile-builder .pb-preview {
   display: flex;
@@ -242,6 +292,7 @@ body.dark .profile-builder {
 @media (prefers-reduced-motion: reduce) {
   .profile-builder .pb-avatar-option,
   .profile-builder .pb-colour-option,
+  .profile-builder .pb-year,
   .profile-builder .pb-name-input,
   .profile-builder .pb-preview-chip,
   .profile-builder .pb-save-btn {
@@ -250,6 +301,7 @@ body.dark .profile-builder {
 
   .profile-builder .pb-avatar-option:hover,
   .profile-builder .pb-colour-option:hover,
+  .profile-builder .pb-year:hover,
   .profile-builder .pb-colour-option.selected {
     transform: none;
   }

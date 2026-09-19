@@ -109,6 +109,66 @@ body.dark .parent-area-page {
   gap: 0.5rem;
 }
 
+/* ---------- school year ----------
+   Takes a whole row of the flex parent, so it sits under the chip and buttons
+   rather than squeezing in beside them. */
+.parent-area-page .parent-area-year {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.parent-area-page .parent-area-year-label {
+  font-size: 0.85rem;
+  color: var(--pa-muted);
+}
+
+.parent-area-page .parent-area-year-row {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.parent-area-page .parent-area-year-btn {
+  min-width: 44px;
+  min-height: 36px;
+  padding-inline: 0.55rem;
+  border-radius: 9px;
+  border: 1px solid var(--pa-border);
+  background-color: var(--pa-panel);
+  color: var(--pa-text);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.parent-area-page .parent-area-year-btn:hover:not(:disabled),
+.parent-area-page .parent-area-year-btn:focus-visible:not(:disabled) {
+  outline: none;
+  border-color: var(--pa-accent);
+}
+
+/* The accent as a FILL with --on-*-accent ink, never as coloured text (§9). */
+.parent-area-page .parent-area-year-btn.selected {
+  border-color: var(--pa-accent);
+  background-color: var(--pa-accent);
+  color: var(--pa-on-accent);
+}
+
+.parent-area-page .parent-area-year-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.parent-area-page .parent-area-year-error {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--pa-danger);
+}
+
 /* ---------- per-child progress ----------
    Bars and counts, no rings and no emoji: this is the adult screen, and the
    question is "where is this child stuck?", which wants the shape of the
@@ -331,7 +391,8 @@ body.dark .parent-area-page {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .parent-area-page .parent-area-bar-fill {
+  .parent-area-page .parent-area-bar-fill,
+  .parent-area-page .parent-area-year-btn {
     transition: none;
   }
 }

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { AVATARS, PROFILE_COLOURS } from "../../data/avatars";
+import { CHILD_YEAR_GROUPS } from "../../data/childFields";
+import { isYearAvailable } from "../../data/curriculumRegistry";
 import "./ProfileBuilder.css";
 
 /**
@@ -26,6 +28,8 @@ import "./ProfileBuilder.css";
  * @param {Function} onSave      ({name, avatar, colour}) => void
  * @param {Function} [onCancel]  omitted renders no cancel button
  * @param {boolean}  [bare]      true inside a card that is already a panel
+ * @param {string}   [yearLabel] the school-year question
+ * @param {object}   [initial]   existing values, when editing rather than creating
  */
 function ProfileBuilder({
   title,
@@ -37,10 +41,16 @@ function ProfileBuilder({
   onSave,
   onCancel,
   bare = false,
+  yearLabel = "Which school year?",
+  initial = null,
 }) {
-  const [name, setName] = useState("");
-  const [avatar, setAvatar] = useState(AVATARS[0]);
-  const [colour, setColour] = useState(PROFILE_COLOURS[0]);
+  const [name, setName] = useState(initial?.name ?? "");
+  const [avatar, setAvatar] = useState(initial?.avatar ?? AVATARS[0]);
+  const [colour, setColour] = useState(initial?.colour ?? PROFILE_COLOURS[0]);
+  // null is a real answer — "not sure yet" — and the one a grown-up should be
+  // able to give without guessing. It simply means the curriculum picker keeps
+  // asking, which is the current behaviour for everyone.
+  const [yearGroup, setYearGroup] = useState(initial?.yearGroup ?? null);
   // Kept apart from the caller's `error` so a failed save does not erase a
   // "type a name first" message, or the other way round.
   const [localError, setLocalError] = useState("");
@@ -56,7 +66,7 @@ function ProfileBuilder({
     }
 
     setLocalError("");
-    onSave({ name: trimmed, avatar, colour });
+    onSave({ name: trimmed, avatar, colour, yearGroup });
   };
 
   const shownError = localError || error;
@@ -116,6 +126,40 @@ function ProfileBuilder({
               .replace(/-/g, " ")} colour`}
           />
         ))}
+      </div>
+
+      <p className="pb-label" id="pb-year-label">
+        {yearLabel}
+      </p>
+      <div className="pb-year-row" role="group" aria-labelledby="pb-year-label">
+        {CHILD_YEAR_GROUPS.map((year) => {
+          // Years with no curriculum yet are still offered — a child IS in Year
+          // 1 whether or not we have content for them — but say so plainly
+          // rather than promising a path that isn't there.
+          const ready = isYearAvailable(year);
+          return (
+            <button
+              key={year}
+              type="button"
+              className={`pb-year ${yearGroup === year ? "selected" : ""} ${
+                ready ? "" : "is-soon"
+              }`}
+              onClick={() => setYearGroup(year)}
+              aria-pressed={yearGroup === year}
+            >
+              <span className="pb-year-name">Year {year}</span>
+              {!ready && <span className="pb-year-note">coming soon</span>}
+            </button>
+          );
+        })}
+        <button
+          type="button"
+          className={`pb-year ${yearGroup === null ? "selected" : ""}`}
+          onClick={() => setYearGroup(null)}
+          aria-pressed={yearGroup === null}
+        >
+          <span className="pb-year-name">Not sure</span>
+        </button>
       </div>
 
       <div className="pb-preview">

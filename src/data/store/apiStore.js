@@ -28,6 +28,7 @@
  */
 
 import { normaliseAccountFields } from "../../../shared/accountTypes.js";
+import { normaliseChildPatch } from "../childFields.js";
 
 const BASE = "/api";
 
@@ -221,16 +222,41 @@ export const store = {
   },
 
   /** @returns {Promise<object>} the new child doc. */
-  async createChild(parentId, { name, avatar, colour }) {
+  async createChild(parentId, { name, avatar, colour, yearGroup }) {
     if (!parentId) throw new ApiError("PARENT_REQUIRED");
     const trimmedName = String(name ?? "").trim();
     if (!trimmedName) throw new ApiError("NAME_REQUIRED");
 
+    const { yearGroup: year = null } = normaliseChildPatch({ yearGroup });
+
     const { data } = await request("/children", {
       method: "POST",
-      body: { name: trimmedName, avatar: avatar ?? null, colour: colour ?? null },
+      body: {
+        name: trimmedName,
+        avatar: avatar ?? null,
+        colour: colour ?? null,
+        yearGroup: year,
+      },
       expect: [201],
     });
+    return data?.child ?? null;
+  },
+
+  /**
+   * Partial update. The server scopes by session and re-validates the patch —
+   * validating here too keeps the error codes identical across the drivers.
+   * @throws {Error} CHILD_NOT_FOUND | NAME_REQUIRED | INVALID_YEAR_GROUP
+   * @returns {Promise<object>} the updated child doc.
+   */
+  async updateChild(childId, patch) {
+    if (!childId) throw new ApiError("CHILD_REQUIRED");
+
+    const fields = normaliseChildPatch(patch);
+    const { status, data } = await request(
+      `/children/${encodeURIComponent(childId)}`,
+      { method: "PATCH", body: fields, expect: [200], soft: [404] }
+    );
+    if (status === 404) throw new ApiError("CHILD_NOT_FOUND", { status });
     return data?.child ?? null;
   },
 

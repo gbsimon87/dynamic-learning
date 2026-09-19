@@ -2,6 +2,8 @@ import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../context/auth-context";
 import { useChildrenProgress } from "../../hooks/useChildrenProgress";
+import { CHILD_YEAR_GROUPS, readYearGroup } from "../../data/childFields";
+import { isYearAvailable } from "../../data/curriculumRegistry";
 import "./ParentArea.css";
 
 /**
@@ -111,8 +113,80 @@ function ChildProgress({ id, name, summary, loading }) {
   );
 }
 
+/**
+ * The school year on a profile, changeable in place.
+ *
+ * It lives here rather than on /profiles because it is a grown-up's fact about
+ * a child, not a choice a six-year-old should be making on the way into a game.
+ * Setting it is what lets the curriculum picker skip itself.
+ *
+ * Saves immediately on tap: there is one field, so a Save button would only add
+ * a step and a half-saved state to get wrong.
+ */
+function YearPicker({ child, onChange }) {
+  const [saving, setSaving] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const current = readYearGroup(child);
+
+  const pick = async (year) => {
+    if (saving || year === current) return;
+    setSaving(true);
+    setFailed(false);
+    try {
+      await onChange(child._id, { yearGroup: year });
+    } catch {
+      // Say so rather than silently reverting — a grown-up who taps Year 3 and
+      // sees nothing happen will reasonably assume it worked.
+      setFailed(true);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="parent-area-year">
+      <span className="parent-area-year-label" id={`year-${child._id}`}>
+        School year
+      </span>
+      <div
+        className="parent-area-year-row"
+        role="group"
+        aria-labelledby={`year-${child._id}`}
+      >
+        {CHILD_YEAR_GROUPS.map((year) => (
+          <button
+            key={year}
+            type="button"
+            className={`parent-area-year-btn ${current === year ? "selected" : ""}`}
+            aria-pressed={current === year}
+            disabled={saving}
+            onClick={() => pick(year)}
+            title={isYearAvailable(year) ? undefined : "No curriculum yet"}
+          >
+            {year}
+          </button>
+        ))}
+        <button
+          type="button"
+          className={`parent-area-year-btn ${current === null ? "selected" : ""}`}
+          aria-pressed={current === null}
+          disabled={saving}
+          onClick={() => pick(null)}
+        >
+          Not set
+        </button>
+      </div>
+      {failed && (
+        <span className="parent-area-year-error" role="alert">
+          That didn't save — please try again.
+        </span>
+      )}
+    </div>
+  );
+}
+
 function ParentArea() {
-  const { parent, children, status, isLearner, signOut, removeChild } =
+  const { parent, children, status, isLearner, signOut, removeChild, updateChild } =
     useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -245,6 +319,8 @@ function ParentArea() {
                       </button>
                     </span>
                   )}
+
+                  <YearPicker child={kid} onChange={updateChild} />
 
                   {openId === kid._id && (
                     <ChildProgress

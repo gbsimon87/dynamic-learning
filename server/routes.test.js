@@ -199,6 +199,57 @@ test("route authorization", { skip: URI ? false : "MONGODB_URI not set" }, async
     assert.equal((await a("GET", "/api/auth/me")).status, 401);
   });
 
+  // --- child year group ----------------------------------------------------
+  await t.test("a child can be created with a year group and patched", async () => {
+    const created = await a("POST", "/api/children", {
+      name: "Year Kid",
+      yearGroup: 3,
+    });
+    assert.equal(created.status, 201);
+    assert.equal(created.body.child.yearGroup, 3);
+
+    const patched = await a("PATCH", `/api/children/${created.body.child._id}`, {
+      yearGroup: 2,
+    });
+    assert.equal(patched.status, 200);
+    assert.equal(patched.body.child.yearGroup, 2);
+    assert.equal(patched.body.child.name, "Year Kid", "other fields untouched");
+  });
+
+  await t.test("PATCH cannot move a child to another family", async () => {
+    const created = await a("POST", "/api/children", { name: "Stay Put" });
+    const id = created.body.child._id;
+
+    const res = await a("PATCH", `/api/children/${id}`, {
+      parentId: "000000000000000000000000",
+      name: "Stay Put",
+    });
+    assert.equal(res.status, 200);
+
+    // Still visible to A, still invisible to B.
+    const mine = await a("GET", "/api/children");
+    assert.ok(mine.body.children.some((kid) => kid._id === id));
+    const theirs = await b("GET", "/api/children");
+    assert.equal(theirs.body.children.some((kid) => kid._id === id), false);
+  });
+
+  await t.test("PATCH on another parent's child is a 404", async () => {
+    const created = await a("POST", "/api/children", { name: "Not Yours" });
+    const res = await b("PATCH", `/api/children/${created.body.child._id}`, {
+      yearGroup: 2,
+    });
+    assert.equal(res.status, 404);
+  });
+
+  await t.test("PATCH rejects an unoffered year group", async () => {
+    const created = await a("POST", "/api/children", { name: "Bad Year" });
+    const res = await a("PATCH", `/api/children/${created.body.child._id}`, {
+      yearGroup: 9,
+    });
+    assert.equal(res.status, 400);
+    assert.equal(res.body.error, "INVALID_YEAR_GROUP");
+  });
+
   // --- account type + age band --------------------------------------------
   // The client validates these too, for good error messages. The server
   // validates because a request is not a trust boundary — these tests are what

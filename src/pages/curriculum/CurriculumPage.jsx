@@ -316,8 +316,10 @@ function CurriculumPage() {
             pills — is gone, so the challenge cards start near the top of the
             screen instead of below a screenful of copy. */}
         <div className="cp-bar">
+          {/* `?pick=1` or this bounces straight back here: the picker skips
+              itself for a learner whose year is on their profile. */}
           <Link
-            to="/curriculum"
+            to="/curriculum?pick=1"
             className="cp-back"
             aria-label="Change year or subject"
             title="Change year or subject"

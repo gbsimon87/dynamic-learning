@@ -1,5 +1,7 @@
-import { useRef, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router";
+import { AuthContext } from "../../context/auth-context";
+import { readYearGroup } from "../../data/childFields";
 import {
   CURRICULUM_YEARS,
   CURRICULUM_SUBJECTS,
@@ -132,9 +134,54 @@ function SubjectCard({ subject, year, onNeedYear }) {
 
 function CurriculumSelectPage() {
   const revealRef = useReveal();
-  const [selectedYear, setSelectedYear] = useState(null);
+  const { child } = useContext(AuthContext);
+
+  // The child's school year, when a grown-up has recorded one. It PRE-SELECTS
+  // step 1 rather than removing it: a child who moved up a year, or is doing
+  // Year 2 work in Year 3, must still be able to choose — so the row stays,
+  // already answered.
+  const savedYear = readYearGroup(child);
+
+  const [selectedYear, setSelectedYear] = useState(savedYear);
   const [nudgeYears, setNudgeYears] = useState(false);
+  // Set once a year has been chosen BY HAND, which switches the auto-skip off:
+  // without it, landing back here from a curriculum would bounce straight back
+  // in, and the picker would be unreachable.
+  const [chosenByHand, setChosenByHand] = useState(false);
   const yearsRef = useRef(null);
+
+  // `?pick=1` forces the picker to stay put. Component state cannot do this
+  // job: leaving a curriculum REMOUNTS this page, so the skip would fire again
+  // and the back arrow would bounce the learner straight back in, with the
+  // picker unreachable. The link that lands here says which it wants.
+  const [params] = useSearchParams();
+  const forcePicker = params.has("pick");
+
+  // The profile list loads after the first render, so the saved year can
+  // arrive late. Adopt it only while the learner has not chosen for themselves.
+  useEffect(() => {
+    if (!chosenByHand && savedYear !== null) setSelectedYear(savedYear);
+  }, [savedYear, chosenByHand]);
+
+  const pickYear = (year) => {
+    setChosenByHand(true);
+    setSelectedYear(year);
+  };
+
+  // One subject available for the saved year means there is nothing left to
+  // ask, so go. More than one and the picker still has a real question.
+  const readySubjects = CURRICULUM_SUBJECTS.filter((subject) =>
+    savedYear === null ? false : isCurriculumAvailable(savedYear, subject.id)
+  );
+
+  if (!forcePicker && !chosenByHand && savedYear !== null && readySubjects.length === 1) {
+    return (
+      <Navigate
+        to={`/curriculum/year/${savedYear}/${readySubjects[0].id}`}
+        replace
+      />
+    );
+  }
 
   // Tapping a subject too early bounces the year row rather than silently
   // refusing — the child can see where the missing step is.
@@ -208,7 +255,7 @@ function CurriculumSelectPage() {
               year={year}
               available={isYearAvailable(year)}
               selected={selectedYear === year}
-              onPick={setSelectedYear}
+              onPick={pickYear}
             />
           ))}
         </div>
