@@ -6,7 +6,7 @@
 > [PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md), which is where history lives.
 > The same goes for bugs: a fixed bug is deleted here and written up there.
 
-**Last reviewed:** 2026-09-19
+**Last reviewed:** 2026-09-20
 
 ### Context for prioritisation
 - The app ships **UK Year 2 Maths** complete in Curriculum Mode, plus standalone
@@ -77,6 +77,7 @@ Ordered **easiest → hardest** to implement.
 | 14 | **Offline / PWA support** | Service worker plus manifest so the app installs and works without a connection — valuable on shared or low-connectivity school devices. No manifest, service worker, or PWA plugin exists today. Note this interacts with the API store: offline progress would need a queue and a conflict rule. | ⚪ Idea |
 | 15 | **Geography curriculum expansion** | Turn the geography backlog (continents, oceans, landforms, habitats, weather, day/night) into a structured topic path rather than loose games. Source ideas in `notes_geography.md`. [Flag Finder](../src/pages/skills/geography/FlagFinder.jsx) uses the REST Countries API and could filter by continent — "Which African country?" — enabling continent-focused topics. | ⚪ Idea |
 | 16 | **English curriculum mode** | Extend Curriculum Mode beyond Maths — author a Year 2 English curriculum tree (phonics, spelling, grammar, comprehension) reusing the same category/topic/challenge machinery. Much cheaper after #6. | ⚪ Idea |
+| 17 | **Solar System meteor experiment** | Launches a meteor, shows impact and textured Earth fragments, and restores the Solar System through Reset. Implemented and verified locally: pure tests T1–T10 and browser checks B1–B12 all pass, resources stay flat over ten cycles, and the desktop production preview runs at a median 8.3 ms. The single remaining requirement is a **physical phone/tablet performance benchmark**, which no device in this workspace can provide. Follow the [implementation plan](solar-system-meteor/IMPLEMENTATION_PLAN.md) and [progress tracker](solar-system-meteor/IMPLEMENTATION_TRACKER.md). | 🟡 Partial |
 
 ---
 
@@ -94,3 +95,5 @@ Ordered **easiest → hardest** to implement.
    view) and #10 (adaptive difficulty) both need, and which would also unlock
    streaks on top of the badges shipped 2026-09-19.
 5. **Broaden and polish:** #5, #7, #8 and beyond.
+6. **Finish the larger visual experiment:** #17 (Solar System meteor) needs only
+   a physical-device performance run; everything else is verified in its tracker.

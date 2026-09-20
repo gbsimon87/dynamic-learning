@@ -4,6 +4,8 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Pane } from "tweakpane";
 import { matchBodies } from "./solarSearch.js";
 import { moonFacts } from "./moonFacts.js";
+import { createSolarDefaults, createWorldTime, advanceWorldTime, getBodyPose } from "./solarSimulation.js";
+import { createMeteorExperiment } from "./meteorExperiment.js";
 import "./SolarSystem.css";
 
 /**
@@ -30,6 +32,13 @@ export default function ThreeSolarSystem() {
     const canvasRef = useRef(null); // managed <canvas>
     const sceneApiRef = useRef(null);
     const searchInputRef = useRef(null);
+    const launchButtonRef = useRef(null);
+    const resetButtonRef = useRef(null);
+    const controlsStripRef = useRef(null);
+    const focusRequestRef = useRef(null);
+    const [meteorPhase, setMeteorPhase] = useState("ready");
+    const [sceneReady, setSceneReady] = useState(false);
+    const [meteorError, setMeteorError] = useState("");
     const [selectedPlanet, setSelectedPlanet] = useState(null);
     const [tourState, setTourState] = useState({ active: false, index: 0, total: 0, muted: false });
     // Serialisable mirror of the scene's searchable bodies; the Object3D refs
@@ -45,6 +54,12 @@ export default function ThreeSolarSystem() {
 
     useEffect(() => {
         if (!containerRef.current || !canvasRef.current) return;
+        const defaults = createSolarDefaults();
+        let experiment = null;
+        let resetting = false;
+        let disposed = false;
+        let worldTime = createWorldTime();
+        const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
         // ================================================================
         // Constants & Config
@@ -76,11 +91,7 @@ export default function ThreeSolarSystem() {
             neptune: textureLoader.load("/static/2k_neptune.jpg"),
         };
 
-        const glowSettings = {
-            enabled: true,
-            intensity: 0.42,
-            size: 16,
-        };
+        const glowSettings = { ...defaults.glow };
 
         Object.values(textures).forEach((tex) => {
             if (tex && tex.isTexture) tex.colorSpace = THREE.SRGBColorSpace;
@@ -486,25 +497,14 @@ export default function ThreeSolarSystem() {
         // ================================================================
         // Asteroid Belt
         // ================================================================
-        const beltSettings = {
-            enabled: true,
-            count: 4500,
-            innerRadius: null,
-            outerRadius: null,
-            minSize: 0.25,
-            maxSize: 0.3,
-            maxInclinationDeg: 3,
-            eccentricity: 0.04,
-            minSpeed: 0.0004,
-            maxSpeed: 0.0012,
-        };
+        const beltSettings = { ...defaults.belt };
 
         let asteroidBelt = null; // { mesh, angles, radii, speeds, inc, eccPhase, dummy }
 
         const marsDist = findPlanetDistance("Mars") ?? 39.0;
         const jupDist = findPlanetDistance("Jupiter") ?? 133.33;
-        beltSettings.innerRadius = marsDist + 8;
-        beltSettings.outerRadius = jupDist - 15;
+        defaults.belt.innerRadius = beltSettings.innerRadius = marsDist + 8;
+        defaults.belt.outerRadius = beltSettings.outerRadius = jupDist - 15;
 
         function createAsteroidBelt(opts = {}) {
             const o = { ...beltSettings, ...opts };
@@ -528,6 +528,7 @@ export default function ThreeSolarSystem() {
             const angles = new Float32Array(o.count);
             const radii = new Float32Array(o.count);
             const speeds = new Float32Array(o.count);
+            const scales = new Float32Array(o.count);
             const inc = new Float32Array(o.count);
             const eccPhase = new Float32Array(o.count);
             const dummy = new THREE.Object3D();
@@ -546,6 +547,7 @@ export default function ThreeSolarSystem() {
                 angles[i] = angle;
                 radii[i] = r;
                 speeds[i] = speed;
+                scales[i] = size;
                 inc[i] = incRad;
                 eccPhase[i] = phase;
 
@@ -562,16 +564,16 @@ export default function ThreeSolarSystem() {
             }
 
             scene.add(mesh);
-            asteroidBelt = { mesh, angles, radii, speeds, inc, eccPhase, dummy, settings: o };
+            asteroidBelt = { mesh, angles, baseAngles: angles.slice(), radii, speeds, scales, inc, eccPhase, dummy, settings: o };
         }
 
-        function updateAsteroidBelt(dt, elapsed) {
+        function updateAsteroidBelt(orbitTime, elapsed) {
             if (!asteroidBelt || !beltSettings.enabled) return;
-            const { mesh, angles, radii, speeds, inc, eccPhase, dummy, settings } = asteroidBelt;
+            const { mesh, angles, baseAngles, radii, speeds, scales, inc, eccPhase, dummy, settings } = asteroidBelt;
             const count = angles.length;
 
             for (let i = 0; i < count; i++) {
-                angles[i] += speeds[i] * dt * simulation.orbitSpeedMultiplier;
+                angles[i] = baseAngles[i] + speeds[i] * orbitTime;
                 const rBase = radii[i];
                 const r = rBase * (1 + settings.eccentricity * Math.sin(eccPhase[i] + elapsed * 0.2));
 
@@ -583,6 +585,7 @@ export default function ThreeSolarSystem() {
                 z = Math.cos(inc[i]) * z;
 
                 dummy.position.set(x, y, z);
+                dummy.scale.setScalar(scales[i]);
                 dummy.rotation.y = angles[i];
                 dummy.updateMatrix();
                 mesh.setMatrixAt(i, dummy.matrix);
@@ -662,6 +665,12 @@ export default function ThreeSolarSystem() {
         });
 
         createAsteroidBelt();
+        const initialBelt = {
+            baseAngles: asteroidBelt.baseAngles.slice(), radii: asteroidBelt.radii.slice(),
+            speeds: asteroidBelt.speeds.slice(), scales: asteroidBelt.scales.slice(),
+            inc: asteroidBelt.inc.slice(), eccPhase: asteroidBelt.eccPhase.slice(),
+            matrices: asteroidBelt.mesh.instanceMatrix.array.slice(),
+        };
 
         // ================================================================
         // Subtle, physical-looking corona anchored at the Sun
@@ -714,7 +723,7 @@ export default function ThreeSolarSystem() {
         // Background Stars
         // ================================================================
         let stars = null;
-        const starSettings = { count: 5000, size: 0.6 };
+        const starSettings = { ...defaults.stars };
 
         function createStars() {
             if (stars) {
@@ -748,6 +757,7 @@ export default function ThreeSolarSystem() {
             scene.add(stars);
         }
         createStars();
+        const initialStarPositions = stars.geometry.attributes.position.array.slice();
 
         // ================================================================
         // Lights
@@ -766,7 +776,7 @@ export default function ThreeSolarSystem() {
         // Camera & Renderer
         // ================================================================
         const camera = new THREE.PerspectiveCamera(50, getAspect(), 0.1, 5000);
-        camera.position.set(0, 72, 128);
+        camera.position.fromArray(defaults.camera.position);
         scene.add(camera);
 
         const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current, antialias: true });
@@ -813,6 +823,9 @@ export default function ThreeSolarSystem() {
         function filterZoomTargets(intersects) {
             return intersects.filter((hit) => {
                 const obj = hit.object;
+                for (let owner = obj; owner; owner = owner.parent) {
+                    if (owner.userData.isMeteorEffect) return false;
+                }
                 return (
                     obj.type === "Mesh" &&
                     !obj.userData.isOrbit &&
@@ -825,14 +838,7 @@ export default function ThreeSolarSystem() {
         // ================================================================
         // Simulation Settings & Tweakpane
         // ================================================================
-        const simulation = {
-            orbitSpeedMultiplier: 1,
-            rotationSpeedMultiplier: 1,
-            showOrbits: true,
-            showLabels: true,
-            showMoonLabels: false,
-            enableTilt: true,
-        };
+        const simulation = { ...defaults.simulation };
 
         const pane = new Pane({
             container: containerRef.current,
@@ -873,7 +879,7 @@ export default function ThreeSolarSystem() {
         starsFolder
             .addBinding(starSettings, "count", { label: "Star Count", min: 0, max: 10000, step: 100 })
             .on("change", () => createStars());
-        const backgroundSettings = { enabled: true };
+        const backgroundSettings = { ...defaults.background };
         starsFolder
             .addBinding(backgroundSettings, "enabled", { label: "Show Galaxy" })
             .on("change", (ev) => {
@@ -990,6 +996,10 @@ export default function ThreeSolarSystem() {
         }
 
         function resetView() {
+            if (experiment?.isActive()) {
+                resetSolarSystem();
+                return;
+            }
             stopFollowing();
             stopTour(true);
             followBlendT = 0;
@@ -997,6 +1007,124 @@ export default function ThreeSolarSystem() {
             desiredControlsTarget.set(0, 0, 0);
             zoomAnimating = true;
             updateCameraFocus("Overview");
+        }
+
+        function clearControlDamping() {
+            const position = camera.position.clone();
+            const target = controls.target.clone();
+            const damping = controls.enableDamping;
+            controls.enableDamping = false;
+            controls.update();
+            camera.position.copy(position);
+            controls.target.copy(target);
+            controls.update();
+            controls.enableDamping = damping;
+        }
+
+        function resetSolarSystem() {
+            if (disposed || resetting) return;
+            resetting = true;
+            stopNarration();
+            stopTour(true);
+            stopFollowing();
+            followBlendT = 0;
+            zoomAnimating = false;
+            experiment?.reset();
+            Object.assign(simulation, defaults.simulation);
+            Object.assign(glowSettings, defaults.glow);
+            Object.assign(starSettings, defaults.stars);
+            Object.assign(beltSettings, defaults.belt);
+            Object.assign(backgroundSettings, defaults.background);
+            sunLight.intensity = defaults.lighting.sun;
+            ambientLight.intensity = defaults.lighting.ambient;
+            scene.background = backgroundTexture;
+            if (stars.geometry.attributes.position.count !== initialStarPositions.length / 3) createStars();
+            stars.geometry.attributes.position.array.set(initialStarPositions);
+            stars.geometry.attributes.position.needsUpdate = true;
+            stars.material.size = starSettings.size;
+            if (asteroidBelt.mesh.count !== initialBelt.baseAngles.length) createAsteroidBelt();
+            for (const key of ["baseAngles", "radii", "speeds", "scales", "inc", "eccPhase"]) asteroidBelt[key].set(initialBelt[key]);
+            asteroidBelt.angles.set(initialBelt.baseAngles);
+            asteroidBelt.mesh.instanceMatrix.array.set(initialBelt.matrices);
+            asteroidBelt.mesh.instanceMatrix.needsUpdate = true;
+            asteroidBelt.mesh.visible = true;
+            asteroidBelt.settings = { ...defaults.belt };
+            worldTime = createWorldTime();
+            applyWorldPoses();
+            camera.position.fromArray(defaults.camera.position);
+            camera.up.set(0, 1, 0);
+            camera.fov = defaults.camera.fov;
+            camera.near = defaults.camera.near;
+            camera.far = defaults.camera.far;
+            camera.zoom = 1;
+            camera.updateProjectionMatrix();
+            controls.target.fromArray(defaults.camera.target);
+            clearControlDamping();
+            controls.enabled = true;
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.075;
+            desiredCameraPosition.copy(camera.position);
+            desiredControlsTarget.copy(controls.target);
+            previousFollowPosition.copy(controls.target);
+            cameraSettings.focus = "Overview";
+            tourMuted = false;
+            setTourState({ active: false, index: 0, total: 0, muted: false });
+            pane.hidden = false;
+            pane.disabled = false;
+            pane.expanded = wideQuery.matches;
+            pane.refresh();
+            updateSunGlow();
+            orbitPaths.forEach((orbit) => { orbit.visible = true; });
+            labelSprites.forEach((label) => { label.visible = !label.userData.isMoonLabel; });
+            setSelectedPlanet(null);
+            setFocusedId(null);
+            setQuery("");
+            setSearchOpen(false);
+            setSearchExpanded(false);
+            setActiveIndex(0);
+            setMeteorPhase("ready");
+            setMeteorError("");
+            prevTime = performance.now() / 1000;
+            resetting = false;
+            focusRequestRef.current = "launch";
+        }
+
+        function launchExperiment() {
+            if (disposed || resetting || experiment?.isActive()) return false;
+            try {
+                if (!experiment) experiment = createMeteorExperiment({
+                    scene, camera, earthBody: planetSystems.find((system) => system.userData.planet.name === "Earth").userData.body,
+                    earthTexture: textures.earth,
+                    quality: containerRef.current.clientWidth < 720 || window.matchMedia("(pointer: coarse)").matches ? "low" : "standard",
+                    onPhaseChange: (phase) => { if (!disposed) setMeteorPhase(phase); },
+                });
+                experiment.resize({ width: containerRef.current.clientWidth, height: containerRef.current.clientHeight, reservedBottomPx: controlsStripRef.current?.offsetHeight + 16 || 130 });
+                stopTour(true);
+                stopFollowing();
+                followBlendT = 0;
+                zoomAnimating = false;
+                setQuery("");
+                setSearchOpen(false);
+                setSearchExpanded(false);
+                setSelectedPlanet(null);
+                searchInputRef.current?.blur();
+                clearControlDamping();
+                controls.enabled = false;
+                scene.updateMatrixWorld(true);
+                if (!experiment.launch({ reducedMotion: reducedQuery.matches, cameraTarget: controls.target.clone() })) return false;
+                pane.hidden = true;
+                pane.disabled = true;
+                setMeteorError("");
+                focusRequestRef.current = "reset";
+                return true;
+            } catch (error) {
+                console.error("Meteor experiment could not launch", error);
+                resetSolarSystem();
+                experiment?.dispose();
+                experiment = null;
+                setMeteorError("That meteor did not launch. Try again.");
+                return false;
+            }
         }
 
         function createPlanetInfo(planet, planetIndex) {
@@ -1052,7 +1180,7 @@ export default function ThreeSolarSystem() {
         }
 
         function focusEntry(entry, fromTour = false) {
-            if (!entry) return;
+            if (!entry || experiment?.isActive() || resetting) return;
             if (!fromTour && tourActive) stopTour();
             const isMoon = entry.kind === "moon";
             followActive = true;
@@ -1087,6 +1215,7 @@ export default function ThreeSolarSystem() {
         }
 
         function visitTourPlanet(nextIndex) {
+            if (experiment?.isActive() || resetting) return;
             const clampedIndex = THREE.MathUtils.clamp(nextIndex, 0, planetSystems.length - 1);
             tourActive = true;
             tourIndex = clampedIndex;
@@ -1110,6 +1239,8 @@ export default function ThreeSolarSystem() {
         sceneApiRef.current = {
             focusById: (id) => focusEntry(searchEntriesById.get(id)),
             resetView,
+            resetSolarSystem,
+            launchMeteor: launchExperiment,
             start: () => visitTourPlanet(0),
             previous: () => visitTourPlanet(tourIndex - 1),
             next: () => {
@@ -1120,8 +1251,10 @@ export default function ThreeSolarSystem() {
             toggleNarration: toggleTourNarration,
             exit: (hideCard = false) => stopTour(hideCard),
         };
+        setSceneReady(true);
 
         function onClick(event) {
+            if (experiment?.isActive()) return;
             const rect = renderer.domElement.getBoundingClientRect();
             clickMouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
             clickMouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
@@ -1139,6 +1272,7 @@ export default function ThreeSolarSystem() {
         function onWheel(event) {
             event.preventDefault();
             event.stopImmediatePropagation();
+            if (experiment?.isActive()) return;
 
             const zoomFactor = Math.exp(THREE.MathUtils.clamp(event.deltaY, -120, 120) * 0.0025);
             if (followActive && followTarget) {
@@ -1177,6 +1311,7 @@ export default function ThreeSolarSystem() {
         }
 
         function onControlsStart() {
+            if (experiment?.isActive()) return;
             zoomAnimating = false;
             desiredCameraPosition.copy(camera.position);
             desiredControlsTarget.copy(controls.target);
@@ -1184,6 +1319,10 @@ export default function ThreeSolarSystem() {
 
         function onKeyDown(e) {
             if (e.key !== "Escape") return;
+            if (experiment?.isActive()) {
+                resetSolarSystem();
+                return;
+            }
             // Escape inside the search field clears the field instead of the view.
             if (e.target?.closest?.(".solar-toolbar")) return;
             stopFollowing();
@@ -1199,56 +1338,70 @@ export default function ThreeSolarSystem() {
         // ================================================================
         // Animation Loop
         // ================================================================
-        const clock = new THREE.Clock();
         let prevTime = performance.now() / 1000;
+        const onVisibilityChange = () => { prevTime = performance.now() / 1000; };
+        const onReducedMotionChange = (event) => {
+            if (event.matches && experiment?.isActive()) resetSolarSystem();
+        };
+        document.addEventListener("visibilitychange", onVisibilityChange);
+        reducedQuery.addEventListener("change", onReducedMotionChange);
 
         const labelWorldPosition = new THREE.Vector3();
         const currentFollowPosition = new THREE.Vector3();
         let animationFrameId = 0;
 
+        function applyWorldPoses() {
+            planetSystems.forEach((system, i) => {
+                const data = planetData[i];
+                const pose = getBodyPose(data, worldTime);
+                system.position.set(pose.position.x, pose.position.y, pose.position.z);
+                system.userData.axialGroup.rotation.z = simulation.enableTilt ? THREE.MathUtils.degToRad(data.tilt || 0) : 0;
+                system.userData.body.rotation.y = pose.rotationY;
+                system.userData.moons.forEach(({ mesh, data: moonData, phase }) => {
+                    const moonPose = getBodyPose({ ...moonData, phase }, worldTime);
+                    mesh.position.set(moonPose.position.x, moonPose.position.y, moonPose.position.z);
+                    mesh.rotation.y = moonPose.rotationY;
+                });
+            });
+        }
+
         function animate() {
             const now = performance.now() / 1000;
             let dt = now - prevTime;
             prevTime = now;
-            dt = Math.min(dt, 0.1);
-            const elapsed = clock.getElapsedTime();
+            dt = document.hidden ? 0 : Math.min(Math.max(dt, 0), 0.1);
+            const active = experiment?.isActive() ?? false;
+            if (!active) {
+                worldTime = advanceWorldTime(worldTime, dt, simulation);
+                applyWorldPoses();
+            } else {
+                try { experiment.update(dt); }
+                catch (error) {
+                    console.error("Meteor experiment stopped", error);
+                    resetSolarSystem();
+                    experiment?.dispose();
+                    experiment = null;
+                    setMeteorError("That meteor did not launch. Try again.");
+                }
+            }
 
-            planetSystems.forEach((system, i) => {
-                const data = planetData[i];
-                const orbitSpeed = data.speed * simulation.orbitSpeedMultiplier;
-                system.position.x = Math.sin(elapsed * orbitSpeed) * data.distance;
-                system.position.z = Math.cos(elapsed * orbitSpeed) * data.distance;
-
-                const rotationSpeed = data.speed * simulation.rotationSpeedMultiplier;
-                system.userData.axialGroup.rotation.z = simulation.enableTilt
-                    ? THREE.MathUtils.degToRad(data.tilt || 0)
-                    : 0;
-                system.userData.body.rotation.y += rotationSpeed * dt * 60;
-
-                system.userData.moons.forEach(({ mesh, data: moonData, phase }) => {
-                    const moonOrbitSpeed = moonData.speed * simulation.orbitSpeedMultiplier;
-                    mesh.rotation.y += moonData.speed * simulation.rotationSpeedMultiplier * dt * 60;
-                    mesh.position.x = Math.sin(elapsed * moonOrbitSpeed + phase) * moonData.distance;
-                    mesh.position.z = Math.cos(elapsed * moonOrbitSpeed + phase) * moonData.distance;
-                });
-            });
-
-            orbitPaths.forEach((orbit) => (orbit.visible = simulation.showOrbits));
+            orbitPaths.forEach((orbit) => (orbit.visible = !active && simulation.showOrbits));
+            asteroidBelt.mesh.visible = !active && beltSettings.enabled;
 
             labelSprites.forEach((label) => {
                 label.userData.owner.getWorldPosition(labelWorldPosition);
                 label.position.copy(labelWorldPosition);
                 label.position.y += label.userData.labelOffset;
-                label.visible = label.userData.isMoonLabel
+                label.visible = !active && (label.userData.isMoonLabel
                     ? (simulation.showMoonLabels || forceMoonLabels)
                         && followActive
                         && label.userData.planetSystem === followSystem
                         // The followed body needs no label of its own.
                         && label.userData.owner !== followTarget
-                    : simulation.showLabels && !followActive;
+                    : simulation.showLabels && !followActive);
             });
 
-            if (followActive && followTarget) {
+            if (!active && followActive && followTarget) {
                 followTarget.getWorldPosition(currentFollowPosition);
 
                 if (followBlendT < 1) {
@@ -1273,7 +1426,7 @@ export default function ThreeSolarSystem() {
                     }
                 }
                 previousFollowPosition.copy(currentFollowPosition);
-            } else if (zoomAnimating) {
+            } else if (!active && zoomAnimating) {
                 const zoomAlpha = 1 - Math.exp(-12 * dt);
                 camera.position.lerp(desiredCameraPosition, zoomAlpha);
                 controls.target.lerp(desiredControlsTarget, zoomAlpha);
@@ -1287,8 +1440,10 @@ export default function ThreeSolarSystem() {
                 }
             }
 
-            controls.update();
-            updateAsteroidBelt(dt, elapsed);
+            if (!active) {
+                controls.update();
+                updateAsteroidBelt(worldTime.orbitTime, worldTime.elapsed);
+            }
             updateSunGlow();
             renderer.render(scene, camera);
             animationFrameId = requestAnimationFrame(animate);
@@ -1300,20 +1455,26 @@ export default function ThreeSolarSystem() {
         // ================================================================
         const ro = new ResizeObserver(() => {
             if (!containerRef.current) return;
+            if (containerRef.current.clientWidth <= 0 || containerRef.current.clientHeight <= 0) return;
             camera.aspect = getAspect();
             camera.updateProjectionMatrix();
             renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
+            experiment?.resize({ width: containerRef.current.clientWidth, height: containerRef.current.clientHeight, reservedBottomPx: (controlsStripRef.current?.offsetHeight || 114) + 16 });
         });
         ro.observe(containerRef.current);
+        if (controlsStripRef.current) ro.observe(controlsStripRef.current);
 
         // ================================================================
         // Cleanup
         // ================================================================
         return () => {
+            disposed = true;
             stopNarration();
             sceneApiRef.current = null;
             cancelAnimationFrame(animationFrameId);
             ro.disconnect();
+            document.removeEventListener("visibilitychange", onVisibilityChange);
+            reducedQuery.removeEventListener("change", onReducedMotionChange);
             renderer.domElement.removeEventListener("click", onClick, true);
             renderer.domElement.removeEventListener("wheel", onWheel, true);
             window.removeEventListener("keydown", onKeyDown);
@@ -1321,14 +1482,21 @@ export default function ThreeSolarSystem() {
             controls.removeEventListener("start", onControlsStart);
             pane.dispose();
             controls.dispose();
-            // dispose scene resources (shallow)
+            experiment?.dispose();
+            const seenGeometries = new Set();
+            const seenMaterials = new Set();
+            const seenTextures = new Set(Object.values(textures));
+            seenTextures.add(backgroundTexture);
             scene.traverse((obj) => {
-                if (obj.geometry) obj.geometry.dispose?.();
-                if (obj.material) {
-                    if (Array.isArray(obj.material)) obj.material.forEach((m) => m.dispose?.());
-                    else obj.material.dispose?.();
+                if (obj.geometry) seenGeometries.add(obj.geometry);
+                for (const material of obj.material ? (Array.isArray(obj.material) ? obj.material : [obj.material]) : []) {
+                    seenMaterials.add(material);
+                    for (const value of Object.values(material)) if (value?.isTexture) seenTextures.add(value);
                 }
             });
+            seenGeometries.forEach((g) => g.dispose());
+            seenMaterials.forEach((m) => m.dispose());
+            seenTextures.forEach((t) => t.dispose());
             renderer.dispose();
         };
     }, []);
@@ -1337,9 +1505,17 @@ export default function ThreeSolarSystem() {
         if (searchExpanded) searchInputRef.current?.focus();
     }, [searchExpanded]);
 
+    useEffect(() => {
+        if (!sceneReady) return;
+        if (focusRequestRef.current === "launch" && meteorPhase === "ready") launchButtonRef.current?.focus();
+        else if (focusRequestRef.current === "reset" && meteorPhase !== "ready") resetButtonRef.current?.focus();
+        else return;
+        focusRequestRef.current = null;
+    }, [meteorPhase, sceneReady]);
+
     const matches = useMemo(() => matchBodies(searchBodies, query), [searchBodies, query]);
     const highlighted = matches.length === 0 ? -1 : Math.min(activeIndex, matches.length - 1);
-    const resultsVisible = searchOpen && query.trim().length > 0;
+    const resultsVisible = meteorPhase === "ready" && searchOpen && query.trim().length > 0;
 
     const collapseSearch = () => {
         setQuery("");
@@ -1375,13 +1551,23 @@ export default function ThreeSolarSystem() {
         }
     };
 
+    const meteorActive = meteorPhase !== "ready";
+    const phaseMessages = {
+        ready: "Ready for a pretend space experiment.",
+        preparing: "Getting Earth ready to watch…",
+        approaching: "Here comes the meteor!",
+        impact: "The meteor has reached Earth!",
+        breaking: "Watch the pieces drift apart.",
+        aftermath: "Earth is in pieces. Reset to play again.",
+    };
+
     return (
         <div
             ref={containerRef}
             className="solar-system"
             style={{
                 width: "100%",
-                height: "max(420px, calc(100dvh - 66px))",
+                height: "calc(100dvh - var(--navbar-height))",
                 position: "relative",
                 overflow: "hidden",
                 background: "#02040a",
@@ -1390,9 +1576,9 @@ export default function ThreeSolarSystem() {
             <canvas
                 ref={canvasRef}
                 aria-label="Interactive model of the Solar System"
-                style={{ display: "block", width: "100%", height: "100%", cursor: "grab" }}
+                style={{ display: "block", width: "100%", height: "100%", cursor: meteorActive ? "default" : "grab" }}
             />
-            {!tourState.active && (
+            {!meteorActive && !tourState.active && (
                 <div className={`solar-toolbar${searchExpanded ? " solar-toolbar--searching" : ""}`}>
                     <button
                         type="button"
@@ -1480,7 +1666,7 @@ export default function ThreeSolarSystem() {
                     )}
                 </div>
             )}
-            {!selectedPlanet && !tourState.active && (
+            {!meteorActive && !selectedPlanet && !tourState.active && (
                 <button
                     type="button"
                     className="solar-tour-launch"
@@ -1490,7 +1676,7 @@ export default function ThreeSolarSystem() {
                     Tour<span className="solar-tour-launch__full"> the Solar System</span>
                 </button>
             )}
-            {selectedPlanet && (
+            {!meteorActive && selectedPlanet && (
                 <aside
                     className={`solar-info-card${tourState.active ? " solar-info-card--tour" : ""}`}
                     aria-label={`${selectedPlanet.name} information`}
@@ -1591,12 +1777,11 @@ export default function ThreeSolarSystem() {
                     )}
                 </aside>
             )}
-            <div
+            {!meteorActive && <div
                 className="solar-system__hint"
                 style={{
                     position: "absolute",
                     left: "1rem",
-                    bottom: "1rem",
                     maxWidth: "calc(100% - 2rem)",
                     padding: "0.5rem 0.75rem",
                     border: "1px solid rgba(255,255,255,0.14)",
@@ -1609,6 +1794,14 @@ export default function ThreeSolarSystem() {
                 }}
             >
                 Drag to orbit · Pinch or scroll to zoom · Search or select a body to follow
+            </div>}
+            <div className="solar-experiment-controls" ref={controlsStripRef}>
+                <p className="solar-experiment-caption">A pretend space experiment — real Earth stays safe.</p>
+                <div className="solar-experiment-actions">
+                    <button ref={launchButtonRef} type="button" className="solar-experiment-launch" disabled={!sceneReady || meteorActive} onClick={() => sceneApiRef.current?.launchMeteor()}>Launch meteor</button>
+                    <button ref={resetButtonRef} type="button" className="solar-experiment-reset" disabled={!sceneReady} onClick={() => sceneApiRef.current?.resetSolarSystem()}>Reset Solar System</button>
+                </div>
+                <p className="solar-experiment-status" role="status" aria-live="polite" aria-atomic="true">{meteorError || phaseMessages[meteorPhase]}</p>
             </div>
         </div>
     );

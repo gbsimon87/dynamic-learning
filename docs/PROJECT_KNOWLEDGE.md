@@ -453,6 +453,48 @@ Practice, Find the Missing Number, Number Bonds, Fraction Fun
 Synonym Safari, Sight Word Pop, Speed Reader
 **Geography:** Solar System (3D), World Map, Flag Finder, City Spotlight
 
+**Solar System meteor experiment (implementation in progress, 2026-09-20):**
+`/solar-system` now has Launch meteor and Reset Solar System controls. The page
+keeps its existing renderer/animation loop and adds a pure world clock, a pure
+phase timeline, numeric fragment/path helpers, and a Three.js effect controller
+under `src/pages/skills/geography/`. During launch it freezes the world, stops
+the tour/follow/search, frames Earth, then shows an approaching meteor, impact,
+textured curved fragments, and a held aftermath. Reset restores the initial
+world, camera, controls, labels, lights, stars, belt, and pane settings without
+writing progress. The breakup camera rises above the orbital plane so Venus
+does not cover Earth when the planets align.
+
+Verified 2026-09-20 in a local headless browser: the full sequence in both themes,
+reset from every phase (including a pane sweep that restored all defaults after
+edits that reallocate star and belt buffers), keyboard and focus handling,
+320–1440 px layouts with live resize, reduced motion including a mid-flight
+preference change, rapid input, hidden-tab return, route exit and re-entry,
+exploration regression, recoverable construction failure, and ten repeat cycles
+with flat resource counts (67 geometries / 19 textures / 19 programs). Desktop
+production-preview frames ran at a median 8.3 ms with Reset visible in 9 ms.
+
+The effect layer was then reworked for a more cinematic look (2026-09-20): a
+seeded irregular rock, a tapered plasma trail, a screen-space motion-blur streak,
+a drifting smoke column, a surface heat spot, a white impact flash, two soft
+decelerating shockwaves, sparks with drag, and a cooling ejecta cloud, with the
+corona, emissive and light all ramping as the meteor closes in.
+
+Four things worth knowing before touching this again. Particles use one small
+`ShaderMaterial` with per-particle size, colour and alpha, because `PointsMaterial`
+allows only one size and one colour per system; it keeps `gl_PointSize` correct by
+reading the drawing-buffer height in `onBeforeRender`. Any light added near a
+planet must be tiny — the Sun is intensity 400 at about 25 units, so its local
+irradiance is under 1, and a close light with decay 2 blows out the surface at
+anything above roughly 0.25. Hard-edged `RingGeometry` reads as a solid band rather
+than a shockwave, so the blast rings use a soft gradient texture on a plane. And
+the controller is built lazily on the first accepted launch inside the launch error
+boundary, so a construction failure leaves ordinary exploration usable behind a
+retry message.
+
+Still open: physical-device performance, which no device in this workspace can
+supply — tracked in the
+[tracker](solar-system-meteor/IMPLEMENTATION_TRACKER.md). No dependencies added.
+
 ### Accounts — built 2026-09-15, rebuilt 2026-09-19
 Sign-up (`/signup`), sign-in (`/login`), child profile picker (`/profiles`), and an
 account admin screen (`/parent`). See §4.7. Curriculum Mode requires a selected child

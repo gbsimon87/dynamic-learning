@@ -45,6 +45,12 @@
 
   /* Height of the sticky navbar, so full-viewport pages can subtract it. */
   --navbar-height: 56px;
+  --solar-panel: rgba(255, 248, 244, 0.96);
+  --solar-text: #22181c;
+  --solar-muted: #51464a;
+  --solar-border: #bd998c;
+  --solar-accent: var(--light-accent);
+  --solar-on-accent: var(--on-light-accent);
 }
 
 body.dark {
@@ -61,6 +67,12 @@ body.dark {
   --map-accent: var(--dark-accent);
   --map-on-accent: var(--on-dark-accent);
   --map-hud: rgba(34, 24, 28, 0.95);
+  --solar-panel: rgba(20, 24, 39, 0.96);
+  --solar-text: #f6e8ea;
+  --solar-muted: #d4c9cf;
+  --solar-border: #c4a47d;
+  --solar-accent: var(--dark-accent);
+  --solar-on-accent: var(--on-dark-accent);
 }
 
 body {

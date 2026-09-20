@@ -563,3 +563,64 @@
     transform: none;
   }
 }
+
+/* The experiment controls stay available while the camera owns the scene. */
+.solar-system .solar-experiment-controls {
+  position: absolute;
+  z-index: 110;
+  right: max(0.75rem, env(safe-area-inset-right));
+  bottom: max(0.75rem, env(safe-area-inset-bottom));
+  left: max(0.75rem, env(safe-area-inset-left));
+  display: grid;
+  gap: 0.45rem;
+  width: min(36rem, calc(100% - 1.5rem));
+  margin: 0 auto;
+  padding: 0.75rem;
+  border: 1px solid var(--solar-border);
+  border-radius: 1rem;
+  background: var(--solar-panel);
+  color: var(--solar-text);
+  box-shadow: 0 0.8rem 2rem rgba(0, 0, 0, 0.38);
+  font-family: system-ui, sans-serif;
+}
+
+.solar-system .solar-experiment-caption,
+.solar-system .solar-experiment-status {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.solar-system .solar-experiment-caption { font-weight: 700; }
+.solar-system .solar-experiment-status { color: var(--solar-muted); }
+.solar-system .solar-experiment-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; }
+.solar-system .solar-experiment-actions button {
+  min-height: 48px;
+  padding: 0.55rem 0.65rem;
+  border: 2px solid var(--solar-border);
+  border-radius: 0.75rem;
+  font: 700 0.93rem/1.2 system-ui, sans-serif;
+  cursor: pointer;
+}
+.solar-system .solar-experiment-launch { background: var(--solar-accent); color: var(--solar-on-accent); }
+.solar-system .solar-experiment-reset { background: var(--solar-panel); color: var(--solar-text); }
+.solar-system .solar-experiment-actions button:disabled { opacity: 0.55; cursor: not-allowed; }
+.solar-system .solar-experiment-actions button:focus-visible { outline: 3px solid #ffb44d; outline-offset: 2px; }
+.solar-system .solar-system__hint { bottom: 10.2rem; }
+.solar-system .solar-info-card { bottom: 10.2rem; max-height: min(42%, 22rem); }
+
+@media (min-width: 720px) {
+  .solar-system .solar-info-card { top: 4.75rem; bottom: auto; }
+}
+
+@media (max-height: 520px) {
+  .solar-system .solar-experiment-controls { width: min(43rem, calc(100% - 1.5rem)); grid-template-columns: minmax(7rem, 1fr) minmax(15rem, 2fr); align-items: center; }
+  .solar-system .solar-experiment-status { grid-column: 1 / -1; }
+  .solar-system .solar-system__hint { bottom: 7.7rem; }
+  .solar-system .solar-info-card { bottom: 7.7rem; max-height: 42%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .solar-system .solar-experiment-actions button { transition: none; }
+}
