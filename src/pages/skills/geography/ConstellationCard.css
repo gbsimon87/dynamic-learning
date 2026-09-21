@@ -1,0 +1,211 @@
+/* The star explorer panel. Borrows the glass treatment from .solar-info-card
+   but takes the middle of the screen, because the chart needs the room. */
+
+.solar-constellation {
+  position: absolute;
+  z-index: 60;
+  top: 3.25rem;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-sizing: border-box;
+  width: min(58rem, calc(100% - 2rem));
+  max-height: calc(100% - 13.5rem);
+  padding: 1rem;
+  overflow: hidden;
+  transform: translateX(-50%);
+  border: 1px solid rgba(159, 208, 255, 0.32);
+  border-radius: 1.25rem;
+  background:
+    radial-gradient(circle at 100% 0, rgba(96, 165, 250, 0.18), transparent 48%),
+    rgba(5, 10, 24, 0.94);
+  box-shadow: 0 1.25rem 3.5rem rgba(0, 0, 0, 0.5);
+  color: #f8fafc;
+  font-family: system-ui, sans-serif;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  animation: solar-card-enter 220ms ease-out;
+}
+
+.solar-constellation__chart-pane {
+  flex: 0 0 auto;
+  padding: 0.5rem;
+  border: 1px solid rgba(159, 208, 255, 0.16);
+  border-radius: 1rem;
+  background: radial-gradient(circle at 50% 40%, rgba(23, 37, 84, 0.65), rgba(2, 4, 10, 0.9));
+}
+
+.solar-constellation__chart {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* --- the drawing ------------------------------------------------------- */
+
+.solar-constellation__lines line {
+  stroke: rgba(159, 208, 255, 0.72);
+  stroke-width: 0.45;
+  stroke-linecap: round;
+  /* pathLength="1" on each line makes one dash span the whole segment,
+     whatever its real length, so every segment draws in at the same rate. */
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: solar-constellation-draw 620ms ease-out forwards;
+}
+
+.solar-constellation__stars {
+  opacity: 0;
+  animation: solar-constellation-appear 420ms ease-out forwards;
+}
+
+.solar-constellation__star {
+  fill: #ffffff;
+}
+
+.solar-constellation__star-name {
+  fill: rgba(226, 240, 255, 0.82);
+  font-size: 3.6px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+@keyframes solar-constellation-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes solar-constellation-appear {
+  to { opacity: 1; }
+}
+
+/* --- the text ---------------------------------------------------------- */
+
+.solar-constellation__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 0;
+}
+
+.solar-constellation__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.solar-constellation__eyebrow {
+  display: block;
+  color: #9fd0ff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.solar-constellation__header h2 {
+  margin: 0.15rem 0 0;
+  font-size: 1.4rem;
+}
+
+.solar-constellation__aka {
+  margin: 0.2rem 0 0;
+  color: rgba(226, 240, 255, 0.66);
+  font-size: 0.78rem;
+}
+
+.solar-constellation__close {
+  flex: 0 0 auto;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #f8fafc;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.solar-constellation__close:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.solar-constellation__close:focus-visible {
+  outline: 2px solid #9fd0ff;
+  outline-offset: 3px;
+}
+
+.solar-constellation__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.solar-constellation__description {
+  margin: 0 0 0.75rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.solar-constellation__scroll h3 {
+  margin: 0 0 0.4rem;
+  color: #9fd0ff;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.solar-constellation__scroll ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.solar-constellation__scroll li + li {
+  margin-top: 0.35rem;
+}
+
+/* --- wide screens: chart beside the text ------------------------------- */
+
+@media (min-width: 720px) {
+  .solar-constellation {
+    left: calc((100% - 17.5rem) / 2);
+    flex-direction: row;
+    gap: 1.25rem;
+    width: min(58rem, calc(100% - 19.5rem));
+    padding: 1.25rem;
+  }
+
+  .solar-constellation__chart-pane {
+    flex: 1 1 58%;
+    align-self: center;
+  }
+
+  .solar-constellation__body {
+    flex: 1 1 42%;
+  }
+
+  .solar-constellation__header h2 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .solar-constellation {
+    animation: none;
+  }
+
+  .solar-constellation__lines line {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+
+  .solar-constellation__stars {
+    opacity: 1;
+    animation: none;
+  }
+}

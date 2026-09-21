@@ -6,6 +6,9 @@ import { matchBodies } from "./solarSearch.js";
 import { moonFacts } from "./moonFacts.js";
 import { createSolarDefaults, createWorldTime, advanceWorldTime, getBodyPose } from "./solarSimulation.js";
 import { createMeteorExperiment } from "./meteorExperiment.js";
+import { speak, stopNarration } from "./narration.js";
+import { constellations } from "./constellations.js";
+import ConstellationCard from "./ConstellationCard.jsx";
 import "./SolarSystem.css";
 
 /**
@@ -41,6 +44,9 @@ export default function ThreeSolarSystem() {
     const [meteorError, setMeteorError] = useState("");
     const [selectedPlanet, setSelectedPlanet] = useState(null);
     const [tourState, setTourState] = useState({ active: false, index: 0, total: 0, muted: false });
+    // The constellation explorer is pure React — it never touches the scene —
+    // so unlike tourState this has no mirror inside the Three.js effect.
+    const [constellationState, setConstellationState] = useState({ active: false, index: 0, muted: false });
     // Serialisable mirror of the scene's searchable bodies; the Object3D refs
     // they map to stay inside the effect.
     const [searchBodies, setSearchBodies] = useState([]);
@@ -858,7 +864,7 @@ export default function ThreeSolarSystem() {
         const applyPaneWidth = () => {
             pane.element.style.width = wideQuery.matches
                 ? "min(256px, calc(100% - 2rem))"
-                : "min(232px, calc(100% - 8.5rem))";
+                : "min(232px, calc(100% - 10.5rem))";
         };
         applyPaneWidth();
         wideQuery.addEventListener("change", applyPaneWidth);
@@ -974,18 +980,9 @@ export default function ThreeSolarSystem() {
             desiredControlsTarget.copy(controls.target);
         }
 
-        function stopNarration() {
-            if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-        }
-
         function speakPlanet(planet) {
-            if (tourMuted || !("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) return;
-            stopNarration();
-            const utterance = new SpeechSynthesisUtterance(`${planet.name}. ${planet.tourNarration}`);
-            utterance.lang = "en-GB";
-            utterance.rate = 0.95;
-            utterance.pitch = 1.02;
-            window.speechSynthesis.speak(utterance);
+            if (tourMuted) return;
+            speak(`${planet.name}. ${planet.tourNarration}`);
         }
 
         function stopTour(hideCard = false) {
@@ -1552,6 +1549,15 @@ export default function ThreeSolarSystem() {
     };
 
     const meteorActive = meteorPhase !== "ready";
+    // Derived, never stored: meteorPhase, tourState and constellationState are
+    // the sources of truth, so these four modes cannot drift out of sync.
+    const mode = meteorActive
+        ? "meteor"
+        : tourState.active
+            ? "tour"
+            : constellationState.active
+                ? "constellations"
+                : "idle";
     const phaseMessages = {
         ready: "Ready for a pretend space experiment.",
         preparing: "Getting Earth ready to watch…",
@@ -1575,10 +1581,11 @@ export default function ThreeSolarSystem() {
         >
             <canvas
                 ref={canvasRef}
+                className={`solar-system__canvas${mode === "constellations" ? " solar-system__canvas--dimmed" : ""}`}
                 aria-label="Interactive model of the Solar System"
                 style={{ display: "block", width: "100%", height: "100%", cursor: meteorActive ? "default" : "grab" }}
             />
-            {!meteorActive && !tourState.active && (
+            {mode === "idle" && (
                 <div className={`solar-toolbar${searchExpanded ? " solar-toolbar--searching" : ""}`}>
                     <button
                         type="button"
@@ -1666,17 +1673,28 @@ export default function ThreeSolarSystem() {
                     )}
                 </div>
             )}
-            {!meteorActive && !selectedPlanet && !tourState.active && (
-                <button
-                    type="button"
-                    className="solar-tour-launch"
-                    onClick={() => sceneApiRef.current?.start()}
-                >
-                    <span className="solar-tour-launch__icon" aria-hidden="true">▶</span>
-                    Tour<span className="solar-tour-launch__full"> the Solar System</span>
-                </button>
+            {mode === "idle" && !selectedPlanet && (
+                <div className="solar-launch-buttons">
+                    <button
+                        type="button"
+                        className="solar-tour-launch"
+                        onClick={() => sceneApiRef.current?.start()}
+                    >
+                        <span className="solar-tour-launch__icon" aria-hidden="true">▶</span>
+                        Tour<span className="solar-tour-launch__full"> the Solar System</span>
+                    </button>
+                    <button
+                        type="button"
+                        className="solar-tour-launch"
+                        aria-label="Explore constellations"
+                        onClick={() => setConstellationState({ active: true, index: 0, muted: false })}
+                    >
+                        <span className="solar-tour-launch__icon" aria-hidden="true">✦</span>
+                        <span className="solar-tour-launch__full">Constellations</span>
+                    </button>
+                </div>
             )}
-            {!meteorActive && selectedPlanet && (
+            {(mode === "idle" || mode === "tour") && selectedPlanet && (
                 <aside
                     className={`solar-info-card${tourState.active ? " solar-info-card--tour" : ""}`}
                     aria-label={`${selectedPlanet.name} information`}
@@ -1777,7 +1795,28 @@ export default function ThreeSolarSystem() {
                     )}
                 </aside>
             )}
-            {!meteorActive && <div
+            {mode === "constellations" && (
+                <ConstellationCard
+                    constellation={constellations[constellationState.index]}
+                    index={constellationState.index}
+                    total={constellations.length}
+                    muted={constellationState.muted}
+                    onPrevious={() => setConstellationState((current) => ({
+                        ...current,
+                        index: Math.max(0, current.index - 1),
+                    }))}
+                    onNext={() => setConstellationState((current) => ({
+                        ...current,
+                        index: Math.min(constellations.length - 1, current.index + 1),
+                    }))}
+                    onToggleMute={() => setConstellationState((current) => ({
+                        ...current,
+                        muted: !current.muted,
+                    }))}
+                    onExit={() => setConstellationState({ active: false, index: 0, muted: false })}
+                />
+            )}
+            {(mode === "idle" || mode === "tour") && <div
                 className="solar-system__hint"
                 style={{
                     position: "absolute",
@@ -1798,7 +1837,7 @@ export default function ThreeSolarSystem() {
             <div className="solar-experiment-controls" ref={controlsStripRef}>
                 <p className="solar-experiment-caption">A pretend space experiment — real Earth stays safe.</p>
                 <div className="solar-experiment-actions">
-                    <button ref={launchButtonRef} type="button" className="solar-experiment-launch" disabled={!sceneReady || meteorActive} onClick={() => sceneApiRef.current?.launchMeteor()}>Launch meteor</button>
+                    <button ref={launchButtonRef} type="button" className="solar-experiment-launch" disabled={!sceneReady || meteorActive || mode === "constellations"} onClick={() => sceneApiRef.current?.launchMeteor()}>Launch meteor</button>
                     <button ref={resetButtonRef} type="button" className="solar-experiment-reset" disabled={!sceneReady} onClick={() => sceneApiRef.current?.resetSolarSystem()}>Reset Solar System</button>
                 </div>
                 <p className="solar-experiment-status" role="status" aria-live="polite" aria-atomic="true">{meteorError || phaseMessages[meteorPhase]}</p>

@@ -33,3 +33,17 @@ Backlog: `docs/PROJECT_IDEAS.md`. Deployment: `docs/DEPLOYMENT.md`.
    `--dark-*` tokens in `App.css`; the audience is 6–8 years old.
 4. **Load the UI before calling it done** — a written file is not a working
    change. `npm run lint`, `npm test` and `npm run build` must pass.
+
+# Browser Inspection
+
+When working on frontend tasks, use browser inspection or browser automation only if those tools are actually available in the current VS Code AI session.
+
+If browser tooling, Node REPL controls, or an in-app browser control surface are unavailable:
+
+Do not stop the task.
+Do not treat it as an application error.
+Do not modify the project purely to work around the missing AI/browser tooling.
+Continue using the codebase, terminal, tests, linting, type checks, and build output.
+If visual verification is still needed, state that browser verification could not be completed in this session.
+
+Do not repeatedly retry unavailable browser tooling unless explicitly asked.

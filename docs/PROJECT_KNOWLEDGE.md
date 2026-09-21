@@ -17,7 +17,7 @@
 > file reflects it. Also update [PROJECT_IDEAS.md](PROJECT_IDEAS.md) when an idea
 > moves between statuses.
 
-**Last reviewed:** 2026-09-19
+**Last reviewed:** 2026-09-21
 
 ---
 
@@ -452,6 +452,20 @@ Practice, Find the Missing Number, Number Bonds, Fraction Fun
 **English:** Word Builder, Word Sorter, Sentence Builder, Opposite Match,
 Synonym Safari, Sight Word Pop, Speed Reader
 **Geography:** Solar System (3D), World Map, Flag Finder, City Spotlight
+
+**Solar System constellation explorer (built 2026-09-21):** `/solar-system`
+includes an idle-only Constellations entry point. Stage one presents Ursa Major
+as an animated, responsive SVG star chart with child-friendly description,
+facts, shared speech-synthesis narration, mute/replay controls, and navigation
+that is already data-driven for more constellations. Catalogue data stores real
+J2000 right ascension and declination in `constellations.js`; the pure
+`constellationProjection.js` module converts it to a proportion-preserving
+gnomonic chart and also exposes unit vectors for a future Three.js sky stage.
+Constellation mode is derived from the existing meteor/tour state, dims but does
+not stop the scene, hides exploration overlays, and prevents meteor launch. The
+chart and data contracts have 13 pure tests. Desktop, 375 px, both themes,
+reduced motion, narration controls, tour/meteor/search regressions, and both exit
+paths were browser-verified with no runtime errors. No dependencies were added.
 
 **Solar System meteor experiment (implementation in progress, 2026-09-20):**
 `/solar-system` now has Launch meteor and Reset Solar System controls. The page
