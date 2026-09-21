@@ -166,29 +166,32 @@ export default function ConstellationCard({
 
                 <div className="solar-tour-controls" aria-label="Constellation navigation">
                     <div className="solar-tour-controls__audio">
-                        <button type="button" onClick={() => speak(spokenText)} disabled={muted}>
-                            Replay narration
+                        <button type="button" aria-label="Replay narration" title="Replay narration" onClick={() => speak(spokenText)} disabled={muted}>
+                            <span className="solar-control-icon" aria-hidden="true">↻</span>
+                            <span className="solar-control-label">Replay narration</span>
                         </button>
-                        <button type="button" onClick={onToggleMute}>
-                            {muted ? "Turn sound on" : "Mute"}
+                        <button type="button" aria-label={muted ? "Turn sound on" : "Mute"} title={muted ? "Turn sound on" : "Mute"} onClick={onToggleMute}>
+                            <span className="solar-control-icon" aria-hidden="true">{muted ? "🔊" : "🔇"}</span>
+                            <span className="solar-control-label">{muted ? "Turn sound on" : "Mute"}</span>
                         </button>
                     </div>
                     <div className="solar-tour-controls__nav">
-                        <button type="button" onClick={onPrevious} disabled={index === 0}>
-                            ← Previous
+                        <button type="button" aria-label="Previous" title="Previous" onClick={onPrevious} disabled={index === 0}>
+                            <span className="solar-control-icon" aria-hidden="true">←</span>
+                            <span className="solar-control-label">← Previous</span>
                         </button>
                         <button
                             type="button"
                             className="solar-tour-controls__next"
+                            aria-label="Next"
+                            title="Next"
                             onClick={onNext}
                             disabled={index >= total - 1}
                         >
-                            Next →
+                            <span className="solar-control-icon" aria-hidden="true">→</span>
+                            <span className="solar-control-label">Next →</span>
                         </button>
                     </div>
-                    <button type="button" className="solar-tour-controls__exit" onClick={onExit}>
-                        Back to the Solar System
-                    </button>
                 </div>
             </div>
         </aside>

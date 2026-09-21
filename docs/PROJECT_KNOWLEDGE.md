@@ -460,7 +460,8 @@ animated, responsive SVG star charts with child-friendly descriptions, facts,
 shared speech-synthesis narration, mute/replay controls and Previous/Next
 navigation. Catalogue data stores real J2000 right ascension, declination and
 apparent magnitude in `constellations.js`; optional labels keep dense figures
-readable. The pure
+readable. On phones, narration and Previous/Next controls use icon buttons with
+accessible labels; the card's × is the sole exit control. The pure
 `constellationProjection.js` module converts it to a proportion-preserving
 gnomonic chart, handles the 0h/24h right-ascension seam, and also exposes unit
 vectors for a future Three.js sky stage.
@@ -473,7 +474,10 @@ reduced motion, narration controls, tour/meteor/search regressions, and both exi
 paths were browser-verified with no runtime errors. No dependencies were added.
 
 **Solar System meteor experiment (implementation in progress, 2026-09-20):**
-`/solar-system` now has Launch meteor and Reset Solar System controls. The page
+`/solar-system` keeps Tour, Constellations, Launch meteor and Reset Solar System
+in one compact top action group rather than a persistent bottom panel. During a
+meteor sequence, a labelled Reset Solar System action remains visible beside a
+compact phase message. The page
 keeps its existing renderer/animation loop and adds a pure world clock, a pure
 phase timeline, numeric fragment/path helpers, and a Three.js effect controller
 under `src/pages/skills/geography/`. During launch it freezes the world, stops

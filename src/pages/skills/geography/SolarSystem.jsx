@@ -37,7 +37,6 @@ export default function ThreeSolarSystem() {
     const searchInputRef = useRef(null);
     const launchButtonRef = useRef(null);
     const resetButtonRef = useRef(null);
-    const controlsStripRef = useRef(null);
     const focusRequestRef = useRef(null);
     const [meteorPhase, setMeteorPhase] = useState("ready");
     const [sceneReady, setSceneReady] = useState(false);
@@ -1095,7 +1094,7 @@ export default function ThreeSolarSystem() {
                     quality: containerRef.current.clientWidth < 720 || window.matchMedia("(pointer: coarse)").matches ? "low" : "standard",
                     onPhaseChange: (phase) => { if (!disposed) setMeteorPhase(phase); },
                 });
-                experiment.resize({ width: containerRef.current.clientWidth, height: containerRef.current.clientHeight, reservedBottomPx: controlsStripRef.current?.offsetHeight + 16 || 130 });
+                experiment.resize({ width: containerRef.current.clientWidth, height: containerRef.current.clientHeight, reservedBottomPx: 24 });
                 stopTour(true);
                 stopFollowing();
                 followBlendT = 0;
@@ -1458,10 +1457,9 @@ export default function ThreeSolarSystem() {
             camera.aspect = getAspect();
             camera.updateProjectionMatrix();
             renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
-            experiment?.resize({ width: containerRef.current.clientWidth, height: containerRef.current.clientHeight, reservedBottomPx: (controlsStripRef.current?.offsetHeight || 114) + 16 });
+            experiment?.resize({ width: containerRef.current.clientWidth, height: containerRef.current.clientHeight, reservedBottomPx: 24 });
         });
         ro.observe(containerRef.current);
-        if (controlsStripRef.current) ro.observe(controlsStripRef.current);
 
         // ================================================================
         // Cleanup
@@ -1561,12 +1559,12 @@ export default function ThreeSolarSystem() {
                 ? "constellations"
                 : "idle";
     const phaseMessages = {
-        ready: "Ready for a pretend space experiment.",
+        ready: "",
         preparing: "Getting Earth ready to watch…",
         approaching: "Here comes the meteor!",
         impact: "The meteor has reached Earth!",
         breaking: "Watch the pieces drift apart.",
-        aftermath: "Earth is in pieces. Reset to play again.",
+        aftermath: "Reset the Solar System to rebuild the scene.",
     };
 
     return (
@@ -1683,7 +1681,7 @@ export default function ThreeSolarSystem() {
                         onClick={() => sceneApiRef.current?.start()}
                     >
                         <span className="solar-tour-launch__icon" aria-hidden="true">▶</span>
-                        Tour<span className="solar-tour-launch__full"> the Solar System</span>
+                        <span className="solar-action-label">Tour the Solar System</span>
                     </button>
                     <button
                         type="button"
@@ -1695,9 +1693,50 @@ export default function ThreeSolarSystem() {
                         }}
                     >
                         <span className="solar-tour-launch__icon" aria-hidden="true">✦</span>
-                        <span className="solar-tour-launch__full">Constellations</span>
+                        <span className="solar-action-label">Constellations</span>
+                    </button>
+                    <button
+                        ref={launchButtonRef}
+                        type="button"
+                        className="solar-tour-launch"
+                        aria-label="Launch meteor"
+                        disabled={!sceneReady}
+                        onClick={() => sceneApiRef.current?.launchMeteor()}
+                    >
+                        <span className="solar-tour-launch__icon" aria-hidden="true">☄</span>
+                        <span className="solar-action-label">Launch meteor</span>
+                    </button>
+                    <button
+                        ref={resetButtonRef}
+                        type="button"
+                        className="solar-tour-launch solar-tour-launch--reset"
+                        aria-label="Reset Solar System"
+                        disabled={!sceneReady}
+                        onClick={() => sceneApiRef.current?.resetSolarSystem()}
+                    >
+                        <span className="solar-tour-launch__icon" aria-hidden="true">↻</span>
+                        <span className="solar-action-label">Reset Solar System</span>
                     </button>
                 </div>
+            )}
+            {mode === "meteor" && (
+                <div className="solar-launch-buttons solar-launch-buttons--meteor">
+                    <button
+                        ref={resetButtonRef}
+                        type="button"
+                        className="solar-tour-launch solar-tour-launch--reset solar-tour-launch--meteor-reset"
+                        disabled={!sceneReady}
+                        onClick={() => sceneApiRef.current?.resetSolarSystem()}
+                    >
+                        <span className="solar-tour-launch__icon" aria-hidden="true">↻</span>
+                        <span>Reset Solar System</span>
+                    </button>
+                </div>
+            )}
+            {(meteorActive || meteorError) && (
+                <p className="solar-meteor-status" role="status" aria-live="polite" aria-atomic="true">
+                    {meteorError || phaseMessages[meteorPhase]}
+                </p>
             )}
             {(mode === "idle" || mode === "tour") && selectedPlanet && (
                 <aside
@@ -1750,36 +1789,37 @@ export default function ThreeSolarSystem() {
                     {tourState.active ? (
                         <div className="solar-tour-controls" aria-label="Tour navigation">
                             <div className="solar-tour-controls__audio">
-                                <button type="button" onClick={() => sceneApiRef.current?.replay()} disabled={tourState.muted}>
-                                    Replay narration
+                                <button type="button" aria-label="Replay narration" title="Replay narration" onClick={() => sceneApiRef.current?.replay()} disabled={tourState.muted}>
+                                    <span className="solar-control-icon" aria-hidden="true">↻</span>
+                                    <span className="solar-control-label">Replay narration</span>
                                 </button>
-                                <button type="button" onClick={() => sceneApiRef.current?.toggleNarration()}>
-                                    {tourState.muted ? "Turn sound on" : "Mute"}
+                                <button type="button" aria-label={tourState.muted ? "Turn sound on" : "Mute"} title={tourState.muted ? "Turn sound on" : "Mute"} onClick={() => sceneApiRef.current?.toggleNarration()}>
+                                    <span className="solar-control-icon" aria-hidden="true">{tourState.muted ? "🔊" : "🔇"}</span>
+                                    <span className="solar-control-label">{tourState.muted ? "Turn sound on" : "Mute"}</span>
                                 </button>
                             </div>
                             <div className="solar-tour-controls__nav">
                                 <button
                                     type="button"
+                                    aria-label="Previous"
+                                    title="Previous"
                                     onClick={() => sceneApiRef.current?.previous()}
                                     disabled={tourState.index === 0}
                                 >
-                                    ← Previous
+                                    <span className="solar-control-icon" aria-hidden="true">←</span>
+                                    <span className="solar-control-label">← Previous</span>
                                 </button>
                                 <button
                                     type="button"
                                     className="solar-tour-controls__next"
+                                    aria-label={tourState.index === tourState.total - 1 ? "Finish tour" : "Next"}
+                                    title={tourState.index === tourState.total - 1 ? "Finish tour" : "Next"}
                                     onClick={() => sceneApiRef.current?.next()}
                                 >
-                                    {tourState.index === tourState.total - 1 ? "Finish tour" : "Next →"}
+                                    <span className="solar-control-icon" aria-hidden="true">{tourState.index === tourState.total - 1 ? "✓" : "→"}</span>
+                                    <span className="solar-control-label">{tourState.index === tourState.total - 1 ? "Finish tour" : "Next →"}</span>
                                 </button>
                             </div>
-                            <button
-                                type="button"
-                                className="solar-tour-controls__exit"
-                                onClick={() => sceneApiRef.current?.exit()}
-                            >
-                                Exit guided tour
-                            </button>
                         </div>
                     ) : selectedPlanet.kind === "moon" ? (
                         <button
@@ -1823,7 +1863,7 @@ export default function ThreeSolarSystem() {
                     }}
                 />
             )}
-            {(mode === "idle" || mode === "tour") && <div
+            {mode === "idle" && <div
                 className="solar-system__hint"
                 style={{
                     position: "absolute",
@@ -1840,14 +1880,6 @@ export default function ThreeSolarSystem() {
                 }}
             >
                 Drag to orbit · Pinch or scroll to zoom · Search or select a body to follow
-            </div>}
-            {mode !== "constellations" && <div className="solar-experiment-controls" ref={controlsStripRef}>
-                <p className="solar-experiment-caption">A pretend space experiment — real Earth stays safe.</p>
-                <div className="solar-experiment-actions">
-                    <button ref={launchButtonRef} type="button" className="solar-experiment-launch" disabled={!sceneReady || meteorActive || mode === "constellations"} onClick={() => sceneApiRef.current?.launchMeteor()}>Launch meteor</button>
-                    <button ref={resetButtonRef} type="button" className="solar-experiment-reset" disabled={!sceneReady} onClick={() => sceneApiRef.current?.resetSolarSystem()}>Reset Solar System</button>
-                </div>
-                <p className="solar-experiment-status" role="status" aria-live="polite" aria-atomic="true">{meteorError || phaseMessages[meteorPhase]}</p>
             </div>}
         </div>
     );
