@@ -19,6 +19,15 @@ const SMALLEST_RADIUS = 0.9;
 
 const mean = (values) => values.reduce((total, value) => total + value, 0) / values.length;
 
+// Right ascension wraps at 24h. A circular mean keeps constellations near that
+// seam together instead of incorrectly centring them on the opposite sky.
+function meanRightAscension(stars) {
+    const angles = stars.map((star) => star.raHours * HOURS_TO_DEGREES * DEG);
+    const sinMean = mean(angles.map(Math.sin));
+    const cosMean = mean(angles.map(Math.cos));
+    return Math.atan2(sinMean, cosMean);
+}
+
 function starRadius(magnitude) {
     // Magnitude runs backwards: smaller number means brighter star.
     const span = FAINTEST_MAGNITUDE - BRIGHTEST_MAGNITUDE;
@@ -44,7 +53,7 @@ export function projectConstellation(stars, { padding = 8, box = 100 } = {}) {
         return { points: [], width: box, height: box };
     }
 
-    const ra0 = mean(stars.map((star) => star.raHours)) * HOURS_TO_DEGREES * DEG;
+    const ra0 = meanRightAscension(stars);
     const dec0 = mean(stars.map((star) => star.decDeg)) * DEG;
     const sinDec0 = Math.sin(dec0);
     const cosDec0 = Math.cos(dec0);
@@ -65,11 +74,11 @@ export function projectConstellation(stars, { padding = 8, box = 100 } = {}) {
     const ys = flat.map((point) => point.y);
     const minX = Math.min(...xs);
     const minY = Math.min(...ys);
-    const spanX = Math.max(...xs) - minX || 1;
-    const spanY = Math.max(...ys) - minY || 1;
+    const spanX = Math.max(...xs) - minX;
+    const spanY = Math.max(...ys) - minY;
     // One scale for both axes: stretching each to fill the box would destroy
     // the shape the child is meant to recognise.
-    const scale = (box - padding * 2) / Math.max(spanX, spanY);
+    const scale = (box - padding * 2) / (Math.max(spanX, spanY) || 1);
 
     return {
         points: flat.map((point) => ({

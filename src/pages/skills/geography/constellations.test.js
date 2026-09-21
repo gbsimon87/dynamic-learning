@@ -21,6 +21,13 @@ test("constellation ids are unique", () => {
   assert.equal(new Set(ids).size, ids.length);
 });
 
+test("the explorer includes five recognisable northern-sky constellations", () => {
+  assert.deepEqual(
+    constellations.map((item) => item.id),
+    ["ursa-major", "ursa-minor", "cassiopeia", "cygnus", "orion"],
+  );
+});
+
 test("every line joins two stars that exist in the same constellation", () => {
   for (const item of constellations) {
     const known = new Set(item.stars.map((star) => star.id));
@@ -42,6 +49,11 @@ test("every star carries drawable coordinates", () => {
       assert.ok(Number.isFinite(star.decDeg), `${item.id}/${star.id} decDeg must be finite`);
       assert.ok(star.decDeg >= -90 && star.decDeg <= 90, `${item.id}/${star.id} decDeg out of range`);
       assert.ok(Number.isFinite(star.magnitude), `${item.id}/${star.id} needs a finite magnitude`);
+      assert.ok(star.label === undefined || typeof star.label === "boolean", `${item.id}/${star.id} label must be boolean`);
+      assert.ok(
+        star.labelPosition === undefined || star.labelPosition === "below",
+        `${item.id}/${star.id} has an unsupported label position`,
+      );
     }
   }
 });
@@ -57,12 +69,23 @@ test("every constellation projects to a drawable chart", () => {
   }
 });
 
-test("Ursa Major ships with the seven Plough stars and a closed bowl", () => {
+test("Ursa Major includes the seven-star Plough and the rest of the Great Bear figure", () => {
   const ursa = constellations.find((item) => item.id === "ursa-major");
   assert.ok(ursa, "ursa-major must be present");
-  assert.deepEqual(
-    ursa.stars.map((star) => star.id).sort(),
-    ["alioth", "alkaid", "dubhe", "megrez", "merak", "mizar", "phecda"],
-  );
-  assert.equal(ursa.lines.length, 7, "four bowl segments plus three handle segments");
+  const starIds = new Set(ursa.stars.map((star) => star.id));
+  for (const id of ["alioth", "alkaid", "dubhe", "megrez", "merak", "mizar", "phecda"]) {
+    assert.ok(starIds.has(id), `the Plough is missing ${id}`);
+  }
+  assert.ok(ursa.stars.length > 7, "the Great Bear needs stars beyond the Plough");
+  assert.ok(ursa.lines.length > 7, "the Great Bear needs lines beyond the Plough");
+});
+
+test("projection keeps stars together across the 0h/24h right-ascension seam", () => {
+  const seamStars = [
+    { id: "west", raHours: 23.9, decDeg: 30, magnitude: 2 },
+    { id: "east", raHours: 0.1, decDeg: 30, magnitude: 2 },
+  ];
+  const chart = projectConstellation(seamStars);
+  assert.ok(chart.width > chart.height, "nearby seam stars should form a short horizontal pair");
+  assert.ok(chart.width <= 100, "seam pair should remain inside the chart box");
 });

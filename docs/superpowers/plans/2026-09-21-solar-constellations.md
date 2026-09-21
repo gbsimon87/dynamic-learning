@@ -1,5 +1,12 @@
 # Constellations (Stage One) Implementation Plan
 
+> **Post-plan expansion (2026-09-21):** The completed one-constellation stage
+> was subsequently expanded to five. Ursa Major now draws the recognisable
+> Great Bear beyond the seven-star Plough, joined by Ursa Minor, Cassiopeia,
+> Cygnus and Orion. Dense figures support selectively hidden labels, and the
+> projection uses circular right-ascension centring across the 0h/24h seam.
+> The task steps below remain the historical implementation record.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking — tick each box as you complete it, and fill in the Progress table below.
 
 **Goal:** Let a child step through constellations in the Solar System page, each one shown as an animated SVG star chart with its name, a short description, facts and spoken narration.
@@ -1259,4 +1266,7 @@ Update the Progress table at the top of this plan. If anything above failed, wri
 
 Stage two (the celestial sphere in the Three.js scene) is sketched in section 8 of the spec. `raDecToUnitVector` exists and is tested for exactly that purpose. Nothing in this stage forecloses it.
 
-To add a second constellation: append one object to `constellations` in `constellations.js`. Nothing else needs to change — the Previous/Next buttons, the "N of M" counter and the projection all already handle it, and `constellations.test.js` will catch a mistyped star id.
+To add another constellation: append one object to `constellations` in
+`constellations.js`. Nothing else needs to change — the Previous/Next buttons,
+the "N of M" counter and the projection already handle it, and
+`constellations.test.js` will catch a mistyped star id.

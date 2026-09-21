@@ -1,7 +1,16 @@
 # Constellations in the Solar System — Stage One: SVG Star Chart
 
 Date: 2026-09-21
-Status: approved, ready for implementation
+Status: implemented; catalogue expansion approved 2026-09-21
+
+> **Catalogue expansion (2026-09-21):** A later product decision supersedes the
+> one-constellation scope below. The explorer now includes a recognisable full
+> Great Bear figure for Ursa Major plus Ursa Minor, Cassiopeia, Cygnus and Orion.
+> Minor stars may set `label: false` to prevent crowded charts. Coordinates and
+> magnitudes come from HYG v4.1, western line figures follow Stellarium's western
+> sky culture, and right-ascension centring uses a circular mean so figures that
+> cross 0h/24h project correctly. The original stage-one detail is retained
+> below as the record of the initial implementation.
 
 ## Problem
 
@@ -15,7 +24,7 @@ backwards through a list, each stop showing the pattern, its name, a
 child-friendly description and a few facts.
 
 Two things constrain how we build it. First, the feature must stay trivially
-expandable — this ships with one constellation and grows to a dozen. Second,
+expandable — it began with one constellation and can grow to a dozen. Second,
 `SolarSystem.jsx` is already 1808 lines wrapped around a single `useEffect`, and
 adding a third mode inline would make that worse.
 
@@ -41,8 +50,6 @@ one marginally simpler and stage two a rewrite.
 ## Non-goals
 
 - Any quiz, score or progress tracking. This is an explorer, not a challenge.
-- More than one constellation. Ursa Major ships alone; the plural naming, the
-  array shape and the Previous/Next controls are all built for N from day one.
 - Real-time sky positions, precession, or the observer's latitude and date.
 - Any change to the meteor experiment, the planet tour, search, or the
   Tweakpane controls beyond the mode-state refactor described in section 5.

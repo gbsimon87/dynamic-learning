@@ -637,6 +637,9 @@
 
 @media (min-width: 720px) {
   .solar-system .solar-info-card { top: 4.75rem; bottom: auto; }
+  .solar-system .solar-info-card--tour {
+    max-height: calc(100% - 15.25rem);
+  }
 }
 
 @media (max-height: 520px) {

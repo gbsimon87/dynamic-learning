@@ -1213,6 +1213,7 @@ export default function ThreeSolarSystem() {
 
         function visitTourPlanet(nextIndex) {
             if (experiment?.isActive() || resetting) return;
+            if (!tourActive) pane.expanded = false;
             const clampedIndex = THREE.MathUtils.clamp(nextIndex, 0, planetSystems.length - 1);
             tourActive = true;
             tourIndex = clampedIndex;
@@ -1247,6 +1248,7 @@ export default function ThreeSolarSystem() {
             replay: () => speakPlanet(planetData[tourIndex]),
             toggleNarration: toggleTourNarration,
             exit: (hideCard = false) => stopTour(hideCard),
+            collapsePane: () => { pane.expanded = false; },
         };
         setSceneReady(true);
 
@@ -1687,7 +1689,10 @@ export default function ThreeSolarSystem() {
                         type="button"
                         className="solar-tour-launch"
                         aria-label="Explore constellations"
-                        onClick={() => setConstellationState({ active: true, index: 0, muted: false })}
+                        onClick={() => {
+                            sceneApiRef.current?.collapsePane?.();
+                            setConstellationState({ active: true, index: 0, muted: false });
+                        }}
                     >
                         <span className="solar-tour-launch__icon" aria-hidden="true">✦</span>
                         <span className="solar-tour-launch__full">Constellations</span>
@@ -1813,7 +1818,9 @@ export default function ThreeSolarSystem() {
                         ...current,
                         muted: !current.muted,
                     }))}
-                    onExit={() => setConstellationState({ active: false, index: 0, muted: false })}
+                    onExit={() => {
+                        setConstellationState({ active: false, index: 0, muted: false });
+                    }}
                 />
             )}
             {(mode === "idle" || mode === "tour") && <div
@@ -1834,14 +1841,14 @@ export default function ThreeSolarSystem() {
             >
                 Drag to orbit · Pinch or scroll to zoom · Search or select a body to follow
             </div>}
-            <div className="solar-experiment-controls" ref={controlsStripRef}>
+            {mode !== "constellations" && <div className="solar-experiment-controls" ref={controlsStripRef}>
                 <p className="solar-experiment-caption">A pretend space experiment — real Earth stays safe.</p>
                 <div className="solar-experiment-actions">
                     <button ref={launchButtonRef} type="button" className="solar-experiment-launch" disabled={!sceneReady || meteorActive || mode === "constellations"} onClick={() => sceneApiRef.current?.launchMeteor()}>Launch meteor</button>
                     <button ref={resetButtonRef} type="button" className="solar-experiment-reset" disabled={!sceneReady} onClick={() => sceneApiRef.current?.resetSolarSystem()}>Reset Solar System</button>
                 </div>
                 <p className="solar-experiment-status" role="status" aria-live="polite" aria-atomic="true">{meteorError || phaseMessages[meteorPhase]}</p>
-            </div>
+            </div>}
         </div>
     );
 }

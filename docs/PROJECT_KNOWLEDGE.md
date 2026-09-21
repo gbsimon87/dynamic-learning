@@ -453,17 +453,22 @@ Practice, Find the Missing Number, Number Bonds, Fraction Fun
 Synonym Safari, Sight Word Pop, Speed Reader
 **Geography:** Solar System (3D), World Map, Flag Finder, City Spotlight
 
-**Solar System constellation explorer (built 2026-09-21):** `/solar-system`
-includes an idle-only Constellations entry point. Stage one presents Ursa Major
-as an animated, responsive SVG star chart with child-friendly description,
-facts, shared speech-synthesis narration, mute/replay controls, and navigation
-that is already data-driven for more constellations. Catalogue data stores real
-J2000 right ascension and declination in `constellations.js`; the pure
+**Solar System constellation explorer (built and expanded 2026-09-21):**
+`/solar-system` includes an idle-only Constellations entry point. It presents
+Ursa Major's full Great Bear figure, Ursa Minor, Cassiopeia, Cygnus and Orion as
+animated, responsive SVG star charts with child-friendly descriptions, facts,
+shared speech-synthesis narration, mute/replay controls and Previous/Next
+navigation. Catalogue data stores real J2000 right ascension, declination and
+apparent magnitude in `constellations.js`; optional labels keep dense figures
+readable. The pure
 `constellationProjection.js` module converts it to a proportion-preserving
-gnomonic chart and also exposes unit vectors for a future Three.js sky stage.
+gnomonic chart, handles the 0h/24h right-ascension seam, and also exposes unit
+vectors for a future Three.js sky stage.
 Constellation mode is derived from the existing meteor/tour state, dims but does
 not stop the scene, hides exploration overlays, and prevents meteor launch. The
-chart and data contracts have 13 pure tests. Desktop, 375 px, both themes,
+Solar System control panel automatically collapses when either the planet tour
+or constellation explorer begins, leaving only its compact title bar. The
+chart and data contracts have pure tests. Desktop, 375 px, both themes,
 reduced motion, narration controls, tour/meteor/search regressions, and both exit
 paths were browser-verified with no runtime errors. No dependencies were added.
 

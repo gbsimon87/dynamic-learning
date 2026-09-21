@@ -26,8 +26,8 @@ export default function ConstellationCard({
         () => new Map(chart.points.map((point) => [point.id, point])),
         [chart],
     );
-    const nameById = useMemo(
-        () => new Map(constellation.stars.map((star) => [star.id, star.name])),
+    const starById = useMemo(
+        () => new Map(constellation.stars.map((star) => [star.id, star])),
         [constellation],
     );
 
@@ -100,7 +100,9 @@ export default function ConstellationCard({
                         className="solar-constellation__stars"
                         style={{ animationDelay: `${starsDelayMs}ms` }}
                     >
-                        {chart.points.map((point) => (
+                        {chart.points.map((point) => {
+                            const star = starById.get(point.id);
+                            return (
                             <g key={point.id}>
                                 <circle
                                     className="solar-constellation__halo"
@@ -115,16 +117,21 @@ export default function ConstellationCard({
                                     cy={point.y}
                                     r={point.radius}
                                 />
-                                <text
-                                    className="solar-constellation__star-name"
-                                    x={point.x}
-                                    y={point.y - point.radius - 1.8}
-                                    textAnchor="middle"
-                                >
-                                    {nameById.get(point.id)}
-                                </text>
+                                {star?.label !== false && (
+                                    <text
+                                        className="solar-constellation__star-name"
+                                        x={point.x}
+                                        y={star?.labelPosition === "below"
+                                            ? point.y + point.radius + 4.8
+                                            : point.y - point.radius - 1.8}
+                                        textAnchor="middle"
+                                    >
+                                        {star?.name}
+                                    </text>
+                                )}
                             </g>
-                        ))}
+                            );
+                        })}
                     </g>
                 </svg>
             </div>
