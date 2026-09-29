@@ -49,7 +49,8 @@ free sounds feel cheap. Each file is gain-matched to its tier:
 
 Plus silence trimmed, a 5 ms fade-in, a 150 ms fade-out, and peaks limited
 below -1 dBFS. 128 kbps MP3 — every browser decodes it, older iPhones included.
-The whole set is about 600 KB and is preloaded on the first tap.
+The whole set is about 600 KB. It downloads only when a curriculum challenge
+page opens, and is decoded on the first tap there.
 
 ## Changing a sound
 

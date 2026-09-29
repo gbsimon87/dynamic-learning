@@ -512,6 +512,23 @@ function ParentArea() {
           </Link>
         </section>
 
+        {/* iOS silences web audio with the silent switch / Silent Mode, and a
+            family iPad often lives in silent mode. Overriding a grown-up's
+            switch is not ours to do, so it is explained here instead. */}
+        <section className="parent-area-section" aria-labelledby="parent-area-sound">
+          <h2 className="parent-area-section-title" id="parent-area-sound">Sound</h2>
+          <p className="parent-area-note">
+            Challenges play short sounds for right answers and rewards. The{" "}
+            <span aria-hidden="true">🔊</span> button in the top bar turns them
+            off or on for this device.
+          </p>
+          <p className="parent-area-note">
+            <strong>No sound on an iPhone or iPad?</strong> The silent switch, or
+            Silent Mode in Control Centre, mutes sounds in the browser too. Turn
+            it off, then check the volume.
+          </p>
+        </section>
+
         <section className="parent-area-section">
           <h2 className="parent-area-section-title">Account</h2>
           <button

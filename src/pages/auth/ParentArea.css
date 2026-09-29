@@ -73,6 +73,17 @@ body.dark .parent-area-page {
   margin-bottom: 1rem;
 }
 
+.parent-area-page .parent-area-note {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--pa-muted);
+  margin-bottom: 0.7rem;
+}
+
+.parent-area-page .parent-area-note strong {
+  color: var(--pa-text);
+}
+
 .parent-area-page .parent-area-empty {
   font-size: 0.95rem;
   color: var(--pa-muted);

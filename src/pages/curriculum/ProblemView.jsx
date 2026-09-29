@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Challenge from "./Challenge";
 import CompletionCelebration from "../../components/celebration/CompletionCelebration";
 import { useProgress } from "../../hooks/useProgress";
@@ -18,6 +18,7 @@ import { AuthContext } from "../../context/auth-context";
 import { completeChallenge as withChallengeComplete } from "../../data/progressRules";
 import { getYearStats } from "../../data/curriculumProgressStats";
 import { topicSticker } from "../../data/stickers";
+import { preloadSounds } from "../../components/celebration/sound/player";
 import { shouldBypassLocks } from "../../data/devUnlock";
 import "./ProblemView.css";
 
@@ -25,6 +26,9 @@ function ProblemView() {
   const { year, subject, categoryId, topicId, challengeId } = useParams();
   const { award } = useRewards();
   const childName = useContext(AuthContext)?.child?.name;
+
+  // Sounds only ever play in a challenge, so this is where they download.
+  useEffect(() => preloadSounds(), []);
   const { progress, hydrated, isChallengeComplete, completeChallenge } =
     useProgress(year, subject);
 

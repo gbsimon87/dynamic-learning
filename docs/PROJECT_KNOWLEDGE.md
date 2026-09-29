@@ -350,15 +350,21 @@ Spec: [docs/superpowers/specs/2026-09-29-curriculum-celebrations-design.md](supe
   one are in [docs/sounds/README.md](sounds/README.md); the audition page they
   were picked on is saved beside it. Callers only name a scenario
   (`playCue("topic")`), so replacing a sound touches no component.
-- **Playback** (`sound/player.js`) is plain Web Audio — no audio library. The
-  files are fetched and decoded on the first tap anywhere, so the first answer
-  is never kept waiting. Every cue keeps a synthesised fallback, so a failed
+- **Playback** (`sound/player.js`) is plain Web Audio — no audio library.
+  `ProblemView` calls `preloadSounds()`, so the files download only on a
+  curriculum challenge page (Skills Mode and the homepage never fetch them);
+  the first tap there creates the audio and decodes them, so the first answer
+  is never kept waiting. Only one answer sound plays at a time, and the
+  challenge shell fades its last one on unmount, so `correct-last` or a combo
+  never plays over the celebration's opening sound. Every cue keeps a synthesised fallback, so a failed
   file plays a tone, never silence; `cues.test.js` checks every file exists,
   because the fallback would otherwise hide a missing one. `playCue` returns a
   stop function: a new celebration step, or leaving the celebration, fades out
   the previous sound, so the 8-second finale never talks over the next step.
 - **Mute** is the navbar 🔊 button, stored as the device preference
-  `dl.soundMuted` — not learner data.
+  `dl.soundMuted` — not learner data. iOS's silent switch / Silent Mode also
+  silences web audio; that is deliberately not overridden, and `/parent` has a
+  "Sound" section explaining it.
 - **Licence (read 2026-09-29):** the Mixkit Sound Effects Free License covers
   use in the app, commercial included, with no attribution. It forbids
   redistributing the sounds on their own or "with source files"; keeping the

@@ -50,8 +50,22 @@ function ChallengeShell({ title, questions, render, onComplete }) {
   // Refs, not state: they only ever feed the next answer, never the render.
   const streakRef = useRef(0);
   const missedRef = useRef(false);
+  // Stop function for the answer sound still playing, if any.
+  const stopSoundRef = useRef(null);
 
-  useEffect(() => () => window.clearTimeout(timerRef.current), []);
+  // Unmounting is the celebration taking over (or the child leaving): fade the
+  // last answer sound so it never plays on top of the celebration's own —
+  // correct-last and the combo both outlast the 1s pause before it.
+  useEffect(() => () => {
+    window.clearTimeout(timerRef.current);
+    stopSoundRef.current?.();
+  }, []);
+
+  /** One answer sound at a time: a quick next tap replaces, never stacks. */
+  const answerSound = (name) => {
+    stopSoundRef.current?.();
+    stopSoundRef.current = playCue(name);
+  };
 
   /**
    * Children call this with whether the attempt was correct. Advancing is the
@@ -69,7 +83,7 @@ function ChallengeShell({ title, questions, render, onComplete }) {
       const text = nextMessage("wrong");
       setFeedback((previous) => ({ tone: "wrong", text, key: (previous?.key ?? 0) + 1 }));
       wobble(answerRef.current);
-      playCue("wrong");
+      answerSound("wrong");
       return;
     }
 
@@ -81,7 +95,7 @@ function ChallengeShell({ title, questions, render, onComplete }) {
     const tone = combo ? "combo" : "correct";
     setFeedback((previous) => ({ tone, text, key: (previous?.key ?? 0) + 1 }));
     setLocked(true);
-    playCue(combo ? "combo" : isLast ? "correctLast" : "correct");
+    answerSound(combo ? "combo" : isLast ? "correctLast" : "correct");
     playEffect(combo ? "stars" : "sparkle", { origin: feedbackRef.current });
     missedRef.current = false;
 

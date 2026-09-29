@@ -4,8 +4,8 @@ import { CUES } from "./cues";
  * Plays the named celebration cues, and owns the one mute switch.
  *
  * Browsers only let audio start after a user gesture, so the AudioContext is
- * created lazily on the first cue (every cue follows a tap) and resumed on the
- * first pointer or key press as a backstop.
+ * created lazily on the first tap after `preloadSounds()` (or the first cue,
+ * which always follows a tap) and resumed on later taps as a backstop.
  *
  * Mute is a DEVICE preference in `localStorage` under `dl.soundMuted`, not
  * learner data: it lives beside the theme, belongs to whoever holds the tablet,
@@ -57,42 +57,74 @@ function getContext() {
   master = context.createGain();
   master.gain.value = 0.8;
   master.connect(context.destination);
-  preloadAll();
+  if (wanted) decodeAll();
   return context;
 }
 
+const bytes = new Map();
+let wanted = false;
+
+function allSources() {
+  return [...new Set(Object.values(CUES).map((cue) => cue.src).filter(Boolean))];
+}
+
+function fetchBytes(src) {
+  if (!bytes.has(src)) {
+    const pending = fetch(src).then((response) => {
+      if (!response.ok) throw new Error(`${src}: ${response.status}`);
+      return response.arrayBuffer();
+    });
+    // A failed download is forgotten, so the next play retries.
+    pending.catch(() => bytes.delete(src));
+    bytes.set(src, pending);
+  }
+  return bytes.get(src);
+}
+
 /**
- * Fetches and decodes every cue's file once, as soon as audio is allowed, so
- * the first correct answer is not kept waiting on a download. ~600 KB total.
+ * Starts downloading every sound (~600 KB) — called by the curriculum
+ * challenge page, the only place sounds play, so Skills Mode and the homepage
+ * never pay for them.
+ *
+ * Download only: decoding needs an AudioContext, and creating one before the
+ * child has tapped anything makes browsers log a warning. The first tap after
+ * this creates the context and decodes everything already downloaded, so the
+ * first correct answer is never kept waiting.
  */
-function preloadAll() {
-  const sources = new Set(Object.values(CUES).map((cue) => cue.src).filter(Boolean));
-  sources.forEach((src) => loadBuffer(src).catch(() => {}));
+export function preloadSounds() {
+  if (wanted || typeof window === "undefined") return;
+  wanted = true;
+  allSources().forEach((src) => fetchBytes(src).catch(() => {}));
+  if (context) decodeAll();
+}
+
+function decodeAll() {
+  allSources().forEach((src) => loadBuffer(src).catch(() => {}));
 }
 
 function loadBuffer(src) {
   if (!buffers.has(src)) {
-    const pending = fetch(src)
-      .then((response) => {
-        if (!response.ok) throw new Error(`${src}: ${response.status}`);
-        return response.arrayBuffer();
-      })
+    const pending = fetchBytes(src)
       // Callback form: older Safari's decodeAudioData returns no promise.
       .then((data) => new Promise((resolve, reject) => context.decodeAudioData(data, resolve, reject)));
-    // A failed load is forgotten, so the next play retries rather than
-    // falling back to the synth for the rest of the visit.
-    pending.catch(() => buffers.delete(src));
+    // decodeAudioData consumes its buffer, so a failed decode must fetch again.
+    pending.catch(() => {
+      buffers.delete(src);
+      bytes.delete(src);
+    });
     buffers.set(src, pending);
   }
   return buffers.get(src);
 }
 
 if (typeof window !== "undefined") {
-  // The first tap anywhere creates (and so unlocks and preloads) the audio,
-  // well before the first answer that needs it.
+  // Browsers only allow audio to start inside a user gesture. Once a
+  // challenge page has asked for sound, the first tap creates the audio (and
+  // decodes the downloads); on any page it wakes a context that went to sleep.
   const wake = () => {
     if (muted) return;
     try {
+      if (!context && !wanted) return;
       if (!getContext()) return;
       if (context.state === "suspended") context.resume().catch(() => {});
     } catch {
