@@ -261,9 +261,10 @@ function NameEditor({ child, onChange }) {
  *
  * The avatar row lives HERE rather than on /profiles because changing a
  * picture is an edit, and /profiles is a launchpad — a child heading for a game
- * should not be one mis-tap away from redecorating. It is also the only place
- * an existing profile can be edited at all, since the profile builder only ever
- * creates.
+ * should not be one mis-tap away from redecorating. It is also where every
+ * profile's picture can be changed — the profile builder only ever creates; the
+ * one other path is the celebration's "Make it my picture", for the child who
+ * has just unlocked one.
  *
  * Read-only for badges: a grown-up can see what was earned, never grant it.
  */

@@ -45,9 +45,12 @@
 - **`npm run seed` exists** (2026-09-19) and creates a test parent with two
   children who have different progress through both years. Use it rather than
   clicking through the curriculum by hand to reach a state worth looking at.
-- **Celebrations + Trophy Room shipped 2026-09-29** (Curriculum Mode only). Open
-  follow-ups: streaks/XP (still blocked on day stamps, above); a mascot; the
-  same kit for Skills Mode games. Recorded sounds shipped the same day (Mixkit,
+- **Celebrations + Trophy Room shipped 2026-09-29** (Curriculum Mode only), with
+  Bix the mascot joining combos and the Trophy Room. **Streaks, XP, levels and
+  a "something new" dot are designed** — docs/superpowers/specs/2026-09-30-
+  streaks-xp-whats-new-design.md — and add the day stamps the bullet above
+  says streaks were waiting for (in the rewards document, not progress). Still
+  open: the same kit for Skills Mode games. Recorded sounds shipped the same day (Mixkit,
   see docs/sounds/README.md). The Mixkit licence covers use in the app;
   keeping the MP3s in the public repo was cleared with a lawyer.
 - Ideas are scoped to serve **both Year 2 and Year 3** where possible.

@@ -1,5 +1,11 @@
 # Curriculum celebrations + Trophy Room
 
+> **Status: implemented, then amended** (2026-09-29/30). The body below is the
+> design as first approved. Several decisions were changed afterwards at the
+> user's request; **where they conflict, the Amendments section at the end
+> wins.** Current behaviour is described in `docs/PROJECT_KNOWLEDGE.md` §4.5
+> ("Celebrations") and §5, and the sound set in `docs/sounds/README.md`.
+
 ## Context
 
 Curriculum Mode's success moments are understated for 6–8 year olds:
@@ -104,3 +110,22 @@ The goal is Duolingo-style reinforcement that grows with the size of the achieve
   - The mute toggle persisting across a reload.
 - Screenshot at 390×844 and 1280×800, in both light and dark, and with `emulate_media reducedMotion: reduce`.
 - The year certificate step: reach it with devUnlock/seed data and check the print preview.
+
+## Amendments since approval
+
+| # | Original decision | Now | Why |
+|---|---|---|---|
+| A1 | Synthesised sounds, 6 cues (`chime`, `success`, `reveal`, `fanfareSmall`, `fanfare`, `fanfareBig`) | **13 recorded Mixkit files, 14 scenario cues** (`correct`, `correctLast`, `success`, `practice`, `topic`, `quest`, `subjectYear`, `sticker`, `badge`, `unlock`, `certificate`, `combo`, `wrong`, `progress`), loudness-matched, each with a synth fallback | The user found the synth tones cheap and picked each sound by ear |
+| A2 | Wrong answer: no sound | A **soft boop** at the lowest volume in the app (-24 LUFS) | User's choice |
+| A3 | No combos | **"3 in a row" combo**, every 3 first-try right answers (`answerStreak.js`), with its own sound, a bigger burst and a cheering Bix | User's choice |
+| A4 | Sound loads on first tap anywhere | **Only on curriculum challenge pages** (`preloadSounds()` in `ProblemView`) | Skills Mode and the homepage were downloading ~600 KB they never use |
+| A5 | Answer and celebration sounds independent | **One answer sound at a time; the last one fades when the celebration starts**; each celebration step fades the previous step's sound | `correct-last` and the combo overlapped the celebration's opening sound |
+| A6 | Trophy Room picker for siblings | **The Trophy Room shows only the active child**; grown-ups see each child's room read-only at `/parent/trophies/:childId`, linked from `/parent`. No grown-up gate on `/parent` (user's choice) | A child should only see their own trophies |
+| A7 | Unlocked picture only announced | **"Make it my picture" button** on the unlock step (same `updateChild` path as `/parent`) | The reward was not claimable by the child |
+| A8 | Stickers only in the Trophy Room | Earned stickers **also replace the stop number on the Curriculum Mode map** | Show the collection where children play |
+| A9 | No mascot | **Bix** (moved to `src/components/mascot/`) beside combos and by the Trophy Room's "Next up" | User's choice; not on the celebration headline |
+| A10 | — | `/parent` gained a **Sound** section explaining the 🔊 button and the iOS silent switch, which silences web audio and is deliberately not overridden | Families on muted iPads would think the app is silent |
+| A11 | The steps list included a `NextStep` file | `NextStep` lives inside `CompletionCelebration.jsx` | Too small for its own file |
+
+Streaks, XP, levels and the "something new" dot were out of scope here; they are
+designed in `2026-09-30-streaks-xp-whats-new-design.md`.

@@ -879,10 +879,11 @@ Two things to keep true:
 child-switch hazard applies. Unlike progress its write is **explicit**, not an
 effect on state: badges are awarded at exactly one moment.
 
-Unlocked avatars are redeemed in `/parent`, which is the only place an existing
-profile can be edited at all — `ProfileBuilder` only ever creates. Locked
-pictures are still shown, padlocked: a reward nobody knows about motivates
-nobody.
+Unlocked avatars can be redeemed in two places: `/parent` (every profile's
+picture picker — `ProfileBuilder` only ever creates) and, since 2026-09-29, the
+"Make it my picture" button on the celebration's unlock step, for the child who
+just won it. Both call `updateChild`. Locked pictures are still shown,
+padlocked: a reward nobody knows about motivates nobody.
 
 ### Topic stickers & the Trophy Room (2026-09-29)
 
