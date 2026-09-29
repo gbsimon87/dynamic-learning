@@ -3,11 +3,13 @@ import { ThemeContext } from '../../context/theme-context';
 import { AuthContext } from '../../context/auth-context';
 import { Link, useLocation } from 'react-router';
 import { CURRICULUM_ICON } from '../../data/curriculumRegistry';
+import { useSoundMuted } from '../celebration/sound/useSoundMuted';
 import './Navbar.css';
 
 function Navbar() {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const { child, status } = useContext(AuthContext) ?? {};
+  const [muted, toggleMuted] = useSoundMuted();
   const [hidden, setHidden] = useState(false);
   const [prevScroll, setPrevScroll] = useState(window.scrollY);
   const location = useLocation();
@@ -72,6 +74,29 @@ function Navbar() {
           <span aria-hidden="true">{CURRICULUM_ICON}</span>
           <span className="navbar-link-label">Curriculum</span>
         </Link>
+        {/* Only once a child is playing: the Trophy Room is theirs. */}
+        {status === 'ready' && (
+          <Link
+            to="/trophies"
+            className={`navbar-link ${location.pathname === '/trophies' ? 'active' : ''}`}
+            title="Trophy Room"
+          >
+            <span aria-hidden="true">🏆</span>
+            <span className="navbar-link-label">Trophy Room</span>
+          </Link>
+        )}
+        {/* The one sound switch for every celebration. A device setting, kept
+            beside the theme toggle rather than on a profile. */}
+        <button
+          type="button"
+          onClick={toggleMuted}
+          className="theme-btn"
+          aria-pressed={muted}
+          aria-label="Mute sounds"
+          title={muted ? 'Sounds are off' : 'Sounds are on'}
+        >
+          <span aria-hidden="true">{muted ? '🔇' : '🔊'}</span>
+        </button>
         <button
           onClick={toggleTheme}
           className="theme-btn"

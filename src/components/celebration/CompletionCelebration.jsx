@@ -1,185 +1,152 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router";
+import { buildCelebrationSteps } from "../../data/celebrationSteps";
+import { nextMessage } from "../../data/celebrationMessages";
+import { playCue } from "./sound/player";
+import { playEffect } from "./fx/effects";
+import HeadlineStep from "./steps/HeadlineStep";
+import ProgressStep from "./steps/ProgressStep";
+import StickerStep from "./steps/StickerStep";
+import BadgeStep from "./steps/BadgeStep";
+import UnlockStep from "./steps/UnlockStep";
+import CertificateStep from "./steps/CertificateStep";
 import "./CompletionCelebration.css";
 
-const CONFETTI = Array.from({ length: 24 }, (_, index) => index);
-
-const LABELS = {
-  challenge: "Challenge done",
-  topic: "Topic complete",
-  category: "Section complete",
-  subject: "Subject complete",
-  year: "Year complete",
+const STEP_COMPONENTS = {
+  headline: HeadlineStep,
+  progress: ProgressStep,
+  sticker: StickerStep,
+  badge: BadgeStep,
+  unlock: UnlockStep,
+  certificate: CertificateStep,
 };
 
-function headline(level, year, subjectName) {
-  switch (level) {
-    case "practice": return "Great practice!";
-    case "topic": return "Topic complete!";
-    case "category": return "Section complete!";
-    case "subject": return `${subjectName} complete!`;
-    case "year": return `Year ${year} complete!`;
-    default: return "You did it!";
-  }
-}
-
-function message(level, summary, subjectName) {
-  if (level === "practice") return "You gave this challenge another go. Keep that curiosity going!";
-  if (!summary) return "You completed a challenge. Well done!";
-
-  switch (level) {
-    case "topic":
-      return `You finished every challenge in ${summary.topicName}.`;
-    case "category":
-      return `You finished every topic in ${summary.categoryTitle}.`;
-    case "subject":
-      return `You finished the whole ${subjectName} journey!`;
-    case "year":
-      return `You finished every ${subjectName} challenge in Year ${summary.year}. What a journey!`;
-    default:
-      return `${summary.challengeTitle} in ${summary.topicName} is complete.`;
-  }
-}
-
-function AchievementStats({ level, summary }) {
-  if (!summary || level === "challenge" || level === "practice") return null;
-
-  const items = level === "topic"
-    ? [[summary.topicChallenges, "challenges"]]
-    : level === "category"
-      ? [[summary.categoryTopics, "topics"]]
-      : [
-          [summary.subjectCategories, "sections"],
-          [summary.subjectTopics, "topics"],
-          [summary.subjectChallenges, "challenges"],
-        ];
-
+function NextStep({ headingRef, focalRef }) {
   return (
-    <div className="completion-celebration-stats" role="group" aria-label="What you completed">
-      {items.map(([value, label]) => (
-        <div className="completion-celebration-stat" key={label}>
-          <strong>{value}</strong>
-          <span>{label}</span>
-        </div>
-      ))}
-    </div>
+    <>
+      <div className="completion-celebration-medal" ref={focalRef} aria-hidden="true">
+        <span>🚀</span>
+      </div>
+      <h2 ref={headingRef} tabIndex={-1}>Ready for more?</h2>
+    </>
   );
 }
 
+/**
+ * The completion celebration, played as a sequence of steps.
+ *
+ * `buildCelebrationSteps` decides what is shown; this plays it. Each step
+ * fires its own effect and sound on arrival, takes focus on its heading, and
+ * waits for "Continue" — so a badge is never tapped past unseen. "Skip" is on
+ * every step for the child who just wants to keep playing. A plain challenge
+ * is a single screen with the next actions on it.
+ *
+ * It only ANNOUNCES. Progress and badges were already written by ProblemView
+ * before this mounts, so skipping or leaving mid-sequence loses nothing.
+ */
 export default function CompletionCelebration({
   result,
   badges = [],
+  sticker = null,
+  yearBefore = null,
+  yearAfter = null,
   year,
   subjectName,
+  childName,
   nextHref,
   topicsHref,
 }) {
-  const [showConfetti, setShowConfetti] = useState(true);
-  const confettiTimer = useRef(null);
+  const steps = useMemo(
+    () => buildCelebrationSteps({
+      level: result.level,
+      earned: result.earned,
+      badges,
+      sticker,
+      yearBefore,
+      yearAfter,
+    }),
+    [result, badges, sticker, yearBefore, yearAfter]
+  );
+  const [headline] = useState(() =>
+    nextMessage(result.level, { name: childName, subject: subjectName, year })
+  );
+  const [stepIndex, setStepIndex] = useState(0);
   const headingRef = useRef(null);
-  const { level, earned, summary } = result;
-  const isBig = level === "subject" || level === "year";
-  const decoratedSummary = summary ? { ...summary, year } : null;
+  const focalRef = useRef(null);
+  const cuedStepRef = useRef(-1);
 
-  useEffect(() => {
-    if (!showConfetti || level === "practice") return undefined;
-    confettiTimer.current = window.setTimeout(() => setShowConfetti(false), 3900);
-    return () => window.clearTimeout(confettiTimer.current);
-  }, [level, showConfetti]);
+  const step = steps[stepIndex];
+  const StepContent = STEP_COMPONENTS[step.type] ?? NextStep;
+  const awardedSomething = badges.length > 0 || Boolean(sticker?.earned && result.earned.includes("topic"));
 
   useEffect(() => {
     headingRef.current?.focus();
-  }, []);
+    // StrictMode runs effects twice in development; the particles are safe to
+    // restart, a doubled fanfare is not.
+    if (cuedStepRef.current !== stepIndex) {
+      cuedStepRef.current = stepIndex;
+      if (step.cue) playCue(step.cue);
+    }
+    return playEffect(step.effect, { origin: focalRef.current });
+  }, [stepIndex, step]);
+
+  const primaryHref = nextHref ?? topicsHref;
 
   return (
-    <main className={`completion-celebration completion-celebration-${level}`}>
-      {showConfetti && level !== "practice" && (
-        <div className="completion-celebration-confetti" aria-hidden="true">
-          {CONFETTI.map((piece) => <i key={piece} style={{ "--piece-index": piece }} />)}
-        </div>
-      )}
+    <main className={`completion-celebration completion-celebration-${result.level}`}>
+      <section
+        key={stepIndex}
+        className={`completion-celebration-card completion-celebration-step-${step.type}`}
+        aria-label={steps.length > 1 ? `Step ${stepIndex + 1} of ${steps.length}` : undefined}
+      >
+        <StepContent
+          step={step}
+          result={result}
+          headline={headline}
+          year={year}
+          subjectName={subjectName}
+          childName={childName}
+          headingRef={headingRef}
+          focalRef={focalRef}
+        />
 
-      <section className="completion-celebration-card" aria-labelledby="completion-title">
-        <p className="completion-celebration-eyebrow">
-          {level === "practice" ? "Practice makes progress" : `Your Year ${year} ${subjectName} journey`}
-        </p>
+        {step.final ? (
+          <div className="completion-celebration-actions">
+            <Link className="completion-celebration-primary" to={primaryHref}>
+              {nextHref ? "Next challenge" : "Explore your topics"} <span aria-hidden="true">→</span>
+            </Link>
+            {nextHref && (
+              <Link className="completion-celebration-secondary" to={topicsHref}>
+                Back to topics
+              </Link>
+            )}
+            {awardedSomething && (
+              <Link className="completion-celebration-secondary" to="/trophies">
+                See your trophies <span aria-hidden="true">🏆</span>
+              </Link>
+            )}
+          </div>
+        ) : (
+          <div className="completion-celebration-actions">
+            <button
+              type="button"
+              className="completion-celebration-primary"
+              onClick={() => setStepIndex((index) => Math.min(index + 1, steps.length - 1))}
+            >
+              Continue <span aria-hidden="true">→</span>
+            </button>
+            <Link className="completion-celebration-skip" to={primaryHref}>
+              {nextHref ? "Skip to next challenge" : "Skip to topics"}
+            </Link>
+          </div>
+        )}
 
-        <div className="completion-celebration-medal" aria-hidden="true">
-          <span>{level === "year" ? "🏆" : isBig ? "🏅" : level === "category" ? "🌟" : level === "topic" ? "⭐" : level === "practice" ? "💪" : "✨"}</span>
-        </div>
-
-        <h1 id="completion-title" ref={headingRef} tabIndex={-1}>
-          {headline(level, year, subjectName)}
-        </h1>
-        <p className="completion-celebration-message">
-          {message(level, decoratedSummary, subjectName)}
-        </p>
-
-        {earned.length > 1 && (
-          <div className="completion-celebration-earned" role="group" aria-label="Achievements earned">
-            {earned.slice(1).map((milestone) => (
-              <span key={milestone}>✓ {milestone === "subject" ? `${subjectName} complete` : LABELS[milestone]}</span>
+        {steps.length > 1 && (
+          <ol className="completion-celebration-dots" aria-hidden="true">
+            {steps.map((item, index) => (
+              <li key={index} className={index <= stepIndex ? "is-done" : ""} />
             ))}
-          </div>
-        )}
-
-        {/* New badges, announced where the child is already looking. Placed
-            ABOVE the stats and below the milestones: a badge is the thing they
-            keep, so it should not be the last item before the buttons where a
-            fast tapper never sees it. */}
-        {badges.length > 0 && (
-          <div className="completion-celebration-badges">
-            <p className="completion-celebration-badges-title">
-              {badges.length === 1 ? "New badge!" : "New badges!"}
-            </p>
-            <ul>
-              {badges.map((badge) => (
-                <li key={badge.id} className="completion-celebration-badge">
-                  <span className="completion-celebration-badge-icon" aria-hidden="true">
-                    {badge.icon}
-                  </span>
-                  <span className="completion-celebration-badge-text">
-                    <strong>{badge.name}</strong>
-                    <span>{badge.blurb}</span>
-                    {badge.unlocksAvatar && (
-                      <span className="completion-celebration-badge-unlock">
-                        Unlocked a new picture: {badge.unlocksAvatar}
-                      </span>
-                    )}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        <AchievementStats level={level} summary={summary} />
-
-        <div className="completion-celebration-actions">
-          {nextHref ? (
-            <Link className="completion-celebration-primary" to={nextHref}>
-              Next challenge <span aria-hidden="true">→</span>
-            </Link>
-          ) : (
-            <Link className="completion-celebration-primary" to={topicsHref}>
-              Explore your topics <span aria-hidden="true">→</span>
-            </Link>
-          )}
-          {nextHref && (
-            <Link className="completion-celebration-secondary" to={topicsHref}>
-              Back to topics
-            </Link>
-          )}
-        </div>
-
-        {showConfetti && level !== "practice" && (
-          <button
-            className="completion-celebration-skip"
-            type="button"
-            onClick={() => setShowConfetti(false)}
-          >
-            Stop confetti
-          </button>
+          </ol>
         )}
       </section>
     </main>

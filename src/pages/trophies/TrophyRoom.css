@@ -1,0 +1,346 @@
+/* ===========================================================
+   TROPHY ROOM
+   Every colour is a theme token with a body.dark pair, so the
+   room repaints with the theme (PROJECT_KNOWLEDGE §9).
+=========================================================== */
+.trophy-room {
+  --tr-ink: var(--light-text);
+  --tr-panel: var(--light-panel);
+  --tr-accent: var(--light-accent);
+  --tr-on-accent: var(--on-light-accent);
+  --tr-wash: #fff2d7;
+  --tr-edge: #e9c77e;
+  --tr-muted: #645057;
+  --tr-locked: rgba(34, 24, 28, 0.06);
+  --tr-locked-edge: rgba(34, 24, 28, 0.22);
+
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 1.5rem 16px 3rem;
+  color: var(--tr-ink);
+}
+
+body.dark .trophy-room {
+  --tr-ink: var(--dark-text);
+  --tr-panel: var(--dark-panel);
+  --tr-accent: var(--dark-accent);
+  --tr-on-accent: var(--on-dark-accent);
+  --tr-wash: #423820;
+  --tr-edge: #aa925f;
+  --tr-muted: #d5c6c8;
+  --tr-locked: rgba(246, 232, 234, 0.06);
+  --tr-locked-edge: rgba(246, 232, 234, 0.25);
+}
+
+.trophy-room .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.trophy-header { text-align: center; }
+
+.trophy-eyebrow {
+  margin: 0;
+  color: var(--tr-muted);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.trophy-header h1 {
+  margin: 0.2rem 0 0;
+  font-size: clamp(1.9rem, 6vw, 2.8rem);
+}
+
+.trophy-picker {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.trophy-picker button {
+  min-height: 48px;
+  padding: 0.4rem 1rem;
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background: var(--trophy-kid-colour, var(--tr-wash));
+  color: var(--on-light-accent);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.trophy-picker button[aria-pressed="true"] { border-color: var(--tr-ink); }
+.trophy-picker button:focus-visible { outline: 3px solid var(--tr-ink); outline-offset: 3px; }
+
+.trophy-loading { text-align: center; margin-top: 2rem; }
+
+.trophy-summary {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin: 1.2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trophy-summary li {
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  background: var(--tr-wash);
+  font-weight: 600;
+}
+
+.trophy-summary strong { font-size: 1.2rem; }
+
+/* Next up */
+.trophy-next {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0 0;
+  padding: 1rem 1.2rem;
+  border: 3px solid var(--tr-accent);
+  border-radius: 22px;
+  background: var(--tr-panel);
+  box-shadow: 0 8px 24px var(--panel-shadow);
+}
+
+.trophy-next-disc {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--tr-wash);
+  font-size: 2.2rem;
+}
+
+.trophy-next-text { flex: 1; }
+.trophy-next-text h2 { margin: 0; font-size: 1.2rem; }
+.trophy-next-text p { margin: 0.2rem 0 0; }
+
+.trophy-next-play {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 52px;
+  padding: 0.6rem 1.3rem;
+  border-radius: 14px;
+  background: var(--tr-accent);
+  color: var(--tr-on-accent);
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+}
+
+.trophy-next-play:focus-visible { outline: 3px solid var(--tr-ink); outline-offset: 3px; }
+
+/* Sections */
+.trophy-section { margin-top: 2rem; }
+.trophy-section h2 { margin: 0 0 0.6rem; font-size: 1.5rem; }
+.trophy-section-note { margin: -0.3rem 0 0.8rem; color: var(--tr-muted); }
+
+/* Badges */
+.trophy-badges {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trophy-badge {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 0.35rem;
+  padding: 1rem 0.8rem;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.trophy-badge.is-held {
+  border: 3px solid var(--tr-edge);
+  background: var(--tr-wash);
+  box-shadow: 0 5px 0 var(--tr-edge);
+}
+
+.trophy-badge.is-locked {
+  border: 3px dashed var(--tr-locked-edge);
+  background: var(--tr-locked);
+}
+
+.trophy-badge-icon { font-size: 3rem; line-height: 1.1; }
+
+/* A silhouette: the shape is a teaser, the colour is the reward. */
+.trophy-badge.is-locked .trophy-badge-icon {
+  filter: grayscale(1) brightness(0);
+  opacity: 0.25;
+}
+
+body.dark .trophy-badge.is-locked .trophy-badge-icon {
+  filter: grayscale(1) brightness(0) invert(1);
+}
+
+.trophy-badge-note {
+  display: grid;
+  gap: 0.2rem;
+  color: var(--tr-muted);
+  font-size: 0.9rem;
+}
+
+.trophy-badge-date { font-size: 0.8rem; font-weight: 700; }
+
+.trophy-meter {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--tr-locked);
+  box-shadow: inset 0 0 0 1px var(--tr-locked-edge);
+  overflow: hidden;
+}
+
+.trophy-meter > span {
+  display: block;
+  height: 100%;
+  background: var(--tr-accent);
+}
+
+.trophy-meter em {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 0.75rem;
+  font-style: normal;
+  font-weight: 800;
+}
+
+/* Sticker book, one fold-out per year */
+.trophy-year {
+  margin-top: 0.8rem;
+  border: 2px solid var(--tr-locked-edge);
+  border-radius: 20px;
+  background: var(--tr-panel);
+}
+
+.trophy-year summary {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 56px;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.trophy-year summary::-webkit-details-marker { display: none; }
+
+.trophy-year summary::after {
+  content: "▾";
+  margin-left: auto;
+  font-size: 1.3rem;
+  transition: transform 200ms ease;
+}
+
+.trophy-year[open] summary::after { transform: rotate(180deg); }
+.trophy-year summary:focus-visible { outline: 3px solid var(--tr-ink); outline-offset: -3px; border-radius: 18px; }
+
+.trophy-year-title { display: grid; gap: 0.1rem; }
+.trophy-year-title strong { font-size: 1.2rem; }
+.trophy-year-title span { color: var(--tr-muted); }
+
+.tr-ring { flex: none; width: 60px; height: auto; }
+.tr-ring-track { fill: none; stroke: var(--tr-locked); stroke-width: 12; }
+.tr-ring-fill {
+  fill: none;
+  stroke: var(--tr-accent);
+  stroke-width: 12;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 1.1s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+.tr-ring-text {
+  fill: var(--tr-ink);
+  font-size: 2rem;
+  font-weight: 800;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.trophy-quest { padding: 0 1rem 1rem; }
+.trophy-quest h3 { margin: 0.6rem 0; font-size: 1.05rem; }
+
+.trophy-stickers {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trophy-sticker {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 0.25rem;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.trophy-sticker-disc {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  font-size: 2.3rem;
+}
+
+.trophy-sticker.is-earned .trophy-sticker-disc {
+  border: 5px solid var(--tr-panel);
+  background: var(--tr-wash);
+  box-shadow: 0 0 0 2px var(--tr-edge), 0 6px 12px var(--panel-shadow);
+}
+
+.trophy-sticker.is-locked .trophy-sticker-disc {
+  border: 3px dashed var(--tr-locked-edge);
+  background: var(--tr-locked);
+}
+
+.trophy-sticker.is-locked .trophy-sticker-disc {
+  color: transparent;
+  text-shadow: 0 0 0 var(--tr-locked-edge);
+}
+
+.trophy-sticker-name { font-weight: 700; line-height: 1.25; }
+.trophy-sticker-note { color: var(--tr-muted); font-size: 0.8rem; }
+.trophy-sticker.is-earned .trophy-sticker-note { color: var(--tr-ink); font-weight: 700; }
+
+@media (max-width: 560px) {
+  .trophy-next { flex-wrap: wrap; }
+  .trophy-next-play { width: 100%; }
+  .trophy-badges { grid-template-columns: repeat(2, 1fr); }
+  .trophy-stickers { grid-template-columns: repeat(3, 1fr); }
+  .trophy-sticker-disc { width: 64px; height: 64px; font-size: 2rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tr-ring-fill,
+  .trophy-year summary::after { transition: none; }
+}

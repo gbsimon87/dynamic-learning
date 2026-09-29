@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Challenge from "./Challenge";
 import CompletionCelebration from "../../components/celebration/CompletionCelebration";
 import { useProgress } from "../../hooks/useProgress";
@@ -14,12 +14,17 @@ import { buildLockState } from "../../data/curriculumLocks";
 import { findNextChallenge } from "../../data/curriculumNavigation";
 import { getCompletionMilestones } from "../../data/completionMilestones";
 import { useRewards } from "../../hooks/useRewards";
+import { AuthContext } from "../../context/auth-context";
+import { completeChallenge as withChallengeComplete } from "../../data/progressRules";
+import { getYearStats } from "../../data/curriculumProgressStats";
+import { topicSticker } from "../../data/stickers";
 import { shouldBypassLocks } from "../../data/devUnlock";
 import "./ProblemView.css";
 
 function ProblemView() {
   const { year, subject, categoryId, topicId, challengeId } = useParams();
   const { award } = useRewards();
+  const childName = useContext(AuthContext)?.child?.name;
   const { progress, hydrated, isChallengeComplete, completeChallenge } =
     useProgress(year, subject);
 
@@ -60,7 +65,23 @@ function ProblemView() {
     // makes replaying one award nothing.
     const badges = award(result.earned, { year, subject });
 
-    setCompletion({ positionKey, result, badges });
+    // What the celebration shows about the year and the topic's sticker. Pure
+    // reads: `withChallengeComplete` is the reducer run on a copy to see the
+    // "after" state — the hook call above is still the only write.
+    let extras = {};
+    if (result.earned.length > 0) {
+      const after = withChallengeComplete(progress, categoryId, topicId, challengeId);
+      const topic = curriculum
+        ?.find((category) => category.id === categoryId)
+        ?.topics.find((item) => item.id === topicId);
+      extras = {
+        yearBefore: getYearStats(progress, curriculum, isBuilt),
+        yearAfter: getYearStats(after, curriculum, isBuilt),
+        sticker: topic ? topicSticker(after, categoryId, topic, isBuilt) : null,
+      };
+    }
+
+    setCompletion({ positionKey, result, badges, ...extras });
   };
 
   // Where to go next. Computed from the SAME lock state the curriculum screen
@@ -85,6 +106,10 @@ function ProblemView() {
       <CompletionCelebration
         result={completion.result}
         badges={completion.badges}
+        sticker={completion.sticker}
+        yearBefore={completion.yearBefore}
+        yearAfter={completion.yearAfter}
+        childName={childName}
         year={year}
         subjectName={getSubjectName(subject)}
         nextHref={next && `/year/${year}/${subject}/problem/${next.categoryId}/${next.topicId}/${next.challengeId}`}

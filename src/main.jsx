@@ -34,6 +34,7 @@ import SolarSystem from "./pages/skills/geography/SolarSystem";
 
 // === CURRICULUM ===
 import ProblemView from "./pages/curriculum/ProblemView";
+import TrophyRoom from "./pages/trophies/TrophyRoom";
 
 // === AUTH: parent accounts + child profiles ===
 import Login from "./pages/auth/Login";
@@ -84,6 +85,10 @@ const router = createBrowserRouter([
             path: "year/:year/:subject/problem/:categoryId/:topicId/:challengeId",
             element: <ProblemView />,
           },
+
+          // Trophy Room: badges + topic stickers. Gated like the curriculum,
+          // since it shows a specific child's progress.
+          { path: "trophies", element: <TrophyRoom /> },
         ],
       },
 

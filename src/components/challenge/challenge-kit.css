@@ -38,6 +38,77 @@ body.dark {
   opacity: 0.7;
 }
 
+/* One segment per question, filling as each is answered. */
+.challenge-progress-bar {
+  display: flex;
+  gap: 6px;
+  max-width: 420px;
+  margin: 0.5rem auto 0;
+}
+
+.challenge-progress-segment {
+  flex: 1;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--ck-muted);
+  box-shadow: inset 0 0 0 1px var(--ck-border);
+  transition: background-color 250ms ease, transform 250ms ease;
+}
+
+.challenge-progress-segment.is-filled {
+  background: var(--ck-accent);
+  box-shadow: none;
+  animation: challenge-segment-fill 420ms cubic-bezier(.2, 1.6, .5, 1);
+}
+
+@keyframes challenge-segment-fill {
+  0% { transform: scaleY(1); }
+  45% { transform: scaleY(1.7); }
+  100% { transform: scaleY(1); }
+}
+
+/* The feedback line. Named apart from the Skills games' global `.feedback.*`
+   rules so their colours can never leak into a challenge. */
+.challenge-feedback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+}
+
+.challenge-feedback-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.challenge-feedback-correct .challenge-feedback-icon {
+  background: var(--ck-accent);
+  color: var(--ck-on-accent);
+  animation: challenge-tick-pop 480ms cubic-bezier(.2, 1.8, .5, 1) both;
+}
+
+.challenge-feedback-wrong .challenge-feedback-icon {
+  background: var(--ck-muted);
+  color: var(--ck-text);
+  box-shadow: inset 0 0 0 2px var(--ck-border);
+}
+
+@keyframes challenge-tick-pop {
+  from { transform: scale(0.2) rotate(-25deg); opacity: 0; }
+  to { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .challenge-progress-segment { transition: none; }
+  .challenge-progress-segment.is-filled,
+  .challenge-feedback-correct .challenge-feedback-icon { animation: none; }
+}
+
 .challenge-title {
   margin: 0.5rem 0 1.2rem;
   font-size: 1.35rem;
