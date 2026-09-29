@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Challenge from "./Challenge";
 import CompletionCelebration from "../../components/celebration/CompletionCelebration";
 import { useProgress } from "../../hooks/useProgress";
@@ -19,6 +19,8 @@ import { completeChallenge as withChallengeComplete } from "../../data/progressR
 import { getYearStats } from "../../data/curriculumProgressStats";
 import { topicSticker } from "../../data/stickers";
 import { preloadSounds } from "../../components/celebration/sound/player";
+import { localDay, weekDots } from "../../data/streak";
+import { stickerKey } from "../../data/news";
 import { shouldBypassLocks } from "../../data/devUnlock";
 import "./ProblemView.css";
 
@@ -39,6 +41,15 @@ function ProblemView() {
   const [completion, setCompletion] = useState(null);
   const justCompleted = completion?.positionKey === positionKey;
 
+  // One award per run: XP is additive, so a second call must never count.
+  // A ref, not state: two calls in the same tick would both see stale state.
+  // It resets whenever the challenge changes, so Next → Back → play again is
+  // a genuine new run and is awarded.
+  const awardedKeyRef = useRef(null);
+  useEffect(() => {
+    awardedKeyRef.current = null;
+  }, [positionKey]);
+
   const alreadyCompleted = isChallengeComplete(categoryId, topicId, challengeId);
 
   const topicsHref = `/curriculum/year/${year}/${subject}`;
@@ -46,8 +57,10 @@ function ProblemView() {
   const isBuilt = (topic, challenge) =>
     isChallengeImplemented(subject, year, topic, challenge);
 
-  const handleComplete = () => {
+  const handleComplete = (run = {}) => {
     if (!hydrated) return;
+    if (awardedKeyRef.current === positionKey) return;
+    awardedKeyRef.current = positionKey;
     const result = getCompletionMilestones({
       curriculum,
       progress,
@@ -62,12 +75,6 @@ function ProblemView() {
     // Idempotent: the reducer ignores a repeat, so a double-submit can't
     // duplicate the entry.
     completeChallenge(categoryId, topicId, challengeId);
-
-    // Badges ride on the SAME milestones the celebration already reports, so a
-    // badge can never be awarded for something the panel does not announce.
-    // `result.earned` is empty for an already-complete challenge, which is what
-    // makes replaying one award nothing.
-    const badges = award(result.earned, { year, subject });
 
     // What the celebration shows about the year and the topic's sticker. Pure
     // reads: `withChallengeComplete` is the reducer run on a copy to see the
@@ -85,7 +92,46 @@ function ProblemView() {
       };
     }
 
-    setCompletion({ positionKey, result, badges, ...extras });
+    const stickerWon =
+      result.earned.includes("topic") && extras.sticker?.earned
+        ? stickerKey(year, subject, topicId)
+        : null;
+
+    // Badges ride on the SAME milestones the celebration already reports, so a
+    // badge can never be awarded for something the panel does not announce.
+    const today = localDay();
+    const gained = award({
+      earned: result.earned,
+      firstTime: result.earned.length > 0,
+      combos: run?.combos ?? 0,
+      sticker: stickerWon,
+      today,
+      at: new Date().toISOString(),
+      year,
+      subject,
+    });
+
+    setCompletion({
+      positionKey,
+      result,
+      badges: gained?.awarded ?? [],
+      ...extras,
+      xp: gained && {
+        gained: gained.xpGained,
+        total: gained.xpTotal,
+        capped: gained.practiceCapped,
+      },
+      levelUp: gained && gained.levelAfter > gained.levelBefore ? gained.levelAfter : null,
+      streak:
+        gained && gained.streakOutcome !== "none"
+          ? {
+              outcome: gained.streakOutcome,
+              current: gained.streak.current,
+              usedFreezes: gained.usedFreezes,
+              dots: weekDots(gained.streak, today),
+            }
+          : null,
+    });
   };
 
   // Where to go next. Computed from the SAME lock state the curriculum screen
@@ -113,6 +159,9 @@ function ProblemView() {
         sticker={completion.sticker}
         yearBefore={completion.yearBefore}
         yearAfter={completion.yearAfter}
+        xp={completion.xp}
+        levelUp={completion.levelUp}
+        streak={completion.streak}
         childName={childName}
         year={year}
         subjectName={getSubjectName(subject)}

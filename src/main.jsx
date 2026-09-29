@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext";
+import { RewardsProvider } from "./context/RewardsContext";
 import RequireChild from "./components/RequireChild";
 import RootLayout from "./layouts/RootLayout";
 import Home from "./pages/home/Home";
@@ -130,7 +131,9 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ThemeProvider>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <RewardsProvider>
+          <RouterProvider router={router} />
+        </RewardsProvider>
       </AuthProvider>
     </ThemeProvider>
   </StrictMode>

@@ -9,7 +9,8 @@ import "./challenge-kit.css";
 /**
  * Owns the run loop every curriculum challenge repeats: which question we're
  * on, the feedback line, the lock during the success pause, and the single
- * `onComplete()` once the last question is right.
+ * `onComplete({ combos })` once the last question is right; `combos` counts
+ * '3 in a row' bursts this run.
  *
  * Children render the interaction and report an answer; they never touch
  * progress. See .claude/skills/add-curriculum-challenge for the contract.
@@ -50,6 +51,7 @@ function ChallengeShell({ title, questions, render, onComplete }) {
   // The combo streak, and whether the current question has been missed yet.
   // Refs, not state: they only ever feed the next answer, never the render.
   const streakRef = useRef(0);
+  const combosRef = useRef(0);
   const missedRef = useRef(false);
   // Stop function for the answer sound still playing, if any.
   const stopSoundRef = useRef(null);
@@ -77,6 +79,7 @@ function ChallengeShell({ title, questions, render, onComplete }) {
 
     const { streak, combo } = nextStreak(streakRef.current, isCorrect, !missedRef.current);
     streakRef.current = streak;
+    if (combo) combosRef.current += 1;
 
     // Chosen here, not inside the updater: StrictMode runs updaters twice.
     if (!isCorrect) {
@@ -102,7 +105,7 @@ function ChallengeShell({ title, questions, render, onComplete }) {
 
     timerRef.current = window.setTimeout(() => {
       if (isLast) {
-        onComplete();
+        onComplete({ combos: combosRef.current });
         return;
       }
       setIndex((i) => i + 1);
