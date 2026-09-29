@@ -617,6 +617,31 @@ body.dark .curriculum-page {
   font-weight: 700;
 }
 
+/* An earned sticker replaces the stop number: a die-cut disc with the
+   topic's emoji, as it appears in the Trophy Room. */
+.cp-topic-sticker {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.6rem;
+  height: 2.6rem;
+  border: 3px solid var(--cp-inset);
+  border-radius: 50%;
+  background: var(--cat-hue);
+  box-shadow: 0 0 0 2px var(--cat-deep), 0 3px 6px var(--panel-shadow);
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.cp-topic .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .cp-topic.is-locked .cp-topic-pin {
   background: var(--cp-dead);
   color: var(--cp-on-dead);

@@ -56,31 +56,34 @@ body.dark .trophy-room {
   font-size: clamp(1.9rem, 6vw, 2.8rem);
 }
 
-.trophy-picker {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.trophy-picker button {
+.trophy-back {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  min-height: 48px;
-  padding: 0.4rem 1rem;
-  border: 3px solid transparent;
-  border-radius: 999px;
-  background: var(--trophy-kid-colour, var(--tr-wash));
-  color: var(--on-light-accent);
-  font: inherit;
+  min-height: 44px;
+  margin-bottom: 0.4rem;
+  color: var(--tr-ink);
   font-weight: 700;
-  cursor: pointer;
 }
 
-.trophy-picker button[aria-pressed="true"] { border-color: var(--tr-ink); }
-.trophy-picker button:focus-visible { outline: 3px solid var(--tr-ink); outline-offset: 3px; }
+/* "Next up" with Bix beside it, cheering the child on. */
+.trophy-next-row.has-bix {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+}
+
+.trophy-next-row.has-bix .trophy-next {
+  flex: 1;
+  margin-top: 0;
+}
+
+.trophy-bix { flex: none; }
+
+@media (max-width: 560px) {
+  .trophy-next-row.has-bix { flex-direction: column; }
+  .trophy-next-row.has-bix .trophy-next { width: 100%; }
+}
 
 .trophy-loading { text-align: center; margin-top: 2rem; }
 

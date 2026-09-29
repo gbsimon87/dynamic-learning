@@ -34,7 +34,7 @@ import SolarSystem from "./pages/skills/geography/SolarSystem";
 
 // === CURRICULUM ===
 import ProblemView from "./pages/curriculum/ProblemView";
-import TrophyRoom from "./pages/trophies/TrophyRoom";
+import TrophyRoom, { ChildTrophyRoom } from "./pages/trophies/TrophyRoom";
 
 // === AUTH: parent accounts + child profiles ===
 import Login from "./pages/auth/Login";
@@ -68,6 +68,9 @@ const router = createBrowserRouter([
       { path: "signup", element: <SignUp /> },
       { path: "profiles", element: <Profiles /> },
       { path: "parent", element: <ParentArea /> },
+      // A grown-up's view of one child's Trophy Room. Outside RequireChild: a
+      // parent looks from /parent, often with no child selected.
+      { path: "parent/trophies/:childId", element: <ChildTrophyRoom /> },
 
       // === Curriculum: gated — progress belongs to a specific child profile ===
       // Skills Mode and Home stay completely ungated.

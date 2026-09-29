@@ -110,6 +110,17 @@ body.dark {
   100% { transform: scale(1) rotate(0); }
 }
 
+.challenge-feedback-bix {
+  display: inline-flex;
+  margin-left: 0.2rem;
+  animation: challenge-bix-in 420ms cubic-bezier(.2, 1.6, .5, 1) both;
+}
+
+@keyframes challenge-bix-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.6); }
+  to { opacity: 1; transform: none; }
+}
+
 .challenge-feedback-wrong .challenge-feedback-icon {
   background: var(--ck-muted);
   color: var(--ck-text);
@@ -125,7 +136,8 @@ body.dark {
   .challenge-progress-segment { transition: none; }
   .challenge-progress-segment.is-filled,
   .challenge-feedback-correct .challenge-feedback-icon,
-  .challenge-feedback-combo .challenge-feedback-icon { animation: none; }
+  .challenge-feedback-combo .challenge-feedback-icon,
+  .challenge-feedback-bix { animation: none; }
 }
 
 .challenge-title {

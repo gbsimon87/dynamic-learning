@@ -1,5 +1,5 @@
-import { useContext, useMemo, useState } from "react";
-import { Link } from "react-router";
+import { useContext, useMemo } from "react";
+import { Link, Navigate, useParams } from "react-router";
 import { AuthContext } from "../../context/auth-context";
 import { useTrophyData } from "../../hooks/useTrophyData";
 import { BADGES, badgeProgress, heldBadgeIds } from "../../data/badges";
@@ -7,6 +7,7 @@ import { countStickers, topicStickers } from "../../data/stickers";
 import { pickResume } from "../../data/curriculumResume";
 import { getYearStats } from "../../data/curriculumProgressStats";
 import ProgressRing from "../../components/ProgressRing";
+import Mascot from "../../components/mascot/Mascot";
 import "./TrophyRoom.css";
 
 function earnedOn(rewards, badgeId) {
@@ -107,7 +108,9 @@ function StickerBook({ candidate, open }) {
   );
 }
 
-function NextUp({ resume, candidates, viewed, isActive }) {
+function NextUp({ resume, candidates, isActive, name }) {
+  // The child reads "Your …"; a grown-up reads the child's name.
+  const whose = isActive || !name ? "Your" : `${name}’s`;
   if (!resume) return null;
 
   // Everything built in the year they were working on is done: point them on
@@ -118,7 +121,7 @@ function NextUp({ resume, candidates, viewed, isActive }) {
         <span className="trophy-next-disc" aria-hidden="true">🎉</span>
         <div className="trophy-next-text">
           <h2 id="trophy-next">Next up</h2>
-          <p>Every Year {resume.year} {resume.subjectName} challenge is done. Ready for a new adventure?</p>
+          <p>Every Year {resume.year} {resume.subjectName} challenge is done.{isActive && " Ready for a new adventure?"}</p>
         </div>
         {isActive && (
           <Link className="trophy-next-play" to="/curriculum">
@@ -145,17 +148,13 @@ function NextUp({ resume, candidates, viewed, isActive }) {
         <h2 id="trophy-next">Next up</h2>
         <p>
           {sticker?.available
-            ? <>Your <strong>{next.topicName}</strong> sticker — {sticker.remaining} {sticker.remaining === 1 ? "challenge" : "challenges"} to go!</>
-            : <>Keep going with <strong>{next.topicName}</strong>.</>}
+            ? <>{whose} <strong>{next.topicName}</strong> sticker — {sticker.remaining} {sticker.remaining === 1 ? "challenge" : "challenges"} to go!</>
+            : <>{isActive ? "Keep going with" : "Working on"} <strong>{next.topicName}</strong>.</>}
         </p>
       </div>
-      {isActive ? (
+      {isActive && (
         <Link className="trophy-next-play" to={next.href}>
           Play <span aria-hidden="true">→</span>
-        </Link>
-      ) : (
-        <Link className="trophy-next-play" to="/profiles">
-          Switch to {viewed.name} to play
         </Link>
       )}
     </section>
@@ -163,13 +162,13 @@ function NextUp({ resume, candidates, viewed, isActive }) {
 }
 
 /**
- * The Trophy Room: every badge and topic sticker a child has, and the ones
- * still to win. Read-only — nothing here can award or remove anything.
+ * The collection itself, for one child. Read-only — nothing here can award or
+ * remove anything.
+ *
+ * `grownUp` is the parent's view of any child (from /parent): no Bix, no Play
+ * button, and the heading names the child rather than addressing them.
  */
-export default function TrophyRoom() {
-  const { child, children = [] } = useContext(AuthContext);
-  const [viewedId, setViewedId] = useState(child?._id);
-  const viewed = children.find((kid) => kid._id === viewedId) ?? child;
+function TrophyCabinet({ viewed, grownUp = false }) {
   const { loading, rewards, candidates } = useTrophyData(viewed?._id);
   const resume = useMemo(() => pickResume(candidates), [candidates]);
 
@@ -187,27 +186,16 @@ export default function TrophyRoom() {
   return (
     <main className="trophy-room">
       <header className="trophy-header">
+        {grownUp && (
+          <Link className="trophy-back" to="/parent">
+            <span aria-hidden="true">← </span>Back to the parent area
+          </Link>
+        )}
         <p className="trophy-eyebrow">Trophy Room</p>
         <h1>
           <span aria-hidden="true">{viewed?.avatar} </span>
           {viewed?.name ? `${viewed.name}’s trophies` : "Your trophies"}
         </h1>
-
-        {children.length > 1 && (
-          <div className="trophy-picker" role="group" aria-label="Whose trophies">
-            {children.map((kid) => (
-              <button
-                key={kid._id}
-                type="button"
-                aria-pressed={kid._id === viewed?._id}
-                onClick={() => setViewedId(kid._id)}
-                style={{ "--trophy-kid-colour": `var(${kid.colour})` }}
-              >
-                <span aria-hidden="true">{kid.avatar}</span> {kid.name}
-              </button>
-            ))}
-          </div>
-        )}
       </header>
 
       {loading ? (
@@ -219,12 +207,20 @@ export default function TrophyRoom() {
             <li><strong>{stickers.earned}</strong> of {stickers.total} stickers</li>
           </ul>
 
-          <NextUp
-            resume={resume}
-            candidates={candidates}
-            viewed={viewed}
-            isActive={viewed?._id === child?._id}
-          />
+          <div className={`trophy-next-row ${grownUp ? "" : "has-bix"}`}>
+            {/* Bix cheers the child on towards their next sticker. */}
+            {!grownUp && (
+              <div className="trophy-bix">
+                <Mascot className="mascot-medium" label="Bix is cheering you on" />
+              </div>
+            )}
+            <NextUp
+              resume={resume}
+              candidates={candidates}
+              isActive={!grownUp}
+              name={viewed?.name}
+            />
+          </div>
 
           <BadgeShelf rewards={rewards} />
 
@@ -243,4 +239,28 @@ export default function TrophyRoom() {
       )}
     </main>
   );
+}
+
+/**
+ * /trophies — the child who is playing, and only them. Siblings' rooms are the
+ * grown-up's to look at, from /parent (below), not a child's.
+ */
+export default function TrophyRoom() {
+  const { child } = useContext(AuthContext);
+  return <TrophyCabinet viewed={child} />;
+}
+
+/**
+ * /parent/trophies/:childId — a grown-up looking at one child's room. Only a
+ * child of the signed-in account resolves; anything else is sent back.
+ */
+export function ChildTrophyRoom() {
+  const { childId } = useParams();
+  const { status, children = [] } = useContext(AuthContext);
+  if (status === "loading") return null;
+  if (status === "signedOut") return <Navigate to="/login" replace />;
+
+  const viewed = children.find((kid) => kid._id === childId);
+  if (!viewed) return <Navigate to="/parent" replace />;
+  return <TrophyCabinet viewed={viewed} grownUp />;
 }

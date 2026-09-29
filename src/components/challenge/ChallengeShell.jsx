@@ -3,6 +3,7 @@ import { nextMessage } from "../../data/celebrationMessages";
 import { nextStreak } from "../../data/answerStreak";
 import { playCue } from "../celebration/sound/player";
 import { playEffect } from "../celebration/fx/effects";
+import Mascot from "../mascot/Mascot";
 import "./challenge-kit.css";
 
 /**
@@ -155,6 +156,12 @@ function ChallengeShell({ title, questions, render, onComplete }) {
               {feedback.tone === "combo" ? "🔥" : feedback.tone === "correct" ? "✓" : "↻"}
             </span>
             {feedback.text}
+            {/* Bix pops up to cheer a combo. Decorative: the words say it. */}
+            {feedback.tone === "combo" && (
+              <span className="challenge-feedback-bix">
+                <Mascot className="mascot-small" cheerOn={feedback.key} decorative />
+              </span>
+            )}
           </>
         )}
       </p>

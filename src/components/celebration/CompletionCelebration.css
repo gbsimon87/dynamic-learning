@@ -485,3 +485,24 @@ button.completion-celebration-secondary { background: transparent; }
 
 .completion-celebration-stats { margin-top: 1rem; padding: 0.6rem; }
 .completion-celebration-actions { margin-top: 1.2rem; }
+
+/* "Make it my picture" on the unlock step: a clear second button, below the
+   picture and above Continue, with the new emoji on it. */
+button.celebration-claim {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 52px;
+  margin-top: 0.6rem;
+  padding: 0.6rem 1.3rem;
+  border: 3px solid var(--celebration-accent);
+  border-radius: 14px;
+  color: var(--celebration-ink);
+  text-decoration: none;
+}
+
+button.celebration-claim:disabled { opacity: 0.6; cursor: progress; }
+
+.celebration-avatar.is-claimed {
+  box-shadow: 0 0 0 6px var(--celebration-accent), 0 0 0 12px var(--celebration-wash);
+}

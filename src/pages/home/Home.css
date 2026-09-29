@@ -24,11 +24,6 @@
   /* The "thickness" under a pressed button. */
   --home-accent-shade: #92262f;
 
-  /* Bix */
-  --home-mascot-1: #ffb9bd;
-  --home-mascot-2: #ef626c;
-  --home-mascot-dot: #ffe08a;
-  --home-mascot-cheek: rgba(239, 98, 108, 0.55);
 
   /* Subject hues: vivid for edges and icon tiles, deep for filled buttons. */
   --home-hue-math: #ef626c;
@@ -62,10 +57,6 @@ body.dark .home-page {
   --home-on-cta: #ffffff;
   --home-accent-shade: #13544b;
 
-  --home-mascot-1: #a9ece2;
-  --home-mascot-2: #4fb4a5;
-  --home-mascot-dot: #ffd166;
-  --home-mascot-cheek: rgba(255, 145, 155, 0.5);
 
   background-color: var(--dark-bg);
 }

@@ -8,6 +8,7 @@ import {
 import { useProgress } from "../../hooks/useProgress";
 import { isChallengeImplemented } from "../../data/challengeAvailability";
 import { buildLockState } from "../../data/curriculumLocks";
+import { topicSticker } from "../../data/stickers";
 import {
   getTopicStats,
   getYearStats,
@@ -468,6 +469,13 @@ function CurriculumPage() {
                     isBuilt
                   );
 
+                  // The topic's sticker, on the map where it was won — the same
+                  // strict rule the celebration and Trophy Room use, so all three
+                  // always agree.
+                  const sticker = hydrated
+                    ? topicSticker(progress, category.id, topic, isBuilt)
+                    : null;
+
                   return (
                     <article
                       key={topic.id}
@@ -480,13 +488,20 @@ function CurriculumPage() {
                       }`}
                     >
                       <div className="cp-topic-head">
-                        <span className="cp-topic-pin" aria-hidden="true">
-                          {topicLocks.locked
-                            ? "🔒"
-                            : topicLocks.complete
-                              ? "🏆"
-                              : topicIndex + 1}
-                        </span>
+                        {sticker?.earned ? (
+                          <span className="cp-topic-sticker" title="Sticker collected">
+                            <span aria-hidden="true">{sticker.icon}</span>
+                            <span className="sr-only">Sticker collected.</span>
+                          </span>
+                        ) : (
+                          <span className="cp-topic-pin" aria-hidden="true">
+                            {topicLocks.locked
+                              ? "🔒"
+                              : topicLocks.complete
+                                ? "🏆"
+                                : topicIndex + 1}
+                          </span>
+                        )}
 
                         <h3 className="cp-topic-title">{topic.name}</h3>
 

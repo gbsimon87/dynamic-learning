@@ -308,6 +308,10 @@ function ChildRewards({ child, rewards, onChangeAvatar }) {
         ))}
       </ul>
 
+      <Link className="parent-area-trophies-link" to={`/parent/trophies/${child._id}`}>
+        See {child.name}’s Trophy Room <span aria-hidden="true">🏆 →</span>
+      </Link>
+
       <p className="parent-area-rewards-title" id={`avatar-${child._id}`}>
         Picture
       </p>

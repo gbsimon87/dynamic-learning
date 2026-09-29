@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Link } from "react-router";
 import { AuthContext } from "../../context/auth-context";
-import Mascot from "./Mascot";
+import Mascot from "../../components/mascot/Mascot";
 import HomeFooter from "./HomeFooter";
 import { useHomeResume } from "./useHomeResume";
 import { useReveal } from "./useReveal";

@@ -2,7 +2,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import "./Mascot.css";
 
 /**
- * Bix — the homepage character.
+ * Bix — the app's character: the homepage hero, the Trophy Room, and the
+ * "3 in a row" combo in every challenge.
  *
  * Drawn entirely in CSS so there is no image asset to ship, no layout shift
  * while it loads, and so both themes can restyle it from tokens.
@@ -16,6 +17,14 @@ import "./Mascot.css";
  *
  * All three are switched off under `prefers-reduced-motion`; the character
  * still renders and the button still works, it simply holds still.
+ *
+ * Props, for use beyond the homepage:
+ *   className   sizing from the caller (e.g. "mascot-small")
+ *   cheerOn     any value; Bix cheers on his own when he appears with it set,
+ *               and again whenever it changes — how the combo line makes him
+ *               react without a tap
+ *   decorative  renders him hidden from assistive technology and out of the
+ *               tab order, for places where the words already say it all
  */
 
 const CHEERS = ["⭐", "✨", "🎉", "💫", "🌟", "🎈"];
@@ -35,7 +44,12 @@ function prefersReducedMotion() {
   return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 }
 
-export default function Mascot({ label = "Say hello to Bix" }) {
+export default function Mascot({
+  label = "Say hello to Bix",
+  className = "",
+  cheerOn,
+  decorative = false,
+}) {
   const rootRef = useRef(null);
   const frameRef = useRef(0);
   const burstTimer = useRef(0);
@@ -89,13 +103,21 @@ export default function Mascot({ label = "Say hello to Bix" }) {
     }, 1000);
   }, []);
 
+  // With `cheerOn` set, Bix cheers as he appears and again each time it
+  // changes. Without it (the homepage) he waits to be tapped.
+  useEffect(() => {
+    if (cheerOn !== undefined) cheer();
+  }, [cheerOn, cheer]);
+
   return (
     <button
       type="button"
       ref={rootRef}
-      className={`mascot ${reacting ? "is-reacting" : ""}`}
+      className={`mascot ${className} ${reacting ? "is-reacting" : ""}`}
       onClick={cheer}
-      aria-label={label}
+      aria-label={decorative ? undefined : label}
+      aria-hidden={decorative || undefined}
+      tabIndex={decorative ? -1 : undefined}
     >
       <span className="mascot-shadow" aria-hidden="true" />
 

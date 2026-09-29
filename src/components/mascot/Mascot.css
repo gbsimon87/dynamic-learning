@@ -1,9 +1,13 @@
-/* ===== BIX, THE HOMEPAGE CHARACTER =====
-   Pure CSS — no image asset. Colours come from tokens declared by .home-page
-   (Home.css), which has a body.dark pair, so the character restyles with the
-   theme instead of staying light-only. */
-
+/* ===== BIX, THE APP'S CHARACTER =====
+   Pure CSS — no image asset. His colour tokens are declared on .mascot itself,
+   with a body.dark pair, so he restyles with the theme on any page: the
+   homepage hero, the Trophy Room, and the "3 in a row" combo. */
 .mascot {
+  --home-mascot-1: #ffb9bd;
+  --home-mascot-2: #ef626c;
+  --home-mascot-dot: #ffe08a;
+  --home-mascot-cheek: rgba(239, 98, 108, 0.55);
+
   position: relative;
   display: grid;
   place-items: end center;
@@ -19,8 +23,15 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+body.dark .mascot {
+  --home-mascot-1: #a9ece2;
+  --home-mascot-2: #4fb4a5;
+  --home-mascot-dot: #ffd166;
+  --home-mascot-cheek: rgba(255, 145, 155, 0.5);
+}
+
 .mascot:focus-visible {
-  outline: 3px solid var(--home-focus);
+  outline: 3px solid var(--home-focus, currentColor);
   outline-offset: 8px;
   border-radius: 40%;
 }
@@ -257,4 +268,17 @@
   .mascot:hover .mascot-body {
     transform: none;
   }
+}
+
+/* Smaller Bixes, for the combo line and the Trophy Room. `zoom` rather than a
+   narrower width: his antennae, eyes and mouth are sized in pixels, and zoom
+   scales those with him (a transform would fight the bob animation). */
+.mascot.mascot-small {
+  width: 150px;
+  zoom: 0.38;
+}
+
+.mascot.mascot-medium {
+  width: 150px;
+  zoom: 0.62;
 }

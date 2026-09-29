@@ -597,3 +597,14 @@ body.dark .parent-area-page {
     transform: none;
   }
 }
+
+.parent-area-page .parent-area-trophies-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  margin: 0.2rem 0 0.6rem;
+  color: var(--pa-text);
+  font-weight: 700;
+  text-decoration: underline;
+}

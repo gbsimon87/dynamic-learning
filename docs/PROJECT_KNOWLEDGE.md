@@ -117,6 +117,7 @@ src/
 ├── components/               # Shared, reusable pieces
 │   ├── RequireChild.jsx      # Route guard for Curriculum Mode (§4.7)
 │   ├── ProgressRing.jsx      # The one percent dial, shared by 3 screens
+│   ├── mascot/Mascot.jsx     # Bix — homepage, combo line, Trophy Room
 │   ├── celebration/          # Completion sequence, steps/, fx/ (particles), sound/ (cues + mute)
 │   ├── challenge/            # The shared challenge kit (39 components)
 │   ├── ui/Navbar.jsx
@@ -376,6 +377,16 @@ Spec: [docs/superpowers/specs/2026-09-29-curriculum-celebrations-design.md](supe
   cue is guarded by a ref, and the stop-on-unmount is deferred a tick so the
   dev-only remount cancels it — or dev shows repeated lines, doubled fanfares,
   or a finale cut off the instant it starts.
+- **Unlocked pictures are claimable in the moment.** The "New picture
+  unlocked!" step has a "Make it my picture" button that calls the same
+  `updateChild` the grown-up area's picker uses. (The "pictures" are profile
+  emoji — 🐨 🦉 🐲 🦖 — locked behind badges in `badges.js`; nothing is generated.)
+- **Bix**, the CSS-drawn mascot, is shared from `src/components/mascot/`: the
+  homepage hero, a small cheering Bix beside every combo line (decorative,
+  hidden from assistive technology), and a medium Bix by the Trophy Room's
+  "Next up". His colour tokens live on `.mascot` itself with a `body.dark`
+  pair, so he renders correctly off the homepage; smaller sizes use CSS `zoom`
+  because his features are sized in pixels.
 - `prefers-reduced-motion` drops every particle effect (canvas never created)
   and turns flips/drops into fades. Each step's heading takes focus.
 
@@ -889,10 +900,19 @@ on real completions, so progress injected straight into storage shows a low
 count — expected.
 
 `/trophies` (behind `RequireChild`, 🏆 in the navbar) shows badges, a sticker
-book per year grouped by quest, and a "Next up" card from `pickResume`. A parent
-account can flip between children with the picker; that only changes whose room
-is shown, never the active child, and Play appears only for the active child.
-Reads go through `useTrophyData`, which never writes.
+book per year grouped by quest, and a "Next up" card from `pickResume` with Bix
+beside it. **It only ever shows the child who is playing** — a child never sees
+a sibling's room. A grown-up sees every child's from `/parent` ("See {name}'s
+Trophy Room" under each child), which opens `/parent/trophies/:childId`: the
+same cabinet, read-only, with no Play button and no Bix. That route sits
+outside `RequireChild` (a parent often has no child selected) and redirects
+anything that is not a child of the signed-in account. `/parent` itself has no
+grown-up gate, by decision (2026-09-29). Reads go through `useTrophyData`,
+which never writes.
+
+Earned stickers also replace the stop number on their topic in the Curriculum
+Mode map (`CurriculumPage`), using the same `topicSticker` rule, so the map,
+the celebration and the Trophy Room always agree.
 
 ### Progress visibility — where each figure comes from (2026-09-19)
 
