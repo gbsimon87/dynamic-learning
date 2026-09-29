@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ProgressRing from "../../ProgressRing";
+import { playCue } from "../sound/player";
 
 /**
  * How far this completion moved the whole year: the ring starts where the
@@ -10,7 +11,11 @@ export default function ProgressStep({ step, year, subjectName, headingRef, foca
   const [shown, setShown] = useState(step.from);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setShown(step.to), 650);
+    // The shimmer plays as the ring starts to move, not when the step opens.
+    const timer = window.setTimeout(() => {
+      setShown(step.to);
+      playCue("progress");
+    }, 650);
     return () => window.clearTimeout(timer);
   }, [step.to]);
 

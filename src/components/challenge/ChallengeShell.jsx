@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { nextMessage } from "../../data/celebrationMessages";
+import { nextStreak } from "../../data/answerStreak";
 import { playCue } from "../celebration/sound/player";
 import { playEffect } from "../celebration/fx/effects";
 import "./challenge-kit.css";
@@ -14,8 +15,10 @@ import "./challenge-kit.css";
  *
  * Every curriculum challenge runs through here, so this is also where each
  * answer is celebrated: a right answer pops a tick, sparkles, chimes and fills
- * one segment of the bar; a wrong one gets a gentle wobble and a kind word —
- * never a buzzer, so a mistake never feels like a punishment.
+ * one segment of the bar; a wrong one gets a gentle wobble, a kind word and
+ * the quietest sound in the app — a soft boop, never a buzzer, so a mistake
+ * never feels like a punishment. Three right first time in a row is a combo
+ * (answerStreak.js): a 🔥 line, a bigger burst and its own sound.
  *
  * `questions`  array of anything; the child decides how to render one
  * `render`     ({ question, submit, locked, index }) => JSX
@@ -43,6 +46,10 @@ function ChallengeShell({ title, questions, render, onComplete }) {
   const answerRef = useRef(null);
   const feedbackRef = useRef(null);
   const timerRef = useRef(null);
+  // The combo streak, and whether the current question has been missed yet.
+  // Refs, not state: they only ever feed the next answer, never the render.
+  const streakRef = useRef(0);
+  const missedRef = useRef(false);
 
   useEffect(() => () => window.clearTimeout(timerRef.current), []);
 
@@ -53,20 +60,30 @@ function ChallengeShell({ title, questions, render, onComplete }) {
   const submit = (isCorrect) => {
     if (locked) return;
 
+    const { streak, combo } = nextStreak(streakRef.current, isCorrect, !missedRef.current);
+    streakRef.current = streak;
+
     // Chosen here, not inside the updater: StrictMode runs updaters twice.
     if (!isCorrect) {
+      missedRef.current = true;
       const text = nextMessage("wrong");
       setFeedback((previous) => ({ tone: "wrong", text, key: (previous?.key ?? 0) + 1 }));
       wobble(answerRef.current);
+      playCue("wrong");
       return;
     }
 
     const isLast = index + 1 >= questions.length;
-    const text = nextMessage(isLast ? "last" : "correct");
-    setFeedback((previous) => ({ tone: "correct", text, key: (previous?.key ?? 0) + 1 }));
+    // A combo outranks the ordinary answer sound, even on the last question.
+    const text = combo
+      ? nextMessage("combo", { count: streak })
+      : nextMessage(isLast ? "last" : "correct");
+    const tone = combo ? "combo" : "correct";
+    setFeedback((previous) => ({ tone, text, key: (previous?.key ?? 0) + 1 }));
     setLocked(true);
-    playCue("chime");
-    playEffect("sparkle", { origin: feedbackRef.current });
+    playCue(combo ? "combo" : isLast ? "correctLast" : "correct");
+    playEffect(combo ? "stars" : "sparkle", { origin: feedbackRef.current });
+    missedRef.current = false;
 
     timerRef.current = window.setTimeout(() => {
       if (isLast) {
@@ -121,7 +138,7 @@ function ChallengeShell({ title, questions, render, onComplete }) {
         {feedback && (
           <>
             <span key={feedback.key} className="challenge-feedback-icon" aria-hidden="true">
-              {feedback.tone === "correct" ? "✓" : "↻"}
+              {feedback.tone === "combo" ? "🔥" : feedback.tone === "correct" ? "✓" : "↻"}
             </span>
             {feedback.text}
           </>

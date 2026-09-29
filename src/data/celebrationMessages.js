@@ -20,6 +20,8 @@ export const MESSAGES = {
     "Keep going — you can do it!",
   ],
   last: ["All done! Brilliant work!", "That's the lot — amazing!"],
+  // The "3 in a row" combo. `{count}` is the streak: 3, 6, 9…
+  combo: ["{count} in a row! 🔥", "On fire! {count} in a row!", "Unstoppable! {count} in a row!"],
 
   // Completion headlines, by milestone level.
   practice: ["Great practice!", "Practice makes progress, {name}!", "Sharp as ever!"],
@@ -44,19 +46,19 @@ function fill(template, values) {
 /**
  * @param {string} kind  a key of MESSAGES
  * @param {object} options
- *   name, subject, year  fill the placeholders
+ *   name, subject, year, count  fill the placeholders
  *   previousId           the id shown last time; never returned again
  *   random               () => [0, 1), injectable for tests
  * @returns {{id: string, text: string}}
  */
-export function pickMessage(kind, { name, subject, year, previousId, random = Math.random } = {}) {
+export function pickMessage(kind, { name, subject, year, count, previousId, random = Math.random } = {}) {
   const pool = (MESSAGES[kind] ?? MESSAGES.challenge)
     .map((template, index) => ({ id: `${kind}:${index}`, template }))
     .filter((entry) => name || !entry.template.includes("{name}"));
 
   const fresh = pool.length > 1 ? pool.filter((entry) => entry.id !== previousId) : pool;
   const choice = fresh[Math.min(fresh.length - 1, Math.floor(random() * fresh.length))];
-  return { id: choice.id, text: fill(choice.template, { name, subject, year }) };
+  return { id: choice.id, text: fill(choice.template, { name, subject, year, count }) };
 }
 
 const lastShown = new Map();

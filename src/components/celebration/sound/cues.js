@@ -1,11 +1,15 @@
 /**
- * The celebration sound cues, by name.
+ * The app's sound cues, one per SCENARIO, by name.
  *
- * Callers only ever say `playCue("fanfare")`; what a cue sounds like lives
- * here. Today every cue is synthesised with the Web Audio API — bright,
- * xylophone-like tones with no files to license or load. To swap in a recorded
- * sound later, give a cue a `src` (a URL under public/sounds/): the player
- * plays the file and falls back to `synth` if it cannot load. No caller changes.
+ * Callers only ever say `playCue("topic")`; what a cue sounds like lives here.
+ * Each cue plays a recorded file from public/sounds/ (`src`) and falls back to
+ * a synthesised tone (`synth`) if the file cannot load, so a missing file or a
+ * failed request never leaves a moment silent.
+ *
+ * The recordings are Mixkit sound effects, chosen by ear, then trimmed, faded
+ * and loudness-matched in three tiers (answers -20 LUFS, rewards -18, fanfares
+ * -16; the wrong-answer boop -24 so it never stings). Which Mixkit id each file
+ * came from, and how to re-process or replace one: docs/sounds/README.md.
  *
  * `synth(tone, t)` schedules notes from time `t`; `tone(freq, start, length,
  * options)` is supplied by the player.
@@ -21,7 +25,7 @@ function arpeggio(tone, t, notes, gap, length, options) {
   notes.forEach((note, index) => tone(note, t + index * gap, length, options));
 }
 
-export const CUES = {
+const SYNTH = {
   /** A correct answer: two quick bright notes. */
   chime: {
     synth: (tone, t) => arpeggio(tone, t, [N.E6, N.G6], 0.07, 0.35, { gain: 0.22 }),
@@ -74,4 +78,42 @@ export const CUES = {
       arpeggio(tone, t + 1.05, [N.C6, N.E6, N.G6, N.C7], 0.08, 1.2, { gain: 0.08 });
     },
   },
+};
+
+/** A single soft low note, for the wrong-answer fallback. */
+SYNTH.boop = {
+  synth: (tone, t) => tone(330, t, 0.25, { gain: 0.12, type: "sine" }),
+};
+
+const file = (name) => `/sounds/${name}.mp3`;
+
+export const CUES = {
+  /** A correct answer, any question but the last. Heard 4–6× a challenge. */
+  correct: { src: file("correct"), synth: SYNTH.chime.synth },
+  /** A correct answer to the LAST question; `success` follows ~1s later. */
+  correctLast: { src: file("correct-last"), synth: SYNTH.chime.synth },
+  /** Three (then six, nine…) questions right first time in a row. */
+  combo: { src: file("combo"), synth: SYNTH.reveal.synth },
+  /** A wrong answer. Deliberately the quietest file. */
+  wrong: { src: file("wrong"), synth: SYNTH.boop.synth },
+  /** The celebration's progress ring filling. */
+  progress: { src: file("progress"), synth: SYNTH.chime.synth },
+  /** A practice replay of an already-finished challenge ends. */
+  practice: { src: file("practice"), synth: SYNTH.chime.synth },
+  /** A challenge finished for the first time, no bigger milestone. */
+  success: { src: file("success"), synth: SYNTH.success.synth },
+  /** "New sticker!" — a topic's sticker drops in. */
+  sticker: { src: file("sticker"), synth: SYNTH.reveal.synth },
+  /** "New badge!" — each badge flips over. */
+  badge: { src: file("badge"), synth: SYNTH.reveal.synth },
+  /** "New picture unlocked!" */
+  unlock: { src: file("unlock"), synth: SYNTH.chime.synth },
+  /** A whole topic finished. */
+  topic: { src: file("topic"), synth: SYNTH.fanfareSmall.synth },
+  /** A whole quest (category) finished. */
+  quest: { src: file("quest"), synth: SYNTH.fanfare.synth },
+  /** A whole subject or year finished — the biggest moment. */
+  subjectYear: { src: file("subject-year"), synth: SYNTH.fanfareBig.synth },
+  /** The year certificate step. Shares the finale fanfare, by choice. */
+  certificate: { src: file("subject-year"), synth: SYNTH.fanfare.synth },
 };

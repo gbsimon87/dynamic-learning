@@ -10,14 +10,17 @@
  * UI owns how a step looks; this owns that it exists. Tested under node.
  */
 
-/** Effect and sound per milestone level, from quietest to loudest. */
+/**
+ * Effect and sound per milestone level, from quietest to loudest. Cue names
+ * are scenarios in celebration/sound/cues.js.
+ */
 export const TIERS = {
-  practice: { effect: "sparkle", cue: "chime" },
+  practice: { effect: "sparkle", cue: "practice" },
   challenge: { effect: "burst", cue: "success" },
-  topic: { effect: "confetti", cue: "fanfareSmall" },
-  category: { effect: "confettiStars", cue: "fanfare" },
-  subject: { effect: "fireworks", cue: "fanfareBig" },
-  year: { effect: "fireworksFinale", cue: "fanfareBig" },
+  topic: { effect: "confetti", cue: "topic" },
+  category: { effect: "confettiStars", cue: "quest" },
+  subject: { effect: "fireworks", cue: "subjectYear" },
+  year: { effect: "fireworksFinale", cue: "subjectYear" },
 };
 
 const BIG_LEVELS = new Set(["topic", "category", "subject", "year"]);
@@ -45,6 +48,7 @@ export function buildCelebrationSteps({
   const middle = [];
 
   if (BIG_LEVELS.has(level) && yearBefore && yearAfter) {
+    // No entry cue: ProgressStep plays "progress" as the ring starts to fill.
     middle.push({
       type: "progress",
       from: yearBefore.percent,
@@ -55,20 +59,20 @@ export function buildCelebrationSteps({
   }
 
   if (earned.includes("topic") && sticker?.earned) {
-    middle.push({ type: "sticker", sticker, effect: "stars", cue: "reveal" });
+    middle.push({ type: "sticker", sticker, effect: "stars", cue: "sticker" });
   }
 
   // A badge always gets its own beat, even on a plain challenge (First steps):
   // it is the thing the child keeps.
   for (const badge of badges) {
-    middle.push({ type: "badge", badge, effect: "stars", cue: "reveal" });
+    middle.push({ type: "badge", badge, effect: "stars", cue: "badge" });
     if (badge.unlocksAvatar) {
-      middle.push({ type: "unlock", badge, avatar: badge.unlocksAvatar, effect: "sparkle", cue: "chime" });
+      middle.push({ type: "unlock", badge, avatar: badge.unlocksAvatar, effect: "sparkle", cue: "unlock" });
     }
   }
 
   if (earned.includes("year")) {
-    middle.push({ type: "certificate", effect: "confetti", cue: "fanfare" });
+    middle.push({ type: "certificate", effect: "confetti", cue: "certificate" });
   }
 
   if (middle.length === 0) return [{ ...headline, final: true }];

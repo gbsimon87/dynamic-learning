@@ -92,6 +92,24 @@ body.dark {
   animation: challenge-tick-pop 480ms cubic-bezier(.2, 1.8, .5, 1) both;
 }
 
+/* The combo: same shape as a correct tick, a bigger pop, a flame. */
+.challenge-feedback-combo {
+  font-weight: 800;
+}
+
+.challenge-feedback-combo .challenge-feedback-icon {
+  background: var(--ck-accent);
+  color: var(--ck-on-accent);
+  font-size: 1.3rem;
+  animation: challenge-combo-pop 620ms cubic-bezier(.2, 1.9, .5, 1) both;
+}
+
+@keyframes challenge-combo-pop {
+  0% { transform: scale(0.2) rotate(-30deg); opacity: 0; }
+  60% { transform: scale(1.35) rotate(8deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); }
+}
+
 .challenge-feedback-wrong .challenge-feedback-icon {
   background: var(--ck-muted);
   color: var(--ck-text);
@@ -106,7 +124,8 @@ body.dark {
 @media (prefers-reduced-motion: reduce) {
   .challenge-progress-segment { transition: none; }
   .challenge-progress-segment.is-filled,
-  .challenge-feedback-correct .challenge-feedback-icon { animation: none; }
+  .challenge-feedback-correct .challenge-feedback-icon,
+  .challenge-feedback-combo .challenge-feedback-icon { animation: none; }
 }
 
 .challenge-title {

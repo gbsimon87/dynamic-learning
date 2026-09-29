@@ -76,6 +76,8 @@ export default function CompletionCelebration({
   const headingRef = useRef(null);
   const focalRef = useRef(null);
   const cuedStepRef = useRef(-1);
+  const stopSoundRef = useRef(null);
+  const pendingStopRef = useRef(null);
 
   const step = steps[stepIndex];
   const StepContent = STEP_COMPONENTS[step.type] ?? NextStep;
@@ -88,13 +90,25 @@ export default function CompletionCelebration({
   useEffect(() => {
     headingRef.current?.focus();
     // StrictMode runs effects twice in development; the particles are safe to
-    // restart, a doubled fanfare is not.
+    // restart, a doubled fanfare is not. A new step fades out the last step's
+    // sound, so a long fanfare never talks over the next reveal.
     if (cuedStepRef.current !== stepIndex) {
       cuedStepRef.current = stepIndex;
-      if (step.cue) playCue(step.cue);
+      stopSoundRef.current?.();
+      stopSoundRef.current = step.cue ? playCue(step.cue) : null;
     }
     return playEffect(step.effect, { origin: focalRef.current });
   }, [stepIndex, step]);
+
+  // Leaving the celebration (Next, Skip, Back) fades out whatever is playing.
+  // Deferred a tick because StrictMode's dev-only remount runs this cleanup
+  // straight after mount; the remount cancels it, a real unmount does not.
+  useEffect(() => {
+    window.clearTimeout(pendingStopRef.current);
+    return () => {
+      pendingStopRef.current = window.setTimeout(() => stopSoundRef.current?.(), 0);
+    };
+  }, []);
 
   const primaryHref = nextHref ?? topicsHref;
 

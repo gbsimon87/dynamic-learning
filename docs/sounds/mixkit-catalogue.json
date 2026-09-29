@@ -1,0 +1,1342 @@
+[
+ {
+  "id": "210",
+  "url": "https://assets.mixkit.co/active_storage/sfx/210/210-preview.mp3",
+  "title": "Arcade mechanical bling",
+  "dur": "0:02",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "211",
+  "url": "https://assets.mixkit.co/active_storage/sfx/211/211-preview.mp3",
+  "title": "Retro arcade casino notification",
+  "dur": "0:04",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "212",
+  "url": "https://assets.mixkit.co/active_storage/sfx/212/212-preview.mp3",
+  "title": "Retro game notification",
+  "dur": "0:01",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "216",
+  "url": "https://assets.mixkit.co/active_storage/sfx/216/216-preview.mp3",
+  "title": "Arcade game jump coin",
+  "dur": "0:01",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "217",
+  "url": "https://assets.mixkit.co/active_storage/sfx/217/217-preview.mp3",
+  "title": "Arcade score interface",
+  "dur": "0:01",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "226",
+  "url": "https://assets.mixkit.co/active_storage/sfx/226/226-preview.mp3",
+  "title": "Medieval show fanfare announcement",
+  "dur": "0:08",
+  "cats": [
+   "game",
+   "win"
+  ]
+ },
+ {
+  "id": "227",
+  "url": "https://assets.mixkit.co/active_storage/sfx/227/227-preview.mp3",
+  "title": "Ominous drums",
+  "dur": "0:04",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "229",
+  "url": "https://assets.mixkit.co/active_storage/sfx/229/229-preview.mp3",
+  "title": "Arcade bonus",
+  "dur": "0:02",
+  "cats": [
+   "bonus"
+  ]
+ },
+ {
+  "id": "235",
+  "url": "https://assets.mixkit.co/active_storage/sfx/235/235-preview.mp3",
+  "title": "Explainer video game reveal",
+  "dur": "0:02",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "237",
+  "url": "https://assets.mixkit.co/active_storage/sfx/237/237-preview.mp3",
+  "title": "Video game retro click",
+  "dur": "0:01",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "253",
+  "url": "https://assets.mixkit.co/active_storage/sfx/253/253-preview.mp3",
+  "title": "Unlock game notification",
+  "dur": "0:01",
+  "cats": [
+   "game",
+   "win"
+  ]
+ },
+ {
+  "id": "254",
+  "url": "https://assets.mixkit.co/active_storage/sfx/254/254-preview.mp3",
+  "title": "Unlock new item game notification",
+  "dur": "0:02",
+  "cats": [
+   "game",
+   "win"
+  ]
+ },
+ {
+  "id": "255",
+  "url": "https://assets.mixkit.co/active_storage/sfx/255/255-preview.mp3",
+  "title": "Fantasy game sweep notification",
+  "dur": "0:03",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "257",
+  "url": "https://assets.mixkit.co/active_storage/sfx/257/257-preview.mp3",
+  "title": "Magic sweep game trophy",
+  "dur": "0:03",
+  "cats": [
+   "game",
+   "win"
+  ]
+ },
+ {
+  "id": "265",
+  "url": "https://assets.mixkit.co/active_storage/sfx/265/265-preview.mp3",
+  "title": "Quick positive video game notification interface",
+  "dur": "0:04",
+  "cats": [
+   "game",
+   "win"
+  ]
+ },
+ {
+  "id": "266",
+  "url": "https://assets.mixkit.co/active_storage/sfx/266/266-preview.mp3",
+  "title": "Sci Fi positive notification",
+  "dur": "0:04",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "269",
+  "url": "https://assets.mixkit.co/active_storage/sfx/269/269-preview.mp3",
+  "title": "Quick win video game notification",
+  "dur": "0:01",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "270",
+  "url": "https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3",
+  "title": "Fantasy game success notification",
+  "dur": "0:03",
+  "cats": [
+   "magic",
+   "win"
+  ]
+ },
+ {
+  "id": "271",
+  "url": "https://assets.mixkit.co/active_storage/sfx/271/271-preview.mp3",
+  "title": "Space coin win notification",
+  "dur": "0:01",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "276",
+  "url": "https://assets.mixkit.co/active_storage/sfx/276/276-preview.mp3",
+  "title": "Long game over notification",
+  "dur": "0:05",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "277",
+  "url": "https://assets.mixkit.co/active_storage/sfx/277/277-preview.mp3",
+  "title": "Retro video game bubble laser",
+  "dur": "0:04",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "333",
+  "url": "https://assets.mixkit.co/active_storage/sfx/333/333-preview.mp3",
+  "title": "Doorbell single press",
+  "dur": "0:01",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "344",
+  "url": "https://assets.mixkit.co/active_storage/sfx/344/344-preview.mp3",
+  "title": "Fairy cartoon success voice",
+  "dur": "0:02",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "462",
+  "url": "https://assets.mixkit.co/active_storage/sfx/462/462-preview.mp3",
+  "title": "Huge crowd cheering victory",
+  "dur": "0:10",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "502",
+  "url": "https://assets.mixkit.co/active_storage/sfx/502/502-preview.mp3",
+  "title": "Auditorium moderate applause and cheering",
+  "dur": "0:17",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "523",
+  "url": "https://assets.mixkit.co/active_storage/sfx/523/523-preview.mp3",
+  "title": "Animated small group applause",
+  "dur": "0:04",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "555",
+  "url": "https://assets.mixkit.co/active_storage/sfx/555/555-preview.mp3",
+  "title": "Achievement win drums",
+  "dur": "0:05",
+  "cats": [
+   "achievement"
+  ]
+ },
+ {
+  "id": "598",
+  "url": "https://assets.mixkit.co/active_storage/sfx/598/598-preview.mp3",
+  "title": "Horror bell cartoon transition",
+  "dur": "0:05",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "600",
+  "url": "https://assets.mixkit.co/active_storage/sfx/600/600-preview.mp3",
+  "title": "Achievement bell",
+  "dur": "0:02",
+  "cats": [
+   "achievement",
+   "win"
+  ]
+ },
+ {
+  "id": "610",
+  "url": "https://assets.mixkit.co/active_storage/sfx/610/610-preview.mp3",
+  "title": "Cheering crowd loud whistle",
+  "dur": "0:14",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "658",
+  "url": "https://assets.mixkit.co/active_storage/sfx/658/658-preview.mp3",
+  "title": "Choir magic shine",
+  "dur": "0:04",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "689",
+  "url": "https://assets.mixkit.co/active_storage/sfx/689/689-preview.mp3",
+  "title": "Game level music",
+  "dur": "0:30",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "767",
+  "url": "https://assets.mixkit.co/active_storage/sfx/767/767-preview.mp3",
+  "title": "Arcade bonus alert",
+  "dur": "0:02",
+  "cats": [
+   "bonus",
+   "win"
+  ]
+ },
+ {
+  "id": "863",
+  "url": "https://assets.mixkit.co/active_storage/sfx/863/863-preview.mp3",
+  "title": "Fairy water spell",
+  "dur": "0:03",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "867",
+  "url": "https://assets.mixkit.co/active_storage/sfx/867/867-preview.mp3",
+  "title": "Fairy glitter",
+  "dur": "0:02",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "868",
+  "url": "https://assets.mixkit.co/active_storage/sfx/868/868-preview.mp3",
+  "title": "Fairy teleport",
+  "dur": "0:02",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "869",
+  "url": "https://assets.mixkit.co/active_storage/sfx/869/869-preview.mp3",
+  "title": "Fairy sparkle whoosh",
+  "dur": "0:04",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "870",
+  "url": "https://assets.mixkit.co/active_storage/sfx/870/870-preview.mp3",
+  "title": "Sparkling fairy glow",
+  "dur": "0:03",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "871",
+  "url": "https://assets.mixkit.co/active_storage/sfx/871/871-preview.mp3",
+  "title": "Fairy magic sparkle",
+  "dur": "0:01",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "873",
+  "url": "https://assets.mixkit.co/active_storage/sfx/873/873-preview.mp3",
+  "title": "Light spell",
+  "dur": "0:02",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "896",
+  "url": "https://assets.mixkit.co/active_storage/sfx/896/896-preview.mp3",
+  "title": "Sci-Fi reject notification",
+  "dur": "0:03",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "900",
+  "url": "https://assets.mixkit.co/active_storage/sfx/900/900-preview.mp3",
+  "title": "Sci fi click",
+  "dur": "0:01",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "911",
+  "url": "https://assets.mixkit.co/active_storage/sfx/911/911-preview.mp3",
+  "title": "Interface hint notification",
+  "dur": "0:01",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "914",
+  "url": "https://assets.mixkit.co/active_storage/sfx/914/914-preview.mp3",
+  "title": "Sci Fi confirmation",
+  "dur": "0:01",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "930",
+  "url": "https://assets.mixkit.co/active_storage/sfx/930/930-preview.mp3",
+  "title": "Bell of promise",
+  "dur": "0:08",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "933",
+  "url": "https://assets.mixkit.co/active_storage/sfx/933/933-preview.mp3",
+  "title": "Bell notification",
+  "dur": "0:03",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "937",
+  "url": "https://assets.mixkit.co/active_storage/sfx/937/937-preview.mp3",
+  "title": "Happy bells notification",
+  "dur": "0:03",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "939",
+  "url": "https://assets.mixkit.co/active_storage/sfx/939/939-preview.mp3",
+  "title": "Christmas magic bell hit",
+  "dur": "0:04",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "946",
+  "url": "https://assets.mixkit.co/active_storage/sfx/946/946-preview.mp3",
+  "title": "Wrong answer fail notification",
+  "dur": "0:01",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "951",
+  "url": "https://assets.mixkit.co/active_storage/sfx/951/951-preview.mp3",
+  "title": "Positive notification",
+  "dur": "0:02",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "952",
+  "url": "https://assets.mixkit.co/active_storage/sfx/952/952-preview.mp3",
+  "title": "Correct answer reward",
+  "dur": "0:02",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "958",
+  "url": "https://assets.mixkit.co/active_storage/sfx/958/958-preview.mp3",
+  "title": "Revealing bonus notification",
+  "dur": "0:01",
+  "cats": [
+   "bonus"
+  ]
+ },
+ {
+  "id": "960",
+  "url": "https://assets.mixkit.co/active_storage/sfx/960/960-preview.mp3",
+  "title": "Tile game reveal",
+  "dur": "0:02",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "987",
+  "url": "https://assets.mixkit.co/active_storage/sfx/987/987-preview.mp3",
+  "title": "Game notification wave alarm",
+  "dur": "0:01",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "1463",
+  "url": "https://assets.mixkit.co/active_storage/sfx/1463/1463-preview.mp3",
+  "title": "Spellcaster fairy swoosh",
+  "dur": "0:02",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "1517",
+  "url": "https://assets.mixkit.co/active_storage/sfx/1517/1517-preview.mp3",
+  "title": "Bonus whip",
+  "dur": "0:01",
+  "cats": [
+   "bonus"
+  ]
+ },
+ {
+  "id": "1528",
+  "url": "https://assets.mixkit.co/active_storage/sfx/1528/1528-preview.mp3",
+  "title": "Magical stone slide",
+  "dur": "0:04",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "1928",
+  "url": "https://assets.mixkit.co/active_storage/sfx/1928/1928-preview.mp3",
+  "title": "Slot machine win",
+  "dur": "0:05",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "1934",
+  "url": "https://assets.mixkit.co/active_storage/sfx/1934/1934-preview.mp3",
+  "title": "Payout award",
+  "dur": "0:04",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "1937",
+  "url": "https://assets.mixkit.co/active_storage/sfx/1937/1937-preview.mp3",
+  "title": "Bonus collect award",
+  "dur": "0:01",
+  "cats": [
+   "bonus"
+  ]
+ },
+ {
+  "id": "1938",
+  "url": "https://assets.mixkit.co/active_storage/sfx/1938/1938-preview.mp3",
+  "title": "Melodic bonus collect",
+  "dur": "0:02",
+  "cats": [
+   "bonus",
+   "win"
+  ]
+ },
+ {
+  "id": "1995",
+  "url": "https://assets.mixkit.co/active_storage/sfx/1995/1995-preview.mp3",
+  "title": "Slot machine win alarm",
+  "dur": "0:06",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "1996",
+  "url": "https://assets.mixkit.co/active_storage/sfx/1996/1996-preview.mp3",
+  "title": "Slot machine payout alarm",
+  "dur": "0:10",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "2010",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2010/2010-preview.mp3",
+  "title": "Male voice cheer",
+  "dur": "0:01",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "2011",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2011/2011-preview.mp3",
+  "title": "Male voice cheer victory",
+  "dur": "0:01",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "2012",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2012/2012-preview.mp3",
+  "title": "Males yes victory",
+  "dur": "0:01",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "2013",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3",
+  "title": "Game loot win",
+  "dur": "0:01",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "2014",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2014/2014-preview.mp3",
+  "title": "Wind chimes",
+  "dur": "0:02",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "2015",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2015/2015-preview.mp3",
+  "title": "Winning chimes",
+  "dur": "0:02",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "2016",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2016/2016-preview.mp3",
+  "title": "Video game win",
+  "dur": "0:02",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "2017",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3",
+  "title": "Winning swoosh",
+  "dur": "0:01",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "2018",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3",
+  "title": "Winning notification",
+  "dur": "0:01",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "2019",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3",
+  "title": "Ethereal fairy win sound",
+  "dur": "0:02",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "2020",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2020/2020-preview.mp3",
+  "title": "Small win",
+  "dur": "0:01",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "2021",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2021/2021-preview.mp3",
+  "title": "Instant win",
+  "dur": "0:01",
+  "cats": [
+   "win"
+  ]
+ },
+ {
+  "id": "2042",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2042/2042-preview.mp3",
+  "title": "Player losing or failing",
+  "dur": "0:03",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "2043",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2043/2043-preview.mp3",
+  "title": "Player jumping in a video game",
+  "dur": "0:01",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "2044",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2044/2044-preview.mp3",
+  "title": "Arcade video game bonus",
+  "dur": "0:01",
+  "cats": [
+   "bonus"
+  ]
+ },
+ {
+  "id": "2045",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2045/2045-preview.mp3",
+  "title": "Extra bonus in a video game",
+  "dur": "0:01",
+  "cats": [
+   "bonus",
+   "game"
+  ]
+ },
+ {
+  "id": "2047",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2047/2047-preview.mp3",
+  "title": "Martial arts fast punch",
+  "dur": "0:01",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "2055",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2055/2055-preview.mp3",
+  "title": "Boxer getting hit",
+  "dur": "0:02",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "2058",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2058/2058-preview.mp3",
+  "title": "Bonus earned in video game",
+  "dur": "0:01",
+  "cats": [
+   "bonus",
+   "game"
+  ]
+ },
+ {
+  "id": "2059",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2059/2059-preview.mp3",
+  "title": "Game level completed",
+  "dur": "0:03",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "2060",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2060/2060-preview.mp3",
+  "title": "Winning an extra bonus",
+  "dur": "0:01",
+  "cats": [
+   "bonus",
+   "game"
+  ]
+ },
+ {
+  "id": "2061",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2061/2061-preview.mp3",
+  "title": "Final level bonus",
+  "dur": "0:02",
+  "cats": [
+   "bonus"
+  ]
+ },
+ {
+  "id": "2062",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2062/2062-preview.mp3",
+  "title": "Game experience level increased",
+  "dur": "0:03",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "2063",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2063/2063-preview.mp3",
+  "title": "Completion of a level",
+  "dur": "0:02",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "2064",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2064/2064-preview.mp3",
+  "title": "Bonus extra in a video game",
+  "dur": "0:03",
+  "cats": [
+   "bonus"
+  ]
+ },
+ {
+  "id": "2065",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2065/2065-preview.mp3",
+  "title": "Game bonus reached",
+  "dur": "0:02",
+  "cats": [
+   "bonus",
+   "game"
+  ]
+ },
+ {
+  "id": "2066",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2066/2066-preview.mp3",
+  "title": "Video game treasure",
+  "dur": "0:02",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "2067",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2067/2067-preview.mp3",
+  "title": "Casino bling achievement",
+  "dur": "0:04",
+  "cats": [
+   "achievement",
+   "game"
+  ]
+ },
+ {
+  "id": "2068",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2068/2068-preview.mp3",
+  "title": "Achievement completed",
+  "dur": "0:03",
+  "cats": [
+   "achievement"
+  ]
+ },
+ {
+  "id": "2069",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2069/2069-preview.mp3",
+  "title": "Winning a coin, video game",
+  "dur": "0:01",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "2072",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2072/2072-preview.mp3",
+  "title": "Small hit in a game",
+  "dur": "0:01",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "2073",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2073/2073-preview.mp3",
+  "title": "Game ball tap",
+  "dur": "0:01",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "2310",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2310/2310-preview.mp3",
+  "title": "Melodical flute music notification",
+  "dur": "0:07",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2313",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2313/2313-preview.mp3",
+  "title": "Game flute bonus",
+  "dur": "0:03",
+  "cats": [
+   "bonus",
+   "game"
+  ]
+ },
+ {
+  "id": "2317",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2317/2317-preview.mp3",
+  "title": "Uplifting flute notification",
+  "dur": "0:03",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2320",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2320/2320-preview.mp3",
+  "title": "Guitar notification alert",
+  "dur": "0:01",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2324",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2324/2324-preview.mp3",
+  "title": "Negative guitar tone",
+  "dur": "0:01",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "2342",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2342/2342-preview.mp3",
+  "title": "Arcade magic notification",
+  "dur": "0:02",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "2343",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2343/2343-preview.mp3",
+  "title": "Cinematic whoosh magic gust",
+  "dur": "0:07",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "2344",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2344/2344-preview.mp3",
+  "title": "Magic notification ring",
+  "dur": "0:03",
+  "cats": [
+   "magic",
+   "notification"
+  ]
+ },
+ {
+  "id": "2345",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2345/2345-preview.mp3",
+  "title": "Magic spell mystery whoosh",
+  "dur": "0:05",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "2350",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2350/2350-preview.mp3",
+  "title": "Magic sparkle whoosh",
+  "dur": "0:03",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "2352",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2352/2352-preview.mp3",
+  "title": "Magic glitter or particles",
+  "dur": "0:06",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "2353",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2353/2353-preview.mp3",
+  "title": "Magic glitter shot",
+  "dur": "0:04",
+  "cats": [
+   "game",
+   "magic"
+  ]
+ },
+ {
+  "id": "2354",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3",
+  "title": "Message pop alert",
+  "dur": "0:01",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2356",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2356/2356-preview.mp3",
+  "title": "Dry pop up notification alert",
+  "dur": "0:01",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2357",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2357/2357-preview.mp3",
+  "title": "Bubble pop up alert notification",
+  "dur": "0:01",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2358",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3",
+  "title": "Long pop",
+  "dur": "0:01",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2361",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2361/2361-preview.mp3",
+  "title": "Video game blood pop",
+  "dur": "0:01",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "2363",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2363/2363-preview.mp3",
+  "title": "Game blood pop slide",
+  "dur": "0:02",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "2407",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2407/2407-preview.mp3",
+  "title": "Strong wild wind in a storm",
+  "dur": "0:13",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "2489",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2489/2489-preview.mp3",
+  "title": "Arabian mystery harp notification",
+  "dur": "0:03",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2573",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2573/2573-preview.mp3",
+  "title": "Interface option select",
+  "dur": "0:01",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2574",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2574/2574-preview.mp3",
+  "title": "Software interface start",
+  "dur": "0:02",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2575",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2575/2575-preview.mp3",
+  "title": "Software interface back",
+  "dur": "0:01",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2576",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2576/2576-preview.mp3",
+  "title": "Software interface remove",
+  "dur": "0:02",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2580",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2580/2580-preview.mp3",
+  "title": "Light button",
+  "dur": "0:01",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2583",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2583/2583-preview.mp3",
+  "title": "Magical light transition",
+  "dur": "0:05",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "2584",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2584/2584-preview.mp3",
+  "title": "Magical light moving",
+  "dur": "0:05",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "2586",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2586/2586-preview.mp3",
+  "title": "Magical light sweep",
+  "dur": "0:04",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "2587",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2587/2587-preview.mp3",
+  "title": "Magic whistle",
+  "dur": "0:05",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "2589",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2589/2589-preview.mp3",
+  "title": "Shot light energy flowing",
+  "dur": "0:07",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "2628",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2628/2628-preview.mp3",
+  "title": "Relaxing harp sweep",
+  "dur": "0:06",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "2629",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2629/2629-preview.mp3",
+  "title": "Magic astral sweep effect",
+  "dur": "0:04",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "2633",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2633/2633-preview.mp3",
+  "title": "Sweeping sparkle presentation intro",
+  "dur": "0:02",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "2638",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2638/2638-preview.mp3",
+  "title": "Magic transition sweep presentation",
+  "dur": "0:03",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "2820",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2820/2820-preview.mp3",
+  "title": "Magic marimba",
+  "dur": "0:03",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2837",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2837/2837-preview.mp3",
+  "title": "Video game health recharge",
+  "dur": "0:01",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "2841",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2841/2841-preview.mp3",
+  "title": "Atm cash machine key press",
+  "dur": "0:01",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2848",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2848/2848-preview.mp3",
+  "title": "Gaming lock",
+  "dur": "0:01",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2861",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2861/2861-preview.mp3",
+  "title": "Clear announce tones",
+  "dur": "0:03",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2863",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2863/2863-preview.mp3",
+  "title": "Elevator tone",
+  "dur": "0:01",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2864",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2864/2864-preview.mp3",
+  "title": "Doorbell tone",
+  "dur": "0:04",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2866",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2866/2866-preview.mp3",
+  "title": "Digital quick tone",
+  "dur": "0:01",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2867",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2867/2867-preview.mp3",
+  "title": "Confirmation tone",
+  "dur": "0:01",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2870",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2870/2870-preview.mp3",
+  "title": "Correct answer tone",
+  "dur": "0:01",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2976",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2976/2976-preview.mp3",
+  "title": "Urgent simple tone loop",
+  "dur": "0:09",
+  "cats": [
+   "notification"
+  ]
+ },
+ {
+  "id": "2984",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2984/2984-preview.mp3",
+  "title": "Funny melody audio logo",
+  "dur": "0:05",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "2999",
+  "url": "https://assets.mixkit.co/active_storage/sfx/2999/2999-preview.mp3",
+  "title": "Magic bubbles spell",
+  "dur": "0:01",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "3038",
+  "url": "https://assets.mixkit.co/active_storage/sfx/3038/3038-preview.mp3",
+  "title": "Crowd cheer bonus",
+  "dur": "0:05",
+  "cats": [
+   "bonus"
+  ]
+ },
+ {
+  "id": "3062",
+  "url": "https://assets.mixkit.co/active_storage/sfx/3062/3062-preview.mp3",
+  "title": "Magic wand sparkle",
+  "dur": "0:02",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "3082",
+  "url": "https://assets.mixkit.co/active_storage/sfx/3082/3082-preview.mp3",
+  "title": "Magic sparkle poof hit",
+  "dur": "0:03",
+  "cats": [
+   "magic"
+  ]
+ },
+ {
+  "id": "3175",
+  "url": "https://assets.mixkit.co/active_storage/sfx/3175/3175-preview.mp3",
+  "title": "Thin metal card deck shuffle",
+  "dur": "0:02",
+  "cats": [
+   "game"
+  ]
+ },
+ {
+  "id": "3193",
+  "url": "https://assets.mixkit.co/active_storage/sfx/3193/3193-preview.mp3",
+  "title": "Bubbly achievement tone",
+  "dur": "0:04",
+  "cats": [
+   "achievement"
+  ]
+ }
+]

@@ -168,7 +168,13 @@ scripts/                      # Dev tooling, Node-only
 public/
 ├── countries.geojson, continents.geojson
 ├── images/landmarks/*.webp
+├── sounds/*.mp3              # The app's 13 sound files — see docs/sounds/README.md
 └── static/
+docs/sounds/                  # Where each sound came from + how to replace one
+├── README.md                 # Scenario → file → Mixkit id table, loudness, licence
+├── mixkit-audition.html      # The page the sounds were chosen on (open in Chrome)
+├── mixkit-catalogue.json     # 147 Mixkit sounds: id, title, preview URL
+└── process-sounds.py, measure.py  # Rebuild public/sounds from the originals (ffmpeg)
 ```
 
 **Convention:** every page/component lives in a folder alongside its own `.css`
@@ -321,10 +327,14 @@ works and the year award waits for a cross-subject progress read.
 Spec: [docs/superpowers/specs/2026-09-29-curriculum-celebrations-design.md](superpowers/specs/2026-09-29-curriculum-celebrations-design.md).
 
 - **Per answer** — `ChallengeShell` (every one of the 332 challenges runs through
-  it) fills one segment of a progress bar, pops a tick, sparkles and chimes on a
-  right answer; a wrong one wobbles and gets a kind rotating line, never a
-  buzzer. Its feedback classes are `challenge-feedback-*`, deliberately not
-  `.feedback.correct`, which several Skills games define globally.
+  it) fills one segment of a progress bar, pops a tick, sparkles and plays a
+  sound on a right answer (a different one on the last question); a wrong one
+  wobbles, gets a kind rotating line and the app's quietest sound, a soft boop.
+  **Combo:** every 3 questions right first time in a row (`answerStreak.js`,
+  pure and tested) shows a 🔥 "3 in a row!" line with its own sound and a
+  bigger burst; any wrong attempt resets it. Its feedback classes are
+  `challenge-feedback-*`, deliberately not `.feedback.correct`, which several
+  Skills games define globally.
 - **On completion** — `buildCelebrationSteps` (pure, tested) turns the milestone
   result into a SEQUENCE: headline → year progress → topic sticker → one step
   per badge → avatar unlock → certificate (year only) → next. Each step waits for
@@ -333,12 +343,30 @@ Spec: [docs/superpowers/specs/2026-09-29-curriculum-celebrations-design.md](supe
 - **It only announces.** Progress and badges are written in `ProblemView`
   before the sequence mounts; its extra figures (`yearBefore`/`yearAfter`, the
   sticker) come from running the pure `completeChallenge` reducer on a copy.
-- **Sound** is synthesised with Web Audio (`sound/cues.js`). A cue may gain a
-  `src` file later with no caller changes. Mute is the navbar 🔊 button, stored
-  as the device preference `dl.soundMuted` — not learner data.
-- **StrictMode double-runs** state initialisers and updaters: headlines are
-  chosen with `peekMessage` and recorded in an effect, and a step's cue is
-  guarded by a ref, or dev shows repeated lines and doubled fanfares.
+- **The app has sound.** 14 scenarios, each its own cue in `sound/cues.js`,
+  play 13 recorded files from `public/sounds/` (Mixkit, loudness-matched in
+  tiers so fanfares are loudest and the wrong-answer boop quietest). The full
+  scenario → file → Mixkit id table, how they were processed, and how to swap
+  one are in [docs/sounds/README.md](sounds/README.md); the audition page they
+  were picked on is saved beside it. Callers only name a scenario
+  (`playCue("topic")`), so replacing a sound touches no component.
+- **Playback** (`sound/player.js`) is plain Web Audio — no audio library. The
+  files are fetched and decoded on the first tap anywhere, so the first answer
+  is never kept waiting. Every cue keeps a synthesised fallback, so a failed
+  file plays a tone, never silence; `cues.test.js` checks every file exists,
+  because the fallback would otherwise hide a missing one. `playCue` returns a
+  stop function: a new celebration step, or leaving the celebration, fades out
+  the previous sound, so the 8-second finale never talks over the next step.
+- **Mute** is the navbar 🔊 button, stored as the device preference
+  `dl.soundMuted` — not learner data.
+- ⚠️ **The Mixkit licence text was not read** when the files were added (it
+  only loads in a pop-up on mixkit.co/license). Confirm it covers use in an app
+  before a public release — see the Licence section of docs/sounds/README.md.
+- **StrictMode double-runs** state initialisers, updaters and effects:
+  headlines are chosen with `peekMessage` and recorded in an effect, a step's
+  cue is guarded by a ref, and the stop-on-unmount is deferred a tick so the
+  dev-only remount cancels it — or dev shows repeated lines, doubled fanfares,
+  or a finale cut off the instant it starts.
 - `prefers-reduced-motion` drops every particle effect (canvas never created)
   and turns flips/drops into fades. Each step's heading takes focus.
 
