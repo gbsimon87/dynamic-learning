@@ -201,3 +201,11 @@ test("badgeProgress counts towards a threshold and caps at it", () => {
   );
   assert.equal(badgeProgress(getBadge("first-steps"), emptyRewards()), null);
 });
+
+test("earnBadges keeps unknown fields and never touches schemaVersion", () => {
+  const v2 = { schemaVersion: 2, badges: [], counts: {}, xp: 40, streak: { current: 3 } };
+  const { rewards } = earnBadges(v2, ["challenge"], AT);
+  assert.equal(rewards.schemaVersion, 2);
+  assert.equal(rewards.xp, 40);
+  assert.deepEqual(rewards.streak, { current: 3 });
+});

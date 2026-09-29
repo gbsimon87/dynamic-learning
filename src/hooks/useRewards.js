@@ -21,6 +21,11 @@ export function useRewards() {
   const childId = auth?.child?._id ?? null;
 
   const loadedKeyRef = useRef(null);
+  // Set when the read FAILED, as distinct from "this child has no rewards yet".
+  // A failed read must never be followed by a write: the in-memory document
+  // would be empty, and saving it would erase the real one.
+  const failedRef = useRef(false);
+  const [attempt, setAttempt] = useState(0);
   const [hydrated, setHydrated] = useState(false);
   const [rewards, setRewards] = useState(emptyRewards());
 
@@ -29,6 +34,7 @@ export function useRewards() {
 
     // Anything in memory belongs to the PREVIOUS child.
     loadedKeyRef.current = null;
+    failedRef.current = false;
     setHydrated(false);
     setRewards(emptyRewards());
 
@@ -41,22 +47,20 @@ export function useRewards() {
     }
 
     (async () => {
-      let data = emptyRewards();
+      let doc;
       try {
-        const doc = await store.getRewards(childId);
-        if (doc?.data && typeof doc.data === "object") {
-          data = { ...emptyRewards(), ...doc.data };
-        }
+        doc = await store.getRewards(childId);
       } catch {
-        // Unreadable store degrades to "no badges yet" in memory — but
-        // `loadedKeyRef` stays unset below only if we bail, so be careful: we
-        // DO mark it loaded, because a child with a genuinely empty document
-        // is indistinguishable here, and refusing to ever award again would be
-        // worse than re-awarding a badge the next save reconciles.
-        data = emptyRewards();
+        // Stay un-hydrated: `award` refuses to write and asks for a re-read.
+        if (!cancelled) failedRef.current = true;
+        return;
       }
       if (cancelled) return;
 
+      const data =
+        doc?.data && typeof doc.data === "object"
+          ? { ...emptyRewards(), ...doc.data }
+          : emptyRewards();
       loadedKeyRef.current = childId;
       setRewards(data);
       setHydrated(true);
@@ -65,7 +69,7 @@ export function useRewards() {
     return () => {
       cancelled = true;
     };
-  }, [childId]);
+  }, [childId, attempt]);
 
   /**
    * Awards badges for milestones that have just been earned, and persists.
@@ -77,6 +81,13 @@ export function useRewards() {
    */
   const award = useCallback(
     (earned, context = {}) => {
+      if (failedRef.current) {
+        // The last read failed: re-read, and award nothing this time rather
+        // than overwrite the real document with an empty one.
+        failedRef.current = false;
+        setAttempt((n) => n + 1);
+        return [];
+      }
       // Un-hydrated means we do not yet know what this child already holds, so
       // awarding now could duplicate a badge AND overwrite the real document.
       if (!hydrated || !childId) return [];

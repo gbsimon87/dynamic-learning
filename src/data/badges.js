@@ -165,8 +165,9 @@ export function earnBadges(rewards, earned, context = {}) {
   }
 
   // The tally moved even when no badge did, so this is always a new document.
+  // The version belongs to rewardsShape.normaliseRewards, not to badges.
   return {
-    rewards: { ...current, schemaVersion: 1, badges: log, counts },
+    rewards: { ...current, badges: log, counts },
     awarded,
   };
 }
