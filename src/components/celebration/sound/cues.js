@@ -116,4 +116,8 @@ export const CUES = {
   subjectYear: { src: file("subject-year"), synth: SYNTH.fanfareBig.synth },
   /** The year certificate step. Shares the finale fanfare, by choice. */
   certificate: { src: file("subject-year"), synth: SYNTH.fanfare.synth },
+  /** The level-up step. Mixkit #2984 "Funny melody audio logo". */
+  levelUp: { src: file("level-up"), synth: SYNTH.fanfare.synth },
+  /** The day's-first streak step. Mixkit #2317, the same file as `badge`, by choice. */
+  streak: { src: file("badge"), synth: SYNTH.reveal.synth },
 };

@@ -80,3 +80,47 @@ test("tiers escalate: each level has an effect and a cue", () => {
     assert.ok(TIERS[level].effect && TIERS[level].cue, level);
   }
 });
+
+const streakInfo = { outcome: "extended", current: 4, usedFreezes: 0, dots: [] };
+
+test("the day's first plain challenge becomes headline, streak, next", () => {
+  const steps = buildCelebrationSteps({ level: "challenge", earned: ["challenge"], streak: streakInfo });
+  assert.deepEqual(types(steps), ["headline", "streak", "next"]);
+});
+
+test("a practice replay that is the day's first also gets the streak step", () => {
+  const steps = buildCelebrationSteps({ level: "practice", streak: { ...streakInfo, outcome: "started", current: 1 } });
+  assert.deepEqual(types(steps), ["headline", "streak", "next"]);
+});
+
+test("level-up comes after the unlock and before the streak and certificate", () => {
+  const steps = buildCelebrationSteps({
+    level: "year",
+    earned: ["challenge", "topic", "category", "subject", "year"],
+    badges: [getBadge("topic-finisher")],
+    sticker,
+    yearBefore: before,
+    yearAfter: after,
+    levelUp: 6,
+    streak: streakInfo,
+  });
+  assert.deepEqual(types(steps), [
+    "headline", "progress", "sticker", "badge", "unlock", "levelUp", "streak", "certificate", "next",
+  ]);
+});
+
+test("the XP gain rides on the headline", () => {
+  const [headline] = buildCelebrationSteps({ level: "challenge", earned: ["challenge"], xp: { gained: 12, total: 112, capped: false } });
+  assert.deepEqual(headline.xp, { gained: 12, total: 112, capped: false });
+});
+
+test("streak milestones get the bigger effect", () => {
+  const at = (current) =>
+    buildCelebrationSteps({ level: "challenge", earned: ["challenge"], streak: { ...streakInfo, current } })[1].effect;
+  assert.equal(at(4), "burst");
+  assert.equal(at(7), "confettiStars");
+});
+
+test("no streak step when the streak didn't move (second game today)", () => {
+  assert.deepEqual(types(buildCelebrationSteps({ level: "challenge", earned: ["challenge"], streak: null })), ["headline"]);
+});

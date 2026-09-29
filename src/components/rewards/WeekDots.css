@@ -1,0 +1,31 @@
+.week-dots {
+  --wd-ink: var(--light-text);
+  --wd-empty: rgba(34, 24, 28, 0.08);
+  --wd-ring: var(--light-accent);
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0.8rem 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--wd-ink);
+}
+body.dark .week-dots {
+  --wd-ink: var(--dark-text);
+  --wd-empty: rgba(246, 232, 234, 0.12);
+  --wd-ring: var(--dark-accent);
+}
+.week-dot { display: grid; justify-items: center; gap: 0.2rem; font-size: 0.75rem; font-weight: 700; }
+.week-dot-mark {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--wd-empty);
+  font-size: 1.05rem;
+}
+.week-dot.is-today .week-dot-mark { box-shadow: inset 0 0 0 3px var(--wd-ring); }
+.week-dots .sr-only {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}

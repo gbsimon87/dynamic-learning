@@ -10,6 +10,8 @@
  * UI owns how a step looks; this owns that it exists. Tested under node.
  */
 
+import { STREAK_MILESTONES } from "./streak.js";
+
 /**
  * Effect and sound per milestone level, from quietest to loudest. Cue names
  * are scenarios in celebration/sound/cues.js.
@@ -24,6 +26,7 @@ export const TIERS = {
 };
 
 const BIG_LEVELS = new Set(["topic", "category", "subject", "year"]);
+const STREAK_STEPS = new Set(["started", "extended", "saved", "restarted"]);
 
 /**
  * @param {object} input
@@ -33,6 +36,9 @@ const BIG_LEVELS = new Set(["topic", "category", "subject", "year"]);
  *   sticker     the topic's sticker (stickers.topicSticker), or null
  *   yearBefore  getYearStats before this completion, or null
  *   yearAfter   getYearStats after it, or null
+ *   xp          { gained, total, capped } for the headline, or null
+ *   levelUp     the new level number, or null
+ *   streak      { outcome, current, usedFreezes, dots } when the streak moved, or null
  * @returns {object[]} steps; the last one always carries the next actions.
  */
 export function buildCelebrationSteps({
@@ -42,9 +48,12 @@ export function buildCelebrationSteps({
   sticker = null,
   yearBefore = null,
   yearAfter = null,
+  xp = null,
+  levelUp = null,
+  streak = null,
 }) {
   const tier = TIERS[level] ?? TIERS.challenge;
-  const headline = { type: "headline", level, ...tier };
+  const headline = { type: "headline", level, ...tier, xp };
   const middle = [];
 
   if (BIG_LEVELS.has(level) && yearBefore && yearAfter) {
@@ -69,6 +78,14 @@ export function buildCelebrationSteps({
     if (badge.unlocksAvatar) {
       middle.push({ type: "unlock", badge, avatar: badge.unlocksAvatar, effect: "sparkle", cue: "unlock" });
     }
+  }
+
+  if (levelUp) {
+    middle.push({ type: "levelUp", level: levelUp, effect: "confettiStars", cue: "levelUp" });
+  }
+  if (streak && STREAK_STEPS.has(streak.outcome)) {
+    const milestone = STREAK_MILESTONES.includes(streak.current);
+    middle.push({ type: "streak", ...streak, effect: milestone ? "confettiStars" : "burst", cue: "streak" });
   }
 
   if (earned.includes("year")) {

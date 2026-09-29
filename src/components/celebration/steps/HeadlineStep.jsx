@@ -1,3 +1,5 @@
+import LevelBar from "../../rewards/LevelBar";
+
 const MEDALS = {
   practice: "💪",
   challenge: "✨",
@@ -76,6 +78,17 @@ export default function HeadlineStep({ step, result, headline, year, subjectName
       <p className="completion-celebration-message">
         {message(level, summary, subjectName, year)}
       </p>
+
+      {step.xp && (
+        step.xp.capped ? (
+          <p className="celebration-chip">Practice XP done for today — great practice though!</p>
+        ) : step.xp.gained > 0 && (
+          <div className="celebration-xp">
+            <p className="celebration-chip celebration-xp-gain">+{step.xp.gained} XP</p>
+            <LevelBar xp={step.xp.total} />
+          </div>
+        )
+      )}
 
       {earned.length > 2 && (
         <div className="completion-celebration-earned" role="group" aria-label="Achievements earned">

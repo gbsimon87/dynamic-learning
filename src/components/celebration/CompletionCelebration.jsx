@@ -10,6 +10,8 @@ import StickerStep from "./steps/StickerStep";
 import BadgeStep from "./steps/BadgeStep";
 import UnlockStep from "./steps/UnlockStep";
 import CertificateStep from "./steps/CertificateStep";
+import LevelUpStep from "./steps/LevelUpStep";
+import StreakStep from "./steps/StreakStep";
 import "./CompletionCelebration.css";
 
 const STEP_COMPONENTS = {
@@ -19,6 +21,8 @@ const STEP_COMPONENTS = {
   badge: BadgeStep,
   unlock: UnlockStep,
   certificate: CertificateStep,
+  levelUp: LevelUpStep,
+  streak: StreakStep,
 };
 
 function NextStep({ headingRef, focalRef }) {
@@ -50,6 +54,9 @@ export default function CompletionCelebration({
   sticker = null,
   yearBefore = null,
   yearAfter = null,
+  xp = null,
+  levelUp = null,
+  streak = null,
   year,
   subjectName,
   childName,
@@ -64,8 +71,11 @@ export default function CompletionCelebration({
       sticker,
       yearBefore,
       yearAfter,
+      xp,
+      levelUp,
+      streak,
     }),
-    [result, badges, sticker, yearBefore, yearAfter]
+    [result, badges, sticker, yearBefore, yearAfter, xp, levelUp, streak]
   );
   // Picked in render, recorded once shown: StrictMode runs the initialiser
   // twice, and recording inside it made the next headline repeat this one.

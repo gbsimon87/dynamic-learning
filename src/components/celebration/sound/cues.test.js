@@ -31,6 +31,8 @@ test("every cue the celebration and the challenge shell ask for exists", () => {
     sticker: { earned: true },
     yearBefore: { percent: 0 },
     yearAfter: { percent: 100 },
+    levelUp: 6,
+    streak: { outcome: "extended", current: 2, usedFreezes: 0, dots: [] },
   });
   const asked = [
     ...Object.values(TIERS).map((tier) => tier.cue),

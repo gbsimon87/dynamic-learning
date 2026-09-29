@@ -2,7 +2,7 @@
 Rebuilds public/sounds/*.mp3 from the original Mixkit WAVs.
 
   1. Download the originals (full quality, not the previews):
-       mkdir -p raw && for id in 2870 2020 2014 946 3062 1938 2064 600 2633 2317 2063 2059 226; do
+       mkdir -p raw && for id in 2870 2020 2014 946 3062 1938 2064 600 2633 2317 2063 2059 226 2984; do
          curl -sSL -o raw/$id.wav https://assets.mixkit.co/active_storage/sfx/$id/$id.wav; done
   2. python3 docs/sounds/process-sounds.py raw
 
@@ -26,7 +26,7 @@ PLAN = [
   ("wrong", 946, -24), ("progress", 3062, -20), ("practice", 1938, -20),
   ("unlock", 2064, -20), ("success", 600, -18), ("sticker", 2633, -18),
   ("badge", 2317, -18), ("topic", 2063, -16), ("quest", 2059, -16),
-  ("subject-year", 226, -16),
+  ("subject-year", 226, -16), ("level-up", 2984, -18),
 ]
 for name, mid, target in PLAN:
     m = measure(f"{RAW}/{mid}.wav")
