@@ -16,7 +16,12 @@ function everyChallengeBuilt(curriculum, isBuilt) {
   );
 }
 
-function fullTopicComplete(progress, categoryId, topic, isBuilt) {
+/**
+ * The strict "topic finished" rule: every planned challenge built AND done.
+ * Exported so topic stickers (stickers.js) award on exactly the rule the topic
+ * milestone uses — a sticker must never disagree with the celebration.
+ */
+export function fullTopicComplete(progress, categoryId, topic, isBuilt) {
   return topic.challenges.length > 0 &&
     topic.challenges.every((challenge) => isBuilt(topic.id, challenge.id)) &&
     isTopicComplete(progress, categoryId, topic.id, topic);

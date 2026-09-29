@@ -19,6 +19,9 @@
  * `level` is the milestone that earns it, `repeatable` marks the badges a
  * learner can hold several of (one per topic finished, say) rather than once.
  *
+ * `hint` is display text only — how to earn it, shown on a locked badge in the
+ * Trophy Room. It is never stored.
+ *
  * `unlocksAvatar` names an emoji from AVATARS_UNLOCKABLE. Keeping the link here
  * rather than in avatars.js means a designer adding a badge adds its reward in
  * the same place, and an avatar can never be unlockable by nothing.
@@ -31,6 +34,7 @@ export const BADGES = [
     icon: "🌱",
     name: "First steps",
     blurb: "You finished your very first challenge!",
+    hint: "Finish any challenge",
   },
   {
     id: "topic-finisher",
@@ -38,6 +42,7 @@ export const BADGES = [
     icon: "🏆",
     name: "Topic finisher",
     blurb: "You finished every challenge in a topic.",
+    hint: "Finish every challenge in one topic",
     unlocksAvatar: "🐨",
   },
   {
@@ -47,6 +52,7 @@ export const BADGES = [
     icon: "🌟",
     name: "Topic master",
     blurb: "Five whole topics finished.",
+    hint: "Finish 5 topics",
     unlocksAvatar: "🦉",
   },
   {
@@ -55,6 +61,7 @@ export const BADGES = [
     icon: "👑",
     name: "Quest champion",
     blurb: "You finished a whole quest.",
+    hint: "Finish every topic in a quest",
     unlocksAvatar: "🐲",
   },
   {
@@ -63,6 +70,7 @@ export const BADGES = [
     icon: "🚀",
     name: "Year hero",
     blurb: "Every challenge in the year, done.",
+    hint: "Finish every challenge in a year",
     unlocksAvatar: "🦖",
   },
 ];
@@ -160,6 +168,19 @@ export function earnBadges(rewards, earned, context = {}) {
   return {
     rewards: { ...current, schemaVersion: 1, badges: log, counts },
     awarded,
+  };
+}
+
+/**
+ * How far along a counting badge is, e.g. Topic master at 3 of 5.
+ * @returns {{current: number, target: number}|null} null for a badge that is
+ *   not counted (it is simply held or not).
+ */
+export function badgeProgress(badge, rewards) {
+  if (!badge?.threshold) return null;
+  return {
+    current: Math.min(countAtLevel(rewards, badge.level), badge.threshold),
+    target: badge.threshold,
   };
 }
 

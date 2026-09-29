@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import {
   AVATARS_UNLOCKABLE,
   BADGES,
+  badgeProgress,
   badgeForAvatar,
   countAtLevel,
   earnBadges,
@@ -181,4 +182,22 @@ test("no unlockable avatar is already a starter", async () => {
       `${emoji} is a starter and cannot also be a reward`
     );
   }
+});
+
+test("every badge says how to earn it", () => {
+  for (const badge of BADGES) assert.ok(badge.hint, `${badge.id} has no hint`);
+});
+
+test("badgeProgress counts towards a threshold and caps at it", () => {
+  const master = getBadge("topic-master");
+  assert.deepEqual(badgeProgress(master, emptyRewards()), { current: 0, target: 5 });
+  assert.deepEqual(
+    badgeProgress(master, { ...emptyRewards(), counts: { topic: 3 } }),
+    { current: 3, target: 5 }
+  );
+  assert.deepEqual(
+    badgeProgress(master, { ...emptyRewards(), counts: { topic: 9 } }),
+    { current: 5, target: 5 }
+  );
+  assert.equal(badgeProgress(getBadge("first-steps"), emptyRewards()), null);
 });
