@@ -94,10 +94,12 @@ What that means here:
   in scope and different in nature" than the sounds, on a web platform, and it
   may be commercial. Modifying them (the trimming and loudness matching) is
   allowed. No attribution is required.
-- ⚠️ **A public source repository is the grey area.** Committing the files to a
-  public GitHub repo lets anyone download them on their own, which is close to
-  "redistribute the Item on its own … or with source files". Keep the sounds
-  out of any public repository — see PROJECT_KNOWLEDGE §4.5, "Celebrations".
+- ✅ **Keeping them in this public repository — decided 2026-09-29.** Committing
+  the files to a public GitHub repo lets anyone download them on their own,
+  which reads close to "redistribute the Item on its own … or with source
+  files". The project owner took legal advice, was told it is acceptable, and
+  chose to keep `public/sounds/` in the public repo. Revisit this if the
+  licence text or the repository's purpose changes.
 - ❌ Never publish them as a sound pack, in a template or starter kit, or
   register them with a content-ID / rights-management service.
 - The saved audition page and catalogue only link to Mixkit's own previews;

@@ -361,9 +361,10 @@ Spec: [docs/superpowers/specs/2026-09-29-curriculum-celebrations-design.md](supe
   `dl.soundMuted` — not learner data.
 - **Licence (read 2026-09-29):** the Mixkit Sound Effects Free License covers
   use in the app, commercial included, with no attribution. It forbids
-  redistributing the sounds on their own or "with source files" — so ⚠️ the
-  MP3s must not be pushed to a PUBLIC repository. Full text and what it means:
-  the Licence section of [docs/sounds/README.md](sounds/README.md).
+  redistributing the sounds on their own or "with source files"; keeping the
+  MP3s in this public repo was checked with a lawyer and accepted by the owner
+  (2026-09-29). Full text and reasoning: the Licence section of
+  [docs/sounds/README.md](sounds/README.md).
 - **StrictMode double-runs** state initialisers, updaters and effects:
   headlines are chosen with `peekMessage` and recorded in an effect, a step's
   cue is guarded by a ref, and the stop-on-unmount is deferred a tick so the
