@@ -17,7 +17,7 @@
 > file reflects it. Also update [PROJECT_IDEAS.md](PROJECT_IDEAS.md) when an idea
 > moves between statuses.
 
-**Last reviewed:** 2026-09-21
+**Last reviewed:** 2026-09-29
 
 ---
 
@@ -49,6 +49,7 @@ decision made in this codebase:
 | Maps | **leaflet** + **react-leaflet** + **@turf/turf** | GeoJSON served from `public/` |
 | 3D | **three** (+ **tweakpane** for dev controls) | Solar System scene |
 | Clock UI | **react-clock** | Clock Generator |
+| Celebration particles | **canvas-confetti** | Lazy-loaded by `celebration/fx/effects.js` only (§4.5, "Celebrations") |
 | Number words | **written-number** | Converts `42` → "forty-two" |
 | Accounts | **Parent email + child profiles** | PBKDF2 password hashing, behind a swappable async store — see §4.7 |
 | Backend | **Express + MongoDB Atlas** | `server/` — optional: the app still runs fully local. See §4.8 |
@@ -111,11 +112,12 @@ src/
 │   ├── useProgress.js        # Active child's curriculum progress (§4.5)
 │   ├── useRewards.js         # Active child's badges (see "Badges", §5)
 │   ├── useChildrenProgress.js  # Progress for a LIST of children (§5)
-│   └── useChildrenRewards.js   # Badges for a LIST of children
+│   ├── useChildrenRewards.js   # Badges for a LIST of children
+│   └── useTrophyData.js        # One child's rewards + progress, read-only (Trophy Room)
 ├── components/               # Shared, reusable pieces
 │   ├── RequireChild.jsx      # Route guard for Curriculum Mode (§4.7)
 │   ├── ProgressRing.jsx      # The one percent dial, shared by 3 screens
-│   ├── celebration/CompletionCelebration.jsx
+│   ├── celebration/          # Completion sequence, steps/, fx/ (particles), sound/ (cues + mute)
 │   ├── challenge/            # The shared challenge kit (39 components)
 │   ├── ui/Navbar.jsx
 │   ├── ClockPanel.jsx, ReadingNumbersPanel.jsx, DualLabelClock.jsx,
@@ -133,6 +135,9 @@ src/
 │   ├── curriculumProgressStats.js
 │   ├── progressRules.js, curriculumLocks.js, curriculumNavigation.js
 │   ├── completionMilestones.js
+│   ├── stickers.js              # Topic stickers, DERIVED from progress (§5)
+│   ├── celebrationSteps.js      # Which celebration steps, effects, cues
+│   ├── celebrationMessages.js   # Rotating, never-repeating headlines
 │   ├── challenges/              # Pure question generators, unit-tested
 │   ├── store/                   # THE BACKEND SEAM (§4.7)
 │   │   ├── index.js             # Swap point: re-exports the active store
@@ -309,10 +314,35 @@ before calling a topic, section, subject, or year finished. This is deliberately
 stricter than the unlock rules, which skip unbuilt challenges to keep the path
 playable. A year award currently applies when its sole registered subject is
 finished; if a second subject is registered for a year, the subject award still
-works and the year award waits for a cross-subject progress read. Confetti is
-brief and skippable; `prefers-reduced-motion` removes its animation. The heading
-receives focus for assistive technology. No completion data or storage keys
-changed.
+works and the year award waits for a cross-subject progress read.
+
+#### Celebrations (2026-09-29)
+
+Spec: [docs/superpowers/specs/2026-09-29-curriculum-celebrations-design.md](superpowers/specs/2026-09-29-curriculum-celebrations-design.md).
+
+- **Per answer** — `ChallengeShell` (every one of the 332 challenges runs through
+  it) fills one segment of a progress bar, pops a tick, sparkles and chimes on a
+  right answer; a wrong one wobbles and gets a kind rotating line, never a
+  buzzer. Its feedback classes are `challenge-feedback-*`, deliberately not
+  `.feedback.correct`, which several Skills games define globally.
+- **On completion** — `buildCelebrationSteps` (pure, tested) turns the milestone
+  result into a SEQUENCE: headline → year progress → topic sticker → one step
+  per badge → avatar unlock → certificate (year only) → next. Each step waits for
+  Continue; "Skip" is on every step. A plain challenge or a practice replay is a
+  single screen. Effects and sound escalate by tier (`TIERS`).
+- **It only announces.** Progress and badges are written in `ProblemView`
+  before the sequence mounts; its extra figures (`yearBefore`/`yearAfter`, the
+  sticker) come from running the pure `completeChallenge` reducer on a copy.
+- **Sound** is synthesised with Web Audio (`sound/cues.js`). A cue may gain a
+  `src` file later with no caller changes. Mute is the navbar 🔊 button, stored
+  as the device preference `dl.soundMuted` — not learner data.
+- **StrictMode double-runs** state initialisers and updaters: headlines are
+  chosen with `peekMessage` and recorded in an effect, and a step's cue is
+  guarded by a ref, or dev shows repeated lines and doubled fanfares.
+- `prefers-reduced-motion` drops every particle effect (canvas never created)
+  and turns flips/drops into fades. Each step's heading takes focus.
+
+No completion data or storage keys changed; the only new key is `dl.soundMuted`.
 
 ⚠️ **The hook is inert with no active child** — empty progress, and it never writes.
 It also refuses to save unless the in-memory progress came from the document currently
@@ -382,6 +412,8 @@ Two browser-local keys, neither of them identity:
 
 - `dl.session` = `{ parentId, childId, email }`. The `email` is a **display hint
   only** — identity always re-validates `parentId` against the store.
+- `dl.soundMuted` = `"1"` / `"0"`, the celebration mute switch. A device
+  preference beside `theme`; safe to lose.
 - `dl.lastAccount` = `{ email, accountType, profiles: [{id, name, avatar, colour}] }`,
   written on sign-in so `/login` can greet a returning family by their profile
   faces and ask for the password alone. **Display data only** — never a
@@ -803,6 +835,27 @@ Unlocked avatars are redeemed in `/parent`, which is the only place an existing
 profile can be edited at all — `ProfileBuilder` only ever creates. Locked
 pictures are still shown, padlocked: a reward nobody knows about motivates
 nobody.
+
+### Topic stickers & the Trophy Room (2026-09-29)
+
+**Stickers are derived, never stored.** `stickers.js` marks a topic's sticker
+earned exactly when `fullTopicComplete` (exported from `completionMilestones`)
+says so — the same strict rule as the topic milestone — straight from the
+existing progress document. No new write path, no backfill; the price is no
+"earned on" date. Each topic's emoji is the `icon` field in the curriculum
+datasets; `curriculumIds.test.js` locks every category and topic id so adding
+display fields can never move a progress key.
+
+Badges gained a display-only `hint` ("Finish 5 topics") and `badgeProgress`
+("2 of 5"), which reads the existing `counts` tally. Note the tally only moves
+on real completions, so progress injected straight into storage shows a low
+count — expected.
+
+`/trophies` (behind `RequireChild`, 🏆 in the navbar) shows badges, a sticker
+book per year grouped by quest, and a "Next up" card from `pickResume`. A parent
+account can flip between children with the picker; that only changes whose room
+is shown, never the active child, and Play appears only for the active child.
+Reads go through `useTrophyData`, which never writes.
 
 ### Progress visibility — where each figure comes from (2026-09-19)
 

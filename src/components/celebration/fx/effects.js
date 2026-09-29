@@ -14,7 +14,8 @@
  */
 
 const COLOURS = ["#ef626c", "#e0a833", "#52a99d", "#84dccf", "#ffd166", "#b388eb"];
-const GOLD = ["#ffd166", "#e0a833", "#fff2d7"];
+// Deep enough to read on the pale light-theme panel, bright enough for dark.
+const GOLD = ["#ffc53d", "#f59e0b", "#e0a833", "#ef626c"];
 
 let loader = null;
 function loadConfetti() {

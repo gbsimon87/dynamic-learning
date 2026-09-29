@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { MESSAGES, nextMessage, pickMessage } from "./celebrationMessages.js";
+import { MESSAGES, nextMessage, peekMessage, pickMessage, rememberMessage } from "./celebrationMessages.js";
 
 test("never repeats the previous line", () => {
   for (const kind of Object.keys(MESSAGES)) {
@@ -36,4 +36,12 @@ test("nextMessage remembers the last line per kind", () => {
   const seen = [nextMessage("correct"), nextMessage("correct"), nextMessage("correct")];
   assert.notEqual(seen[0], seen[1]);
   assert.notEqual(seen[1], seen[2]);
+});
+
+test("peeking twice (a StrictMode double render) does not move the memory", () => {
+  const first = peekMessage("topic", { name: "Maya", random: () => 0 });
+  const again = peekMessage("topic", { name: "Maya", random: () => 0 });
+  assert.equal(first.id, again.id);
+  rememberMessage("topic", first.id);
+  assert.notEqual(peekMessage("topic", { name: "Maya", random: () => 0 }).id, first.id);
 });

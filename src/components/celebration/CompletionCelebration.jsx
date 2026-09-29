@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router";
 import { buildCelebrationSteps } from "../../data/celebrationSteps";
-import { nextMessage } from "../../data/celebrationMessages";
+import { peekMessage, rememberMessage } from "../../data/celebrationMessages";
 import { playCue } from "./sound/player";
 import { playEffect } from "./fx/effects";
 import HeadlineStep from "./steps/HeadlineStep";
@@ -67,8 +67,10 @@ export default function CompletionCelebration({
     }),
     [result, badges, sticker, yearBefore, yearAfter]
   );
+  // Picked in render, recorded once shown: StrictMode runs the initialiser
+  // twice, and recording inside it made the next headline repeat this one.
   const [headline] = useState(() =>
-    nextMessage(result.level, { name: childName, subject: subjectName, year })
+    peekMessage(result.level, { name: childName, subject: subjectName, year })
   );
   const [stepIndex, setStepIndex] = useState(0);
   const headingRef = useRef(null);
@@ -78,6 +80,10 @@ export default function CompletionCelebration({
   const step = steps[stepIndex];
   const StepContent = STEP_COMPONENTS[step.type] ?? NextStep;
   const awardedSomething = badges.length > 0 || Boolean(sticker?.earned && result.earned.includes("topic"));
+
+  useEffect(() => {
+    rememberMessage(result.level, headline.id);
+  }, [result.level, headline.id]);
 
   useEffect(() => {
     headingRef.current?.focus();
@@ -102,7 +108,7 @@ export default function CompletionCelebration({
         <StepContent
           step={step}
           result={result}
-          headline={headline}
+          headline={headline.text}
           year={year}
           subjectName={subjectName}
           childName={childName}

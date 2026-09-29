@@ -45,6 +45,10 @@
 - **`npm run seed` exists** (2026-09-19) and creates a test parent with two
   children who have different progress through both years. Use it rather than
   clicking through the curriculum by hand to reach a state worth looking at.
+- **Celebrations + Trophy Room shipped 2026-09-29** (Curriculum Mode only). Open
+  follow-ups: recorded sound files to replace the synthesised cues (give a cue a
+  `src` in `celebration/sound/cues.js`); streaks/XP (still blocked on day
+  stamps, above); a mascot; the same kit for Skills Mode games.
 - Ideas are scoped to serve **both Year 2 and Year 3** where possible.
 
 ### Status key

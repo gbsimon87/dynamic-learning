@@ -451,15 +451,37 @@ button.completion-celebration-secondary { background: transparent; }
 
 /* Printing the certificate: only the certificate. */
 @media print {
+  body { background: #fff !important; }
   body * { visibility: hidden; }
   .celebration-certificate,
   .celebration-certificate * { visibility: visible; }
   .celebration-certificate {
-    position: absolute;
-    inset: 2cm 2cm auto;
+    /* Fixed, not absolute: the card is a positioned ancestor, and absolute
+       left the certificate floating halfway down the sheet. */
+    position: fixed;
+    inset: 1.5cm 1.5cm auto;
     background: #fff;
     color: #000;
   }
   .celebration-certificate-small,
   .celebration-certificate-date { color: #333; }
 }
+
+/* Every step must fit one screen with Continue in view — a button below the
+   fold is a button a six-year-old never finds. */
+.completion-celebration-card {
+  padding: clamp(1.1rem, 3.5vw, 2rem);
+}
+
+.completion-celebration-medal {
+  width: clamp(88px, 15vw, 118px);
+  margin: 0.8rem auto;
+  font-size: clamp(2.8rem, 7vw, 3.8rem);
+}
+
+.completion-celebration h1 {
+  font-size: clamp(2rem, 5.5vw, 2.8rem);
+}
+
+.completion-celebration-stats { margin-top: 1rem; padding: 0.6rem; }
+.completion-celebration-actions { margin-top: 1.2rem; }

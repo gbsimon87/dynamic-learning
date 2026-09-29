@@ -108,7 +108,26 @@ function StickerBook({ candidate, open }) {
 }
 
 function NextUp({ resume, candidates, viewed, isActive }) {
-  if (!resume?.next) return null;
+  if (!resume) return null;
+
+  // Everything built in the year they were working on is done: point them on
+  // rather than leaving the card out and the room with no way forward.
+  if (!resume.next) {
+    return (
+      <section className="trophy-next" aria-labelledby="trophy-next">
+        <span className="trophy-next-disc" aria-hidden="true">🎉</span>
+        <div className="trophy-next-text">
+          <h2 id="trophy-next">Next up</h2>
+          <p>Every Year {resume.year} {resume.subjectName} challenge is done. Ready for a new adventure?</p>
+        </div>
+        {isActive && (
+          <Link className="trophy-next-play" to="/curriculum">
+            Choose what’s next <span aria-hidden="true">→</span>
+          </Link>
+        )}
+      </section>
+    );
+  }
   const { next } = resume;
   const candidate = candidates.find(
     (entry) => entry.year === resume.year && entry.subject === resume.subject

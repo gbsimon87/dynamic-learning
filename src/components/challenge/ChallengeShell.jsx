@@ -53,22 +53,17 @@ function ChallengeShell({ title, questions, render, onComplete }) {
   const submit = (isCorrect) => {
     if (locked) return;
 
+    // Chosen here, not inside the updater: StrictMode runs updaters twice.
     if (!isCorrect) {
-      setFeedback((previous) => ({
-        tone: "wrong",
-        text: nextMessage("wrong"),
-        key: (previous?.key ?? 0) + 1,
-      }));
+      const text = nextMessage("wrong");
+      setFeedback((previous) => ({ tone: "wrong", text, key: (previous?.key ?? 0) + 1 }));
       wobble(answerRef.current);
       return;
     }
 
     const isLast = index + 1 >= questions.length;
-    setFeedback((previous) => ({
-      tone: "correct",
-      text: nextMessage(isLast ? "last" : "correct"),
-      key: (previous?.key ?? 0) + 1,
-    }));
+    const text = nextMessage(isLast ? "last" : "correct");
+    setFeedback((previous) => ({ tone: "correct", text, key: (previous?.key ?? 0) + 1 }));
     setLocked(true);
     playCue("chime");
     playEffect("sparkle", { origin: feedbackRef.current });

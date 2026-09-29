@@ -61,9 +61,22 @@ export function pickMessage(kind, { name, subject, year, previousId, random = Ma
 
 const lastShown = new Map();
 
-/** `pickMessage`, remembering the last line per kind for this page session. */
+/**
+ * Chooses a line avoiding the last one shown, WITHOUT recording it. For render
+ * (a state initialiser), which React may run twice; pair it with
+ * `rememberMessage` in an effect once the line is actually on screen.
+ */
+export function peekMessage(kind, options = {}) {
+  return pickMessage(kind, { ...options, previousId: lastShown.get(kind) });
+}
+
+export function rememberMessage(kind, id) {
+  lastShown.set(kind, id);
+}
+
+/** Choose and record in one go — for event handlers, which run once. */
 export function nextMessage(kind, options = {}) {
-  const message = pickMessage(kind, { ...options, previousId: lastShown.get(kind) });
-  lastShown.set(kind, message.id);
+  const message = peekMessage(kind, options);
+  rememberMessage(kind, message.id);
   return message.text;
 }
