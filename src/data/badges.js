@@ -15,6 +15,8 @@
  * see PROJECT_IDEAS.
  */
 
+import { normaliseRewards } from "./rewardsShape.js";
+
 /**
  * `level` is the milestone that earns it, `repeatable` marks the badges a
  * learner can hold several of (one per topic finished, say) rather than once.
@@ -101,7 +103,7 @@ export function badgeForAvatar(emoji) {
  * has to be its own field.
  */
 export function emptyRewards() {
-  return { schemaVersion: 1, badges: [], counts: {} };
+  return normaliseRewards(null);
 }
 
 /** Ids currently held, as a Set. */
