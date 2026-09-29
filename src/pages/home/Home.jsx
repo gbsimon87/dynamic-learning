@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { AuthContext } from "../../context/auth-context";
 import Mascot from "../../components/mascot/Mascot";
 import HomeFooter from "./HomeFooter";
+import HomeAchievements from "./HomeAchievements";
 import { useHomeResume } from "./useHomeResume";
 import { useReveal } from "./useReveal";
 import { CURRICULUM_ICON } from "../../data/curriculumRegistry";
@@ -297,6 +298,8 @@ function Home() {
           </div>
         </div>
       </section>
+
+      <HomeAchievements />
 
       {/* === SUBJECT LAUNCHPAD === */}
       <section className="home-section" aria-labelledby="home-subjects-title">

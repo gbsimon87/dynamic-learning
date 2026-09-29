@@ -217,3 +217,52 @@ body.dark .navbar-auth-link {
     font-size: 0.85rem;
   }
 }
+/* Streak, level and news. The dot and the phone badge are absolutely
+   positioned, so they add no width to a bar with ~30px spare at 360px. */
+.navbar-link { position: relative; }
+.navbar-news-dot {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 11px;
+  height: 11px;
+  border: 2px solid var(--light-bg);
+  border-radius: 50%;
+  background: var(--light-accent);
+}
+body.dark .navbar-news-dot { border-color: var(--dark-bg); background: var(--dark-accent); }
+
+.navbar-stats {
+  display: inline-flex;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.navbar-stats > span {
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  background: var(--map-chip);
+  color: var(--map-text);
+}
+
+.navbar-avatar-chip { position: relative; }
+.navbar-streak-badge {
+  display: none;
+  position: absolute;
+  bottom: -6px;
+  right: -4px; /* -6px pushed nav.scrollWidth 1px past clientWidth at 360px */
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background: var(--light-accent);
+  color: var(--on-light-accent);
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1.5;
+}
+body.dark .navbar-streak-badge { background: var(--dark-accent); color: var(--on-dark-accent); }
+
+@media (max-width: 480px) {
+  .navbar-stats { display: none; }
+  .navbar-streak-badge { display: inline-block; }
+}

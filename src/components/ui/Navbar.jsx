@@ -4,12 +4,20 @@ import { AuthContext } from '../../context/auth-context';
 import { Link, useLocation } from 'react-router';
 import { CURRICULUM_ICON } from '../../data/curriculumRegistry';
 import { useSoundMuted } from '../celebration/sound/useSoundMuted';
+import { useRewards } from '../../hooks/useRewards';
+import { streakStatus, localDay } from '../../data/streak';
+import { levelFor } from '../../data/xp';
+import { hasNews } from '../../data/news';
 import './Navbar.css';
 
 function Navbar() {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const { child, status } = useContext(AuthContext) ?? {};
   const [muted, toggleMuted] = useSoundMuted();
+  const { rewards, hydrated, xp } = useRewards();
+  const streak = hydrated ? streakStatus(rewards.streak, localDay()) : null;
+  const level = hydrated ? levelFor(xp).level : null;
+  const news = hydrated && hasNews(rewards);
   const [hidden, setHidden] = useState(false);
   const [prevScroll, setPrevScroll] = useState(window.scrollY);
   const location = useLocation();
@@ -82,7 +90,10 @@ function Navbar() {
             title="Trophy Room"
           >
             <span aria-hidden="true">🏆</span>
-            <span className="navbar-link-label">Trophy Room</span>
+            <span className="navbar-link-label">
+              {news ? 'Trophy Room, new trophies to see' : 'Trophy Room'}
+            </span>
+            {news && <span className="navbar-news-dot" aria-hidden="true" />}
           </Link>
         )}
         {/* The one sound switch for every celebration. A device setting, kept
@@ -116,6 +127,13 @@ function Navbar() {
           </Link>
         )}
 
+        {status === 'ready' && hydrated && (
+          <span className="navbar-stats" aria-label={`${streak.current}-day streak, level ${level}`}>
+            <span aria-hidden="true">🔥 {streak.current}</span>
+            <span aria-hidden="true">Lv {level}</span>
+          </span>
+        )}
+
         {status !== 'signedOut' && status !== 'loading' && (
           <Link
             to="/profiles"
@@ -128,6 +146,9 @@ function Navbar() {
             <span className="navbar-avatar-emoji" aria-hidden="true">
               {child ? child.avatar : '👤'}
             </span>
+            {child && streak?.current > 0 && (
+              <span className="navbar-streak-badge" aria-hidden="true">🔥{streak.current}</span>
+            )}
             <span className="navbar-avatar-name">
               {child ? child.name : 'Pick profile'}
             </span>
