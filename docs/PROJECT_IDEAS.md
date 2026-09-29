@@ -48,8 +48,8 @@
 - **Celebrations + Trophy Room shipped 2026-09-29** (Curriculum Mode only). Open
   follow-ups: streaks/XP (still blocked on day stamps, above); a mascot; the
   same kit for Skills Mode games. Recorded sounds shipped the same day (Mixkit,
-  see docs/sounds/README.md) — confirm the Mixkit licence before a public
-  release.
+  see docs/sounds/README.md). The Mixkit licence covers use in the app, but the
+  MP3s must stay out of a public repository.
 - Ideas are scoped to serve **both Year 2 and Year 3** where possible.
 
 ### Status key

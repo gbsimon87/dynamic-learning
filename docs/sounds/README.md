@@ -70,8 +70,35 @@ missing file would go unnoticed without the test.
 
 ## Licence
 
-Mixkit's sound effects are free under the **Mixkit Sound Effects Free
-License**. ⚠️ Its full text only loads in a pop-up on
-[mixkit.co/license](https://mixkit.co/license/), so it was **not** read when
-these were added. Before a public release, open "Sound Effects Free License"
-there and confirm it covers use inside an app, then note the date here.
+**Mixkit Sound Effects Free License**, read 2026-09-29 (text supplied from the
+pop-up on [mixkit.co/license](https://mixkit.co/license/)):
+
+> Items under the Mixkit Sound Effects Free License can be used in your
+> commercial and non-commercial projects for free.
+>
+> You are licensed to use the Item to create an End Product that incorporates
+> the Item as well as other things, so that it is larger in scope and different
+> in nature than the Item. You're permitted to download, copy, modify,
+> distribute and publicly perform the Sound Effect Items on any web or social
+> media platform, in podcasts and in video games, as well as in films and
+> presentations distributed on CDs, DVDs, via TV or radio broadcast or internet
+> based video on demand services.
+>
+> You can't redistribute the Item on its own, as stock, in a tool or template,
+> or with source files. You're also not allowed to claim them as your own or
+> register them on any rights management service.
+
+What that means here:
+
+- ✅ **Playing them in the app is covered.** The app is an End Product "larger
+  in scope and different in nature" than the sounds, on a web platform, and it
+  may be commercial. Modifying them (the trimming and loudness matching) is
+  allowed. No attribution is required.
+- ⚠️ **A public source repository is the grey area.** Committing the files to a
+  public GitHub repo lets anyone download them on their own, which is close to
+  "redistribute the Item on its own … or with source files". Keep the sounds
+  out of any public repository — see PROJECT_KNOWLEDGE §4.5, "Celebrations".
+- ❌ Never publish them as a sound pack, in a template or starter kit, or
+  register them with a content-ID / rights-management service.
+- The saved audition page and catalogue only link to Mixkit's own previews;
+  they contain no audio, so they are not a redistribution.

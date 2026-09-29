@@ -359,9 +359,11 @@ Spec: [docs/superpowers/specs/2026-09-29-curriculum-celebrations-design.md](supe
   the previous sound, so the 8-second finale never talks over the next step.
 - **Mute** is the navbar 🔊 button, stored as the device preference
   `dl.soundMuted` — not learner data.
-- ⚠️ **The Mixkit licence text was not read** when the files were added (it
-  only loads in a pop-up on mixkit.co/license). Confirm it covers use in an app
-  before a public release — see the Licence section of docs/sounds/README.md.
+- **Licence (read 2026-09-29):** the Mixkit Sound Effects Free License covers
+  use in the app, commercial included, with no attribution. It forbids
+  redistributing the sounds on their own or "with source files" — so ⚠️ the
+  MP3s must not be pushed to a PUBLIC repository. Full text and what it means:
+  the Licence section of [docs/sounds/README.md](sounds/README.md).
 - **StrictMode double-runs** state initialisers, updaters and effects:
   headlines are chosen with `peekMessage` and recorded in an effect, a step's
   cue is guarded by a ref, and the stop-on-unmount is deferred a tick so the
