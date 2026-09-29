@@ -1,6 +1,6 @@
 # Streaks, XP, levels & "what's new": design
 
-**Date:** 2026-09-30 · **Status:** revision 2, awaiting review · **Branch:** `feat/celebrations`
+**Date:** 2026-09-30 · **Status:** revision 2, open questions resolved, awaiting approval · **Branch:** `feat/celebrations`
 
 ## What changed in revision 2
 
@@ -51,6 +51,9 @@ and manual verification against a pre-existing document.
 | Shown in | Navbar · celebration · home page · Trophy Room + parent area |
 | "New" covers | **Badges and stickers**, stored **on the child's record** |
 | Home page | "Something new" card · streak and level card · collection summary |
+| Practice XP | **Capped: only the first 2 replays each day earn XP**; every replay still counts for the streak |
+| New sounds | The user picks `streak` and `levelUp` from the Mixkit audition page |
+| Bix | **Cheers on the level-up step** (plus combos and the Trophy Room, as before) |
 
 ## The rules
 
@@ -59,7 +62,7 @@ and manual verification against a pre-existing document.
 | Event | XP |
 |---|---|
 | First completion of a challenge | +10 |
-| Practice replay | +5 *(cap: open question Q1)* |
+| Practice replay | +5, **for the first 2 replays each local day only** (10 XP a day); later replays show "Practice XP done for today" and still count for the streak |
 | Each "3 in a row" combo in the run, practice included | +2 |
 | Back-fill, once per child | 10 per completed, built challenge in any year |
 
@@ -118,6 +121,7 @@ needs no change.
     stickers: [],            //   "year/subject/topicId" (topic ids repeat across years)
   },
   recentStickers: [],        // "year/subject/topicId", newest last, at most 5
+  practice: { day: null, count: 0 },  // replays that earned XP on `day`; resets on a new day
 }
 ```
 
@@ -132,7 +136,7 @@ prove that v1 → v2 keeps every original field byte-identical, and that
 **Pure logic (`src/data/`, tested with `node:test`):**
 
 - `rewardsShape.js`: `normaliseRewards`, `REWARDS_SCHEMA_VERSION = 2`.
-- `xp.js`: `xpForRun({ firstTime, combos })`, `backfillXp(candidates)` (counts
+- `xp.js`: `xpForRun({ firstTime, combos, practice, today })` (applies the 2-a-day practice cap), `backfillXp(candidates)` (counts
   completed, built challenges in `loadResumeCandidates`' shape), and
   `levelFor(xp)` → `{ level, into, needed }`.
 - `streak.js`: `recordDay(streak, today)` → `{ streak, outcome, usedFreezes, earnedFreeze }`,
@@ -192,7 +196,9 @@ certificate → next.
 A plain challenge, or a practice replay, that is the day's first becomes
 **headline → streak → next**. Otherwise they stay one screen. The streak step
 reads "🔥 4-day streak!", "🧊 A freeze saved your streak!", "New streak started!"
-or "Streak started!". Streaks of 3, 7, 14 and 30 get a bigger effect.
+or "Streak started!". Streaks of 3, 7, 14 and 30 get a bigger effect. The
+**level-up step** shows the new level with **Bix cheering** (a medium Bix whose
+cheer fires as the step appears).
 
 **Navbar:**
 
@@ -217,9 +223,9 @@ or "Streak started!". Streaks of 3, 7, 14 and 30 get a bigger effect.
 **Parent area and grown-up room:** streak, best, level and XP for each child.
 
 **Sounds:** two new cues, `streak` and `levelUp`, picked by the user from
-`docs/sounds/mixkit-audition.html` (Q2). Until then they reuse the
-`combo.mp3` and `quest.mp3` files. They're processed with
-`docs/sounds/process-sounds.py` in the rewards tier (-18 LUFS).
+`docs/sounds/mixkit-audition.html` and processed with
+`docs/sounds/process-sounds.py` in the rewards tier (-18 LUFS), with a synth
+fallback like the rest.
 
 ## Error handling & known limits
 
@@ -270,16 +276,11 @@ differ); `docs/PROJECT_KNOWLEDGE.md` §5 "Badges" (the rewards shape) and §4.5
 "Celebrations"; the `add-curriculum-challenge` skill (the `onComplete` payload);
 `docs/sounds/README.md` (the two new cues).
 
-## Open questions
+## Resolved questions
 
-- **Q1: practice XP cap.** Without one, a child could replay their easiest challenge
-  for levels. Recommendation: practice XP counts only for the first 5 replays each
-  day (25 XP), shown as "Practice XP maxed for today" after that.
-  It needs one more field: `practice: { day, count }`.
-- **Q2: sounds** for the streak and level-up steps. Pick them now, or reuse existing
-  files for now.
-- **Q3: Bix on the level-up step.** Revision 1 assumed it; you'd chosen combos and
-  the Trophy Room only.
+- **Q1 practice XP cap:** the first **2** replays each local day earn XP.
+- **Q2 sounds:** the user picks two Mixkit sounds now.
+- **Q3 Bix:** yes, Bix cheers on the level-up step.
 
 ## Out of scope
 
