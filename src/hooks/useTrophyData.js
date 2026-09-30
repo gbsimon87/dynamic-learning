@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { store } from "../data/store";
-import { emptyRewards } from "../data/badges";
+import { normaliseRewards } from "../data/rewardsShape";
 import { isChallengeImplemented } from "../data/challengeAvailability";
 import { loadResumeCandidates } from "../data/resumeCandidates";
 
@@ -20,7 +20,7 @@ import { loadResumeCandidates } from "../data/resumeCandidates";
 export function useTrophyData(childId) {
   const [state, setState] = useState({
     childId: null,
-    rewards: emptyRewards(),
+    rewards: normaliseRewards(),
     candidates: [],
   });
 
@@ -33,8 +33,7 @@ export function useTrophyData(childId) {
       loadResumeCandidates(store, childId, isChallengeImplemented).catch(() => []),
     ]).then(([doc, candidates]) => {
       if (cancelled) return;
-      const data = doc?.data && typeof doc.data === "object" ? doc.data : {};
-      setState({ childId, rewards: { ...emptyRewards(), ...data }, candidates });
+      setState({ childId, rewards: normaliseRewards(doc?.data), candidates });
     });
 
     return () => {
@@ -47,7 +46,7 @@ export function useTrophyData(childId) {
   const loading = state.childId !== childId;
   return {
     loading,
-    rewards: loading ? emptyRewards() : state.rewards,
+    rewards: loading ? normaliseRewards() : state.rewards,
     candidates: loading ? [] : state.candidates,
   };
 }

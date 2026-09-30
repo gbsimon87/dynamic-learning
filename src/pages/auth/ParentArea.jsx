@@ -10,6 +10,9 @@ import {
   heldBadgeIds,
   unlockedAvatars,
 } from "../../data/badges";
+import { normaliseRewards } from "../../data/rewardsShape";
+import { levelFor } from "../../data/xp";
+import { streakStatus, localDay } from "../../data/streak";
 import { isYearAvailable } from "../../data/curriculumRegistry";
 import FloatingGlyphBackground from "../../components/FloatingGlyphBackground";
 import "./ParentArea.css";
@@ -270,6 +273,7 @@ function NameEditor({ child, onChange }) {
  */
 function ChildRewards({ child, rewards, onChangeAvatar }) {
   const [saving, setSaving] = useState(false);
+  const r = normaliseRewards(rewards);
   const held = heldBadgeIds(rewards);
   const choices = unlockedAvatars(rewards, AVATARS);
 
@@ -308,6 +312,11 @@ function ChildRewards({ child, rewards, onChangeAvatar }) {
           </li>
         ))}
       </ul>
+
+      <p className="parent-area-stats">
+        Level {levelFor(r.xp).level} · {r.xp} XP · 🔥 {streakStatus(r.streak, localDay()).current}-day
+        streak (best {r.streak.best})
+      </p>
 
       <Link className="parent-area-trophies-link" to={`/parent/trophies/${child._id}`}>
         See {child.name}’s Trophy Room <span aria-hidden="true">🏆 →</span>

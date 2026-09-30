@@ -350,3 +350,22 @@ body.dark .trophy-badge.is-locked .trophy-badge-icon {
   .tr-ring-fill,
   .trophy-year summary::after { transition: none; }
 }
+
+.trophy-badge, .trophy-sticker { position: relative; }
+.trophy-new {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: var(--tr-accent);
+  color: var(--tr-on-accent);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  animation: trophy-new-pop 700ms cubic-bezier(.2, 1.6, .5, 1) both;
+}
+@keyframes trophy-new-pop { from { transform: scale(0.3); opacity: 0; } to { transform: none; opacity: 1; } }
+.trophy-stats { display: grid; gap: 0.4rem; max-width: 420px; margin: 1rem auto 0; text-align: center; }
+.trophy-stats p { margin: 0; font-weight: 700; }
+@media (prefers-reduced-motion: reduce) { .trophy-new { animation: none; } }

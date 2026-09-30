@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useParams } from "react-router";
 import { AuthContext } from "../../context/auth-context";
 import { useTrophyData } from "../../hooks/useTrophyData";
@@ -8,6 +8,11 @@ import { pickResume } from "../../data/curriculumResume";
 import { getYearStats } from "../../data/curriculumProgressStats";
 import ProgressRing from "../../components/ProgressRing";
 import Mascot from "../../components/mascot/Mascot";
+import LevelBar from "../../components/rewards/LevelBar";
+import { useRewards } from "../../hooks/useRewards";
+import { displayXp } from "../../data/xp";
+import { streakStatus, localDay } from "../../data/streak";
+import { stickerKey } from "../../data/news";
 import "./TrophyRoom.css";
 
 function earnedOn(rewards, badgeId) {
@@ -16,7 +21,7 @@ function earnedOn(rewards, badgeId) {
   return new Date(at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 
-function BadgeShelf({ rewards }) {
+function BadgeShelf({ rewards, fresh }) {
   const held = heldBadgeIds(rewards);
 
   return (
@@ -30,6 +35,7 @@ function BadgeShelf({ rewards }) {
 
           return (
             <li key={badge.id} className={`trophy-badge ${isHeld ? "is-held" : "is-locked"}`}>
+              {fresh?.badges.has(badge.id) && <span className="trophy-new">NEW</span>}
               <span className="trophy-badge-icon" aria-hidden="true">{badge.icon}</span>
               <strong>{badge.name}</strong>
               {isHeld ? (
@@ -57,7 +63,7 @@ function BadgeShelf({ rewards }) {
   );
 }
 
-function StickerBook({ candidate, open }) {
+function StickerBook({ candidate, open, fresh }) {
   const { year, subjectName, curriculum, progress, isBuilt } = candidate;
   const groups = topicStickers(curriculum, progress, isBuilt);
   const count = countStickers(groups);
@@ -92,6 +98,9 @@ function StickerBook({ candidate, open }) {
                   key={sticker.topicId}
                   className={`trophy-sticker ${sticker.earned ? "is-earned" : "is-locked"}`}
                 >
+                  {fresh?.stickers.has(stickerKey(year, candidate.subject, sticker.topicId)) && (
+                    <span className="trophy-new">NEW</span>
+                  )}
                   <span className="trophy-sticker-disc" aria-hidden="true">{sticker.icon}</span>
                   <span className="trophy-sticker-name">{sticker.name}</span>
                   <span className="trophy-sticker-note">
@@ -169,7 +178,21 @@ function NextUp({ resume, candidates, isActive, name }) {
  * button, and the heading names the child rather than addressing them.
  */
 function TrophyCabinet({ viewed, grownUp = false }) {
-  const { loading, rewards, candidates } = useTrophyData(viewed?._id);
+  const own = useRewards();
+  const { clearNews } = own;
+  const stored = useTrophyData(viewed?._id); // grown-up: rewards + progress; child: progress only
+  const rewards = grownUp ? stored.rewards : own.rewards;
+  const loading = grownUp ? stored.loading : stored.loading || !own.hydrated;
+  const { candidates } = stored;
+
+  // What was new when this visit began: the ribbons show it for the whole
+  // visit, while the stored news is cleared once, after the rewards load.
+  const [fresh, setFresh] = useState(null);
+  useEffect(() => {
+    if (grownUp || !own.hydrated || fresh) return;
+    setFresh({ badges: new Set(own.rewards.news.badges), stickers: new Set(own.rewards.news.stickers) });
+    clearNews();
+  }, [grownUp, own.hydrated, own.rewards, clearNews, fresh]);
   const resume = useMemo(() => pickResume(candidates), [candidates]);
 
   const held = heldBadgeIds(rewards).size;
@@ -207,6 +230,14 @@ function TrophyCabinet({ viewed, grownUp = false }) {
             <li><strong>{stickers.earned}</strong> of {stickers.total} stickers</li>
           </ul>
 
+          <div className="trophy-stats">
+            <LevelBar xp={grownUp ? displayXp(rewards, null) : own.xp} />
+            <p>
+              <span aria-hidden="true">🔥 </span>
+              {streakStatus(rewards.streak, localDay()).current}-day streak · best {rewards.streak.best}
+            </p>
+          </div>
+
           <div className={`trophy-next-row ${grownUp ? "" : "has-bix"}`}>
             {/* Bix cheers the child on towards their next sticker. */}
             {!grownUp && (
@@ -222,7 +253,7 @@ function TrophyCabinet({ viewed, grownUp = false }) {
             />
           </div>
 
-          <BadgeShelf rewards={rewards} />
+          <BadgeShelf rewards={rewards} fresh={fresh} />
 
           <section className="trophy-section" aria-labelledby="trophy-stickers">
             <h2 id="trophy-stickers">Sticker book</h2>
@@ -231,6 +262,7 @@ function TrophyCabinet({ viewed, grownUp = false }) {
               <StickerBook
                 key={`${candidate.year}-${candidate.subject}`}
                 candidate={candidate}
+                fresh={fresh}
                 open={candidate.year === openYear}
               />
             ))}

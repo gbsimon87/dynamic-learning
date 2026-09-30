@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { store } from "../data/store";
-import { emptyRewards } from "../data/badges";
+import { normaliseRewards } from "../data/rewardsShape";
 
 /**
  * Rewards for a LIST of children, keyed by child id.
@@ -8,8 +8,8 @@ import { emptyRewards } from "../data/badges";
  * The sibling of `useChildrenProgress`, and for the same reason: `useRewards`
  * keys off the ACTIVE child, but the Parent Area shows every child at once.
  *
- * Read-only — awarding happens in `useRewards`, at the one moment a challenge
- * completes. Nothing here writes, so a grown-up opening this screen can never
+ * Read-only — awarding happens in `RewardsProvider` (src/context/RewardsContext.jsx),
+ * at the one moment a challenge completes. Nothing here writes, so a grown-up opening this screen can never
  * change what a child has earned.
  *
  * `bump` re-reads after a profile edit, so the avatar row reflects a change
@@ -37,14 +37,10 @@ export function useChildrenRewards(children, bump = 0) {
       childIds.map(async (childId) => {
         try {
           const doc = await store.getRewards(childId);
-          const data =
-            doc?.data && typeof doc.data === "object"
-              ? { ...emptyRewards(), ...doc.data }
-              : emptyRewards();
-          return [childId, data];
+          return [childId, normaliseRewards(doc?.data)];
         } catch {
           // One unreadable document must not blank out the siblings'.
-          return [childId, emptyRewards()];
+          return [childId, normaliseRewards()];
         }
       })
     ).then((entries) => {

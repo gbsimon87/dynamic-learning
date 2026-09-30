@@ -608,3 +608,5 @@ body.dark .parent-area-page {
   font-weight: 700;
   text-decoration: underline;
 }
+
+.parent-area-page .parent-area-stats { font-size: 0.95rem; color: var(--pa-muted); margin: 0.2rem 0 0.6rem; }
