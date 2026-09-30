@@ -1,10 +1,23 @@
 .problem-page {
-  padding: 0 2rem 2rem;
+  padding: 1.75rem 2rem 3rem;
   text-align: center;
   animation: fadeIn 0.6s ease-in-out;
 }
 
+/* The heading and the replay note are one group; the challenge card below is
+   a separate one, so the gap under the header is wider than the gap inside it.
+   index.css zeroes every margin, so each one here is deliberate. */
+.problem-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+
 .problem-page h2 {
+  font-size: clamp(1.5rem, 4.5vw, 1.9rem);
+  line-height: 1.2;
   color: var(--light-text);
 }
 
@@ -12,8 +25,24 @@ body.dark .problem-page h2 {
   color: var(--dark-text);
 }
 
+.replay-info {
+  max-width: 34rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 14px;
+  font-size: 0.98rem;
+  line-height: 1.4;
+  color: var(--light-text);
+  background: color-mix(in srgb, var(--light-accent) 14%, transparent);
+}
+
+body.dark .replay-info {
+  color: var(--dark-text);
+  background: color-mix(in srgb, var(--dark-accent) 16%, transparent);
+}
+
 @media (max-width: 600px) {
-  .problem-page { padding: 0 1rem 1.5rem; }
+  .problem-page { padding: 1.25rem 1rem 2rem; }
+  .problem-header { gap: 0.6rem; margin-bottom: 1.25rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

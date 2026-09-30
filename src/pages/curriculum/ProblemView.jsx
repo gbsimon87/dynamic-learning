@@ -185,14 +185,16 @@ function ProblemView() {
 
   return (
     <div className="problem-page">
-      <h2>🧩 Challenge {challengeId}</h2>
+      <header className="problem-header">
+        <h2>🧩 Challenge {challengeId}</h2>
 
-      {alreadyCompleted && (
-        <p className="replay-info">
-          ✅ You’ve already completed this challenge — but you can try again for
-          practice!
-        </p>
-      )}
+        {alreadyCompleted && (
+          <p className="replay-info">
+            ✅ You’ve already completed this challenge — but you can try again for
+            practice!
+          </p>
+        )}
+      </header>
 
       <Challenge
         challengeId={challengeId}

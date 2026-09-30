@@ -11,6 +11,7 @@ body.light {
   --ck-on-accent: var(--on-light-accent);
   --ck-muted: rgba(34, 24, 28, 0.08);
   --ck-border: rgba(34, 24, 28, 0.18);
+  --ck-card-edge: rgba(34, 24, 28, 0.06);
 }
 
 body.dark {
@@ -20,35 +21,46 @@ body.dark {
   --ck-on-accent: var(--on-dark-accent);
   --ck-muted: rgba(246, 232, 234, 0.1);
   --ck-border: rgba(246, 232, 234, 0.25);
+  --ck-card-edge: rgba(246, 232, 234, 0.08);
 }
 
 .challenge-container {
   max-width: 760px;
   margin: 0 auto;
-  padding: 1.5rem;
-  border-radius: 16px;
+  padding: clamp(1.25rem, 4vw, 2.25rem) clamp(1rem, 4vw, 2.5rem) clamp(1rem, 3vw, 1.5rem);
+  border-radius: 24px;
   background: var(--ck-panel);
   color: var(--ck-text);
-  box-shadow: 0 4px 16px var(--panel-shadow);
+  /* A hairline edge plus a close and a far shadow: the card sits on the page
+     rather than floating in a grey haze. */
+  box-shadow:
+    0 0 0 1px var(--ck-card-edge),
+    0 2px 4px var(--panel-shadow),
+    0 16px 36px -12px var(--panel-shadow);
   text-align: center;
 }
 
+/* "Question 1 of 6" and its bar are one unit; the question below is the next
+   group, so it sits well clear of the bar. */
 .challenge-progress {
   font-size: 0.95rem;
-  opacity: 0.7;
+  letter-spacing: 0.02em;
+  opacity: 0.75;
 }
 
 /* One segment per question, filling as each is answered. */
 .challenge-progress-bar {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   max-width: 420px;
-  margin: 0.5rem auto 0;
+  /* The gap under the bar is here, not on the title, so a challenge that
+     renders its own prompt instead of a title gets it too. */
+  margin: 0.6rem auto 1.75rem;
 }
 
 .challenge-progress-segment {
   flex: 1;
-  height: 12px;
+  height: 14px;
   border-radius: 999px;
   background: var(--ck-muted);
   box-shadow: inset 0 0 0 1px var(--ck-border);
@@ -141,9 +153,11 @@ body.dark {
 }
 
 .challenge-title {
-  margin: 0.5rem 0 1.2rem;
-  font-size: 1.35rem;
-  line-height: 1.4;
+  max-width: 34ch;
+  margin: 0 auto 1.5rem;
+  font-size: clamp(1.3rem, 3.6vw, 1.6rem);
+  line-height: 1.35;
+  text-wrap: balance;
 }
 
 .challenge-prompt {
@@ -349,21 +363,23 @@ body.dark {
 .array-grid {
   display: inline-flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: min(0.5rem, 1.5vw);
+  max-width: 100%;
   margin-bottom: 1.5rem;
-  padding: 0.8rem 1rem;
+  padding: 0.8rem min(1rem, 3vw);
   border: 3px solid var(--ck-border);
   border-radius: 14px;
 }
 
 .array-row {
   display: flex;
-  gap: 0.5rem;
+  gap: min(0.5rem, 1.5vw);
 }
 
+/* Scales down on a phone: a 10-wide row of full-size dots overflowed the card. */
 .array-dot {
-  width: 26px;
-  height: 26px;
+  width: min(26px, 5.5vw);
+  height: min(26px, 5.5vw);
   border-radius: 50%;
   background: var(--ck-accent);
 }
