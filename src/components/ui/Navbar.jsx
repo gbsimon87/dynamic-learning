@@ -128,9 +128,9 @@ function Navbar() {
         )}
 
         {status === 'ready' && hydrated && (
-          <span className="navbar-stats" aria-label={`${streak.current}-day streak, level ${level}`}>
-            <span aria-hidden="true">🔥 {streak.current}</span>
-            <span aria-hidden="true">Lv {level}</span>
+          <span className="navbar-stats" aria-hidden="true">
+            <span>🔥 {streak.current}</span>
+            <span>Lv {level}</span>
           </span>
         )}
 
@@ -152,6 +152,13 @@ function Navbar() {
             <span className="navbar-avatar-name">
               {child ? child.name : 'Pick profile'}
             </span>
+            {child && hydrated && (
+              <span className="navbar-link-label">
+                {streak.current > 0
+                  ? `, ${streak.current}-day streak, level ${level}`
+                  : `, no streak yet, level ${level}`}
+              </span>
+            )}
           </Link>
         )}
       </div>
