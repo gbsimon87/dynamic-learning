@@ -1,7 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { SEED_CHILDREN, SEED_PARENT, buildProgress, buildRewards } from "./seedData.js";
+import { SEED_CHILDREN, SEED_PARENT, buildProgress, buildRewards, withSeedStreak } from "./seedData.js";
+import { year2MathCurriculum } from "../src/data/year2MathCurriculum.js";
 
 /* A tiny curriculum: two categories, the second with nothing built. */
 const curriculum = [
@@ -123,4 +124,20 @@ test("no badge is ever awarded twice across years", () => {
 
   const ids = rewards.badges.map((badge) => badge.id);
   assert.equal(new Set(ids).size, ids.length);
+});
+
+test("seeded rewards are v2 with XP matching the completions", () => {
+  const isBuilt = () => true;
+  const rewards = buildRewards([{ curriculum: year2MathCurriculum, isBuilt, count: 7, year: 2, subject: "math" }]);
+  assert.equal(rewards.schemaVersion, 2);
+  assert.equal(rewards.xp, 70);
+  assert.equal(rewards.xpBackfilled, true);
+});
+
+test("withSeedStreak builds a streak of N days ending yesterday", () => {
+  const out = withSeedStreak(buildRewards([]), 4, "2026-09-30");
+  assert.equal(out.streak.current, 4);
+  assert.equal(out.streak.lastDay, "2026-09-29");
+  assert.deepEqual(out.streak.recent, ["2026-09-26", "2026-09-27", "2026-09-28", "2026-09-29"]);
+  assert.equal(withSeedStreak(buildRewards([]), 0, "2026-09-30").streak.current, 0);
 });

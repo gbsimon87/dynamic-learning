@@ -14,6 +14,9 @@
 import { getCompletionMilestones } from "../src/data/completionMilestones.js";
 import { earnBadges, emptyRewards } from "../src/data/badges.js";
 import { completeChallenge } from "../src/data/progressRules.js";
+import { normaliseRewards } from "../src/data/rewardsShape.js";
+import { addDays } from "../src/data/streak.js";
+import { XP } from "../src/data/xp.js";
 
 /** The test account. Deliberately obvious — this is never a real person. */
 export const SEED_PARENT = {
@@ -39,6 +42,7 @@ export const SEED_CHILDREN = [
     // card and resume should both point there.
     progress: { 2: 26, 3: 6 },
     mostRecentYear: 3,
+    streakDays: 4,
   },
   {
     name: "Liam",
@@ -49,6 +53,7 @@ export const SEED_CHILDREN = [
     // recent — so the two children exercise opposite branches of `pickResume`.
     progress: { 2: 11, 3: 3 },
     mostRecentYear: 2,
+    streakDays: 0,
   },
 ];
 
@@ -87,6 +92,7 @@ export function buildProgress(curriculum, isBuilt, count) {
  */
 export function buildRewards(curricula, startRewards = emptyRewards()) {
   let rewards = startRewards;
+  let completedTotal = 0;
 
   for (const { curriculum, isBuilt, count, year, subject } of curricula) {
     let progress = {};
@@ -113,6 +119,7 @@ export function buildRewards(curricula, startRewards = emptyRewards()) {
 
           progress = completeChallenge(progress, category.id, topic.id, challenge.id);
           done += 1;
+          completedTotal += 1;
 
           rewards = earnBadges(rewards, result.earned, {
             at: new Date().toISOString(),
@@ -124,5 +131,17 @@ export function buildRewards(curricula, startRewards = emptyRewards()) {
     }
   }
 
-  return rewards;
+  // Seeded children earned their XP the way a real child would: 10 per first
+  // completion. Marked back-filled so the app never adds it again.
+  return { ...normaliseRewards(rewards), xp: completedTotal * XP.backfill, xpBackfilled: true };
+}
+
+/** A demo streak of `days` played days in a row, ending yesterday. */
+export function withSeedStreak(rewards, days, today) {
+  if (!days) return rewards;
+  const recent = Array.from({ length: days }, (_, i) => addDays(today, i - days)).slice(-14);
+  return {
+    ...rewards,
+    streak: { ...rewards.streak, current: days, best: days, lastDay: addDays(today, -1), freezes: Math.min(2, Math.floor(days / 5)), recent, frozen: [] },
+  };
 }

@@ -48,7 +48,9 @@ import {
   SEED_PARENT,
   buildProgress,
   buildRewards,
+  withSeedStreak,
 } from "./seedData.js";
+import { localDay } from "../src/data/streak.js";
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PURGE_GRACE_MS = 3000;
@@ -129,7 +131,7 @@ async function main() {
       a.year === child.mostRecentYear ? 1 : b.year === child.mostRecentYear ? -1 : 0
     );
 
-    const rewards = buildRewards(years);
+    const rewards = withSeedStreak(buildRewards(years), child.streakDays ?? 0, localDay());
     return { child, years, rewards };
   });
 
