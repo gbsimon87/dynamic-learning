@@ -53,3 +53,11 @@ export function displayXp(rewards, pendingBackfill) {
   const pending = !rewards.xpBackfilled && Number.isFinite(pendingBackfill) ? pendingBackfill : 0;
   return rewards.xp + pending;
 }
+
+/**
+ * A grown-up's (read-only) view of a child's XP: a child not yet back-filled
+ * shows the same one-off back-fill their own view shows, without storing it.
+ */
+export function grownUpXp(rewards, candidates) {
+  return displayXp(rewards, rewards.xpBackfilled ? null : backfillXp(candidates));
+}

@@ -2,11 +2,10 @@ import { useContext } from "react";
 import { Link } from "react-router";
 import { AuthContext } from "../../context/auth-context";
 import { useRewards } from "../../hooks/useRewards";
-import { useTrophyData } from "../../hooks/useTrophyData";
 import { localDay, streakStatus, weekDots } from "../../data/streak";
 import { hasNews } from "../../data/news";
 import { BADGES, heldBadgeIds } from "../../data/badges";
-import { countStickers, topicStickers } from "../../data/stickers";
+import { countAllStickers, findSticker } from "../../data/stickers";
 import LevelBar from "../../components/rewards/LevelBar";
 import WeekDots from "../../components/rewards/WeekDots";
 import "./HomeAchievements.css";
@@ -15,29 +14,24 @@ function plural(n, one, many) {
   return `${n} ${n === 1 ? one : many}`;
 }
 
-/** The home page's three achievement cards, for the child who is playing. */
-export default function HomeAchievements() {
+/**
+ * The home page's three achievement cards, for the child who is playing.
+ * `candidates` are the progress documents Home already read for its
+ * Keep-going card (useHomeResume), so the sticker totals cost no extra read.
+ */
+export default function HomeAchievements({ candidates = [] }) {
   const { child } = useContext(AuthContext);
   const { rewards, hydrated, xp } = useRewards();
-  const { candidates } = useTrophyData(child?._id); // progress, for sticker totals
   if (!child || !hydrated) return null;
 
   const today = localDay();
   const streak = streakStatus(rewards.streak, today);
-  const stickers = candidates.reduce(
-    (sum, c) => {
-      const n = countStickers(topicStickers(c.curriculum, c.progress, c.isBuilt));
-      return { earned: sum.earned + n.earned, total: sum.total + n.total };
-    },
-    { earned: 0, total: 0 }
-  );
+  const stickers = countAllStickers(candidates);
   const latest = rewards.recentStickers.at(-1);
   const latestSticker = latest && (() => {
     const [year, subject, topicId] = latest.split("/");
     const c = candidates.find((x) => String(x.year) === year && x.subject === subject);
-    return c && topicStickers(c.curriculum, c.progress, c.isBuilt)
-      .flatMap((g) => g.stickers)
-      .find((s) => s.topicId === topicId);
+    return findSticker(c, topicId);
   })();
   const newBadges = rewards.news.badges.length;
   const newStickers = rewards.news.stickers.length;

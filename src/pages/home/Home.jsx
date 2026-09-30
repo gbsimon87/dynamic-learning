@@ -184,7 +184,7 @@ function SubjectCard({ subject }) {
 function Home() {
   const revealRef = useReveal();
   const { child } = useContext(AuthContext);
-  const { resume } = useHomeResume();
+  const { resume, candidates } = useHomeResume();
 
   const greeting = child ? `Hi ${child.name}!` : "Welcome!";
   const hero = heroState({ child, resume });
@@ -299,7 +299,7 @@ function Home() {
         </div>
       </section>
 
-      <HomeAchievements />
+      <HomeAchievements candidates={candidates} />
 
       {/* === SUBJECT LAUNCHPAD === */}
       <section className="home-section" aria-labelledby="home-subjects-title">

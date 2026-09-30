@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { backfillXp, displayXp, levelFor, xpForRun } from "./xp.js";
+import { backfillXp, displayXp, grownUpXp, levelFor, xpForRun } from "./xp.js";
 import { normaliseRewards } from "./rewardsShape.js";
 
 const P0 = { day: null, count: 0 };
@@ -47,4 +47,12 @@ test("displayed XP includes a pending back-fill until it is stored", () => {
   assert.equal(displayXp(r, 40), 45);
   assert.equal(displayXp(r, null), 5);
   assert.equal(displayXp({ ...r, xpBackfilled: true }, 40), 5);
+});
+
+test("a grown-up sees the back-fill only for a child not yet back-filled", () => {
+  const curriculum = [{ id: "c", topics: [{ id: "t", challenges: [{ id: 1 }, { id: 2 }] }] }];
+  const candidates = [{ curriculum, progress: { c: { topics: { t: { completedChallenges: [1, 2] } } } }, isBuilt: () => true }];
+  const r = { ...normaliseRewards(null), xp: 5 };
+  assert.equal(grownUpXp(r, candidates), 25);
+  assert.equal(grownUpXp({ ...r, xpBackfilled: true }, candidates), 5);
 });

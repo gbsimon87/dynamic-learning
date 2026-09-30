@@ -14,10 +14,13 @@ import { loadResumeCandidates } from "../data/resumeCandidates";
  *
  * A failed read degrades to "nothing yet" rather than an error screen.
  *
+ * `{ rewards: false }` skips the rewards read, for a caller that already has
+ * them (the child's own room and the home page use RewardsProvider's copy).
+ *
  * @returns {{loading: boolean, rewards: object, candidates: object[]}}
  *   `candidates` is `loadResumeCandidates`' shape, one per curriculum.
  */
-export function useTrophyData(childId) {
+export function useTrophyData(childId, { rewards: withRewards = true } = {}) {
   const [state, setState] = useState({
     childId: null,
     rewards: normaliseRewards(),
@@ -29,7 +32,7 @@ export function useTrophyData(childId) {
     if (!childId) return undefined;
 
     Promise.all([
-      store.getRewards(childId).catch(() => null),
+      withRewards ? store.getRewards(childId).catch(() => null) : null,
       loadResumeCandidates(store, childId, isChallengeImplemented).catch(() => []),
     ]).then(([doc, candidates]) => {
       if (cancelled) return;
@@ -39,7 +42,7 @@ export function useTrophyData(childId) {
     return () => {
       cancelled = true;
     };
-  }, [childId]);
+  }, [childId, withRewards]);
 
   // Until the read for THIS child lands, show loading rather than the previous
   // child's trophies under the new child's name.

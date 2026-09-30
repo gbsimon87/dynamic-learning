@@ -11,7 +11,7 @@ import {
   unlockedAvatars,
 } from "../../data/badges";
 import { normaliseRewards } from "../../data/rewardsShape";
-import { backfillXp, displayXp, levelFor } from "../../data/xp";
+import { grownUpXp, levelFor } from "../../data/xp";
 import { useTrophyData } from "../../hooks/useTrophyData";
 import { streakStatus, localDay } from "../../data/streak";
 import { isYearAvailable } from "../../data/curriculumRegistry";
@@ -275,9 +275,11 @@ function NameEditor({ child, onChange }) {
 function ChildRewards({ child, rewards, onChangeAvatar }) {
   const [saving, setSaving] = useState(false);
   const r = normaliseRewards(rewards);
-  // Read-only back-fill for a child who has not played since XP began.
-  const { candidates } = useTrophyData(child._id);
-  const shownXp = displayXp(r, r.xpBackfilled ? null : backfillXp(candidates));
+  // Read-only back-fill for a child who has not played since XP began. Its
+  // progress read is only waited on when there is a back-fill to show.
+  const trophy = useTrophyData(child._id, { rewards: false });
+  const shownXp = grownUpXp(r, trophy.candidates);
+  const xpReady = r.xpBackfilled || !trophy.loading;
   const held = heldBadgeIds(rewards);
   const choices = unlockedAvatars(rewards, AVATARS);
 
@@ -318,8 +320,8 @@ function ChildRewards({ child, rewards, onChangeAvatar }) {
       </ul>
 
       <p className="parent-area-stats">
-        Level {levelFor(shownXp).level} · {shownXp} XP · 🔥 {streakStatus(r.streak, localDay()).current}-day
-        streak (best {r.streak.best})
+        {xpReady ? `Level ${levelFor(shownXp).level} · ${shownXp} XP` : "Level …"} · 🔥{" "}
+        {streakStatus(r.streak, localDay()).current}-day streak (best {r.streak.best})
       </p>
 
       <Link className="parent-area-trophies-link" to={`/parent/trophies/${child._id}`}>

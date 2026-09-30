@@ -32,16 +32,6 @@ body.dark .trophy-room {
   --tr-locked-edge: rgba(246, 232, 234, 0.25);
 }
 
-.trophy-room .sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
 .trophy-header { text-align: center; }
 
 .trophy-eyebrow {

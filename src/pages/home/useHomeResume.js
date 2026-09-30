@@ -16,34 +16,35 @@ import { pickResume } from "../../data/curriculumResume";
  * (.claude/skills/curriculum-progress). No child signed in means no reads at
  * all, so a signed-out visitor never touches another child's document.
  *
- * @returns {{ loading: boolean, resume: object|null }}
+ * @returns {{ loading: boolean, resume: object|null, candidates: object[] }}
+ *   `candidates` also feeds the achievement cards, so the page reads once.
  */
 export function useHomeResume() {
   const auth = useContext(AuthContext);
   const childId = auth?.child?._id ?? null;
 
-  const [state, setState] = useState({ loading: Boolean(childId), resume: null });
+  const [state, setState] = useState({ loading: Boolean(childId), resume: null, candidates: [] });
 
   useEffect(() => {
     let cancelled = false;
 
     if (!childId) {
-      setState({ loading: false, resume: null });
+      setState({ loading: false, resume: null, candidates: [] });
       return () => {
         cancelled = true;
       };
     }
 
-    setState({ loading: true, resume: null });
+    setState({ loading: true, resume: null, candidates: [] });
 
     loadResumeCandidates(store, childId, isChallengeImplemented)
       .then((candidates) => {
         if (cancelled) return;
-        setState({ loading: false, resume: pickResume(candidates) });
+        setState({ loading: false, resume: pickResume(candidates), candidates });
       })
       .catch(() => {
         // A failed read just means no card — never a broken homepage.
-        if (!cancelled) setState({ loading: false, resume: null });
+        if (!cancelled) setState({ loading: false, resume: null, candidates: [] });
       });
 
     return () => {

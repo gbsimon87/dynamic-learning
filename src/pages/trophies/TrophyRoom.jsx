@@ -3,14 +3,14 @@ import { Link, Navigate, useParams } from "react-router";
 import { AuthContext } from "../../context/auth-context";
 import { useTrophyData } from "../../hooks/useTrophyData";
 import { BADGES, badgeProgress, heldBadgeIds } from "../../data/badges";
-import { countStickers, topicStickers } from "../../data/stickers";
+import { countAllStickers, countStickers, findSticker, topicStickers } from "../../data/stickers";
 import { pickResume } from "../../data/curriculumResume";
 import { getYearStats } from "../../data/curriculumProgressStats";
 import ProgressRing from "../../components/ProgressRing";
 import Mascot from "../../components/mascot/Mascot";
 import LevelBar from "../../components/rewards/LevelBar";
 import { useRewards } from "../../hooks/useRewards";
-import { backfillXp, displayXp } from "../../data/xp";
+import { grownUpXp } from "../../data/xp";
 import { streakStatus, localDay } from "../../data/streak";
 import { stickerKey } from "../../data/news";
 import "./TrophyRoom.css";
@@ -144,11 +144,7 @@ function NextUp({ resume, candidates, isActive, name }) {
   const candidate = candidates.find(
     (entry) => entry.year === resume.year && entry.subject === resume.subject
   );
-  const sticker = candidate
-    ? topicStickers(candidate.curriculum, candidate.progress, candidate.isBuilt)
-      .flatMap((group) => group.stickers)
-      .find((entry) => entry.topicId === next.topicId)
-    : null;
+  const sticker = findSticker(candidate, next.topicId);
 
   return (
     <section className="trophy-next" aria-labelledby="trophy-next">
@@ -180,7 +176,8 @@ function NextUp({ resume, candidates, isActive, name }) {
 function TrophyCabinet({ viewed, grownUp = false }) {
   const own = useRewards();
   const { clearNews } = own;
-  const stored = useTrophyData(viewed?._id); // grown-up: rewards + progress; child: progress only
+  // A grown-up needs the child's rewards read; a child has their own already.
+  const stored = useTrophyData(viewed?._id, { rewards: grownUp });
   const rewards = grownUp ? stored.rewards : own.rewards;
   const failed = !grownUp && own.status === "failed";
   const loading = grownUp ? stored.loading : stored.loading || !own.hydrated;
@@ -194,30 +191,26 @@ function TrophyCabinet({ viewed, grownUp = false }) {
     autoRetried.current = true;
     retry();
   }, [failed, retry]);
-  // Read-only for a grown-up: a child not yet back-filled shows the same
-  // one-off back-fill their own view shows, without storing it.
-  const xp = grownUp
-    ? displayXp(rewards, rewards.xpBackfilled ? null : backfillXp(candidates))
-    : own.xp;
+  const xp = grownUp ? grownUpXp(rewards, candidates) : own.xp;
 
   // What was new when this visit began: the ribbons show it for the whole
-  // visit, while the stored news is cleared once, after the rewards load.
+  // visit. The stored news is cleared only once the room is actually on
+  // screen, so backing out while it is still opening never loses a ribbon.
   const [fresh, setFresh] = useState(null);
   useEffect(() => {
     if (grownUp || !own.hydrated || fresh) return;
     setFresh({ badges: new Set(own.rewards.news.badges), stickers: new Set(own.rewards.news.stickers) });
+  }, [grownUp, own.hydrated, own.rewards, fresh]);
+  const cleared = useRef(false);
+  useEffect(() => {
+    if (grownUp || !fresh || loading || failed || cleared.current) return;
+    cleared.current = true;
     clearNews();
-  }, [grownUp, own.hydrated, own.rewards, clearNews, fresh]);
+  }, [grownUp, fresh, loading, failed, clearNews]);
   const resume = useMemo(() => pickResume(candidates), [candidates]);
 
   const held = heldBadgeIds(rewards).size;
-  const stickers = candidates.reduce(
-    (sum, candidate) => {
-      const count = countStickers(topicStickers(candidate.curriculum, candidate.progress, candidate.isBuilt));
-      return { earned: sum.earned + count.earned, total: sum.total + count.total };
-    },
-    { earned: 0, total: 0 }
-  );
+  const stickers = countAllStickers(candidates);
   // Open the book at the year they are working in; the rest stay folded.
   const openYear = resume?.year ?? (Number(viewed?.yearGroup) || candidates[0]?.year);
 
