@@ -37,19 +37,18 @@
   only — no timestamps per challenge, no attempt counts, no wrong answers. #9
   and #10 both need that, and it is a new write path on the `onComplete`
   contract rather than a new view. Treat it as their shared prerequisite.
-- **Badges shipped 2026-09-19; streaks did not, deliberately.** A streak needs
-  to know which DAYS a child played, and nothing records that — see the
-  per-attempt bullet above. Badges hang off `completionMilestones` and live in a
-  rewards document per child (`src/data/badges.js`). Adding streaks means adding
-  day stamps first, and that is the same write path #9 and #10 need.
+- **Badges shipped 2026-09-19; streaks, XP and levels shipped 2026-09-30.**
+  Badges hang off `completionMilestones` and live in a rewards document per
+  child (`src/data/badges.js`). Streaks did not need the per-attempt write path
+  after all: the day stamps live in that same rewards document (v2), so
+  progress was not touched. See PROJECT_KNOWLEDGE §5, "Badges, XP & streaks".
 - **`npm run seed` exists** (2026-09-19) and creates a test parent with two
   children who have different progress through both years. Use it rather than
   clicking through the curriculum by hand to reach a state worth looking at.
 - **Celebrations + Trophy Room shipped 2026-09-29** (Curriculum Mode only), with
   Bix the mascot joining combos and the Trophy Room. **Streaks, XP, levels and
-  a "something new" dot are designed** — docs/superpowers/specs/2026-09-30-
-  streaks-xp-whats-new-design.md — and add the day stamps the bullet above
-  says streaks were waiting for (in the rewards document, not progress). Still
+  a "something new" dot shipped 2026-09-30** — docs/superpowers/specs/2026-09-30-
+  streaks-xp-whats-new-design.md. Still
   open: the same kit for Skills Mode games. Recorded sounds shipped the same day (Mixkit,
   see docs/sounds/README.md). The Mixkit licence covers use in the app;
   keeping the MP3s in the public repo was cleared with a lawyer.
@@ -100,8 +99,8 @@ Ordered **easiest → hardest** to implement.
 3. **Unblock scale:** #6 (content authoring format) — makes #16 and future
    curriculum years far cheaper.
 4. **Then the shared prerequisite:** per-attempt data, which #9 (parent/teacher
-   view) and #10 (adaptive difficulty) both need, and which would also unlock
-   streaks on top of the badges shipped 2026-09-19.
+   view) and #10 (adaptive difficulty) both need. (Streaks and XP shipped
+   2026-09-30 without it.)
 5. **Broaden and polish:** #5, #7, #8 and beyond.
 6. **Finish the larger visual experiment:** #17 (Solar System meteor) needs only
    a physical-device performance run; everything else is verified in its tracker.

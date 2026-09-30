@@ -1,6 +1,6 @@
 # Streaks, XP, levels & "what's new": design
 
-**Date:** 2026-09-30 · **Status:** revision 2, open questions resolved, awaiting approval · **Branch:** `feat/celebrations`
+**Date:** 2026-09-30 · **Status:** implemented 2026-09-30 · **Branch:** `feat/celebrations`
 
 ## What changed in revision 2
 

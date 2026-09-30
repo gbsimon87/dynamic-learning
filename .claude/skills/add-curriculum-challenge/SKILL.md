@@ -52,6 +52,7 @@ Every challenge component MUST:
 - be the **default export**
 - accept a single prop: **`onComplete`**
 - call `onComplete()` **only** on a correct answer, after a ~1s success delay
+- `ChallengeShell` calls `onComplete({ combos })`. Pass `onComplete` straight through — never wrap it as `() => onComplete()`, which would drop the combo count and its XP.
 - own its own state, its own question randomisation, and its own CSS
 - render a `.challenge-container` root and a `.feedback` element
 

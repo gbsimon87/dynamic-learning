@@ -9,10 +9,9 @@
  * Pure: no React, no storage, no dates beyond what the caller passes in, so it
  * runs under `node --test`.
  *
- * WHY NOT STREAKS: a streak needs to know which DAYS a child played, and
- * nothing records that. Rather than invent a half-answer from the one
- * `updatedAt` stamp per curriculum, streaks are deliberately out of scope —
- * see PROJECT_IDEAS.
+ * Streaks and XP live in the same rewards document, not here: see
+ * rewardsShape.js (the shape) and awardRun.js (what one finished challenge
+ * changes).
  */
 
 import { normaliseRewards } from "./rewardsShape.js";

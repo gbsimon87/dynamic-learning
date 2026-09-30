@@ -28,6 +28,11 @@ All from [Mixkit](https://mixkit.co/free-sound-effects/), chosen by ear on
 | 12 | Combo: 3, 6, 9… questions right first time in a row | `combo` | `combo.mp3` | 2014 | Wind chimes |
 | 13 | A wrong answer | `wrong` | `wrong.mp3` | 946 | Wrong answer fail notification |
 | 14 | The celebration's progress ring filling | `progress` | `progress.mp3` | 3062 | Magic wand sparkle |
+| 15 | Level-up step (with Bix) | `levelUp` | `level-up.mp3` | 2984 | Funny melody audio logo |
+| 16 | Streak step (the day's first finished challenge) | `streak` | `badge.mp3` | 2317 | Uplifting flute notification *(shares #9, by choice)* |
+
+#2317 now plays for both badges and streaks, so a day with both hears it twice.
+Swapping `streak`'s `src` in `cues.js` to its own file is a one-line change.
 
 Silent by design: the Continue and Skip buttons, the "Ready for more?" step,
 the Trophy Room, and all of Skills Mode.
@@ -43,7 +48,7 @@ free sounds feel cheap. Each file is gain-matched to its tier:
 | Tier | Target | Cues |
 |---|---|---|
 | Frequent | -20 LUFS | `correct`, `correctLast`, `combo`, `progress`, `practice`, `unlock` |
-| Rewards | -18 LUFS | `success`, `sticker`, `badge` |
+| Rewards | -18 LUFS | `success`, `sticker`, `badge` (also `streak`), `levelUp` |
 | Fanfares | -16 LUFS | `topic`, `quest`, `subjectYear` / `certificate` |
 | Wrong answer | -24 LUFS | `wrong` — the quietest in the app, so a mistake never stings |
 
@@ -61,7 +66,7 @@ page opens, and is decoded on the first tap there.
 2. Change that row's Mixkit id in `PLAN` in
    [`process-sounds.py`](process-sounds.py).
 3. Download the originals and rebuild — the steps are at the top of that
-   script. It needs ffmpeg (`brew install ffmpeg`). Re-running it with
+   script, whose download id list includes 2984 (`level-up`). It needs ffmpeg (`brew install ffmpeg`). Re-running it with
    unchanged ids reproduces the current files byte for byte.
 4. `npm test` checks every cue's file exists; then play the moment in the app.
 

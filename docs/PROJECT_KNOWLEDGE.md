@@ -17,7 +17,7 @@
 > file reflects it. Also update [PROJECT_IDEAS.md](PROJECT_IDEAS.md) when an idea
 > moves between statuses.
 
-**Last reviewed:** 2026-09-29
+**Last reviewed:** 2026-09-30
 
 ---
 
@@ -107,10 +107,12 @@ src/
 │   ├── ThemeContext.jsx      # Global light/dark theme provider
 │   ├── theme-context.js      # Context object, split out for Fast Refresh
 │   ├── AuthContext.jsx       # Parent account + child profile provider (§4.7)
-│   └── auth-context.js       # Context object, split out for Fast Refresh
+│   ├── auth-context.js       # Context object, split out for Fast Refresh
+│   ├── RewardsContext.jsx    # RewardsProvider: the ONE writer of rewards (§5, "Badges, XP & streaks")
+│   └── rewards-context.js    # Context object, split out for Fast Refresh
 ├── hooks/
 │   ├── useProgress.js        # Active child's curriculum progress (§4.5)
-│   ├── useRewards.js         # Active child's badges (see "Badges", §5)
+│   ├── useRewards.js         # Thin reader of RewardsProvider (see "Badges, XP & streaks", §5)
 │   ├── useChildrenProgress.js  # Progress for a LIST of children (§5)
 │   ├── useChildrenRewards.js   # Badges for a LIST of children
 │   └── useTrophyData.js        # One child's rewards + progress, read-only (Trophy Room)
@@ -118,7 +120,8 @@ src/
 │   ├── RequireChild.jsx      # Route guard for Curriculum Mode (§4.7)
 │   ├── ProgressRing.jsx      # The one percent dial, shared by 3 screens
 │   ├── mascot/Mascot.jsx     # Bix — homepage, combo line, Trophy Room
-│   ├── celebration/          # Completion sequence, steps/, fx/ (particles), sound/ (cues + mute)
+│   ├── celebration/          # Completion sequence, steps/ (incl. LevelUpStep, StreakStep), fx/ (particles), sound/ (cues + mute)
+│   ├── rewards/              # LevelBar, WeekDots: shared XP bar and Mon–Sun streak dots
 │   ├── challenge/            # The shared challenge kit (39 components)
 │   ├── ui/Navbar.jsx
 │   ├── ClockPanel.jsx, ReadingNumbersPanel.jsx, DualLabelClock.jsx,
@@ -129,6 +132,10 @@ src/
 │   ├── curriculumRegistry.js    # Which curricula exist — the one source
 │   ├── avatars.js               # Starter profile emoji + colour tokens
 │   ├── badges.js                # Badge catalogue + earnBadges (§5)
+│   ├── rewardsShape.js          # normaliseRewards: the v2 rewards shape, migrated on read (§5)
+│   ├── xp.js, streak.js         # XP, levels, back-fill · streak, freezes, week dots (pure, §5)
+│   ├── news.js                  # "Something new": addNews / clearNews / hasNews (§5)
+│   ├── awardRun.js              # Everything one finished challenge changes, in one pure step (§5)
 │   ├── childFields.js           # Writable child fields + year rules (§5)
 │   ├── lastAccount.js           # `dl.lastAccount` welcome-back hint (§4.7)
 │   ├── curriculumResume.js      # "Where was this child up to?" (§5)
@@ -154,7 +161,7 @@ scripts/                      # Dev tooling, Node-only
 ├── utils/
 │   └── toKebabCase.js        # Generates the IDs used in URLs + storage keys
 ├── pages/
-│   ├── home/Home.jsx
+│   ├── home/Home.jsx, HomeAchievements.jsx   # HomeAchievements: something-new, streak/level and collection cards
 │   ├── auth/                 # Login, SignUp, Profiles, ParentArea
 │   ├── skills/
 │   │   ├── SkillsPage.jsx    # Skills hub — links to every skill game
@@ -169,7 +176,7 @@ scripts/                      # Dev tooling, Node-only
 public/
 ├── countries.geojson, continents.geojson
 ├── images/landmarks/*.webp
-├── sounds/*.mp3              # The app's 13 sound files — see docs/sounds/README.md
+├── sounds/*.mp3              # The app's 14 sound files — see docs/sounds/README.md
 └── static/
 docs/sounds/                  # Where each sound came from + how to replace one
 ├── README.md                 # Scenario → file → Mixkit id table, loudness, licence
@@ -338,14 +345,26 @@ Spec: [docs/superpowers/specs/2026-09-29-curriculum-celebrations-design.md](supe
   Skills games define globally.
 - **On completion** — `buildCelebrationSteps` (pure, tested) turns the milestone
   result into a SEQUENCE: headline → year progress → topic sticker → one step
-  per badge → avatar unlock → certificate (year only) → next. Each step waits for
-  Continue; "Skip" is on every step. A plain challenge or a practice replay is a
-  single screen. Effects and sound escalate by tier (`TIERS`).
+  per badge → avatar unlock → level-up → streak → certificate (year only) → next.
+  Each step waits for Continue; "Skip" is on every step. A plain challenge or a
+  practice replay is a single screen, unless it earns a level-up or is the day's
+  first finished challenge (then headline → streak → next). Effects and sound escalate by tier (`TIERS`).
+- **XP, level-up and streak (2026-09-30).** The headline carries a **+N XP** chip
+  and a filling level bar ("Practice XP done for today" once the day's 2 XP-earning
+  replays are used). The **level-up** step shows the new level with a medium Bix
+  cheering as it appears (`LevelUpStep`, cue `levelUp`). The **streak** step
+  (`StreakStep`, cue `streak`) appears only on the day's first finished challenge
+  (`recordDay` outcome `started`, `extended`, `saved` or `restarted`): "N-day
+  streak!", a freeze-saved message, or a new-streak message, with the week dots;
+  streaks of 3, 7, 14 and 30 get a bigger effect (`STREAK_MILESTONES`). Full order:
+  headline → year progress → sticker → badge(s) → unlock → level-up → streak →
+  certificate → next. Spec:
+  [docs/superpowers/specs/2026-09-30-streaks-xp-whats-new-design.md](superpowers/specs/2026-09-30-streaks-xp-whats-new-design.md).
 - **It only announces.** Progress and badges are written in `ProblemView`
   before the sequence mounts; its extra figures (`yearBefore`/`yearAfter`, the
   sticker) come from running the pure `completeChallenge` reducer on a copy.
-- **The app has sound.** 14 scenarios, each its own cue in `sound/cues.js`,
-  play 13 recorded files from `public/sounds/` (Mixkit, loudness-matched in
+- **The app has sound.** 16 scenarios, each its own cue in `sound/cues.js`,
+  play 14 recorded files from `public/sounds/` (Mixkit, loudness-matched in
   tiers so fanfares are loudest and the wrong-answer boop quietest). The full
   scenario → file → Mixkit id table, how they were processed, and how to swap
   one are in [docs/sounds/README.md](sounds/README.md); the audition page they
@@ -390,7 +409,8 @@ Spec: [docs/superpowers/specs/2026-09-29-curriculum-celebrations-design.md](supe
 - `prefers-reduced-motion` drops every particle effect (canvas never created)
   and turns flips/drops into fades. Each step's heading takes focus.
 
-No completion data or storage keys changed; the only new key is `dl.soundMuted`.
+The 2026-09-29 celebrations changed no stored data; the only new key was `dl.soundMuted`.
+(The 2026-09-30 XP and streak work does change the rewards document: see §5.)
 
 ⚠️ **The hook is inert with no active child** — empty progress, and it never writes.
 It also refuses to save unless the in-memory progress came from the document currently
@@ -451,6 +471,7 @@ parents:  { _id, email, passwordHash, passwordSalt, iterations,
 children: { _id, parentId, name, avatar, colour, yearGroup, createdAt }
 progress: { _id, childId, year, subject, schemaVersion: 1, data: {...}, createdAt, updatedAt }
 rewards:  { _id, childId, schemaVersion: 1, data: {...}, createdAt, updatedAt }
+          // the envelope stays 1; the shape version is `data.schemaVersion` (now 2, §5)
 ```
 
 Rewards are **one document per child**, not per year+subject like progress — a
@@ -852,7 +873,7 @@ stay unchanged. The parent and profile picker pages share a drifting glyph
 backdrop like the Home and Skills hubs. On narrow screens the parent page's name
 form stacks, year buttons wrap, and long names stay inside their profile card.
 
-### Badges (2026-09-19)
+### Badges, XP & streaks (badges 2026-09-19; XP, streaks and news 2026-09-30)
 
 One **rewards document per child**, separate from progress: a badge belongs to
 the learner across every year, and keeping them apart means a reward bug can
@@ -875,9 +896,101 @@ Two things to keep true:
   nothing and leave the tally alone. Never call `earnBadges` with invented
   milestones.
 
-`useRewards` mirrors `useProgress`'s `loadedKeyRef` guard, because the same
-child-switch hazard applies. Unlike progress its write is **explicit**, not an
-effect on state: badges are awarded at exactly one moment.
+**The 2026-09-30 spec supersedes the old "streaks deliberately out of scope"
+stance.** Streaks, XP, levels and "something new" shipped in
+[docs/superpowers/specs/2026-09-30-streaks-xp-whats-new-design.md](superpowers/specs/2026-09-30-streaks-xp-whats-new-design.md).
+The day stamps streaks were waiting for live in the **rewards document**, not
+progress, which is untouched.
+
+**The v2 rewards shape** (`data`; `rewardsShape.js`, `REWARDS_SCHEMA_VERSION = 2`).
+The stored envelope's own `schemaVersion` stays 1; the shape version is
+`data.schemaVersion`.
+
+| Field | Meaning |
+|---|---|
+| `schemaVersion` | 2 |
+| `badges`, `counts` | Unchanged from v1 |
+| `xp` | Total earned, integer |
+| `xpBackfilled` | The one-off back-fill has been stored |
+| `streak` | `{ current, best, lastDay, freezes (0-2), recent, frozen }`. `current` counts days played (a frozen day bridges the gap, adds nothing). `recent` and `frozen` are the last 14 days, for the Mon-Sun dots only |
+| `news` | `{ badges: [ids], stickers: ["year/subject/topicId"] }`, earned but not yet looked at |
+| `recentStickers` | `"year/subject/topicId"`, newest last, at most 5 |
+| `practice` | `{ day, count }`: replays that earned XP on `day`; resets on a new day |
+
+**Migration happens on read and loses nothing.** `normaliseRewards` fills
+missing fields with defaults, never removes or rewrites an existing one
+(unknown fields survive) and never throws. A v1 document reads as v2 in memory
+and is written as v2 only on its next real save. `earnBadges` no longer sets
+`schemaVersion`; `normaliseRewards` owns it.
+
+**Phase 0 rule: a failed read is never followed by a write.** Only a rewards
+document that genuinely does not exist (`null`) counts as "no rewards yet". If
+the read throws, `RewardsProvider` stays `failed`, `award` and `clearNews` write
+nothing, and `award` asks for a re-read. (Before this, a failed read let the
+next finished challenge overwrite the saved document.)
+
+**`RewardsProvider` is the single writer.** `src/context/RewardsContext.jsx`,
+mounted in `src/main.jsx` inside `AuthProvider`, holds one in-memory rewards
+document for the active child, shared by the challenge page, navbar, home page
+and Trophy Room. `useRewards()` is a thin reader of it. It keeps `useProgress`'s
+`loadedKeyRef` guard (never write one child's rewards into another's document)
+and a `latestRef` so two writes in a row never build on a stale copy. It writes
+at exactly two moments:
+
+1. **`award(...)`, a challenge finished.** `ProblemView` calls it once per run
+   (guarded by a ref keyed to the run). One save covers badges, XP (plus any
+   pending back-fill), streak, news and recent stickers, via the pure
+   `awardRun`. `ChallengeShell` calls `onComplete({ combos })` and every
+   challenge passes it straight through, so combos reach the award.
+2. **`clearNews()`, the child opens their own Trophy Room.** One save, skipped
+   when there is no news. The room shows NEW ribbons from what was new at the
+   start of the visit, so they do not vanish while the child looks.
+
+The grown-up room (`/parent/trophies/:childId`) and `/parent` read from the
+store, normalised, and never write.
+
+**Back-fill.** While `xpBackfilled` is false the provider reads the progress
+documents once (`loadResumeCandidates`, read-only) into an in-memory
+`pendingBackfill`: 10 XP per completed, built challenge in any year. Displayed
+XP is `xp + pendingBackfill` straight away; the next `award` stores it and sets
+`xpBackfilled`. If that read fails it waits for the next visit. Streaks start
+fresh.
+
+**The numbers** (`xp.js`, `streak.js`):
+
+- First completion of a challenge +10; practice replay +5 for the first 2
+  replays each local day only; each "3 in a row" combo +2 (practice included).
+- Levels: L2 at 100 XP, and each gap is 50 bigger than the last (L3 250,
+  L4 450, L5 700, L6 1,000, L7 1,350).
+- A streak day is the device's local `YYYY-MM-DD`; any finished challenge,
+  practice included, counts. Played yesterday: +1. Missed days with enough
+  freezes held: one freeze spent per missed day, +1. Missed more than freezes
+  held: `current` resets to 1 and freezes are kept. A clock that goes backwards
+  is ignored.
+- **Freezes:** earned each time `current` reaches a multiple of 5, holding at
+  most 2, spent automatically. `best` is the highest `current` reached.
+- Display never writes: a streak reads alive while the missed days before today
+  are within the freezes held ("play today to keep it"), otherwise 0.
+
+**"Something new"** (`news.js`). Badges and stickers are **added to `news` when
+earned** and **cleared when the child opens their own Trophy Room**, so
+anything owned before this shipped is never new and nothing needs every
+progress document. It drives the navbar 🏆 dot, the NEW ribbons in the Trophy
+Room and the home "Something new!" card.
+
+**Where it shows.** Navbar: above 480px `🔥 N` and `Lv N` chips beside the
+name; at 480px and below a small `🔥N` badge on the avatar chip (`right: -4px`;
+-6px pushed the bar 1px wider than 360px) and no level chip. Streak and level
+are announced to screen readers through the avatar chip link's accessible name
+(a visually-hidden span, e.g. "Demi, 2-day streak, level 3"). Home
+(`HomeAchievements.jsx`, only while a child is playing): a something-new card,
+a streak and level card (`WeekDots`, `LevelBar`) and a collection summary. The
+Trophy Room and `/parent` show streak, best, level and XP.
+`npm run seed` builds v2 documents with a demo streak.
+
+**Known limit: last save wins.** Each save replaces the whole rewards
+document. The same child on two devices or two tabs at once loses whichever
+save is older. Merging on the server is out of scope.
 
 Unlocked avatars can be redeemed in two places: `/parent` (every profile's
 picture picker — `ProfileBuilder` only ever creates) and, since 2026-09-29, the
@@ -1169,6 +1282,16 @@ without a changelog note or the report was inaccurate.
    has no `fetch`-mocked test file of its own.
 10. **No accessibility pass** — drag-and-drop interactions have no keyboard or
    screen-reader alternative; no audio support for pre-readers.
+11. **Back-fill can double count in one edge case** (2026-09-30). If the one-off
+   progress read fails, challenges finished before a *later* visit's back-fill
+   are counted both in their run XP and in the back-fill (+10 each). Accepted:
+   a guard would need a new stored field.
+12. **Whole-document rewards save** (2026-09-30): the same child on two devices
+   or tabs at once, last save wins (§5, "Badges, XP & streaks").
+13. **localStorage mode: a corrupt collection reads as empty and the next save
+   replaces it** (2026-09-30 note). Existing behaviour for every collection
+   (`dl.parents`, `dl.children`, `dl.progress`, `dl.rewards`), unchanged.
+
 **Resolved since last review:**
 
 - **Numbers and Counting Challenge 3 rejected correct answers** (found
