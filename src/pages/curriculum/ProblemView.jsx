@@ -26,7 +26,13 @@ import "./ProblemView.css";
 
 function ProblemView() {
   const { year, subject, categoryId, topicId, challengeId } = useParams();
-  const { award } = useRewards();
+  const { award, status: rewardsStatus, retry } = useRewards();
+
+  // A failed rewards read is retried on arrival, so a run can be awarded.
+  useEffect(() => {
+    if (rewardsStatus === "failed") retry();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const childName = useContext(AuthContext)?.child?.name;
 
   // Sounds only ever play in a challenge, so this is where they download.

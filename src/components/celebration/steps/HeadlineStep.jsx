@@ -85,7 +85,7 @@ export default function HeadlineStep({ step, result, headline, year, subjectName
         ) : step.xp.gained > 0 && (
           <div className="celebration-xp">
             <p className="celebration-chip celebration-xp-gain">+{step.xp.gained} XP</p>
-            <LevelBar xp={step.xp.total} />
+            <LevelBar xp={step.xp.total} from={step.xp.total - step.xp.gained} />
           </div>
         )
       )}

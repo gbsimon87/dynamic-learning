@@ -52,6 +52,6 @@ export function normaliseRewards(data) {
     },
     news: { ...news, badges: list(news.badges), stickers: list(news.stickers) },
     recentStickers: list(source.recentStickers),
-    practice: { day: day(practice.day), count: int(practice.count) },
+    practice: { ...practice, day: day(practice.day), count: int(practice.count) },
   };
 }

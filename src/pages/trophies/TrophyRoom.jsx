@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Link, Navigate, useParams } from "react-router";
 import { AuthContext } from "../../context/auth-context";
 import { useTrophyData } from "../../hooks/useTrophyData";
@@ -10,7 +10,7 @@ import ProgressRing from "../../components/ProgressRing";
 import Mascot from "../../components/mascot/Mascot";
 import LevelBar from "../../components/rewards/LevelBar";
 import { useRewards } from "../../hooks/useRewards";
-import { displayXp } from "../../data/xp";
+import { backfillXp, displayXp } from "../../data/xp";
 import { streakStatus, localDay } from "../../data/streak";
 import { stickerKey } from "../../data/news";
 import "./TrophyRoom.css";
@@ -182,8 +182,23 @@ function TrophyCabinet({ viewed, grownUp = false }) {
   const { clearNews } = own;
   const stored = useTrophyData(viewed?._id); // grown-up: rewards + progress; child: progress only
   const rewards = grownUp ? stored.rewards : own.rewards;
+  const failed = !grownUp && own.status === "failed";
   const loading = grownUp ? stored.loading : stored.loading || !own.hydrated;
   const { candidates } = stored;
+  const { retry } = own;
+  // One automatic retry per visit (a still-failing read must not loop); after
+  // that, the "Try again" button.
+  const autoRetried = useRef(false);
+  useEffect(() => {
+    if (!failed || autoRetried.current) return;
+    autoRetried.current = true;
+    retry();
+  }, [failed, retry]);
+  // Read-only for a grown-up: a child not yet back-filled shows the same
+  // one-off back-fill their own view shows, without storing it.
+  const xp = grownUp
+    ? displayXp(rewards, rewards.xpBackfilled ? null : backfillXp(candidates))
+    : own.xp;
 
   // What was new when this visit began: the ribbons show it for the whole
   // visit, while the stored news is cleared once, after the rewards load.
@@ -221,7 +236,12 @@ function TrophyCabinet({ viewed, grownUp = false }) {
         </h1>
       </header>
 
-      {loading ? (
+      {failed ? (
+        <div role="status" className="trophy-loading">
+          <p>We couldn’t open your trophies just now.</p>
+          <button type="button" className="trophy-retry" onClick={retry}>Try again</button>
+        </div>
+      ) : loading ? (
         <p role="status" className="trophy-loading">Opening the trophy cabinet…</p>
       ) : (
         <>
@@ -231,10 +251,10 @@ function TrophyCabinet({ viewed, grownUp = false }) {
           </ul>
 
           <div className="trophy-stats">
-            <LevelBar xp={grownUp ? displayXp(rewards, null) : own.xp} />
+            <LevelBar xp={xp} />
             <p>
               <span aria-hidden="true">🔥 </span>
-              {streakStatus(rewards.streak, localDay()).current}-day streak · best {rewards.streak.best}
+              {streakStatus(rewards.streak, localDay()).current}-day streak · best {rewards.streak.best} · {xp} XP total
             </p>
           </div>
 

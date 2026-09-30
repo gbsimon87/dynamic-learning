@@ -10,6 +10,7 @@ const INERT = {
   xp: 0,
   award: () => null,
   clearNews: () => {},
+  retry: () => {},
 };
 
 /**

@@ -11,7 +11,8 @@ import {
   unlockedAvatars,
 } from "../../data/badges";
 import { normaliseRewards } from "../../data/rewardsShape";
-import { levelFor } from "../../data/xp";
+import { backfillXp, displayXp, levelFor } from "../../data/xp";
+import { useTrophyData } from "../../hooks/useTrophyData";
 import { streakStatus, localDay } from "../../data/streak";
 import { isYearAvailable } from "../../data/curriculumRegistry";
 import FloatingGlyphBackground from "../../components/FloatingGlyphBackground";
@@ -274,6 +275,9 @@ function NameEditor({ child, onChange }) {
 function ChildRewards({ child, rewards, onChangeAvatar }) {
   const [saving, setSaving] = useState(false);
   const r = normaliseRewards(rewards);
+  // Read-only back-fill for a child who has not played since XP began.
+  const { candidates } = useTrophyData(child._id);
+  const shownXp = displayXp(r, r.xpBackfilled ? null : backfillXp(candidates));
   const held = heldBadgeIds(rewards);
   const choices = unlockedAvatars(rewards, AVATARS);
 
@@ -314,7 +318,7 @@ function ChildRewards({ child, rewards, onChangeAvatar }) {
       </ul>
 
       <p className="parent-area-stats">
-        Level {levelFor(r.xp).level} · {r.xp} XP · 🔥 {streakStatus(r.streak, localDay()).current}-day
+        Level {levelFor(shownXp).level} · {shownXp} XP · 🔥 {streakStatus(r.streak, localDay()).current}-day
         streak (best {r.streak.best})
       </p>
 

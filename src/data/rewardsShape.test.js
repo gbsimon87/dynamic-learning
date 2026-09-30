@@ -44,3 +44,8 @@ test("freezes are clamped to 0–2 and bad dates are dropped", () => {
 test("unknown top-level fields survive, so a newer app's data is never lost", () => {
   assert.equal(normaliseRewards({ futureThing: 1 }).futureThing, 1);
 });
+
+test("unknown fields inside practice survive", () => {
+  const out = normaliseRewards({ practice: { day: "2026-01-02", count: 2, future: "kept" } });
+  assert.deepEqual(out.practice, { day: "2026-01-02", count: 2, future: "kept" });
+});

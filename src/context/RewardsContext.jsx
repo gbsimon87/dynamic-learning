@@ -102,6 +102,17 @@ export function RewardsProvider({ children }) {
     [state.status, state.pendingBackfill, childId, save]
   );
 
+  // A failed read is retried, never written over: bump `attempt` to re-read.
+  const retry = useCallback(() => {
+    if (state.status === "failed") setAttempt((n) => n + 1);
+  }, [state.status]);
+
+  useEffect(() => {
+    if (state.status !== "failed") return undefined;
+    window.addEventListener("focus", retry);
+    return () => window.removeEventListener("focus", retry);
+  }, [state.status, retry]);
+
   const clearNews = useCallback(() => {
     if (state.status !== "ready" || loadedKeyRef.current !== childId) return;
     if (!hasNews(latestRef.current)) return;
@@ -117,8 +128,9 @@ export function RewardsProvider({ children }) {
       xp: displayXp(state.rewards, state.pendingBackfill),
       award,
       clearNews,
+      retry,
     }),
-    [state, award, clearNews]
+    [state, award, clearNews, retry]
   );
 
   return <RewardsContext.Provider value={value}>{children}</RewardsContext.Provider>;
