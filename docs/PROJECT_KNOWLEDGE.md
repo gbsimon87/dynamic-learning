@@ -927,7 +927,13 @@ and is written as v2 only on its next real save. `earnBadges` no longer sets
 document that genuinely does not exist (`null`) counts as "no rewards yet". If
 the read throws, `RewardsProvider` stays `failed`, `award` and `clearNews` write
 nothing, and `award` asks for a re-read. (Before this, a failed read let the
-next finished challenge overwrite the saved document.)
+next finished challenge overwrite the saved document.) Re-reads also come from
+`retry()` — which never writes and only acts while `failed` — called once when a
+challenge page opens, once when the Trophy Room opens, on window focus, and by
+the Trophy Room's "Try again" button, which replaces its loader after a failure
+("We couldn't open your trophies just now"). A completion that happens while
+the read is still failed is recorded in progress but earns no XP, badge or
+streak day — the retries keep that window small.
 
 **`RewardsProvider` is the single writer.** `src/context/RewardsContext.jsx`,
 mounted in `src/main.jsx` inside `AuthProvider`, holds one in-memory rewards
@@ -947,7 +953,10 @@ at exactly two moments:
    start of the visit, so they do not vanish while the child looks.
 
 The grown-up room (`/parent/trophies/:childId`) and `/parent` read from the
-store, normalised, and never write.
+store, normalised, and never write. Both show the **displayed** XP — stored XP
+plus the back-fill worked out from that child's progress while `xpBackfilled`
+is still false — so on day one a parent sees the same level the child does
+rather than "Level 1 · 0 XP". The Trophy Room's stats line shows total XP.
 
 **Back-fill.** While `xpBackfilled` is false the provider reads the progress
 documents once (`loadResumeCandidates`, read-only) into an in-memory
