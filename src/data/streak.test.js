@@ -93,3 +93,23 @@ test("week dots run Monday to Sunday", () => {
   assert.deepEqual(dots.slice(0, 3).map((d) => d.state), ["played", "played", "today"]);
   assert.equal(dots[6].state, "empty");
 });
+
+test("a last day in the future (clock set ahead once) is pulled back, not a months-long lockout", () => {
+  const ahead = play(["2026-09-01", "2026-09-02", "2026-12-25"]); // clock jumped to Christmas
+  const back = recordDay(ahead.streak, "2026-09-03"); // clock fixed
+  assert.equal(back.outcome, "none");
+  assert.equal(back.streak.lastDay, "2026-09-03");
+  assert.ok(!back.streak.recent.includes("2026-12-25"));
+  assert.ok(back.streak.recent.includes("2026-09-03"));
+  // The very next day counts again.
+  const next = recordDay(back.streak, "2026-09-04");
+  assert.equal(next.outcome, "extended");
+});
+
+test("a last day just one ahead (another time zone) is the same day, not a clamp", () => {
+  const ahead = play(["2026-09-30", "2026-10-01"]); // the other device is a day ahead
+  const here = recordDay(ahead.streak, "2026-09-30");
+  assert.equal(here.outcome, "none");
+  assert.equal(here.streak, ahead.streak);
+  assert.equal(recordDay(here.streak, "2026-10-02").outcome, "extended");
+});

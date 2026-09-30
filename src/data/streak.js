@@ -34,8 +34,29 @@ export function addDays(day, n) {
 const keep = (days, day) => [...days, day].slice(-KEEP);
 
 export function recordDay(streak, today) {
-  if (streak.lastDay && daysBetween(streak.lastDay, today) <= 0) {
+  const gap = streak.lastDay ? daysBetween(streak.lastDay, today) : null;
+  // Same day — or one day "ahead", which is simply another device in an
+  // earlier time zone (or a late queued run): already counted.
+  if (gap === 0 || gap === -1) {
     return { streak, outcome: "none", usedFreezes: 0, earnedFreeze: false };
+  }
+  // A last day further in the FUTURE means the device clock was once set
+  // ahead. Left alone, no day would count until the calendar caught up, weeks
+  // later, so the streak is pulled back to today, later days dropped, kept.
+  if (gap !== null && gap < -1) {
+    const past = (days) => days.filter((day) => daysBetween(day, today) >= 0);
+    const recent = past(streak.recent);
+    return {
+      streak: {
+        ...streak,
+        lastDay: today,
+        recent: recent.includes(today) ? recent : keep(recent, today),
+        frozen: past(streak.frozen),
+      },
+      outcome: "none",
+      usedFreezes: 0,
+      earnedFreeze: false,
+    };
   }
 
   let current;

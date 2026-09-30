@@ -19,6 +19,7 @@ let context = null;
 let master = null;
 const buffers = new Map();
 const listeners = new Set();
+const playing = new Set(); // stop functions of files playing or still loading
 let muted = readMuted();
 
 function readMuted() {
@@ -40,6 +41,8 @@ export function setMuted(value) {
   } catch {
     // Not remembered; still honoured for this visit.
   }
+  // Muting silences what is already playing too, such as a year fanfare.
+  if (muted) [...playing].forEach((stop) => stop());
   listeners.forEach((listener) => listener(muted));
 }
 
@@ -171,6 +174,7 @@ function playBuffer(buffer, handle) {
   source.buffer = buffer;
   source.connect(gain);
   gain.connect(master);
+  source.onended = () => handle.done?.();
   source.start();
   handle.fade = () => {
     const now = context.currentTime;
@@ -202,13 +206,9 @@ export function playCue(name) {
       return NOOP;
     }
 
-    const handle = { stopped: false, fade: null };
-    loadBuffer(cue.src)
-      .then((buffer) => playBuffer(buffer, handle))
-      .catch(() => {
-        if (!handle.stopped) synth();
-      });
-    return () => {
+    const handle = { stopped: false, fade: null, done: null };
+    const stop = () => {
+      playing.delete(stop);
       handle.stopped = true;
       try {
         handle.fade?.();
@@ -216,6 +216,15 @@ export function playCue(name) {
         // Already finished.
       }
     };
+    handle.done = () => playing.delete(stop);
+    playing.add(stop);
+    loadBuffer(cue.src)
+      .then((buffer) => playBuffer(buffer, handle))
+      .catch(() => {
+        playing.delete(stop);
+        if (!handle.stopped && !muted) synth();
+      });
+    return stop;
   } catch {
     // Sound is decoration: a failure here must never interrupt a child.
     return NOOP;
