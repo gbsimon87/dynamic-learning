@@ -11,6 +11,7 @@ const INERT = {
   award: () => null,
   clearNews: () => {},
   retry: () => {},
+  refresh: () => {},
 };
 
 /**

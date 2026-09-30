@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { countStickers, topicSticker, topicStickers } from "./stickers.js";
+import { countStickers, topicSticker, topicStickers, wonSticker } from "./stickers.js";
 
 const curriculum = [
   {
@@ -57,4 +57,11 @@ test("stickers are grouped by quest and counted", () => {
 test("empty progress earns nothing and does not throw", () => {
   assert.deepEqual(countStickers(topicStickers(curriculum, {}, built)), { earned: 0, total: 2 });
   assert.deepEqual(topicStickers(undefined, {}, built), []);
+});
+
+test("wonSticker needs the topic milestone and an earned sticker", () => {
+  assert.equal(wonSticker(["challenge", "topic"], { earned: true }), true);
+  assert.equal(wonSticker(["challenge"], { earned: true }), false);
+  assert.equal(wonSticker(["challenge", "topic"], { earned: false }), false);
+  assert.equal(wonSticker(["challenge", "topic"], null), false);
 });

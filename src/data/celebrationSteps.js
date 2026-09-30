@@ -11,6 +11,7 @@
  */
 
 import { STREAK_MILESTONES } from "./streak.js";
+import { wonSticker } from "./stickers.js";
 
 /**
  * Effect and sound per milestone level, from quietest to loudest. Cue names
@@ -67,7 +68,7 @@ export function buildCelebrationSteps({
     });
   }
 
-  if (earned.includes("topic") && sticker?.earned) {
+  if (wonSticker(earned, sticker)) {
     middle.push({ type: "sticker", sticker, effect: "stars", cue: "sticker" });
   }
 

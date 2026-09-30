@@ -6,11 +6,16 @@
  * `pendingBackfill` is a number once the progress documents have been read,
  * or null if that read has not happened or failed, in which case the
  * back-fill waits for a later run.
+ *
+ * While the back-fill is still waiting, a first completion's base XP is NOT
+ * stored: that completion is already in the progress documents, so the
+ * back-fill will count it when it lands. Storing it too would pay it twice.
+ * The child still sees it (`xpGained`, `xpTotal`); only the store waits.
  */
 import { earnBadges } from "./badges.js";
 import { normaliseRewards } from "./rewardsShape.js";
 import { recordDay } from "./streak.js";
-import { levelFor, xpForRun } from "./xp.js";
+import { XP, levelFor, xpForRun } from "./xp.js";
 import { addNews } from "./news.js";
 
 export function awardRun(rewards, input) {
@@ -26,10 +31,11 @@ export function awardRun(rewards, input) {
 
   const run = xpForRun({ firstTime, combos, practice: next.practice, today });
   const day = recordDay(next.streak, today);
+  const deferred = !next.xpBackfilled && pendingBackfill === null && firstTime ? XP.first : 0;
 
   next = {
     ...next,
-    xp: next.xp + backfill + run.xp,
+    xp: next.xp + backfill + run.xp - deferred,
     xpBackfilled: next.xpBackfilled || pendingBackfill !== null,
     practice: run.practice,
     streak: day.streak,
@@ -40,10 +46,10 @@ export function awardRun(rewards, input) {
     rewards: next,
     awarded: badges.awarded,
     xpGained: run.xp,
-    xpTotal: next.xp,
+    xpTotal: next.xp + deferred,
     practiceCapped: run.practiceCapped,
     levelBefore,
-    levelAfter: levelFor(next.xp).level,
+    levelAfter: levelFor(next.xp + deferred).level,
     streakOutcome: day.outcome,
     streak: day.streak,
     usedFreezes: day.usedFreezes,

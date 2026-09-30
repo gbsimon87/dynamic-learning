@@ -19,8 +19,14 @@ test("a first completion adds XP, starts a streak and stores v2 without losing v
 
 test("pendingBackfill null (the progress read failed) leaves the back-fill for later", () => {
   const r = awardRun(V1, { ...base, earned: ["challenge"], firstTime: true, today: "2026-09-30", pendingBackfill: null });
-  assert.equal(r.rewards.xp, 10);
   assert.equal(r.rewards.xpBackfilled, false);
+  // The child sees the 10; the store leaves it to the back-fill, which counts
+  // this completion from the progress documents — so it is never paid twice.
+  assert.equal(r.xpGained, 10);
+  assert.equal(r.xpTotal, 10);
+  assert.equal(r.rewards.xp, 0);
+  const later = awardRun(r.rewards, { ...base, earned: [], firstTime: false, today: "2026-09-30", pendingBackfill: 10 });
+  assert.equal(later.rewards.xp, 15); // back-fill 10 (this completion) + practice 5
 });
 
 test("the back-fill alone never counts as a level-up", () => {
@@ -56,4 +62,14 @@ test("a third practice replay today earns no XP but still counts for the streak"
   assert.equal(out.practiceCapped, true);
   assert.equal(r.xp, 10);
   assert.equal(r.streak.current, 1);
+});
+
+test("a replay past today's practice cap, on a day already counted, changes nothing (so nothing is saved)", () => {
+  const practice = { ...base, earned: [], firstTime: false, today: "2026-09-30", pendingBackfill: 0 };
+  let rewards = awardRun(V1, { ...base, earned: ["challenge"], firstTime: true, today: "2026-09-30", pendingBackfill: 0 }).rewards;
+  rewards = awardRun(rewards, practice).rewards;
+  rewards = awardRun(rewards, practice).rewards;
+  const capped = awardRun(rewards, practice);
+  assert.equal(capped.practiceCapped, true);
+  assert.equal(JSON.stringify(capped.rewards), JSON.stringify(rewards));
 });

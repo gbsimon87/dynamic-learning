@@ -17,7 +17,7 @@ import { useRewards } from "../../hooks/useRewards";
 import { AuthContext } from "../../context/auth-context";
 import { completeChallenge as withChallengeComplete } from "../../data/progressRules";
 import { getYearStats } from "../../data/curriculumProgressStats";
-import { topicSticker } from "../../data/stickers";
+import { topicSticker, wonSticker } from "../../data/stickers";
 import { preloadSounds } from "../../components/celebration/sound/player";
 import { localDay, weekDots } from "../../data/streak";
 import { stickerKey } from "../../data/news";
@@ -26,13 +26,7 @@ import "./ProblemView.css";
 
 function ProblemView() {
   const { year, subject, categoryId, topicId, challengeId } = useParams();
-  const { award, status: rewardsStatus, retry } = useRewards();
-
-  // A failed rewards read is retried on arrival, so a run can be awarded.
-  useEffect(() => {
-    if (rewardsStatus === "failed") retry();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { award, refresh } = useRewards();
   const childName = useContext(AuthContext)?.child?.name;
 
   // Sounds only ever play in a challenge, so this is where they download.
@@ -45,6 +39,10 @@ function ProblemView() {
   // boolean would leave the panel showing over the challenge just opened.
   const positionKey = `${year}/${subject}/${categoryId}/${topicId}/${challengeId}`;
   const [completion, setCompletion] = useState(null);
+  // Leaving a challenge forgets its celebration, so Next → browser Back opens
+  // the challenge again rather than replaying the fanfare. Cleared during
+  // render, not in an effect, so the old panel never paints for a frame.
+  if (completion && completion.positionKey !== positionKey) setCompletion(null);
   const justCompleted = completion?.positionKey === positionKey;
 
   // One award per run: XP is additive, so a second call must never count.
@@ -54,7 +52,10 @@ function ProblemView() {
   const awardedKeyRef = useRef(null);
   useEffect(() => {
     awardedKeyRef.current = null;
-  }, [positionKey]);
+    // Re-read the rewards (or retry a failed read) as each challenge opens,
+    // so this run builds on what the child earned elsewhere since.
+    refresh();
+  }, [positionKey, refresh]);
 
   const alreadyCompleted = isChallengeComplete(categoryId, topicId, challengeId);
 
@@ -98,13 +99,14 @@ function ProblemView() {
       };
     }
 
-    const stickerWon =
-      result.earned.includes("topic") && extras.sticker?.earned
-        ? stickerKey(year, subject, topicId)
-        : null;
+    const stickerWon = wonSticker(result.earned, extras.sticker)
+      ? stickerKey(year, subject, topicId)
+      : null;
 
     // Badges ride on the SAME milestones the celebration already reports, so a
     // badge can never be awarded for something the panel does not announce.
+    // Null while the rewards are still loading: the run is queued and awarded
+    // once they are in (the Trophy Room then shows it as new).
     const today = localDay();
     const gained = award({
       earned: result.earned,

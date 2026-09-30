@@ -52,3 +52,27 @@ export function countStickers(groups) {
   const all = (groups ?? []).flatMap((group) => group.stickers);
   return { earned: all.filter((sticker) => sticker.earned).length, total: all.length };
 }
+
+/** Whether a finished run won its topic's sticker: the topic milestone AND the strict rule. */
+export function wonSticker(earned, sticker) {
+  return (earned ?? []).includes("topic") && Boolean(sticker?.earned);
+}
+
+/** `{ earned, total }` across every candidate from `loadResumeCandidates`. */
+export function countAllStickers(candidates) {
+  return (candidates ?? []).reduce(
+    (sum, { curriculum, progress, isBuilt }) => {
+      const count = countStickers(topicStickers(curriculum, progress, isBuilt));
+      return { earned: sum.earned + count.earned, total: sum.total + count.total };
+    },
+    { earned: 0, total: 0 }
+  );
+}
+
+/** One topic's sticker from a `loadResumeCandidates` candidate, or undefined. */
+export function findSticker(candidate, topicId) {
+  if (!candidate) return undefined;
+  return topicStickers(candidate.curriculum, candidate.progress, candidate.isBuilt)
+    .flatMap((group) => group.stickers)
+    .find((sticker) => sticker.topicId === topicId);
+}

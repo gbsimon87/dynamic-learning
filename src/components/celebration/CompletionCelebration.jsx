@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router";
 import { buildCelebrationSteps } from "../../data/celebrationSteps";
+import { wonSticker } from "../../data/stickers";
 import { peekMessage, rememberMessage } from "../../data/celebrationMessages";
 import { playCue } from "./sound/player";
 import { playEffect } from "./fx/effects";
@@ -91,7 +92,7 @@ export default function CompletionCelebration({
 
   const step = steps[stepIndex];
   const StepContent = STEP_COMPONENTS[step.type] ?? NextStep;
-  const awardedSomething = badges.length > 0 || Boolean(sticker?.earned && result.earned.includes("topic"));
+  const awardedSomething = badges.length > 0 || wonSticker(result.earned, sticker);
 
   useEffect(() => {
     rememberMessage(result.level, headline.id);
