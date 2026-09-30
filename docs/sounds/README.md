@@ -6,6 +6,8 @@ The files live in [`public/sounds/`](../../public/sounds/) and are wired to
 scenarios in [`src/components/celebration/sound/cues.js`](../../src/components/celebration/sound/cues.js).
 Callers only ever name a scenario (`playCue("topic")`), so replacing a sound
 never touches a component.
+The navbar 🔊 button mutes every cue on the device and fades out anything
+already playing, so a long file (the year fanfare) is cut off at once.
 
 ## Scenario → sound
 

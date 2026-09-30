@@ -382,7 +382,8 @@ Spec: [docs/superpowers/specs/2026-09-29-curriculum-celebrations-design.md](supe
   stop function: a new celebration step, or leaving the celebration, fades out
   the previous sound, so the 8-second finale never talks over the next step.
 - **Mute** is the navbar 🔊 button, stored as the device preference
-  `dl.soundMuted` — not learner data. iOS's silent switch / Silent Mode also
+  `dl.soundMuted` — not learner data. Muting also fades out whatever is
+  playing (or still loading), so a fanfare stops at once. iOS's silent switch / Silent Mode also
   silences web audio; that is deliberately not overridden, and `/parent` has a
   "Sound" section explaining it.
 - **Licence (read 2026-09-29):** the Mixkit Sound Effects Free License covers
@@ -928,12 +929,28 @@ document that genuinely does not exist (`null`) counts as "no rewards yet". If
 the read throws, `RewardsProvider` stays `failed`, `award` and `clearNews` write
 nothing, and `award` asks for a re-read. (Before this, a failed read let the
 next finished challenge overwrite the saved document.) Re-reads also come from
-`retry()` — which never writes and only acts while `failed` — called once when a
-challenge page opens, once when the Trophy Room opens, on window focus, and by
+`refresh()` (alias `retry()`), called as each challenge page opens, once when
+the Trophy Room opens, on window focus and when the tab becomes visible, and by
 the Trophy Room's "Try again" button, which replaces its loader after a failure
-("We couldn't open your trophies just now"). A completion that happens while
-the read is still failed is recorded in progress but earns no XP, badge or
-streak day — the retries keep that window small.
+("We couldn't open your trophies just now").
+
+**A run finished before the read lands is queued, not dropped.** `award`
+returns null (that celebration shows no XP or badges) and the run is awarded
+the moment the document is in, in the same save; its badges then show as NEW
+in the Trophy Room. The queue lives in memory: closing the tab while the read
+is still failing loses it.
+
+**`refresh()` keeps a long-open tab current.** On a good read it re-reads in
+the background and swaps in the stored document — only if nothing was saved
+while the read was in flight and it is the newest read — so a tablet left open
+all day builds on what the same child earned elsewhere since. It never reads
+over unsaved memory: while a save is in flight it does nothing, and after a
+failed save it sends the in-memory document again instead.
+
+**Saves go one at a time.** A newer save waits for the one in flight, and only
+the newest waiting document is sent, so replies can never land out of order
+and leave an older document on the server. A save that changes nothing (a
+practice replay past the day's cap, on a day already counted) is skipped.
 
 **`RewardsProvider` is the single writer.** `src/context/RewardsContext.jsx`,
 mounted in `src/main.jsx` inside `AuthProvider`, holds one in-memory rewards
@@ -962,8 +979,12 @@ rather than "Level 1 · 0 XP". The Trophy Room's stats line shows total XP.
 documents once (`loadResumeCandidates`, read-only) into an in-memory
 `pendingBackfill`: 10 XP per completed, built challenge in any year. Displayed
 XP is `xp + pendingBackfill` straight away; the next `award` stores it and sets
-`xpBackfilled`. If that read fails it waits for the next visit. Streaks start
-fresh.
+`xpBackfilled`. The provider stays `loading` until that read is done, so a
+queued run is awarded against it (minus 10 per queued first completion, which
+the back-fill already counts). If that read fails it waits for the next visit,
+and meanwhile a first completion's base 10 XP is shown but not stored — the
+back-fill will count that completion from progress — so nothing is paid twice.
+Streaks start fresh.
 
 **The numbers** (`xp.js`, `streak.js`):
 
@@ -974,8 +995,11 @@ fresh.
 - A streak day is the device's local `YYYY-MM-DD`; any finished challenge,
   practice included, counts. Played yesterday: +1. Missed days with enough
   freezes held: one freeze spent per missed day, +1. Missed more than freezes
-  held: `current` resets to 1 and freezes are kept. A clock that goes backwards
-  is ignored.
+  held: `current` resets to 1 and freezes are kept. A last day one day ahead
+  (another device in an earlier time zone) counts as today. A last day further
+  ahead means the clock was once set forward: the streak is pulled back to
+  today and later days are dropped, rather than locked until the calendar
+  catches up.
 - **Freezes:** earned each time `current` reaches a multiple of 5, holding at
   most 2, spent automatically. `best` is the highest `current` reached.
 - Display never writes: a streak reads alive while the missed days before today
@@ -998,8 +1022,10 @@ Trophy Room and `/parent` show streak, best, level and XP.
 `npm run seed` builds v2 documents with a demo streak.
 
 **Known limit: last save wins.** Each save replaces the whole rewards
-document. The same child on two devices or two tabs at once loses whichever
-save is older. Merging on the server is out of scope.
+document. `refresh()` narrows this to the same child playing on two devices at
+the very same moment: whichever save is older is lost. Merging on the server is
+out of scope. A save that failed for one child is dropped when switching to
+another (as before).
 
 Unlocked avatars can be redeemed in two places: `/parent` (every profile's
 picture picker — `ProfileBuilder` only ever creates) and, since 2026-09-29, the
@@ -1291,12 +1317,12 @@ without a changelog note or the report was inaccurate.
    has no `fetch`-mocked test file of its own.
 10. **No accessibility pass** — drag-and-drop interactions have no keyboard or
    screen-reader alternative; no audio support for pre-readers.
-11. **Back-fill can double count in one edge case** (2026-09-30). If the one-off
-   progress read fails, challenges finished before a *later* visit's back-fill
-   are counted both in their run XP and in the back-fill (+10 each). Accepted:
-   a guard would need a new stored field.
-12. **Whole-document rewards save** (2026-09-30): the same child on two devices
-   or tabs at once, last save wins (§5, "Badges, XP & streaks").
+11. **Back-fill can under-pay in one edge case** (2026-09-30). If a first
+   completion's progress save fails but its rewards save succeeds before the
+   back-fill lands, that challenge's 10 XP is never counted. The safe
+   direction; accepted.
+12. **Whole-document rewards save** (2026-09-30): the same child playing on two
+   devices at the same moment, last save wins (§5, "Badges, XP & streaks").
 13. **localStorage mode: a corrupt collection reads as empty and the next save
    replaces it** (2026-09-30 note). Existing behaviour for every collection
    (`dl.parents`, `dl.children`, `dl.progress`, `dl.rewards`), unchanged.
