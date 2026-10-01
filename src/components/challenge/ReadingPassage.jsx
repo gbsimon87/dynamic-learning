@@ -8,7 +8,9 @@ import "./english-kit.css";
  * `passage`  { title?, kind?, blocks } where each block is
  *            { type: "p" | "h" | "line" | "item", text }.
  *            "h" is a heading or sub-heading, "line" a line of poetry (kept
- *            on its own line), "item" a numbered step.
+ *            on its own line), "item" a numbered step. A "p" may carry a
+ *            `label` ("Paragraph 1") shown above it, for questions that
+ *            name paragraphs.
  * `speak`    shows a 🔊 "Read it to me" button. It is never automatic: the
  *            reading is the skill, and listening is the child's choice.
  * `highlight` optional Set of block indices to mark, for a hint.
@@ -47,7 +49,12 @@ function ReadingPassage({ passage, speak = true, highlight }) {
               </p>
             );
           }
-          return <p key={index} className={`reading-passage-p ${marked}`}>{block.text}</p>;
+          return (
+            <p key={index} className={`reading-passage-p ${marked}`}>
+              {block.label && <span className="reading-passage-label">{block.label}</span>}
+              {block.text}
+            </p>
+          );
         })}
       </div>
     </article>

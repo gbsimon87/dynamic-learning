@@ -305,6 +305,20 @@
   text-underline-offset: 5px;
 }
 
+/* Whole sentences: read as a passage, each one a tap target. */
+.word-picker.is-sentences {
+  justify-content: flex-start;
+  max-width: 38rem;
+  font-size: 1.12rem;
+  text-align: left;
+}
+
+.word-picker.is-sentences .word-picker-word {
+  text-align: left;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
 .word-picker.is-gaps {
   gap: 0.1rem;
 }
@@ -386,6 +400,16 @@
 
 .reading-passage-body .reading-passage-line {
   margin-bottom: 0.15rem;
+}
+
+.reading-passage-label {
+  display: block;
+  margin-bottom: 0.15rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.7;
 }
 
 .reading-passage-step {

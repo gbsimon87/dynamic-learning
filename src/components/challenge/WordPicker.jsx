@@ -16,24 +16,31 @@ import "./english-kit.css";
  *             as plain text in word mode (so "the" can't be tapped when the
  *             question is about verbs and that would be noise).
  * `hinted`    optional Set of token indices to underline as a hint.
+ * `variant="sentences"` lays whole sentences out as a short passage, one
+ *             tappable sentence after another, for "tap the evidence".
+ * `innerGaps` in gap mode, offer only the gaps BETWEEN tokens. A new
+ *             paragraph cannot start before the first sentence, so offering
+ *             that gap only gives a child a wrong answer to find.
  */
-function WordPicker({ tokens, selected, onSelect, disabled, mode = "word", pickable, hinted, label = "Sentence" }) {
+function WordPicker({ tokens, selected, onSelect, disabled, mode = "word", pickable, hinted, label = "Sentence", variant = "", innerGaps = false }) {
   if (mode === "gap") {
     return (
       <p className="word-picker is-gaps" role="group" aria-label={label}>
         {tokens.map((token, index) => (
           <span key={index} className="word-picker-run">
-            <GapButton index={index} selected={selected} onSelect={onSelect} disabled={disabled} before={token} />
+            {!(innerGaps && index === 0) && (
+              <GapButton index={index} selected={selected} onSelect={onSelect} disabled={disabled} before={token} />
+            )}
             <span className={`word-picker-text ${hinted?.has(index) ? "is-hinted" : ""}`}>{token}</span>
           </span>
         ))}
-        <GapButton index={tokens.length} selected={selected} onSelect={onSelect} disabled={disabled} />
+        {!innerGaps && <GapButton index={tokens.length} selected={selected} onSelect={onSelect} disabled={disabled} />}
       </p>
     );
   }
 
   return (
-    <p className="word-picker" role="group" aria-label={label}>
+    <p className={`word-picker ${variant ? `is-${variant}` : ""}`} role="group" aria-label={label}>
       {tokens.map((token, index) =>
         pickable && !pickable(index) ? (
           <span key={index} className="word-picker-text">{token}</span>
