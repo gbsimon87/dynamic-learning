@@ -206,10 +206,9 @@ adverbial
 
 # Mapping to our curriculum dataset
 
-> **Status: DRAFT, awaiting sign-off (2026-10-01).** Category and topic titles
-> become ids in URLs and saved progress once `year3EnglishCurriculum.js` ships,
-> so this list is approved before the dataset is written. After that, a rename
-> is a migration, not an edit.
+> **Status: Year 3 approved 2026-10-01.** Category and topic titles are ids in
+> URLs and saved progress (`year3EnglishCurriculum.js`). A rename is a
+> migration, not an edit.
 
 One programme of study covers two years, but the app has one tree per year. We
 split it into `year3EnglishCurriculum` and `year4EnglishCurriculum`:
@@ -250,7 +249,7 @@ split it into `year3EnglishCurriculum` and `year4EnglishCurriculum`:
 - Passages are original, run to **about 200 words at most**, and use British
   spelling.
 
-## Year 3 topics (draft, 32 topics)
+## Year 3 topics (32 topics)
 
 Categories alternate between strands, so a child never works through ten
 reading topics before reaching spelling. That is our design choice; the order
