@@ -22,7 +22,7 @@ import "./CurriculumPage.css";
    The drifting layer behind the hero, same idea as the homepage sky. Fixed
    positions rather than random so the scene is the same on every visit, and
    `aria-hidden` on the container because "+ ÷ ★ 7" read aloud is nonsense. */
-const GLYPHS = [
+const MATHS_GLYPHS = [
   { char: "＋", left: 5, top: 22, size: 2.2, duration: 15, delay: 0 },
   { char: "✦", left: 17, top: 70, size: 1.5, duration: 18, delay: 3 },
   { char: "÷", left: 29, top: 14, size: 2, duration: 14, delay: 6 },
@@ -34,6 +34,15 @@ const GLYPHS = [
   { char: "＝", left: 94, top: 20, size: 1.9, duration: 21, delay: 7 },
 ];
 
+// Letters and punctuation for English, at the same positions and timings,
+// so the hero has the same rhythm whichever subject is open.
+const ENGLISH_GLYPHS = MATHS_GLYPHS.map((glyph, index) => ({
+  ...glyph,
+  char: ["A", "✦", "?", "“", "b", "●", "!", "★", ","][index],
+}));
+
+const GLYPHS_BY_SUBJECT = { english: ENGLISH_GLYPHS };
+
 /* ===== CATEGORY LOOKS =====
    An icon and a colour per category so a child can tell the sections apart at
    a glance rather than reading eight near-identical headings. Matched on the
@@ -42,6 +51,12 @@ const GLYPHS = [
    anything carrying white ink — both are token names so the theme repaints
    them (PROJECT_KNOWLEDGE §9). */
 const CATEGORY_ICONS = [
+  // English strands first: "Writing - Composition" contains "position" and
+  // would otherwise take the Position and Direction compass.
+  { match: /^spelling\b/i, icon: "🔤" },
+  { match: /^reading\b/i, icon: "📖" },
+  { match: /^grammar\b/i, icon: "🧱" },
+  { match: /^writing\b/i, icon: "✍️" },
   { match: /place value/i, icon: "🔢" },
   { match: /addition|subtraction/i, icon: "➕" },
   { match: /multiplication|division/i, icon: "✖️" },
@@ -294,7 +309,7 @@ function CurriculumPage() {
       {/* ===== HERO ===== */}
       <section className="cp-hero">
         <div className="cp-sky" aria-hidden="true">
-          {GLYPHS.map((glyph, index) => (
+          {(GLYPHS_BY_SUBJECT[subject] ?? MATHS_GLYPHS).map((glyph, index) => (
             <span
               key={index}
               className="cp-glyph"
