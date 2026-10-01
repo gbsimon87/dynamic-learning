@@ -42,6 +42,7 @@ import { hashPassword } from "../server/auth.js";
 import { hashPassword as hashPasswordClient } from "../src/utils/passwordHash.js";
 import { year2MathCurriculum } from "../src/data/year2MathCurriculum.js";
 import { year3MathCurriculum } from "../src/data/year3MathCurriculum.js";
+import { CURRICULUM_SUBJECTS, isCurriculumAvailable } from "../src/data/curriculumRegistry.js";
 import { makeIsBuilt, readBuiltChallenges } from "./seedBuilt.js";
 import {
   SEED_CHILDREN,
@@ -121,7 +122,21 @@ async function main() {
       const curriculum = CURRICULA[year];
       const isBuilt = makeIsBuilt(built, "math", Number(year));
       const { data, completed } = buildProgress(curriculum, isBuilt, count);
-      return { year: Number(year), subject: "math", data, completed, curriculum, isBuilt, count };
+      // Only Maths is seeded, so the year's other subjects are finished only
+      // when it has none. A year award is never claimed for unseeded work.
+      const otherSubjectsComplete = !CURRICULUM_SUBJECTS.some(
+        (subject) => subject.id !== "math" && isCurriculumAvailable(year, subject.id)
+      );
+      return {
+        year: Number(year),
+        subject: "math",
+        data,
+        completed,
+        curriculum,
+        isBuilt,
+        count,
+        otherSubjectsComplete,
+      };
     });
 
     // Ordered so the child's most recent curriculum is stamped last — that is

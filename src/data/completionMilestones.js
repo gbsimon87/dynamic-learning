@@ -42,13 +42,32 @@ export function fullSubjectComplete(progress, curriculum, isBuilt) {
 }
 
 /**
+ * True when every subject given is fully finished: every planned challenge
+ * built and done (`fullSubjectComplete`). An empty list is trivially true,
+ * so a year with one registered subject behaves exactly as it always has.
+ *
+ * Each entry is `{ curriculum, progress, isBuilt }`. A `progress` of null or
+ * undefined means "not read" (still loading, or the read failed). It counts as
+ * NOT finished: a year award is never given on a guess.
+ */
+export function allSubjectsComplete(subjects) {
+  return subjects.every(({ curriculum, progress, isBuilt }) =>
+    Boolean(curriculum) && progress != null &&
+    fullSubjectComplete(progress, curriculum, isBuilt)
+  );
+}
+
+/**
  * Read-only milestone detection for the one challenge that was just answered.
  * The progress reducer is reused to inspect the "after" state; persistence is
  * still owned exclusively by useProgress / ProblemView.
  *
- * `isOnlySubjectInYear` reflects the available curriculum registry. When more
- * subjects are added to a year, a year award must wait until their progress is
- * loaded too; this function never guesses that an unobserved subject is done.
+ * `otherSubjectsComplete` says whether every OTHER subject registered for this
+ * year is already finished (see `allSubjectsComplete`). A year is finished only
+ * when all of its subjects are, so finishing one subject earns the year award
+ * only when the rest are done. The caller works that out from loaded progress;
+ * when it cannot — still loading, or a failed read — it passes false. This
+ * function never guesses that a subject it did not see is done.
  */
 export function getCompletionMilestones({
   curriculum,
@@ -57,7 +76,7 @@ export function getCompletionMilestones({
   topicId,
   challengeId,
   isBuilt,
-  isOnlySubjectInYear = false,
+  otherSubjectsComplete = false,
 }) {
   const category = curriculum?.find((item) => item.id === categoryId);
   const topic = category?.topics.find((item) => item.id === topicId);
@@ -88,7 +107,7 @@ export function getCompletionMilestones({
   if (!fullSubjectComplete(progress, curriculum, isBuilt) &&
       fullSubjectComplete(after, curriculum, isBuilt)) {
     earned.push("subject");
-    if (isOnlySubjectInYear) earned.push("year");
+    if (otherSubjectsComplete) earned.push("year");
   }
 
   return {

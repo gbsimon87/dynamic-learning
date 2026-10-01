@@ -3,16 +3,15 @@ import { useContext, useEffect, useRef, useState } from "react";
 import Challenge from "./Challenge";
 import CompletionCelebration from "../../components/celebration/CompletionCelebration";
 import { useProgress } from "../../hooks/useProgress";
-import {
-  CURRICULUM_SUBJECTS,
-  getSubjectName,
-  isCurriculumAvailable,
-  loadCurriculum,
-} from "../../data/curriculumRegistry";
+import { useOtherSubjectsProgress } from "../../hooks/useOtherSubjectsProgress";
+import { getSubjectName, loadCurriculum } from "../../data/curriculumRegistry";
 import { isChallengeImplemented } from "../../data/challengeAvailability";
 import { buildLockState } from "../../data/curriculumLocks";
 import { findNextChallenge } from "../../data/curriculumNavigation";
-import { getCompletionMilestones } from "../../data/completionMilestones";
+import {
+  allSubjectsComplete,
+  getCompletionMilestones,
+} from "../../data/completionMilestones";
 import { useRewards } from "../../hooks/useRewards";
 import { AuthContext } from "../../context/auth-context";
 import { completeChallenge as withChallengeComplete } from "../../data/progressRules";
@@ -33,6 +32,10 @@ function ProblemView() {
   useEffect(() => preloadSounds(), []);
   const { progress, hydrated, isChallengeComplete, completeChallenge } =
     useProgress(year, subject);
+  // The year's other subjects, read-only: finishing this subject finishes the
+  // year only when they are finished too. Null while loading counts as "not
+  // finished", so a year award is never given on a guess.
+  const otherSubjects = useOtherSubjectsProgress(year, subject);
 
   // Which challenge the completion panel belongs to. "Next challenge" keeps
   // this component mounted and only changes the route params, so a plain
@@ -75,9 +78,7 @@ function ProblemView() {
       topicId,
       challengeId,
       isBuilt,
-      isOnlySubjectInYear: CURRICULUM_SUBJECTS.filter((item) =>
-        isCurriculumAvailable(year, item.id)
-      ).length === 1,
+      otherSubjectsComplete: otherSubjects !== null && allSubjectsComplete(otherSubjects),
     });
     // Idempotent: the reducer ignores a repeat, so a double-submit can't
     // duplicate the entry.

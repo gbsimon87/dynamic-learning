@@ -326,9 +326,15 @@ Replaying a finished challenge gets a practice message, not another award.
 Milestone detection requires **every planned challenge to be built and done**
 before calling a topic, section, subject, or year finished. This is deliberately
 stricter than the unlock rules, which skip unbuilt challenges to keep the path
-playable. A year award currently applies when its sole registered subject is
-finished; if a second subject is registered for a year, the subject award still
-works and the year award waits for a cross-subject progress read.
+playable. A year award applies when the subject just finished was the last unfinished
+subject registered for that year (2026-10-01). `ProblemView` reads the child's
+other subjects for the year through the read-only `useOtherSubjectsProgress`
+hook and checks them with `allSubjectsComplete` (completionMilestones.js). A
+subject still loading, or one whose read failed, counts as NOT finished, so the
+award is never given on a guess. A year with one subject reads nothing and
+behaves as before. Note that the **Year hero badge** (`badges.js`) is keyed to
+the `subject` milestone, not `year`; the year milestone drives the certificate
+step and the `counts.year` tally.
 
 #### Celebrations (2026-09-29)
 

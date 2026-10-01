@@ -141,3 +141,18 @@ test("withSeedStreak builds a streak of N days ending yesterday", () => {
   assert.deepEqual(out.streak.recent, ["2026-09-26", "2026-09-27", "2026-09-28", "2026-09-29"]);
   assert.equal(withSeedStreak(buildRewards([]), 0, "2026-09-30").streak.current, 0);
 });
+
+test("a seeded year counts as finished only when its other subjects are", () => {
+  const tiny = [
+    { id: "words", title: "Words", topics: [{ id: "a-or-an", name: "A or An", challenges: [{ id: 1 }] }] },
+  ];
+  const all = () => true;
+  const yearsFinished = (otherSubjectsComplete) =>
+    buildRewards([
+      { curriculum: tiny, isBuilt: all, count: 1, year: 3, subject: "math", otherSubjectsComplete },
+    ]).counts.year ?? 0;
+
+  assert.equal(yearsFinished(true), 1);
+  assert.equal(yearsFinished(false), 0);
+  assert.equal(yearsFinished(undefined), 0);
+});

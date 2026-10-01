@@ -94,7 +94,7 @@ export function buildRewards(curricula, startRewards = emptyRewards()) {
   let rewards = startRewards;
   let completedTotal = 0;
 
-  for (const { curriculum, isBuilt, count, year, subject } of curricula) {
+  for (const { curriculum, isBuilt, count, year, subject, otherSubjectsComplete = false } of curricula) {
     let progress = {};
     let done = 0;
 
@@ -111,10 +111,11 @@ export function buildRewards(curricula, startRewards = emptyRewards()) {
             topicId: topic.id,
             challengeId: challenge.id,
             isBuilt,
-            // Maths is the only registered subject per year today, so a
-            // finished subject is a finished year. `curriculumRegistry` is the
-            // source of truth at runtime; this mirrors it.
-            isOnlySubjectInYear: true,
+            // Whether the year's OTHER registered subjects are finished, as
+            // ProblemView works out at runtime. The caller decides it (seed.js
+            // reads the registry); it defaults to false so a seed never
+            // claims a year it has not finished.
+            otherSubjectsComplete,
           });
 
           progress = completeChallenge(progress, category.id, topic.id, challenge.id);

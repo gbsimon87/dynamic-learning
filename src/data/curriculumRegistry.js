@@ -1,5 +1,5 @@
-import { year2MathCurriculum } from "./year2MathCurriculum";
-import { year3MathCurriculum } from "./year3MathCurriculum";
+import { year2MathCurriculum } from "./year2MathCurriculum.js";
+import { year3MathCurriculum } from "./year3MathCurriculum.js";
 
 /**
  * Single source of truth for which curricula exist.
