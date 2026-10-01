@@ -1,5 +1,6 @@
 import { year2MathCurriculum } from "./year2MathCurriculum.js";
 import { year3MathCurriculum } from "./year3MathCurriculum.js";
+import { year3EnglishCurriculum } from "./year3EnglishCurriculum.js";
 
 /**
  * Single source of truth for which curricula exist.
@@ -35,12 +36,18 @@ const CURRICULA = [
     load: () => year2MathCurriculum,
   },
   {
-    // The dataset is complete; no challenge components exist yet, so every
-    // topic renders as "Coming soon" until they are built.
     year: 3,
     subject: "math",
     available: true,
     load: () => year3MathCurriculum,
+  },
+  {
+    // Approved 2026-10-01 (docs/curriculum/year-3-and-4-english.md). Topics
+    // show as "Coming soon" until their challenge files exist.
+    year: 3,
+    subject: "english",
+    available: true,
+    load: () => year3EnglishCurriculum,
   },
 ];
 

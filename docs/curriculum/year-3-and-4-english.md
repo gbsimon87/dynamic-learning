@@ -260,8 +260,8 @@ of the programme of study is not statutory.
 | Topic | Statutory requirement it serves |
 |---|---|
 | Adding Prefixes | use further prefixes and suffixes and understand how to add them (Appendix 1: more prefixes: dis–, mis–, in–, re–, sub–, inter–) |
-| Super-, Anti- and Auto- | Appendix 2, Year 3: Formation of nouns using a range of prefixes [for example super–, anti–, auto–] |
-| Adding -ation and -ly | use further prefixes and suffixes and understand how to add them (Appendix 1: the suffix –ation; the suffix –ly) |
+| The Prefixes Super, Anti and Auto | Appendix 2, Year 3: Formation of nouns using a range of prefixes [for example super–, anti–, auto–] |
+| The Suffixes ation and ly | use further prefixes and suffixes and understand how to add them (Appendix 1: the suffix –ation; the suffix –ly) |
 | Doubling Before a Suffix | use further prefixes and suffixes and understand how to add them (Appendix 1: adding suffixes beginning with vowel letters to words of more than one syllable) |
 
 ### 2. Reading - Words and Meanings
@@ -293,7 +293,7 @@ of the programme of study is not statutory.
 
 | Topic | Statutory requirement it serves |
 |---|---|
-| The -sure and -ture Endings | spell words that are often misspelt (Appendix 1: words with endings sounding like /ʒə/ or /tʃə/) |
+| The sure and ture Endings | spell words that are often misspelt (Appendix 1: words with endings sounding like /ʒə/ or /tʃə/) |
 | Tricky Sounds y and ou | spell words that are often misspelt (Appendix 1: /ɪ/ spelt y elsewhere than at the end of words; /ʌ/ spelt ou) |
 | Homophones | spell further homophones |
 | Words Often Misspelt | spell words that are often misspelt (Appendix 1: word list, Year 3 half) |

@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { year2MathCurriculum } from "./year2MathCurriculum.js";
 import { year3MathCurriculum } from "./year3MathCurriculum.js";
+import { year3EnglishCurriculum } from "./year3EnglishCurriculum.js";
 
 /**
  * Category and topic ids are keys inside every learner's saved progress, so a
@@ -171,6 +172,81 @@ const LOCKED_IDS = {
         "one-step-and-two-step-questions"
       ]
     ]
+  ],
+  // Year 3 English, approved 2026-10-01.
+  "3-english": [
+    [
+      "spelling---prefixes-and-suffixes",
+      [
+        "adding-prefixes",
+        "the-prefixes-super-anti-and-auto",
+        "the-suffixes-ation-and-ly",
+        "doubling-before-a-suffix"
+      ]
+    ],
+    [
+      "reading---words-and-meanings",
+      [
+        "root-words",
+        "exception-words",
+        "using-a-dictionary",
+        "words-in-context"
+      ]
+    ],
+    [
+      "grammar---words",
+      [
+        "a-or-an",
+        "word-families"
+      ]
+    ],
+    [
+      "reading---stories",
+      [
+        "does-it-make-sense",
+        "characters-feelings",
+        "predicting-what-happens-next",
+        "fairy-stories-myths-and-legends"
+      ]
+    ],
+    [
+      "spelling---sounds-and-homophones",
+      [
+        "the-sure-and-ture-endings",
+        "tricky-sounds-y-and-ou",
+        "homophones",
+        "words-often-misspelt"
+      ]
+    ],
+    [
+      "grammar---sentences",
+      [
+        "conjunctions",
+        "time-and-cause-words",
+        "the-present-perfect",
+        "inverted-commas"
+      ]
+    ],
+    [
+      "reading---non-fiction-and-poetry",
+      [
+        "finding-information",
+        "asking-questions-about-a-text",
+        "kinds-of-writing",
+        "words-that-spark-the-imagination",
+        "poetry-forms"
+      ]
+    ],
+    [
+      "writing---composition",
+      [
+        "paragraphs",
+        "headings-and-sub-headings",
+        "settings-characters-and-plot",
+        "proofreading",
+        "dictation"
+      ]
+    ]
   ]
 };
 
@@ -185,8 +261,12 @@ test("Year 3 category and topic ids are unchanged", () => {
   assert.deepEqual(ids(year3MathCurriculum), LOCKED_IDS[3]);
 });
 
+test("Year 3 English category and topic ids are unchanged", () => {
+  assert.deepEqual(ids(year3EnglishCurriculum), LOCKED_IDS["3-english"]);
+});
+
 test("every topic has a sticker icon", () => {
-  for (const curriculum of [year2MathCurriculum, year3MathCurriculum]) {
+  for (const curriculum of [year2MathCurriculum, year3MathCurriculum, year3EnglishCurriculum]) {
     for (const category of curriculum) {
       for (const topic of category.topics) {
         assert.ok(topic.icon, `${topic.name} has no icon`);
