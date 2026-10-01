@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { projectConstellation } from "./constellationProjection.js";
-import { speak, stopNarration } from "./narration.js";
+import { speak, stopNarration } from "../../../utils/speech.js";
 import "./ConstellationCard.css";
 
 // Each segment starts drawing shortly after the one before it, so the figure

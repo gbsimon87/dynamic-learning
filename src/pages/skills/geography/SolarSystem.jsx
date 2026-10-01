@@ -6,7 +6,7 @@ import { matchBodies } from "./solarSearch.js";
 import { moonFacts } from "./moonFacts.js";
 import { createSolarDefaults, createWorldTime, advanceWorldTime, getBodyPose } from "./solarSimulation.js";
 import { createMeteorExperiment } from "./meteorExperiment.js";
-import { speak, stopNarration } from "./narration.js";
+import { speak, stopNarration } from "../../../utils/speech.js";
 import { constellations } from "./constellations.js";
 import ConstellationCard from "./ConstellationCard.jsx";
 import "./SolarSystem.css";
