@@ -17,15 +17,16 @@
 > file reflects it. Also update [PROJECT_IDEAS.md](PROJECT_IDEAS.md) when an idea
 > moves between statuses.
 
-**Last reviewed:** 2026-09-30
+**Last reviewed:** 2026-10-01
 
 ---
 
 ## 1. What This Project Is
 
 **Dynamic Learning** is an interactive web learning platform for primary-school
-children (currently targeted at ~6-year-olds / **UK Year 2**). It teaches Maths,
-English, Geometry and Geography through browser-based mini-games.
+children (built first for ~6-year-olds / **UK Year 2**; Curriculum Mode now
+also covers Year 3 Maths and Years 3–4 English). It teaches Maths, English,
+Geometry and Geography through browser-based mini-games.
 
 There are two distinct learning modes, and the distinction matters for every
 decision made in this codebase:
@@ -122,14 +123,18 @@ src/
 │   ├── mascot/Mascot.jsx     # Bix — homepage, combo line, Trophy Room
 │   ├── celebration/          # Completion sequence, steps/ (incl. LevelUpStep, StreakStep), fx/ (particles), sound/ (cues + mute)
 │   ├── rewards/              # LevelBar, WeekDots: shared XP bar and Mon–Sun streak dots
-│   ├── challenge/            # The shared challenge kit (39 components)
+│   ├── challenge/            # The shared challenge kit: maths + the English kit (LetterInput, TileBuilder,
+│   │                         #   WordPicker, ReadingPassage, SortBins, SpeakButton, HintNote; english-kit.css; hints.js)
 │   ├── ui/Navbar.jsx
 │   ├── ClockPanel.jsx, ReadingNumbersPanel.jsx, DualLabelClock.jsx,
 │   ├── MapGame.jsx, MultiplicationGrid.jsx, ShapeQuiz.jsx
 ├── data/
 │   ├── year2MathCurriculum.js   # Curriculum tree (categories → topics)
 │   ├── year3MathCurriculum.js
-│   ├── curriculumRegistry.js    # Which curricula exist — the one source
+│   ├── year3EnglishCurriculum.js, year4EnglishCurriculum.js
+│   ├── curriculumRegistry.js    # Which curricula exist — the one source (years 1–4)
+│   ├── english/                 # English content shared across topics: appendix1.js (statutory word lists,
+│   │                            #   our Y3/Y4 split), cast.js, passages*.js, textChecks.js (British spelling)
 │   ├── avatars.js               # Starter profile emoji + colour tokens
 │   ├── badges.js                # Badge catalogue + earnBadges (§5)
 │   ├── rewardsShape.js          # normaliseRewards: the v2 rewards shape, migrated on read (§5)
@@ -147,6 +152,7 @@ src/
 │   ├── celebrationSteps.js      # Which celebration steps, effects, cues
 │   ├── celebrationMessages.js   # Rotating, never-repeating headlines
 │   ├── challenges/              # Pure question generators, unit-tested
+│   │   └── english/             # One builder per English topic (+ shared.js); Year 4 ones are year4*.js
 │   ├── store/                   # THE BACKEND SEAM (§4.7)
 │   │   ├── index.js             # Swap point: re-exports the active store
 │   │   ├── localStorageStore.js # Browser driver
@@ -159,7 +165,8 @@ scripts/                      # Dev tooling, Node-only
 ├── seedData.js               # What it seeds — pure, tested
 └── seedBuilt.js              # Which challenges exist, read from disk
 ├── utils/
-│   └── toKebabCase.js        # Generates the IDs used in URLs + storage keys
+│   ├── toKebabCase.js        # Generates the IDs used in URLs + storage keys
+│   └── speech.js             # One British speech-synthesis voice (Solar System + English kit)
 ├── pages/
 │   ├── home/Home.jsx, HomeAchievements.jsx   # HomeAchievements: something-new, streak/level and collection cards
 │   ├── auth/                 # Login, SignUp, Profiles, ParentArea
@@ -168,7 +175,8 @@ scripts/                      # Dev tooling, Node-only
 │   │   ├── math/             # Skill games, grouped by subject
 │   │   ├── english/
 │   │   ├── geography/
-│   │   └── math/challenges/year2/<topic-id>/<TopicName>ChallengeN.jsx
+│   │   ├── math/challenges/year2/<topic-id>/<TopicName>ChallengeN.jsx
+│   │   └── english/challenges/year3|year4/<Pascal>Game.jsx + <topic-id>/<Pascal>ChallengeN.jsx
 │   └── curriculum/
 │       ├── CurriculumPage.jsx   # Category/topic/challenge grid + lock logic
 │       ├── ProblemView.jsx      # Shell around one challenge; saves progress
@@ -220,6 +228,8 @@ as `localStorage` keys, so **renaming a category or topic title silently breaks
 saved progress**. Treat titles as stable identifiers.
 
 Year 2 Maths currently defines **8 categories / 39 topics / 156 challenge slots**.
+Year 3 English: **8 / 32 / 128**; Year 4 English: **8 / 33 / 132** (both
+approved 2026-10-01; ids locked in `curriculumIds.test.js`).
 
 ### 4.3 Challenge loading (the convention that ties it together)
 [Challenge.jsx](../src/pages/curriculum/Challenge.jsx) resolves a challenge
@@ -792,6 +802,45 @@ component that renders a dense row or column of buttons needs the same line.
 Locked topics still list their challenges (each rendered locked and
 unclickable). Hiding them left a locked topic as a bare padlock, with no sign
 of what it held or how much of it there was.
+
+### Curriculum Mode — Years 3 and 4 English (2026-10-01, in progress)
+
+**The live status and the resume point is
+[docs/english-curriculum/IMPLEMENTATION_TRACKER.md](english-curriculum/IMPLEMENTATION_TRACKER.md).**
+The approved plan with every product decision sits beside it, along with the
+self-contained briefs used to build batches of topics.
+
+- **Source.** The Years 3–4 programme of study and Appendix 1 are saved
+  verbatim in `docs/curriculum/`. The mapping section of
+  `year-3-and-4-english.md` holds three things that are our own design, not
+  statutory: the Year 3 / Year 4 split, the boundaries for each year, and
+  every topic → bullet row. Offline strands (handwriting, performance,
+  discussion, reading aloud) are listed as deliberately not covered.
+- **Datasets.** `year3EnglishCurriculum.js` (32 topics) and
+  `year4EnglishCurriculum.js` (33). Categories alternate between strands
+  (spelling → reading → grammar → …), so the sequential category unlock never
+  puts ten reading topics before any spelling.
+- **The pattern** is the same as Maths, with authored banks instead of
+  arithmetic:
+  - a pure builder per topic in `src/data/challenges/english/`, ≥3× a run,
+    tested for one-right-answer and British spelling;
+  - one `<Pascal>Game.jsx` per topic, shared by its 4 challenge files;
+  - 5 questions per challenge (3–4 for a passage);
+  - hints after two misses that never give the answer away;
+  - glossed grammar terms in slots 1–3 only.
+
+  See the "English topics" section of the `building-curriculum-topics` skill.
+- **Built and browser-verified so far:** the four Year 3 pilots, Homophones,
+  Conjunctions, Characters' Feelings and Paragraphs. The tracker has the rest.
+- **Speech** is the browser's own speech synthesis in a British voice
+  (`src/utils/speech.js`, `SpeakButton`). It plays only when tapped and follows
+  the navbar mute; tapping while muted unmutes. With no voice available the
+  button is not shown, so every question must be answerable without sound.
+- **Year 4 in the app.** `CURRICULUM_YEARS` and `CHILD_YEAR_GROUPS` are now
+  `[1, 2, 3, 4]`. Year 4 offers English only (Maths "Coming soon").
+- **Curriculum page:** the English strands have their own category icons
+  (🔤 📖 🧱 ✍️) and the hero shows letters rather than maths symbols. English
+  patterns are matched first, because "Composition" contains "position".
 
 ### Development seed (2026-09-19)
 
@@ -1380,11 +1429,16 @@ second game needs a modal, move and generalise this implementation under
 5. Update the table in §5.
 
 ### Add a new Year / Subject
-1. Create `src/data/year<N><Subject>Curriculum.js` in the same shape.
-2. Make [CurriculumPage.jsx](../src/pages/curriculum/CurriculumPage.jsx) select
-   the dataset from its `year`/`subject` props instead of the hard-coded import.
-3. Create `src/pages/skills/<subject>/challenges/year<N>/...` folders.
-4. Storage keys are already namespaced by year and subject, so progress won't clash.
+Done for real with Years 3–4 English (2026-10-01); follow that example:
+1. Save the programme of study verbatim in `docs/curriculum/`, with a mapping
+   section, and get the topic titles signed off. Titles are ids.
+2. Create `src/data/year<N><Subject>Curriculum.js` in the same shape, with a
+   dataset test, and lock its ids in `curriculumIds.test.js`.
+3. Register it in `curriculumRegistry.js`. A new year also needs adding to
+   `CURRICULUM_YEARS` and `CHILD_YEAR_GROUPS` (`childFields.js`).
+4. Create `src/pages/skills/<subject>/challenges/year<N>/...` folders.
+5. Progress is namespaced by (child, year, subject), so years never clash. A
+   second subject in a year makes the year award wait for both (§4.5).
 
 ---
 

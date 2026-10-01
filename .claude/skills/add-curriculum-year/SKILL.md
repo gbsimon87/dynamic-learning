@@ -5,9 +5,12 @@ description: Use when adding a new year group or subject to Curriculum Mode - no
 
 # Adding a Curriculum Year or Subject
 
-The app currently ships **Year 2 Maths only**. Year 3 is the next planned year
-group. This skill covers making the curriculum system multi-year, then
-populating it.
+> **Current state (2026-10-01).** The registry generalisation below is done.
+> The app has Year 2 and Year 3 Maths and Years 3–4 English, and years 1–4 in
+> `CURRICULUM_YEARS` / `CHILD_YEAR_GROUPS`. Years 3–4 English is the worked
+> example to follow; see `docs/english-curriculum/IMPLEMENTATION_TRACKER.md`
+> and the "Add a new Year / Subject" playbook in `docs/PROJECT_KNOWLEDGE.md`
+> §7. The sections below are the original guidance, kept for its reasoning.
 
 ## The blocker you must clear first
 
