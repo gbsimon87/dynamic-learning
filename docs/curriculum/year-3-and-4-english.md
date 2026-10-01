@@ -206,7 +206,7 @@ adverbial
 
 # Mapping to our curriculum dataset
 
-> **Status: Year 3 approved 2026-10-01.** Category and topic titles are ids in
+> **Status: Year 3 and Year 4 approved 2026-10-01.** Category and topic titles are ids in
 > URLs and saved progress (`year3EnglishCurriculum.js`). A rename is a
 > migration, not an edit.
 
@@ -327,13 +327,93 @@ of the programme of study is not statutory.
 | Proofreading | proofread for spelling and punctuation errors · proposing changes to grammar and vocabulary to improve consistency |
 | Dictation | write from memory simple sentences, dictated by the teacher, that include words and punctuation taught so far |
 
-## Year 4 topics
+## Year 4 boundaries
 
-To be drafted after Year 3 is built. It will take the Year 4 column of the
-Appendix 1 split above, the Year 4 rows of Appendix 2, and the harder
-comprehension bullets: identifying main ideas drawn from more than 1 paragraph
-and summarising these · identifying how language, structure, and presentation
-contribute to meaning · justifying inferences with evidence.
+- Year 4 takes the **Year 4 column** of the Appendix 1 split above, and
+  revises Year 3. A Year 3 pattern may come back as a distractor or a
+  reminder, but never as the topic.
+- Direct speech is now punctuated **in full**: inverted commas, a comma after
+  the reporting clause, and end punctuation inside the inverted commas
+  (The conductor shouted, “Sit down!”).
+- Fronted adverbials, and the comma after them, are taught here.
+- Year 4 terms are: determiner, pronoun, possessive pronoun, adverbial.
+- Passages may run to about 200 words, but with longer sentences and more
+  than one paragraph to summarise.
+
+## Year 4 topics (33 topics, approved 2026-10-01)
+
+### 1. Spelling - Prefixes, Suffixes and Apostrophes
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| The Prefixes il, im and ir | use further prefixes and suffixes and understand how to add them (Appendix 1: in– becomes il– before l, im– before m or p, ir– before r) |
+| The Suffix ous | use further prefixes and suffixes and understand how to add them (Appendix 1: the suffix –ous) |
+| More ly Adverbs | use further prefixes and suffixes and understand how to add them (Appendix 1: –ly exceptions (2)–(4): –le → –ly, –ic → –ally, truly, duly, wholly) |
+| Apostrophes for Plural Possession | place the possessive apostrophe accurately in words with regular plurals [for example, girls’, boys’] and in words with irregular plurals [for example, children’s] · Appendix 2, Year 4: Apostrophes to mark plural possession |
+
+### 2. Reading - Understanding Texts
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| Main Ideas and Summaries | identifying main ideas drawn from more than 1 paragraph and summarising these |
+| Justifying Inferences | drawing inferences such as inferring characters’ feelings, thoughts and motives from their actions, and justifying inferences with evidence |
+| How Language Creates Meaning | identifying how language, structure, and presentation contribute to meaning (language) · discussing words and phrases that capture the reader’s interest and imagination |
+| How Structure and Presentation Help | identifying how language, structure, and presentation contribute to meaning (structure and presentation) |
+
+### 3. Grammar - Words and Phrases
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| Plural or Possessive | Appendix 2, Year 4: The grammatical difference between plural and possessive –s |
+| Standard English Verbs | Appendix 2, Year 4: Standard English forms for verb inflections instead of local spoken forms [for example, we were instead of we was, or I did instead of I done] |
+| Determiners | Appendix 2, Year 4 terminology: determiner |
+| Expanded Noun Phrases | Appendix 2, Year 4: Noun phrases expanded by the addition of modifying adjectives, nouns and preposition phrases |
+
+### 4. Spelling - Word Endings
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| The shun Endings | Appendix 1: endings which sound like /ʃən/, spelt –tion, –sion, –ssion, –cian |
+| The zhun Ending | Appendix 1: endings which sound like /ʒən/ (–sion) |
+| The Endings gue and que | Appendix 1: words ending with the /g/ sound spelt –gue and the /k/ sound spelt –que (French in origin) |
+| More Words Often Misspelt | spell words that are often misspelt (Appendix 1: word list, Year 4 half) |
+
+### 5. Reading - Stories and Poems
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| Themes in Stories | identifying themes and conventions in a wide range of books |
+| Predicting from Clues | predicting what might happen from details stated and implied |
+| Myths and Legends from Around the World | increasing their familiarity with a wide range of books, including fairy stories, myths and legends |
+| Comparing Forms of Poetry | recognising some different forms of poetry [for example, free verse, narrative poetry] |
+
+### 6. Grammar - Sentences and Speech
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| Fronted Adverbials | using fronted adverbials · Appendix 2, Year 4: Fronted adverbials [for example, Later that day, I heard the bad news.] · terminology: adverbial |
+| Commas after Fronted Adverbials | using commas after fronted adverbials |
+| Punctuating Direct Speech | using and punctuating direct speech · Appendix 2, Year 4: Use of inverted commas and other punctuation to indicate direct speech |
+| Pronouns and Possessive Pronouns | choosing nouns or pronouns appropriately for clarity and cohesion and to avoid repetition · terminology: pronoun, possessive pronoun |
+
+### 7. Spelling - Sounds and Homophones
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| Greek and French ch | Appendix 1: words with the /k/ sound spelt ch (Greek in origin) and the /ʃ/ sound spelt ch (mostly French in origin) |
+| The Letters sc | Appendix 1: words with the /s/ sound spelt sc (Latin in origin) |
+| The Sounds ei, eigh and ey | Appendix 1: words with the /eɪ/ sound spelt ei, eigh, or ey |
+| More Homophones | spell further homophones (Appendix 1: homophones, Year 4 half) |
+
+### 8. Writing - Composition and Editing
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| Paragraphs around a Theme | organising paragraphs around a theme · Appendix 2, Year 4: Use of paragraphs to organise ideas around a theme |
+| Nouns or Pronouns for Clarity | proposing changes to grammar and vocabulary to improve consistency, including the accurate use of pronouns in sentences · Appendix 2, Year 4: Appropriate choice of pronoun or noun within and across sentences to aid cohesion and avoid repetition |
+| Editing for Consistency | proposing changes to grammar and vocabulary to improve consistency |
+| Proofreading Longer Texts | proofread for spelling and punctuation errors |
+| Dictation | write from memory simple sentences, dictated by the teacher, that include words and punctuation taught so far |
 
 ## Not covered (deliberately)
 
@@ -351,4 +431,3 @@ forgotten:
 | composing and rehearsing sentences orally (including dialogue) | Spoken |
 | assessing the effectiveness of their own and others’ writing and suggesting improvements | Needs the child’s own writing |
 | read their own writing aloud to a group or the whole class … | Performance |
-| identifying main ideas drawn from more than 1 paragraph and summarising these · identifying how language, structure, and presentation contribute to meaning | Covered in **Year 4**, not missing |

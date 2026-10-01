@@ -1,6 +1,7 @@
 import { year2MathCurriculum } from "./year2MathCurriculum.js";
 import { year3MathCurriculum } from "./year3MathCurriculum.js";
 import { year3EnglishCurriculum } from "./year3EnglishCurriculum.js";
+import { year4EnglishCurriculum } from "./year4EnglishCurriculum.js";
 
 /**
  * Single source of truth for which curricula exist.
@@ -19,7 +20,7 @@ import { year3EnglishCurriculum } from "./year3EnglishCurriculum.js";
  */
 export const CURRICULUM_ICON = "🧭";
 
-export const CURRICULUM_YEARS = [1, 2, 3];
+export const CURRICULUM_YEARS = [1, 2, 3, 4];
 
 export const CURRICULUM_SUBJECTS = [
   { id: "math", name: "Maths", icon: "🧮" },
@@ -48,6 +49,14 @@ const CURRICULA = [
     subject: "english",
     available: true,
     load: () => year3EnglishCurriculum,
+  },
+  {
+    // Approved 2026-10-01. Year 4 has English only for now; its Maths card
+    // shows as not ready, the way any unregistered subject does.
+    year: 4,
+    subject: "english",
+    available: true,
+    load: () => year4EnglishCurriculum,
   },
 ];
 

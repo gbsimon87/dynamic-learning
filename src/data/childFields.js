@@ -19,7 +19,7 @@ export const EDITABLE_CHILD_FIELDS = ["name", "avatar", "colour", "yearGroup"];
  * rather than the whole of primary: offering Year 6 would promise a curriculum
  * that does not exist.
  */
-export const CHILD_YEAR_GROUPS = [1, 2, 3];
+export const CHILD_YEAR_GROUPS = [1, 2, 3, 4];
 
 /**
  * A profile created before `yearGroup` existed simply has none, which is the

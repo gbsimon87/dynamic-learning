@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { year2MathCurriculum } from "./year2MathCurriculum.js";
 import { year3MathCurriculum } from "./year3MathCurriculum.js";
 import { year3EnglishCurriculum } from "./year3EnglishCurriculum.js";
+import { year4EnglishCurriculum } from "./year4EnglishCurriculum.js";
 
 /**
  * Category and topic ids are keys inside every learner's saved progress, so a
@@ -247,6 +248,82 @@ const LOCKED_IDS = {
         "dictation"
       ]
     ]
+  ],
+  // Year 4 English, approved 2026-10-01.
+  "4-english": [
+    [
+      "spelling---prefixes-suffixes-and-apostrophes",
+      [
+        "the-prefixes-il-im-and-ir",
+        "the-suffix-ous",
+        "more-ly-adverbs",
+        "apostrophes-for-plural-possession"
+      ]
+    ],
+    [
+      "reading---understanding-texts",
+      [
+        "main-ideas-and-summaries",
+        "justifying-inferences",
+        "how-language-creates-meaning",
+        "how-structure-and-presentation-help"
+      ]
+    ],
+    [
+      "grammar---words-and-phrases",
+      [
+        "plural-or-possessive",
+        "standard-english-verbs",
+        "determiners",
+        "expanded-noun-phrases"
+      ]
+    ],
+    [
+      "spelling---word-endings",
+      [
+        "the-shun-endings",
+        "the-zhun-ending",
+        "the-endings-gue-and-que",
+        "more-words-often-misspelt"
+      ]
+    ],
+    [
+      "reading---stories-and-poems",
+      [
+        "themes-in-stories",
+        "predicting-from-clues",
+        "myths-and-legends-from-around-the-world",
+        "comparing-forms-of-poetry"
+      ]
+    ],
+    [
+      "grammar---sentences-and-speech",
+      [
+        "fronted-adverbials",
+        "commas-after-fronted-adverbials",
+        "punctuating-direct-speech",
+        "pronouns-and-possessive-pronouns"
+      ]
+    ],
+    [
+      "spelling---sounds-and-homophones",
+      [
+        "greek-and-french-ch",
+        "the-letters-sc",
+        "the-sounds-ei-eigh-and-ey",
+        "more-homophones"
+      ]
+    ],
+    [
+      "writing---composition-and-editing",
+      [
+        "paragraphs-around-a-theme",
+        "nouns-or-pronouns-for-clarity",
+        "editing-for-consistency",
+        "proofreading-longer-texts",
+        "dictation"
+      ]
+    ]
   ]
 };
 
@@ -265,8 +342,12 @@ test("Year 3 English category and topic ids are unchanged", () => {
   assert.deepEqual(ids(year3EnglishCurriculum), LOCKED_IDS["3-english"]);
 });
 
+test("Year 4 English category and topic ids are unchanged", () => {
+  assert.deepEqual(ids(year4EnglishCurriculum), LOCKED_IDS["4-english"]);
+});
+
 test("every topic has a sticker icon", () => {
-  for (const curriculum of [year2MathCurriculum, year3MathCurriculum, year3EnglishCurriculum]) {
+  for (const curriculum of [year2MathCurriculum, year3MathCurriculum, year3EnglishCurriculum, year4EnglishCurriculum]) {
     for (const category of curriculum) {
       for (const topic of category.topics) {
         assert.ok(topic.icon, `${topic.name} has no icon`);
