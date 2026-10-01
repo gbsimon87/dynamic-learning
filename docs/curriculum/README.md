@@ -7,6 +7,8 @@ cover.
 | File | Covers |
 |---|---|
 | [year-2-maths.md](year-2-maths.md) | England, Mathematics, Key Stage 1 — Year 2 |
+| [year-3-and-4-english.md](year-3-and-4-english.md) | England, English, Lower Key Stage 2 — Years 3 and 4, with the Years 3 and 4 parts of Appendix 2 and the dataset mapping |
+| [english-appendix-1-years-3-and-4.md](english-appendix-1-years-3-and-4.md) | England, English Appendix 1 (spelling) — Years 3 and 4 section and statutory word list |
 
 ## How to use these
 
