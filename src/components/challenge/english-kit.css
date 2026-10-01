@@ -1,0 +1,564 @@
+/* ===========================================================
+   ENGLISH KIT
+   Letter keyboard, tiles, word picking, passages, sorting bins,
+   the speak button and hints. Every colour comes from the --ck-*
+   tokens in challenge-kit.css (themselves the App.css --light-* /
+   --dark-* tokens), so both themes are solved here, once.
+
+   Each button below is styled with TWO classes and sets margin-top:
+   0. A host rule of one class plus `button` (ProblemView once had
+   `.problem-page button { margin-top: 1.5rem }`) then cannot pull a
+   dense row of keys or tiles apart.
+=========================================================== */
+
+/* --- speak button --- */
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 48px;
+  padding: 0.45rem 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  border: 2px solid var(--ck-border);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.speak-btn.speak-btn,
+.speak-btn.is-compact {
+  margin-top: 0;
+}
+
+.speak-btn.is-compact {
+  min-width: 48px;
+  justify-content: center;
+  padding: 0.45rem;
+}
+
+.speak-btn:hover {
+  border-color: var(--ck-accent);
+}
+
+.speak-btn.is-speaking {
+  border-color: var(--ck-accent);
+  box-shadow: 0 0 0 3px var(--ck-muted);
+}
+
+.speak-btn:focus-visible {
+  outline: 3px solid var(--ck-text);
+  outline-offset: 2px;
+}
+
+/* --- hint --- */
+.challenge-hint {
+  max-width: 34rem;
+  margin: 0 auto 1.2rem;
+  padding: 0.7rem 1rem;
+  font-size: 1.05rem;
+  line-height: 1.45;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  border-left: 5px solid var(--ck-accent);
+  border-radius: 10px;
+  text-align: left;
+}
+
+/* --- prompt row: a prompt with its speak button beside it --- */
+.english-prompt-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem 0.9rem;
+  margin-bottom: 1.2rem;
+}
+
+.english-prompt-row .challenge-prompt {
+  margin: 0;
+}
+
+/* The word or sentence being asked about. */
+.english-focus {
+  margin: 0 auto 1.4rem;
+  font-size: clamp(1.35rem, 4.5vw, 1.8rem);
+  font-weight: 700;
+  line-height: 1.45;
+  max-width: 30ch;
+}
+
+.english-focus .english-blank {
+  display: inline-block;
+  min-width: 4.5ch;
+  padding: 0 0.2em;
+  color: var(--ck-accent);
+  border-bottom: 4px solid var(--ck-accent);
+}
+
+.english-blank-empty {
+  color: var(--ck-text);
+  opacity: 0.35;
+}
+
+.english-picture {
+  display: block;
+  font-size: 3rem;
+  line-height: 1;
+  margin-bottom: 0.6rem;
+}
+
+/* A highlighted letter group, e.g. the tricky part of an exception word. */
+.english-mark {
+  padding: 0 0.12em;
+  border-radius: 6px;
+  background: var(--ck-accent);
+  color: var(--ck-on-accent);
+}
+
+/* --- letter input --- */
+.letter-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+}
+
+.letter-input-line {
+  min-width: 10ch;
+  min-height: 1.4em;
+  margin: 0;
+  padding: 0 0.6rem 0.1rem;
+  font-size: 2.1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  border-bottom: 4px solid var(--ck-accent);
+}
+
+.letter-input-placeholder {
+  opacity: 0.3;
+}
+
+.letter-keyboard {
+  display: grid;
+  /* Six across: a–z plus a two-wide ⌫ and Clear fill five even rows. */
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.45rem;
+  width: 100%;
+  max-width: 420px;
+}
+
+.letter-input-key.letter-key {
+  margin-top: 0;
+  min-height: 50px;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  border: 2px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.letter-input-key.letter-key:hover:not(:disabled) {
+  border-color: var(--ck-border);
+}
+
+.letter-input-key.is-action {
+  grid-column: span 2;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.letter-input-key.letter-key:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* --- tile builder --- */
+.tile-builder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+  margin-bottom: 1.4rem;
+}
+
+.tile-answer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 72px;
+  width: 100%;
+  max-width: 640px;
+  padding: 0.6rem 0.8rem;
+  border: 3px dashed var(--ck-border);
+  border-radius: 14px;
+}
+
+.tile-builder.is-letters .tile-answer {
+  gap: 0.2rem;
+}
+
+.tile-answer-empty {
+  opacity: 0.6;
+}
+
+.tile-fixed,
+.tile-gap {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.tile-gap {
+  opacity: 0.4;
+}
+
+.tile-tray {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.tile-answer-slot.tile,
+.tile-tray-slot.tile {
+  margin-top: 0;
+  min-width: 52px;
+  min-height: 52px;
+  padding: 0.35rem 0.9rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  border: 3px solid var(--ck-border);
+  border-radius: 12px;
+  box-shadow: 0 2px 5px var(--panel-shadow);
+  cursor: pointer;
+}
+
+.tile-answer-slot.is-placed {
+  background: var(--ck-accent);
+  border-color: var(--ck-accent);
+  color: var(--ck-on-accent);
+}
+
+.tile-tray-slot.is-used {
+  opacity: 0.25;
+  box-shadow: none;
+  cursor: default;
+}
+
+.tile-answer-slot.tile:focus-visible,
+.tile-tray-slot.tile:focus-visible {
+  outline: 3px solid var(--ck-text);
+  outline-offset: 2px;
+}
+
+/* --- word picker --- */
+.word-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem 0.4rem;
+  max-width: 640px;
+  margin: 0 auto 1.5rem;
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  line-height: 1.5;
+}
+
+.word-picker-word.word-pick {
+  margin-top: 0;
+  min-height: 48px;
+  padding: 0.2rem 0.55rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  border: 3px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.word-picker-word.word-pick:hover:not(:disabled) {
+  border-color: var(--ck-border);
+}
+
+.word-picker-word.selected {
+  background: var(--ck-accent);
+  border-color: var(--ck-accent);
+  color: var(--ck-on-accent);
+}
+
+.word-picker-text {
+  padding: 0.2rem 0.1rem;
+}
+
+.word-picker .is-hinted {
+  text-decoration: underline 3px var(--ck-accent);
+  text-underline-offset: 5px;
+}
+
+.word-picker.is-gaps {
+  gap: 0.1rem;
+}
+
+.word-picker-run {
+  display: inline-flex;
+  align-items: center;
+}
+
+.word-picker-gap.word-gap {
+  margin-top: 0;
+  min-width: 34px;
+  min-height: 48px;
+  padding: 0 0.15rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--ck-text);
+  background: transparent;
+  border: 2px dashed var(--ck-border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.word-picker-gap.selected {
+  background: var(--ck-accent);
+  border: 2px solid var(--ck-accent);
+  color: var(--ck-on-accent);
+}
+
+.word-picker-word.word-pick:focus-visible,
+.word-picker-gap.word-gap:focus-visible {
+  outline: 3px solid var(--ck-text);
+  outline-offset: 2px;
+}
+
+/* --- reading passage --- */
+.reading-passage {
+  max-width: 38rem;
+  margin: 0 auto 1.5rem;
+  padding: 1rem 1.2rem 1.1rem;
+  text-align: left;
+  font-size: 1.12rem;
+  line-height: 1.6;
+  background: var(--ck-muted);
+  border-radius: 16px;
+}
+
+.reading-passage-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.6rem;
+}
+
+.reading-passage-title {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.reading-passage-body p,
+.reading-passage-heading {
+  margin: 0 0 0.7rem;
+}
+
+.reading-passage-body p:last-child {
+  margin-bottom: 0;
+}
+
+.reading-passage-heading {
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.reading-passage-line {
+  margin-bottom: 0.15rem;
+}
+
+.reading-passage-body .reading-passage-line {
+  margin-bottom: 0.15rem;
+}
+
+.reading-passage-step {
+  font-weight: 800;
+}
+
+.reading-passage .is-highlighted {
+  border-radius: 6px;
+  box-shadow: 0 0 0 3px var(--ck-accent);
+}
+
+.reading-passage.is-letter .reading-passage-body,
+.reading-passage.is-diary .reading-passage-body {
+  font-style: normal;
+}
+
+/* --- sort bins --- */
+.sort-bins {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 1.4rem;
+}
+
+.sort-pile {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 60px;
+}
+
+.sort-pile-empty {
+  align-self: center;
+  opacity: 0.75;
+}
+
+.sort-pile-card.sort-card,
+.sort-bin-card.sort-card {
+  margin-top: 0;
+  min-height: 52px;
+  padding: 0.35rem 0.9rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--ck-text);
+  background: var(--ck-panel);
+  border: 3px solid var(--ck-border);
+  border-radius: 12px;
+  box-shadow: 0 2px 5px var(--panel-shadow);
+  cursor: pointer;
+}
+
+.sort-pile-card.selected {
+  background: var(--ck-accent);
+  border-color: var(--ck-accent);
+  color: var(--ck-on-accent);
+  transform: translateY(-3px);
+}
+
+.sort-instruction {
+  margin: 0;
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.sort-bin-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  width: 100%;
+  max-width: 640px;
+}
+
+.sort-bin-row.has-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.sort-bin {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 150px;
+  padding: 0.5rem;
+  border: 3px dashed var(--ck-border);
+  border-radius: 14px;
+}
+
+.sort-bin-target.sort-bin-label {
+  margin-top: 0;
+  min-height: 52px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  border: 3px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.sort-bin-target.is-ready {
+  border-color: var(--ck-accent);
+}
+
+.sort-bin-target.sort-bin-label:disabled {
+  cursor: default;
+}
+
+.sort-bin-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.sort-bin-card.sort-card {
+  min-height: 44px;
+  padding: 0.2rem 0.6rem;
+  font-size: 1.05rem;
+}
+
+.sort-pile-card.sort-card:focus-visible,
+.sort-bin-card.sort-card:focus-visible,
+.sort-bin-target.sort-bin-label:focus-visible {
+  outline: 3px solid var(--ck-text);
+  outline-offset: 2px;
+}
+
+/* --- vertical drag strip (sentences, story events) --- */
+.drag-strip.drag-strip-vertical {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  width: 100%;
+  max-width: 560px;
+  gap: 0.6rem;
+}
+
+.drag-strip-vertical .drag-card {
+  justify-content: flex-start;
+  min-height: 56px;
+  padding: 0.5rem 0.9rem;
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: left;
+}
+
+@media (max-width: 480px) {
+  .letter-keyboard {
+    gap: 0.3rem;
+  }
+
+  .letter-input-key.letter-key {
+    min-height: 46px;
+    font-size: 1.2rem;
+  }
+
+  .sort-bin-row.has-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .sort-bin {
+    min-height: 110px;
+  }
+
+  .reading-passage {
+    padding: 0.85rem 0.9rem;
+    font-size: 1.05rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sort-pile-card.selected {
+    transform: none;
+  }
+}

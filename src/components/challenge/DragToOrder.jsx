@@ -7,8 +7,10 @@ import "./challenge-kit.css";
  * matters here: drag alone excludes anyone not using a pointer.
  *
  * `items` is an array of { id, label }; `onReorder` receives the new array.
+ * `direction="vertical"` stacks the cards, for sentences and story events
+ * that are too long to sit side by side.
  */
-function DragToOrder({ items, onReorder, disabled }) {
+function DragToOrder({ items, onReorder, disabled, direction = "horizontal" }) {
   const handleDragEnd = (result) => {
     // Dropped outside the strip - leave the order alone.
     if (!result.destination) return;
@@ -22,10 +24,10 @@ function DragToOrder({ items, onReorder, disabled }) {
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
-      <Droppable droppableId="order" direction="horizontal">
+      <Droppable droppableId="order" direction={direction}>
         {(droppable) => (
           <div
-            className="drag-strip"
+            className={`drag-strip ${direction === "vertical" ? "drag-strip-vertical" : ""}`}
             ref={droppable.innerRef}
             {...droppable.droppableProps}
           >

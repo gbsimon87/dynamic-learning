@@ -23,8 +23,14 @@ import "./challenge-kit.css";
  * (answerStreak.js): a 🔥 line, a bigger burst and its own sound.
  *
  * `questions`  array of anything; the child decides how to render one
- * `render`     ({ question, submit, locked, index }) => JSX
+ * `render`     ({ question, submit, locked, index, misses }) => JSX
+ *
+ * `misses` counts wrong attempts on the CURRENT question and resets when it
+ * advances. Challenges that offer a hint show it from `misses >= 2`
+ * (`HINT_AFTER` in hints.js); the shell itself never reveals an answer, and
+ * a hint changes nothing that is earned.
  */
+
 function wobble(element) {
   if (!element?.animate) return;
   if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
@@ -45,6 +51,7 @@ function ChallengeShell({ title, questions, render, onComplete }) {
   const [index, setIndex] = useState(0);
   const [feedback, setFeedback] = useState(null);
   const [locked, setLocked] = useState(false);
+  const [misses, setMisses] = useState(0);
   const answerRef = useRef(null);
   const feedbackRef = useRef(null);
   const timerRef = useRef(null);
@@ -84,6 +91,7 @@ function ChallengeShell({ title, questions, render, onComplete }) {
     // Chosen here, not inside the updater: StrictMode runs updaters twice.
     if (!isCorrect) {
       missedRef.current = true;
+      setMisses((count) => count + 1);
       const text = nextMessage("wrong");
       setFeedback((previous) => ({ tone: "wrong", text, key: (previous?.key ?? 0) + 1 }));
       wobble(answerRef.current);
@@ -109,6 +117,7 @@ function ChallengeShell({ title, questions, render, onComplete }) {
         return;
       }
       setIndex((i) => i + 1);
+      setMisses(0);
       setFeedback(null);
       setLocked(false);
     }, 1000);
@@ -142,7 +151,7 @@ function ChallengeShell({ title, questions, render, onComplete }) {
       {title && <h3 className="challenge-title">{title}</h3>}
 
       <div ref={answerRef}>
-        {render({ question: questions[index], submit, locked, index })}
+        {render({ question: questions[index], submit, locked, index, misses })}
       </div>
 
       {/* Always rendered, so the live region exists before the first message
