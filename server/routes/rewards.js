@@ -12,6 +12,7 @@ import { Router } from "express";
 import * as db from "../db.js";
 import { requireAuth, requireOwnedChild } from "../middleware.js";
 import { publicRewards } from "../serialize.js";
+import { isRewardsData } from "../../shared/rewardsData.js";
 
 const router = Router();
 router.use(requireAuth);
@@ -27,6 +28,7 @@ router.get("/:childId", requireOwnedChild, async (req, res, next) => {
 
 router.put("/:childId", requireOwnedChild, async (req, res, next) => {
   try {
+    if (!isRewardsData(req.body?.data)) return res.status(400).json({ error: "INVALID_REWARDS" });
     const now = new Date().toISOString();
     // Upsert on childId: saving twice never creates a second document.
     // `createdAt` is only written on insert, so it survives every update.
@@ -36,7 +38,7 @@ router.put("/:childId", requireOwnedChild, async (req, res, next) => {
         $set: {
           childId: req.child._id,
           schemaVersion: 1,
-          data: req.body?.data ?? {},
+          data: req.body.data,
           updatedAt: now,
         },
         $setOnInsert: { createdAt: now },

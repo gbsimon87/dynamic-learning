@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { shouldBypassLocks } from "./devUnlock.js";
 
 test("the bypass is on only for the exact string \"true\"", () => {
-  assert.equal(shouldBypassLocks({ VITE_UNLOCK_ALL: "true" }), true);
+  assert.equal(shouldBypassLocks({ DEV: true, VITE_UNLOCK_ALL: "true" }), true);
 });
 
 test("anything else leaves the curriculum gated", () => {
@@ -11,7 +11,7 @@ test("anything else leaves the curriculum gated", () => {
   // variable can never quietly disable the unlock rules.
   for (const value of ["1", "yes", "TRUE", "false", "0", "", undefined, null]) {
     assert.equal(
-      shouldBypassLocks({ VITE_UNLOCK_ALL: value }),
+      shouldBypassLocks({ DEV: true, VITE_UNLOCK_ALL: value }),
       false,
       `${JSON.stringify(value)} should not enable the bypass`
     );
@@ -23,4 +23,10 @@ test("a missing or undefined env never throws", () => {
   assert.equal(shouldBypassLocks({}), false);
   assert.equal(shouldBypassLocks(undefined), false);
   assert.equal(shouldBypassLocks(null), false);
+});
+
+test("production builds never bypass locks, even with the flag set", () => {
+  for (const DEV of [false, undefined, "true"]) {
+    assert.equal(shouldBypassLocks({ DEV, VITE_UNLOCK_ALL: "true" }), false);
+  }
 });

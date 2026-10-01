@@ -70,9 +70,11 @@ function Login() {
     try {
       await signIn({ email: email.trim(), password });
       navigate(redirectTo, { replace: true });
-    } catch {
+    } catch (err) {
       // Deliberately does not say which half was wrong, and never echoes input.
-      setError("We could not sign you in. Check your email and password.");
+      setError(err?.message === "TOO_MANY_ATTEMPTS"
+        ? "There have been too many attempts. Please wait 15 minutes and try again."
+        : "We could not sign you in. Check your email and password.");
       setSubmitting(false);
     }
   };

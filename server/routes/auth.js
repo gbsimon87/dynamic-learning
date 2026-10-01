@@ -11,12 +11,14 @@ import {
 import { requireAuth } from "../middleware.js";
 import { publicParent } from "../serialize.js";
 import { normaliseAccountFields } from "../../shared/accountTypes.js";
+import { createAuthThrottle } from "../authThrottle.js";
 
 const router = Router();
+const throttle = createAuthThrottle();
 
 const normaliseEmail = (email) => String(email ?? "").trim().toLowerCase();
 
-router.post("/signup", async (req, res, next) => {
+router.post("/signup", throttle, async (req, res, next) => {
   try {
     const email = normaliseEmail(req.body?.email);
     const password = req.body?.password;
@@ -73,7 +75,7 @@ router.post("/signup", async (req, res, next) => {
   }
 });
 
-router.post("/login", async (req, res, next) => {
+router.post("/login", throttle, async (req, res, next) => {
   try {
     const email = normaliseEmail(req.body?.email);
     const password = req.body?.password;

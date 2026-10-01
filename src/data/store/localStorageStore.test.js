@@ -21,6 +21,66 @@ function reset() {
   memory.clear();
 }
 
+test("corrupt rewards stay untouched and quota failures can be retried", async (t) => {
+  reset();
+  for (const raw of ["", "invalid", "{}", "null"]) {
+    memory.set("dl.rewards", raw);
+    await assert.rejects(store.getRewards("child"));
+    await assert.rejects(store.saveRewards("child", {}));
+    assert.equal(memory.get("dl.rewards"), raw);
+  }
+  for (const data of [null, [], "broken"]) {
+    const raw = JSON.stringify([{ _id: "old", childId: "child", data }]);
+    memory.set("dl.rewards", raw);
+    await assert.rejects(store.getRewards("child"), /INVALID_REWARDS/);
+    assert.equal(memory.get("dl.rewards"), raw);
+  }
+  reset();
+  const initial = await store.saveRewards("child", { badges: ["first"], xp: 30 });
+  const raw = memory.get("dl.rewards");
+  const storage = globalThis.localStorage;
+  t.after(() => { globalThis.localStorage = storage; reset(); });
+  globalThis.localStorage = { getItem: storage.getItem, setItem: () => { throw new Error("quota"); } };
+  await assert.rejects(store.saveRewards("child", { ...initial.data, xp: 60 }), /REWARDS_SAVE_FAILED/);
+  assert.equal(memory.get("dl.rewards"), raw);
+  globalThis.localStorage = storage;
+  const saved = await store.saveRewards("child", { ...initial.data, xp: 60 });
+  assert.equal(saved._id, initial._id);
+  assert.deepEqual(saved.data, { badges: ["first"], xp: 60 });
+});
+
+test("unreadable progress storage is preserved and never treated as empty", async (t) => {
+  reset();
+  for (const raw of ["", "broken JSON", "{}", "null"]) {
+    memory.set("dl.progress", raw);
+    await assert.rejects(store.getProgress("child", 3, "english"));
+    await assert.rejects(store.saveProgress("child", 3, "english", {}));
+    assert.equal(memory.get("dl.progress"), raw);
+  }
+  const storage = globalThis.localStorage;
+  t.after(() => { globalThis.localStorage = storage; reset(); });
+  globalThis.localStorage = { getItem: () => { throw new Error("denied"); } };
+  await assert.rejects(store.getProgress("child", 3, "english"), /denied/);
+  delete globalThis.localStorage;
+  await assert.rejects(store.getProgress("child", 3, "english"), /STORAGE_UNAVAILABLE/);
+});
+
+test("progress quota failures are surfaced and a retry preserves siblings", async (t) => {
+  reset();
+  const initial = await store.saveProgress("child", 3, "english", { reading: { topics: {} } });
+  const raw = memory.get("dl.progress");
+  const storage = globalThis.localStorage;
+  t.after(() => { globalThis.localStorage = storage; reset(); });
+  globalThis.localStorage = { getItem: storage.getItem, setItem: () => { throw new Error("quota"); } };
+  const data = { ...initial.data, spelling: { topics: { words: { completedChallenges: [1] } } } };
+  await assert.rejects(store.saveProgress("child", 3, "english", data), /PROGRESS_SAVE_FAILED/);
+  assert.equal(memory.get("dl.progress"), raw);
+  globalThis.localStorage = storage;
+  const saved = await store.saveProgress("child", 3, "english", data);
+  assert.equal(saved._id, initial._id);
+  assert.deepEqual(saved.data, data);
+});
+
 test("createParent stores a parent and hides its credentials", async () => {
   reset();
   const parent = await store.createParent({

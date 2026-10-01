@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSoundMuted } from "../celebration/sound/useSoundMuted";
 import { isNarrationSupported, speakAndWait, stopNarration } from "../../utils/speech.js";
 import "./english-kit.css";
@@ -19,9 +19,16 @@ import "./english-kit.css";
 function SpeakButton({ text, label = "Hear it", compact = false }) {
   const [muted, toggleMuted] = useSoundMuted();
   const [speaking, setSpeaking] = useState(false);
+  const requestRef = useRef(0);
 
   // Leaving the question, or muting, stops the voice mid-sentence.
-  useEffect(() => () => stopNarration(), [text]);
+  useEffect(() => {
+    setSpeaking(false);
+    return () => {
+      requestRef.current += 1;
+      stopNarration();
+    };
+  }, [text]);
   useEffect(() => {
     if (muted) stopNarration();
   }, [muted]);
@@ -30,9 +37,10 @@ function SpeakButton({ text, label = "Hear it", compact = false }) {
 
   const handleClick = async () => {
     if (muted) toggleMuted();
+    const request = ++requestRef.current;
     setSpeaking(true);
     await speakAndWait(text);
-    setSpeaking(false);
+    if (request === requestRef.current) setSpeaking(false);
   };
 
   const shown = muted ? `${label} (turns sound on)` : label;

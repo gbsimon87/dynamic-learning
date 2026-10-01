@@ -8,13 +8,11 @@
  *
  * This is a BUILD-time switch, exactly like `VITE_USE_API` — Vite inlines
  * `import.meta.env` at build time, so flipping it needs a restart, not a
- * reload. A production build made without the variable contains no bypass at
- * all, which is why this is an env var rather than a URL parameter a curious
- * child could discover.
+ * reload. A production build always disables the bypass, even with the
+ * variable set. A URL parameter cannot turn it on.
  *
- * It changes ONLY what the picker offers. Progress, the completion rules and
- * the stored data are untouched, so nothing a learner has done can be lost or
- * faked by turning it on. Unbuilt challenges stay unavailable — this unlocks
+ * It changes access in the picker and the challenge route. The completion
+ * rules and stored data are untouched. Unbuilt challenges stay unavailable — this unlocks
  * what exists, it does not invent pages.
  */
 
@@ -23,5 +21,5 @@
  * this stays a pure function testable outside Vite.
  */
 export function shouldBypassLocks(env) {
-  return env?.VITE_UNLOCK_ALL === "true";
+  return env?.DEV === true && env?.VITE_UNLOCK_ALL === "true";
 }

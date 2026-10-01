@@ -127,4 +127,17 @@ export const PATTERNS = {
   },
   sure: { year: 3, words: ["measure", "treasure", "pleasure", "enclosure"] },
   ture: { year: 3, words: ["creature", "furniture", "picture", "nature", "adventure"] },
+  ous: {
+    year: 4,
+    words: ["poisonous", "dangerous", "mountainous", "famous", "various", "tremendous", "enormous", "jealous", "humorous", "glamorous", "vigorous", "courageous", "outrageous", "serious", "obvious", "curious", "hideous", "spontaneous", "courteous"],
+  },
+  shun: {
+    year: 4,
+    words: ["invention", "injection", "action", "hesitation", "completion", "expression", "discussion", "confession", "permission", "admission", "expansion", "extension", "comprehension", "tension", "attention", "intention", "musician", "electrician", "magician", "politician", "mathematician"],
+  },
+  zhun: { year: 4, words: ["division", "invasion", "confusion", "decision", "collision", "television"] },
+  gueQue: { year: 4, words: ["league", "tongue", "antique", "unique"] },
+  chSounds: { year: 4, words: ["scheme", "chorus", "chemist", "echo", "character", "chef", "chalet", "machine", "brochure"] },
+  sc: { year: 4, words: ["science", "scene", "discipline", "fascinate", "crescent"] },
+  longA: { year: 4, words: ["vein", "weigh", "eight", "neighbour", "they", "obey"] },
 };

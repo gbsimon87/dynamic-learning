@@ -360,6 +360,8 @@ function ParentArea() {
   const navigate = useNavigate();
 
   const [confirmingId, setConfirmingId] = useState(null);
+  const [signingOut, setSigningOut] = useState(false);
+  const [signOutError, setSignOutError] = useState("");
 
   // Which child's progress is unfolded. One at a time: a grown-up with three
 
@@ -416,8 +418,17 @@ function ParentArea() {
   // signOut is async (it ends the server session too), so await it before
   // navigating — otherwise we leave mid-sign-out and the redirect races it.
   const handleSignOut = async () => {
-    await signOut();
-    navigate("/login", { replace: true });
+    if (signingOut) return;
+    setSigningOut(true);
+    setSignOutError("");
+    try {
+      await signOut();
+      navigate("/login", { replace: true });
+    } catch {
+      setSignOutError("We couldn’t sign you out. Check your connection and try again before sharing this device.");
+    } finally {
+      setSigningOut(false);
+    }
   };
 
   return (
@@ -551,12 +562,14 @@ function ParentArea() {
 
         <section className="parent-area-section">
           <h2 className="parent-area-section-title">Account</h2>
+          {signOutError && <p className="parent-area-name-error" role="alert">{signOutError}</p>}
           <button
             type="button"
             className="parent-area-signout-btn"
+            disabled={signingOut}
             onClick={handleSignOut}
           >
-            Sign out
+            {signingOut ? "Signing out…" : "Sign out"}
           </button>
         </section>
       </main>

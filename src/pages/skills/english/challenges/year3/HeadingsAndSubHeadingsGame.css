@@ -1,0 +1,48 @@
+/* Headings and Sub-headings, level 3: a report whose sub-headings are the
+   tap targets. The card itself reuses .reading-passage from english-kit.css;
+   colours come from the --ck-* tokens, so both themes work. Buttons carry two
+   classes and margin-top: 0 so the host page's button rule cannot move them. */
+
+.headings-page-section {
+  margin-bottom: 0.9rem;
+}
+
+.headings-page-section:last-child {
+  margin-bottom: 0;
+}
+
+.headings-page-heading.headings-heading-btn {
+  display: block;
+  width: 100%;
+  margin-top: 0;
+  min-height: 48px;
+  padding: 0.35rem 0.75rem;
+  font: inherit;
+  font-size: 1.1rem;
+  font-weight: 800;
+  text-align: left;
+  color: var(--ck-text);
+  background: var(--ck-panel);
+  border: 3px solid var(--ck-border);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.headings-page-heading.headings-heading-btn:hover:not(:disabled) {
+  border-color: var(--ck-accent);
+}
+
+.headings-page-heading.selected {
+  background: var(--ck-accent);
+  border-color: var(--ck-accent);
+  color: var(--ck-on-accent);
+}
+
+.headings-page-heading.headings-heading-btn:focus-visible {
+  outline: 3px solid var(--ck-text);
+  outline-offset: 2px;
+}
+
+.headings-page .headings-page-text {
+  margin: 0.35rem 0 0;
+}

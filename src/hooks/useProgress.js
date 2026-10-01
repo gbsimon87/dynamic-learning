@@ -2,14 +2,15 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../context/auth-context";
 import { store } from "../data/store";
 import * as rules from "../data/progressRules";
+import { readProgress, saveProgressInOrder } from "../data/progressPersistence";
 
 /**
  * Shared curriculum-progress hook — now account-aware.
  *
  * Progress belongs to the ACTIVE CHILD PROFILE, not to the browser. The
- * signature, the return shape and every unlock rule below are unchanged from
- * the localStorage-only version (CurriculumPage.jsx / ProblemView.jsx need no
- * edits); only the read/write path moved:
+ * signature, existing return fields and every unlock rule below are unchanged from
+ * the localStorage-only version. Retry/error fields expose storage failures;
+ * the read/write path moved:
  *
  *   read   localStorage[`${subject}Progress_year${year}`]
  *          -> await store.getProgress(childId, year, subject) -> doc.data
@@ -42,6 +43,10 @@ export function useProgress(year, subject) {
 
   const [hydrated, setHydrated] = useState(false);
   const [progress, setProgress] = useState({});
+  const [loadError, setLoadError] = useState(false);
+  const [saveError, setSaveError] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  const [saveAttempt, setSaveAttempt] = useState(0);
 
   // Load the active child's document. Re-runs on child / year / subject change.
   useEffect(() => {
@@ -52,6 +57,8 @@ export function useProgress(year, subject) {
     lastSavedRef.current = null;
     setHydrated(false);
     setProgress({});
+    setLoadError(false);
+    setSaveError(false);
 
     if (!childId) {
       // No active child: be completely inert — empty progress, never a write.
@@ -63,14 +70,13 @@ export function useProgress(year, subject) {
     }
 
     (async () => {
-      let data = {};
+      let data;
       try {
-        const doc = await store.getProgress(childId, year, subject);
-        // A missing document is a brand-new learner, not an error.
-        if (doc && doc.data && typeof doc.data === "object") data = doc.data;
+        data = await readProgress(store, childId, year, subject);
       } catch {
-        // Unreadable store degrades to an empty object, never a white screen.
-        data = {};
+        // Never turn a failed read into a writable empty document.
+        if (!cancelled) setLoadError(true);
+        return;
       }
       if (cancelled) return;
 
@@ -83,7 +89,7 @@ export function useProgress(year, subject) {
     return () => {
       cancelled = true;
     };
-  }, [childId, year, subject, documentKey]);
+  }, [childId, year, subject, documentKey, loadAttempt]);
 
   // Persist updates — guarded by `hydrated` AND by `loadedKeyRef` so neither
   // the initial empty state nor another child's state can ever overwrite real
@@ -95,12 +101,16 @@ export function useProgress(year, subject) {
     const serialised = JSON.stringify(progress);
     // Skip the no-op write that would otherwise fire right after hydration.
     if (serialised === lastSavedRef.current) return;
-    lastSavedRef.current = serialised;
-
-    store.saveProgress(childId, year, subject, progress).catch(() => {
-      // Write failed — progress stays in memory for this session.
+    let cancelled = false;
+    saveProgressInOrder(store, childId, year, subject, progress).then(() => {
+      if (cancelled || loadedKeyRef.current !== documentKey) return;
+      lastSavedRef.current = serialised;
+      setSaveError(false);
+    }).catch(() => {
+      if (!cancelled && loadedKeyRef.current === documentKey) setSaveError(true);
     });
-  }, [progress, hydrated, childId, year, subject, documentKey]);
+    return () => { cancelled = true; };
+  }, [progress, hydrated, childId, year, subject, documentKey, saveAttempt]);
 
   // Every predicate below is the pure rule from ../data/progressRules bound to
   // this hook's state. The rules live there so the curriculum screen's lock
@@ -141,6 +151,7 @@ export function useProgress(year, subject) {
    * never fires a duplicate write.
    */
   const completeChallenge = (categoryId, topicId, challengeId) => {
+    if (!hydrated || !childId || loadedKeyRef.current !== documentKey) return;
     setProgress((prev) =>
       rules.completeChallenge(prev, categoryId, topicId, challengeId)
     );
@@ -148,7 +159,11 @@ export function useProgress(year, subject) {
 
   return {
     progress,
-    hydrated,
+    hydrated: hydrated && (!childId || loadedKeyRef.current === documentKey),
+    loadError,
+    saveError,
+    retryLoad: () => setLoadAttempt((attempt) => attempt + 1),
+    retrySave: () => setSaveAttempt((attempt) => attempt + 1),
     isTopicComplete,
     isChallengeUnlocked,
     isCategoryComplete,

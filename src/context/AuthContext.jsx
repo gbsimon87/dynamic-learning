@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AuthContext } from "./auth-context";
 import { store } from "../data/store";
+import { signOutSession } from "../data/signOutSession";
 import { isLearnerAccount } from "../../shared/accountTypes.js";
 import {
   clearLastAccount,
@@ -258,25 +259,15 @@ export function AuthProvider({ children: subtree }) {
   }, []);
 
   const signOut = useCallback(async () => {
-    // Clearing local state alone would leave the server's session cookie alive,
-    // so "sign out" on a shared device wouldn't actually sign anyone out. Tell
-    // the backend first (no-op for the localStorage driver, which has none).
-    if (typeof store.signOutParent === "function") {
-      try {
-        await store.signOutParent();
-      } catch {
-        // Offline or server down: still clear locally. The cookie expires on
-        // its own, and refusing to sign out would be the worse failure.
-      }
-    }
-    clearSession();
-    // Signing out is the one deliberate "forget me" gesture the UI offers, so
-    // the welcome-back faces and the remembered email go with it.
-    clearLastAccount();
-    setParent(null);
-    setChildProfiles([]);
-    setChild(null);
-    setError(null);
+    await signOutSession(store, () => {
+      clearSession();
+      // Forget the welcome-back faces only after the cookie is gone.
+      clearLastAccount();
+      setParent(null);
+      setChildProfiles([]);
+      setChild(null);
+      setError(null);
+    });
   }, []);
 
   const selectChild = useCallback(

@@ -211,6 +211,8 @@ function SignUp() {
         setErrors({
           email: "There is already an account using that email address.",
         });
+      } else if (err?.message === "TOO_MANY_ATTEMPTS") {
+        setErrors({ form: "There have been too many attempts. Please wait 15 minutes and try again." });
       } else if (err?.message === "AGE_BAND_TOO_YOUNG") {
         // Should be unreachable — the age step gates it — but if it ever fires,
         // say the kind thing rather than showing a raw code.

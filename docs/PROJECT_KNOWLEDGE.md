@@ -278,10 +278,46 @@ browser is simply ignored — there is deliberately **no migration path**, remov
 All reading and writing of progress goes through the shared
 [useProgress](../src/hooks/useProgress.js) hook — `useProgress(year, subject)`
 returns `{ progress, hydrated, isTopicComplete, isChallengeUnlocked,
-isCategoryComplete, isCategoryPassable, isChallengeComplete, completeChallenge }`.
+isCategoryComplete, isCategoryPassable, isChallengeComplete, completeChallenge,
+loadError, saveError, retryLoad, retrySave }`.
 This replaced logic previously duplicated across `CurriculumPage.jsx` and
 `ProblemView.jsx` (see §6, resolved). The shape above is still unversioned —
 that remains a known gap (§6).
+
+**Bug/security review, 2026-10-01:** progress reads now fail closed. Only an
+explicit missing document means a new learner; failed API reads, invalid JSON,
+malformed progress and unreadable local storage display a retry control and
+cannot be followed by a completion write. Local progress saves report quota
+failures. `progressPersistence.js` serialises writes per child/year/subject across
+hook remounts, and waits for pending writes before reading; failed saves retain
+the in-memory snapshot for retry. `shared/progressData.js` validates known
+fields on API reads and writes while retaining extra fields and numeric-string
+legacy ids. The stored shape, keys and unlock predicates are unchanged.
+
+`ProblemView` keys each challenge run by child and route, so navigating cancels
+the old run and clears its completion panel. Direct URLs now obey the same lock
+state as the picker. `ChallengeShell` synchronously rejects repeated successful
+submissions and stale question handlers. Dictation enables apostrophes, disables
+hidden inputs, includes ownership context for regular plural possessives and
+counts words independently of punctuation. Speech cancellation settles pending
+promises even when browsers emit no completion event. Year 4 spelling sorts now
+include meaning and sentence context for real-word distractors.
+
+**Follow-up review:** failed progress and rewards snapshots now survive
+navigation/profile switches in module session queues, and retry before an old
+stored document is read. Rewards APIs reject malformed payloads/acknowledgements
+and unavailable-child 404s; local rewards storage reports corruption and quota
+failures. Login/signup share bounded account (20 per 15 minutes) and process
+(120 per minute) budgets, independent of proxy headers. Coordinated limits across
+instances remain deployment work. Remote sign-out errors now keep the account
+visibly signed in and offer a retry, rather than falsely claiming the cookie
+session ended. Local sign-out still requires no API endpoint.
+
+The compatible lockfile update removes 15 npm audit advisories (11 high, 3
+moderate, 1 low); audit reports zero known advisories at review time. Render's
+Node pin is now 22.23.3 LTS, replacing 22.11.0 which did not meet Vite's engine
+requirement. Remaining backend concerns and verification limits are recorded in
+[the bug/security review](english-curriculum/BUG_SECURITY_REVIEW.md).
 
 **The rules themselves are pure and live outside React** (2026-09-18):
 
@@ -676,9 +712,9 @@ other. It only ever CREATES; editing an existing profile happens in `/parent`.
 ### Curriculum Mode — dev unlock switch
 `VITE_UNLOCK_ALL=true` opens every built challenge in the picker, bypassing the
 sequential unlock rules (`src/data/devUnlock.js`). It is a BUILD-time switch
-like `VITE_USE_API`, so a production build made without it has no bypass at
-all — which is why it is an env var and not a URL parameter. It changes only
-what `CurriculumPage` offers: `useProgress`, the completion rules and the
+like `VITE_USE_API`, but requires `import.meta.env.DEV === true`; production
+builds ignore it even if it is set. Both the picker and the challenge route
+use the same lock state: `useProgress`, the completion rules and the
 stored data are untouched, and unbuilt challenges stay unavailable. A banner
 shows while it is active, so a genuine gating bug is never mistaken for the
 flag working.
@@ -803,12 +839,15 @@ Locked topics still list their challenges (each rendered locked and
 unclickable). Hiding them left a locked topic as a bare padlock, with no sign
 of what it held or how much of it there was.
 
-### Curriculum Mode — Years 3 and 4 English (2026-10-01, in progress)
+### Curriculum Mode — Years 3 and 4 English (2026-10-01, implemented)
 
 **The live status and the resume point is
 [docs/english-curriculum/IMPLEMENTATION_TRACKER.md](english-curriculum/IMPLEMENTATION_TRACKER.md).**
 The approved plan with every product decision sits beside it, along with the
-self-contained briefs used to build batches of topics.
+self-contained briefs used to build batches of topics. All **32 Year 3 topics
+(128 challenges)** and **33 Year 4 topics (132 challenges)** are implemented.
+[IMPLEMENTATION_REVIEW.md](english-curriculum/IMPLEMENTATION_REVIEW.md) records
+the completion checks and the outstanding interactive browser review.
 
 - **Source.** The Years 3–4 programme of study and Appendix 1 are saved
   verbatim in `docs/curriculum/`. The mapping section of
@@ -830,8 +869,25 @@ self-contained briefs used to build batches of topics.
   - glossed grammar terms in slots 1–3 only.
 
   See the "English topics" section of the `building-curriculum-topics` skill.
-- **Built and browser-verified so far:** the four Year 3 pilots, Homophones,
-  Conjunctions, Characters' Feelings and Paragraphs. The tracker has the rest.
+- **Built:** every topic in both approved datasets has all four challenges.
+  Year 3 includes completed reading banks, all missing wrappers, and bounded
+  shuffle/selection fallbacks. Year 4 adds its complete Appendix 1 spelling
+  half, grammar, original comprehension texts, composition and dictation.
+  Its spelling banks include every assigned appendix example, all statutory
+  Year 4 word-list entries and all eight Year 4 homophone groups.
+- **Shared rendering:** `EnglishPracticeGame.jsx` renders choice, sorting,
+  letter-tile/word-tile building and spelling entry. Year 4 reading topics use
+  `year3/ReadingTopicGame.jsx` with per-topic banks and `year4Reading.js`.
+  `year4Practice.js` contains pure question assembly. Each topic still has its
+  own builder, tests, Game and four computed challenge files.
+  Dictation reuses the Year 3 Game with an injected Year 4 builder; its tokens
+  preserve commas, inverted commas, possessive apostrophes and end marks.
+- **Verification:** lint, 987 passing tests (one pre-existing skip), build and
+  initial Vite/React rendering of all 260 English components pass. Only the
+  four Year 3 pilots have had interactive browser verification so far.
+  Browser controls were unavailable for the completion session; wrong-answer
+  retries, full-run celebrations, mobile layout, keyboard use and computed
+  contrast in both themes remain to be checked interactively.
 - **Speech** is the browser's own speech synthesis in a British voice
   (`src/utils/speech.js`, `SpeakButton`). It plays only when tapped and follows
   the navbar mute; tapping while muted unmutes. With no voice available the
@@ -1005,9 +1061,10 @@ all day builds on what the same child earned elsewhere since. It never reads
 over unsaved memory: while a save is in flight it does nothing, and after a
 failed save it sends the in-memory document again instead.
 
-**Saves go one at a time.** A newer save waits for the one in flight, and only
-the newest waiting document is sent, so replies can never land out of order
-and leave an older document on the server. A save that changes nothing (a
+**Saves go one at a time per child.** Each newer snapshot waits for the one
+in flight through `rewardsPersistence.js`, so replies cannot leave an older
+document on the server. Failed snapshots remain available across profile
+switches until a retry is acknowledged. Another child has an independent queue. A save that changes nothing (a
 practice replay past the day's cap, on a day already counted) is skipped.
 
 **`RewardsProvider` is the single writer.** `src/context/RewardsContext.jsx`,
@@ -1082,8 +1139,10 @@ Trophy Room and `/parent` show streak, best, level and XP.
 **Known limit: last save wins.** Each save replaces the whole rewards
 document. `refresh()` narrows this to the same child playing on two devices at
 the very same moment: whichever save is older is lost. Merging on the server is
-out of scope. A save that failed for one child is dropped when switching to
-another (as before).
+still needed for simultaneous devices. Failed or queued snapshots now survive
+profile switching within this app session and retry when that child is reopened
+(`rewardsPersistence.js`); closing/reloading before acknowledgement can still
+lose unsaved work.
 
 Unlocked avatars can be redeemed in two places: `/parent` (every profile's
 picture picker — `ProfileBuilder` only ever creates) and, since 2026-09-29, the

@@ -1,0 +1,56 @@
+/* Dictation: the look, cover, write panel and its controls. Colours come from
+   the --ck-* tokens, so both themes work. Buttons carry two classes and
+   margin-top: 0 so the host page's button rule cannot move them. */
+
+.dictation-look {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.4rem;
+  padding: 1rem 1.2rem;
+  background: var(--ck-muted);
+  border: 3px dashed var(--ck-border);
+  border-radius: 16px;
+}
+
+.dictation-look .challenge-prompt {
+  margin: 0;
+}
+
+.dictation-look .dictation-sentence {
+  margin: 0;
+  max-width: 34ch;
+}
+
+.dictation-control.dictation-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0;
+  min-height: 48px;
+  padding: 0.45rem 1.1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ck-on-accent);
+  background: var(--ck-accent);
+  border: 2px solid var(--ck-accent);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.dictation-control.is-quiet {
+  color: var(--ck-text);
+  background: transparent;
+  border-color: var(--ck-border);
+}
+
+.dictation-control.dictation-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.dictation-control.dictation-btn:focus-visible {
+  outline: 3px solid var(--ck-text);
+  outline-offset: 2px;
+}

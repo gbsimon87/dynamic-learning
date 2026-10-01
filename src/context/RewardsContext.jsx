@@ -2,6 +2,7 @@ import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "r
 import { AuthContext } from "./auth-context";
 import { RewardsContext } from "./rewards-context";
 import { store } from "../data/store";
+import { readRewards, saveRewardsInOrder } from "../data/rewardsPersistence";
 import { normaliseRewards } from "../data/rewardsShape";
 import { awardRun } from "../data/awardRun";
 import { XP, backfillXp, displayXp } from "../data/xp";
@@ -44,9 +45,9 @@ export function RewardsProvider({ children }) {
   const writesRef = useRef(0);
   const queueRef = useRef([]);
   const readsRef = useRef(0);
-  // One save in flight at a time, so replies can never land out of order and
-  // leave an older document on the server: a newer one waits in `queued`.
-  const sendingRef = useRef({ busy: false, queued: null, failed: false });
+  // Every snapshot enters the session queue immediately, including snapshots
+  // from a child being left while another write is still in flight.
+  const sendingRef = useRef({ pending: new Map(), failed: false });
   const [attempt, setAttempt] = useState(0);
   const [state, setState] = useState({
     status: "idle",
@@ -56,27 +57,21 @@ export function RewardsProvider({ children }) {
 
   const send = useCallback((forChild, doc) => {
     const sending = sendingRef.current;
-    if (sending.busy) {
-      sending.queued = { forChild, doc };
-      return;
-    }
-    sending.busy = true;
-    store
-      .saveRewards(forChild, doc)
+    sending.pending.set(forChild, (sending.pending.get(forChild) ?? 0) + 1);
+    saveRewardsInOrder(store, forChild, doc)
       .then(
         () => {
-          sending.failed = false;
+          if (loadedKeyRef.current === forChild) sending.failed = false;
         },
         () => {
           // Kept in memory; `refresh` sends it again rather than reading over it.
-          sending.failed = true;
+          if (loadedKeyRef.current === forChild) sending.failed = true;
         }
       )
       .finally(() => {
-        sending.busy = false;
-        const waiting = sending.queued;
-        sending.queued = null;
-        if (waiting) send(waiting.forChild, waiting.doc);
+        const count = sending.pending.get(forChild) - 1;
+        if (count === 0) sending.pending.delete(forChild);
+        else sending.pending.set(forChild, count);
       });
   }, []);
 
@@ -95,8 +90,7 @@ export function RewardsProvider({ children }) {
     readsRef.current += 1; // any refresh still in flight is now out of date
     loadedKeyRef.current = null;
     latestRef.current = normaliseRewards(null);
-    // A failed save belongs to the child being left (a known limit: it is
-    // dropped with the in-memory copy, as before).
+    // Pending/failed snapshots remain in rewardsPersistence, keyed by child.
     sendingRef.current.failed = false;
     statusRef.current = childId ? "loading" : "idle";
     backfillRef.current = null;
@@ -108,7 +102,7 @@ export function RewardsProvider({ children }) {
     (async () => {
       let doc;
       try {
-        doc = await store.getRewards(childId);
+        doc = await readRewards(store, childId);
       } catch {
         if (cancelled) return;
         statusRef.current = "failed";
@@ -192,10 +186,10 @@ export function RewardsProvider({ children }) {
       send(childId, latestRef.current);
       return;
     }
-    if (sending.busy) return;
+    if (sending.pending.has(childId)) return;
     const writes = writesRef.current;
     const read = (readsRef.current += 1);
-    store.getRewards(childId).then(
+    readRewards(store, childId).then(
       (doc) => {
         // Only the newest read counts, and only if nothing was saved meanwhile.
         if (read !== readsRef.current) return;

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { nextMessage } from "../../data/celebrationMessages";
 import { nextStreak } from "../../data/answerStreak";
+import { createSubmissionGate } from "../../data/submissionGate";
 import { playCue } from "../celebration/sound/player";
 import { playEffect } from "../celebration/fx/effects";
 import Mascot from "../mascot/Mascot";
@@ -55,6 +56,8 @@ function ChallengeShell({ title, questions, render, onComplete }) {
   const answerRef = useRef(null);
   const feedbackRef = useRef(null);
   const timerRef = useRef(null);
+  const submissionRef = useRef(null);
+  if (!submissionRef.current) submissionRef.current = createSubmissionGate();
   // The combo streak, and whether the current question has been missed yet.
   // Refs, not state: they only ever feed the next answer, never the render.
   const streakRef = useRef(0);
@@ -82,7 +85,8 @@ function ChallengeShell({ title, questions, render, onComplete }) {
    * shell's job so no challenge can accidentally complete early.
    */
   const submit = (isCorrect) => {
-    if (locked) return;
+    // React state is batched: close the gate before another tap can submit.
+    if (!submissionRef.current(index, isCorrect)) return;
 
     const { streak, combo } = nextStreak(streakRef.current, isCorrect, !missedRef.current);
     streakRef.current = streak;

@@ -4,6 +4,7 @@ import {
   readAccountType,
 } from "../../../shared/accountTypes.js";
 import { normaliseChildPatch } from "../childFields.js";
+import { isRewardsData } from "../../../shared/rewardsData.js";
 
 /**
  * localStorage-backed implementation of the app's data store.
@@ -43,15 +44,19 @@ const KEYS = {
  * Private mode and quota-exceeded must degrade, never throw at a UI callsite.
  * ------------------------------------------------------------------ */
 
-function readCollection(key) {
+function readCollection(key, strict = false) {
   try {
+    if (strict && !globalThis.localStorage) throw new Error("STORAGE_UNAVAILABLE");
     const raw = globalThis.localStorage?.getItem(key);
-    if (!raw) return [];
+    if (raw === null || (!strict && !raw)) return [];
     const parsed = JSON.parse(raw);
     // A collection is always an array. Anything else is corrupt; treat as empty
     // rather than letting `.filter` throw on every subsequent call.
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
+    if (Array.isArray(parsed)) return parsed;
+    if (strict) throw new Error("INVALID_STORAGE");
+    return [];
+  } catch (error) {
+    if (strict) throw error;
     return [];
   }
 }
@@ -263,7 +268,7 @@ export const store = {
   /** @returns {Promise<object|null>} progress for one childId+year+subject. */
   async getProgress(childId, year, subject) {
     if (!childId) return null;
-    const found = readCollection(KEYS.progress).find(
+    const found = readCollection(KEYS.progress, true).find(
       (doc) =>
         doc.childId === childId &&
         Number(doc.year) === Number(year) &&
@@ -280,7 +285,7 @@ export const store = {
   async saveProgress(childId, year, subject, data) {
     if (!childId) throw new Error("CHILD_REQUIRED");
 
-    const docs = readCollection(KEYS.progress);
+    const docs = readCollection(KEYS.progress, true);
     const index = docs.findIndex(
       (doc) =>
         doc.childId === childId &&
@@ -301,7 +306,7 @@ export const store = {
     };
 
     const next = index === -1 ? [...docs, doc] : docs.with(index, doc);
-    writeCollection(KEYS.progress, next);
+    if (!writeCollection(KEYS.progress, next)) throw new Error("PROGRESS_SAVE_FAILED");
     return clone(doc);
   },
 
@@ -314,9 +319,10 @@ export const store = {
    */
   async getRewards(childId) {
     if (!childId) return null;
-    const found = readCollection(KEYS.rewards).find(
+    const found = readCollection(KEYS.rewards, true).find(
       (doc) => doc.childId === childId
     );
+    if (found && !isRewardsData(found.data)) throw new Error("INVALID_REWARDS");
     return clone(found) ?? null;
   },
 
@@ -326,8 +332,9 @@ export const store = {
    */
   async saveRewards(childId, data) {
     if (!childId) throw new Error("CHILD_REQUIRED");
+    if (!isRewardsData(data ?? {})) throw new Error("INVALID_REWARDS");
 
-    const docs = readCollection(KEYS.rewards);
+    const docs = readCollection(KEYS.rewards, true);
     const index = docs.findIndex((doc) => doc.childId === childId);
     const base = index === -1 ? null : docs[index];
 
@@ -341,7 +348,7 @@ export const store = {
     };
 
     const next = index === -1 ? [...docs, doc] : docs.with(index, doc);
-    writeCollection(KEYS.rewards, next);
+    if (!writeCollection(KEYS.rewards, next)) throw new Error("REWARDS_SAVE_FAILED");
     return clone(doc);
   },
 };

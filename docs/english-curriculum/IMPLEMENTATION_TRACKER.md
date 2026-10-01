@@ -49,73 +49,115 @@ into `dev`; no PRs). Last updated **2026-10-01**.
 
 ## Year 3: topic status
 
-Legend: ✅ done · 🧪 built, unit tests pass, **not yet browser-verified or committed** · ⏳ in progress · ⬜ not started
+Legend: ✅ previously browser-verified pilot · 🧪 implemented, tested and React-rendered; **interactive browser review and commits pending**
 
-The 28 non-pilot topics were handed to four parallel agents on 2026-10-01,
-using TOPIC_BRIEF_YEAR3.md. When this tracker was written they were still
-running, so their files are **uncommitted** in the working tree. To pick up:
-
-1. Run `git status` and check that each topic has its builder in
-   `src/data/challenges/english/`, its `<Pascal>Game.jsx` in
-   `src/pages/skills/english/challenges/year3/`, and a `<topic-id>/` folder
-   holding 4 challenge files.
-2. Read each builder and game; check them against the topic's row in the
-   mapping doc and the house rules (one right answer, hints that never give
-   the answer away, glosses, British spelling).
-3. Run `npm run lint`, `npm test` and `npm run build`.
-4. Drive every challenge in the browser (see "Verifying" below). Fix, commit
-   per category, and move each row here to ✅.
+All **32 topics / 128 challenges** now have builders, games and correctly
+named challenge files. The resumed work completed six missing sets of challenge
+wrappers and the missing Poetry Forms and Words That Spark the Imagination banks.
+The four pilots retain their earlier browser verification; all other topics have
+passed automated checks and a Vite/React render pass. Browser controls were not
+available in the completion session, so those checks are not marked as done.
 
 | # | Category | Topic | Status |
 |---|---|---|---|
-| 1 | Spelling - Prefixes and Suffixes | Adding Prefixes | ⏳ |
-| 1 | | The Prefixes Super, Anti and Auto | ⏳ |
-| 1 | | The Suffixes ation and ly | ⏳ |
-| 1 | | Doubling Before a Suffix | ⏳ |
-| 2 | Reading - Words and Meanings | Root Words | ⏳ |
-| 2 | | Exception Words | ⏳ |
-| 2 | | Using a Dictionary | ⏳ |
-| 2 | | Words in Context | ⏳ |
-| 3 | Grammar - Words | A or An | ⏳ |
-| 3 | | Word Families | ⏳ |
-| 4 | Reading - Stories | Does It Make Sense? | ⏳ |
+| 1 | Spelling - Prefixes and Suffixes | Adding Prefixes | 🧪 |
+| 1 | | The Prefixes Super, Anti and Auto | 🧪 |
+| 1 | | The Suffixes ation and ly | 🧪 |
+| 1 | | Doubling Before a Suffix | 🧪 |
+| 2 | Reading - Words and Meanings | Root Words | 🧪 |
+| 2 | | Exception Words | 🧪 |
+| 2 | | Using a Dictionary | 🧪 |
+| 2 | | Words in Context | 🧪 |
+| 3 | Grammar - Words | A or An | 🧪 |
+| 3 | | Word Families | 🧪 |
+| 4 | Reading - Stories | Does It Make Sense? | 🧪 |
 | 4 | | Characters' Feelings | ✅ pilot |
-| 4 | | Predicting What Happens Next | ⏳ |
-| 4 | | Fairy Stories, Myths and Legends | ⏳ |
-| 5 | Spelling - Sounds and Homophones | The sure and ture Endings | ⏳ |
-| 5 | | Tricky Sounds y and ou | ⏳ |
+| 4 | | Predicting What Happens Next | 🧪 |
+| 4 | | Fairy Stories, Myths and Legends | 🧪 |
+| 5 | Spelling - Sounds and Homophones | The sure and ture Endings | 🧪 |
+| 5 | | Tricky Sounds y and ou | 🧪 |
 | 5 | | Homophones | ✅ pilot |
-| 5 | | Words Often Misspelt | ⏳ |
+| 5 | | Words Often Misspelt | 🧪 |
 | 6 | Grammar - Sentences | Conjunctions | ✅ pilot |
-| 6 | | Time and Cause Words | ⏳ |
-| 6 | | The Present Perfect | ⏳ |
-| 6 | | Inverted Commas | ⏳ |
-| 7 | Reading - Non-Fiction and Poetry | Finding Information | ⏳ |
-| 7 | | Asking Questions about a Text | ⏳ |
-| 7 | | Kinds of Writing | ⏳ |
-| 7 | | Words That Spark the Imagination | ⏳ |
-| 7 | | Poetry Forms | ⏳ |
+| 6 | | Time and Cause Words | 🧪 |
+| 6 | | The Present Perfect | 🧪 |
+| 6 | | Inverted Commas | 🧪 |
+| 7 | Reading - Non-Fiction and Poetry | Finding Information | 🧪 |
+| 7 | | Asking Questions about a Text | 🧪 |
+| 7 | | Kinds of Writing | 🧪 |
+| 7 | | Words That Spark the Imagination | 🧪 |
+| 7 | | Poetry Forms | 🧪 |
 | 8 | Writing - Composition | Paragraphs | ✅ pilot |
-| 8 | | Headings and Sub-headings | ⏳ |
-| 8 | | Settings, Characters and Plot | ⏳ |
-| 8 | | Proofreading | ⏳ |
-| 8 | | Dictation | ⏳ |
-
-The four batches, so a stalled one can be re-run on its own:
-- **A:** categories 1 and 3.
-- **B:** category 2, plus the three non-pilot spelling topics in 5.
-- **C:** categories 4 and 7, minus the pilot.
-- **D:** category 6 and category 8, minus the pilots.
+| 8 | | Headings and Sub-headings | 🧪 |
+| 8 | | Settings, Characters and Plot | 🧪 |
+| 8 | | Proofreading | 🧪 |
+| 8 | | Dictation | 🧪 |
 
 ## Year 4: topic status
 
-Dataset, ids, registry and the year picker are done. **No topic is built
-yet** (every one shows "Coming soon"). All 33 are ⬜. Build them with
-TOPIC_BRIEF_YEAR4.md: builders go in `src/data/challenges/english/year4<Topic>.js`
-and games in `src/pages/skills/english/challenges/year4/`. Topic ids and
-PascalIds come from `node -e` over `year4EnglishCurriculum.js` (see the skill's
-"Name the files by computing"). The topic list and each topic's bullet are in
-the mapping doc, under "Year 4 topics".
+All **33 topics / 132 challenges** are implemented. Builders are named
+`year4<PascalTopic>.js`, with per-topic tests. Games and challenge wrappers live
+in `src/pages/skills/english/challenges/year4/`.
+
+| Topic | Status |
+|---|---|
+| The Prefixes il, im and ir | 🧪 |
+| The Suffix ous | 🧪 |
+| More ly Adverbs | 🧪 |
+| Apostrophes for Plural Possession | 🧪 |
+| Main Ideas and Summaries | 🧪 |
+| Justifying Inferences | 🧪 |
+| How Language Creates Meaning | 🧪 |
+| How Structure and Presentation Help | 🧪 |
+| Plural or Possessive | 🧪 |
+| Standard English Verbs | 🧪 |
+| Determiners | 🧪 |
+| Expanded Noun Phrases | 🧪 |
+| The shun Endings | 🧪 |
+| The zhun Ending | 🧪 |
+| The Endings gue and que | 🧪 |
+| More Words Often Misspelt | 🧪 |
+| Themes in Stories | 🧪 |
+| Predicting from Clues | 🧪 |
+| Myths and Legends from Around the World | 🧪 |
+| Comparing Forms of Poetry | 🧪 |
+| Fronted Adverbials | 🧪 |
+| Commas after Fronted Adverbials | 🧪 |
+| Punctuating Direct Speech | 🧪 |
+| Pronouns and Possessive Pronouns | 🧪 |
+| Greek and French ch | 🧪 |
+| The Letters sc | 🧪 |
+| The Sounds ei, eigh and ey | 🧪 |
+| More Homophones | 🧪 |
+| Paragraphs around a Theme | 🧪 |
+| Nouns or Pronouns for Clarity | 🧪 |
+| Editing for Consistency | 🧪 |
+| Proofreading Longer Texts | 🧪 |
+| Dictation | 🧪 |
+
+## Completion checks (2026-10-01)
+
+- `npm run lint`: passed.
+- `npm test`: 987 passed, 1 pre-existing skip, no failures (988 total).
+- `npm run build`: passed; the existing large main bundle warning remains.
+- All **260** English challenge components loaded and rendered through Vite and
+  React, with speech unavailable. This verifies component imports and initial
+  render; it does **not** verify clicks, completion, layout or contrast.
+- Coverage tests check every approved slot has its computed filename and passes
+  `onComplete` through. Year 4 bank tests exercise all levels across 30 seeds
+  and constant RNGs, check answer availability, tile multiplicity, evidence,
+  British spelling and passage lengths.
+- Appendix tests cover the entire Year 4 word list, homophone split and every
+  example in its assigned spelling patterns.
+- Three random retry loops in Year 3 builders were replaced with bounded
+  selection, with regression tests for constant RNGs.
+- **Still to review in a browser:** two wrong attempts and hint, complete runs,
+  saved completion/celebrations, keyboard input, 375px layout and both themes.
+  Existing work and the resumed additions remain in the working tree for review.
+
+The implementation is complete; the remaining verification is interactive.
+Read [IMPLEMENTATION_REVIEW.md](IMPLEMENTATION_REVIEW.md) for the shared patterns,
+content notes and browser-driving details.
 
 ## Verifying (how every built topic was checked)
 
@@ -136,9 +178,9 @@ the mapping doc, under "Year 4 topics".
 - Also check 375px width (no horizontal scroll), the dark theme, and
   `LetterInput` taps landing in one batch.
 
-## After both years
+## Documentation
 
-- `docs/PROJECT_KNOWLEDGE.md` §5: mark every topic built.
-- `docs/PROJECT_IDEAS.md` #16: delete the row.
+- `docs/PROJECT_KNOWLEDGE.md` §5 records both years as implemented.
+- `docs/PROJECT_IDEAS.md` #16 now tracks only the remaining Year 1–2 English work.
 - Optional: seed English progress in `scripts/seed.js`, which seeds Maths
   only today.

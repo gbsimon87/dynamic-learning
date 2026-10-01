@@ -9,6 +9,7 @@ import { Router } from "express";
 import * as db from "../db.js";
 import { requireAuth, requireOwnedChild } from "../middleware.js";
 import { publicProgress } from "../serialize.js";
+import { isProgressData } from "../../shared/progressData.js";
 
 const router = Router();
 router.use(requireAuth);
@@ -33,6 +34,7 @@ router.get("/:childId/:year/:subject", requireOwnedChild, async (req, res, next)
 
 router.put("/:childId/:year/:subject", requireOwnedChild, async (req, res, next) => {
   try {
+    if (!isProgressData(req.body?.data)) return res.status(400).json({ error: "INVALID_PROGRESS" });
     const filter = key(req);
     if (!filter) return res.status(400).json({ error: "INVALID_YEAR" });
 
@@ -45,7 +47,7 @@ router.put("/:childId/:year/:subject", requireOwnedChild, async (req, res, next)
         $set: {
           ...filter,
           schemaVersion: 1,
-          data: req.body?.data ?? {},
+          data: req.body.data,
           updatedAt: now,
         },
         $setOnInsert: { createdAt: now },

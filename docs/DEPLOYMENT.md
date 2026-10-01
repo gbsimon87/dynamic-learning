@@ -56,7 +56,7 @@ same set with placeholders.
 | `MONGODB_URI` | `mongodb+srv://…` | Atlas → your cluster → **Connect** → **Drivers** → Node.js. Copy the string, replace `<username>`/`<password>` with a database user's credentials, and append the database name after the host. URL-encode any special characters in the password (`@` → `%40`). |
 | `SESSION_SECRET` | a long random string | Generate one: `openssl rand -base64 48`. Rotating it invalidates every session, i.e. signs everyone out. |
 | `VITE_USE_API` | `true` | See §4. |
-| `NODE_VERSION` | `22.11.0` | Pinned in `render.yaml`. |
+| `NODE_VERSION` | `22.23.3` | Pinned in `render.yaml`; [Node 22.23.3 LTS](https://nodejs.org/en/blog/release/v22.23.3) satisfies Vite’s Node 22.12+ requirement. |
 | `NODE_ENV` | `production` | Makes the server serve the built `dist/` and set the cookie `Secure` flag. |
 | `PORT` | — | **Do not set.** Render injects it; `server/index.js` reads `process.env.PORT`. |
 

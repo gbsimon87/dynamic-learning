@@ -1,0 +1,82 @@
+/*
+ * Extra layout for the shared Year 3 reading game (ReadingTopicGame.jsx).
+ * Colours come only from the --ck-* tokens, so both themes work.
+ */
+
+.reading-topic-prompt.challenge-prompt {
+  margin-bottom: 0.9rem;
+}
+
+.reading-topic-focus.english-focus {
+  max-width: 34ch;
+}
+
+/* --- a contents page or an index --- */
+.reading-book-list {
+  max-width: 26rem;
+  margin: 0 auto 1.4rem;
+  padding: 1rem 1.2rem;
+  text-align: left;
+  color: var(--ck-text);
+  background: var(--ck-panel);
+  border: 2px solid var(--ck-border);
+  border-radius: 14px;
+  box-shadow: 0 3px 0 var(--ck-card-edge);
+}
+
+.reading-book-list-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  opacity: 0.75;
+}
+
+.reading-book-list-kind {
+  margin: 0 0 0.6rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.reading-book-list-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reading-book-list-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  padding: 0.25rem 0;
+  font-size: 1.12rem;
+}
+
+.reading-book-list-dots {
+  flex: 1;
+  border-bottom: 2px dotted var(--ck-border);
+}
+
+.reading-book-list-page {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- a poem to tap, one picker per line --- */
+.reading-poem-picker {
+  max-width: 38rem;
+  margin: 0 auto 1.5rem;
+  padding: 0.8rem 1rem;
+  background: var(--ck-muted);
+  border-radius: 16px;
+}
+
+.reading-poem-picker-title {
+  margin: 0 0 0.4rem;
+  font-weight: 800;
+}
+
+.reading-poem-picker .word-picker {
+  justify-content: flex-start;
+  margin: 0 0 0.25rem;
+  font-size: clamp(1.1rem, 3.6vw, 1.3rem);
+}

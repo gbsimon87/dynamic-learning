@@ -29,6 +29,8 @@
 
 import { normaliseAccountFields } from "../../../shared/accountTypes.js";
 import { normaliseChildPatch } from "../childFields.js";
+import { isProgressData } from "../../../shared/progressData.js";
+import { isRewardsData } from "../../../shared/rewardsData.js";
 
 const BASE = "/api";
 
@@ -74,8 +76,10 @@ async function request(path, { method = "GET", body, expect = [200], soft = [] }
   if (response.status !== 204) {
     try {
       data = await response.json();
-    } catch {
-      data = null;
+    } catch (cause) {
+      if (expect.includes(response.status)) {
+        throw new ApiError("INVALID_RESPONSE", { status: response.status, cause });
+      }
     }
   }
 
@@ -167,9 +171,8 @@ export const store = {
 
   /**
    * Ends the session. Has no `localStorageStore` counterpart (there is no
-   * server-side session to end locally), so it is optional: `AuthContext.signOut`
-   * only clears local state today. Present so a caller can end the cookie
-   * session when the app grows to do so.
+   * server-side session to end locally). `AuthContext.signOut` awaits this
+   * method before clearing local identity.
    * @returns {Promise<void>}
    */
   async signOutParent() {
@@ -287,7 +290,10 @@ export const store = {
         Number(year)
       )}/${encodeURIComponent(subject)}`
     );
-    return data?.progress ?? null;
+    if (!data || !Object.hasOwn(data, "progress") || data.progress !== null && !isProgressData(data.progress?.data)) {
+      throw new ApiError("INVALID_RESPONSE");
+    }
+    return data.progress;
   },
 
   /**
@@ -303,7 +309,8 @@ export const store = {
       )}/${encodeURIComponent(subject)}`,
       { method: "PUT", body: { data: data ?? {} }, expect: [200] }
     );
-    return body?.progress ?? null;
+    if (!body?.progress || !isProgressData(body.progress.data)) throw new ApiError("INVALID_RESPONSE");
+    return body.progress;
   },
 
   /**
@@ -314,12 +321,13 @@ export const store = {
    */
   async getRewards(childId) {
     if (!childId) return null;
-    const { status, data } = await request(
-      `/rewards/${encodeURIComponent(childId)}`,
-      { expect: [200], soft: [404] }
-    );
-    if (status === 404) return null;
-    return data?.rewards ?? null;
+    // This endpoint returns 200/rewards:null for a missing document. A 404
+    // means the child is unavailable or not owned, never a fresh reward tree.
+    const { data } = await request(`/rewards/${encodeURIComponent(childId)}`);
+    if (!data || !Object.hasOwn(data, "rewards") || data.rewards !== null && !isRewardsData(data.rewards?.data)) {
+      throw new ApiError("INVALID_RESPONSE");
+    }
+    return data.rewards;
   },
 
   /**
@@ -333,6 +341,7 @@ export const store = {
       `/rewards/${encodeURIComponent(childId)}`,
       { method: "PUT", body: { data: data ?? {} }, expect: [200] }
     );
-    return body?.rewards ?? null;
+    if (!body?.rewards || !isRewardsData(body.rewards.data)) throw new ApiError("INVALID_RESPONSE");
+    return body.rewards;
   },
 };

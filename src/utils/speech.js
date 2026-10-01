@@ -12,6 +12,7 @@
  */
 
 const VOICE = { lang: "en-GB", rate: 0.95, pitch: 1.02 };
+let finishPending = null;
 
 export function isNarrationSupported() {
     return typeof window !== "undefined"
@@ -21,8 +22,11 @@ export function isNarrationSupported() {
 }
 
 export function stopNarration() {
+    // Some browsers never dispatch onend/onerror after cancel(). Settle our
+    // own promise first, so replacing speech cannot strand a caller.
+    finishPending?.();
     if (typeof window !== "undefined" && typeof window.speechSynthesis?.cancel === "function") {
-        window.speechSynthesis.cancel();
+        try { window.speechSynthesis.cancel(); } catch { /* unavailable voice */ }
     }
 }
 
@@ -31,7 +35,7 @@ export function speak(text, options = {}) {
     stopNarration();
     const utterance = new window.SpeechSynthesisUtterance(text);
     Object.assign(utterance, VOICE, options);
-    window.speechSynthesis.speak(utterance);
+    try { window.speechSynthesis.speak(utterance); } catch { /* unavailable voice */ }
 }
 
 /**
@@ -46,10 +50,19 @@ export function speakAndWait(text, options = {}) {
             return;
         }
         stopNarration();
-        const utterance = new window.SpeechSynthesisUtterance(text);
-        Object.assign(utterance, VOICE, options);
-        utterance.onend = () => resolve();
-        utterance.onerror = () => resolve();
-        window.speechSynthesis.speak(utterance);
+        const finish = () => {
+            if (finishPending === finish) finishPending = null;
+            resolve();
+        };
+        finishPending = finish;
+        try {
+            const utterance = new window.SpeechSynthesisUtterance(text);
+            Object.assign(utterance, VOICE, options);
+            utterance.onend = finish;
+            utterance.onerror = finish;
+            window.speechSynthesis.speak(utterance);
+        } catch {
+            finish();
+        }
     });
 }

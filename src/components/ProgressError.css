@@ -1,0 +1,36 @@
+.progress-error {
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--light-text);
+}
+
+.progress-error p {
+  margin-bottom: 1rem;
+}
+
+.progress-error button {
+  min-height: 56px;
+  padding: 0.7rem 2rem;
+  font: inherit;
+  font-weight: 700;
+  color: var(--light-text);
+  background: var(--light-bg);
+  border: 2px solid var(--light-accent);
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+body.dark .progress-error,
+body.dark .progress-error button {
+  color: var(--dark-text);
+}
+
+body.dark .progress-error button {
+  background: var(--dark-bg);
+  border-color: var(--dark-accent);
+}
+
+.progress-error button:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 4px;
+}

@@ -16,6 +16,7 @@ import {
 import { shouldBypassLocks } from "../../data/devUnlock";
 import { useReveal } from "../home/useReveal";
 import ProgressRing from "../../components/ProgressRing";
+import ProgressError from "../../components/ProgressError";
 import "./CurriculumPage.css";
 
 /* ===== DECORATION =====
@@ -259,13 +260,15 @@ function CurriculumPage() {
   const year = Number(params.year);
   const subject = params.subject;
 
-  const { progress, hydrated } = useProgress(year, subject);
+  const { progress, hydrated, loadError, retryLoad } = useProgress(year, subject);
   const revealRef = useReveal();
 
   // Unknown or not-yet-built year/subject → back to the picker
   if (!isCurriculumAvailable(year, subject)) {
     return <Navigate to="/curriculum" replace />;
   }
+  if (loadError) return <ProgressError loading retry={retryLoad} />;
+  if (!hydrated) return <div className="curriculum-page" role="status">Loading your progress…</div>;
 
   const curriculum = loadCurriculum(year, subject);
   const subjectName = getSubjectName(subject);

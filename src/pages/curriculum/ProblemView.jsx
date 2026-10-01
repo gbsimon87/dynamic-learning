@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { Navigate, useParams } from "react-router";
 import { useContext, useEffect, useRef, useState } from "react";
 import Challenge from "./Challenge";
 import CompletionCelebration from "../../components/celebration/CompletionCelebration";
@@ -21,16 +21,18 @@ import { preloadSounds } from "../../components/celebration/sound/player";
 import { localDay, weekDots } from "../../data/streak";
 import { stickerKey } from "../../data/news";
 import { shouldBypassLocks } from "../../data/devUnlock";
+import ProgressError from "../../components/ProgressError";
 import "./ProblemView.css";
 
 function ProblemView() {
   const { year, subject, categoryId, topicId, challengeId } = useParams();
   const { award, refresh } = useRewards();
-  const childName = useContext(AuthContext)?.child?.name;
+  const child = useContext(AuthContext)?.child;
+  const childName = child?.name;
 
   // Sounds only ever play in a challenge, so this is where they download.
   useEffect(() => preloadSounds(), []);
-  const { progress, hydrated, isChallengeComplete, completeChallenge } =
+  const { progress, hydrated, loadError, saveError, retryLoad, retrySave, isChallengeComplete, completeChallenge } =
     useProgress(year, subject);
   // The year's other subjects, read-only: finishing this subject finishes the
   // year only when they are finished too. Null while loading counts as "not
@@ -40,7 +42,7 @@ function ProblemView() {
   // Which challenge the completion panel belongs to. "Next challenge" keeps
   // this component mounted and only changes the route params, so a plain
   // boolean would leave the panel showing over the challenge just opened.
-  const positionKey = `${year}/${subject}/${categoryId}/${topicId}/${challengeId}`;
+  const positionKey = `${child?._id ?? "none"}/${year}/${subject}/${categoryId}/${topicId}/${challengeId}`;
   const [completion, setCompletion] = useState(null);
   // Leaving a challenge forgets its celebration, so Next → browser Back opens
   // the challenge again rather than replaying the fanfare. Cleared during
@@ -66,9 +68,18 @@ function ProblemView() {
   const curriculum = loadCurriculum(year, subject);
   const isBuilt = (topic, challenge) =>
     isChallengeImplemented(subject, year, topic, challenge);
+  const lockState = hydrated && curriculum ? buildLockState({
+    curriculum,
+    progress,
+    isBuilt,
+    bypassLocks: shouldBypassLocks(import.meta.env),
+  }) : null;
+  const currentChallenge = lockState?.find((category) => category.id === categoryId)
+    ?.topics.find((topic) => topic.id === topicId)
+    ?.challenges.find((challenge) => Number(challenge.id) === Number(challengeId));
 
   const handleComplete = (run = {}) => {
-    if (!hydrated) return;
+    if (!hydrated || !currentChallenge || currentChallenge.locked) return;
     if (awardedKeyRef.current === positionKey) return;
     awardedKeyRef.current = positionKey;
     const result = getCompletionMilestones({
@@ -148,20 +159,14 @@ function ProblemView() {
   // challenge just finished counts towards unlocking the one being offered.
   // Un-hydrated progress would read as "nothing completed" and resolve to no
   // next challenge, so don't offer a destination until the real document is in.
-  const next = hydrated && curriculum
-    ? findNextChallenge(
-        buildLockState({
-          curriculum,
-          progress,
-          isBuilt,
-          bypassLocks: shouldBypassLocks(import.meta.env),
-        }),
-        { categoryId, topicId, challengeId }
-      )
+  const next = lockState
+    ? findNextChallenge(lockState, { categoryId, topicId, challengeId })
     : null;
 
   if (justCompleted) {
     return (
+      <>
+      {saveError && <ProgressError retry={retrySave} />}
       <CompletionCelebration
         result={completion.result}
         badges={completion.badges}
@@ -177,15 +182,20 @@ function ProblemView() {
         nextHref={next && `/year/${year}/${subject}/problem/${next.categoryId}/${next.topicId}/${next.challengeId}`}
         topicsHref={topicsHref}
       />
+      </>
     );
   }
 
+  if (loadError) return <ProgressError loading retry={retryLoad} />;
   if (!hydrated) {
     return <div className="problem-page" role="status">Loading your progress…</div>;
   }
+  if (!curriculum) return <Navigate to="/curriculum" replace />;
+  if (!currentChallenge || currentChallenge.locked) return <Navigate to={topicsHref} replace />;
 
   return (
     <div className="problem-page">
+      {saveError && <ProgressError retry={retrySave} />}
       <header className="problem-header">
         <h2>🧩 Challenge {challengeId}</h2>
 
@@ -198,6 +208,7 @@ function ProblemView() {
       </header>
 
       <Challenge
+        key={positionKey}
         challengeId={challengeId}
         onComplete={handleComplete}
         alreadyCompleted={alreadyCompleted}

@@ -1,0 +1,156 @@
+/*
+ * Shared extras for the Year 3 word-building games: Adding Prefixes, Super
+ * Anti and Auto, ation and ly, Doubling, A or An, Word Families.
+ * Colours come only from the --ck-* tokens, so both themes work. Buttons
+ * carry two classes so `.problem-page button` cannot restyle them.
+ */
+
+/* A rule card: the rule stated, shown above a level 1 question. */
+.ww-rule {
+  max-width: 30rem;
+  margin: 0 auto 1.1rem;
+  padding: 0.8rem 1.1rem;
+  text-align: left;
+  color: var(--ck-text);
+  background: var(--ck-panel);
+  border: 2px solid var(--ck-border);
+  border-radius: 14px;
+  box-shadow: 0 3px 0 var(--ck-card-edge);
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+
+.ww-rule p {
+  margin: 0 0 0.35rem;
+}
+
+.ww-rule p:last-child {
+  margin-bottom: 0;
+}
+
+.ww-rule-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.25rem 0.9rem;
+  margin: 0;
+}
+
+.ww-rule-list dt {
+  font-weight: 800;
+  color: var(--ck-accent);
+}
+
+.ww-rule-list dd {
+  margin: 0;
+}
+
+/* "admire + ation", "forget + ing": the sum the child works on. */
+.ww-sum {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0 auto 1rem;
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  font-weight: 800;
+  color: var(--ck-text);
+}
+
+.ww-sum-op {
+  opacity: 0.6;
+  font-weight: 700;
+}
+
+/* Syllables with the stressed one marked: for · GET. */
+.ww-syllables {
+  display: inline-flex;
+  gap: 0.15rem;
+  align-items: baseline;
+}
+
+.ww-syllable {
+  padding: 0 0.12em;
+}
+
+.ww-syllable-dot {
+  opacity: 0.45;
+}
+
+.ww-syllable.is-stressed {
+  border-radius: 6px;
+  background: var(--ck-accent);
+  color: var(--ck-on-accent);
+  text-transform: uppercase;
+}
+
+/* A root word in brackets under a sentence: (appear). */
+.ww-root {
+  display: inline-block;
+  margin: -0.6rem auto 1.1rem;
+  padding: 0.2rem 0.8rem;
+  border: 2px dashed var(--ck-border);
+  border-radius: 999px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--ck-text);
+}
+
+/* A or An mini-story: tap a gap to choose a / an. */
+.ww-story {
+  max-width: 34rem;
+  margin: 0 auto 1.2rem;
+  padding: 1rem 1.2rem;
+  text-align: left;
+  color: var(--ck-text);
+  background: var(--ck-panel);
+  border: 2px solid var(--ck-border);
+  border-radius: 14px;
+  font-size: clamp(1.15rem, 3.8vw, 1.35rem);
+  line-height: 2.2;
+}
+
+.ww-gap.ww-gap-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3.2rem;
+  min-height: 2.75rem;
+  margin: 0 0.15rem;
+  padding: 0 0.6rem;
+  border: 3px dashed var(--ck-accent);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--ck-text);
+  font: inherit;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  vertical-align: baseline;
+}
+
+.ww-gap.ww-gap-btn.is-filled {
+  border-style: solid;
+  background: var(--ck-accent);
+  color: var(--ck-on-accent);
+}
+
+.ww-gap.ww-gap-btn.is-hinted {
+  outline: 3px solid var(--ck-accent);
+  outline-offset: 2px;
+}
+
+.ww-gap.ww-gap-btn:disabled {
+  cursor: default;
+}
+
+.ww-gap.ww-gap-btn:focus-visible {
+  outline: 3px solid var(--ck-text);
+  outline-offset: 2px;
+}
+
+.ww-gap-number {
+  margin-right: 0.25rem;
+  font-size: 0.7em;
+  opacity: 0.7;
+}

@@ -92,6 +92,17 @@ test("route authorization", { skip: URI ? false : "MONGODB_URI not set" }, async
   // --- children -----------------------------------------------------------
   const childA = (await a("POST", "/api/children", { name: "Ada", avatar: "🦊", colour: "pink" })).body.child;
   const childB = (await b("POST", "/api/children", { name: "Bruno", avatar: "🐼", colour: "blue" })).body.child;
+  await t.test("malformed progress updates cannot overwrite a child's document", async () => {
+    const path = `/api/progress/${childA._id}/4/english`;
+    const data = { spelling: { topics: { words: { completedChallenges: [1, 2] } } } };
+    assert.equal((await a("PUT", path, { data })).status, 200);
+    for (const body of [{}, { data: null }, { data: [] }, { data: { spelling: { topics: { words: { completedChallenges: "1,2" } } } } }]) {
+      const response = await a("PUT", path, body);
+      assert.equal(response.status, 400);
+      assert.deepEqual(response.body, { error: "INVALID_PROGRESS" });
+      assert.deepEqual((await a("GET", path)).body.progress.data, data);
+    }
+  });
   assert.equal(childA.name, "Ada");
   assert.equal(typeof childA.parentId, "string");
 
@@ -262,6 +273,10 @@ test("route authorization", { skip: URI ? false : "MONGODB_URI not set" }, async
     });
     assert.equal(saved.status, 200);
     assert.equal(saved.body.rewards.data.badges.length, 1);
+    for (const body of [{}, { data: null }, { data: [] }, { data: "broken" }]) {
+      assert.equal((await a("PUT", `/api/rewards/${id}`, body)).status, 400);
+      assert.deepEqual((await a("GET", `/api/rewards/${id}`)).body.rewards.data, saved.body.rewards.data);
+    }
 
     // Upsert, not insert: a second save must not create a second document.
     await a("PUT", `/api/rewards/${id}`, { data: { badges: [], counts: {} } });

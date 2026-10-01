@@ -1,0 +1,80 @@
+/* Using a Dictionary: the alphabet strip, a dictionary page head and a
+   dictionary entry. Colours from the --ck-* tokens only, so both themes work. */
+
+.dictionary-alphabet {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem;
+  max-width: 34rem;
+  margin: 0 auto 1.2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.dictionary-alphabet-letter {
+  min-width: 1.9rem;
+  padding: 0.15rem 0.2rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  border-radius: 6px;
+}
+
+.dictionary-page {
+  max-width: 26rem;
+  margin: 0 auto 1.2rem;
+  padding: 0.6rem 1rem 1.4rem;
+  color: var(--ck-text);
+  background: var(--ck-panel);
+  border: 3px solid var(--ck-border);
+  border-radius: 12px;
+}
+
+.dictionary-page-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.4rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  border-bottom: 3px solid var(--ck-accent);
+}
+
+.dictionary-page-lines {
+  display: block;
+  height: 3.2rem;
+  margin-top: 0.6rem;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--ck-muted) 0 0.5rem,
+    transparent 0.5rem 1.05rem
+  );
+  border-radius: 4px;
+}
+
+.dictionary-entry {
+  max-width: 34rem;
+  margin: 0 auto 1.2rem;
+  padding: 0.8rem 1.1rem;
+  text-align: left;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  border-left: 6px solid var(--ck-accent);
+  border-radius: 10px;
+}
+
+.dictionary-entry-word {
+  margin: 0 0 0.35rem;
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.dictionary-entry-list {
+  margin: 0;
+  padding-left: 1.6rem;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
