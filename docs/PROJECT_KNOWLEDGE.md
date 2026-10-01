@@ -332,9 +332,12 @@ other subjects for the year through the read-only `useOtherSubjectsProgress`
 hook and checks them with `allSubjectsComplete` (completionMilestones.js). A
 subject still loading, or one whose read failed, counts as NOT finished, so the
 award is never given on a guess. A year with one subject reads nothing and
-behaves as before. Note that the **Year hero badge** (`badges.js`) is keyed to
-the `subject` milestone, not `year`; the year milestone drives the certificate
-step and the `counts.year` tally.
+behaves as before. Two badges sit on these milestones (`badges.js`):
+**Subject star** (stored id `year-hero`, kept from when it was called Year hero
+and every year had one subject) on `subject`, and **Year hero** (id
+`year-finisher`, unlocks 🦅) on `year`. The year milestone also drives the
+certificate step and the `counts.year` tally. There is no back-fill: on
+2026-10-01 no child had finished a year.
 
 #### Celebrations (2026-09-29)
 
@@ -406,7 +409,7 @@ Spec: [docs/superpowers/specs/2026-09-29-curriculum-celebrations-design.md](supe
 - **Unlocked pictures are claimable in the moment.** The "New picture
   unlocked!" step has a "Make it my picture" button that calls the same
   `updateChild` the grown-up area's picker uses. (The "pictures" are profile
-  emoji — 🐨 🦉 🐲 🦖 — locked behind badges in `badges.js`; nothing is generated.)
+  emoji — 🐨 🦉 🐲 🦖 🦅 — locked behind badges in `badges.js`; nothing is generated.)
 - **Bix**, the CSS-drawn mascot, is shared from `src/components/mascot/`: the
   homepage hero, a small cheering Bix beside every combo line (decorative,
   hidden from assistive technology), and a medium Bix by the Trophy Room's

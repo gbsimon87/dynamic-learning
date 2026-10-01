@@ -66,13 +66,25 @@ export const BADGES = [
     unlocksAvatar: "🐲",
   },
   {
+    // The id predates the name. Until 2026-10-01 this was "Year hero", back
+    // when every year had one subject. The id is stored in learners' rewards,
+    // so it stays; only the words changed.
     id: "year-hero",
     level: "subject",
     icon: "🚀",
+    name: "Subject star",
+    blurb: "Every challenge in a subject, done.",
+    hint: "Finish every challenge in one subject",
+    unlocksAvatar: "🦖",
+  },
+  {
+    id: "year-finisher",
+    level: "year",
+    icon: "🎓",
     name: "Year hero",
     blurb: "Every challenge in the year, done.",
-    hint: "Finish every challenge in a year",
-    unlocksAvatar: "🦖",
+    hint: "Finish every subject in a year",
+    unlocksAvatar: "🦅",
   },
 ];
 

@@ -112,7 +112,7 @@ test("a topic count is never double-awarded after the threshold", () => {
   assert.equal(masters.length, 1);
 });
 
-test("finishing a whole quest and year earns their badges", () => {
+test("finishing a whole quest and subject earns their badges", () => {
   const { awarded } = earnBadges(
     emptyRewards(),
     ["challenge", "topic", "category", "subject"],
@@ -124,6 +124,23 @@ test("finishing a whole quest and year earns their badges", () => {
     "quest-champion",
     "year-hero",
   ]);
+});
+
+test("finishing a subject is not finishing the year", () => {
+  const { awarded } = earnBadges(emptyRewards(), ["challenge", "subject"], AT);
+  assert.ok(awarded.some((badge) => badge.id === "year-hero"));
+  assert.ok(!awarded.some((badge) => badge.id === "year-finisher"));
+});
+
+test("finishing the year earns Year hero and its picture", () => {
+  const { rewards, awarded } = earnBadges(
+    emptyRewards(),
+    ["challenge", "topic", "category", "subject", "year"],
+    AT
+  );
+  assert.equal(awarded.at(-1).id, "year-finisher");
+  assert.equal(getBadge("year-finisher").name, "Year hero");
+  assert.ok(unlockedAvatars(rewards, []).includes("🦅"));
 });
 
 test("held ids are readable back out", () => {
