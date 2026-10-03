@@ -20,6 +20,13 @@
       "license": "Apache-2.0",
       "attribution": "Body Muscles, Copyright 2024 Ivan Vulović, Apache License 2.0 (https://github.com/vulovix/body-muscles). Only the SVG path data is used, converted from TypeScript to plain JavaScript; the drawing code is our own.",
       "credit": "Muscle map: Body Muscles © Ivan Vulović, Apache-2.0"
+    },
+    "lithology-patterns": {
+      "repo": "equinor/lithology-patterns",
+      "commit": "5e211ae92a8037ef816b8fa614a7ea23449f1935",
+      "license": "MIT",
+      "attribution": "Lithology patterns © Equinor ASA, MIT License (https://github.com/equinor/lithology-patterns). Adapted: the coloured tile background is removed so only the pattern lines remain.",
+      "credit": "Rock layers: Equinor lithology patterns, MIT"
     }
   },
   "files": [
@@ -110,6 +117,41 @@
       "from": "assets/Bone/Color/bone_color.svg"
     },
     {
+      "source": "fluentui-emoji",
+      "path": "fluentui-emoji/spiral_shell_color.svg",
+      "from": "assets/Spiral shell/Color/spiral_shell_color.svg"
+    },
+    {
+      "source": "fluentui-emoji",
+      "path": "fluentui-emoji/herb_color.svg",
+      "from": "assets/Herb/Color/herb_color.svg"
+    },
+    {
+      "source": "fluentui-emoji",
+      "path": "fluentui-emoji/rock_color.svg",
+      "from": "assets/Rock/Color/rock_color.svg"
+    },
+    {
+      "source": "fluentui-emoji",
+      "path": "fluentui-emoji/fallen_leaf_color.svg",
+      "from": "assets/Fallen leaf/Color/fallen_leaf_color.svg"
+    },
+    {
+      "source": "fluentui-emoji",
+      "path": "fluentui-emoji/wind_face_color.svg",
+      "from": "assets/Wind face/Color/wind_face_color.svg"
+    },
+    {
+      "source": "fluentui-emoji",
+      "path": "fluentui-emoji/droplet_color.svg",
+      "from": "assets/Droplet/Color/droplet_color.svg"
+    },
+    {
+      "source": "fluentui-emoji",
+      "path": "fluentui-emoji/magnifying_glass_tilted_left_color.svg",
+      "from": "assets/Magnifying glass tilted left/Color/magnifying_glass_tilted_left_color.svg"
+    },
+    {
       "source": "body-muscles",
       "path": "body-muscles/LICENSE",
       "from": "LICENSE"
@@ -128,6 +170,26 @@
       "source": "body-muscles",
       "path": "body-muscles/muscles.back.js",
       "from": "src/data/muscles.back.ts"
+    },
+    {
+      "source": "lithology-patterns",
+      "path": "lithology-patterns/LICENSE",
+      "from": "LICENSE"
+    },
+    {
+      "source": "lithology-patterns",
+      "path": "lithology-patterns/30000.svg",
+      "from": "assets/svg/30000.svg"
+    },
+    {
+      "source": "lithology-patterns",
+      "path": "lithology-patterns/65000.svg",
+      "from": "assets/svg/65000.svg"
+    },
+    {
+      "source": "lithology-patterns",
+      "path": "lithology-patterns/70000.svg",
+      "from": "assets/svg/70000.svg"
     }
   ]
 }

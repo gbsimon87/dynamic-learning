@@ -900,6 +900,19 @@ the completion checks and the outstanding interactive browser review.
 
 ### Curriculum Mode — Year 3 Science (2026-10-03)
 
+**Illustrated diagrams (2026-10-03):** Skeletons, Muscles and Movement, and
+the three Rocks topics draw with third-party artwork vendored into
+`src/assets/science/`. That means BodyParts3D bones rendered to WebP, Fluent
+Emoji, the body-muscles path data and three Equinor sediment tiles. Every
+file is pinned in `scripts/science-assets/sources.json` and listed in
+`manifest.json`, with each source's licence beside it. A one-line credit sits
+in each caption. `DIAGRAM_STYLE` in `src/data/scienceDiagrams.js` switches
+back to the classic hand-built `*Figure` components, which also act as the
+automatic fallback when an image fails to load. Tests cover the manifest,
+the licence files, a size budget (≤120 KB per file, ≤1.5 MB in total) and the
+label anchors. Plan and rationale:
+[docs/science-curriculum/DIAGRAM_ASSETS_PLAN.md](science-curriculum/DIAGRAM_ASSETS_PLAN.md).
+
 Science is registered for Year 3 with five source-ordered categories, 21 topics
 and 84 challenge slots. **Parts of Flowering Plants**, **What Plants Need to Grow**, **Water Transport
 in Plants**, **Pollination and Seed Formation** and **Seed Dispersal** each have all four challenges implemented (Plants 20/20). **Nutrition for Animals and Humans**, **Skeletons for Support and Protection** and **Muscles and Movement** add twelve challenges (Animals 12/12),

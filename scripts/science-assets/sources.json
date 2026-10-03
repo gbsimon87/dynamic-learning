@@ -29,7 +29,14 @@
       "assets/Snail/Color/snail_color.svg",
       "assets/Worm/Color/worm_color.svg",
       "assets/Skull/Color/skull_color.svg",
-      "assets/Bone/Color/bone_color.svg"
+      "assets/Bone/Color/bone_color.svg",
+      "assets/Spiral shell/Color/spiral_shell_color.svg",
+      "assets/Herb/Color/herb_color.svg",
+      "assets/Rock/Color/rock_color.svg",
+      "assets/Fallen leaf/Color/fallen_leaf_color.svg",
+      "assets/Wind face/Color/wind_face_color.svg",
+      "assets/Droplet/Color/droplet_color.svg",
+      "assets/Magnifying glass tilted left/Color/magnifying_glass_tilted_left_color.svg"
     ],
     "outputs": "src/assets/science/fluentui-emoji"
   },
@@ -47,5 +54,25 @@
     ],
     "transform": "ts-data",
     "outputs": "src/assets/science/body-muscles"
+  },
+  "lithology-patterns": {
+    "repo": "equinor/lithology-patterns",
+    "commit": "5e211ae92a8037ef816b8fa614a7ea23449f1935",
+    "license": "MIT",
+    "attribution": "Lithology patterns © Equinor ASA, MIT License (https://github.com/equinor/lithology-patterns). Adapted: the coloured tile background is removed so only the pattern lines remain.",
+    "credit": "Rock layers: Equinor lithology patterns, MIT",
+    "files": [
+      "LICENSE",
+      "assets/svg/30000.svg",
+      "assets/svg/65000.svg",
+      "assets/svg/70000.svg"
+    ],
+    "outputs": "src/assets/science/lithology-patterns",
+    "$names": {
+      "30000": "sandstone",
+      "65000": "shale",
+      "70000": "limestone"
+    },
+    "transform": "pattern-lines"
   }
 }

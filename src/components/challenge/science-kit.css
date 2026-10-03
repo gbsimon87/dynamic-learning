@@ -135,3 +135,30 @@ body.dark { --sci-muscle: #f08a90; --sci-muscle-lit: #ff6f7a; --sci-muscle-quiet
 .science-muscle-map-views svg { background: none; border-radius: 0; }
 .science-muscle-map path { fill: var(--sci-muscle-quiet); stroke: var(--ck-panel); stroke-width: .15; }
 .science-muscle-map path.is-lit { fill: var(--sci-muscle-lit); stroke: var(--ck-text); stroke-width: .25; }
+
+/* Rock specimens. The rock body has its own colour per sample (set inline);
+   the feature marks are drawn to be unmistakable in either theme. */
+.science-rock-shadow { fill: #000; opacity: .14; }
+.science-rock-outline { fill: none; stroke: #3b2f28; stroke-width: 3; }
+.science-rock-band { fill: #2d2622; }
+.science-rock-grain ellipse { fill: #f3e6c6; stroke: #5a4632; stroke-width: 2; }
+.science-rock-grain .science-rock-grain-shine { fill: #fff; stroke: none; opacity: .75; }
+.science-rock-crystal path { stroke: #33262a; stroke-width: 1.8; stroke-linejoin: round; }
+.science-rock-crystal .is-light { fill: #f6f1ff; }
+.science-rock-crystal .is-dark { fill: #b9a3c9; }
+.science-rock-glint { fill: #fff; stroke: none !important; }
+.science-rock-fossil path { fill: none; stroke: #3b2f28; stroke-width: 4; stroke-linecap: round; }
+.science-rock-fossil .is-emboss { stroke: #fff; stroke-opacity: .55; }
+
+/* Fossil cutaway: sediment pattern layers, water, remains. */
+.science-layer { stroke: #3b2f28; stroke-width: 2; }
+.science-layer-surface { fill: none; stroke: var(--ck-text); stroke-width: 3; }
+.science-water-top { stop-color: #bfe3f5; }
+.science-water-bottom { stop-color: #6fb3d6; }
+body.dark .science-water-top { stop-color: #2f5e78; }
+body.dark .science-water-bottom { stop-color: #1f4357; }
+.science-fossil-remains path { fill: #f3e7cc; stroke: #3b2f28; stroke-width: 3; }
+.science-layer-label rect { fill: var(--ck-panel); stroke: var(--ck-border); stroke-width: 1.5; }
+
+/* Soil component cards. */
+.science-soil-card { fill: var(--ck-panel); stroke: var(--ck-border); stroke-width: 2; }

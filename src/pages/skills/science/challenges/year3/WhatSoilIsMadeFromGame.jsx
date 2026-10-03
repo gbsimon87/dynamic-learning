@@ -3,6 +3,11 @@ import ChallengeShell from "../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../components/challenge/ChoiceGrid";
 import DiagramLabelBoard from "../../../../../components/challenge/DiagramLabelBoard";
 import SoilCompositionFigure from "../../../../../components/challenge/SoilCompositionFigure";
+import SoilIllustration from "../../../../../components/challenge/SoilIllustration";
+import { isIllustrated } from "../../../../../data/scienceDiagrams";
+
+// The illustrated diagram, or the original hand-built one (scienceDiagrams.js).
+const SoilPicture = isIllustrated() ? SoilIllustration : SoilCompositionFigure;
 import HintNote from "../../../../../components/challenge/HintNote";
 import ObservationSequence from "../../../../../components/challenge/ObservationSequence";
 import ScienceInformationCard from "../../../../../components/challenge/ScienceInformationCard";
@@ -14,7 +19,7 @@ import { useProcessEnquiry } from "../../../../../hooks/useProcessEnquiry.js";
 import { SOURCES,GLOSS,soilFeatures,buildSoilQuestions,isSoilRecordCorrect,isSoilLabelsCorrect } from "../../../../../data/challenges/science/whatSoilIsMadeFrom.js";
 const TITLES=["Find soil components","Sort soil materials","Label a soil model","Investigate a soil mixture"];
 function Vocabulary(){return <details className="science-gloss"><summary>Science words</summary><p>{GLOSS}</p></details>;}
-function Picture({question,stage}){return <SoilCompositionFigure sampleId={question.sample.id} features={stage?soilFeatures(question.sample,stage.variant).filter(c=>stage.id!=="inspect"||["mineral","organic"].includes(c.id)):question.features}/>;}
+function Picture({question,stage}){return <SoilPicture sampleId={question.sample.id} features={stage?soilFeatures(question.sample,stage.variant).filter(c=>stage.id!=="inspect"||["mineral","organic"].includes(c.id)):question.features}/>;}
 function Source(){return <p className="science-gloss">{SOURCES.bsss.label}. Supplied specimen notes and local models; no live experiment.</p>;}
 export default function WhatSoilIsMadeFromGame({level,onComplete}){
  const questions=useMemo(()=>buildSoilQuestions(level,Math.random),[level]);

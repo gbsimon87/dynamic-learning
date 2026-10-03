@@ -2,6 +2,11 @@ import { useMemo, useRef, useState } from "react";
 import ChallengeShell from "../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../components/challenge/ChoiceGrid";
 import FossilFormationFigure from "../../../../../components/challenge/FossilFormationFigure";
+import FossilLayersIllustration from "../../../../../components/challenge/FossilLayersIllustration";
+import { isIllustrated } from "../../../../../data/scienceDiagrams";
+
+// The illustrated diagram, or the original hand-built one (scienceDiagrams.js).
+const FossilPicture = isIllustrated() ? FossilLayersIllustration : FossilFormationFigure;
 import HintNote from "../../../../../components/challenge/HintNote";
 import ObservationSequence from "../../../../../components/challenge/ObservationSequence";
 import ScienceInformationCard from "../../../../../components/challenge/ScienceInformationCard";
@@ -12,7 +17,7 @@ import { useProcessEnquiry } from "../../../../../hooks/useProcessEnquiry.js";
 import { SOURCES, GLOSS, buildFossilQuestions, isFossilRecordCorrect, isFossilOrderCorrect } from "../../../../../data/challenges/science/howFossilsForm.js";
 const TITLES=["Evidence of past life","Compare fossil evidence","Order a fossil story","Explain how a fossil formed"];
 function Vocabulary(){return <details className="science-gloss"><summary>Science words</summary><p>{GLOSS}</p></details>;}
-function Picture({question,stage}){return <FossilFormationFigure kind={question.account.kind} phase={stage.phase} description={stage.text}/>;}
+function Picture({question,stage}){return <FossilPicture kind={question.account.kind} phase={stage.phase} description={stage.text}/>;}
 function Source({question}){return <p className="science-gloss">{SOURCES[question.account.source].label}. This is a simplified illustrated account, not a photograph or live experiment.</p>;}
 export default function HowFossilsFormGame({level,onComplete}){
  const questions=useMemo(()=>buildFossilQuestions(level,Math.random),[level]);

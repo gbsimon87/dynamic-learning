@@ -52,6 +52,17 @@ function tsDataToJs(text, file) {
   return `// Converted from ${file} (body-muscles, Apache-2.0; see LICENSE and NOTICE beside this file).\n${out}`;
 }
 
+/**
+ * Equinor's tiles start with a full-tile square in a geological map colour.
+ * Remove it so only the pattern lines remain, to be laid over our own rock
+ * colours. Fails loudly if the first shape is not that square.
+ */
+function patternLines(svg, file) {
+  const out = svg.replace(/<path fill="#[0-9a-fA-F]{3,6}" d="M0 0h64v64H0z"\/>/, "");
+  if (out === svg) throw new Error(`${file}: expected a full-tile background square to remove`);
+  return out;
+}
+
 const manifest = { sources: {}, files: [] };
 for (const [id, source] of Object.entries(SOURCES)) {
   if (id.startsWith("$")) continue;
@@ -77,6 +88,7 @@ for (const [id, source] of Object.entries(SOURCES)) {
     }
     if (name.endsWith(".svg")) {
       body = Buffer.from(optimize(body.toString("utf8"), { ...SVGO, path: name }).data);
+      if (source.transform === "pattern-lines") body = Buffer.from(patternLines(body.toString("utf8"), file));
     }
     fs.writeFileSync(path.join(out, name), body);
     manifest.files.push({ source: id, path: path.relative(ASSETS, path.join(out, name)), from: file });

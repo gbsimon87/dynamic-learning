@@ -1,6 +1,8 @@
 # Year 3 Science: diagram assets plan
 
-**Status:** Phase 1 spike done 2026-10-03 (Skeletons: BodyParts3D bones + Fluent animals, awaiting style sign-off). Pipeline started: `scripts/science-assets/` (sources.json, vendor.mjs, render-bones.mjs).
+**Status: done 2026-10-03.** All five topics are illustrated; the style was
+signed off on the Skeletons spike. What shipped differs from the plan below in
+four places (see "What changed in delivery" at the end).
 **Goal:** replace the hand-built diagrams in the anatomy and rocks topics with
 real, child-friendly artwork. We take only the specific files we use from five
 open-licensed sources and copy them into the repo. No source becomes a runtime
@@ -225,3 +227,54 @@ simplified drawing.
   shaded 3D.
 - Whether to add an optional "spin the skeleton" 3D view later. It would
   ship about 1 MB of decimated meshes, loaded on demand; not in this plan.
+
+---
+
+## What changed in delivery (2026-10-03)
+
+1. **US Geological Survey (FGDC) patterns (source C): dropped.** Seen at
+   full size, they are map-symbol conventions rather than pictures of rock.
+   Limestone's "brick" lines read as **bands**, and granite's dashes do not
+   look like crystals. Comparing and Grouping Rocks asks children to spot
+   exactly those features, so these tiles would have suggested wrong
+   answers. That topic's `RockSampleIllustration` is drawn by hand instead:
+   - a shaded rock body with no texture of its own;
+   - every mark on it is a real feature: shaded pebble grains, faceted
+     crystals, coloured bands, an embossed fossil.
+2. **Equinor patterns (source D): three tiles only** (sandstone 30000, shale
+   65000, limestone 70000), used only for the How Fossils Form layers.
+   `vendor.mjs` removes each tile's map-colour background
+   (`transform: "pattern-lines"`), and the lines sit over natural rock
+   colours. The soil topic uses Fluent pictures instead of a soil pattern.
+3. **The arm model** (Muscles and Movement) is BodyParts3D arm bones from
+   the side, bent at the elbow (`render-bones.mjs`, `renderArm`). The muscle
+   pair is drawn over the bones as lenses (`lensPath`), because a rigid mesh
+   cannot show a muscle shortening. The body-muscles map sits in the topic's
+   "How this arm model works" card.
+4. **Tooling:** `playwright-core` was added as a dev dependency. It drives the
+   installed Google Chrome to render the bones once; no browser is
+   downloaded.
+
+**What shipped:**
+
+| Topic | Component | Uses |
+|---|---|---|
+| Skeletons | `SkeletonIllustration` | BodyParts3D skeleton in 3 poses; Fluent animal pictures |
+| Muscles and Movement | `ArmMovementIllustration`, `MuscleMapFigure` | BodyParts3D arm in 3 poses; body-muscles map |
+| Comparing and Grouping Rocks | `RockSampleIllustration` | hand-drawn specimen; Fluent magnifier |
+| How Fossils Form | `FossilLayersIllustration` | Equinor layers; Fluent shell, fish, herb |
+| What Soil Is Made From | `SoilIllustration` | Fluent rock, leaf, wind and droplet pictures |
+
+All of them follow `DIAGRAM_STYLE` (`src/data/scienceDiagrams.js`) and fall
+back to the classic `*Figure` components.
+
+**Re-running the pipeline:**
+
+```sh
+node scripts/science-assets/vendor.mjs         # SVGs and licences; rebuilds manifest.json
+node scripts/science-assets/render-bones.mjs   # bone images and anchors (needs Google Chrome)
+```
+
+Run `vendor.mjs` again after `render-bones.mjs` so the manifest lists the
+images. Shipped artwork is about 0.5 MB in total, licences included, and each topic loads only
+its own.

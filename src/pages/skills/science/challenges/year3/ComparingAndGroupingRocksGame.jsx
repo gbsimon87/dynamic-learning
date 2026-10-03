@@ -5,6 +5,11 @@ import ClassificationTable from "../../../../../components/challenge/Classificat
 import DataTable from "../../../../../components/challenge/DataTable";
 import HintNote from "../../../../../components/challenge/HintNote";
 import RockFigure from "../../../../../components/challenge/RockFigure";
+import RockSampleIllustration from "../../../../../components/challenge/RockSampleIllustration";
+import { isIllustrated } from "../../../../../data/scienceDiagrams";
+
+// The illustrated diagram, or the original hand-built one (scienceDiagrams.js).
+const RockPicture = isIllustrated() ? RockSampleIllustration : RockFigure;
 import ObservationSequence from "../../../../../components/challenge/ObservationSequence";
 import ScienceInformationCard from "../../../../../components/challenge/ScienceInformationCard";
 import SortBins from "../../../../../components/challenge/SortBins";
@@ -14,7 +19,7 @@ import { useRocksEnquiry } from "../../../../../hooks/useRocksEnquiry.js";
 import { SOURCE, GLOSS, buildRocksQuestions, isRocksSortCorrect, isRocksTableCorrect, testText, specimenText } from "../../../../../data/challenges/science/comparingAndGroupingRocks.js";
 const TITLES=["Look closely at rock samples","Group rock samples","Build a classification table","Compare rock properties fairly"];
 function Vocabulary(){return <details className="science-gloss"><summary>Science words</summary><p>{GLOSS}</p></details>;}
-function Samples({ specimens, tests=false }){return <div className="science-life-cards">{specimens.map(s=><section key={s.id}><RockFigure specimen={s}/>{tests&&<ScienceInformationCard title={`Test card ${s.id}`} text={testText(s)}/>}</section>)}</div>;}
+function Samples({ specimens, tests=false }){return <div className="science-life-cards">{specimens.map(s=><section key={s.id}><RockPicture specimen={s}/>{tests&&<ScienceInformationCard title={`Test card ${s.id}`} text={testText(s)}/>}</section>)}</div>;}
 export default function ComparingAndGroupingRocksGame({level,onComplete}){
  const questions=useMemo(()=>buildRocksQuestions(level,Math.random),[level]);
  return <ChallengeShell title={TITLES[level-1]} questions={questions} onComplete={onComplete} render={({question,submit,locked,index,misses})=>{const Round=level===4?Investigation:ShortRound;return <Round key={index} question={question} submit={submit} locked={locked} hint={misses>=2}/>;}}/>;
