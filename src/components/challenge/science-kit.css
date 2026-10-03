@@ -95,3 +95,31 @@
 .science-force-receiver { fill: var(--ck-panel); stroke: var(--ck-text); stroke-width: 2; }
 .science-material-start { fill: none; stroke: var(--ck-text); stroke-width: 2; stroke-dasharray: 4 4; }
 .science-magnet-body { fill: var(--ck-panel); stroke: var(--ck-text); stroke-width: 3; }
+
+/* ===== Illustrated diagrams (docs/science-curriculum/DIAGRAM_ASSETS_PLAN.md) =====
+   Third-party artwork sits on a soft card so the transparent pictures read on
+   both themes; callouts reuse .science-callout. */
+.science-illustration { max-width: 540px; }
+.science-illustration svg,
+.science-animal-picture img {
+  border-radius: 18px;
+  background: var(--ck-muted);
+}
+.science-illustration-callout path { stroke-dasharray: none; }
+.science-illustration-callout .science-callout-halo { stroke: var(--ck-panel); stroke-width: 6; opacity: .85; }
+.science-illustration-callout circle { stroke: var(--ck-panel); stroke-width: 2; }
+.science-animal-picture { text-align: center; }
+.science-animal-picture img {
+  display: block;
+  width: min(160px, 50vw);
+  height: auto;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: content-box;
+}
+.science-credit {
+  display: block;
+  margin-top: .35rem;
+  font-size: .78rem;
+  opacity: .7;
+}

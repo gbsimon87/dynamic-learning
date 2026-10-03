@@ -1,0 +1,36 @@
+{
+  "$comment": "Every third-party file the Science diagrams use, pinned to a commit. Scripts in this folder fetch ONLY what is listed here; nothing is a runtime dependency. See docs/science-curriculum/DIAGRAM_ASSETS_PLAN.md.",
+  "bodyparts3d": {
+    "repo": "ashemag/human-atlas",
+    "commit": "1c38bf35c254a891200d3cedecfd57abebe83d8d",
+    "license": "CC-BY-4.0",
+    "attribution": "BodyParts3D, © The Database Center for Life Science, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Adapted: selected bones rendered as flat illustrations; arms re-posed.",
+    "credit": "Bones: BodyParts3D © DBCLS, CC BY 4.0",
+    "files": [
+      "public/models/atlas.json",
+      "public/ATTRIBUTION.md"
+    ],
+    "outputs": "src/assets/science/bodyparts3d",
+    "renderedBy": "scripts/science-assets/render-bones.mjs"
+  },
+  "fluentui-emoji": {
+    "repo": "microsoft/fluentui-emoji",
+    "commit": "1ffb34c752ecf5d402f04cfb4b392c77f57c54bc",
+    "license": "MIT",
+    "attribution": "Fluent Emoji © Microsoft Corporation, MIT License.",
+    "credit": "Pictures: Fluent Emoji © Microsoft, MIT",
+    "files": [
+      "LICENSE",
+      "assets/Dog/Color/dog_color.svg",
+      "assets/Bird/Color/bird_color.svg",
+      "assets/Fish/Color/fish_color.svg",
+      "assets/Crab/Color/crab_color.svg",
+      "assets/Beetle/Color/beetle_color.svg",
+      "assets/Snail/Color/snail_color.svg",
+      "assets/Worm/Color/worm_color.svg",
+      "assets/Skull/Color/skull_color.svg",
+      "assets/Bone/Color/bone_color.svg"
+    ],
+    "outputs": "src/assets/science/fluentui-emoji"
+  }
+}

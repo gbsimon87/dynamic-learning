@@ -1,0 +1,137 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Render bones</title>
+<body style="margin:0;background:transparent">
+<script type="module">
+import * as THREE from "/three.module.js";
+
+/* Flat "storybook" bones: ivory toon shading in three steps, a warm dark
+   outline from an inverted hull, transparent background. Front view,
+   orthographic, so nothing is foreshortened. */
+const BONE = 0xf3e7cc;
+const OUTLINE = 0x3b2a20;
+const SCALE = 520; // pixels per metre: a 1.7 m skeleton is ~900 px tall at 2×
+
+try {
+  const [{ parts, anchors, poses }, payload] = await Promise.all([
+    fetch("/payload.json").then((r) => r.json()),
+    fetch("/payload.bin").then((r) => r.arrayBuffer()),
+  ]);
+
+  const gradient = new THREE.DataTexture(new Uint8Array([90, 175, 255]), 3, 1, THREE.RedFormat);
+  gradient.minFilter = gradient.magFilter = THREE.NearestFilter;
+  gradient.needsUpdate = true;
+  const fill = new THREE.MeshToonMaterial({ color: BONE, gradientMap: gradient });
+  const outline = new THREE.ShaderMaterial({
+    side: THREE.BackSide,
+    uniforms: { thickness: { value: 0.0034 }, color: { value: new THREE.Color(OUTLINE) } },
+    vertexShader: "uniform float thickness; void main(){ vec3 p = position + normalize(normal) * thickness; gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0); }",
+    fragmentShader: "uniform vec3 color; void main(){ gl_FragColor = vec4(color, 1.0); }",
+  });
+
+  const scene = new THREE.Scene();
+  scene.add(new THREE.AmbientLight(0xffffff, 1.4));
+  const sun = new THREE.DirectionalLight(0xffffff, 2.2);
+  sun.position.set(-0.6, 1, 1.2);
+  scene.add(sun);
+
+  // Which way is "front"? The face bones sit in front of the back of the skull.
+  const byName = new Map(parts.map((part) => [part.name, part]));
+  const centre = (part) => {
+    const p = new Float32Array(payload, part.positions, part.vertexCount * 3);
+    const c = [0, 0, 0];
+    for (let i = 0; i < p.length; i += 3) { c[0] += p[i]; c[1] += p[i + 1]; c[2] += p[i + 2]; }
+    return c.map((v) => v / part.vertexCount);
+  };
+  const front = Math.sign(centre(byName.get("Mandible"))[2] - centre(byName.get("Occipital bone"))[2]) || 1;
+
+  const meshes = parts.map((part) => {
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(payload, part.positions, part.vertexCount * 3), 3));
+    geometry.setAttribute("normal", new THREE.BufferAttribute(new Int16Array(payload, part.normals, part.vertexCount * 3), 3, true));
+    geometry.setIndex(new THREE.BufferAttribute(new Uint32Array(payload, part.indices, part.indexCount), 1));
+    const group = new THREE.Group();
+    group.add(new THREE.Mesh(geometry, outline), new THREE.Mesh(geometry, fill));
+    group.userData = part;
+    scene.add(group);
+    return group;
+  });
+
+  // Each arm turns about the top of its humerus, in the body's own plane.
+  const shoulder = {};
+  for (const side of ["left", "right"]) {
+    const humerus = byName.get(`${side[0].toUpperCase()}${side.slice(1)} humerus`);
+    const p = new Float32Array(payload, humerus.positions, humerus.vertexCount * 3);
+    let top = -Infinity, at = null;
+    for (let i = 0; i < p.length; i += 3) if (p[i + 1] > top) { top = p[i + 1]; at = [p[i], p[i + 1], p[i + 2]]; }
+    shoulder[side] = new THREE.Vector3(...at);
+  }
+  const midline = (shoulder.left.x + shoulder.right.x) / 2;
+
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -10, 10);
+  camera.position.set(0, 0, front);
+  camera.lookAt(0, 0, 0);
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+  renderer.setClearColor(0x000000, 0);
+  document.body.appendChild(renderer.domElement);
+
+  window.renderPose = (name) => {
+    const degrees = poses[name];
+    for (const mesh of meshes) {
+      const { group, side } = mesh.userData;
+      mesh.position.set(0, 0, 0);
+      mesh.rotation.set(0, 0, 0);
+      if (group !== "arms" || !side) continue;
+      const pivot = shoulder[side];
+      // Outward is away from the midline; the sign of the turn follows it,
+      // and whether we are looking from +z or −z.
+      const outward = Math.sign(pivot.x - midline);
+      const angle = THREE.MathUtils.degToRad(degrees) * outward;
+      const q = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), angle);
+      mesh.quaternion.copy(q);
+      mesh.position.copy(pivot).sub(pivot.clone().applyQuaternion(q));
+    }
+    scene.updateMatrixWorld(true);
+    const box = new THREE.Box3();
+    for (const mesh of meshes) box.expandByObject(mesh.children[1]);
+    const pad = 0.02;
+    const width = Math.ceil((box.max.x - box.min.x + 2 * pad) * SCALE);
+    const height = Math.ceil((box.max.y - box.min.y + 2 * pad) * SCALE);
+    const cx = (box.max.x + box.min.x) / 2, cy = (box.max.y + box.min.y) / 2;
+    const halfW = width / SCALE / 2, halfH = height / SCALE / 2;
+    // Looking from −z flips x on screen; keep the picture un-mirrored.
+    camera.left = -halfW; camera.right = halfW; camera.top = halfH; camera.bottom = -halfH;
+    camera.position.set(cx, cy, front * 5);
+    camera.lookAt(cx, cy, 0);
+    camera.updateProjectionMatrix();
+    renderer.setSize(width, height, false);
+    renderer.render(scene, camera);
+
+    // Label anchors: the vertex of each anchor part nearest its projected
+    // centre, among those nearest the camera, in 0–1 image coordinates.
+    const anchorsOut = {};
+    for (const [label, partName] of Object.entries(anchors)) {
+      const mesh = meshes.find((m) => m.userData.name === partName);
+      const pos = mesh.children[1].geometry.getAttribute("position");
+      const points = [];
+      const v = new THREE.Vector3();
+      for (let i = 0; i < pos.count; i += 1) {
+        v.fromBufferAttribute(pos, i).applyMatrix4(mesh.children[1].matrixWorld);
+        const depth = v.z * front;
+        v.project(camera);
+        points.push({ x: (v.x + 1) / 2, y: (1 - v.y) / 2, depth });
+      }
+      const mx = points.reduce((s, p) => s + p.x, 0) / points.length;
+      const my = points.reduce((s, p) => s + p.y, 0) / points.length;
+      const maxDepth = Math.max(...points.map((p) => p.depth));
+      const front20 = points.filter((p) => p.depth > maxDepth - 0.02);
+      const best = front20.reduce((a, b) => (Math.hypot(a.x - mx, a.y - my) <= Math.hypot(b.x - mx, b.y - my) ? a : b));
+      anchorsOut[label] = { x: +best.x.toFixed(4), y: +best.y.toFixed(4) };
+    }
+    return { dataUrl: renderer.domElement.toDataURL("image/webp", 0.9), width, height, anchors: anchorsOut };
+  };
+  window.ready = true;
+} catch (error) {
+  window.failed = String(error?.stack ?? error);
+}
+</script>
