@@ -62,3 +62,24 @@ test("labels keep their anchor height unless that would crowd the one above", ()
   assert.deepEqual(spreadLabels([{ id: "b", y: 110 }, { id: "a", y: 100 }]), { a: 100, b: 130 });
   assert.deepEqual(spreadLabels([{ id: "a", y: 0 }, { id: "b", y: 5 }, { id: "c", y: 6 }], 20), { a: 0, b: 20, c: 40 });
 });
+
+test("a muscle lens bulges to the side asked for, and more when contracted", async () => {
+  const { lensPath } = await import("./scienceDiagrams.js");
+  const control = (d) => d.match(/Q(-?[\d.]+) (-?[\d.]+)/).slice(1).map(Number);
+  const start = { x: 100, y: 0 }, end = { x: 100, y: 100 };
+  assert.ok(control(lensPath(start, end, 10, 1))[0] > 100, "front bulge is to the right");
+  assert.ok(control(lensPath(start, end, 10, -1))[0] < 100, "back bulge is to the left");
+  assert.ok(control(lensPath(start, end, 13, 1))[0] > control(lensPath(start, end, 6, 1))[0]);
+});
+
+test("arm anchors: the elbow sits between shoulder and hand, and the front muscle is in front of the back one", () => {
+  const armModel = JSON.parse(fs.readFileSync(path.join(ASSETS, "bodyparts3d/arm.json"), "utf8"));
+  for (const [pose, view] of Object.entries(armModel.poses)) {
+    const a = view.anchors;
+    for (const point of Object.values(a)) assert.ok(point.x >= 0 && point.x <= 1 && point.y >= 0 && point.y <= 1, pose);
+    assert.ok(a.elbow.y > a.shoulder.y, `${pose}: elbow below shoulder`);
+    assert.ok(a.bicepsOrigin.x > a.tricepsOrigin.x, `${pose}: biceps in front of triceps`);
+  }
+  // The hand rises as the arm bends.
+  assert.ok(armModel.poses.bent.anchors.hand.y < armModel.poses.straight.anchors.hand.y);
+});

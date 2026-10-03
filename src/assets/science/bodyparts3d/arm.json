@@ -1,0 +1,112 @@
+{
+  "source": "ashemag/human-atlas",
+  "commit": "1c38bf35c254a891200d3cedecfd57abebe83d8d",
+  "credit": "Bones: BodyParts3D © DBCLS, CC BY 4.0",
+  "poses": {
+    "straight": {
+      "file": "arm-straight.webp",
+      "width": 176,
+      "height": 619,
+      "anchors": {
+        "shoulder": {
+          "x": 0.3041,
+          "y": 0.0407
+        },
+        "elbow": {
+          "x": 0.2583,
+          "y": 0.4314
+        },
+        "bicepsOrigin": {
+          "x": 0.3397,
+          "y": 0.1319
+        },
+        "bicepsInsert": {
+          "x": 0.3595,
+          "y": 0.4893
+        },
+        "tricepsOrigin": {
+          "x": 0.2399,
+          "y": 0.1304
+        },
+        "tricepsInsert": {
+          "x": 0.144,
+          "y": 0.4407
+        },
+        "hand": {
+          "x": 0.7036,
+          "y": 0.9003
+        }
+      }
+    },
+    "half": {
+      "file": "arm-half.webp",
+      "width": 394,
+      "height": 424,
+      "anchors": {
+        "shoulder": {
+          "x": 0.1246,
+          "y": 0.06
+        },
+        "elbow": {
+          "x": 0.1042,
+          "y": 0.6303
+        },
+        "bicepsOrigin": {
+          "x": 0.1405,
+          "y": 0.193
+        },
+        "bicepsInsert": {
+          "x": 0.2046,
+          "y": 0.6444
+        },
+        "tricepsOrigin": {
+          "x": 0.0959,
+          "y": 0.1909
+        },
+        "tricepsInsert": {
+          "x": 0.0869,
+          "y": 0.677
+        },
+        "hand": {
+          "x": 0.8216,
+          "y": 0.8715
+        }
+      }
+    },
+    "bent": {
+      "file": "arm-bent.webp",
+      "width": 360,
+      "height": 313,
+      "anchors": {
+        "shoulder": {
+          "x": 0.1404,
+          "y": 0.0804
+        },
+        "elbow": {
+          "x": 0.118,
+          "y": 0.853
+        },
+        "bicepsOrigin": {
+          "x": 0.1578,
+          "y": 0.2606
+        },
+        "bicepsInsert": {
+          "x": 0.2014,
+          "y": 0.7684
+        },
+        "tricepsOrigin": {
+          "x": 0.109,
+          "y": 0.2577
+        },
+        "tricepsInsert": {
+          "x": 0.148,
+          "y": 0.9103
+        },
+        "hand": {
+          "x": 0.8404,
+          "y": 0.3711
+        }
+      }
+    }
+  }
+}

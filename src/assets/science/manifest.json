@@ -13,12 +13,35 @@
       "license": "MIT",
       "attribution": "Fluent Emoji © Microsoft Corporation, MIT License.",
       "credit": "Pictures: Fluent Emoji © Microsoft, MIT"
+    },
+    "body-muscles": {
+      "repo": "vulovix/body-muscles",
+      "commit": "15c8085ee97cb94c51f92c75224416b15f955b5c",
+      "license": "Apache-2.0",
+      "attribution": "Body Muscles, Copyright 2024 Ivan Vulović, Apache License 2.0 (https://github.com/vulovix/body-muscles). Only the SVG path data is used, converted from TypeScript to plain JavaScript; the drawing code is our own.",
+      "credit": "Muscle map: Body Muscles © Ivan Vulović, Apache-2.0"
     }
   },
   "files": [
     {
       "source": "bodyparts3d",
       "path": "bodyparts3d/ATTRIBUTION.md"
+    },
+    {
+      "source": "bodyparts3d",
+      "path": "bodyparts3d/arm-bent.webp"
+    },
+    {
+      "source": "bodyparts3d",
+      "path": "bodyparts3d/arm-half.webp"
+    },
+    {
+      "source": "bodyparts3d",
+      "path": "bodyparts3d/arm-straight.webp"
+    },
+    {
+      "source": "bodyparts3d",
+      "path": "bodyparts3d/arm.json"
     },
     {
       "source": "bodyparts3d",
@@ -85,6 +108,26 @@
       "source": "fluentui-emoji",
       "path": "fluentui-emoji/bone_color.svg",
       "from": "assets/Bone/Color/bone_color.svg"
+    },
+    {
+      "source": "body-muscles",
+      "path": "body-muscles/LICENSE",
+      "from": "LICENSE"
+    },
+    {
+      "source": "body-muscles",
+      "path": "body-muscles/NOTICE",
+      "from": "NOTICE"
+    },
+    {
+      "source": "body-muscles",
+      "path": "body-muscles/muscles.front.js",
+      "from": "src/data/muscles.front.ts"
+    },
+    {
+      "source": "body-muscles",
+      "path": "body-muscles/muscles.back.js",
+      "from": "src/data/muscles.back.ts"
     }
   ]
 }

@@ -29,3 +29,24 @@ export function spreadLabels(anchors, gap = 30) {
   }
   return placed;
 }
+
+/**
+ * A muscle belly as a lens between two points: swelling mostly to one side
+ * (`side` 1 bulges towards +x, the front of the arm; −1 towards −x, the back)
+ * and only a little towards the bone it lies along. `bulge` is the half-width;
+ * a contracted muscle gets a bigger one. Returns an SVG path.
+ */
+export function lensPath(start, end, bulge, side = 1) {
+  const dx = end.x - start.x;
+  const dy = end.y - start.y;
+  const length = Math.hypot(dx, dy) || 1;
+  let nx = -dy / length;
+  let ny = dx / length;
+  if (Math.sign(nx || 1) !== Math.sign(side)) { nx = -nx; ny = -ny; }
+  const mx = (start.x + end.x) / 2;
+  const my = (start.y + end.y) / 2;
+  const outer = { x: mx + nx * bulge * 2, y: my + ny * bulge * 2 };
+  const inner = { x: mx - nx * bulge * 0.5, y: my - ny * bulge * 0.5 };
+  const r = (v) => Math.round(v * 10) / 10;
+  return `M${r(start.x)} ${r(start.y)} Q${r(outer.x)} ${r(outer.y)} ${r(end.x)} ${r(end.y)} Q${r(inner.x)} ${r(inner.y)} ${r(start.x)} ${r(start.y)}Z`;
+}

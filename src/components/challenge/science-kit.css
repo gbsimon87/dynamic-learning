@@ -123,3 +123,15 @@
   font-size: .78rem;
   opacity: .7;
 }
+
+/* Muscles, joints and the body map. Colours are tokens so both themes work. */
+:root, body.light { --sci-muscle: #e8737a; --sci-muscle-lit: #d94d57; --sci-muscle-quiet: #d9cfc7; }
+body.dark { --sci-muscle: #f08a90; --sci-muscle-lit: #ff6f7a; --sci-muscle-quiet: #4a4340; }
+.science-muscle-belly { fill: var(--sci-muscle); fill-opacity: .9; stroke: var(--ck-text); stroke-width: 2; }
+.science-tendon { fill: none; stroke: var(--ck-text); stroke-width: 2.5; stroke-linecap: round; }
+.science-joint { fill: none; stroke: var(--ck-text); stroke-width: 2.5; stroke-dasharray: 4 3; }
+.science-muscle-map { max-width: 360px; }
+.science-muscle-map-views { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; padding: .75rem; border-radius: 18px; background: var(--ck-muted); }
+.science-muscle-map-views svg { background: none; border-radius: 0; }
+.science-muscle-map path { fill: var(--sci-muscle-quiet); stroke: var(--ck-panel); stroke-width: .15; }
+.science-muscle-map path.is-lit { fill: var(--sci-muscle-lit); stroke: var(--ck-text); stroke-width: .25; }

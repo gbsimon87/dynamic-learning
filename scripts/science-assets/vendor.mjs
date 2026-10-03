@@ -37,6 +37,21 @@ async function fetchFile(source, file) {
   return Buffer.from(await response.arrayBuffer());
 }
 
+/**
+ * body-muscles ships its path data as TypeScript. Turn each file into a plain
+ * data module: drop the imports and type annotations, write the view as a
+ * string. Fails loudly if the shape is not what this expects.
+ */
+function tsDataToJs(text, file) {
+  const out = text
+    .replace(/^import[^;]*;\n/gm, "")
+    .replace(/: MuscleDef\[\]/g, "")
+    .replace(/ViewSide\.FRONT/g, '"front"')
+    .replace(/ViewSide\.BACK/g, '"back"');
+  if (/\bimport\b|ViewSide|: [A-Z]\w+/.test(out)) throw new Error(`${file}: unexpected TypeScript left after conversion`);
+  return `// Converted from ${file} (body-muscles, Apache-2.0; see LICENSE and NOTICE beside this file).\n${out}`;
+}
+
 const manifest = { sources: {}, files: [] };
 for (const [id, source] of Object.entries(SOURCES)) {
   if (id.startsWith("$")) continue;
@@ -55,7 +70,11 @@ for (const [id, source] of Object.entries(SOURCES)) {
   fs.mkdirSync(out, { recursive: true });
   for (const file of source.files) {
     let body = await fetchFile(source, file);
-    const name = path.basename(file);
+    let name = path.basename(file);
+    if (source.transform === "ts-data" && name.endsWith(".ts")) {
+      body = Buffer.from(tsDataToJs(body.toString("utf8"), file));
+      name = name.replace(/\.ts$/, ".js");
+    }
     if (name.endsWith(".svg")) {
       body = Buffer.from(optimize(body.toString("utf8"), { ...SVGO, path: name }).data);
     }

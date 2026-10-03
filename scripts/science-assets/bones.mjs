@@ -55,3 +55,15 @@ export function sideOf(name) {
   if (/^right\b|\bright\b/i.test(name)) return "right";
   return null;
 }
+
+/**
+ * The arm model for Muscles and Movement: one arm seen from the side, the
+ * forearm turned at the elbow. Angles match MOVEMENT_POSES in
+ * src/data/movementDiagram.js (straight 0°, half 55°, bent 105°).
+ */
+export const ARM_POSES = { straight: 0, half: 55, bent: 105 };
+
+/** Forearm and hand bones turn at the elbow; the humerus stays still. */
+export function isForearm(name) {
+  return /radius|ulna|capitate|hamate|lunate|pisiform|scaphoid|trapezi|triquetral|metacarpal|finger|thumb/i.test(name);
+}

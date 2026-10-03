@@ -11,6 +11,8 @@
  *
  *   skeleton-<pose>.webp   one image per arm pose, transparent background
  *   skeleton.json          image sizes and the label anchors per pose (0–1)
+ *   arm-<pose>.webp        one arm from the side, straight / half / bent
+ *   arm.json               its muscle attachment points per pose (0–1)
  *   ATTRIBUTION.md         the CC BY 4.0 credit and what was adapted
  *
  * The outputs are committed; nothing here runs during `npm run build`.
@@ -19,7 +21,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright-core";
-import { ANCHOR_PARTS, GROUPS, POSES, selectSkeleton, sideOf } from "./bones.mjs";
+import { ANCHOR_PARTS, ARM_POSES, GROUPS, POSES, isForearm, selectSkeleton, sideOf } from "./bones.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const SOURCE = JSON.parse(fs.readFileSync(path.join(ROOT, "scripts/science-assets/sources.json"), "utf8")).bodyparts3d;
@@ -65,6 +67,7 @@ const index = parts.map((part) => {
     name: part.name,
     group: part.group,
     side: sideOf(part.name),
+    forearm: isForearm(part.name),
     vertexCount: part.vertexCount,
     indexCount: part.indexCount,
     positions: take(chunk, part.positions, part.vertexCount * 12),
@@ -85,7 +88,7 @@ await page.route("http://render.local/**", async (route) => {
   if (url.pathname === "/") return route.fulfill({ body: PAGE, contentType: "text/html" });
   if (url.pathname === "/payload.bin") return route.fulfill({ body: payload, contentType: "application/octet-stream" });
   if (url.pathname === "/payload.json") {
-    return route.fulfill({ body: JSON.stringify({ parts: index, anchors: ANCHOR_PARTS, poses: POSES }), contentType: "application/json" });
+    return route.fulfill({ body: JSON.stringify({ parts: index, anchors: ANCHOR_PARTS, poses: POSES, armPoses: ARM_POSES }), contentType: "application/json" });
   }
   const file = path.join(THREE_DIR, path.basename(url.pathname));
   if (fs.existsSync(file)) return route.fulfill({ body: fs.readFileSync(file), contentType: "text/javascript" });
@@ -105,6 +108,16 @@ for (const pose of Object.keys(POSES)) {
   manifest.poses[pose] = { file, width: result.width, height: result.height, anchors: result.anchors };
   console.log(`${file}: ${result.width}×${result.height}, ${(fs.statSync(path.join(OUT, file)).size / 1024).toFixed(0)} KB`);
 }
+// The arm model for Muscles and Movement, one image per elbow angle.
+const arm = { source: SOURCE.repo, commit: SOURCE.commit, credit: SOURCE.credit, poses: {} };
+for (const pose of Object.keys(ARM_POSES)) {
+  const result = await page.evaluate((name) => window.renderArm(name, "right"), pose);
+  const file = `arm-${pose}.webp`;
+  fs.writeFileSync(path.join(OUT, file), Buffer.from(result.dataUrl.split(",")[1], "base64"));
+  arm.poses[pose] = { file, width: result.width, height: result.height, anchors: result.anchors };
+  console.log(`${file}: ${result.width}×${result.height}, ${(fs.statSync(path.join(OUT, file)).size / 1024).toFixed(0)} KB`);
+}
+fs.writeFileSync(path.join(OUT, "arm.json"), `${JSON.stringify(arm, null, 2)}\n`);
 await browser.close();
 
 fs.writeFileSync(path.join(OUT, "skeleton.json"), `${JSON.stringify(manifest, null, 2)}\n`);
@@ -116,6 +129,7 @@ fs.writeFileSync(
     "Mitsuhashi et al. 2009, https://doi.org/10.1093/nar/gkn613).\n\n" +
     `Adaptations here: ${parts.length} bone meshes selected (muscles, gums, voice-box ` +
     "cartilage and spinal disks left out); arms rotated at the shoulder into three " +
-    "poses; rendered as flat illustrations by scripts/science-assets/render-bones.mjs.\n",
+    "poses and one forearm bent at the elbow; rendered as flat illustrations by " +
+    "scripts/science-assets/render-bones.mjs.\n",
 );
 console.log(`wrote ${path.relative(ROOT, OUT)}`);

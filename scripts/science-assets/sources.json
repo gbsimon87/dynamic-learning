@@ -32,5 +32,20 @@
       "assets/Bone/Color/bone_color.svg"
     ],
     "outputs": "src/assets/science/fluentui-emoji"
+  },
+  "body-muscles": {
+    "repo": "vulovix/body-muscles",
+    "commit": "15c8085ee97cb94c51f92c75224416b15f955b5c",
+    "license": "Apache-2.0",
+    "attribution": "Body Muscles, Copyright 2024 Ivan Vulović, Apache License 2.0 (https://github.com/vulovix/body-muscles). Only the SVG path data is used, converted from TypeScript to plain JavaScript; the drawing code is our own.",
+    "credit": "Muscle map: Body Muscles © Ivan Vulović, Apache-2.0",
+    "files": [
+      "LICENSE",
+      "NOTICE",
+      "src/data/muscles.front.ts",
+      "src/data/muscles.back.ts"
+    ],
+    "transform": "ts-data",
+    "outputs": "src/assets/science/body-muscles"
   }
 }
