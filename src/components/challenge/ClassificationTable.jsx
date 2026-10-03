@@ -1,0 +1,5 @@
+import "./science-kit.css";
+/** Controlled yes/no classification. Each native button identifies row and column. */
+export default function ClassificationTable({ rows, columns, answers, onChange, disabled }) {
+ return <div className="science-classification-scroll" role="region" aria-label="Classification table" tabIndex={0}><table className="data-table science-classification-table"><caption>Build the sample classification table</caption><thead><tr><th scope="col">Sample</th>{columns.map(c=><th key={c.id} scope="col">{c.label}</th>)}</tr></thead><tbody>{rows.map(row=><tr key={row.id}><th scope="row">Sample {row.id}</th>{columns.map(c=>{const key=`${row.id}:${c.id}`;return <td key={c.id}><div className="science-classification-options" role="group" aria-label={`Sample ${row.id}: ${c.label}`}>{["yes","no"].map(value=><button key={value} type="button" disabled={disabled} aria-pressed={answers[key]===value} onClick={()=>{if(!disabled)onChange(key,value);}}>{value==="yes"?"Yes":"No"}</button>)}</div></td>;})}</tr>)}</tbody></table></div>;
+}

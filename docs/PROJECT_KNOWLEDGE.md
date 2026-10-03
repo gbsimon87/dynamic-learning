@@ -898,6 +898,203 @@ the completion checks and the outstanding interactive browser review.
   (🔤 📖 🧱 ✍️) and the hero shows letters rather than maths symbols. English
   patterns are matched first, because "Composition" contains "position".
 
+### Curriculum Mode — Year 3 Science (2026-10-03)
+
+Science is registered for Year 3 with five source-ordered categories, 21 topics
+and 84 challenge slots. **Parts of Flowering Plants**, **What Plants Need to Grow**, **Water Transport
+in Plants**, **Pollination and Seed Formation** and **Seed Dispersal** each have all four challenges implemented (Plants 20/20). **Nutrition for Animals and Humans**, **Skeletons for Support and Protection** and **Muscles and Movement** add twelve challenges (Animals 12/12),
+**Comparing and Grouping Rocks**, **How Fossils Form** and **What Soil Is Made From** add twelve challenges (Rocks 12/12), with all five **Light** topics adding twenty challenges (Light 20/20), bringing Science to 84/84. Forces and magnets has all five topics (20/20 challenges).
+Topics were implemented in order, four slots together, with checks after each topic.
+Interactive browser and owner review remain pending.
+
+The first topic uses pure authored banks (16 observations / 16 diagram cases),
+ChoiceGrid, a controlled DiagramLabelBoard and TileBuilder explanations.
+PlantFigure draws local SVG with tested callouts; Science styles use shared theme
+tokens. The optional grown-up activity appears on the final celebration and
+completed topic map, using strict completion, without storage or reward changes.
+Identifiers are locked in tests; the supplied source text is preserved with a
+separate [topic mapping](curriculum/year-3-science.md).
+
+The growth topic adds controlled FairTestBoard / ObservationSequence interactions,
+15 authored tasks per short level and nine enquiry scenarios. C4 uses three rounds
+with ungraded predictions, guarded setup, staged observations, two recorded heights
+and a built conclusion. A pure revision/version state machine invalidates downstream
+work on reset and rejects duplicate/stale transitions. No experiment data is stored.
+
+Water Transport adds 15 tasks per short bank and nine process enquiries, with
+rooted/cut-stem routes, before/after evidence, ordered routes and dye records.
+Its supplied-setup state machine omits fair-test sorting. Only observed changes
+support conclusions; cut stems have no roots attached. ObservationSequence now
+accepts optional JSX content, with default growth rendering preserved.
+WaterTransportFigure uses reviewed local SVG; an optional grown-up carnation
+activity is available after strict completion.
+
+Pollination adds 15 tasks per short bank and nine supplied-source enquiries,
+covering insect/wind pollen transfer, seed formation and ordered life cycles.
+FlowerLifeCycleFigure uses local labelled SVG and equivalent descriptions.
+The reusable processEnquiry reducer / useProcessEnquiry hook guards transitions,
+resets and unmount callbacks, with topic-specific evidence validation. An optional
+flower-visitor observation activity never gates progress. Pollen is distinct from
+seeds; a pollen-transfer observation alone does not prove new seeds formed.
+
+Seed Dispersal adds fifteen tasks per short bank and nine comparison enquiries.
+Choices, three-specimen sorting and built explanations connect visible features to
+supplied movement evidence. Local SeedDispersalFigure SVG depicts seed/fruit structures;
+examples are authored schematics, not species identifications. Guarded process enquiry
+requires both records and a supported explanation. Optional grown-up observation
+never gates progress. Tests verify the Plants category award only on its final slot,
+replay/predecessor preservation and expansion into Animals.
+
+Nutrition adds 18 source-supported facts, 15 diet-sort sets, 15 model-menu cases
+and nine source-research enquiries. ScienceInformationCard shows adapted information
+with visible attribution. Each C1 run covers food sources, types and amounts. C3 accepts
+all combinations/orders meeting explicit group counts; these model counts are not real
+portions or a complete day's diet. C4 uses guarded source reading, claim classification
+and a supported report. Optional grown-up research never gates progress. Tests cover
+all menu subsets and preserve completed Plants progress while releasing Animals.
+
+Skeletons adds fifteen cases per bank, with five tasks in every slot: jobs, explicit
+animal grouping, four structure labels plus a job match, and built explanations.
+SkeletonFigure draws reviewed human/dog internal skeletons and crab/beetle outer
+coverings; callout geometry is checked separately. Backbone and shell/exoskeleton
+criteria are distinct. DiagramLabelBoard accepts a topic-specific accessible label,
+with the Plant default retained. Optional grown-up picture research never gates progress.
+Progress checks preserve Plants/Nutrition and require strict Skeletons topic completion.
+
+Muscles adds fifteen cases per short bank and nine staged arm enquiries. C1 covers
+muscle roles, C2 compares movement, C3 builds a linked three-clause explanation and
+C4 uses three guarded investigations (bend, straighten, bend/return). MovementFigure
+renders fixed-length bones turning at the elbow and opposing schematic muscle lengths,
+with equivalent descriptions and adapted Nemours KidsHealth attribution. Predictions
+are ungraded; observation, two claim records and the ordered explanation are required.
+Optional picture research never gates progress. Tests preserve all earlier progress
+and award the Animals category only on this final topic's fourth slot.
+
+Comparing and Grouping Rocks adds six unnamed authored sample diagrams, eighteen
+visible-feature tasks, fifteen sort sets, fifteen classification tables and nine
+supplied-test investigations. New RockFigure SVG and controlled ClassificationTable
+support appearance/property comparisons. C4 requires a fair plan, ungraded prediction,
+all observation stages, both result records and a supported explanation; sample results
+are distinct from rock-type claims. Optional picture observation never gates progress.
+Tests preserve Plants/Animals and require strict first-Rocks topic completion without
+awarding the unfinished Rocks category or Science year.
+
+Light and Darkness adds 15 supported scene tasks, 15 comparisons, 15 built
+explanations and nine controlled enquiries. Five non-luminous objects and three
+sources support on/off comparisons with no other light entering. `LightSceneFigure`
+uses accessible local SVG and complete text equivalents: dark observations omit
+object shapes/emission marks while retaining object presence in captions. Lit/dark
+fills use App.css tokens independently of app theme. C2 records three observations;
+C3 builds First/Next/So explanations; C4 requires all stages and records before its
+final three-tile explanation through the guarded enquiry hook. Every C1 run includes
+lit and dark scenes. BBC Teach concepts verified 2026-10-03; no runtime network or
+physical experiment required. Optional picture comparison requires strict completion.
+Six topic tests plus availability/progress regression, four wrappers, 30 diagram
+renders and 27 stage renders passed. No unfinished Light/Science award; earlier
+progress preserved. Browser playthrough/both-theme visual checks remain pending.
+
+What Soil Is Made From adds 20 identification tasks, 15 solid-material sorting cases,
+15 four-component labelling cases and nine supplied-observation enquiries. Local
+`SoilCompositionFigure` uses shared theme tokens, lettered SVG and equivalent notes.
+Five authored sample records distinguish rock/mineral particles, decayed remains,
+air and water, without inferring amounts or composition from colour. Every C1 run
+covers all four components; C4 requires three observations, two evidence records and
+one supported explanation through the guarded shared enquiry hook. British Society
+of Soil Science concepts verified 2026-10-03; no runtime network or specimen handling.
+Rocks awards only after Soil C4; Science stays unfinished. The optional picture activity
+is read-only and requires all four slots. Six pure topic tests plus release/progress
+regression, four wrapper renders, 15 diagrams and nine stage renders passed; browser
+playthrough and both-theme checks remain pending. No persistence/unlock rule changed.
+
+How Fossils Form adds five original illustrated accounts, fifteen tasks per short
+bank and nine source-based enquiries. FossilFormationFigure shows cutaway burial,
+evidence preservation and later exposure, with shell moulds, mineral-preserved bones
+and leaf imprints. C2 checks claims; C3 orders four letter-linked pictures; C4 requires
+all source cards, both evidence records and a supported explanation after an ungraded
+prediction. Source attribution uses NHM/BGS; no real-time fossilisation or age questions.
+Optional picture research never gates progress. Tests preserve earlier work, reject
+incorrect orderings and require strict topic completion without unfinished Rocks awards.
+
+Lint, tests (1,116 passes, one database-dependent skip) and production build
+passed; Vite loaded all forty wrappers, initial React renders passed; all 27 water
+observations matched their dye marks, and 27 growth screens preserved matching
+drawn/table heights. The 27 pollination observation renders matched their
+pollen/seed markers and accessible evidence descriptions. Four seed-dispersal wrappers
+rendered through Vite; 42 specimen/observation renders matched their structural features
+and escaped authored text. Nutrition’s four wrapper renders and 36 source-card renders
+preserved attributed evidence; meal-table counts matched the requested total. Default
+growth rendering remained intact after adding the optional research navigation label.
+Skeletons’ four wrappers and 18 diagram renders passed geometry/structure checks;
+the default Plant-label accessibility remained intact. Muscles’ four wrappers, three
+SVG geometry renders and 72 comparison/observation renders passed.
+Rocks’ four wrappers, six specimen diagrams, fifteen classification tables and nine
+result-table renders passed, including text escaping and the initial fair-plan gate.
+Fossils’ four wrappers, twenty cutaway diagrams and 36 source-card stage renders
+passed, including readable ordering labels and escaped captions.
+
+Reflected Light uses six supplied surfaces, 18 facts, 15 distinct comparisons,
+18 lettered source/surface/eye diagrams and nine guarded enquiries. Clear image
+and reflected light are explicitly distinguished; all supplied surfaces reflect.
+Optica/BBC Teach concepts were verified on 2026-10-03; no numerical optics assessed.
+Protecting Our Eyes from Sunlight has 15 authored situations per level and five
+tasks/run, with supported information, action sorting, message tiles and applied
+advice/explanation. NEI sources verified 2026-10-03; no practical sun-viewing test.
+
+How Shadows Form has 15 tasks per short bank and nine guarded enquiries, separating
+blocker removal/replacement from lamp off/on. An unlit screen is distinguished from
+a cast shadow. Changing Shadow Size has 15 tasks per short bank and nine enquiries,
+with fixed-screen source/object comparisons, keypad/table records and five-factor
+fair setup before observation in C4. ShadowFigure and ShadowExplorer share a pure
+point-source geometry model, with invalid-input fallback and whole-cm displayed/
+assessed measurements. `shadowEnquiry.js` / `useShadowEnquiry.js` extend the existing
+process stages with a frozen fair setup and reset/stale-callback guards. Neither
+model nor enquiry state is persisted. All controls reuse theme tokens and native
+keyboard/tap interactions. Optional strict-completion picture activities accompany
+reflection and shadows. Interactive phone/both-theme and saved-progress checks are
+pending; automated suite passed (1,149 passed, one database-dependent skip).
+
+Interactive browser checks, both-theme visual checks and owner review remain
+pending because browser controls are unavailable in this session.
+All 20 Light wrappers and 347 distinct reflection/shadow observation renders passed
+Vite SSR checks, including actual availability, model measurements and escaped captions.
+The [Science tracker](science-curriculum/y3-science-tracker.md) records evidence,
+review findings and the exact resume point. Next: complete Science browser and owner review. The owner authorised completing the entire Light category in
+one batch on 2026-10-03.
+
+### Forces and magnets implementation (2026-10-03)
+
+5/5 topics, 20/20 challenges; Year 3 Science now 84/84. The owner
+authorised sequential topic implementation; each topic passed lint, full tests,
+production build and initial Vite renders before proceeding. Browser review pending.
+
+**Movement on Different Surfaces:** 15 supplied surface comparisons per short bank and nine enquiries. C1 chooses the further run, C2 sorts measured travel evidence, C3 requires a complete fair plan before keypad/table records, and C4 uses prediction/fair setup/staged stops/records/bounded explanation. Same toy, ramp release, level track and cm measuring method within a comparison. APS friction concepts verified; supplied distances are original examples, not universal predictions.
+
+**Contact and Magnetic Forces:** 15 supported contact/magnetic cases, 15 three-observation sorts, 15 lettered diagrams and nine controlled enquiries. Contact pushes/pulls require touching; supplied magnetic interactions retain a visible gap while a force acts. Before-force observations are distinct from contact/non-contact force evidence. IOP concepts verified; no claim that every non-contact force is magnetic.
+
+**Magnetic Materials:** 15 supported material tests, 15 three-sample classifications, 15 fair-test/result-table tasks and nine enquiries. Named iron/ordinary steel samples are attracted; aluminium/copper and selected non-metals show no noticeable attraction in these supplied classroom tests. Records rely on supplied evidence, not appearance; not all metals are magnetic. Magnet, gap, sample size and testing method are fixed within comparisons.
+
+**Magnets and Their Poles:** 16 supported pole facts, 15 supplied facing-pole comparisons, 15 label-and-record tasks and nine turning/repeating observation enquiries. Bar magnets have both N and S poles; all four facing pairs have supplied outcomes. Same poles repel; different poles attract. N/S identity is labelled, never inferred from colour. IOP concepts verified; numerical strength/field calculations excluded.
+
+**Predicting Attraction and Repulsion:** 16 rule-supported predictions, 15 multi-pair records, 15 target-arrangement construction tasks and nine model enquiries. Native controls turn either magnet; equivalent successful arrangements are accepted. A pure two-pole model computes attraction/repulsion and drawings. Predictions ungraded in C4; run/turn observations precede records and a bounded explanation. Reset clears evidence and rejects stale callbacks; no timers or continuous physics.
+
+### Final Science code review (2026-10-03)
+
+Reviewed the dirty Year 3 Science implementation and shared integration; no
+confirmed exploitable security vulnerability found. Dependency audit: zero known
+vulnerabilities. Fixed sparse ordering validation in five topics, malformed surface
+samples, non-decimal growth records, unused pole enquiry text and array-shaped
+magnet construction answers. Five initial regression groups passed after reproducing
+the failures. A follow-up fixed a rock enquiry reset race by putting fair-plan
+approval and evidence in one guarded reducer, with three more regression groups.
+Full checks: lint/build passed, 1,183 tests passed, one database-dependent skip. No progress/auth/storage/reward/unlock contract changes.
+
+`node scripts/checkScienceChallenges.js` checks actual availability and all 84
+original initial renders, then 6,960 sampled cases using reducer-prepared enquiry
+states, hints and locked controls. It writes diagnostic HTML to a temporary
+directory without accessing learner data. Browser interaction, layouts and real
+saved-progress playthroughs remain pending. Details and limits: [final bug/security
+review](science-curriculum/BUG_SECURITY_REVIEW.md).
+
 ### Development seed (2026-09-19)
 
 ```bash

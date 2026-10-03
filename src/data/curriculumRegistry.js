@@ -1,6 +1,7 @@
 import { year2MathCurriculum } from "./year2MathCurriculum.js";
 import { year3MathCurriculum } from "./year3MathCurriculum.js";
 import { year3EnglishCurriculum } from "./year3EnglishCurriculum.js";
+import { year3ScienceCurriculum } from "./year3ScienceCurriculum.js";
 import { year4EnglishCurriculum } from "./year4EnglishCurriculum.js";
 
 /**
@@ -30,6 +31,7 @@ export const CURRICULUM_SUBJECTS = [
 ];
 
 const CURRICULA = [
+  { year: 3, subject: "science", available: true, load: () => year3ScienceCurriculum },
   {
     year: 2,
     subject: "math",

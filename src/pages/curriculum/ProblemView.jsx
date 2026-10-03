@@ -1,3 +1,4 @@
+import { completedScienceActivity } from "../../data/scienceActivities.js";
 import { Navigate, useParams } from "react-router";
 import { useContext, useEffect, useRef, useState } from "react";
 import Challenge from "./Challenge";
@@ -108,6 +109,7 @@ function ProblemView() {
         yearBefore: getYearStats(progress, curriculum, isBuilt),
         yearAfter: getYearStats(after, curriculum, isBuilt),
         sticker: topic ? topicSticker(after, categoryId, topic, isBuilt) : null,
+        practicalActivity: completedScienceActivity({ year, subject, categoryId, topicId, progress: after, isBuilt }),
       };
     }
 
@@ -169,6 +171,7 @@ function ProblemView() {
       {saveError && <ProgressError retry={retrySave} />}
       <CompletionCelebration
         result={completion.result}
+        practicalActivity={completion.practicalActivity}
         badges={completion.badges}
         sticker={completion.sticker}
         yearBefore={completion.yearBefore}

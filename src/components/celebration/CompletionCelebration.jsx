@@ -1,3 +1,4 @@
+import PracticalActivityCard from "../challenge/PracticalActivityCard";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router";
 import { buildCelebrationSteps } from "../../data/celebrationSteps";
@@ -51,6 +52,7 @@ function NextStep({ headingRef, focalRef }) {
  */
 export default function CompletionCelebration({
   result,
+  practicalActivity = null,
   badges = [],
   sticker = null,
   yearBefore = null,
@@ -140,6 +142,8 @@ export default function CompletionCelebration({
           headingRef={headingRef}
           focalRef={focalRef}
         />
+
+        {step.final && practicalActivity && <PracticalActivityCard activity={practicalActivity} />}
 
         {step.final ? (
           <div className="completion-celebration-actions">

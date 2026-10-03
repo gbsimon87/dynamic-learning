@@ -1,3 +1,4 @@
+import { year3ScienceCurriculum } from "./year3ScienceCurriculum.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { year2MathCurriculum } from "./year2MathCurriculum.js";
@@ -347,11 +348,63 @@ test("Year 4 English category and topic ids are unchanged", () => {
 });
 
 test("every topic has a sticker icon", () => {
-  for (const curriculum of [year2MathCurriculum, year3MathCurriculum, year3EnglishCurriculum, year4EnglishCurriculum]) {
+  for (const curriculum of [year2MathCurriculum, year3MathCurriculum, year3EnglishCurriculum, year4EnglishCurriculum, year3ScienceCurriculum]) {
     for (const category of curriculum) {
       for (const topic of category.topics) {
         assert.ok(topic.icon, `${topic.name} has no icon`);
       }
     }
   }
+});
+
+const SCIENCE_IDS = [
+  [
+    "plants",
+    [
+      "parts-of-flowering-plants",
+      "what-plants-need-to-grow",
+      "water-transport-in-plants",
+      "pollination-and-seed-formation",
+      "seed-dispersal"
+    ]
+  ],
+  [
+    "animals-including-humans",
+    [
+      "nutrition-for-animals-and-humans",
+      "skeletons-for-support-and-protection",
+      "muscles-and-movement"
+    ]
+  ],
+  [
+    "rocks",
+    [
+      "comparing-and-grouping-rocks",
+      "how-fossils-form",
+      "what-soil-is-made-from"
+    ]
+  ],
+  [
+    "light",
+    [
+      "light-and-darkness",
+      "reflected-light",
+      "protecting-our-eyes-from-sunlight",
+      "how-shadows-form",
+      "changing-shadow-size"
+    ]
+  ],
+  [
+    "forces-and-magnets",
+    [
+      "movement-on-different-surfaces",
+      "contact-and-magnetic-forces",
+      "magnetic-materials",
+      "magnets-and-their-poles",
+      "predicting-attraction-and-repulsion"
+    ]
+  ]
+];
+test("Year 3 Science identifiers remain stable", () => {
+  assert.deepEqual(ids(year3ScienceCurriculum), SCIENCE_IDS);
 });

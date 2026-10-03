@@ -1,0 +1,97 @@
+/* Science interactions reuse the kit's light/dark tokens. */
+.science-plant-figure { margin: 1rem auto; max-width: 440px; }
+.science-plant-figure svg { display: block; width: 100%; height: auto; }
+.science-plant-figure figcaption { font-size: .95rem; line-height: 1.5; }
+.science-soil { fill: var(--ck-muted); }
+.science-line, .science-stem { stroke: var(--ck-text); stroke-width: 3; fill: none; stroke-linecap: round; }
+.science-stem { stroke-width: 7; }
+.science-stem.is-woody { stroke-width: 15; }
+.science-leaf { fill: var(--ck-muted); stroke: var(--ck-text); stroke-width: 2; }
+.science-bloom { fill: var(--ck-accent); stroke: var(--ck-text); stroke-width: 2; }
+.science-flower-centre { fill: var(--ck-panel); }
+.science-svg-text, .science-callout text { fill: var(--ck-text); font-size: 15px; font-weight: 700; }
+.science-callout path { fill: none; stroke: var(--ck-text); stroke-width: 2; stroke-dasharray: 3 3; }
+.science-callout circle { fill: var(--ck-text); }
+.science-callout.is-highlighted path { stroke-width: 4; stroke-dasharray: none; }
+.science-rule, .science-observation { padding: 1rem; border: 2px solid var(--ck-border); border-radius: 16px; margin: 1rem 0; text-align: left; line-height: 1.6; }
+.science-rule dl { margin: 0; }
+.science-rule-row { display: grid; grid-template-columns: 110px 1fr; gap: 1rem; margin-bottom: .6rem; }
+.science-rule dt { font-weight: 700; }
+.science-rule dd { margin: 0; }
+.science-gloss summary { min-height: 44px; padding: .65rem; cursor: pointer; }
+.science-gloss { font-size: .95rem; line-height: 1.6; }
+.science-label-tray, .science-label-targets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; margin: 1rem 0; }
+.science-label-board button { min-height: 48px; padding: .75rem; margin: 0; border: 2px solid var(--ck-border); border-radius: 12px; background: var(--ck-panel); color: var(--ck-text); font: inherit; cursor: pointer; overflow-wrap: anywhere; }
+.science-label-board button.is-selected { border-color: var(--ck-text); outline: 3px solid var(--ck-accent); }
+.science-label-board button:focus-visible { outline: 3px solid var(--ck-text); outline-offset: 3px; }
+.science-label-board button:disabled { opacity: .65; cursor: default; }
+.science-practical { margin: 1rem 0; border: 2px solid currentColor; border-radius: 16px; padding: .8rem; text-align: left; line-height: 1.6; }
+.science-practical summary { cursor: pointer; min-height: 44px; display: list-item; padding: .5rem; font-weight: 700; }
+.science-practical summary:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
+.science-practical li { margin: .5rem 0; }
+@media (max-width: 420px) { .science-rule-row { grid-template-columns: 1fr; gap: .3rem; } .science-rule dd { margin-bottom: .5rem; } }
+.science-needs-guide { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .7rem; text-align: left; margin: 1rem 0; }
+.science-needs-guide > div { border: 2px solid var(--ck-border); border-radius: 12px; padding: .8rem; }
+.science-needs-guide span { display: block; font-size: 1.8rem; }
+.science-needs-guide p { line-height: 1.5; }
+.science-sequence-pictures { display: flex; justify-content: center; align-items: end; gap: 1rem; }
+.science-sequence-pictures > div { width: min(35%, 140px); }
+.science-sequence-pictures svg { width: 100%; height: auto; }
+.science-sequence-controls { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; margin: 1rem 0; }
+.science-sequence-controls button, .science-reset { min-height: 48px; margin: 0; padding: .75rem; border: 2px solid var(--ck-border); border-radius: 12px; background: var(--ck-panel); color: var(--ck-text); font: inherit; cursor: pointer; }
+.science-sequence-controls button[aria-pressed="true"] { border-color: var(--ck-text); font-weight: 700; }
+.science-sequence-controls button:focus-visible, .science-reset:focus-visible, .science-record-fields input:focus-visible { outline: 3px solid var(--ck-text); outline-offset: 3px; }
+.science-sequence-controls button:disabled, .science-reset:disabled { opacity: .65; cursor: default; }
+.science-record-fields { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
+.science-record-fields label { display: grid; gap: .5rem; text-align: left; }
+.science-record-fields input { min-height: 48px; max-width: 160px; box-sizing: border-box; padding: .6rem; font: inherit; border: 2px solid var(--ck-border); border-radius: 12px; color: var(--ck-text); background: var(--ck-panel); }
+.science-water-figure { max-width: 420px; margin: 1rem auto; }
+.science-water-figure svg { display: block; width: 100%; height: auto; }
+.science-water-figure figcaption { line-height: 1.5; font-size: .95rem; }
+.science-water-container { fill: none; stroke: var(--ck-text); stroke-width: 3; }
+.science-water-bloom { fill: var(--ck-panel); stroke: var(--ck-text); stroke-width: 2; }
+.science-dye-marks { fill: var(--ck-accent); stroke: var(--ck-text); stroke-width: 2; }
+.science-water-comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+@media (max-width: 500px) { .science-water-comparison { grid-template-columns: 1fr; } }
+.science-life-figure { max-width: 440px; margin: 1rem auto; }
+.science-life-figure svg { display: block; width: 100%; height: auto; }
+.science-life-figure figcaption { font-size: .95rem; line-height: 1.5; }
+.science-seed-case { fill: var(--ck-muted); stroke: var(--ck-text); stroke-width: 3; }
+.science-seed-shape { fill: var(--ck-accent); stroke: var(--ck-text); stroke-width: 2; }
+.science-pollen-source { fill: var(--ck-panel); stroke: var(--ck-text); stroke-width: 2; }
+.science-transferred-pollen { fill: var(--ck-accent); stroke: var(--ck-text); stroke-width: 1.5; }
+.science-transfer-path { stroke: var(--ck-text); stroke-width: 2; stroke-dasharray: 4 4; fill: none; }
+.science-life-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 1rem; }
+
+.science-movement-bone { stroke: var(--ck-text); stroke-width: 9; fill: none; stroke-linecap: round; }
+.science-movement-muscle { fill: var(--ck-accent); stroke: var(--ck-text); stroke-width: 2; }
+
+.science-rock-grains { fill: var(--ck-panel); stroke: var(--ck-text); stroke-width: 2; }
+.science-rock-crystals { fill: var(--ck-accent); stroke: var(--ck-text); stroke-width: 2; }
+.science-classification-scroll { max-width: 100%; overflow-x: auto; margin: 1rem 0; }
+.science-classification-options { display: flex; flex-wrap: wrap; justify-content: center; gap: .4rem; }
+.science-classification-options button { min-width: 48px; min-height: 48px; margin: 0; padding: .6rem; border: 2px solid var(--ck-border); border-radius: 12px; background: var(--ck-panel); color: var(--ck-text); font: inherit; cursor: pointer; }
+.science-classification-options button[aria-pressed="true"] { border-color: var(--ck-text); outline: 2px solid var(--ck-accent); font-weight: 700; }
+.science-classification-options button:focus-visible, .science-classification-scroll:focus-visible { outline: 3px solid var(--ck-text); outline-offset: 3px; }
+.science-classification-options button:disabled { opacity: .65; cursor: default; }
+
+/* Observation brightness is about the experiment, independent of app theme. */
+.science-light-box { stroke: var(--ck-text); stroke-width: 3; }
+.science-light-box.is-lit { fill: var(--light-panel); }
+.science-light-box.is-dark { fill: var(--dark-bg); }
+
+.science-light-object .science-line, .science-light-object .science-rock-crystals { stroke: var(--light-text); }
+
+.science-reflection-ray { fill: none; stroke: var(--ck-text); stroke-width: 3; }
+.science-reflection-arrow { fill: var(--ck-text); }
+
+.science-shadow-paths { fill: none; stroke: var(--light-text); stroke-width: 1.5; }
+.science-shadow-paths .science-shadow-region { fill: var(--dark-bg); fill-opacity: .2; stroke: none; }
+.science-shadow-screen { fill: none; stroke: var(--ck-text); stroke-width: 5; }
+.science-shadow-mark { fill: none; stroke: var(--dark-bg); stroke-width: 10; }
+.science-shadow-lit-setup { stroke: var(--light-text); }
+.science-surface-travel { fill: var(--ck-accent); stroke: var(--ck-text); stroke-width: 2; }
+.science-force-giver { fill: var(--ck-accent); stroke: var(--ck-text); stroke-width: 2; }
+.science-force-receiver { fill: var(--ck-panel); stroke: var(--ck-text); stroke-width: 2; }
+.science-material-start { fill: none; stroke: var(--ck-text); stroke-width: 2; stroke-dasharray: 4 4; }
+.science-magnet-body { fill: var(--ck-panel); stroke: var(--ck-text); stroke-width: 3; }

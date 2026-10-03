@@ -1,3 +1,5 @@
+import PracticalActivityCard from "../../components/challenge/PracticalActivityCard";
+import { completedScienceActivity } from "../../data/scienceActivities.js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, Navigate, useParams } from "react-router";
 import {
@@ -42,7 +44,11 @@ const ENGLISH_GLYPHS = MATHS_GLYPHS.map((glyph, index) => ({
   char: ["A", "✦", "?", "“", "b", "●", "!", "★", ","][index],
 }));
 
-const GLYPHS_BY_SUBJECT = { english: ENGLISH_GLYPHS };
+const SCIENCE_GLYPHS = MATHS_GLYPHS.map((glyph, index) => ({
+  ...glyph,
+  char: ["🌱", "✦", "🦴", "🪨", "💡", "●", "🧲", "★", "🔬"][index],
+}));
+const GLYPHS_BY_SUBJECT = { english: ENGLISH_GLYPHS, science: SCIENCE_GLYPHS };
 
 /* ===== CATEGORY LOOKS =====
    An icon and a colour per category so a child can tell the sections apart at
@@ -52,6 +58,11 @@ const GLYPHS_BY_SUBJECT = { english: ENGLISH_GLYPHS };
    anything carrying white ink — both are token names so the theme repaints
    them (PROJECT_KNOWLEDGE §9). */
 const CATEGORY_ICONS = [
+  { match: /^plants$/i, icon: "🌱" },
+  { match: /^animals, including humans$/i, icon: "🦴" },
+  { match: /^rocks$/i, icon: "🪨" },
+  { match: /^light$/i, icon: "💡" },
+  { match: /^forces and magnets$/i, icon: "🧲" },
   // English strands first: "Writing - Composition" contains "position" and
   // would otherwise take the Position and Direction compass.
   { match: /^spelling\b/i, icon: "🔤" },
@@ -593,6 +604,7 @@ function CurriculumPage() {
                           );
                         })}
                       </div>
+                      {sticker?.earned && <PracticalActivityCard activity={completedScienceActivity({ year, subject, categoryId: category.id, topicId: topic.id, progress, isBuilt })} />}
                     </article>
                   );
                 })}
