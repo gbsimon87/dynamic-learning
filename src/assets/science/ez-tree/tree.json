@@ -1,0 +1,30 @@
+{
+  "source": "dgreenheck/ez-tree",
+  "commit": "dcf309bd86bd521083d9c70f01f2de45fdc7c457",
+  "credit": "Tree: grown with ez-tree © Daniel Greenheck, MIT",
+  "file": "tree-blossom.webp",
+  "width": 458,
+  "height": 748,
+  "anchors": {
+    "trunk": {
+      "x": 0.4883,
+      "y": 0.889
+    },
+    "leaves": {
+      "x": 0.9321,
+      "y": 0.4469
+    },
+    "blossom": {
+      "x": 0.7637,
+      "y": 0.3453
+    },
+    "base": {
+      "x": 0.4687,
+      "y": 0.9876
+    },
+    "fork": {
+      "x": 0.4687,
+      "y": 0.7686
+    }
+  }
+}

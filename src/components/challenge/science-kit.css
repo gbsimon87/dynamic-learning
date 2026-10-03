@@ -33,6 +33,7 @@
 .science-needs-guide { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .7rem; text-align: left; margin: 1rem 0; }
 .science-needs-guide > div { border: 2px solid var(--ck-border); border-radius: 12px; padding: .8rem; }
 .science-needs-guide span { display: block; font-size: 1.8rem; }
+.science-needs-guide img { display: block; width: 48px; height: 48px; margin-bottom: .3rem; }
 .science-needs-guide p { line-height: 1.5; }
 .science-sequence-pictures { display: flex; justify-content: center; align-items: end; gap: 1rem; }
 .science-sequence-pictures > div { width: min(35%, 140px); }
@@ -162,3 +163,73 @@ body.dark .science-water-bottom { stop-color: #1f4357; }
 
 /* Soil component cards. */
 .science-soil-card { fill: var(--ck-panel); stroke: var(--ck-border); stroke-width: 2; }
+
+/* ===== Plants (docs/science-curriculum/PLANT_DIAGRAMS_PLAN.md) =====
+   Natural colours as tokens, a little deeper in the dark theme. */
+:root, body.light {
+  --sci-soil-top: #c99a6b; --sci-soil-bottom: #8d6544;
+  --sci-leaf-light: #8fd16a; --sci-leaf-dark: #4f9a36; --sci-stem: #5fa840;
+  --sci-plant-ink: #2f4a22; --sci-seed: #b07a45; --sci-seed-young: #b9d98a;
+  --sci-glass: #dff1fb; --sci-dye-water: #9ec9ef;
+}
+body.dark {
+  --sci-soil-top: #74543a; --sci-soil-bottom: #4a3422;
+  --sci-leaf-light: #7cc257; --sci-leaf-dark: #3f8429; --sci-stem: #57a03a;
+  --sci-plant-ink: #1d3015; --sci-seed: #c08a52; --sci-seed-young: #a6cc74;
+  --sci-glass: #2b4552; --sci-dye-water: #3f6f9c;
+}
+.science-soil-top { stop-color: var(--sci-soil-top); }
+.science-soil-bottom { stop-color: var(--sci-soil-bottom); }
+.science-leaf-light { stop-color: var(--sci-leaf-light); }
+.science-leaf-dark { stop-color: var(--sci-leaf-dark); }
+.science-soil-pebble { fill: #000; opacity: .13; }
+.science-soil-surface { fill: none; stroke: #5a3f28; stroke-width: 3; stroke-linecap: round; }
+.science-plant-leaf path:first-child { stroke: var(--sci-plant-ink); stroke-width: 2; stroke-linejoin: round; }
+.science-plant-vein { fill: none; stroke: var(--sci-plant-ink); stroke-width: 1.2; opacity: .5; stroke-linecap: round; }
+.science-plant-stem path { fill: none; stroke-linecap: round; }
+.science-plant-stem .is-outline { stroke: var(--sci-plant-ink); }
+.science-plant-stem .is-fill { stroke: var(--sci-stem); }
+.science-plant-stem .is-shine { stroke: #fff; opacity: .35; }
+/* A soft light edge keeps the thin roots readable on dark soil. */
+[data-plant-part="roots"] { filter: drop-shadow(0 0 1.2px rgba(255, 244, 222, .85)); }
+.science-glass-edge { stop-color: var(--sci-glass); stop-opacity: .75; }
+.science-glass-middle { stop-color: var(--sci-glass); stop-opacity: .2; }
+.science-jar { stroke: var(--ck-text); stroke-width: 3; stroke-linejoin: round; }
+.science-jar-shine { fill: none; stroke: #fff; stroke-width: 4; stroke-linecap: round; opacity: .6; }
+.science-jar-water { fill: var(--sci-dye-water); }
+.science-cut-end { fill: none; stroke: var(--sci-plant-ink); stroke-width: 3; stroke-linecap: round; }
+.science-seed-body { fill: var(--sci-seed); stroke: #3b2a20; stroke-width: 2; }
+.science-seed.is-young .science-seed-body { fill: var(--sci-seed-young); stroke: var(--sci-plant-ink); }
+.science-seed-scar { fill: none; stroke: #3b2a20; stroke-width: 1.5; stroke-linecap: round; opacity: .55; }
+.science-case-skin { stroke: #3b2a20; stroke-width: 3; stroke-linejoin: round; }
+.science-case-skin.is-capsule { fill: #9cc366; }
+.science-case-skin.is-pod { fill: #b5cf74; }
+.science-case-skin.is-fruit { fill: #e2605a; }
+.science-case-flesh { fill: #f7efd6; stroke: #3b2a20; stroke-width: 1.5; opacity: .95; }
+/* Seed dispersal specimens. */
+.science-tuft-hairs path { fill: none; stroke: var(--ck-text); stroke-width: 1.3; stroke-linecap: round; opacity: .75; }
+.science-tuft-stalk { fill: none; stroke: #8a6a3e; stroke-width: 2.5; stroke-linecap: round; }
+.science-seed-ribs { fill: none; stroke: #3b2a20; stroke-width: 1; opacity: .5; }
+.science-wing-base { stop-color: #c9a46a; }
+.science-wing-tip { stop-color: #ead8a8; }
+.science-wing { stroke: #5a4024; stroke-width: 2.5; stroke-linejoin: round; }
+.science-wing-veins { fill: none; stroke: #8a6a3e; stroke-width: 1.4; opacity: .7; }
+.science-samara-seed { fill: #9c8a4a; stroke: #3b2a20; stroke-width: 2.5; }
+.science-burr-spines path { fill: none; stroke: #6b4f2a; stroke-width: 2.6; stroke-linecap: round; }
+.science-burr-body { fill: #a07a46; stroke: #3b2a20; stroke-width: 2.5; }
+.science-water-line { fill: none; stroke: #2f6f94; stroke-width: 2.5; }
+.science-pod { fill: #d2b071; stroke: #3b2a20; stroke-width: 3; stroke-linejoin: round; }
+.science-pod-window { fill: #f3e4c0; stroke: #6b4f2a; stroke-width: 1.5; }
+.science-pod-seam { fill: none; stroke: #6b4f2a; stroke-width: 2; stroke-dasharray: 6 4; }
+.science-pod-stalk, .science-branch { fill: none; stroke: #6b4f2a; stroke-width: 5; stroke-linecap: round; }
+.science-branch { stroke-width: 9; }
+.science-ground { fill: none; stroke: #6b4f2a; stroke-width: 4; }
+.science-grass { fill: none; stroke: var(--sci-stem); stroke-width: 2.5; stroke-linecap: round; }
+.science-plant-leaf-flat { fill: var(--sci-leaf-light); stroke: var(--sci-plant-ink); stroke-width: 2; }
+.science-fruit-core { fill: #efe2bd; stroke: #b8a274; stroke-width: 1.5; }
+.science-husk { fill: #8a5a33; stroke: #3b2a20; stroke-width: 2.5; }
+.science-husk-fibres path { fill: none; stroke: #c49a6c; stroke-width: 1.6; stroke-linecap: round; opacity: .8; }
+body.dark .science-burr-spines path,
+body.dark .science-branch,
+body.dark .science-pod-stalk,
+body.dark .science-ground { stroke: #b48c5c; }

@@ -913,6 +913,17 @@ the licence files, a size budget (≤120 KB per file, ≤1.5 MB in total) and th
 label anchors. Plan and rationale:
 [docs/science-curriculum/DIAGRAM_ASSETS_PLAN.md](science-curriculum/DIAGRAM_ASSETS_PLAN.md).
 
+**Plants diagrams (2026-10-04):** the five Plants topics follow the same
+pattern. Real roots and a cut-open flower come from Bioicons (CC BY 4.0, by
+Frédéric Bouché), and a flowering tree is grown once with ez-tree's generator
+(`scripts/science-assets/render-trees.mjs`, which writes WebP and label
+anchors). Blooms, pollinators, the seedling and the needs-guide pictures come
+from Fluent Emoji. The stems, leaves and seed cases are drawn in the app, as
+are the dispersal specimens (tuft, wing, burr, husk, pod, cut fruit). Geometry
+and label anchors live in `src/data/plantArt.js` (tested); the drawing pieces
+are in `PlantArt.jsx`. A dispersal picture shows features only, never the
+method. Plan: [docs/science-curriculum/PLANT_DIAGRAMS_PLAN.md](science-curriculum/PLANT_DIAGRAMS_PLAN.md).
+
 Science is registered for Year 3 with five source-ordered categories, 21 topics
 and 84 challenge slots. **Parts of Flowering Plants**, **What Plants Need to Grow**, **Water Transport
 in Plants**, **Pollination and Seed Formation** and **Seed Dispersal** each have all four challenges implemented (Plants 20/20). **Nutrition for Animals and Humans**, **Skeletons for Support and Protection** and **Muscles and Movement** add twelve challenges (Animals 12/12),

@@ -1,0 +1,191 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Render trees</title>
+<script type="importmap">{ "imports": { "three": "/three.module.js" } }</script>
+<body style="margin:0;background:transparent">
+<script type="module">
+import * as THREE from "three";
+import { Tree } from "/ez-tree/tree.js";
+import TreeOptions from "/ez-tree/options.js";
+
+/* A small flowering tree in the bones' "storybook" look: toon shading in
+   three steps, a warm dark outline on the wood, leaf sprigs drawn with their
+   own outline, and separate pink blossoms so a label can point at one. Front
+   view, orthographic, transparent background. */
+const BARK = 0x8a5a3b;
+const OUTLINE = 0x3b2a20;
+const PX = 15; // pixels per tree unit
+
+try {
+  const options = new TreeOptions();
+  Object.assign(options, { seed: 30895, type: "deciduous" });
+  Object.assign(options.branch, {
+    levels: 3,
+    angle: { 1: 48, 2: 52, 3: 32 },
+    children: { 0: 5, 1: 3, 2: 3 },
+    force: { direction: { x: 0, y: 1, z: 0 }, strength: 0.012 },
+    gnarliness: { 0: 0.04, 1: -0.06, 2: 0.1, 3: 0.09 },
+    length: { 0: 26, 1: 9, 2: 7, 3: 4 },
+    radius: { 0: 1.5, 1: 0.65, 2: 0.6, 3: 0.8 },
+    sections: { 0: 14, 1: 9, 2: 7, 3: 2 },
+    segments: { 0: 12, 1: 7, 2: 5, 3: 3 },
+    start: { 1: 0.42, 2: 0.2, 3: 0.2 },
+    taper: { 0: 0.6, 1: 0.55, 2: 0.65, 3: 0.75 },
+    twist: { 0: 0, 1: 0.2, 2: 0, 3: 0 },
+  });
+  Object.assign(options.bark, { textured: false, tint: 0xffffff });
+  Object.assign(options.leaves, { billboard: "single", angle: 40, count: 9, start: 0.1, size: 2.6, sizeVariance: 0.3, alphaTest: 0.5, roundedNormals: false });
+
+  const tree = new Tree(options);
+  tree.generate();
+
+  const gradient = new THREE.DataTexture(new Uint8Array([110, 185, 255]), 3, 1, THREE.RedFormat);
+  gradient.minFilter = gradient.magFilter = THREE.NearestFilter;
+  gradient.needsUpdate = true;
+
+  // Wood: toon fill plus an inverted-hull outline.
+  tree.branchesMesh.material = new THREE.MeshToonMaterial({ color: BARK, gradientMap: gradient });
+  const hull = new THREE.Mesh(tree.branchesMesh.geometry, new THREE.ShaderMaterial({
+    side: THREE.BackSide,
+    uniforms: { thickness: { value: 0.09 }, color: { value: new THREE.Color(OUTLINE) } },
+    vertexShader: "uniform float thickness; void main(){ vec3 p = position + normalize(normal) * thickness; gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0); }",
+    fragmentShader: "uniform vec3 color; void main(){ gl_FragColor = vec4(color, 1.0); }",
+  }));
+  tree.add(hull);
+
+  // A sprig of three outlined leaves, drawn once and used for every leaf quad.
+  const sprig = document.createElement("canvas");
+  sprig.width = sprig.height = 256;
+  const g = sprig.getContext("2d");
+  const leaf = (x, y, angle, length, fill) => {
+    g.save();
+    g.translate(x, y);
+    g.rotate(angle);
+    g.beginPath();
+    g.moveTo(0, 0);
+    g.bezierCurveTo(length * 0.35, -length * 0.32, length * 0.8, -length * 0.22, length, 0);
+    g.bezierCurveTo(length * 0.8, length * 0.22, length * 0.35, length * 0.32, 0, 0);
+    g.fillStyle = fill;
+    g.fill();
+    g.lineWidth = 7;
+    g.strokeStyle = "#2f4a22";
+    g.stroke();
+    g.beginPath();
+    g.moveTo(length * 0.1, 0);
+    g.lineTo(length * 0.85, 0);
+    g.lineWidth = 4;
+    g.strokeStyle = "#3f6b2c";
+    g.stroke();
+    g.restore();
+  };
+  // The quad's base is at the bottom centre of the texture.
+  leaf(128, 250, -Math.PI / 2, 236, "#6fb04a");
+  leaf(128, 200, -Math.PI / 2 - 0.75, 150, "#5c9e3e");
+  leaf(128, 200, -Math.PI / 2 + 0.75, 150, "#7cc152");
+  const leafTexture = new THREE.CanvasTexture(sprig);
+  leafTexture.colorSpace = THREE.SRGBColorSpace;
+  tree.leavesMesh.material = new THREE.MeshToonMaterial({ map: leafTexture, gradientMap: gradient, alphaTest: 0.5, side: THREE.DoubleSide });
+
+  // Blossoms: flat five-petal flowers facing the camera, at some leaf bases.
+  const bloom = document.createElement("canvas");
+  bloom.width = bloom.height = 128;
+  const b = bloom.getContext("2d");
+  b.translate(64, 64);
+  for (let i = 0; i < 5; i += 1) {
+    b.save();
+    b.rotate((i * 2 * Math.PI) / 5);
+    b.beginPath();
+    b.ellipse(0, -30, 20, 27, 0, 0, Math.PI * 2);
+    b.fillStyle = "#f7a8c8";
+    b.fill();
+    b.lineWidth = 5;
+    b.strokeStyle = "#8a3358";
+    b.stroke();
+    b.restore();
+  }
+  b.beginPath();
+  b.arc(0, 0, 14, 0, Math.PI * 2);
+  b.fillStyle = "#ffd447";
+  b.fill();
+  b.lineWidth = 4;
+  b.strokeStyle = "#8a5a00";
+  b.stroke();
+  const bloomTexture = new THREE.CanvasTexture(bloom);
+  bloomTexture.colorSpace = THREE.SRGBColorSpace;
+  const bloomMaterial = new THREE.MeshBasicMaterial({ map: bloomTexture, alphaTest: 0.5, transparent: false });
+  const blossoms = [];
+  tree.skeleton.leaves.forEach((leafAt, index) => {
+    if (index % 5 !== 2) return;
+    const size = 2;
+    const quad = new THREE.Mesh(new THREE.PlaneGeometry(size, size), bloomMaterial);
+    quad.position.copy(leafAt.origin).add(new THREE.Vector3(0, 0.6, 2));
+    tree.add(quad);
+    blossoms.push(quad);
+  });
+
+  const scene = new THREE.Scene();
+  scene.add(new THREE.AmbientLight(0xffffff, 1.5));
+  const sun = new THREE.DirectionalLight(0xffffff, 2.2);
+  sun.position.set(-0.6, 1, 1.2);
+  scene.add(sun, tree);
+  scene.updateMatrixWorld(true);
+
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -500, 500);
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+  renderer.setClearColor(0x000000, 0);
+  document.body.appendChild(renderer.domElement);
+
+  window.renderTree = () => {
+    const box = new THREE.Box3().setFromObject(tree);
+    const pad = 0.6;
+    const width = Math.ceil((box.max.x - box.min.x + 2 * pad) * PX);
+    const height = Math.ceil((box.max.y - box.min.y + 2 * pad) * PX);
+    const cx = (box.max.x + box.min.x) / 2, cy = (box.max.y + box.min.y) / 2;
+    const halfW = width / PX / 2, halfH = height / PX / 2;
+    camera.left = -halfW; camera.right = halfW; camera.top = halfH; camera.bottom = -halfH;
+    camera.position.set(cx, cy, 100);
+    camera.lookAt(cx, cy, 0);
+    camera.updateProjectionMatrix();
+    renderer.setSize(width, height, false);
+    renderer.render(scene, camera);
+
+    const project = (v) => {
+      const p = v.clone().project(camera);
+      return { x: +((p.x + 1) / 2).toFixed(4), y: +((1 - p.y) / 2).toFixed(4) };
+    };
+    // Trunk: a little above the ground, below any branch. It grows straight up
+    // from the origin; aim a little right of its middle so the label line
+    // ends on the wood.
+    const trunkY = options.branch.length[0] * options.branch.start[1] * 0.45;
+    const trunk = new THREE.Vector3(options.branch.radius[0] * 0.4, trunkY, 0);
+    // Leaves and blossom: the right-most of each in the middle band of the
+    // canopy, so a label line on the right does not cross the tree. A leaf is
+    // only chosen where no blossom covers it.
+    const top = box.max.y, bottom = options.branch.length[0] * options.branch.start[1];
+    // Blossom from the upper part of the canopy, leaves from the lower part,
+    // so their two labels sit apart.
+    const band = (from, to) => (v) => v.y > bottom + (top - bottom) * from && v.y < bottom + (top - bottom) * to;
+    const rightMost = (points, inBand) => points.filter(inBand).reduce((a, v) => (v.x > a.x ? v : a));
+    const leafPos = tree.leavesMesh.geometry.getAttribute("position");
+    const leafCentres = [];
+    for (let i = 0; i + 3 < leafPos.count; i += 4) {
+      const c = new THREE.Vector3();
+      for (let k = 0; k < 4; k += 1) c.add(new THREE.Vector3().fromBufferAttribute(leafPos, i + k));
+      leafCentres.push(c.divideScalar(4));
+    }
+    const clear = leafCentres.filter((v) => blossoms.every((q) => Math.hypot(q.position.x - v.x, q.position.y - v.y) > 1.6));
+    const anchors = {
+      trunk: project(trunk),
+      leaves: project(rightMost(clear, band(0.05, 0.5))),
+      blossom: project(rightMost(blossoms.map((q) => q.position), band(0.55, 0.9))),
+      base: project(new THREE.Vector3(0, 0, 0)),
+      // Where the first branch leaves the trunk: the top of the bare trunk.
+      fork: project(new THREE.Vector3(0, options.branch.length[0] * options.branch.start[1], 0)),
+    };
+    return { dataUrl: renderer.domElement.toDataURL("image/webp", 0.9), width, height, anchors };
+  };
+  window.ready = true;
+} catch (error) {
+  window.failed = String(error?.stack ?? error);
+}
+</script>

@@ -18,7 +18,8 @@ dependency. The current `*Figure.jsx` components stay as a fallback.
 | How Fossils Form | `FossilFormationFigure` (rectangles) | Rock layer textures (C, D), shell, bone, leaf and dinosaur art (E) |
 | What Soil Is Made From | `SoilCompositionFigure` (boxes) | Soil and sediment textures (D), worm, leaf, droplet and mushroom art (E) |
 
-Plants, light and forces are out of scope for this plan.
+Light and forces are out of scope for this plan. Plants followed later, in
+[PLANT_DIAGRAMS_PLAN.md](PLANT_DIAGRAMS_PLAN.md).
 
 ---
 

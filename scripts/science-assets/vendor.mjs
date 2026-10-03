@@ -63,6 +63,21 @@ function patternLines(svg, file) {
   return out;
 }
 
+/**
+ * Some illustrations sit on a drawn background frame. Remove each element that
+ * starts with one of the file's `$strip` prefixes (up to its closing "/>").
+ * Fails loudly if a prefix is not found, so a changed file cannot slip through.
+ */
+function stripFrame(svg, prefixes, file) {
+  let out = svg;
+  for (const prefix of prefixes) {
+    const start = out.indexOf(prefix);
+    if (start === -1) throw new Error(`${file}: expected an element starting ${prefix}`);
+    out = out.slice(0, start) + out.slice(out.indexOf("/>", start) + 2);
+  }
+  return out;
+}
+
 const manifest = { sources: {}, files: [] };
 for (const [id, source] of Object.entries(SOURCES)) {
   if (id.startsWith("$")) continue;
@@ -87,6 +102,7 @@ for (const [id, source] of Object.entries(SOURCES)) {
       name = name.replace(/\.ts$/, ".js");
     }
     if (name.endsWith(".svg")) {
+      if (source.transform === "strip-frame" && source.$strip[name]) body = Buffer.from(stripFrame(body.toString("utf8"), source.$strip[name], file));
       body = Buffer.from(optimize(body.toString("utf8"), { ...SVGO, path: name }).data);
       if (source.transform === "pattern-lines") body = Buffer.from(patternLines(body.toString("utf8"), file));
     }

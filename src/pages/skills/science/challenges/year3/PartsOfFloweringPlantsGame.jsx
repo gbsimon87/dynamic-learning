@@ -3,12 +3,15 @@ import ChallengeShell from "../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../components/challenge/ChoiceGrid";
 import DiagramLabelBoard from "../../../../../components/challenge/DiagramLabelBoard";
 import PlantFigure from "../../../../../components/challenge/PlantFigure";
+import PlantIllustration from "../../../../../components/challenge/PlantIllustration";
 import HintNote from "../../../../../components/challenge/HintNote";
 import SpeakButton from "../../../../../components/challenge/SpeakButton";
 import TileBuilder from "../../../../../components/challenge/TileBuilder";
 import { placeDiagramLabel } from "../../../../../data/diagramPlacement.js";
+import { isIllustrated } from "../../../../../data/scienceDiagrams";
 import { buildPartsOfFloweringPlantsQuestions, GLOSS, JOBS, PARTS, PART_LABELS, isPlantDiagramCorrect, isPlantExplanationCorrect } from "../../../../../data/challenges/science/partsOfFloweringPlants.js";
 
+const Plant = isIllustrated() ? PlantIllustration : PlantFigure;
 const TITLES = ["Plant parts and their jobs", "Match a job to the diagram", "Record a labelled plant diagram", "Explain what you observed"];
 function PartsOfFloweringPlantsGame({ level, onComplete }) {
   const questions = useMemo(() => buildPartsOfFloweringPlantsQuestions(level, Math.random), [level]);
@@ -39,9 +42,9 @@ function PlantRound({ question, submit, locked, hint }) {
     <p className="challenge-prompt">{prompt}</p>
     <SpeakButton text={`${prompt} ${level === 4 ? question.observation : question.diagram.description} ${GLOSS}`} label="Hear the question" />
     {level === 3 ? <DiagramLabelBoard
-      diagram={<PlantFigure diagram={question.diagram} targets={question.targets} />}
+      diagram={<Plant diagram={question.diagram} targets={question.targets} />}
       targets={question.targets} labels={question.labels} placement={placement} disabled={locked}
-      onPlace={(labelId, targetId) => { if (!locked && !accepted.current) setPlacement((previous) => placeDiagramLabel(previous, labelId, targetId, question.labels, question.targets)); }} /> : <PlantFigure diagram={question.diagram} targets={question.targets} named={level === 1} highlight={level === 1 ? question.part : null} />}
+      onPlace={(labelId, targetId) => { if (!locked && !accepted.current) setPlacement((previous) => placeDiagramLabel(previous, labelId, targetId, question.labels, question.targets)); }} /> : <Plant diagram={question.diagram} targets={question.targets} named={level === 1} highlight={level === 1 ? question.part : null} />}
     {level === 4 && <><div className="science-observation"><strong>Observation card</strong><p>{question.observation}</p></div>
       <p>{starter}<strong>{placed.length ? question.tiles.find((tile) => tile.id === placed[0])?.label : "…"}</strong></p>
       <TileBuilder tiles={question.tiles} placed={placed} kind="words" disabled={locked} label="Your explanation ending"

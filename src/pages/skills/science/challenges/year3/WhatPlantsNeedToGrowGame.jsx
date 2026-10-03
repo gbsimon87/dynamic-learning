@@ -9,8 +9,16 @@ import SpeakButton from "../../../../../components/challenge/SpeakButton";
 import TileBuilder from "../../../../../components/challenge/TileBuilder";
 import { buildWhatPlantsNeedToGrowQuestions, NEEDS, isFairTestCorrect } from "../../../../../data/challenges/science/whatPlantsNeedToGrow.js";
 import { initialGrowthInvestigation, reduceGrowthInvestigation } from "../../../../../data/challenges/science/growthInvestigation.js";
+import { CREDITS, fluent } from "../../../../../components/challenge/scienceArt.js";
+import { isIllustrated } from "../../../../../data/scienceDiagrams";
 import "../../../../../components/challenge/science-kit.css";
 
+// Illustrated needs guide: a Fluent picture for each requirement.
+const NEED_PICTURES = { air: "wind_face", light: "sun", water: "droplet", nutrients: "seedling", room: "potted_plant" };
+function NeedIcon({ need }) {
+  const src = isIllustrated() && fluent(NEED_PICTURES[need.id]);
+  return src ? <img src={src} alt="" width="48" height="48" /> : <span aria-hidden="true">{need.icon}</span>;
+}
 const TITLES = ["What growing plants need", "Different plants, different care", "Build a fair comparison", "Investigate plant growth"];
 export default function WhatPlantsNeedToGrowGame({ level, onComplete }) {
   const questions = useMemo(() => buildWhatPlantsNeedToGrowQuestions(level, Math.random), [level]);
@@ -37,7 +45,7 @@ function ShortRound({ question, submit, locked, hint }) {
     <Vocabulary />
     <p className="challenge-prompt">{question.prompt}</p>
     <SpeakButton text={`${question.prompt} ${question.evidence ?? question.guide ?? question.comparison}`} label="Hear the question" />
-    {question.level === 1 && <><div className="science-needs-guide">{NEEDS.map((need) => <div key={need.id}><span aria-hidden="true">{need.icon}</span><strong>{need.label}</strong><p>{need.gloss}</p></div>)}</div><p className="science-observation">{question.evidence}</p></>}
+    {question.level === 1 && <><div className="science-needs-guide">{NEEDS.map((need) => <div key={need.id}><NeedIcon need={need} /><strong>{need.label}</strong><p>{need.gloss}</p></div>)}</div>{isIllustrated() && <p className="science-credit">{CREDITS.fluent}</p>}<p className="science-observation">{question.evidence}</p></>}
     {question.level === 2 && <div className="science-observation"><strong>Care card for these flowering plant types</strong><p>{question.guide}</p></div>}
     {question.level === 3 ? <FairTestBoard prompt={question.prompt} comparison={question.comparison} cards={question.cards} placement={placement} disabled={locked} onPlace={(id, bin) => {
       if (locked || accepted.current || !question.cards.some((card) => card.id === id) || !["change", "keep", null].includes(bin)) return;

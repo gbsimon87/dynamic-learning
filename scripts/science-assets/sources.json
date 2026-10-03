@@ -36,7 +36,15 @@
       "assets/Fallen leaf/Color/fallen_leaf_color.svg",
       "assets/Wind face/Color/wind_face_color.svg",
       "assets/Droplet/Color/droplet_color.svg",
-      "assets/Magnifying glass tilted left/Color/magnifying_glass_tilted_left_color.svg"
+      "assets/Magnifying glass tilted left/Color/magnifying_glass_tilted_left_color.svg",
+      "assets/Blossom/Color/blossom_color.svg",
+      "assets/Seedling/Color/seedling_color.svg",
+      "assets/Potted plant/Color/potted_plant_color.svg",
+      "assets/Sun/Color/sun_color.svg",
+      "assets/Honeybee/Color/honeybee_color.svg",
+      "assets/Butterfly/Color/butterfly_color.svg",
+      "assets/Fly/Color/fly_color.svg",
+      "assets/Chestnut/Color/chestnut_color.svg"
     ],
     "outputs": "src/assets/science/fluentui-emoji"
   },
@@ -74,5 +82,43 @@
       "70000": "limestone"
     },
     "transform": "pattern-lines"
+  },
+  "bioicons": {
+    "repo": "duerrsimon/bioicons",
+    "commit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
+    "license": "CC-BY-4.0",
+    "attribution": "Arabidopsis flower and plant illustrations by Frédéric Bouché, from Bioicons (https://bioicons.com, https://github.com/duerrsimon/bioicons), licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Adapted: the flower's background frame is removed; only the plant's roots are shown.",
+    "credit": "Flower and roots: Frédéric Bouché via Bioicons, CC BY 4.0",
+    "files": [
+      "static/icons/cc-by-4.0/LICENSE",
+      "static/icons/cc-by-4.0/Plants_Algae/Frédéric_Bouché/Arabidopsis_Flower.svg",
+      "static/icons/cc-by-4.0/Plants_Algae/Frédéric_Bouché/Arabidopsis_plant.svg"
+    ],
+    "transform": "strip-frame",
+    "$strip": {
+      "Arabidopsis_Flower.svg": [
+        "<rect x=\"7\" y=\"7.8\" class=\"st0\"",
+        "<path d=\"M279.5,285.8"
+      ]
+    },
+    "outputs": "src/assets/science/bioicons"
+  },
+  "ez-tree": {
+    "repo": "dgreenheck/ez-tree",
+    "commit": "dcf309bd86bd521083d9c70f01f2de45fdc7c457",
+    "license": "MIT",
+    "attribution": "ez-tree © Daniel Greenheck, MIT License (https://github.com/dgreenheck/ez-tree). Its tree generator (src/lib) grew the flowering tree, rendered once as a flat illustration by scripts/science-assets/render-trees.mjs; no ez-tree code ships in the app.",
+    "credit": "Tree: grown with ez-tree © Daniel Greenheck, MIT",
+    "files": [
+      "LICENSE",
+      "src/lib/tree.js",
+      "src/lib/options.js",
+      "src/lib/branch.js",
+      "src/lib/enums.js",
+      "src/lib/rng.js",
+      "src/lib/trellis.js"
+    ],
+    "outputs": "src/assets/science/ez-tree",
+    "renderedBy": "scripts/science-assets/render-trees.mjs"
   }
 }
