@@ -1,5 +1,5 @@
 {
-  "$comment": "Every third-party file the Science diagrams use, pinned to a commit. Scripts in this folder fetch ONLY what is listed here; nothing is a runtime dependency. See docs/science-curriculum/DIAGRAM_ASSETS_PLAN.md.",
+  "$comment": "Every third-party file the Science diagrams use, pinned to a commit. Scripts in this folder fetch ONLY what is listed here; nothing is a runtime dependency. See docs/PROJECT_KNOWLEDGE.md (Year 3 Science, illustrated diagrams).",
   "bodyparts3d": {
     "repo": "ashemag/human-atlas",
     "commit": "1c38bf35c254a891200d3cedecfd57abebe83d8d",

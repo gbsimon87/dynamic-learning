@@ -2,8 +2,8 @@
  * Which drawing style the Science diagrams use.
  *
  * "illustrated" uses the third-party artwork listed in
- * src/assets/science/manifest.json (see docs/science-curriculum/
- * DIAGRAM_ASSETS_PLAN.md). "classic" uses the original hand-built SVG
+ * src/assets/science/manifest.json (see docs/PROJECT_KNOWLEDGE.md,
+ * "Year 3 Science"). "classic" uses the original hand-built SVG
  * `*Figure` components, which stay as the fallback: an illustration whose
  * image fails to load also falls back to its classic figure on its own.
  */

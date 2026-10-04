@@ -42,8 +42,8 @@ comment block and add the route inside the correct `// === X Skills ===` group.
 Routes are **flat and kebab-case** — `/word-builder`, not `/skills/english/word-builder`.
 
 Keep the route short and child-guessable. Match the route to the name where
-reasonable, and check `docs/PROJECT_IDEAS.md` and `notes.md` — many games already
-have an intended route recorded there; reuse it rather than inventing a new one.
+reasonable, and check `docs/PROJECT_IDEAS.md` (row 20 and `docs/notes_geography.md`) —
+many games already have an intended route recorded there; reuse it rather than inventing a new one.
 
 ### 3. Register the link
 
@@ -68,7 +68,7 @@ adds a capability the summary doesn't cover, extend it.
 - If the game has modes (practice / multiple-choice / timed), make the mode
   switch **fully reset game state** — stale state across mode switches is the
   single most common bug in this codebase (see the Number Bonds and Counting
-  Numbers entries in `notes.md`).
+  Numbers entries in `docs/PROJECT_KNOWLEDGE.md` §6).
 
 ## Styling
 

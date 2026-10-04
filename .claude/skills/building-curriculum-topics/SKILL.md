@@ -176,6 +176,7 @@ quoted evidence appearing verbatim in its passage.
 | shuffle / sample / isSameAnswer / tokenise / bareWord | `src/data/challenges/english/shared.js` |
 | One builder per topic | `src/data/challenges/english/<topic>.js` + `.test.js` |
 | One game per topic, shared by its four challenge files | `src/pages/skills/english/challenges/year3/<Pascal>Game.jsx` |
+| Year 4 equivalents | Builder `src/data/challenges/english/year4<CamelTopic>.js` (the `year4` prefix stops collisions with Year 3 modules such as `dictation.js`); game and challenges under `challenges/year4/` |
 
 **The English kit** (in `src/components/challenge/`, styled in `english-kit.css`):
 

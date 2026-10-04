@@ -97,7 +97,7 @@
 .science-material-start { fill: none; stroke: var(--ck-text); stroke-width: 2; stroke-dasharray: 4 4; }
 .science-magnet-body { fill: var(--ck-panel); stroke: var(--ck-text); stroke-width: 3; }
 
-/* ===== Illustrated diagrams (docs/science-curriculum/DIAGRAM_ASSETS_PLAN.md) =====
+/* ===== Illustrated diagrams (docs/PROJECT_KNOWLEDGE.md, "Year 3 Science") =====
    Third-party artwork sits on a soft card so the transparent pictures read on
    both themes; callouts reuse .science-callout. */
 .science-illustration { max-width: 540px; }
@@ -164,7 +164,7 @@ body.dark .science-water-bottom { stop-color: #1f4357; }
 /* Soil component cards. */
 .science-soil-card { fill: var(--ck-panel); stroke: var(--ck-border); stroke-width: 2; }
 
-/* ===== Plants (docs/science-curriculum/PLANT_DIAGRAMS_PLAN.md) =====
+/* ===== Plants (docs/PROJECT_KNOWLEDGE.md, "Year 3 Science") =====
    Natural colours as tokens, a little deeper in the dark theme. */
 :root, body.light {
   --sci-soil-top: #c99a6b; --sci-soil-bottom: #8d6544;

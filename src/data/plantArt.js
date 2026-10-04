@@ -1,6 +1,6 @@
 /**
- * Geometry for the illustrated Plants diagrams (docs/science-curriculum/
- * PLANT_DIAGRAMS_PLAN.md). Pure, so the label anchors are tested: every label
+ * Geometry for the illustrated Plants diagrams (docs/PROJECT_KNOWLEDGE.md,
+ * "Year 3 Science"). Pure, so the label anchors are tested: every label
  * must point at a drawn part.
  *
  * The scene is 360 × 340 SVG units, like the classic PlantFigure. The plant

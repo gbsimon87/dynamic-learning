@@ -387,8 +387,6 @@ certificate step and the `counts.year` tally. There is no back-fill: on
 
 #### Celebrations (2026-09-29)
 
-Spec: [docs/superpowers/specs/2026-09-29-curriculum-celebrations-design.md](superpowers/specs/2026-09-29-curriculum-celebrations-design.md).
-
 - **Per answer** — `ChallengeShell` (every one of the 332 challenges runs through
   it) fills one segment of a progress bar, pops a tick, sparkles and plays a
   sound on a right answer (a different one on the last question); a wrong one
@@ -413,8 +411,7 @@ Spec: [docs/superpowers/specs/2026-09-29-curriculum-celebrations-design.md](supe
   streak!", a freeze-saved message, or a new-streak message, with the week dots;
   streaks of 3, 7, 14 and 30 get a bigger effect (`STREAK_MILESTONES`). Full order:
   headline → year progress → sticker → badge(s) → unlock → level-up → streak →
-  certificate → next. Spec:
-  [docs/superpowers/specs/2026-09-30-streaks-xp-whats-new-design.md](superpowers/specs/2026-09-30-streaks-xp-whats-new-design.md).
+  certificate → next.
 - **It only announces.** Progress and badges are written in `ProblemView`
   before the sequence mounts; its extra figures (`yearBefore`/`yearAfter`, the
   sticker) come from running the pure `completeChallenge` reducer on a copy.
@@ -910,8 +907,16 @@ in each caption. `DIAGRAM_STYLE` in `src/data/scienceDiagrams.js` switches
 back to the classic hand-built `*Figure` components, which also act as the
 automatic fallback when an image fails to load. Tests cover the manifest,
 the licence files, a size budget (≤120 KB per file, ≤1.5 MB in total) and the
-label anchors. Plan and rationale:
-[docs/science-curriculum/DIAGRAM_ASSETS_PLAN.md](science-curriculum/DIAGRAM_ASSETS_PLAN.md).
+label anchors. To re-fetch or re-render (outputs are committed, so builds
+never touch the network; the render scripts drive the installed Google Chrome
+through `playwright-core`), run the renders first, then `vendor.mjs`, which
+rebuilds `manifest.json`:
+
+```sh
+node scripts/science-assets/render-bones.mjs   # bone images and anchors
+node scripts/science-assets/render-trees.mjs   # tree image and anchors
+node scripts/science-assets/vendor.mjs         # SVGs and licences; rebuilds manifest.json
+```
 
 **Plants diagrams (2026-10-04):** the five Plants topics follow the same
 pattern. Real roots and a cut-open flower come from Bioicons (CC BY 4.0, by
@@ -922,7 +927,7 @@ from Fluent Emoji. The stems, leaves and seed cases are drawn in the app, as
 are the dispersal specimens (tuft, wing, burr, husk, pod, cut fruit). Geometry
 and label anchors live in `src/data/plantArt.js` (tested); the drawing pieces
 are in `PlantArt.jsx`. A dispersal picture shows features only, never the
-method. Plan: [docs/science-curriculum/PLANT_DIAGRAMS_PLAN.md](science-curriculum/PLANT_DIAGRAMS_PLAN.md).
+method.
 
 Science is registered for Year 3 with five source-ordered categories, 21 topics
 and 84 challenge slots. **Parts of Flowering Plants**, **What Plants Need to Grow**, **Water Transport
@@ -1233,8 +1238,7 @@ Two things to keep true:
   milestones.
 
 **The 2026-09-30 spec supersedes the old "streaks deliberately out of scope"
-stance.** Streaks, XP, levels and "something new" shipped in
-[docs/superpowers/specs/2026-09-30-streaks-xp-whats-new-design.md](superpowers/specs/2026-09-30-streaks-xp-whats-new-design.md).
+stance.** Streaks, XP, levels and "something new" shipped on 2026-09-30.
 The day stamps streaks were waiting for live in the **rewards document**, not
 progress, which is untouched.
 
@@ -1581,7 +1585,7 @@ passed, because the challenge agreed with itself.
 
 ## 6. Known Issues / Debt
 
-Carried over from [notes.md](notes.md) and code review. Verified against source
+Carried over from the original notes file and code review. Verified against source
 on 2026-08-09 — two previously-reported bugs no longer reproduce in current code
 and are marked below rather than silently dropped, in case they were fixed
 without a changelog note or the report was inaccurate.
@@ -1664,6 +1668,24 @@ without a changelog note or the report was inaccurate.
 13. **localStorage mode: a corrupt collection reads as empty and the next save
    replaces it** (2026-09-30 note). Existing behaviour for every collection
    (`dl.parents`, `dl.children`, `dl.progress`, `dl.rewards`), unchanged.
+14. **Fraction Fun accepts any N segments** (2026-08-21 audit, needs a
+   decision). `FractionFun.jsx` checks only how many segments are shaded, not
+   which, so scattered shading passes "Shade 3/8 of the bar". This is a
+   teaching call: for *fractions of a set* the check is already right and only
+   the prompt wording changes; for a *bar model* (the usual Year 2 picture) the
+   shading must run contiguously from one end and the check must require it.
+15. **Global CSS collisions, partly fixed** (2026-08-21 audit). `.wrapper`,
+   `.score`, `.prompt`, `.optionBtn` and `.startBtn` are still global in
+   `MathPractice.css`, `FindTheMissingNumber.css`, `WordBuilder.css` and
+   `SightWordPop.css`, and `FindTheMissingNumber.css` and `MathPractice.css`
+   each have a bare `select {}`. CitySpotlight, Counting Challenge 1 and the
+   challenge kit are already scoped. Scope one file at a time with a visual
+   check (see §9, "CSS is global").
+16. **Small leftovers kept deliberately** (2026-08-21 audit). `SynonymSafari.jsx`
+   uses an unnamespaced `'difficulty'` localStorage key (no live collision) and
+   a one-directional match test (works because both directions are always
+   emitted); `.skills-grid` has an unreachable `max-width: 1400px` inside a
+   1200px parent.
 
 **Resolved since last review:**
 
@@ -1736,8 +1758,17 @@ Done for real with Years 3–4 English (2026-10-01); follow that example:
 
 ## 9. Hard-Won Rules (from the 2026-08-21 audit)
 
-A full audit fixed 42 issues; see [ISSUES.md](ISSUES.md) for the itemised record. These are the
-patterns that caused real bugs, so they are now rules.
+A full audit fixed 42 of 44 issues (the two still open are §6 items 14 and 15).
+These are the patterns that caused real bugs, so they are now rules.
+
+**Checked in that audit and found correct**, so nobody re-investigates: the
+REST Countries v5 endpoint and key (`v3.1` is deprecated); progress I/O
+try/catch and the `hydrated` guard against a save-before-hydrate wipe; the
+challenge loader's "not yet available" fallback; the Leaflet lifecycle (no
+manual `L.map()`, `key={mode}` remounts); GeoJSON fetch error handling; every
+`to="/…"` link resolving to a route; theme persistence; WordBuilder's
+distractors and timers; `writtenNumber`'s full `1…775840` range (a library
+limit); and every `while` loop in the repo accounted for.
 
 ### Never sample in an unbounded loop
 `while (arr.length < n) { pick a random candidate; keep it if valid }` **froze the browser
@@ -1814,7 +1845,7 @@ every country having answered them all wrong.
 `.wrapper`, `.score`, `.prompt`, `.optionBtn` are each defined in several files; the last one
 bundled wins app-wide, so screens render differently depending on visit order. New components
 must scope every rule under a unique root class. ⚠️ Retro-fitting this is **still partly
-outstanding** — and do it file by file with visual checks: an automated regex pass emptied
+outstanding** (§6 item 15) — and do it file by file with visual checks: an automated regex pass emptied
 `MathPractice.css`.
 
 ### The REST Countries v5 API paginates at 25

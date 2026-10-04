@@ -5,8 +5,6 @@ into `dev`; no PRs). Last updated **2026-10-01**.
 
 | Document | What it is |
 |---|---|
-| [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) | The approved plan and every product decision (the decisions table). |
-| [TOPIC_BRIEF_YEAR3.md](TOPIC_BRIEF_YEAR3.md) / [TOPIC_BRIEF_YEAR4.md](TOPIC_BRIEF_YEAR4.md) | The self-contained brief for building a batch of topics: conventions, kit, rules, file names, tests, report format. |
 | [../curriculum/year-3-and-4-english.md](../curriculum/year-3-and-4-english.md) | Statutory text, the Year 3 / Year 4 split of Appendix 1, the boundaries, and the approved topic lists with the bullet each topic serves. |
 | [../curriculum/english-appendix-1-years-3-and-4.md](../curriculum/english-appendix-1-years-3-and-4.md) | Appendix 1 (spelling), verbatim. |
 | `.claude/skills/building-curriculum-topics/SKILL.md` | The "English topics" section: the kit, house rules, how to verify. |

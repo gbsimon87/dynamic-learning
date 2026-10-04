@@ -5,7 +5,6 @@
 **Difficulty:** High  
 **Backlog:** [Project Ideas, #17](../PROJECT_IDEAS.md)  
 **Progress:** [Implementation tracker](IMPLEMENTATION_TRACKER.md)  
-**Visual construction:** [Geometry and effects recipe](VISUAL_RECIPE.md)
 
 ## 1. Instructions for the implementing agent
 
@@ -370,8 +369,9 @@ user reset with React updates.
 
 ## 8. Rendering decisions
 
-Follow [VISUAL_RECIPE.md](VISUAL_RECIPE.md) for the camera basis, meteor path,
-contact math, patch UVs, thick fragments, cracks, and particle animation.
+The camera basis, meteor path,
+contact math, patch UVs, thick fragments, cracks, and particle animation live in
+`src/pages/skills/geography/meteorGeometry.js` (tested by T7–T10).
 
 The initial prototype uses a simple rock, contact sprite, and a small number of
 curved fragments, but already goes through the final controller/reset contracts.

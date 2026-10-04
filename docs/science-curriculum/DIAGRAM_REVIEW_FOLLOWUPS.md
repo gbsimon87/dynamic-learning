@@ -2,8 +2,8 @@
 
 **Status: open, not started.** Found in the bug and security review of commits
 `11c74a0`, `a792628`, `2de40f9` and `f4837d6` on 2026-10-04 (the illustrated
-anatomy, rocks and plants diagrams; see `DIAGRAM_ASSETS_PLAN.md` and
-`PLANT_DIAGRAMS_PLAN.md`). Nothing here is high severity, and nothing
+anatomy, rocks and plants diagrams; see PROJECT_KNOWLEDGE, "Year 3
+Science"). Nothing here is high severity, and nothing
 affects learner progress. The shipped app had no security flaw; the security
 items are in the offline asset scripts and the licence notices.
 

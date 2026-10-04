@@ -5,7 +5,6 @@
 physical-device performance evidence is the only required check still missing  
 **Implementation milestones complete:** 5 of 7 (M6/M7 blocked on device evidence)  
 **Plan:** [Implementation plan](IMPLEMENTATION_PLAN.md)  
-**Visual construction:** [Geometry and effects recipe](VISUAL_RECIPE.md)  
 **Backlog:** [Project Ideas, #17](../PROJECT_IDEAS.md)
 
 Use `Not started`, `In progress`, `Blocked`, or `Done`. Check a task only after
