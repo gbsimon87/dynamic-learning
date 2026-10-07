@@ -39,6 +39,7 @@ export default function SignUpFlow() {
   const [code, setCode] = useState("");
   const [codeError, setCodeError] = useState(null);
   const [needsNewCode, setNeedsNewCode] = useState(false);
+  const [codeInvalid, setCodeInvalid] = useState(false);
   const [shakeKey, setShakeKey] = useState(0);
   const [resendAt, setResendAt] = useState(0);
   const [clock, setClock] = useState(() => Date.now());
@@ -122,10 +123,14 @@ export default function SignUpFlow() {
         setFieldErrors({ email: "EMAIL_TAKEN" });
         moveTo(draft, { step: STEP.account }, "back");
       } else if (typed) {
-        setMood("puzzled");
-        setShakeKey((n) => n + 1);
-        setCode("");
-        setNeedsNewCode(reason === "CODE_EXPIRED" || reason === "CODE_ATTEMPTS_EXCEEDED");
+        // Only a code the server rejected clears the boxes; a hiccup keeps what was typed.
+        if (reason === "CODE_INCORRECT" || reason === "CODE_EXPIRED" || reason === "CODE_ATTEMPTS_EXCEEDED") {
+          setMood("puzzled");
+          setShakeKey((n) => n + 1);
+          setCode("");
+          setCodeInvalid(true);
+          setNeedsNewCode(reason !== "CODE_INCORRECT");
+        }
         setCodeError(errorMessage(reason, err?.details ?? {}));
       } else {
         setFieldErrors({ form: errorMessage(reason, err?.details ?? {}) });
@@ -137,13 +142,18 @@ export default function SignUpFlow() {
   };
 
   const sendCode = async () => {
+    if (submitting.current) return;
     const errors = accountErrors({ email: draft.email, ...secret });
     setFieldErrors(errors);
     if (Object.keys(errors).length > 0) return;
+    submitting.current = true;
     setBusy(true);
+    let handedOver = false;
     try {
       const res = await auth.requestSignupCode(draft.email);
       if (res.verification === "off") {
+        handedOver = true; // complete() takes the guard itself
+        submitting.current = false;
         setBusy(false);
         await complete(null);
         return;
@@ -153,21 +163,46 @@ export default function SignUpFlow() {
       setResendAt(Date.now() + (res.resendInSeconds ?? 30) * 1000);
       setCode("");
       setCodeError(null);
+      setCodeInvalid(false);
       setNeedsNewCode(false);
       if (cursor.step !== STEP.code) moveTo(draft, { step: STEP.code }, "forward");
     } catch (err) {
       const reason = err?.message;
-      if (reason === "EMAIL_TAKEN" || reason === "EMAIL_INVALID") setFieldErrors({ email: reason });
-      else if (cursor.step === STEP.code) setCodeError(errorMessage(reason, err?.details ?? {}));
-      else setFieldErrors({ form: errorMessage(reason, err?.details ?? {}) });
+      const details = err?.details ?? {};
+      const message = errorMessage(reason, details);
+      if (reason === "EMAIL_TAKEN" || reason === "EMAIL_INVALID") {
+        setFieldErrors({ email: reason });
+        if (cursor.step !== STEP.account) moveTo(draft, { step: STEP.account }, "back");
+      } else if (reason === "CODE_RECENTLY_SENT" || reason === "TOO_MANY_CODES") {
+        if (details.retryAfterSeconds > 0) {
+          setClock(Date.now());
+          setResendAt(Date.now() + details.retryAfterSeconds * 1000);
+        }
+        if (cursor.step === STEP.code) {
+          setCodeError(message);
+        } else if (reason === "CODE_RECENTLY_SENT") {
+          // A code is already on its way: carry on to the code step.
+          setCode("");
+          setCodeError(message);
+          setCodeInvalid(false);
+          setNeedsNewCode(false);
+          moveTo(draft, { step: STEP.code }, "forward");
+        } else {
+          setFieldErrors({ form: message });
+        }
+      } else if (cursor.step === STEP.code) setCodeError(message);
+      else setFieldErrors({ form: message });
     } finally {
-      setBusy(false);
+      if (!handedOver) {
+        submitting.current = false;
+        setBusy(false);
+      }
     }
   };
 
   useEffect(() => {
     const onKey = (event) => {
-      if (event.key === "Escape" && !created && !event.repeat && !event.isComposing) back();
+      if (event.key === "Escape" && !created && !busy && !event.repeat && !event.isComposing) back();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -246,7 +281,10 @@ export default function SignUpFlow() {
           secret={secret}
           errors={fieldErrors}
           busy={busy}
-          onEmail={(email) => setDraft({ ...draft, email })}
+          onEmail={(email) => {
+            setDraft({ ...draft, email });
+            if (fieldErrors.email || fieldErrors.form) setFieldErrors((was) => ({ ...was, email: undefined, form: undefined }));
+          }}
           onSecret={setSecret}
           onSubmit={sendCode}
         />
@@ -256,11 +294,11 @@ export default function SignUpFlow() {
       body = (
         <CodeBody
           code={code}
-          onCode={(value) => { setCode(value); setCodeError(null); setMood("idle"); }}
+          onCode={(value) => { setCode(value); setCodeError(null); setCodeInvalid(false); setMood("idle"); }}
           onComplete={complete}
           busy={busy}
           error={codeError}
-          invalid={Boolean(codeError)}
+          invalid={codeInvalid}
           shakeKey={shakeKey}
           resendIn={resendIn}
           needsNewCode={needsNewCode}
@@ -295,7 +333,7 @@ export default function SignUpFlow() {
           </div>
         )}
         {hasBack && (
-          <button type="button" className="auth-btn auth-btn-quiet" onClick={back}>← Back</button>
+          <button type="button" className="auth-btn auth-btn-quiet" onClick={back} disabled={busy}>← Back</button>
         )}
         {cursor.step === STEP.birthYear && (
           <p className="auth-switch">Already have an account? <Link to="/login">Sign in</Link></p>
