@@ -8,7 +8,7 @@
 | [Plan](2026-10-07-signup-onboarding.md) | Twelve tasks with the code, tests and commands for each. |
 | This file | What's done, what's next, and every decision made along the way. |
 
-**Last updated:** 2026-10-07 · **Status:** plan written, awaiting review · **Next:** Task 1
+**Last updated:** 2026-10-07 · **Status:** in progress (subagent-driven) · **Next:** Task 12
 
 ## How to keep this file
 
@@ -20,17 +20,17 @@ Status values: ⬜ Not started · 🟡 In progress · ✅ Done · ⏸ Blocked ·
 
 | # | Task | Status | Commit | Date | Notes |
 |---|---|---|---|---|---|
-| 1 | Shared email helpers; `subjects` on child profiles; `normaliseNewChildren` | ⬜ | | | |
-| 2 | Pure flow logic: `signupFlow`, `signupCopy`, `passwordStrength` | ⬜ | | | |
-| 3 | Server codes (`signupCodes.js`) and mailer (`email.js`) | ⬜ | | | |
-| 4 | `pendingSignups` + `POST /api/auth/signup/code` | ⬜ | | | |
-| 5 | `POST /api/auth/signup/complete` | ⬜ | | | |
-| 6 | Client data path: stores, `AuthContext`, `track()` | ⬜ | | | |
-| 7 | Building blocks: Bix's mood, pickers, cards, wheel, code boxes, CSS | ⬜ | | | |
-| 8 | The flow from birth year to summary | ⬜ | | | |
-| 9 | Email, password and the code | ⬜ | | | |
-| 10 | Hand-over; "Your pick" on the curriculum page | ⬜ | | | |
-| 11 | Full browser verification + two-child regression | ⬜ | | | |
+| 1 | Shared email helpers; `subjects` on child profiles; `normaliseNewChildren` | ✅ | c46bcd1 | 2026-10-07 | Existing "narrowed to writable fields" test gained `subjects` in its input (it compares against `EDITABLE_CHILD_FIELDS`). |
+| 2 | Pure flow logic: `signupFlow`, `signupCopy`, `passwordStrength` | ✅ | 1f1bdc0, 90c7249 | 2026-10-07 | Review fix: added `withCursor` (clears the edit-return flag), the saved draft drops `birthYear` and is never written for under-13, a year change that empties subjects re-asks them. |
+| 3 | Server codes (`signupCodes.js`) and mailer (`email.js`) | ✅ | 1a3e013 | 2026-10-07 | As planned. Hardening ideas (fetch timeout, boot log when off) left for the final review. |
+| 4 | `pendingSignups` + `POST /api/auth/signup/code` | ✅ | 417add0, f7161b7 | 2026-10-07 | Review fix: the database write now decides who may send (10 parallel requests had sent 7 emails). Separate startup message if index creation fails. |
+| 5 | `POST /api/auth/signup/complete` | ✅ | 291c75b, 923d447 | 2026-10-07 | Review fix: each guess reserves an attempt before the code is compared (parallel guesses had exceeded five, and could create a verified account). Rollback failures are logged; the rollback test now writes a child before failing. |
+| 6 | Client data path: stores, `AuthContext`, `track()` | ✅ | 3032ef3 | 2026-10-07 | As planned. |
+| 7 | Building blocks: Bix's mood, pickers, cards, wheel, code boxes, CSS | ✅ | 55630ef, b9dbd9d | 2026-10-07 | Review fix: pickers styled anywhere via `.pb-pickers`; code-box editing; wheel rows 64 px, focus ring and list-only scrolling; Bix sized with `zoom`; a11y polish. Not yet seen in a browser (Task 11). |
+| 8 | The flow from birth year to summary | ✅ | 3ba3c14, 9f46a47 | 2026-10-07 | Review fix: backing out of "Add another child" removes the untouched blank child; the birth-year wheel commits only on Continue/Enter (type-ahead had passed through under-13 years and wiped the family). Checked in a browser at 375 and 1440 px. |
+| 9 | Email, password and the code | ✅ | 7c24c95, 3570210 | 2026-10-07 | Review fix: the server's wait time drives the resend countdown, and "a code was just sent" goes to the code step. Only real code errors clear and shake the boxes; Back is disabled mid-request. Checked in a browser (API mode, log mailer). |
+| 10 | Hand-over; "Your pick" on the curriculum page | ✅ | 7dc1d6e, e201194 | 2026-10-07 | "⭐ Your pick" sits top-left (bottom-right overlapped the Start button). Review fix: if picking the child fails, Bix says "Hmm, that didn't work. Tap again!". |
+| 11 | Full browser verification + two-child regression | ✅ | ccbb32c, 4a5ff4b | 2026-10-07 | 11/11 checks pass after fixes: layout overflow, desktop card width, missing `chime` sound; all sign-up buttons 64 px; the wrong-code message isn't red. Code boxes are 64 px tall, 46 px wide on a 375 px phone (six must fit). |
 | 12 | Remove the old sign-up; env, `render.yaml`, docs | ⬜ | | | |
 
 ## Browser verification (Task 11)
@@ -39,18 +39,18 @@ Record pass/fail and the date. Screenshots go in the session scratchpad, not the
 
 | ID | Check | 375 px | 1440 px | Light | Dark | Notes |
 |---|---|---|---|---|---|---|
-| R0 | Seeded two-child account **before**: `/profiles`, `/parent`, a child's `/curriculum` and Trophy Room | | | | | |
-| V1 | Grown-up, one child, Year 2, Maths → `/curriculum/year/2/math` | | | | | |
-| V2 | Grown-up, 3 children, one "Not sure", add a 4th from the summary → "Who's playing first?" | | | | | |
-| V3 | Learner born 2011 → no "Who" step, `learner` / `13-15` | | | | | |
-| V4 | Born 2016 → gate; no request; no `pendingSignups` record | | | | | |
-| V5 | Back keeps answers; Edit returns to summary; Year 3→2 drops Science | | | | | |
-| V6 | Refresh on name, summary, code (→ account step, password empty) | | | | | |
-| V7 | Paste "123 456"; wrong then right; resend after 31 s; 5 wrong → new code | | | | | |
-| V8 | Keyboard only, start to finish | | | | | |
-| V9 | Reduced motion: fades only, no confetti / flying faces / pulse | | | | | |
-| V10 | Muted: silent throughout | | | | | |
-| R1 | Seeded two-child account **after**: same as R0 | | | | | |
+| R0 | Seeded two-child account **before**: `/profiles`, `/parent`, a child's `/curriculum` and Trophy Room | ✅ | ✅ | ✅ | – | Page text hashed for the after-check. |
+| V1 | Grown-up, one child, Year 2, Maths → `/curriculum/year/2/math` | ✅ | ✅ | ✅ | ✅ | Failed first (code step / year cards overflowed; desktop card too narrow), fixed in ccbb32c. |
+| V2 | Grown-up, 3 children, one "Not sure", add a 4th from the summary → "Who's playing first?" | ✅ | ✅ | ✅ | ✅ | Not-sure and Year 1 skip subjects; each child lands on their first subject. |
+| V3 | Learner born 2011 → no "Who" step, `learner` / `13-15` | ✅ | ✅ | ✅ | ✅ | |
+| V4 | Born 2016 → gate; no request; no `pendingSignups` record | ✅ | ✅ | ✅ | ✅ | Zero `/api` requests; nothing in session storage. |
+| V5 | Back keeps answers; Edit returns to summary; Year 3→2 drops Science | ✅ | – | ✅ | – | |
+| V6 | Refresh on name, summary, code (→ account step, password empty) | ✅ | – | ✅ | – | Saved draft has no password and no birth year. |
+| V7 | Paste "123 456"; wrong then right; resend after 31 s; 5 wrong → new code | ✅ | – | ✅ | – | "Too many codes" (5 an hour) not driven in the browser. |
+| V8 | Keyboard only, start to finish | – | ✅ | ✅ | – | |
+| V9 | Reduced motion: fades only, no confetti / flying faces / pulse | ✅ | – | ✅ | – | |
+| V10 | Muted: silent throughout | ✅ | – | ✅ | – | Found the `chime` sound was missing (silent); fixed in ccbb32c. |
+| R1 | Seeded two-child account **after**: same as R0 | ✅ | ✅ | ✅ | – | Identical page text; seeded records untouched (no `subjects`, no `emailVerified` added). |
 
 ## Decisions log
 
@@ -69,9 +69,12 @@ Record pass/fail and the date. Screenshots go in the session scratchpad, not the
 | 2026-10-07 | Existing accounts: `emailVerified` absent = "never asked"; nothing gates on it. Existing profiles: `subjects` absent = `[]`. | No change for the account already in use. |
 | 2026-10-07 | Hand-over goes to the first chosen subject, otherwise `/`. Subjects also tag "⭐ Your pick" on `/curriculum`. | The two v1 uses of `subjects`. |
 | 2026-10-07 | Wrong code ×5 and a failed send set `codeHash: null` rather than deleting the record; `purgeAt` TTL. | Keeps the 5-sends-an-hour cap honest. |
+| 2026-10-07 | Sending a code is gated by a conditional database write (insert on first send, update conditioned on `lastSentAt` after); the email goes out only if the write won. | The plan's read-then-write let parallel requests bypass the 30 s and 5-an-hour limits. |
+| 2026-10-07 | Each code guess reserves an attempt atomically before the comparison; at most five guesses are ever compared per code. | The plan compared first and counted after, so parallel guesses beat the limit. |
 | 2026-10-07 | The code is claimed atomically (`findOneAndUpdate` on the matched hash). | Two racing requests create one account. |
 | 2026-10-07 | The email has no images; Bix "speaks" in text. | Nothing to host, nothing for mail clients to block. |
 | 2026-10-07 | The family row is decoration (a keyframe, no layout measuring); editing happens from the summary. | Editing mid-flow could skip unfinished learners. |
+| 2026-10-07 | The saved sign-up draft (sessionStorage) never holds the birth year, and nothing at all is saved for an under-13 answer. | "Never store a birth year" and "nothing is saved" for under-13. After a refresh the year wheel shows no selection. |
 | 2026-10-07 | `track()` is a no-op with an allow-list until PostHog (#36). | The funnel is ready to measure the day analytics arrives. |
 
 ## Open items (not in this plan)
