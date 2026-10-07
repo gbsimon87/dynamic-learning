@@ -8,7 +8,28 @@
 | [Plan](2026-10-07-signup-onboarding.md) | Twelve tasks with the code, tests and commands for each. |
 | This file | What's done, what's next, and every decision made along the way. |
 
-**Last updated:** 2026-10-07 · **Status:** in progress (subagent-driven) · **Next:** Task 12
+**Last updated:** 2026-10-07 · **Status:** all 12 tasks done; final whole-branch review done — **one fix round left before merge** · **Next:** the fix round below
+
+## ▶ Resume here
+
+The whole-branch review ([final review](2026-10-07-signup-onboarding-final-review.md)) said **"ready to merge with fixes"**. Do these in ONE fix round, then one scoped re-review, then finish the branch (merge/PR is the owner's call):
+
+| ID | Fix | Where | Test to add |
+|---|---|---|---|
+| **C1 (critical)** | The email-shape regex backtracks quadratically: one ~1 MB request can freeze the server for 20–30 min. Reject emails over 254 chars before the regex, and use a linear pattern, e.g. `/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/`. | `shared/emailAddress.js` | `"a@" + ".".repeat(50000) + "@"` returns false in a few ms; existing shape tests still pass. |
+| **I1** | A failed send (502) keeps `lastSentAt = now`, so an immediate retry gets 429 "I've just sent one" although no email went out. In the hash-filtered failure update, restore `lastSentAt` to the value read (or `new Date(0)` for a first send); the send still counts towards 5/hour. | `server/routes/signup.js` (`/code` failure path) | Send fails → retry at once → 200. |
+| **I2** | Code step has no **Try again** after a network error / `SIGNUP_FAILED` (spec §7). When six digits are filled, an error shows and the code wasn't marked wrong, show a 64 px "Try again" button that calls `complete(code)`. | `src/pages/auth/signup/steps.jsx` (`CodeBody`), `SignUpFlow.jsx` | Browser check. |
+| M1 | After the hand-over, Back returns to a blank sign-up: `navigate(destinationFor(child), { replace: true })`. | `SignUpFlow.jsx` | — |
+| M2 | Remove `autoFocus` from the email input (focus goes to the heading; it can flash the iOS keyboard). | `steps.jsx` | — |
+| M5 | Resend `fetch` has no timeout: add `signal: AbortSignal.timeout(10_000)`. | `server/email.js` | Optional: a fetch that never resolves rejects. |
+
+Optional polish, fine to leave: M3 show minutes (not "3540s") when the resend wait is over 60 s; M4 the six code boxes need 296 px, so they spill at 320 px-wide phones.
+
+**Before switching email verification on** (buying a domain, setting `RESEND_API_KEY` / `EMAIL_FROM`), also do **I3**: `/code` has no per-client limit, so a script could make the server email ~120 strangers a minute and burn the Resend quota. Add a per-IP cap and a process-wide daily send budget (set Express `trust proxy` for Render), log Resend's error body, and log at boot when verification is off.
+
+**Known, not caused by this branch:** `server/routes.test.js` has 10 failing sub-tests (progress PUT bodies in an old data shape). Worth a separate fix.
+
+**Running the tests:** unit `npm test`; server tests need a MongoDB — the owner's `.env` has `MONGO_URI`, but the server reads `MONGODB_URI` (+ optional `MONGODB_DB`). A throwaway local one: `mongod --dbpath /tmp/dl-mongo --port 27018 --fork --logpath /tmp/dl-mongo.log` then `MONGODB_URI=mongodb://127.0.0.1:27018 node --test 'server/*.test.js'`.
 
 ## How to keep this file
 
@@ -31,7 +52,7 @@ Status values: ⬜ Not started · 🟡 In progress · ✅ Done · ⏸ Blocked ·
 | 9 | Email, password and the code | ✅ | 7c24c95, 3570210 | 2026-10-07 | Review fix: the server's wait time drives the resend countdown, and "a code was just sent" goes to the code step. Only real code errors clear and shake the boxes; Back is disabled mid-request. Checked in a browser (API mode, log mailer). |
 | 10 | Hand-over; "Your pick" on the curriculum page | ✅ | 7dc1d6e, e201194 | 2026-10-07 | "⭐ Your pick" sits top-left (bottom-right overlapped the Start button). Review fix: if picking the child fails, Bix says "Hmm, that didn't work. Tap again!". |
 | 11 | Full browser verification + two-child regression | ✅ | ccbb32c, 4a5ff4b | 2026-10-07 | 11/11 checks pass after fixes: layout overflow, desktop card width, missing `chime` sound; all sign-up buttons 64 px; the wrong-code message isn't red. Code boxes are 64 px tall, 46 px wide on a 375 px phone (six must fit). |
-| 12 | Remove the old sign-up; env, `render.yaml`, docs | ⬜ | | | |
+| 12 | Remove the old sign-up; env, `render.yaml`, docs | ✅ | 544a776, b517042 | 2026-10-07 | Old wizard and `POST /api/auth/signup` removed (now 404). Its account-type/under-13 server tests were ported to the new route. `MONGODB_DB` documented. V1, V3 and the two-child regression re-run after removal: pass. |
 
 ## Browser verification (Task 11)
 
@@ -78,6 +99,8 @@ Record pass/fail and the date. Screenshots go in the session scratchpad, not the
 | 2026-10-07 | `track()` is a no-op with an allow-list until PostHog (#36). | The funnel is ready to measure the day analytics arrives. |
 
 ## Open items (not in this plan)
+
+- **I3 — rate-limit code emails per client** before switching verification on (see Resume here).
 
 - **Buy a domain and verify it in Resend**, then set `RESEND_API_KEY` and `EMAIL_FROM` on Render. No code change. (PROJECT_KNOWLEDGE §6 item 17.)
 - #35 the child's first-play intro with Bix — starts where the hand-over ends.
