@@ -159,26 +159,42 @@ export function createSignupRouter({
       // 2. The code.
       let verified = false;
       if (mailer.verification === "on") {
-        const record = await db.pendingSignups().findOne({ email });
-        if (!record || !record.codeHash || toMs(record.expiresAt) <= now()) {
-          return res.status(400).json({ error: "CODE_EXPIRED" });
+        // The attempt is reserved BEFORE the guess is compared, in one atomic
+        // write. Counting after the compare let parallel guesses all compare
+        // against a fresh count, so more than five were checked (and a right
+        // guess after many wrong ones still got through). Now at most five
+        // requests ever reach the compare.
+        const reserved = await db.pendingSignups().findOneAndUpdate(
+          {
+            email,
+            codeHash: { $ne: null },
+            attempts: { $lt: MAX_ATTEMPTS },
+            expiresAt: { $gt: new Date(now()) },
+          },
+          { $inc: { attempts: 1 } },
+          { returnDocument: "after" }
+        );
+        if (!reserved) {
+          const record = await db.pendingSignups().findOne({ email });
+          const locked =
+            record && record.codeHash && toMs(record.expiresAt) > now() && record.attempts >= MAX_ATTEMPTS;
+          return res.status(400).json({ error: locked ? "CODE_ATTEMPTS_EXCEEDED" : "CODE_EXPIRED" });
         }
-        if (!codeMatches(record.codeHash, email, req.body?.code, secret())) {
-          const counted = await db
-            .pendingSignups()
-            .findOneAndUpdate({ email, codeHash: record.codeHash }, { $inc: { attempts: 1 } }, { returnDocument: "after" });
-          const attempts = counted?.attempts ?? MAX_ATTEMPTS;
-          if (attempts >= MAX_ATTEMPTS) {
-            // Kept, not deleted, so the hourly send cap still holds.
-            await db.pendingSignups().updateOne({ email }, { $set: { codeHash: null } });
+        if (!codeMatches(reserved.codeHash, email, req.body?.code, secret())) {
+          if (reserved.attempts >= MAX_ATTEMPTS) {
+            // Kept, not deleted, so the hourly send cap still holds. Filtered
+            // by the hash we reserved, so a resend in flight is never undone.
+            await db.pendingSignups().updateOne({ email, codeHash: reserved.codeHash }, { $set: { codeHash: null } });
             return res.status(400).json({ error: "CODE_ATTEMPTS_EXCEEDED" });
           }
-          return res.status(400).json({ error: "CODE_INCORRECT", attemptsLeft: MAX_ATTEMPTS - attempts });
+          return res
+            .status(400)
+            .json({ error: "CODE_INCORRECT", attemptsLeft: MAX_ATTEMPTS - reserved.attempts });
         }
         // Single use, claimed atomically: of two racing requests only one gets it.
         const claimed = await db
           .pendingSignups()
-          .findOneAndUpdate({ email, codeHash: record.codeHash }, { $set: { codeHash: null } });
+          .findOneAndUpdate({ email, codeHash: reserved.codeHash }, { $set: { codeHash: null } });
         if (!claimed) return res.status(400).json({ error: "CODE_EXPIRED" });
         verified = true;
       }
@@ -198,8 +214,12 @@ export function createSignupRouter({
         docs = docs.map((doc, i) => ({ ...doc, _id: insertedIds[i] }));
       } catch (err) {
         console.error("[signup] a profile failed to save; rolling back:", err.message);
-        await db.children().deleteMany({ parentId: parent._id });
-        await db.parents().deleteOne({ _id: parent._id });
+        try {
+          await db.children().deleteMany({ parentId: parent._id });
+          await db.parents().deleteOne({ _id: parent._id });
+        } catch (rollbackErr) {
+          console.error("[signup] rollback failed; leftover parent", String(parent._id), rollbackErr.message);
+        }
         return res.status(500).json({ error: "SIGNUP_FAILED" });
       }
 

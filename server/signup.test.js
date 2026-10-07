@@ -260,11 +260,64 @@ test("sign-up with a code", { skip: URI ? false : "MONGODB_URI not set" }, async
   });
 
   await t.test("a child that fails to save leaves nothing behind", async () => {
-    const failing = await start({ mailer: fakeMailer("off"), now, insertChildren: async () => { throw new Error("disk full"); } });
+    let parentId;
+    const failing = await start({
+      mailer: fakeMailer("off"),
+      now,
+      insertChildren: async (docs) => {
+        parentId = docs[0].parentId;
+        await database.collection("children").insertOne({ ...docs[0] }); // the first profile really lands
+        throw new Error("disk full");
+      },
+    });
     const res = await failing()("POST", "/api/auth/signup/complete", family("broken@example.com"));
     assert.equal(res.status, 500);
     assert.deepEqual(res.body, { error: "SIGNUP_FAILED" });
+    assert.ok(parentId, "the fake ran");
     assert.equal(await database.collection("parents").countDocuments({ email: "broken@example.com" }), 0);
+    assert.equal(await database.collection("children").countDocuments({ parentId }), 0);
+  });
+
+  await t.test("parallel guesses cannot exceed five tries, and a late right code is refused", async () => {
+    const email = "guessing@example.com";
+    await browser()("POST", "/api/auth/signup/code", { email });
+    const right = lastCode(email);
+    const wrong = right === "000000" ? "111111" : "000000";
+    // Hold every pendingSignups read until all nine requests have made theirs,
+    // so (against a handler that compares before counting) every guess is
+    // compared against a fresh, uncounted record.
+    const proto = Object.getPrototypeOf(database.collection("pendingSignups"));
+    const realFindOne = proto.findOne;
+    let waiting = [];
+    proto.findOne = async function (...args) {
+      if (this.collectionName !== "pendingSignups") return realFindOne.apply(this, args);
+      const result = await realFindOne.apply(this, args);
+      await new Promise((resolve) => {
+        waiting.push(resolve);
+        if (waiting.length >= 9) {
+          waiting.forEach((release) => release());
+          waiting = [];
+        }
+        setTimeout(resolve, 1000); // never hang if fewer requests read
+      });
+      return result;
+    };
+    let results;
+    try {
+      const guesses = Array.from({ length: 8 }, () =>
+        browser()("POST", "/api/auth/signup/complete", { ...family(email), code: wrong })
+      );
+      await new Promise((resolve) => setTimeout(resolve, 150)); // the right code really is last
+      guesses.push(browser()("POST", "/api/auth/signup/complete", { ...family(email), code: right }));
+      results = await Promise.all(guesses);
+    } finally {
+      proto.findOne = realFindOne;
+    }
+    assert.equal(results.filter((r) => r.status === 201).length, 0, "no account");
+    assert.equal(await database.collection("parents").countDocuments({ email }), 0);
+    const record = await database.collection("pendingSignups").findOne({ email });
+    assert.ok(record.attempts <= 5, `attempts stored: ${record.attempts}`);
+    assert.equal(record.codeHash, null, "the code is locked");
   });
 
   await t.test("with email off, sign-up completes without a code and says so", async () => {
