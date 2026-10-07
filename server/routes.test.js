@@ -51,27 +51,25 @@ test("route authorization", { skip: URI ? false : "MONGODB_URI not set" }, async
   const b = session();
   const anon = session();
 
+  // Accounts are created by the sign-up flow (covered in signup.test.js). Here
+  // we only need a signed-in parent, so insert one and sign in through /login.
+  const { hashPassword } = await import("./auth.js");
+  async function makeParent(browser, email, password) {
+    const { hash, salt, iterations } = await hashPassword(password);
+    await database.collection("parents").insertOne({
+      email, passwordHash: hash, passwordSalt: salt, iterations,
+      accountType: "parent", ageBand: null, createdAt: new Date().toISOString(),
+    });
+    return browser("POST", "/api/auth/login", { email, password });
+  }
+
   // --- signup / login -----------------------------------------------------
-  const signupA = await a("POST", "/api/auth/signup", {
-    email: "  Parent.A@Example.com ",
-    password: "password-a",
-  });
-  assert.equal(signupA.status, 201);
-  assert.equal(signupA.body.parent.email, "parent.a@example.com", "email normalised");
+  const signupA = await makeParent(a, "parent.a@example.com", "password-a");
+  assert.equal(signupA.status, 200);
   assert.ok(typeof signupA.body.parent._id === "string", "_id serialised to string");
   assert.equal(signupA.body.parent.passwordHash, undefined);
   assert.equal(signupA.body.parent.passwordSalt, undefined);
   assert.equal(signupA.body.parent.iterations, undefined);
-
-  await t.test("duplicate email is rejected even though the index is not unique", async () => {
-    const dup = await session()("POST", "/api/auth/signup", {
-      email: "PARENT.A@example.com",
-      password: "other",
-    });
-    assert.equal(dup.status, 409);
-    assert.deepEqual(dup.body, { error: "EMAIL_TAKEN" });
-    assert.equal(await database.collection("parents").countDocuments({ email: "parent.a@example.com" }), 1);
-  });
 
   await t.test("login is identical for unknown email and wrong password", async () => {
     const unknown = await session()("POST", "/api/auth/login", {
@@ -87,7 +85,7 @@ test("route authorization", { skip: URI ? false : "MONGODB_URI not set" }, async
     assert.deepEqual(wrong, unknown, "no account enumeration");
   });
 
-  assert.equal((await b("POST", "/api/auth/signup", { email: "parent.b@example.com", password: "password-b" })).status, 201);
+  assert.equal((await makeParent(b, "parent.b@example.com", "password-b")).status, 200);
 
   // --- children -----------------------------------------------------------
   const childA = (await a("POST", "/api/children", { name: "Ada", avatar: "🦊", colour: "pink" })).body.child;
@@ -305,72 +303,5 @@ test("route authorization", { skip: URI ? false : "MONGODB_URI not set" }, async
       1,
       "a recycled id must not inherit badges"
     );
-  });
-
-  // --- account type + age band --------------------------------------------
-  // The client validates these too, for good error messages. The server
-  // validates because a request is not a trust boundary — these tests are what
-  // stop a hand-rolled POST putting an under-13 age band in the database.
-  await t.test("signup defaults to a parent account", async () => {
-    const s = session();
-    const res = await s("POST", "/api/auth/signup", {
-      email: "default@example.com",
-      password: "password-x",
-    });
-    assert.equal(res.status, 201);
-    assert.equal(res.body.parent.accountType, "parent");
-    assert.equal(res.body.parent.ageBand, null);
-  });
-
-  await t.test("signup creates a learner account with its age band", async () => {
-    const s = session();
-    const res = await s("POST", "/api/auth/signup", {
-      email: "learner@example.com",
-      password: "password-x",
-      accountType: "learner",
-      ageBand: "16-17",
-    });
-    assert.equal(res.status, 201);
-    assert.equal(res.body.parent.accountType, "learner");
-    assert.equal(res.body.parent.ageBand, "16-17");
-  });
-
-  await t.test("signup never leaks credential fields", async () => {
-    const s = session();
-    const res = await s("POST", "/api/auth/signup", {
-      email: "leak-check@example.com",
-      password: "password-x",
-    });
-    for (const field of ["passwordHash", "passwordSalt", "iterations"]) {
-      assert.equal(res.body.parent[field], undefined, field);
-    }
-  });
-
-  await t.test("signup rejects a bad account type or age band", async () => {
-    const cases = [
-      [{ accountType: "admin" }, "INVALID_ACCOUNT_TYPE"],
-      [{ accountType: "learner" }, "AGE_BAND_REQUIRED"],
-      [{ accountType: "learner", ageBand: "under-13" }, "AGE_BAND_TOO_YOUNG"],
-      [{ accountType: "learner", ageBand: "7-9" }, "INVALID_AGE_BAND"],
-    ];
-
-    for (const [extra, code] of cases) {
-      const s = session();
-      const res = await s("POST", "/api/auth/signup", {
-        email: `reject-${code}@example.com`,
-        password: "password-x",
-        ...extra,
-      });
-      assert.equal(res.status, 400, code);
-      assert.equal(res.body.error, code);
-      // Rejected BEFORE the insert — no orphan account left behind.
-      assert.equal(
-        await database
-          .collection("parents")
-          .countDocuments({ email: `reject-${code}@example.com` }),
-        0,
-        `${code} must not create an account`
-      );
-    }
   });
 });

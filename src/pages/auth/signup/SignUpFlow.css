@@ -106,7 +106,7 @@
 .auth-page .sf-handover .auth-btn { min-height: 80px; font-size: 1.4rem; padding-inline: 2rem; animation: sf-pulse 1.6s ease-in-out infinite; }
 @keyframes sf-pulse { 50% { transform: scale(1.05); } }
 
-/* Password hint (the rules SignUp.css used to hold) */
+/* Password hint (moved here from the old single-page sign-up) */
 .auth-page .su-strength {
   font-weight: 600;
   transition: color 0.2s ease;

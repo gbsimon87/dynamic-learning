@@ -16,7 +16,7 @@ Blueprint (preferred — reads `render.yaml`):
 
 1. Render dashboard → **New** → **Blueprint**.
 2. Pick this repo and the `main` branch. Render reads `render.yaml`.
-3. It prompts for the two secret env vars (§2). Fill them in and apply.
+3. It prompts for the secret env vars (§2). Fill in `MONGODB_URI` and `SESSION_SECRET`; leave the two email ones blank until a domain is verified. Apply.
 
 Manual, if you'd rather not use the Blueprint — create a **Web Service** with:
 
@@ -55,12 +55,23 @@ same set with placeholders.
 | --- | --- | --- |
 | `MONGODB_URI` | `mongodb+srv://…` | Atlas → your cluster → **Connect** → **Drivers** → Node.js. Copy the string, replace `<username>`/`<password>` with a database user's credentials, and append the database name after the host. URL-encode any special characters in the password (`@` → `%40`). |
 | `SESSION_SECRET` | a long random string | Generate one: `openssl rand -base64 48`. Rotating it invalidates every session, i.e. signs everyone out. |
+| `MONGODB_DB` | — | Optional. The database name the server uses; defaults to `dynamic_learning`. Leave unset unless you want a different one. |
+| `RESEND_API_KEY` | `re_…` | Resend → **API Keys**. **Leave unset until a domain is verified** — see the note below. |
+| `EMAIL_FROM` | `Dynamic Learning <hello@your-domain>` | Must be on a domain verified in Resend. Set it together with `RESEND_API_KEY`. |
 | `VITE_USE_API` | `true` | See §4. |
 | `NODE_VERSION` | `22.23.3` | Pinned in `render.yaml`; [Node 22.23.3 LTS](https://nodejs.org/en/blog/release/v22.23.3) satisfies Vite’s Node 22.12+ requirement. |
 | `NODE_ENV` | `production` | Makes the server serve the built `dist/` and set the cookie `Secure` flag. |
 | `PORT` | — | **Do not set.** Render injects it; `server/index.js` reads `process.env.PORT`. |
 
-`MONGODB_URI` and `SESSION_SECRET` are declared `sync: false` in `render.yaml`,
+**Email verification (sign-up codes).** With both `RESEND_API_KEY` and
+`EMAIL_FROM` set, sign-up emails a 6-digit code. With neither set, production
+skips verification and creates the account with `emailVerified: false`; it never
+fails the sign-up. Set only one and the server also skips it, so set both or
+neither. Until a domain is verified in Resend, `EMAIL_FROM` can only be
+`onboarding@resend.dev`, which delivers **only to the Resend account owner**, so
+do not turn it on for real families before the domain is verified.
+
+`MONGODB_URI`, `SESSION_SECRET`, `RESEND_API_KEY` and `EMAIL_FROM` are declared `sync: false` in `render.yaml`,
 which means Render prompts for them and stores them in its dashboard. They are
 never committed. Nothing about them is prefixed `VITE_`, so they stay server-side
 — anything named `VITE_*` is inlined into the public JS bundle.

@@ -40,14 +40,14 @@ try {
   }
   console.log(`Rendered ${count} English challenges through Vite and React, without a speech voice.`);
   const { AuthContext } = await server.ssrLoadModule("/src/context/auth-context.js");
-  const auth = { parent: { email: "review@example.test" }, children: [], status: "ready", signIn: () => {}, signUp: () => {}, signOut: () => {} };
-  for (const page of ["Login", "SignUp", "ParentArea"]) {
+  const auth = { parent: { email: "review@example.test" }, children: [], status: "ready", signIn: () => {}, signOut: () => {} };
+  for (const page of ["Login", "signup/SignUpFlow", "ParentArea"]) {
     const module = await server.ssrLoadModule(`/src/pages/auth/${page}.jsx`);
     const html = renderToString(React.createElement(MemoryRouter, null,
       React.createElement(AuthContext.Provider, { value: auth }, React.createElement(module.default))));
     if (!html.includes("<button")) throw new Error(`Incomplete authentication page render: ${page}`);
   }
-  console.log("Rendered Login, SignUp and ParentArea through Vite and React.");
+  console.log("Rendered Login, SignUpFlow and ParentArea through Vite and React.");
 } finally {
   await server.close();
 }

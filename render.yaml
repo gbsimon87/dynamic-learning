@@ -47,5 +47,13 @@ services:
       - key: SESSION_SECRET
         sync: false
 
+      # Sign-up email codes (Resend). Leave BOTH unset until a domain is
+      # verified in Resend: with neither set, production skips verification
+      # instead of failing. See docs/DEPLOYMENT.md §2.
+      - key: RESEND_API_KEY
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+
       # PORT is injected by Render; server/index.js reads process.env.PORT and
       # falls back to 3001 locally. Do not set it here.

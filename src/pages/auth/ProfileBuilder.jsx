@@ -8,7 +8,7 @@ import "./ProfileBuilder.css";
 /**
  * "Make a profile" — name, avatar and colour, with a live preview.
  *
- * Lifted out of Profiles.jsx so the signup wizard and the profile picker share
+ * Lifted out of Profiles.jsx so the sign-up flow and the profile picker share
  * ONE implementation. They ask the same three questions; before this they asked
  * them with two copies of the same markup, which is exactly how a colour picker
  * ends up fixed on one screen and not the other.

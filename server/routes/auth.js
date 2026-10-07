@@ -1,4 +1,4 @@
-/** /api/auth — signup, login, logout, me. */
+/** /api/auth — login, logout, me. (Sign-up lives in routes/signup.js.) */
 import { Router } from "express";
 import * as db from "./../db.js";
 import {
@@ -9,52 +9,12 @@ import {
 } from "../auth.js";
 import { requireAuth } from "../middleware.js";
 import { publicParent } from "../serialize.js";
-import { normaliseAccountFields } from "../../shared/accountTypes.js";
 import { createAuthThrottle } from "../authThrottle.js";
-import { createParentAccount } from "../accounts.js";
 
 const router = Router();
 const throttle = createAuthThrottle();
 
 const normaliseEmail = (email) => String(email ?? "").trim().toLowerCase();
-
-router.post("/signup", throttle, async (req, res, next) => {
-  try {
-    const email = normaliseEmail(req.body?.email);
-    const password = req.body?.password;
-    if (!email) return res.status(400).json({ error: "EMAIL_REQUIRED" });
-    if (typeof password !== "string" || password.length === 0) {
-      return res.status(400).json({ error: "PASSWORD_REQUIRED" });
-    }
-
-    // Shared with both store drivers so the client and the server agree on the
-    // vocabulary. Re-checked here regardless: the client validates for good error
-    // messages, the server validates because a request is not a trust boundary.
-    // Notably this is what stops an under-13 age band ever reaching the database.
-    let account;
-    try {
-      account = normaliseAccountFields({
-        accountType: req.body?.accountType,
-        ageBand: req.body?.ageBand,
-      });
-    } catch (err) {
-      return res.status(400).json({ error: err.message });
-    }
-
-    let parent;
-    try {
-      parent = await createParentAccount({ email, password, account });
-    } catch (err) {
-      if (err.message === "EMAIL_TAKEN") return res.status(409).json({ error: "EMAIL_TAKEN" });
-      throw err;
-    }
-
-    res.cookie(COOKIE_NAME, signSession(parent._id), cookieOptions());
-    return res.status(201).json({ parent: publicParent(parent) });
-  } catch (err) {
-    return next(err);
-  }
-});
 
 router.post("/login", throttle, async (req, res, next) => {
   try {

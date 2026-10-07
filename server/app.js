@@ -22,8 +22,8 @@ export function createApp({ serveStatic = process.env.NODE_ENV === "production",
   app.use(cookieParser());
 
   app.get("/api/health", (req, res) => res.json({ ok: true }));
-  // Before /api/auth: this router owns /api/auth/signup/*; anything it does not
-  // match (the old POST /api/auth/signup) falls through to authRoutes.
+  // Before /api/auth: this router owns /api/auth/signup/*. The old single-call
+  // POST /api/auth/signup is gone and answers 404 NOT_FOUND like any unknown route.
   app.use(
     "/api/auth/signup",
     createSignupRouter({ ...signup, mailer: signup.mailer ?? createMailerFromEnv() })

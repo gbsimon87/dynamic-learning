@@ -164,7 +164,9 @@ test("sign-up with a code", { skip: URI ? false : "MONGODB_URI not set" }, async
 
   await t.test("an email that already has an account is refused", async () => {
     const email = "taken@example.com";
-    const made = await browser()("POST", "/api/auth/signup", { email, password: "password-1", accountType: "parent", ageBand: "adult" });
+    // Created through /complete on an app with verification off (no code needed).
+    const off = await start({ mailer: fakeMailer("off"), now });
+    const made = await off()("POST", "/api/auth/signup/complete", family(email));
     assert.equal(made.status, 201);
     const res = await browser()("POST", "/api/auth/signup/code", { email });
     assert.equal(res.status, 409);
@@ -326,5 +328,82 @@ test("sign-up with a code", { skip: URI ? false : "MONGODB_URI not set" }, async
     assert.equal(res.status, 201);
     assert.equal(res.body.parent.emailVerified, false);
     assert.equal(res.body.parent.emailVerifiedAt, null);
+  });
+
+  // --- account type + age band --------------------------------------------
+  // The client validates these too, for good error messages. The server
+  // validates because a request is not a trust boundary — these tests are what
+  // stop a hand-rolled POST putting an under-13 age band in the database.
+  // (Ported from routes.test.js when the old /signup route was removed.)
+  const offApp = await start({ mailer: fakeMailer("off"), now });
+  const oneChild = [{ name: "Kid" }];
+
+  await t.test("the old single-call sign-up route is gone", async () => {
+    const res = await offApp()("POST", "/api/auth/signup", { email: "old@example.com", password: "password-x" });
+    assert.equal(res.status, 404);
+    assert.equal(await database.collection("parents").countDocuments({ email: "old@example.com" }), 0);
+  });
+
+  await t.test("sign-up defaults to a parent account", async () => {
+    const res = await offApp()("POST", "/api/auth/signup/complete", {
+      email: "default@example.com",
+      password: "password-x",
+      children: oneChild,
+    });
+    assert.equal(res.status, 201);
+    assert.equal(res.body.parent.accountType, "parent");
+    assert.equal(res.body.parent.ageBand, null);
+  });
+
+  await t.test("sign-up creates a learner account with its age band", async () => {
+    const res = await offApp()("POST", "/api/auth/signup/complete", {
+      email: "learner@example.com",
+      password: "password-x",
+      accountType: "learner",
+      ageBand: "16-17",
+      children: oneChild,
+    });
+    assert.equal(res.status, 201);
+    assert.equal(res.body.parent.accountType, "learner");
+    assert.equal(res.body.parent.ageBand, "16-17");
+  });
+
+  await t.test("sign-up never leaks credential fields", async () => {
+    const res = await offApp()("POST", "/api/auth/signup/complete", {
+      email: "leak-check@example.com",
+      password: "password-x",
+      children: oneChild,
+    });
+    assert.equal(res.status, 201);
+    for (const field of ["passwordHash", "passwordSalt", "iterations"]) {
+      assert.equal(res.body.parent[field], undefined, field);
+    }
+  });
+
+  await t.test("sign-up rejects a bad account type or age band", async () => {
+    const cases = [
+      [{ accountType: "admin" }, "INVALID_ACCOUNT_TYPE"],
+      [{ accountType: "learner" }, "AGE_BAND_REQUIRED"],
+      [{ accountType: "learner", ageBand: "under-13" }, "AGE_BAND_TOO_YOUNG"],
+      [{ accountType: "learner", ageBand: "7-9" }, "INVALID_AGE_BAND"],
+    ];
+
+    for (const [extra, code] of cases) {
+      const email = `reject-${code}@example.com`;
+      const res = await offApp()("POST", "/api/auth/signup/complete", {
+        email,
+        password: "password-x",
+        children: oneChild,
+        ...extra,
+      });
+      assert.equal(res.status, 400, code);
+      assert.equal(res.body.error, code);
+      // Rejected BEFORE the insert — no orphan account left behind.
+      assert.equal(
+        await database.collection("parents").countDocuments({ email }),
+        0,
+        `${code} must not create an account`
+      );
+    }
   });
 });

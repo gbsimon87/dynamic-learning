@@ -7,8 +7,8 @@
    flip; no literal ever appears outside those two blocks.
 
    The shared form furniture (field, input, button, chip, error) lives here too
-   rather than in Login.css and SignUp.css, because it was already duplicated
-   line-for-line between them as `--lg-*` and `--su-*`.
+   rather than in Login.css and SignUpFlow.css, because it was once duplicated
+   line-for-line between the login and sign-up pages.
 =========================================================== */
 .auth-page {
   --au-bg: var(--light-bg);

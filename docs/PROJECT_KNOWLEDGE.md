@@ -169,7 +169,7 @@ scripts/                      # Dev tooling, Node-only
 │   └── speech.js             # One British speech-synthesis voice (Solar System + English kit)
 ├── pages/
 │   ├── home/Home.jsx, HomeAchievements.jsx   # HomeAchievements: something-new, streak/level and collection cards
-│   ├── auth/                 # Login, SignUp, Profiles, ParentArea
+│   ├── auth/                 # Login, signup/ (SignUpFlow), Profiles, ParentArea
 │   ├── skills/
 │   │   ├── SkillsPage.jsx    # Skills hub — links to every skill game
 │   │   ├── math/             # Skill games, grouped by subject
@@ -504,6 +504,7 @@ Everything account-shaped goes through one async interface,
 
 ```
 createParent · findParentByEmail · verifyParent · getParent · signOutParent
+requestSignupCode · completeSignup   (createParent is localStorage-only now; over HTTP, sign-up is completeSignup)
 listChildren · getChild · createChild · updateChild · deleteChild
 getProgress(childId, year, subject) · saveProgress(childId, year, subject, data)
 getRewards(childId)                 · saveRewards(childId, data)
@@ -520,8 +521,9 @@ localStorage key per collection (`dl.parents`, `dl.children`, `dl.progress`,
 
 ```js
 parents:  { _id, email, passwordHash, passwordSalt, iterations,
-            accountType, ageBand, createdAt }
-children: { _id, parentId, name, avatar, colour, yearGroup, createdAt }
+            accountType, ageBand, emailVerified?, emailVerifiedAt?, createdAt }
+children: { _id, parentId, name, avatar, colour, yearGroup, subjects?, createdAt }
+          // emailVerified* and subjects are absent on older documents (§5)
 progress: { _id, childId, year, subject, schemaVersion: 1, data: {...}, createdAt, updatedAt }
 rewards:  { _id, childId, schemaVersion: 1, data: {...}, createdAt, updatedAt }
           // the envelope stays 1; the shape version is `data.schemaVersion` (now 2, §5)
@@ -567,7 +569,8 @@ server/app.js        app construction, split out so tests need no port
 server/db.js         ONE MongoClient, connected once and reused
 server/auth.js       PBKDF2-SHA-256 hashing + JWT session cookie `dl_session`
 server/middleware.js requireAuth, requireOwnedChild
-server/routes/       auth, children, progress, rewards
+server/routes/       auth, signup, children, progress, rewards
+server/email.js      mailer for sign-up codes (Resend; §6 item 17)
 ```
 
 Endpoints mirror the store interface exactly; see the table in
@@ -677,34 +680,99 @@ Sign-up (`/signup`), sign-in (`/login`), child profile picker (`/profiles`), and
 account admin screen (`/parent`). See §4.7. Curriculum Mode requires a selected child
 profile; Skills Mode does not.
 
-**`/signup` is a wizard on one route**, because two different people arrive there
-and the old single screen served only one of them — it greeted a ten-year-old
-with "Create a parent account" and three password fields:
+**`/signup` is one question-led path** (built 2026-10-07, spec
+`docs/superpowers/specs/2026-10-07-signup-onboarding-design.md`), for anyone old
+enough to hold the account: a grown-up or a learner aged 13+. One question per
+screen, with Bix guiding; the whole family is built **before** credentials are
+asked for, and **nothing is saved until the end** — abandoning midway leaves no
+account behind.
 
-| Step | Grown-up branch | Learner branch |
+| Step | What it asks | Notes |
 |---|---|---|
-| 0 | Two illustrated choice cards | same screen |
-| 0b | — | "How old are you?" age chips. Under 13 → a warm dead end offering "Get a grown-up". **No account is created.** |
-| 1 | Email, password, confirm, show/hide, live strength hint | same, gentler copy |
-| 2 | "Add your first child" (`ProfileBuilder`) | "Make my profile" |
-| → | `/profiles` | `/curriculum` |
+| `birthYear` | Year of birth (wheel, no pre-selection) | Age counted at the youngest it could be: `currentYear − birthYear − 1`. |
+| `gate` | — (under 13) | Dead end: "ask a grown-up". **No request, nothing saved.** |
+| `who` | Me / My children | 18+ only; 13–17 is always "Me". Me → `learner`, children → `parent`. |
+| `count` | How many children | Parent only; 1–6 (4+ starts four, "Add another" up to 6). |
+| `name` · `year` · `look` · `subjects` | Per learner: nickname (≤ 20), school year (or "Not sure"), avatar + colour, subjects | `subjects` is skipped when the year has none; stored as `[]`. |
+| `summary` | Review, Edit, Add another | |
+| `account` | Email, password, confirm | Calls `/signup/code`. |
+| `code` | Six-digit code | Skipped when verification is off. Submits on the sixth digit. |
+| `handover` | "Hand the device to Maya!" | Creates nothing; `selectChild`, then the first chosen subject or `/`. |
 
-⚠️ **The account is created at the end of step 1, not at the end of the wizard**,
-because step 2 calls `addChild`, which needs an authenticated account. So a
-failure at step 2 leaves a real account with no profile — recoverable, and it
-routes to `/profiles`, which is exactly the screen for adding one. There is no
-way back from step 2: the credentials are already saved.
+**Two routes** (`server/routes/signup.js`, both behind the auth throttle):
+
+- `POST /api/auth/signup/code { email }` sends a code. 409 `EMAIL_TAKEN`; 429
+  `CODE_RECENTLY_SENT` (30 s) / `TOO_MANY_CODES` (5 an hour); 502
+  `EMAIL_SEND_FAILED`. With verification off it answers `{ verification: "off" }`
+  and stores nothing.
+- `POST /api/auth/signup/complete { email, code?, password, accountType, ageBand,
+  children[] }` validates **everything else first** (so a typo in a profile never
+  spends an attempt), checks the code, then creates the parent and every
+  profile and signs in (201 `{ parent, children }`). 1–6 children for a parent,
+  exactly 1 for a learner; an under-13 band is `AGE_BAND_TOO_YOUNG`. If a profile
+  fails to save, the parent and its profiles are deleted together
+  (`SIGNUP_FAILED`). It selects no child — the hand-over does.
+
+**`pendingSignups`** (one document per email, unique index on `email`):
+`{ email, codeHash, expiresAt, attempts, sendCount, sendWindowStart, lastSentAt,
+purgeAt }`. A TTL index on `purgeAt` (the later of the send window's end and the
+code's expiry) removes old ones. `codeHash` is `HMAC-SHA256(SESSION_SECRET,
+email:code)`; the code is never stored. A code lasts 10 minutes, allows 5 wrong
+tries, and a wrong fifth or a failed send sets `codeHash: null` rather than
+deleting the record, so the hourly send cap still holds.
+
+⚠️ **Two races are closed in the database, not in the handler.** Sending is gated
+by a **conditional write** (insert on first send, update conditioned on the
+`lastSentAt` that was read); the email goes out only if that write won, so ten
+parallel requests send one email. And each guess **reserves an attempt
+atomically before the code is compared** (`findOneAndUpdate` on
+`attempts < 5`), so at most five guesses are ever compared; the code itself is
+then claimed atomically (single use). Both are covered by tests that hold every
+read until all requests have made theirs — keep those tests passing if you
+touch the handlers.
+
+**Email verification.** `parents` gain `emailVerified` and `emailVerifiedAt`.
+**Absent means "never asked"** (every account made before 2026-10-07); nothing
+gates or nags on them. An account made with verification off stores
+`emailVerified: false`. Modes (`server/email.js`): both `RESEND_API_KEY` and
+`EMAIL_FROM` → send; neither and not production → log the code to the terminal;
+anything else → off. See §6 item 17.
+
+**`subjects` on children.** An array of subject ids chosen at sign-up
+(`[]` = Just exploring / not asked; absent reads as `[]`). Used twice: the
+hand-over destination, and a "⭐ Your pick" tag on `CurriculumSelectPage`.
+
+**The draft.** `dl.signupDraft` in `sessionStorage` holds every answer except
+the password and the code, plus the current step, so a refresh resumes. It never
+holds the birth year (after a refresh the wheel shows no selection), and
+**nothing at all is saved for an under-13 answer**. It is cleared on success and
+by "Start again"; a draft that fails to parse is discarded.
+
+**Where the logic lives.** `src/data/signupFlow.js` (pure: steps and skips, age
+band, subjects per year, validation, the request body, `destinationFor`, draft
+parse/serialise), `src/data/signupCopy.js` (Bix's lines and the error messages),
+`server/routes/signup.js` (the routes), `server/signupCodes.js` (code, hash,
+send decision), `server/email.js` (mailer; password reset #3 will add a second
+message), `server/accounts.js` (`createParentAccount`: hash, insert, duplicate-race check).
+The screens are in `src/pages/auth/signup/` (`SignUpFlow.jsx` is the state
+machine; `steps.jsx`, `HandOver.jsx`, `parts/`). Both store drivers have
+`requestSignupCode` and `completeSignup`; the localStorage driver has no code
+step and stores `emailVerified: false`. `track()` (`src/utils/analytics.js`) is
+a no-op with an allow-list until PostHog (#36): counts and step names only,
+never names, emails or birth years.
 
 **The age gate is an honest speed bump, not compliance.** A child can tap an
-older age. It is enough for a family project and is deliberately not enough for
+older year. It is enough for a family project and is deliberately not enough for
 a public launch — see PROJECT_IDEAS.
 
 `AuthShell` gives `/login` and `/signup` one drifting sky, one card and one
 entrance, so moving between them reads as two views of the same place.
-`ProfileBuilder` was lifted out of `Profiles.jsx` so the wizard and the picker
-share one implementation of the name/avatar/colour/year form — they had been
-two copies, which is how a colour picker gets fixed on one screen and not the
-other. It only ever CREATES; editing an existing profile happens in `/parent`.
+`ProfileBuilder` was lifted out of `Profiles.jsx` so the sign-up and the picker
+share the name/avatar/colour/year pickers — they had been two copies, which is
+how a colour picker gets fixed on one screen and not the other. The old
+single-page sign-up wizard and its `POST /api/auth/signup` route were removed
+(2026-10-07); `POST /api/auth/signup/complete` is the only way to create an
+account over HTTP.
 
 ### Curriculum Mode — dev unlock switch
 `VITE_UNLOCK_ALL=true` opens every built challenge in the picker, bypassing the
@@ -1687,8 +1755,9 @@ without a changelog note or the report was inaccurate.
    emitted); `.skills-grid` has an unreachable `max-width: 1400px` inside a
    1200px parent.
 17. **Email verification is pending a sending domain** (decided 2026-10-07,
-   PROJECT_IDEAS #21). Sign-up will verify the grown-up's address with a
-   six-digit code before the account is created, sent through **Resend**. The
+   spec `docs/superpowers/specs/2026-10-07-signup-onboarding-design.md`).
+   Sign-up verifies the address with a six-digit code before the account is
+   created, sent through **Resend**. The
    app has no domain of its own yet — it is served at
    `dynamic-learning-n72m.onrender.com`, and `onrender.com` belongs to Render, so
    it cannot be verified as a sender. Until a domain is bought and verified in
@@ -1699,9 +1768,10 @@ without a changelog note or the report was inaccurate.
    `EMAIL_FROM` are set; without them production sign-up skips it and stores
    the account as `emailVerified: false`, so those accounts can be asked to
    verify later. Locally, with no key, the server logs the code to the
-   terminal. **To finish:** buy a domain, verify it in Resend, set both env vars
-   on Render (DEPLOYMENT §2) — no code change. Deliberately no personal
-   address in this file: the repo is public.
+   terminal. **The code is built** (`server/email.js`, `server/routes/signup.js`,
+   §5 "Accounts"); **only the domain is pending.** To finish: buy a domain,
+   verify it in Resend, set both env vars on Render (DEPLOYMENT §2) — no code
+   change. Deliberately no personal address in this file: the repo is public.
 
 **Resolved since last review:**
 

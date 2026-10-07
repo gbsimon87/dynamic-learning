@@ -201,34 +201,6 @@ export function AuthProvider({ children: subtree }) {
 
   // --- Actions ------------------------------------------------------------
 
-  const signUp = useCallback(async ({ email, password, accountType, ageBand }) => {
-    setError(null);
-    try {
-      // `accountType`/`ageBand` omitted means a grown-up's account, so every
-      // pre-existing caller keeps its current behaviour.
-      const newParent = await store.createParent({
-        email,
-        password,
-        accountType,
-        ageBand,
-      });
-      if (!aliveRef.current) return newParent;
-      setParent(newParent);
-      setChildProfiles([]);
-      setChild(null);
-      writeSession(newParent._id, null, newParent.email);
-      // No profiles yet — the wizard creates the first one immediately after,
-      // and `addChild` refreshes this record with the face to show next time.
-      writeLastAccount(newParent, []);
-      return newParent;
-    } catch (err) {
-      if (aliveRef.current) setError(err?.message || "SIGNUP_FAILED");
-      // Rethrown as well as recorded: the auth pages branch on the thrown
-      // Error (notably "EMAIL_TAKEN") to show a field-level message.
-      throw err;
-    }
-  }, []);
-
   /** Step 6 of sign-up. Not stateful: nothing is saved until completeSignup. */
   const requestSignupCode = useCallback((email) => store.requestSignupCode(email), []);
 
@@ -433,7 +405,6 @@ export function AuthProvider({ children: subtree }) {
       status,
       isLearner,
       error,
-      signUp,
       requestSignupCode,
       completeSignup,
       signIn,
@@ -450,7 +421,6 @@ export function AuthProvider({ children: subtree }) {
       status,
       isLearner,
       error,
-      signUp,
       requestSignupCode,
       completeSignup,
       signIn,
