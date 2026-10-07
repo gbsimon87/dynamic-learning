@@ -4,7 +4,6 @@ import * as db from "./../db.js";
 import {
   COOKIE_NAME,
   cookieOptions,
-  hashPassword,
   signSession,
   verifyPassword,
 } from "../auth.js";
@@ -12,6 +11,7 @@ import { requireAuth } from "../middleware.js";
 import { publicParent } from "../serialize.js";
 import { normaliseAccountFields } from "../../shared/accountTypes.js";
 import { createAuthThrottle } from "../authThrottle.js";
+import { createParentAccount } from "../accounts.js";
 
 const router = Router();
 const throttle = createAuthThrottle();
@@ -41,35 +41,16 @@ router.post("/signup", throttle, async (req, res, next) => {
       return res.status(400).json({ error: err.message });
     }
 
-    // The `email` index is NOT unique, so uniqueness is enforced here.
-    const existing = await db.parents().findOne({ email });
-    if (existing) return res.status(409).json({ error: "EMAIL_TAKEN" });
-
-    const { hash, salt, iterations } = await hashPassword(password);
-    const parent = {
-      email,
-      passwordHash: hash,
-      passwordSalt: salt,
-      iterations,
-      accountType: account.accountType,
-      ageBand: account.ageBand,
-      createdAt: new Date().toISOString(),
-    };
-    const { insertedId } = await db.parents().insertOne(parent);
-
-    // Narrow the race: two concurrent signups both pass the check above. The
-    // loser deletes its own row rather than leaving a duplicate account.
-    const duplicates = await db
-      .parents()
-      .find({ email }, { projection: { _id: 1 } })
-      .toArray();
-    if (duplicates.length > 1 && !insertedId.equals(duplicates[0]._id)) {
-      await db.parents().deleteOne({ _id: insertedId });
-      return res.status(409).json({ error: "EMAIL_TAKEN" });
+    let parent;
+    try {
+      parent = await createParentAccount({ email, password, account });
+    } catch (err) {
+      if (err.message === "EMAIL_TAKEN") return res.status(409).json({ error: "EMAIL_TAKEN" });
+      throw err;
     }
 
-    res.cookie(COOKIE_NAME, signSession(insertedId), cookieOptions());
-    return res.status(201).json({ parent: publicParent({ ...parent, _id: insertedId }) });
+    res.cookie(COOKIE_NAME, signSession(parent._id), cookieOptions());
+    return res.status(201).json({ parent: publicParent(parent) });
   } catch (err) {
     return next(err);
   }

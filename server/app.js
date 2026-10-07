@@ -10,16 +10,24 @@ import authRoutes from "./routes/auth.js";
 import childrenRoutes from "./routes/children.js";
 import progressRoutes from "./routes/progress.js";
 import rewardsRoutes from "./routes/rewards.js";
+import { createSignupRouter } from "./routes/signup.js";
+import { createMailerFromEnv } from "./email.js";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.resolve(here, "..", "dist");
 
-export function createApp({ serveStatic = process.env.NODE_ENV === "production" } = {}) {
+export function createApp({ serveStatic = process.env.NODE_ENV === "production", signup = {} } = {}) {
   const app = express();
   app.use(express.json({ limit: "1mb" }));
   app.use(cookieParser());
 
   app.get("/api/health", (req, res) => res.json({ ok: true }));
+  // Before /api/auth: this router owns /api/auth/signup/*; anything it does not
+  // match (the old POST /api/auth/signup) falls through to authRoutes.
+  app.use(
+    "/api/auth/signup",
+    createSignupRouter({ ...signup, mailer: signup.mailer ?? createMailerFromEnv() })
+  );
   app.use("/api/auth", authRoutes);
   app.use("/api/children", childrenRoutes);
   app.use("/api/progress", progressRoutes);
