@@ -209,7 +209,7 @@ export function CodeBody({ code, onCode, onComplete, busy, error, invalid, shake
   return (
     <>
       <CodeInput value={code} onChange={onCode} onComplete={onComplete} disabled={busy} invalid={invalid} shakeKey={shakeKey} />
-      {error && <p className="auth-error" role="alert">{error}</p>}
+      {error && <p className="sf-code-msg" role="alert">{error}</p>}
       <div className="auth-actions">
         <button type="button" className={`auth-btn ${needsNewCode ? "" : "auth-btn-quiet"}`} onClick={onResend} disabled={busy || resendIn > 0}>
           {resendIn > 0 ? `Send a new code in ${resendIn}s` : "Send a new code"}

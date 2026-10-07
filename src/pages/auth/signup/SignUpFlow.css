@@ -35,6 +35,12 @@
 @keyframes sf-step-in-back { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
 .auth-page .sf-panel .auth-title:focus { outline: none; }
 
+/* Targets for 6-8 year olds: every button and field inside the flow is big (scoped here; /login keeps its sizes). */
+.auth-page .sf .auth-btn { min-height: 64px; }
+.auth-page .sf .auth-input { min-height: 56px; }
+.auth-page .sf .auth-input-wrap .auth-input { padding-inline-end: 4.2rem; }
+.auth-page .sf .auth-peek { min-width: 56px; min-height: 48px; }
+
 /* Choice cards */
 .auth-page .sf-cards { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
 .auth-page .sf-card {
@@ -82,6 +88,8 @@
 }
 .auth-page .sf-code-box:focus { border-color: var(--au-accent); }
 .auth-page .sf-code-box:focus-visible { outline: 3px solid var(--au-accent); outline-offset: 2px; }
+/* The wrong-code moment is never red: plain text colour, a little emphasis. */
+.auth-page .sf-code-msg { margin: 0; font-size: 1rem; font-weight: 600; color: var(--au-text); }
 /* A static wrong-code cue that survives reduced motion (no shake), and is never red. */
 .auth-page .sf-code.is-invalid .sf-code-box { border-style: dashed; border-color: var(--au-accent); }
 
