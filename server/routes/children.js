@@ -30,9 +30,11 @@ router.post("/", async (req, res, next) => {
     // which years exist. Re-validated here because a request is not a trust
     // boundary.
     let year = null;
+    let subjects = [];
     try {
-      ({ yearGroup: year = null } = normaliseChildPatch({
+      ({ yearGroup: year = null, subjects = [] } = normaliseChildPatch({
         yearGroup: req.body?.yearGroup ?? null,
+        subjects: req.body?.subjects,
       }));
     } catch (err) {
       return res.status(400).json({ error: err.message });
@@ -44,6 +46,7 @@ router.post("/", async (req, res, next) => {
       avatar: req.body?.avatar ?? null,
       colour: req.body?.colour ?? null,
       yearGroup: year,
+      subjects,
       createdAt: new Date().toISOString(),
     };
     const { insertedId } = await db.children().insertOne(child);

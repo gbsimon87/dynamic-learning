@@ -104,6 +104,7 @@ test("route authorization", { skip: URI ? false : "MONGODB_URI not set" }, async
     }
   });
   assert.equal(childA.name, "Ada");
+  assert.deepEqual(childA.subjects, [], "a new profile has no subjects until one is chosen");
   assert.equal(typeof childA.parentId, "string");
 
   await t.test("a parent lists only their own children", async () => {

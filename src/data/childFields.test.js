@@ -2,11 +2,16 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  CHILD_NAME_MAX,
+  CHILD_SUBJECTS,
   CHILD_YEAR_GROUPS,
   EDITABLE_CHILD_FIELDS,
   normaliseChildPatch,
+  normaliseNewChildren,
+  readSubjects,
   readYearGroup,
 } from "./childFields.js";
+import { CURRICULUM_SUBJECTS } from "./curriculumRegistry.js";
 
 test("a profile with no yearGroup reads as null, not as a guess", () => {
   assert.equal(readYearGroup({ name: "Mia" }), null);
@@ -30,6 +35,7 @@ test("a patch is narrowed to the writable fields", () => {
     avatar: "🦊",
     colour: "--profile-colour-sky",
     yearGroup: 3,
+    subjects: ["math"],
     // None of these may ever be written.
     parentId: "someone-else",
     _id: "hijacked",
@@ -82,4 +88,45 @@ test("an explicitly-undefined field means 'not supplied', not 'invalid'", () => 
 test("undefined and null are different: one skips, the other clears", () => {
   assert.deepEqual(normaliseChildPatch({ yearGroup: undefined }), {});
   assert.deepEqual(normaliseChildPatch({ yearGroup: null }), { yearGroup: null });
+});
+
+test("subjects: the list is the curriculum's subject ids, and is editable", () => {
+  assert.deepEqual([...CHILD_SUBJECTS].sort(), CURRICULUM_SUBJECTS.map((s) => s.id).sort());
+  assert.ok(EDITABLE_CHILD_FIELDS.includes("subjects"));
+});
+
+test("subjects: de-duplicated, null clears, absent untouched, unknown refused", () => {
+  assert.deepEqual(normaliseChildPatch({ subjects: ["math", "science", "math"] }), { subjects: ["math", "science"] });
+  assert.deepEqual(normaliseChildPatch({ subjects: null }), { subjects: [] });
+  assert.deepEqual(normaliseChildPatch({ name: "Ada" }), { name: "Ada" });
+  assert.throws(() => normaliseChildPatch({ subjects: ["history"] }), /INVALID_SUBJECTS/);
+  assert.throws(() => normaliseChildPatch({ subjects: "math" }), /INVALID_SUBJECTS/);
+});
+
+test("readSubjects tolerates old and corrupt profiles", () => {
+  assert.deepEqual(readSubjects({}), []);
+  assert.deepEqual(readSubjects(null), []);
+  assert.deepEqual(readSubjects({ subjects: "math" }), []);
+  assert.deepEqual(readSubjects({ subjects: ["math", "history"] }), ["math"]);
+});
+
+test("normaliseNewChildren whitelists, trims and bounds a sign-up's profiles", () => {
+  const [kid] = normaliseNewChildren(
+    [{ name: "  Maya ", avatar: "🦊", colour: "--profile-colour-sky", yearGroup: 2, subjects: ["math"], parentId: "evil", _id: "x" }],
+    { max: 6 }
+  );
+  assert.deepEqual(kid, { name: "Maya", avatar: "🦊", colour: "--profile-colour-sky", yearGroup: 2, subjects: ["math"] });
+  assert.deepEqual(normaliseNewChildren([{ name: "Leo" }], { max: 1 })[0], {
+    name: "Leo", avatar: null, colour: null, yearGroup: null, subjects: [],
+  });
+  assert.throws(() => normaliseNewChildren([], { max: 6 }), /INVALID_CHILDREN/);
+  assert.throws(() => normaliseNewChildren("nope", { max: 6 }), /INVALID_CHILDREN/);
+  assert.throws(() => normaliseNewChildren([{ name: "A" }, { name: "B" }], { max: 1 }), /INVALID_CHILDREN/);
+  assert.throws(() => normaliseNewChildren([{ name: " " }], { max: 6 }), /NAME_REQUIRED/);
+  assert.throws(() => normaliseNewChildren([null], { max: 6 }), /NAME_REQUIRED/);
+  assert.throws(() => normaliseNewChildren([{ name: "x".repeat(CHILD_NAME_MAX + 1) }], { max: 6 }), /NAME_TOO_LONG/);
+  // Counted in characters, not UTF-16 units: twenty emoji is twenty.
+  assert.equal([...normaliseNewChildren([{ name: "🦊".repeat(20) }], { max: 6 })[0].name].length, 20);
+  assert.throws(() => normaliseNewChildren([{ name: "A", yearGroup: 9 }], { max: 6 }), /INVALID_YEAR_GROUP/);
+  assert.throws(() => normaliseNewChildren([{ name: "A", subjects: ["history"] }], { max: 6 }), /INVALID_SUBJECTS/);
 });
