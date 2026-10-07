@@ -109,6 +109,15 @@ export function withLearner(draft, index, patch) {
       const allowed = subjectsForYear(next.yearGroup);
       next.subjects = next.subjects.filter((id) => allowed.includes(id));
     }
+    // Everything they picked is gone and the new year has subjects to choose from: ask again.
+    if (
+      "yearGroup" in patch &&
+      Array.isArray(learner.subjects) && learner.subjects.length > 0 &&
+      Array.isArray(next.subjects) && next.subjects.length === 0 &&
+      subjectsForYear(next.yearGroup).length > 0
+    ) {
+      delete next.subjects;
+    }
     if (next.subjects === undefined) delete next.subjects;
     return next;
   });
@@ -120,6 +129,14 @@ export function toggleSubject(subjects, id) {
   const current = Array.isArray(subjects) ? subjects : [];
   const next = current.includes(id) ? current.filter((s) => s !== id) : [...current, id];
   return next.length > 0 ? next : undefined;
+}
+
+/**
+ * Moves the cursor. Arriving at the summary ends an edit, so the "go back to
+ * the summary" shortcut is cleared and Back/Next follow the sequence again.
+ */
+export function withCursor(draft, cursor) {
+  return { ...draft, cursor, returnTo: cursor.step === STEP.summary ? null : draft.returnTo };
 }
 
 export function editLearner(draft, index) {
@@ -272,8 +289,15 @@ export function parseCode(text) {
 
 /* ---------- the saved draft ---------- */
 
+/**
+ * The draft that goes into sessionStorage. The birth year is never saved (it
+ * stays in memory only), and a draft that was turned away at the gate is not
+ * saved at all (null), so nothing about an under-13 survives a reload.
+ */
 export function serialiseDraft(draft) {
-  return JSON.stringify(draft);
+  if (draft.ageBand === GATED) return null;
+  const { birthYear: _birthYear, ...saved } = draft;
+  return JSON.stringify(saved);
 }
 
 function cleanLearner(raw) {
@@ -284,7 +308,9 @@ function cleanLearner(raw) {
 }
 
 /**
- * Reads a saved draft. Anything unexpected → null (start again) rather than a
+ * Reads a saved draft. It never has a birth year (serialiseDraft drops it) and
+ * a gated band is rejected, so nothing about an under-13 is ever restored.
+ * Anything unexpected → null (start again) rather than a
  * half-trusted draft. A cursor that cannot be shown is moved somewhere safe.
  */
 export function parseDraft(raw) {
@@ -298,12 +324,14 @@ export function parseDraft(raw) {
   if (!Array.isArray(data.learners) || data.learners.length > MAX_CHILDREN_PER_SIGNUP) return null;
   if (data.learners.some((l) => !l || typeof l !== "object" || typeof l.name !== "string")) return null;
   if (![null, "me", "children"].includes(data.learnFor ?? null)) return null;
-  if (data.ageBand !== null && data.ageBand !== GATED && !AGE_BANDS.includes(data.ageBand)) return null;
+  // A gated draft is never saved; if one turns up anyway, start again.
+  if (data.ageBand === GATED) return null;
+  if (data.ageBand !== null && data.ageBand !== undefined && !AGE_BANDS.includes(data.ageBand)) return null;
   if (!data.cursor || !Object.values(STEP).includes(data.cursor.step)) return null;
 
   const draft = {
     ...emptyDraft(),
-    birthYear: Number.isInteger(data.birthYear) ? data.birthYear : null,
+    birthYear: null, // never read back: a saved draft holds no birth year
     ageBand: data.ageBand ?? null,
     learnFor: data.learnFor ?? null,
     learners: data.learners.map(cleanLearner),
@@ -317,7 +345,9 @@ export function parseDraft(raw) {
   } else if (cursor.step === STEP.gate || stepsFor(draft).some((c) => sameCursor(c, cursor))) {
     draft.cursor = cursor;
   } else {
-    draft.cursor = stepsFor(draft).find((c) => stepError(draft, c) !== null) ?? { step: STEP.birthYear };
+    draft.cursor =
+      stepsFor(draft).find((c) => stepError(draft, c) !== null) ??
+      (isDraftReady(draft) ? { step: STEP.summary } : { step: STEP.birthYear });
   }
   return draft;
 }

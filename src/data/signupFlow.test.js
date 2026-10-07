@@ -4,7 +4,7 @@ import {
   DRAFT_KEY, EXPLORING, GATED, STEP, accountErrors, addLearner, ageBandForBirthYear,
   birthYearOptions, destinationFor, editLearner, emptyDraft, isDraftReady, nextCursor,
   parseCode, parseDraft, prevCursor, serialiseDraft, signupBody, stageOf, stepError,
-  stepsFor, subjectsForYear, toggleSubject, withBirthYear, withCount, withLearnFor, withLearner,
+  stepsFor, subjectsForYear, toggleSubject, withBirthYear, withCount, withCursor, withLearnFor, withLearner,
 } from "./signupFlow.js";
 
 const NOW = 2026;
@@ -78,6 +78,14 @@ test("editing from the summary returns to the summary", () => {
   assert.deepEqual(prevCursor(draft, { step: STEP.name, index: 0 }), { step: STEP.summary });
 });
 
+test("finishing an edit clears the shortcut back to the summary", () => {
+  const back = withCursor(editLearner(parentDraft(), 0), { step: STEP.summary });
+  assert.equal(back.returnTo, null);
+  assert.deepEqual(prevCursor(back, { step: STEP.summary }), { step: STEP.subjects, index: 1 });
+  assert.deepEqual(nextCursor(back, { step: STEP.subjects, index: 0 }), { step: STEP.name, index: 1 });
+  assert.equal(withCursor(editLearner(parentDraft(), 0), { step: STEP.year, index: 0 }).returnTo, STEP.summary);
+});
+
 test("adding a learner from the summary is capped at six", () => {
   let draft = parentDraft();
   for (let i = 0; i < 10; i++) draft = addLearner(draft);
@@ -98,6 +106,14 @@ test("changing a year drops subjects that year doesn't have (Review Focus 1)", (
   const draft = { ...parentDraft(), learners: [{ ...leo, subjects: ["science", "math"] }] };
   assert.deepEqual(withLearner(draft, 0, { yearGroup: 2 }).learners[0].subjects, ["math"]);
   assert.deepEqual(withLearner(draft, 0, { yearGroup: 1 }).learners[0].subjects, []);
+});
+
+test("a year change that empties the picks asks the subjects again", () => {
+  const draft = { ...parentDraft(), learners: [{ ...leo, subjects: ["science"] }] };
+  assert.equal("subjects" in withLearner(draft, 0, { yearGroup: 2 }).learners[0], false);
+  assert.deepEqual(withLearner(draft, 0, { yearGroup: 1 }).learners[0].subjects, [], "no subjects offered: keep []");
+  const exploring = { ...parentDraft(), learners: [{ ...leo, subjects: [] }] };
+  assert.deepEqual(withLearner(exploring, 0, { yearGroup: 2 }).learners[0].subjects, [], "Just exploring is kept");
 });
 
 test("toggling subjects: Just exploring is exclusive; clearing the last one un-answers", () => {
@@ -163,8 +179,15 @@ test("a draft round-trips and never holds a password", () => {
   const draft = { ...parentDraft(), email: "a@b.co", cursor: { step: STEP.summary } };
   const raw = serialiseDraft(draft);
   assert.equal(raw.includes("password"), false);
-  assert.deepEqual(parseDraft(raw), draft);
+  assert.equal(raw.includes("birthYear"), false, "the birth year is never saved");
+  assert.deepEqual(parseDraft(raw), { ...draft, birthYear: null });
   assert.equal(DRAFT_KEY, "dl.signupDraft");
+});
+
+test("a gated draft is never saved or restored", () => {
+  const gated = withBirthYear(emptyDraft(), 2016, NOW);
+  assert.equal(serialiseDraft(gated), null);
+  assert.equal(parseDraft(JSON.stringify({ ...gated, birthYear: undefined })), null);
 });
 
 test("a stale or tampered draft is discarded or made safe (Review Focus 4)", () => {
@@ -181,6 +204,9 @@ test("a stale or tampered draft is discarded or made safe (Review Focus 4)", () 
   // A cursor the draft cannot reach restarts at the first unanswered step.
   const early = { ...withBirthYear(emptyDraft(), 1990, NOW), cursor: { step: STEP.summary } };
   assert.deepEqual(parseDraft(JSON.stringify(early)).cursor, { step: STEP.who });
+  // A fully answered draft with an unreachable cursor resumes at the summary.
+  const lost = { ...parentDraft(), cursor: { step: STEP.name, index: 5 } };
+  assert.deepEqual(parseDraft(JSON.stringify(lost)).cursor, { step: STEP.summary });
 });
 
 test("progress stages", () => {

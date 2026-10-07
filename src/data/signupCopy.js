@@ -1,5 +1,7 @@
 /** Everything Bix and the sign-up screens say. Kept apart so it can be read and tested in one place. */
 import { maskEmail } from "../../shared/emailAddress.js";
+import { CHILD_NAME_MAX } from "./childFields.js";
+import { MIN_PASSWORD_LENGTH } from "./passwordStrength.js";
 import { STEP } from "./signupFlow.js";
 
 const SUBJECT_CHEERS = {
@@ -57,11 +59,11 @@ export const ERROR_MESSAGES = {
   CHOOSE_ONE: "Pick one to carry on.",
   CHOOSE_LOOK: "Pick a picture and a colour.",
   NAME_REQUIRED: "Type a name first! ✏️",
-  NAME_TOO_LONG: "That's a long one! Try 20 letters or fewer.",
+  NAME_TOO_LONG: `That's a long one! Try ${CHILD_NAME_MAX} letters or fewer.`,
   EMAIL_INVALID: "That email doesn't look quite right.",
   EMAIL_REQUIRED: "Type your email address.",
   EMAIL_TAKEN: "That email already has an account.",
-  PASSWORD_TOO_SHORT: "At least 8 characters, please.",
+  PASSWORD_TOO_SHORT: `At least ${MIN_PASSWORD_LENGTH} characters, please.`,
   PASSWORD_MISMATCH: "Those passwords don't match.",
   CODE_RECENTLY_SENT: "I've just sent one — give it a moment.",
   TOO_MANY_CODES: "Let's take a break — try again in a little while.",
