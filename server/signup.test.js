@@ -56,8 +56,6 @@ test("sign-up with a code", { skip: URI ? false : "MONGODB_URI not set" }, async
   const mailer = fakeMailer();
   const browser = await start({ mailer, now });
   const lastCode = (email) => mailer.sent.filter((m) => m.email === email).at(-1)?.code;
-  // Used by the /complete tests Task 5 adds below.
-  // eslint-disable-next-line no-unused-vars
   const family = (email) => ({
     email,
     password: "password-1",
@@ -174,5 +172,106 @@ test("sign-up with a code", { skip: URI ? false : "MONGODB_URI not set" }, async
     assert.equal(mailer.sent.filter((m) => m.email === email).length, 0);
   });
 
-  // Task 5 adds the /complete tests below this line, inside this test().
+  await t.test("the right code creates the account and every child in one go", async () => {
+    const b = browser();
+    const email = "family@example.com";
+    await b("POST", "/api/auth/signup/code", { email: "FAMILY@example.com" });
+    const res = await b("POST", "/api/auth/signup/complete", { ...family(" Family@Example.com"), code: lastCode(email) });
+    assert.equal(res.status, 201);
+    assert.equal(res.body.parent.email, email);
+    assert.equal(res.body.parent.emailVerified, true);
+    assert.ok(res.body.parent.emailVerifiedAt);
+    assert.equal(res.body.parent.passwordHash, undefined);
+    assert.deepEqual(res.body.children.map((c) => [c.name, c.yearGroup, c.subjects]), [["Maya", 2, ["math"]], ["Leo", 3, []]]);
+    assert.ok(res.cookie, "signed in");
+    assert.deepEqual((await b("GET", "/api/children")).body.children.map((c) => c.name).sort(), ["Leo", "Maya"]);
+    assert.equal((await browser()("POST", "/api/auth/signup/complete", { ...family(email), code: lastCode(email) })).status, 409);
+  });
+
+  await t.test("a wrong code counts down, and the fifth locks the code", async () => {
+    const b = browser();
+    const email = "wrong@example.com";
+    await b("POST", "/api/auth/signup/code", { email });
+    const right = lastCode(email);
+    const wrong = right === "000000" ? "111111" : "000000";
+    for (const left of [4, 3, 2, 1]) {
+      const res = await b("POST", "/api/auth/signup/complete", { ...family(email), code: wrong });
+      assert.equal(res.status, 400);
+      assert.deepEqual(res.body, { error: "CODE_INCORRECT", attemptsLeft: left });
+    }
+    assert.deepEqual((await b("POST", "/api/auth/signup/complete", { ...family(email), code: wrong })).body, { error: "CODE_ATTEMPTS_EXCEEDED" });
+    assert.deepEqual((await b("POST", "/api/auth/signup/complete", { ...family(email), code: right })).body, { error: "CODE_EXPIRED" });
+    assert.equal(await database.collection("parents").countDocuments({ email }), 0);
+  });
+
+  await t.test("an expired code is refused", async () => {
+    const b = browser();
+    const email = "late@example.com";
+    await b("POST", "/api/auth/signup/code", { email });
+    clock += 10 * 60_000 + 1;
+    assert.deepEqual((await b("POST", "/api/auth/signup/complete", { ...family(email), code: lastCode(email) })).body, { error: "CODE_EXPIRED" });
+  });
+
+  await t.test("bad profiles are refused before the code is checked", async () => {
+    const b = browser();
+    const email = "typo@example.com";
+    await b("POST", "/api/auth/signup/code", { email });
+    const cases = [
+      [[], "INVALID_CHILDREN"],
+      [[{ name: "" }], "NAME_REQUIRED"],
+      [[{ name: "A", yearGroup: 9 }], "INVALID_YEAR_GROUP"],
+      [[{ name: "A", subjects: ["history"] }], "INVALID_SUBJECTS"],
+      [Array.from({ length: 7 }, () => ({ name: "A" })), "INVALID_CHILDREN"],
+    ];
+    for (const [children, error] of cases) {
+      assert.deepEqual((await b("POST", "/api/auth/signup/complete", { ...family(email), children, code: "000000" })).body, { error });
+    }
+    assert.equal((await database.collection("pendingSignups").findOne({ email })).attempts, 0, "no attempt spent");
+  });
+
+  await t.test("a learner account holds exactly one profile, and under-13 is refused", async () => {
+    const two = await browser()("POST", "/api/auth/signup/complete", { ...family("teen@example.com"), accountType: "learner", ageBand: "13-15", code: "000000" });
+    assert.deepEqual(two.body, { error: "INVALID_CHILDREN" });
+    const young = await browser()("POST", "/api/auth/signup/complete", { ...family("kid@example.com"), accountType: "learner", ageBand: "under-13", children: [{ name: "Kid" }], code: "000000" });
+    assert.deepEqual(young.body, { error: "AGE_BAND_TOO_YOUNG" });
+  });
+
+  await t.test("the same address typed two ways is one sign-up (Review Focus 2)", async () => {
+    const b = browser();
+    await b("POST", "/api/auth/signup/code", { email: " Mixed.Case@Example.com" });
+    const res = await b("POST", "/api/auth/signup/complete", { ...family("mixed.case@example.com"), code: lastCode("mixed.case@example.com") });
+    assert.equal(res.status, 201);
+  });
+
+  await t.test("two requests racing with one code create one account (Review Focus 5)", async () => {
+    const email = "race@example.com";
+    await browser()("POST", "/api/auth/signup/code", { email });
+    const code = lastCode(email);
+    const results = await Promise.all([
+      browser()("POST", "/api/auth/signup/complete", { ...family(email), code }),
+      browser()("POST", "/api/auth/signup/complete", { ...family(email), code }),
+    ]);
+    const statuses = results.map((r) => r.status).sort();
+    assert.equal(statuses.filter((s) => s === 201).length, 1);
+    assert.ok([400, 409].includes(statuses.find((s) => s !== 201)));
+    const parent = await database.collection("parents").findOne({ email });
+    assert.equal(await database.collection("parents").countDocuments({ email }), 1);
+    assert.equal(await database.collection("children").countDocuments({ parentId: parent._id }), 2);
+  });
+
+  await t.test("a child that fails to save leaves nothing behind", async () => {
+    const failing = await start({ mailer: fakeMailer("off"), now, insertChildren: async () => { throw new Error("disk full"); } });
+    const res = await failing()("POST", "/api/auth/signup/complete", family("broken@example.com"));
+    assert.equal(res.status, 500);
+    assert.deepEqual(res.body, { error: "SIGNUP_FAILED" });
+    assert.equal(await database.collection("parents").countDocuments({ email: "broken@example.com" }), 0);
+  });
+
+  await t.test("with email off, sign-up completes without a code and says so", async () => {
+    const off = await start({ mailer: fakeMailer("off"), now });
+    const res = await off()("POST", "/api/auth/signup/complete", family("unverified@example.com"));
+    assert.equal(res.status, 201);
+    assert.equal(res.body.parent.emailVerified, false);
+    assert.equal(res.body.parent.emailVerifiedAt, null);
+  });
 });

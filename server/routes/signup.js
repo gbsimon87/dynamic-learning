@@ -9,11 +9,19 @@
 import { Router } from "express";
 import * as db from "../db.js";
 import { createAuthThrottle } from "../authThrottle.js";
+import { COOKIE_NAME, cookieOptions, signSession } from "../auth.js";
+import { publicChild, publicParent } from "../serialize.js";
+import { ACCOUNT_LEARNER, normaliseAccountFields } from "../../shared/accountTypes.js";
+import { MAX_CHILDREN_PER_SIGNUP, normaliseNewChildren } from "../../src/data/childFields.js";
+import { createParentAccount } from "../accounts.js";
+import { newChildDoc } from "../childDoc.js";
 import { isEmailShaped, normaliseEmail } from "../../shared/emailAddress.js";
 import {
   CODE_TTL_MS,
+  MAX_ATTEMPTS,
   RESEND_MS,
   SEND_WINDOW_MS,
+  codeMatches,
   generateCode,
   hashCode,
   sendDecision,
@@ -26,6 +34,7 @@ export function createSignupRouter({
   mailer,
   now = Date.now,
   secret = () => process.env.SESSION_SECRET,
+  insertChildren = (docs) => db.children().insertMany(docs),
 }) {
   const router = Router();
   const throttle = createAuthThrottle({ now });
@@ -125,7 +134,81 @@ export function createSignupRouter({
     }
   });
 
-  // POST /complete is added in Task 5, here.
+  router.post("/complete", throttle, async (req, res, next) => {
+    try {
+      // 1. Everything that can be checked without the code, so a typo in a
+      //    profile never spends one of the five attempts.
+      const email = readEmail(req, res);
+      if (!email) return undefined;
+      const password = req.body?.password;
+      if (typeof password !== "string" || password.length === 0) {
+        return res.status(400).json({ error: "PASSWORD_REQUIRED" });
+      }
+      let account;
+      let children;
+      try {
+        account = normaliseAccountFields({ accountType: req.body?.accountType, ageBand: req.body?.ageBand });
+        children = normaliseNewChildren(req.body?.children, {
+          max: account.accountType === ACCOUNT_LEARNER ? 1 : MAX_CHILDREN_PER_SIGNUP,
+        });
+      } catch (err) {
+        return res.status(400).json({ error: err.message });
+      }
+      if (await db.parents().findOne({ email })) return res.status(409).json({ error: "EMAIL_TAKEN" });
+
+      // 2. The code.
+      let verified = false;
+      if (mailer.verification === "on") {
+        const record = await db.pendingSignups().findOne({ email });
+        if (!record || !record.codeHash || toMs(record.expiresAt) <= now()) {
+          return res.status(400).json({ error: "CODE_EXPIRED" });
+        }
+        if (!codeMatches(record.codeHash, email, req.body?.code, secret())) {
+          const counted = await db
+            .pendingSignups()
+            .findOneAndUpdate({ email, codeHash: record.codeHash }, { $inc: { attempts: 1 } }, { returnDocument: "after" });
+          const attempts = counted?.attempts ?? MAX_ATTEMPTS;
+          if (attempts >= MAX_ATTEMPTS) {
+            // Kept, not deleted, so the hourly send cap still holds.
+            await db.pendingSignups().updateOne({ email }, { $set: { codeHash: null } });
+            return res.status(400).json({ error: "CODE_ATTEMPTS_EXCEEDED" });
+          }
+          return res.status(400).json({ error: "CODE_INCORRECT", attemptsLeft: MAX_ATTEMPTS - attempts });
+        }
+        // Single use, claimed atomically: of two racing requests only one gets it.
+        const claimed = await db
+          .pendingSignups()
+          .findOneAndUpdate({ email, codeHash: record.codeHash }, { $set: { codeHash: null } });
+        if (!claimed) return res.status(400).json({ error: "CODE_EXPIRED" });
+        verified = true;
+      }
+
+      // 3. The account, then every profile; undone together if a profile fails.
+      let parent;
+      try {
+        parent = await createParentAccount({ email, password, account, verification: { verified } });
+      } catch (err) {
+        if (err.message === "EMAIL_TAKEN") return res.status(409).json({ error: "EMAIL_TAKEN" });
+        throw err;
+      }
+
+      let docs = children.map((child) => newChildDoc(parent._id, child));
+      try {
+        const { insertedIds } = await insertChildren(docs);
+        docs = docs.map((doc, i) => ({ ...doc, _id: insertedIds[i] }));
+      } catch (err) {
+        console.error("[signup] a profile failed to save; rolling back:", err.message);
+        await db.children().deleteMany({ parentId: parent._id });
+        await db.parents().deleteOne({ _id: parent._id });
+        return res.status(500).json({ error: "SIGNUP_FAILED" });
+      }
+
+      res.cookie(COOKIE_NAME, signSession(parent._id), cookieOptions());
+      return res.status(201).json({ parent: publicParent(parent), children: docs.map(publicChild) });
+    } catch (err) {
+      return next(err);
+    }
+  });
 
   return router;
 }
