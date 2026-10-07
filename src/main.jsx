@@ -39,7 +39,7 @@ import TrophyRoom, { ChildTrophyRoom } from "./pages/trophies/TrophyRoom";
 
 // === AUTH: parent accounts + child profiles ===
 import Login from "./pages/auth/Login";
-import SignUp from "./pages/auth/SignUp";
+import SignUpFlow from "./pages/auth/signup/SignUpFlow";
 import Profiles from "./pages/auth/Profiles";
 import ParentArea from "./pages/auth/ParentArea";
 
@@ -66,7 +66,7 @@ const router = createBrowserRouter([
 
       // === Auth: ungated, these are how you get an account in the first place ===
       { path: "login", element: <Login /> },
-      { path: "signup", element: <SignUp /> },
+      { path: "signup", element: <SignUpFlow /> },
       { path: "profiles", element: <Profiles /> },
       { path: "parent", element: <ParentArea /> },
       // A grown-up's view of one child's Trophy Room. Outside RequireChild: a
