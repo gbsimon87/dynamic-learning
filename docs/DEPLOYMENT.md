@@ -66,9 +66,9 @@ same set with placeholders.
 **Email verification (sign-up codes).** With both `RESEND_API_KEY` and
 `EMAIL_FROM` set, sign-up emails a 6-digit code. With neither set, production
 skips verification and creates the account with `emailVerified: false`; it never
-fails the sign-up. Set only one and the server also skips it, so set both or
-neither. Until a domain is verified in Resend, `EMAIL_FROM` can only be
-`onboarding@resend.dev`, which delivers **only to the Resend account owner**, so
+fails the sign-up. Set only one and the server also skips it (and logs a warning
+at boot), so set both or neither. Until a domain is verified in Resend,
+`EMAIL_FROM` can only be `onboarding@resend.dev`, which delivers **only to the Resend account owner**, so
 do not turn it on for real families before the domain is verified.
 
 `MONGODB_URI`, `SESSION_SECRET`, `RESEND_API_KEY` and `EMAIL_FROM` are declared `sync: false` in `render.yaml`,

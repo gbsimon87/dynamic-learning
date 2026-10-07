@@ -341,6 +341,7 @@ test("sign-up with a code", { skip: URI ? false : "MONGODB_URI not set" }, async
   await t.test("the old single-call sign-up route is gone", async () => {
     const res = await offApp()("POST", "/api/auth/signup", { email: "old@example.com", password: "password-x" });
     assert.equal(res.status, 404);
+    assert.deepEqual(res.body, { error: "NOT_FOUND" });
     assert.equal(await database.collection("parents").countDocuments({ email: "old@example.com" }), 0);
   });
 

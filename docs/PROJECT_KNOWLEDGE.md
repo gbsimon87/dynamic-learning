@@ -573,8 +573,7 @@ server/routes/       auth, signup, children, progress, rewards
 server/email.js      mailer for sign-up codes (Resend; §6 item 17)
 ```
 
-Endpoints mirror the store interface exactly; see the table in
-[DEPLOYMENT.md](DEPLOYMENT.md) or `server/routes/`.
+Endpoints mirror the store interface exactly; see `server/routes/`.
 
 **Authorization — the part to not break.** In local mode "whose data is this" is
 answered by the browser holding it. On a server it must be enforced:
