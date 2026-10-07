@@ -1,9 +1,15 @@
 import { hashPassword, verifyPassword } from "../../utils/passwordHash.js";
 import {
+  ACCOUNT_LEARNER,
   normaliseAccountFields,
   readAccountType,
 } from "../../../shared/accountTypes.js";
-import { normaliseChildPatch } from "../childFields.js";
+import { isEmailShaped } from "../../../shared/emailAddress.js";
+import {
+  MAX_CHILDREN_PER_SIGNUP,
+  normaliseChildPatch,
+  normaliseNewChildren,
+} from "../childFields.js";
 import { isRewardsData } from "../../../shared/rewardsData.js";
 
 /**
@@ -111,7 +117,7 @@ export const store = {
    * @throws {Error} `EMAIL_TAKEN` when the email is already registered.
    * @returns {Promise<object>} the parent doc *without* credential fields.
    */
-  async createParent({ email, password, accountType, ageBand }) {
+  async createParent({ email, password, accountType, ageBand, emailVerified }) {
     const normalised = normaliseEmail(email);
     if (!normalised) throw new Error("EMAIL_REQUIRED");
     if (typeof password !== "string" || password.length === 0) {
@@ -139,10 +145,39 @@ export const store = {
       accountType: account.accountType,
       ageBand: account.ageBand,
       createdAt: now(),
+      ...(typeof emailVerified === "boolean" ? { emailVerified, emailVerifiedAt: null } : {}),
     };
 
     writeCollection(KEYS.parents, [...parents, parent]);
     return publicParent(parent);
+  },
+
+  /** Browser-only mode has no email: verification is always off. */
+  async requestSignupCode(email) {
+    const normalised = normaliseEmail(email);
+    if (!isEmailShaped(normalised)) throw new Error("EMAIL_INVALID");
+    if (readCollection(KEYS.parents).some((p) => normaliseEmail(p.email) === normalised)) {
+      throw new Error("EMAIL_TAKEN");
+    }
+    return { verification: "off" };
+  },
+
+  /** Same validation as the server; undoes the account if a profile fails. */
+  async completeSignup({ email, password, accountType, ageBand, children }) {
+    const account = normaliseAccountFields({ accountType, ageBand });
+    const kids = normaliseNewChildren(children, {
+      max: account.accountType === ACCOUNT_LEARNER ? 1 : MAX_CHILDREN_PER_SIGNUP,
+    });
+    const parent = await store.createParent({ email, password, accountType, ageBand, emailVerified: false });
+    try {
+      const created = [];
+      for (const kid of kids) created.push(await store.createChild(parent._id, kid));
+      return { parent, children: created };
+    } catch (err) {
+      writeCollection(KEYS.children, readCollection(KEYS.children).filter((c) => c.parentId !== parent._id));
+      writeCollection(KEYS.parents, readCollection(KEYS.parents).filter((p) => p._id !== parent._id));
+      throw err;
+    }
   },
 
   /**

@@ -537,3 +537,27 @@ test("stored rewards are a copy, not a live reference", async () => {
   const read = await store.getRewards(child._id);
   assert.equal(read.data.badges.length, 1);
 });
+
+test("completeSignup creates the account and every profile, unverified", async () => {
+  reset();
+  assert.deepEqual(await store.requestSignupCode("New@Example.com"), { verification: "off" });
+  const { parent, children } = await store.completeSignup({
+    email: "New@Example.com", password: "password-1", accountType: "parent", ageBand: null,
+    children: [{ name: "Maya", avatar: "🦊", colour: "--profile-colour-sky", yearGroup: 2, subjects: ["math"] }, { name: "Leo" }],
+  });
+  assert.equal(parent.email, "new@example.com");
+  assert.equal(parent.emailVerified, false);
+  assert.equal(parent.passwordHash, undefined);
+  assert.deepEqual(children.map((c) => [c.name, c.subjects]), [["Maya", ["math"]], ["Leo", []]]);
+  await assert.rejects(store.requestSignupCode("new@example.com"), /EMAIL_TAKEN/);
+  await assert.rejects(store.requestSignupCode("nope"), /EMAIL_INVALID/);
+});
+
+test("completeSignup refuses a learner with two profiles and saves nothing", async () => {
+  reset();
+  await assert.rejects(
+    store.completeSignup({ email: "t@x.co", password: "password-1", accountType: "learner", ageBand: "13-15", children: [{ name: "A" }, { name: "B" }] }),
+    /INVALID_CHILDREN/
+  );
+  assert.equal(memory.get("dl.parents") ?? null, null);
+});

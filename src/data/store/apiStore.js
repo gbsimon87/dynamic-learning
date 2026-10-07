@@ -28,6 +28,7 @@
  */
 
 import { normaliseAccountFields } from "../../../shared/accountTypes.js";
+import { normaliseEmail } from "../../../shared/emailAddress.js";
 import { normaliseChildPatch } from "../childFields.js";
 import { isProgressData } from "../../../shared/progressData.js";
 import { isRewardsData } from "../../../shared/rewardsData.js";
@@ -36,10 +37,11 @@ const BASE = "/api";
 
 /** Thrown for anything that is not a clean, expected response. */
 class ApiError extends Error {
-  constructor(code, { status = 0, cause } = {}) {
+  constructor(code, { status = 0, cause, details } = {}) {
     super(code);
     this.name = "ApiError";
     this.status = status;
+    this.details = details ?? null;
     if (cause) this.cause = cause;
   }
 }
@@ -92,13 +94,27 @@ async function request(path, { method = "GET", body, expect = [200], soft = [] }
   const code =
     (data && typeof data.error === "string" && data.error) ||
     `HTTP_${response.status}`;
-  throw new ApiError(code, { status: response.status });
+  throw new ApiError(code, { status: response.status, details: data });
 }
 
 /**
  * The store. Keep this interface identical to localStorageStore.js.
  */
 export const store = {
+  /** Sends a sign-up code, or reports that verification is off. */
+  async requestSignupCode(email) {
+    const normalised = normaliseEmail(email);
+    if (!normalised) throw new ApiError("EMAIL_REQUIRED");
+    const { data } = await request("/auth/signup/code", { method: "POST", body: { email: normalised }, expect: [200] });
+    return data;
+  },
+
+  /** Creates the account and every profile; the server sets the session cookie. */
+  async completeSignup(body) {
+    const { data } = await request("/auth/signup/complete", { method: "POST", body, expect: [201] });
+    return { parent: data?.parent ?? null, children: data?.children ?? [] };
+  },
+
   /**
    * Creates a parent account and starts a session (the server sets the cookie).
    * @throws {Error} `EMAIL_TAKEN` when the email is already registered.

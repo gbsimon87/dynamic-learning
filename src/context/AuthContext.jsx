@@ -229,6 +229,30 @@ export function AuthProvider({ children: subtree }) {
     }
   }, []);
 
+  /** Step 6 of sign-up. Not stateful: nothing is saved until completeSignup. */
+  const requestSignupCode = useCallback((email) => store.requestSignupCode(email), []);
+
+  /**
+   * Creates the account and every profile in one request. Signs in, but selects
+   * no child: the hand-over screen does, once the device is in the right hands.
+   */
+  const completeSignup = useCallback(async (body) => {
+    setError(null);
+    try {
+      const result = await store.completeSignup(body);
+      if (!aliveRef.current) return result;
+      setParent(result.parent);
+      setChildProfiles(result.children);
+      setChild(null);
+      writeSession(result.parent._id, null, result.parent.email);
+      writeLastAccount(result.parent, result.children);
+      return result;
+    } catch (err) {
+      if (aliveRef.current) setError(err?.message || "SIGNUP_FAILED");
+      throw err;
+    }
+  }, []);
+
   const signIn = useCallback(async ({ email, password }) => {
     setError(null);
     try {
@@ -410,6 +434,8 @@ export function AuthProvider({ children: subtree }) {
       isLearner,
       error,
       signUp,
+      requestSignupCode,
+      completeSignup,
       signIn,
       signOut,
       addChild,
@@ -425,6 +451,8 @@ export function AuthProvider({ children: subtree }) {
       isLearner,
       error,
       signUp,
+      requestSignupCode,
+      completeSignup,
       signIn,
       signOut,
       addChild,
