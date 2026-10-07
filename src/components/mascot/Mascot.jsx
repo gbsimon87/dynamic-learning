@@ -23,6 +23,7 @@ import "./Mascot.css";
  *   cheerOn     any value; Bix cheers on his own when he appears with it set,
  *               and again whenever it changes — how the combo line makes him
  *               react without a tap
+ *   mood        "idle" (default) or "puzzled" — a head tilt for a wrong answer
  *   decorative  renders him hidden from assistive technology and out of the
  *               tab order, for places where the words already say it all
  */
@@ -49,6 +50,7 @@ export default function Mascot({
   className = "",
   cheerOn,
   decorative = false,
+  mood = "idle",
 }) {
   const rootRef = useRef(null);
   const frameRef = useRef(0);
@@ -113,7 +115,7 @@ export default function Mascot({
     <button
       type="button"
       ref={rootRef}
-      className={`mascot ${className} ${reacting ? "is-reacting" : ""}`}
+      className={`mascot ${className} is-${mood} ${reacting ? "is-reacting" : ""}`}
       onClick={cheer}
       aria-label={decorative ? undefined : label}
       aria-hidden={decorative || undefined}

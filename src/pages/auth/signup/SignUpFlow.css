@@ -1,0 +1,122 @@
+/* Sign-up flow (spec §4). Everything is scoped to .auth-page .sf. */
+.auth-page .sf { display: grid; gap: 1rem; }
+
+/* Progress */
+.auth-page .sf-stars { display: flex; justify-content: center; gap: 0.6rem; margin: 0; padding: 0; list-style: none; }
+.auth-page .sf-star {
+  width: 1.4rem; height: 1.4rem; border-radius: 50%; display: grid; place-items: center;
+  border: 2px solid var(--au-border); font-size: 0.9rem; color: var(--au-on-accent);
+  transition: background-color 300ms ease, transform 300ms cubic-bezier(0.22, 1.2, 0.36, 1);
+}
+.auth-page .sf-star.is-current { border-color: var(--au-accent); transform: scale(1.15); }
+.auth-page .sf-star.is-done { background: var(--au-accent); border-color: var(--au-accent); }
+
+/* Bix: above the card content on phones, beside it on wide screens */
+.auth-page .sf-bix { display: flex; align-items: center; gap: 0.75rem; }
+.auth-page .sf-bix-mascot { width: 72px; height: 72px; flex: none; }
+.auth-page .sf-bubble {
+  margin: 0; padding: 0.7rem 1rem; border-radius: 1rem 1rem 1rem 0.25rem;
+  background: var(--au-bg); color: var(--au-text); font-size: 1.05rem; font-weight: 600;
+}
+
+/* Family row */
+.auth-page .sf-family { display: flex; justify-content: center; gap: 0.4rem; margin: 0; padding: 0; list-style: none; }
+.auth-page .sf-family-face {
+  width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-size: 1.5rem;
+  background: var(--sf-face, var(--au-bg)); animation: sf-face-in 520ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
+}
+@keyframes sf-face-in { from { transform: translateY(60px) scale(1.6); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* Step panel */
+.auth-page .sf-panel { animation: sf-step-in 380ms cubic-bezier(0.22, 1.1, 0.36, 1) both; }
+.auth-page .sf-panel[data-direction="back"] { animation-name: sf-step-in-back; }
+@keyframes sf-step-in { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
+@keyframes sf-step-in-back { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
+.auth-page .sf-panel .auth-title:focus { outline: none; }
+
+/* Choice cards */
+.auth-page .sf-cards { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
+.auth-page .sf-card {
+  position: relative; min-height: 64px; padding: 0.9rem 1rem; border-radius: 1rem; text-align: left;
+  display: grid; grid-template-columns: auto 1fr; column-gap: 0.75rem; align-items: center;
+  border: 2px solid var(--au-border); background: var(--au-panel); color: var(--au-text); font: inherit; cursor: pointer;
+  transition: transform 160ms cubic-bezier(0.22, 1.2, 0.36, 1), border-color 160ms ease;
+}
+.auth-page .sf-card:active { transform: scale(0.96); }
+.auth-page .sf-card:focus-visible { outline: 3px solid var(--au-accent); outline-offset: 2px; }
+.auth-page .sf-card.is-chosen { border-color: var(--au-accent); }
+.auth-page .sf-card-icon { grid-row: span 2; font-size: 2rem; }
+.auth-page .sf-card-title { font-size: 1.15rem; font-weight: 700; }
+.auth-page .sf-card-blurb { color: var(--au-muted); font-size: 0.95rem; }
+.auth-page .sf-card-check {
+  position: absolute; top: 0.5rem; right: 0.6rem; width: 1.6rem; height: 1.6rem; border-radius: 50%;
+  display: grid; place-items: center; background: var(--au-accent); color: var(--au-on-accent);
+  transform: scale(0); transition: transform 220ms cubic-bezier(0.22, 1.6, 0.36, 1);
+}
+.auth-page .sf-card.is-chosen .sf-card-check { transform: scale(1); }
+@media (min-width: 640px) {
+  .auth-page .sf-cards { grid-template-columns: repeat(2, 1fr); }
+  .auth-page .sf-cards:has(> :nth-child(5)) { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Year wheel */
+.auth-page .sf-wheel {
+  height: 15rem; overflow-y: auto; scroll-snap-type: y mandatory; margin: 0; padding: 6rem 0; list-style: none;
+  border: 2px solid var(--au-border); border-radius: 1rem; background: var(--au-panel);
+  mask-image: linear-gradient(transparent, black 30%, black 70%, transparent);
+}
+.auth-page .sf-wheel:focus-visible { outline: 3px solid var(--au-accent); outline-offset: 2px; }
+.auth-page .sf-wheel-item {
+  scroll-snap-align: center; min-height: 3rem; display: grid; place-items: center;
+  font-size: 1.4rem; color: var(--au-muted); cursor: pointer;
+}
+.auth-page .sf-wheel-item.is-chosen { color: var(--au-text); font-size: 1.9rem; font-weight: 800; }
+
+/* Code boxes */
+.auth-page .sf-code { display: flex; justify-content: center; gap: 0.5rem; }
+.auth-page .sf-code.is-invalid { animation: auth-shake 400ms ease both; }
+.auth-page .sf-code-box {
+  width: 3rem; height: 4rem; border-radius: 0.75rem; text-align: center; font-size: 1.8rem; font-weight: 700;
+  border: 2px solid var(--au-border); background: var(--au-panel); color: var(--au-text);
+}
+.auth-page .sf-code-box:focus { border-color: var(--au-accent); outline: none; }
+
+/* Continue pinned within thumb reach on phones */
+.auth-page .sf-continue { position: sticky; bottom: calc(env(safe-area-inset-bottom, 0px) + 0.75rem); }
+.auth-page .sf-continue .auth-btn { width: 100%; min-height: 64px; font-size: 1.15rem; }
+
+/* Hand-over */
+.auth-page .sf-handover { text-align: center; display: grid; gap: 1.25rem; justify-items: center; }
+.auth-page .sf-handover-face {
+  width: 9rem; height: 9rem; border-radius: 50%; display: grid; place-items: center; font-size: 5rem;
+  background: var(--sf-face, var(--au-bg));
+}
+.auth-page .sf-handover .auth-btn { min-height: 80px; font-size: 1.4rem; padding-inline: 2rem; animation: sf-pulse 1.6s ease-in-out infinite; }
+@keyframes sf-pulse { 50% { transform: scale(1.05); } }
+
+/* Summary */
+.auth-page .sf-summary { display: grid; gap: 0.75rem; margin: 0; padding: 0; list-style: none; }
+.auth-page .sf-summary-card {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 0.75rem; align-items: center;
+  padding: 0.75rem; border-radius: 1rem; border: 2px solid var(--au-border);
+}
+
+@media (min-width: 900px) {
+  .auth-page .sf { grid-template-columns: 9rem 1fr; column-gap: 1.5rem; }
+  .auth-page .sf > :not(.sf-bix) { grid-column: 2; }
+  .auth-page .sf-bix { grid-column: 1; grid-row: 1 / span 4; flex-direction: column; align-self: start; }
+  .auth-page .sf-bix-mascot { width: 120px; height: 120px; }
+  .auth-page .sf-bubble { border-radius: 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-page .sf-panel,
+  .auth-page .sf-panel[data-direction="back"] { animation: sf-fade 200ms ease both; }
+  .auth-page .sf-family-face,
+  .auth-page .sf-handover .auth-btn,
+  .auth-page .sf-code.is-invalid { animation: none; }
+  .auth-page .sf-card,
+  .auth-page .sf-card-check,
+  .auth-page .sf-star { transition: none; }
+}
+@keyframes sf-fade { from { opacity: 0; } to { opacity: 1; } }

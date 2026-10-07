@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { AVATARS, PROFILE_COLOURS } from "../../data/avatars";
 import { CHILD_YEAR_GROUPS } from "../../data/childFields";
-import { AVATARS_UNLOCKABLE, badgeForAvatar } from "../../data/badges";
 import { isYearAvailable } from "../../data/curriculumRegistry";
+import { AvatarPicker, ColourPicker } from "./ProfilePickers";
 import "./ProfileBuilder.css";
 
 /**
@@ -99,74 +99,10 @@ function ProfileBuilder({
       />
 
       <p className="pb-label">Pick a picture</p>
-      <div className="pb-avatar-grid">
-        {AVATARS.map((emoji) => (
-          <button
-            key={emoji}
-            type="button"
-            className={`pb-avatar-option ${avatar === emoji ? "selected" : ""}`}
-            onClick={() => setAvatar(emoji)}
-            aria-pressed={avatar === emoji}
-            aria-label={`Choose the ${emoji} picture`}
-          >
-            <span aria-hidden="true">{emoji}</span>
-          </button>
-        ))}
-
-        {/* Locked pictures are SHOWN, not hidden. A reward nobody knows exists
-            motivates nobody, and a padlocked tile says "there is more here"
-            without pretending it is available. `unlocked` is empty when
-            creating a profile, because a new learner has earned nothing yet. */}
-        {AVATARS_UNLOCKABLE.filter((emoji) => !unlocked.includes(emoji)).map(
-          (emoji) => {
-            const badge = badgeForAvatar(emoji);
-            return (
-              <span
-                key={emoji}
-                className="pb-avatar-option is-locked"
-                title={`Earn the ${badge.name} badge to unlock this`}
-                aria-label={`Locked picture — earn the ${badge.name} badge to unlock it`}
-                role="img"
-              >
-                <span aria-hidden="true">🔒</span>
-              </span>
-            );
-          }
-        )}
-
-        {/* Earned ones join the grid as ordinary choices. */}
-        {AVATARS_UNLOCKABLE.filter((emoji) => unlocked.includes(emoji)).map(
-          (emoji) => (
-            <button
-              key={emoji}
-              type="button"
-              className={`pb-avatar-option ${avatar === emoji ? "selected" : ""}`}
-              onClick={() => setAvatar(emoji)}
-              aria-pressed={avatar === emoji}
-              aria-label={`Choose the ${emoji} picture`}
-            >
-              <span aria-hidden="true">{emoji}</span>
-            </button>
-          )
-        )}
-      </div>
+      <AvatarPicker value={avatar} onChange={setAvatar} unlocked={unlocked} />
 
       <p className="pb-label">Pick a colour</p>
-      <div className="pb-colour-row">
-        {PROFILE_COLOURS.map((token) => (
-          <button
-            key={token}
-            type="button"
-            className={`pb-colour-option ${colour === token ? "selected" : ""}`}
-            style={{ "--pb-swatch": `var(${token})` }}
-            onClick={() => setColour(token)}
-            aria-pressed={colour === token}
-            aria-label={`Choose the ${token
-              .replace("--profile-colour-", "")
-              .replace(/-/g, " ")} colour`}
-          />
-        ))}
-      </div>
+      <ColourPicker value={colour} onChange={setColour} />
 
       <p className="pb-label" id="pb-year-label">
         {yearLabel}
