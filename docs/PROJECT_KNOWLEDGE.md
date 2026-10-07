@@ -1686,6 +1686,22 @@ without a changelog note or the report was inaccurate.
    a one-directional match test (works because both directions are always
    emitted); `.skills-grid` has an unreachable `max-width: 1400px` inside a
    1200px parent.
+17. **Email verification is pending a sending domain** (decided 2026-10-07,
+   PROJECT_IDEAS #21). Sign-up will verify the grown-up's address with a
+   six-digit code before the account is created, sent through **Resend**. The
+   app has no domain of its own yet — it is served at
+   `dynamic-learning-n72m.onrender.com`, and `onrender.com` belongs to Render, so
+   it cannot be verified as a sender. Until a domain is bought and verified in
+   Resend (SPF/DKIM DNS records), Resend only sends from its test address
+   `onboarding@resend.dev`, and **only to the owner's own Resend account
+   email** — so codes reach the owner and no other family. Agreed behaviour
+   meanwhile: the code step switches on only when `RESEND_API_KEY` **and**
+   `EMAIL_FROM` are set; without them production sign-up skips it and stores
+   the account as `emailVerified: false`, so those accounts can be asked to
+   verify later. Locally, with no key, the server logs the code to the
+   terminal. **To finish:** buy a domain, verify it in Resend, set both env vars
+   on Render (DEPLOYMENT §2) — no code change. Deliberately no personal
+   address in this file: the repo is public.
 
 **Resolved since last review:**
 
