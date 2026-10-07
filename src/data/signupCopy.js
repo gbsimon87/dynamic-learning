@@ -56,6 +56,7 @@ export function stepTitle(draft, cursor) {
 }
 
 export const ERROR_MESSAGES = {
+  HANDOVER_FAILED: "Hmm, that didn't work. Tap again!",
   CHOOSE_ONE: "Pick one to carry on.",
   CHOOSE_LOOK: "Pick a picture and a colour.",
   NAME_REQUIRED: "Type a name first! ✏️",

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { errorMessage } from "../../../data/signupCopy";
 
 /**
  * The payoff. One child: "Hand the device to Maya!" and a big button only she
@@ -6,14 +7,21 @@ import { useState } from "react";
  */
 export default function HandOver({ result, onStart }) {
   const [starting, setStarting] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const tapped = useRef(false); // a ref, so a second tap in the same frame is caught before `disabled` renders
   const kids = result.children;
   const learner = result.parent.accountType === "learner";
   const start = async (child) => {
-    if (starting) return;
+    if (tapped.current) return;
+    tapped.current = true;
+    setFailed(false);
     setStarting(true);
     try {
       await onStart(child);
+    } catch {
+      setFailed(true);
     } finally {
+      tapped.current = false;
       setStarting(false);
     }
   };
@@ -29,6 +37,7 @@ export default function HandOver({ result, onStart }) {
         <button type="button" className="auth-btn" onClick={() => start(child)} disabled={starting} autoFocus>
           {learner ? "Let's go! 🚀" : `I'm ${child.name}! 🚀`}
         </button>
+        {failed && <p className="auth-error" role="alert">{errorMessage("HANDOVER_FAILED")}</p>}
       </div>
     );
   }
@@ -44,6 +53,7 @@ export default function HandOver({ result, onStart }) {
           </button>
         ))}
       </div>
+      {failed && <p className="auth-error" role="alert">{errorMessage("HANDOVER_FAILED")}</p>}
     </div>
   );
 }

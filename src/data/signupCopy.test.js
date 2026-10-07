@@ -32,4 +32,5 @@ test("error messages: details are used, unknown codes fall back", () => {
   assert.equal(errorMessage("CODE_INCORRECT", { attemptsLeft: 3 }), "Hmm, let's try that again — 3 tries left.");
   assert.equal(errorMessage("TOO_MANY_CODES", { retryAfterSeconds: 61 }), "Let's take a break — try again in 2 minutes.");
   assert.equal(errorMessage("WHAT_IS_THIS"), errorMessage("SIGNUP_FAILED"));
+  assert.equal(errorMessage("HANDOVER_FAILED"), "Hmm, that didn't work. Tap again!");
 });

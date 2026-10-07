@@ -122,7 +122,7 @@ function SubjectCard({ subject, year, picked, onNeedYear }) {
       onClick={handleClick}
     >
       {available && <span className="cs-subject-flag">Ready</span>}
-      {picked && available && <span className="cs-subject-pick">⭐ Your pick</span>}
+      {picked && available && <span className="cs-subject-pick"><span aria-hidden="true">⭐</span> Your pick</span>}
 
       <span className="cs-subject-icon" aria-hidden="true">
         {subject.icon}
