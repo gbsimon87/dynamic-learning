@@ -70,29 +70,48 @@ export function createSignupRouter({
       }
 
       const code = generateCode();
-      await db.pendingSignups().updateOne(
-        { email },
-        {
-          $set: {
-            email,
-            codeHash: hashCode(email, code, secret()),
-            expiresAt: new Date(time + CODE_TTL_MS),
-            attempts: 0,
-            sendCount: decision.sendCount,
-            sendWindowStart: new Date(decision.sendWindowStart),
-            lastSentAt: new Date(time),
-            purgeAt: new Date(Math.max(decision.sendWindowStart + SEND_WINDOW_MS, time + CODE_TTL_MS)),
-          },
-        },
-        { upsert: true }
-      );
+      const codeHash = hashCode(email, code, secret());
+      const fields = {
+        email,
+        codeHash,
+        expiresAt: new Date(time + CODE_TTL_MS),
+        attempts: 0,
+        sendCount: decision.sendCount,
+        sendWindowStart: new Date(decision.sendWindowStart),
+        lastSentAt: new Date(time),
+        purgeAt: new Date(Math.max(decision.sendWindowStart + SEND_WINDOW_MS, time + CODE_TTL_MS)),
+      };
+
+      // The write is the gate: the decision above was made on a record that
+      // parallel requests may also have read. Only the request whose write
+      // lands (insert wins the unique email, or lastSentAt is still what we
+      // read) goes on to send; the rest are told to wait.
+      const tooSoon = () =>
+        res
+          .set("Retry-After", String(RESEND_MS / 1000))
+          .status(429)
+          .json({ error: "CODE_RECENTLY_SENT", retryAfterSeconds: RESEND_MS / 1000 });
+      if (record) {
+        const { matchedCount } = await db
+          .pendingSignups()
+          .updateOne({ email, lastSentAt: record.lastSentAt }, { $set: fields });
+        if (matchedCount === 0) return tooSoon();
+      } else {
+        try {
+          await db.pendingSignups().insertOne(fields);
+        } catch (err) {
+          if (err?.code === 11000) return tooSoon();
+          throw err;
+        }
+      }
 
       try {
         await mailer.sendSignupCode(email, code);
       } catch (err) {
         console.error("[email] send failed:", err.message);
-        // Keep the record (the send still counts) but make it unredeemable.
-        await db.pendingSignups().updateOne({ email }, { $set: { codeHash: null } });
+        // Keep the record (the send still counts) but make this code
+        // unredeemable — only if no newer send has replaced it since.
+        await db.pendingSignups().updateOne({ email, codeHash }, { $set: { codeHash: null } });
         return res.status(502).json({ error: "EMAIL_SEND_FAILED" });
       }
 

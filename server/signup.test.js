@@ -16,7 +16,10 @@ test("sign-up with a code", { skip: URI ? false : "MONGODB_URI not set" }, async
   await db.ensureIndexes();
   const servers = [];
   t.after(async () => {
-    for (const server of servers) server.close();
+    for (const server of servers) {
+      server.closeAllConnections?.();
+      await new Promise((resolve) => server.close(resolve));
+    }
     await database.dropDatabase();
     await db.close();
   });
@@ -116,6 +119,59 @@ test("sign-up with a code", { skip: URI ? false : "MONGODB_URI not set" }, async
     const off = await start({ mailer: fakeMailer("off"), now });
     assert.deepEqual((await off()("POST", "/api/auth/signup/code", { email: "nomail@example.com" })).body, { verification: "off" });
     assert.equal(await database.collection("pendingSignups").countDocuments({ email: "nomail@example.com" }), 0);
+  });
+
+  await t.test("parallel requests cannot bypass the cooldown: one send wins", async () => {
+    const email = "parallel@example.com";
+    const PARALLEL = 10;
+    // Make the race deterministic: hold every pendingSignups read until all
+    // PARALLEL requests have made theirs, so each decides on the same (empty)
+    // record. Without a conditional write they would all send.
+    const proto = Object.getPrototypeOf(database.collection("pendingSignups"));
+    const realFindOne = proto.findOne;
+    let waiting = [];
+    proto.findOne = async function (...args) {
+      if (this.collectionName !== "pendingSignups") return realFindOne.apply(this, args);
+      const result = await realFindOne.apply(this, args);
+      await new Promise((resolve) => {
+        waiting.push(resolve);
+        if (waiting.length >= PARALLEL) {
+          waiting.forEach((release) => release());
+          waiting = [];
+        }
+        setTimeout(resolve, 2000); // never hang if fewer requests arrive
+      });
+      return result;
+    };
+    let results;
+    try {
+      results = await Promise.all(
+        Array.from({ length: PARALLEL }, () => browser()("POST", "/api/auth/signup/code", { email }))
+      );
+    } finally {
+      proto.findOne = realFindOne;
+    }
+    assert.equal(results.filter((r) => r.status === 200).length, 1);
+    const refused = results.filter((r) => r.status !== 200);
+    assert.equal(refused.length, PARALLEL - 1);
+    for (const r of refused) {
+      assert.equal(r.status, 429);
+      assert.equal(r.body.error, "CODE_RECENTLY_SENT");
+      assert.equal(r.retryAfter, "30");
+    }
+    assert.equal(mailer.sent.filter((m) => m.email === email).length, 1);
+    const record = await database.collection("pendingSignups").findOne({ email });
+    assert.equal(record.sendCount, 1);
+  });
+
+  await t.test("an email that already has an account is refused", async () => {
+    const email = "taken@example.com";
+    const made = await browser()("POST", "/api/auth/signup", { email, password: "password-1", accountType: "parent", ageBand: "adult" });
+    assert.equal(made.status, 201);
+    const res = await browser()("POST", "/api/auth/signup/code", { email });
+    assert.equal(res.status, 409);
+    assert.deepEqual(res.body, { error: "EMAIL_TAKEN" });
+    assert.equal(mailer.sent.filter((m) => m.email === email).length, 0);
   });
 
   // Task 5 adds the /complete tests below this line, inside this test().

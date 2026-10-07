@@ -22,9 +22,15 @@ if (missing.length > 0) {
 try {
   await db.connect(process.env.MONGODB_URI);
   console.log("[api] connected to MongoDB");
-  await db.ensureIndexes();
 } catch (err) {
   console.error("FATAL: could not connect to MongoDB:", err.message);
+  process.exit(1);
+}
+
+try {
+  await db.ensureIndexes();
+} catch (err) {
+  console.error("FATAL: could not create MongoDB indexes:", err.message);
   process.exit(1);
 }
 
