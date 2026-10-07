@@ -88,6 +88,8 @@ SYNTH.boop = {
 const file = (name) => `/sounds/${name}.mp3`;
 
 export const CUES = {
+  /** A tap on the sign-up flow's cards and pickers. Synth only: it is short and needs no file. */
+  chime: { synth: SYNTH.chime.synth },
   /** A correct answer, any question but the last. Heard 4–6× a challenge. */
   correct: { src: file("correct"), synth: SYNTH.chime.synth },
   /** A correct answer to the LAST question; `success` follows ~1s later. */

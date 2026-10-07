@@ -1,5 +1,5 @@
 /* Sign-up flow (spec §4). Everything is scoped to .auth-page .sf. */
-.auth-page .sf { display: grid; gap: 1rem; }
+.auth-page .sf { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
 
 /* Progress */
 .auth-page .sf-stars { display: flex; justify-content: center; gap: 0.6rem; margin: 0; padding: 0; list-style: none; }
@@ -56,8 +56,8 @@
 }
 .auth-page .sf-card.is-chosen .sf-card-check { transform: scale(1); }
 @media (min-width: 640px) {
-  .auth-page .sf-cards { grid-template-columns: repeat(2, 1fr); }
-  .auth-page .sf-cards:has(> :nth-child(5)) { grid-template-columns: repeat(3, 1fr); }
+  .auth-page .sf-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .auth-page .sf-cards:has(> :nth-child(5)) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 /* Year wheel */
@@ -115,10 +115,12 @@
 }
 
 @media (min-width: 900px) {
-  .auth-page .sf { grid-template-columns: 9rem 1fr; column-gap: 1.5rem; }
+  .auth-page .sf { grid-template-columns: 9rem minmax(0, 1fr); column-gap: 1.5rem; }
   .auth-page .sf > :not(.sf-bix) { grid-column: 2; }
   .auth-page .sf-bix { grid-column: 1; grid-row: 1 / span 4; flex-direction: column; align-self: start; }
   .auth-page .sf-bix-mascot { zoom: 0.8; }
+  /* With Bix beside the card the answers column is narrow: five year cards fit two across, not three. */
+  .auth-page .sf-cards:has(> :nth-child(5)) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .auth-page .sf-bubble { border-radius: 1rem; }
 }
 

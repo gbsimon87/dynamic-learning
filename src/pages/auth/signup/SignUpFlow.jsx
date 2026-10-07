@@ -21,7 +21,6 @@ import {
 import { useSignupDraft } from "./useSignupDraft";
 import "./SignUpFlow.css";
 
-const WIDE = new Set([STEP.who, STEP.count, STEP.year, STEP.subjects, STEP.summary, STEP.handover]);
 const reducedMotion = () => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
 export default function SignUpFlow() {
@@ -335,7 +334,7 @@ export default function SignUpFlow() {
   const hasBack = prevCursor(draft, cursor) !== null;
 
   return (
-    <AuthShell width={WIDE.has(cursor.step) ? "wide" : "narrow"}>
+    <AuthShell width="wide">
       <div className="sf">
         <BixGuide line={bixLine(draft, cursor)} mood={mood} cheerOn={cheer} />
         <ProgressStars stage={stageOf(cursor)} />

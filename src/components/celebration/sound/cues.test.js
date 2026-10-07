@@ -37,8 +37,8 @@ test("every cue the celebration and the challenge shell ask for exists", () => {
   const asked = [
     ...Object.values(TIERS).map((tier) => tier.cue),
     ...steps.map((step) => step.cue).filter(Boolean),
-    // Played directly by ChallengeShell and ProgressStep.
-    "correct", "correctLast", "combo", "wrong", "progress",
+    // Played directly by ChallengeShell, ProgressStep and the sign-up flow.
+    "correct", "correctLast", "combo", "wrong", "progress", "chime",
   ];
   for (const name of asked) assert.ok(CUES[name], `no cue named "${name}"`);
 });
