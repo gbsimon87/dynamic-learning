@@ -14,8 +14,8 @@ const YEAR_OPTIONS = [
   { id: "none", title: "Not sure", blurb: "You can change it later" },
 ];
 
-export function BirthYearBody({ draft, currentYear, onPick }) {
-  return <YearWheel years={birthYearOptions(currentYear)} value={draft.birthYear} onChange={onPick} labelledBy="sf-heading" />;
+export function BirthYearBody({ value, currentYear, onPick, onEnter }) {
+  return <YearWheel years={birthYearOptions(currentYear)} value={value} onChange={onPick} onEnter={onEnter} labelledBy="sf-heading" />;
 }
 
 export function GateBody({ onRestart }) {
@@ -74,7 +74,6 @@ export function NameBody({ learner, error, onName, onSubmit }) {
           maxLength={CHILD_NAME_MAX * 2}
           aria-invalid={error ? "true" : "false"}
           aria-describedby={error ? "sf-name-error" : "sf-name-hint"}
-          autoFocus
         />
         {error ? (
           <p className="auth-error" id="sf-name-error" role="alert">{error}</p>

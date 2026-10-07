@@ -149,6 +149,19 @@ export function addLearner(draft) {
   return { ...draft, learners, cursor: { step: STEP.name, index: learners.length - 1 }, returnTo: STEP.summary };
 }
 
+/**
+ * Backing out of "Add another child" before typing anything: take the blank
+ * learner away again. A learner with any answer at all is kept.
+ */
+export function dropBlankLearner(draft, index) {
+  const learner = draft.learners[index];
+  if (!learner) return draft;
+  const untouched =
+    String(learner.name ?? "").trim() === "" && !learner.avatar && !learner.colour &&
+    learner.yearGroup === undefined && learner.subjects === undefined;
+  return untouched ? { ...draft, learners: draft.learners.filter((_, i) => i !== index) } : draft;
+}
+
 /* ---------- the sequence ---------- */
 
 export function stepsFor(draft) {

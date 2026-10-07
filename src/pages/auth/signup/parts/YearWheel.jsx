@@ -7,7 +7,7 @@ const reducedMotion = () => window.matchMedia?.("(prefers-reduced-motion: reduce
  * would nudge a child to keep it. Keyboard: arrows, Page Up/Down, Home/End,
  * and typing digits jumps ("2" → "20" → "201" → "2013").
  */
-export default function YearWheel({ years, value, onChange, labelledBy }) {
+export default function YearWheel({ years, value, onChange, onEnter, labelledBy }) {
   const listRef = useRef(null);
   const typed = useRef({ text: "", at: 0 });
 
@@ -36,6 +36,11 @@ export default function YearWheel({ years, value, onChange, labelledBy }) {
     if (event.key in targets) {
       event.preventDefault();
       pick(targets[event.key]);
+      return;
+    }
+    if (event.key === "Enter" && !event.shiftKey && at !== -1 && onEnter) {
+      event.preventDefault();
+      onEnter();
       return;
     }
     if (/^\d$/.test(event.key)) {

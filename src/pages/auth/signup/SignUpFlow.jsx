@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import { MAX_CHILDREN_PER_SIGNUP } from "../../../data/childFields";
 import {
-  STEP, addLearner, editLearner, emptyDraft, isDraftReady, nextCursor, prevCursor,
+  STEP, addLearner, dropBlankLearner, editLearner, emptyDraft, isDraftReady, nextCursor, prevCursor,
   stageOf, stepError, toggleSubject, withBirthYear, withCount, withCursor, withLearnFor, withLearner,
 } from "../../../data/signupFlow";
 import { bixLine, errorMessage, stepTitle } from "../../../data/signupCopy";
@@ -27,6 +27,9 @@ export default function SignUpFlow() {
   const [cheer, setCheer] = useState(0);
   const [mood, setMood] = useState("idle");
   const [stepErr, setStepErr] = useState(null);
+  // The wheel's pick is held here and only committed by Continue: an
+  // intermediate pick (type-ahead "2…") must not wipe answers already given.
+  const [pendingYear, setPendingYear] = useState(null);
   const headingRef = useRef(null);
   const timer = useRef(0);
   const currentYear = new Date().getFullYear();
@@ -48,6 +51,7 @@ export default function SignUpFlow() {
     setDirection(way);
     setMood("idle");
     setStepErr(null);
+    setPendingYear(null);
     setDraft(withCursor(base, next));
   };
   const advance = (updated = draft) => {
@@ -58,11 +62,18 @@ export default function SignUpFlow() {
     }
     moveTo(updated, nextCursor(updated, updated.cursor), "forward");
   };
-  const back = () => moveTo(draft, prevCursor(draft, cursor), "back");
+  const back = () => {
+    // Backing out of "Add another child" before typing anything takes the blank child away.
+    const base = cursor.step === STEP.name && draft.returnTo === STEP.summary ? dropBlankLearner(draft, cursor.index) : draft;
+    moveTo(base, prevCursor(draft, cursor), "back");
+  };
+  const continueBirthYear = () =>
+    advance(pendingYear === null ? draft : withBirthYear(draft, pendingYear, currentYear));
 
   /** A single-choice answer: show the tick, cheer, then move on by itself. */
   const choose = (updated) => {
     setDraft(updated);
+    setStepErr(null);
     setCheer((n) => n + 1);
     playCue("chime");
     window.clearTimeout(timer.current);
@@ -71,19 +82,29 @@ export default function SignUpFlow() {
 
   useEffect(() => {
     const onKey = (event) => {
-      if (event.key === "Escape") back();
+      if (event.key === "Escape" && !event.repeat && !event.isComposing) back();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   });
 
-  const updateLearner = (patch) => setDraft(withLearner(draft, cursor.index, patch));
+  const updateLearner = (patch) => {
+    setStepErr(null);
+    setDraft(withLearner(draft, cursor.index, patch));
+  };
 
   let body = null;
   let showContinue = false;
   switch (cursor.step) {
     case STEP.birthYear:
-      body = <BirthYearBody draft={draft} currentYear={currentYear} onPick={(year) => setDraft(withBirthYear(draft, year, currentYear))} />;
+      body = (
+        <BirthYearBody
+          value={pendingYear ?? draft.birthYear}
+          currentYear={currentYear}
+          onPick={(year) => { setStepErr(null); setPendingYear(year); }}
+          onEnter={continueBirthYear}
+        />
+      );
       showContinue = true;
       break;
     case STEP.gate:
@@ -154,7 +175,7 @@ export default function SignUpFlow() {
         </div>
         {showContinue && (
           <div className="sf-continue">
-            <button type="button" className="auth-btn" onClick={() => advance()}>Continue →</button>
+            <button type="button" className="auth-btn" onClick={() => (cursor.step === STEP.birthYear ? continueBirthYear() : advance())}>Continue →</button>
           </div>
         )}
         {hasBack && (

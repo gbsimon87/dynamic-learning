@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   DRAFT_KEY, EXPLORING, GATED, STEP, accountErrors, addLearner, ageBandForBirthYear,
-  birthYearOptions, destinationFor, editLearner, emptyDraft, isDraftReady, nextCursor,
+  birthYearOptions, destinationFor, dropBlankLearner, editLearner, emptyDraft, isDraftReady, nextCursor,
   parseCode, parseDraft, prevCursor, serialiseDraft, signupBody, stageOf, stepError,
   stepsFor, subjectsForYear, toggleSubject, withBirthYear, withCount, withCursor, withLearnFor, withLearner,
 } from "./signupFlow.js";
@@ -84,6 +84,19 @@ test("finishing an edit clears the shortcut back to the summary", () => {
   assert.deepEqual(prevCursor(back, { step: STEP.summary }), { step: STEP.subjects, index: 1 });
   assert.deepEqual(nextCursor(back, { step: STEP.subjects, index: 0 }), { step: STEP.name, index: 1 });
   assert.equal(withCursor(editLearner(parentDraft(), 0), { step: STEP.year, index: 0 }).returnTo, STEP.summary);
+});
+
+test("backing out of an added child drops it; a child with answers is kept", () => {
+  const before = parentDraft();
+  const added = addLearner(before);
+  assert.equal(added.learners.length, 3);
+  assert.deepEqual(dropBlankLearner(added, 2).learners, before.learners);
+  const named = withLearner(added, 2, { name: "Zoe" });
+  assert.equal(dropBlankLearner(named, 2), named);
+  const spaces = withLearner(added, 2, { name: "   " });
+  assert.equal(dropBlankLearner(spaces, 2).learners.length, 2);
+  assert.equal(dropBlankLearner(before, 0), before, "a finished learner is kept");
+  assert.equal(dropBlankLearner(before, 9), before, "no such learner");
 });
 
 test("adding a learner from the summary is capped at six", () => {
