@@ -9,6 +9,7 @@ export default function ChoiceCards({ label, options, value, onChoose, multiple 
   const isChosen = (id) => (multiple ? Array.isArray(value) && value.includes(id) : value === id);
 
   const onKeyDown = (event, index) => {
+    if (event.altKey || event.metaKey || event.ctrlKey) return;
     const delta = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[event.key];
     if (!delta) return;
     event.preventDefault();

@@ -51,8 +51,18 @@ export default function CodeInput({ value, onChange, onComplete, disabled = fals
           autoFocus={index === 0}
           onChange={(event) => {
             const raw = event.target.value;
-            // Typing over a filled box gives "47": keep the new digit only.
-            const fresh = digit && raw.startsWith(digit) ? raw.slice(digit.length) : raw;
+            if (raw === "") {
+              // Emptied by selection-delete or a mobile keyboard: same as Backspace here.
+              onChange(value.slice(0, index));
+              return;
+            }
+            // Typing into a filled box gives "47" or "94": drop one copy of the old digit.
+            const fresh = digit ? raw.replace(digit, "") : raw;
+            if (digit && fresh === "") {
+              // The same digit retyped: keep it and move on.
+              refs.current[Math.min(index + 1, 5)]?.focus();
+              return;
+            }
             fill(Math.min(index, value.length), fresh);
           }}
           onPaste={(event) => {

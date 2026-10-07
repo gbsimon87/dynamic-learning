@@ -12,14 +12,19 @@ export default function YearWheel({ years, value, onChange, labelledBy }) {
   const typed = useRef({ text: "", at: 0 });
 
   useEffect(() => {
-    const chosen = listRef.current?.querySelector('[aria-selected="true"]');
-    chosen?.scrollIntoView({ block: "center", behavior: reducedMotion() ? "auto" : "smooth" });
+    const list = listRef.current;
+    const chosen = list?.querySelector('[aria-selected="true"]');
+    if (!list || !chosen) return;
+    // Scroll the list only — scrollIntoView would drag the whole page with it.
+    const top = chosen.offsetTop - (list.clientHeight - chosen.offsetHeight) / 2;
+    list.scrollTo({ top, behavior: reducedMotion() ? "auto" : "smooth" });
   }, [value]);
 
   const at = value === null || value === undefined ? -1 : years.indexOf(value);
   const pick = (index) => onChange(years[Math.max(0, Math.min(years.length - 1, index))]);
 
   const onKeyDown = (event) => {
+    if (event.altKey || event.metaKey || event.ctrlKey) return;
     const targets = {
       ArrowDown: at + 1,
       ArrowUp: at === -1 ? 0 : at - 1,

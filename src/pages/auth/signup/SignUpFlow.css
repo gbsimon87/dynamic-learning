@@ -13,7 +13,8 @@
 
 /* Bix: above the card content on phones, beside it on wide screens */
 .auth-page .sf-bix { display: flex; align-items: center; gap: 0.75rem; }
-.auth-page .sf-bix-mascot { width: 72px; height: 72px; flex: none; }
+/* Sized with `zoom`, as Mascot.css does for its small Bixes: his antennae and eyes are pixel-sized. */
+.auth-page .sf-bix-mascot { width: 150px; zoom: 0.5; flex: none; }
 .auth-page .sf-bubble {
   margin: 0; padding: 0.7rem 1rem; border-radius: 1rem 1rem 1rem 0.25rem;
   background: var(--au-bg); color: var(--au-text); font-size: 1.05rem; font-weight: 600;
@@ -37,7 +38,7 @@
 /* Choice cards */
 .auth-page .sf-cards { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
 .auth-page .sf-card {
-  position: relative; min-height: 64px; padding: 0.9rem 1rem; border-radius: 1rem; text-align: left;
+  position: relative; min-height: 64px; padding: 0.9rem 2.75rem 0.9rem 1rem; border-radius: 1rem; text-align: left;
   display: grid; grid-template-columns: auto 1fr; column-gap: 0.75rem; align-items: center;
   border: 2px solid var(--au-border); background: var(--au-panel); color: var(--au-text); font: inherit; cursor: pointer;
   transition: transform 160ms cubic-bezier(0.22, 1.2, 0.36, 1), border-color 160ms ease;
@@ -61,25 +62,28 @@
 
 /* Year wheel */
 .auth-page .sf-wheel {
-  height: 15rem; overflow-y: auto; scroll-snap-type: y mandatory; margin: 0; padding: 6rem 0; list-style: none;
+  position: relative; height: 16rem; overflow-y: auto; scroll-snap-type: y mandatory; margin: 0; padding: 6rem 0; list-style: none;
   border: 2px solid var(--au-border); border-radius: 1rem; background: var(--au-panel);
   mask-image: linear-gradient(transparent, black 30%, black 70%, transparent);
 }
-.auth-page .sf-wheel:focus-visible { outline: 3px solid var(--au-accent); outline-offset: 2px; }
+.auth-page .sf-wheel:focus-visible { border-color: var(--au-accent); box-shadow: inset 0 0 0 2px var(--au-accent); outline: none; }
 .auth-page .sf-wheel-item {
-  scroll-snap-align: center; min-height: 3rem; display: grid; place-items: center;
+  scroll-snap-align: center; min-height: 4rem; display: grid; place-items: center;
   font-size: 1.4rem; color: var(--au-muted); cursor: pointer;
 }
 .auth-page .sf-wheel-item.is-chosen { color: var(--au-text); font-size: 1.9rem; font-weight: 800; }
 
 /* Code boxes */
-.auth-page .sf-code { display: flex; justify-content: center; gap: 0.5rem; }
+.auth-page .sf-code { display: flex; justify-content: center; gap: 0.4rem; }
 .auth-page .sf-code.is-invalid { animation: auth-shake 400ms ease both; }
 .auth-page .sf-code-box {
-  width: 3rem; height: 4rem; border-radius: 0.75rem; text-align: center; font-size: 1.8rem; font-weight: 700;
+  flex: 1 1 0; min-width: 44px; max-width: 4rem; height: 4rem; border-radius: 0.75rem; text-align: center; font-size: 1.8rem; font-weight: 700;
   border: 2px solid var(--au-border); background: var(--au-panel); color: var(--au-text);
 }
-.auth-page .sf-code-box:focus { border-color: var(--au-accent); outline: none; }
+.auth-page .sf-code-box:focus { border-color: var(--au-accent); }
+.auth-page .sf-code-box:focus-visible { outline: 3px solid var(--au-accent); outline-offset: 2px; }
+/* A static wrong-code cue that survives reduced motion (no shake), and is never red. */
+.auth-page .sf-code.is-invalid .sf-code-box { border-style: dashed; border-color: var(--au-accent); }
 
 /* Continue pinned within thumb reach on phones */
 .auth-page .sf-continue { position: sticky; bottom: calc(env(safe-area-inset-bottom, 0px) + 0.75rem); }
@@ -105,7 +109,7 @@
   .auth-page .sf { grid-template-columns: 9rem 1fr; column-gap: 1.5rem; }
   .auth-page .sf > :not(.sf-bix) { grid-column: 2; }
   .auth-page .sf-bix { grid-column: 1; grid-row: 1 / span 4; flex-direction: column; align-self: start; }
-  .auth-page .sf-bix-mascot { width: 120px; height: 120px; }
+  .auth-page .sf-bix-mascot { zoom: 0.8; }
   .auth-page .sf-bubble { border-radius: 1rem; }
 }
 

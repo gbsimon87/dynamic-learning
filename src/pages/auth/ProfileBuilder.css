@@ -11,7 +11,7 @@
    `--pb-chip-colour`), never a literal, so a colour picked in light mode still
    repaints in dark mode (§9).
 =========================================================== */
-.profile-builder {
+:is(.profile-builder, .pb-pickers) {
   --pb-text: var(--light-text);
   --pb-panel: var(--light-panel);
   --pb-accent: var(--light-accent);
@@ -28,13 +28,15 @@
      the buttons cannot drift apart (§9). These are six-year-old fingers, so it
      stays at or above 64px. */
   --pb-tap: 64px;
+}
 
+.profile-builder {
   display: block;
   text-align: left;
   color: var(--pb-text);
 }
 
-body.dark .profile-builder {
+body.dark :is(.profile-builder, .pb-pickers) {
   --pb-text: var(--dark-text);
   --pb-panel: var(--dark-panel);
   --pb-accent: var(--dark-accent);
@@ -88,13 +90,13 @@ body.dark .profile-builder {
 }
 
 /* ---------- picture ---------- */
-.profile-builder .pb-avatar-grid {
+:is(.profile-builder, .pb-pickers) .pb-avatar-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--pb-tap), 1fr));
   gap: 0.6rem;
 }
 
-.profile-builder .pb-avatar-option {
+:is(.profile-builder, .pb-pickers) .pb-avatar-option {
   min-width: var(--pb-tap);
   min-height: var(--pb-tap);
   display: flex;
@@ -109,8 +111,8 @@ body.dark .profile-builder {
   transition: transform 0.15s ease, border-color 0.15s ease;
 }
 
-.profile-builder .pb-avatar-option:hover,
-.profile-builder .pb-avatar-option:focus-visible {
+:is(.profile-builder, .pb-pickers) .pb-avatar-option:hover,
+:is(.profile-builder, .pb-pickers) .pb-avatar-option:focus-visible {
   outline: none;
   transform: scale(1.08);
   border-color: var(--pb-accent);
@@ -119,7 +121,7 @@ body.dark .profile-builder {
 /* Shown, never hidden: a padlock says "there is more here" where an absent
    tile says nothing. Not a button — it does nothing when tapped, and a control
    that looks pressable but is inert is worse than one that plainly is not. */
-.profile-builder .pb-avatar-option.is-locked {
+:is(.profile-builder, .pb-pickers) .pb-avatar-option.is-locked {
   cursor: default;
   opacity: 0.55;
   font-size: 1.5rem;
@@ -127,20 +129,20 @@ body.dark .profile-builder {
 }
 
 /* The accent is a BACKGROUND with --on-*-accent ink on top, never ink (§9). */
-.profile-builder .pb-avatar-option.selected {
+:is(.profile-builder, .pb-pickers) .pb-avatar-option.selected {
   border-color: var(--pb-accent);
   background-color: var(--pb-accent);
   color: var(--pb-on-accent);
 }
 
 /* ---------- colour ---------- */
-.profile-builder .pb-colour-row {
+:is(.profile-builder, .pb-pickers) .pb-colour-row {
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem;
 }
 
-.profile-builder .pb-colour-option {
+:is(.profile-builder, .pb-pickers) .pb-colour-option {
   --pb-swatch: var(--profile-colour-sky);
 
   width: var(--pb-tap);
@@ -152,13 +154,13 @@ body.dark .profile-builder {
   transition: transform 0.15s ease, border-color 0.15s ease;
 }
 
-.profile-builder .pb-colour-option:hover,
-.profile-builder .pb-colour-option:focus-visible {
+:is(.profile-builder, .pb-pickers) .pb-colour-option:hover,
+:is(.profile-builder, .pb-pickers) .pb-colour-option:focus-visible {
   outline: none;
   transform: scale(1.08);
 }
 
-.profile-builder .pb-colour-option.selected {
+:is(.profile-builder, .pb-pickers) .pb-colour-option.selected {
   border-color: var(--pb-accent);
   transform: scale(1.08);
 }
@@ -300,8 +302,8 @@ body.dark .profile-builder {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .profile-builder .pb-avatar-option,
-  .profile-builder .pb-colour-option,
+  :is(.profile-builder, .pb-pickers) .pb-avatar-option,
+  :is(.profile-builder, .pb-pickers) .pb-colour-option,
   .profile-builder .pb-year,
   .profile-builder .pb-name-input,
   .profile-builder .pb-preview-chip,
@@ -309,10 +311,10 @@ body.dark .profile-builder {
     transition: none;
   }
 
-  .profile-builder .pb-avatar-option:hover,
-  .profile-builder .pb-colour-option:hover,
+  :is(.profile-builder, .pb-pickers) .pb-avatar-option:hover,
+  :is(.profile-builder, .pb-pickers) .pb-colour-option:hover,
   .profile-builder .pb-year:hover,
-  .profile-builder .pb-colour-option.selected {
+  :is(.profile-builder, .pb-pickers) .pb-colour-option.selected {
     transform: none;
   }
 }

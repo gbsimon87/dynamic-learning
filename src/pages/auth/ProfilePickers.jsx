@@ -1,7 +1,11 @@
 import { AVATARS, PROFILE_COLOURS } from "../../data/avatars";
 import { AVATARS_UNLOCKABLE, badgeForAvatar } from "../../data/badges";
 
-/** The picture grid, shared by ProfileBuilder and sign-up. Classes stay pb-* so ProfileBuilder.css styles both. */
+/**
+ * The picture grid, shared by ProfileBuilder and sign-up. Classes stay pb-* so
+ * ProfileBuilder.css styles both: wrap the pickers in `.pb-pickers` when used
+ * outside ProfileBuilder (ProfileBuilder's own `.profile-builder` already scopes them).
+ */
 export function AvatarPicker({ value, onChange, unlocked = [] }) {
   const option = (emoji) => (
     <button
