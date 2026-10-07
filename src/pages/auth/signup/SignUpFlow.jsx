@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import { MAX_CHILDREN_PER_SIGNUP } from "../../../data/childFields";
 import {
-  STEP, addLearner, dropBlankLearner, editLearner, emptyDraft, isDraftReady, nextCursor, prevCursor,
-  stageOf, stepError, toggleSubject, withBirthYear, withCount, withCursor, withLearnFor, withLearner,
+  STEP, accountErrors, addLearner, dropBlankLearner, editLearner, emptyDraft, isDraftReady, nextCursor, prevCursor,
+  stageOf, stepError, signupBody, toggleSubject, withBirthYear, withCount, withCursor, withLearnFor, withLearner,
 } from "../../../data/signupFlow";
 import { bixLine, errorMessage, stepTitle } from "../../../data/signupCopy";
+import { AuthContext } from "../../../context/auth-context";
+import { playEffect } from "../../../components/celebration/fx/effects";
 import { playCue } from "../../../components/celebration/sound/player";
 import { track } from "../../../utils/analytics";
 import AuthShell from "../AuthShell";
@@ -13,7 +15,7 @@ import BixGuide from "./parts/BixGuide";
 import FamilyRow from "./parts/FamilyRow";
 import ProgressStars from "./parts/ProgressStars";
 import {
-  BirthYearBody, CountBody, GateBody, LookBody, NameBody, SubjectsBody, SummaryBody, WhoBody, YearBody,
+  AccountBody, BirthYearBody, CodeBody, CountBody, GateBody, LookBody, NameBody, SubjectsBody, SummaryBody, WhoBody, YearBody,
 } from "./steps";
 import { useSignupDraft } from "./useSignupDraft";
 import "./SignUpFlow.css";
@@ -22,7 +24,8 @@ const WIDE = new Set([STEP.who, STEP.count, STEP.year, STEP.subjects, STEP.summa
 const reducedMotion = () => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
 export default function SignUpFlow() {
-  const [draft, setDraft] = useSignupDraft();
+  const auth = useContext(AuthContext);
+  const [draft, setDraft, finishDraft] = useSignupDraft();
   const [direction, setDirection] = useState("forward");
   const [cheer, setCheer] = useState(0);
   const [mood, setMood] = useState("idle");
@@ -30,6 +33,18 @@ export default function SignUpFlow() {
   // The wheel's pick is held here and only committed by Continue: an
   // intermediate pick (type-ahead "2…") must not wipe answers already given.
   const [pendingYear, setPendingYear] = useState(null);
+  const [secret, setSecret] = useState({ password: "", confirm: "" }); // memory only, never saved
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [busy, setBusy] = useState(false);
+  const [code, setCode] = useState("");
+  const [codeError, setCodeError] = useState(null);
+  const [needsNewCode, setNeedsNewCode] = useState(false);
+  const [shakeKey, setShakeKey] = useState(0);
+  const [resendAt, setResendAt] = useState(0);
+  const [clock, setClock] = useState(() => Date.now());
+  const [created, setCreated] = useState(null);
+  const submitting = useRef(false);
+
   const headingRef = useRef(null);
   const timer = useRef(0);
   const currentYear = new Date().getFullYear();
@@ -80,9 +95,79 @@ export default function SignUpFlow() {
     timer.current = window.setTimeout(() => advance(updated), reducedMotion() ? 120 : 400);
   };
 
+  // A one-second tick only while a resend countdown is running.
+  useEffect(() => {
+    if (resendAt <= clock) return undefined;
+    const id = window.setTimeout(() => setClock(Date.now()), 1000);
+    return () => window.clearTimeout(id);
+  }, [resendAt, clock]);
+  const resendIn = Math.max(0, Math.ceil((resendAt - clock) / 1000));
+
+  const complete = async (typed) => {
+    if (submitting.current) return; // Review Focus 5: the sixth digit and Enter together
+    submitting.current = true;
+    setBusy(true);
+    try {
+      const result = await auth.completeSignup(signupBody(draft, { password: secret.password, code: typed }));
+      track("signup_completed", { learners: result.children.length, verification: typed ? "on" : "off" });
+      playCue("success");
+      playEffect("confetti");
+      setCheer((n) => n + 1);
+      setSecret({ password: "", confirm: "" });
+      finishDraft();
+      setCreated(result);
+    } catch (err) {
+      const reason = err?.message;
+      if (reason === "EMAIL_TAKEN") {
+        setFieldErrors({ email: "EMAIL_TAKEN" });
+        moveTo(draft, { step: STEP.account }, "back");
+      } else if (typed) {
+        setMood("puzzled");
+        setShakeKey((n) => n + 1);
+        setCode("");
+        setNeedsNewCode(reason === "CODE_EXPIRED" || reason === "CODE_ATTEMPTS_EXCEEDED");
+        setCodeError(errorMessage(reason, err?.details ?? {}));
+      } else {
+        setFieldErrors({ form: errorMessage(reason, err?.details ?? {}) });
+      }
+    } finally {
+      submitting.current = false;
+      setBusy(false);
+    }
+  };
+
+  const sendCode = async () => {
+    const errors = accountErrors({ email: draft.email, ...secret });
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) return;
+    setBusy(true);
+    try {
+      const res = await auth.requestSignupCode(draft.email);
+      if (res.verification === "off") {
+        setBusy(false);
+        await complete(null);
+        return;
+      }
+      track("signup_code_sent");
+      setClock(Date.now());
+      setResendAt(Date.now() + (res.resendInSeconds ?? 30) * 1000);
+      setCode("");
+      setCodeError(null);
+      setNeedsNewCode(false);
+      if (cursor.step !== STEP.code) moveTo(draft, { step: STEP.code }, "forward");
+    } catch (err) {
+      const reason = err?.message;
+      if (reason === "EMAIL_TAKEN" || reason === "EMAIL_INVALID") setFieldErrors({ email: reason });
+      else if (cursor.step === STEP.code) setCodeError(errorMessage(reason, err?.details ?? {}));
+      else setFieldErrors({ form: errorMessage(reason, err?.details ?? {}) });
+    } finally {
+      setBusy(false);
+    }
+  };
+
   useEffect(() => {
     const onKey = (event) => {
-      if (event.key === "Escape" && !event.repeat && !event.isComposing) back();
+      if (event.key === "Escape" && !created && !event.repeat && !event.isComposing) back();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -154,11 +239,42 @@ export default function SignUpFlow() {
       );
       showContinue = isDraftReady(draft);
       break;
+    case STEP.account:
+      body = (
+        <AccountBody
+          email={draft.email}
+          secret={secret}
+          errors={fieldErrors}
+          busy={busy}
+          onEmail={(email) => setDraft({ ...draft, email })}
+          onSecret={setSecret}
+          onSubmit={sendCode}
+        />
+      );
+      break;
+    case STEP.code:
+      body = (
+        <CodeBody
+          code={code}
+          onCode={(value) => { setCode(value); setCodeError(null); setMood("idle"); }}
+          onComplete={complete}
+          busy={busy}
+          error={codeError}
+          invalid={Boolean(codeError)}
+          shakeKey={shakeKey}
+          resendIn={resendIn}
+          needsNewCode={needsNewCode}
+          onResend={sendCode}
+          onChangeEmail={() => moveTo(draft, { step: STEP.account }, "back")}
+        />
+      );
+      break;
     default:
-      body = null; // account, code: Task 9. handover: Task 10.
+      body = null; // handover: Task 10.
   }
 
-  const hasBack = prevCursor(draft, cursor) !== null;
+  if (created) body = null; // Task 10 renders the hand-over from `created`.
+  const hasBack = !created && prevCursor(draft, cursor) !== null;
 
   return (
     <AuthShell width={WIDE.has(cursor.step) ? "wide" : "narrow"}>

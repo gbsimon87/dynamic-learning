@@ -1,7 +1,12 @@
+import { Link } from "react-router";
 import { CHILD_NAME_MAX } from "../../../data/childFields";
 import { CURRICULUM_SUBJECTS, getSubjectName } from "../../../data/curriculumRegistry";
 import { EXPLORING, birthYearOptions, subjectsForYear } from "../../../data/signupFlow";
+import { MIN_PASSWORD_LENGTH, passwordStrength } from "../../../data/passwordStrength";
+import { ERROR_MESSAGES } from "../../../data/signupCopy";
+import PasswordField from "../PasswordField";
 import ChoiceCards from "./parts/ChoiceCards";
+import CodeInput from "./parts/CodeInput";
 import YearWheel from "./parts/YearWheel";
 import { AvatarPicker, ColourPicker } from "../ProfilePickers";
 import "../ProfileBuilder.css";
@@ -138,6 +143,79 @@ export function SummaryBody({ draft, onEdit, onAdd, canAdd }) {
       {canAdd && (
         <button type="button" className="auth-btn auth-btn-quiet" onClick={onAdd}>+ Add another child</button>
       )}
+    </>
+  );
+}
+
+export function AccountBody({ email, secret, errors, busy, onEmail, onSecret, onSubmit }) {
+  const strength = passwordStrength(secret.password);
+  const message = (field) => (errors[field] ? ERROR_MESSAGES[errors[field]] ?? errors[field] : null);
+  return (
+    <form className="auth-form" onSubmit={(event) => { event.preventDefault(); onSubmit(); }} noValidate>
+      <div className="auth-field">
+        <label className="auth-label" htmlFor="sf-email">Email address</label>
+        <input
+          id="sf-email"
+          className={`auth-input ${errors.email ? "invalid" : ""}`}
+          type="email"
+          autoComplete="email"
+          inputMode="email"
+          value={email}
+          onChange={(event) => onEmail(event.target.value)}
+          aria-invalid={errors.email ? "true" : "false"}
+          aria-describedby={errors.email ? "sf-email-error" : undefined}
+          autoFocus
+        />
+        {errors.email && (
+          <p className="auth-error" id="sf-email-error" role="alert">
+            {message("email")}
+            {errors.email === "EMAIL_TAKEN" && <> <Link to="/login">Sign in instead</Link></>}
+          </p>
+        )}
+      </div>
+      <PasswordField
+        id="sf-password"
+        label="Password"
+        autoComplete="new-password"
+        value={secret.password}
+        onChange={(password) => onSecret({ ...secret, password })}
+        error={message("password")}
+        describedBy={errors.password ? "sf-password-error" : "sf-password-hint"}
+        hint={
+          <p className={`auth-hint su-strength is-${strength?.level ?? "empty"}`} id="sf-password-hint">
+            {strength?.label ?? `At least ${MIN_PASSWORD_LENGTH} characters.`}
+          </p>
+        }
+      />
+      <PasswordField
+        id="sf-confirm"
+        label="Type it again"
+        autoComplete="new-password"
+        value={secret.confirm}
+        onChange={(confirm) => onSecret({ ...secret, confirm })}
+        error={message("confirm")}
+        describedBy={errors.confirm ? "sf-confirm-error" : undefined}
+        hint={null}
+      />
+      {errors.form && <p className="auth-error" role="alert">{errors.form}</p>}
+      <div className="sf-continue">
+        <button className="auth-btn" type="submit" disabled={busy}>{busy ? "Sending…" : "Send my code →"}</button>
+      </div>
+    </form>
+  );
+}
+
+export function CodeBody({ code, onCode, onComplete, busy, error, invalid, shakeKey, resendIn, onResend, onChangeEmail, needsNewCode }) {
+  return (
+    <>
+      <CodeInput value={code} onChange={onCode} onComplete={onComplete} disabled={busy} invalid={invalid} shakeKey={shakeKey} />
+      {error && <p className="auth-error" role="alert">{error}</p>}
+      <div className="auth-actions">
+        <button type="button" className={`auth-btn ${needsNewCode ? "" : "auth-btn-quiet"}`} onClick={onResend} disabled={busy || resendIn > 0}>
+          {resendIn > 0 ? `Send a new code in ${resendIn}s` : "Send a new code"}
+        </button>
+        <button type="button" className="auth-btn auth-btn-quiet" onClick={onChangeEmail} disabled={busy}>Change email</button>
+      </div>
     </>
   );
 }

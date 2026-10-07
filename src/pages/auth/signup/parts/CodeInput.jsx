@@ -57,7 +57,8 @@ export default function CodeInput({ value, onChange, onComplete, disabled = fals
               return;
             }
             // Typing into a filled box gives "47" or "94": drop one copy of the old digit.
-            const fresh = digit ? raw.replace(digit, "") : raw;
+            // Only when exactly one character was added; a pasted/autofilled code passes through.
+            const fresh = digit && raw.length === digit.length + 1 ? raw.replace(digit, "") : raw;
             if (digit && fresh === "") {
               // The same digit retyped: keep it and move on.
               refs.current[Math.min(index + 1, 5)]?.focus();

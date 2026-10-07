@@ -98,6 +98,15 @@
 .auth-page .sf-handover .auth-btn { min-height: 80px; font-size: 1.4rem; padding-inline: 2rem; animation: sf-pulse 1.6s ease-in-out infinite; }
 @keyframes sf-pulse { 50% { transform: scale(1.05); } }
 
+/* Password hint (the rules SignUp.css used to hold) */
+.auth-page .su-strength {
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+.auth-page .su-strength.is-short { color: var(--au-danger); }
+.auth-page .su-strength.is-strong,
+.auth-page .su-strength.is-good { color: var(--au-good); }
+
 /* Summary */
 .auth-page .sf-summary { display: grid; gap: 0.75rem; margin: 0; padding: 0; list-style: none; }
 .auth-page .sf-summary-card {
@@ -119,6 +128,7 @@
   .auth-page .sf-family-face,
   .auth-page .sf-handover .auth-btn,
   .auth-page .sf-code.is-invalid { animation: none; }
+  .auth-page .su-strength,
   .auth-page .sf-card,
   .auth-page .sf-card-check,
   .auth-page .sf-star { transition: none; }
