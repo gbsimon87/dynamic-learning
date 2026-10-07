@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router";
 import { AuthContext } from "../../context/auth-context";
-import { readYearGroup } from "../../data/childFields";
+import { readSubjects, readYearGroup } from "../../data/childFields";
 import {
   CURRICULUM_YEARS,
   CURRICULUM_SUBJECTS,
@@ -79,7 +79,7 @@ function YearButton({ year, available, selected, onPick }) {
    Three states, and none of them is an inert grey box: before a year is
    picked the card says so and points back at step 1, a subject with no
    curriculum shakes, and a ready one is the big coloured button. */
-function SubjectCard({ subject, year, onNeedYear }) {
+function SubjectCard({ subject, year, picked, onNeedYear }) {
   const [nudged, setNudged] = useState(false);
   const navigate = useNavigate();
 
@@ -122,6 +122,7 @@ function SubjectCard({ subject, year, onNeedYear }) {
       onClick={handleClick}
     >
       {available && <span className="cs-subject-flag">Ready</span>}
+      {picked && available && <span className="cs-subject-pick">⭐ Your pick</span>}
 
       <span className="cs-subject-icon" aria-hidden="true">
         {subject.icon}
@@ -141,6 +142,8 @@ function CurriculumSelectPage() {
   // Year 2 work in Year 3, must still be able to choose — so the row stays,
   // already answered.
   const savedYear = readYearGroup(child);
+  // The subjects this child chose at sign-up; they get a "Your pick" tag.
+  const picks = readSubjects(child);
 
   const [selectedYear, setSelectedYear] = useState(savedYear);
   const [nudgeYears, setNudgeYears] = useState(false);
@@ -286,6 +289,7 @@ function CurriculumSelectPage() {
               key={subject.id}
               subject={subject}
               year={selectedYear}
+              picked={picks.includes(subject.id)}
               onNeedYear={askForYear}
             />
           ))}

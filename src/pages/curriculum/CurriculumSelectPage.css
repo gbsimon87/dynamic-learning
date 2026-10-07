@@ -427,6 +427,20 @@ body.dark .cs-page {
   animation: cs-shimmer 2.8s linear infinite;
 }
 
+/* A subject the child chose at sign-up. Top-left, mirroring the Ready flag:
+   the card's bottom edge belongs to the call-to-action button. */
+.cs-subject-pick {
+  position: absolute;
+  top: -13px;
+  left: 16px;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: var(--subject-deep);
+  color: var(--cs-on-deep);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
 /* Waiting on step 1, and not yet ready: same shape, quieter paint, so the
    grid never collapses or jumps when a year is chosen. */
 .cs-subject.is-waiting,

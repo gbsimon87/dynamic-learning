@@ -1,8 +1,8 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { MAX_CHILDREN_PER_SIGNUP } from "../../../data/childFields";
 import {
-  STEP, accountErrors, addLearner, dropBlankLearner, editLearner, emptyDraft, isDraftReady, nextCursor, prevCursor,
+  STEP, accountErrors, addLearner, destinationFor, dropBlankLearner, editLearner, emptyDraft, isDraftReady, nextCursor, prevCursor,
   stageOf, stepError, signupBody, toggleSubject, withBirthYear, withCount, withCursor, withLearnFor, withLearner,
 } from "../../../data/signupFlow";
 import { bixLine, errorMessage, stepTitle } from "../../../data/signupCopy";
@@ -13,6 +13,7 @@ import { track } from "../../../utils/analytics";
 import AuthShell from "../AuthShell";
 import BixGuide from "./parts/BixGuide";
 import FamilyRow from "./parts/FamilyRow";
+import HandOver from "./HandOver";
 import ProgressStars from "./parts/ProgressStars";
 import {
   AccountBody, BirthYearBody, CodeBody, CountBody, GateBody, LookBody, NameBody, SubjectsBody, SummaryBody, WhoBody, YearBody,
@@ -25,6 +26,7 @@ const reducedMotion = () => window.matchMedia?.("(prefers-reduced-motion: reduce
 
 export default function SignUpFlow() {
   const auth = useContext(AuthContext);
+  const navigate = useNavigate();
   const [draft, setDraft, finishDraft] = useSignupDraft();
   const [direction, setDirection] = useState("forward");
   const [cheer, setCheer] = useState(0);
@@ -208,6 +210,25 @@ export default function SignUpFlow() {
     return () => window.removeEventListener("keydown", onKey);
   });
 
+  if (created) {
+    return (
+      <AuthShell width="wide">
+        <div className="sf">
+          <BixGuide line={created.children.length > 1 ? "Who's first? 🎉" : "Let's go!"} cheerOn={cheer} />
+          <HandOver
+            result={created}
+            onStart={async (child) => {
+              await auth.selectChild(child._id);
+              playCue("levelUp");
+              playEffect("confettiStars");
+              navigate(destinationFor(child));
+            }}
+          />
+        </div>
+      </AuthShell>
+    );
+  }
+
   const updateLearner = (patch) => {
     setStepErr(null);
     setDraft(withLearner(draft, cursor.index, patch));
@@ -308,11 +329,10 @@ export default function SignUpFlow() {
       );
       break;
     default:
-      body = null; // handover: Task 10.
+      body = null; // the hand-over is rendered by the early return above
   }
 
-  if (created) body = null; // Task 10 renders the hand-over from `created`.
-  const hasBack = !created && prevCursor(draft, cursor) !== null;
+  const hasBack = prevCursor(draft, cursor) !== null;
 
   return (
     <AuthShell width={WIDE.has(cursor.step) ? "wide" : "narrow"}>
