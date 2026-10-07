@@ -6,11 +6,10 @@ import {
   ACCOUNT_PARENT,
   AGE_CHOICES,
 } from "../../../shared/accountTypes.js";
+import { MIN_PASSWORD_LENGTH, passwordStrength } from "../../data/passwordStrength";
 import AuthShell from "./AuthShell";
 import ProfileBuilder from "./ProfileBuilder";
 import "./SignUp.css";
-
-const MIN_PASSWORD_LENGTH = 8;
 
 /* ===== STEPS =====
    One route, a small state machine. The steps a given person sees depend on
@@ -29,30 +28,6 @@ const PROGRESS_STEPS = {
   [ACCOUNT_PARENT]: [STEP.who, STEP.details, STEP.profile],
   [ACCOUNT_LEARNER]: [STEP.who, STEP.age, STEP.details, STEP.profile],
 };
-
-/* ===== PASSWORD STRENGTH =====
-   Shown live as the password is typed, rather than as an error after the form
-   is submitted. Deliberately simple and deliberately generous: this is a
-   nudge towards a longer password, not a policy. Only `length` actually gates
-   submission — see `validateDetails`. */
-function passwordStrength(password) {
-  if (!password) return null;
-  if (password.length < MIN_PASSWORD_LENGTH) {
-    return { level: "short", label: `A bit short — ${MIN_PASSWORD_LENGTH}+ characters` };
-  }
-
-  const variety =
-    (/[a-z]/.test(password) ? 1 : 0) +
-    (/[A-Z]/.test(password) ? 1 : 0) +
-    (/[0-9]/.test(password) ? 1 : 0) +
-    (/[^A-Za-z0-9]/.test(password) ? 1 : 0);
-
-  if (password.length >= 12 && variety >= 3) {
-    return { level: "strong", label: "Strong password 💪" };
-  }
-  if (variety >= 2) return { level: "good", label: "Good password 👍" };
-  return { level: "okay", label: "That'll do — a number or symbol would help" };
-}
 
 /* ===== PASSWORD FIELD =====
    The show/hide toggle exists because the confirm field is the single most
