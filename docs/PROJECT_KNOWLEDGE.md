@@ -1753,23 +1753,27 @@ without a changelog note or the report was inaccurate.
    a one-directional match test (works because both directions are always
    emitted); `.skills-grid` has an unreachable `max-width: 1400px` inside a
    1200px parent.
-17. **Domain and email verification are live; one delivery report is open**
+17. **Domain, email verification and a dev deployment are live**
    (domain set up 2026-10-09; spec
    `docs/superpowers/specs/2026-10-07-signup-onboarding-design.md`). The app
    is served at **`learnwithbix.com`** (Namecheap; apex A record →
    `216.24.57.1`, `www` CNAME → `dynamic-learning-zkww.onrender.com`; Render
    redirects `www` to the apex). The live Render service is
-   **`dynamic-learning-zkww`** (web service: app + API, deploys from `dev`).
+   **`dynamic-learning-zkww`** (web service: app + API, Starter so it never
+   sleeps, deploys from `main`). **`dynamic-learning-dev`** (Free, deploys from
+   `dev`, its own `MONGODB_DB=dynamic_learning_dev`) is the dev site. Both are
+   managed by the Render Blueprint "DEV DL", which auto-syncs `render.yaml`
+   from the `dev` branch — so `plan`/`branch` in that file ARE production's;
+   never set production back to `free`.
    The older `dynamic-learning` static site (`dynamic-learning-n72m.onrender.com`,
-   deploys from `main`, no API) is retired and is to be suspended or deleted —
-   attach nothing to it. `learnwithbix.com` is verified in Resend (DKIM TXT
+   no API) is retired and suspended — attach nothing to it. It still holds the
+   name `dynamic-learning`, which makes `render blueprints validate` report a
+   false type/region change. `learnwithbix.com` is verified in Resend (DKIM TXT
    `resend._domainkey`, CNAMEs `send`/`rsend`, `_dmarc` TXT — keep these when
    editing DNS), and `RESEND_API_KEY` + `EMAIL_FROM` (`Bix
    <hello@learnwithbix.com>`) are set on Render, so the code step is on in
    production. Keys are sending-only, so sent mail is checked in the Resend
-   dashboard, not the API. **Open:** one live sign-up after the keys were set
-   received no code — not yet known whether the code step was shown (env not
-   loaded) or the mail was held by the recipient. The app is to be renamed
+   dashboard, not the API. A live sign-up received its code on 2026-10-09. The app is to be renamed
    "Learn with Bix" (not started). Deliberately no personal address in this
    file: the repo is public.
 

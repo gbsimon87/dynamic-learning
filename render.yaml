@@ -1,4 +1,4 @@
-# Render Blueprint — one Web Service that serves BOTH the built React app and
+# Render Blueprint — two Web Services (production and dev), each serving BOTH the built React app and
 # the /api routes from the same origin. Same origin is load-bearing: the session
 # is an HTTP-only cookie, so a split static-site + API deployment would need CORS
 # and third-party-cookie handling that this setup avoids entirely.
@@ -6,13 +6,16 @@
 # Usage: commit this file, then Render dashboard > New > Blueprint > pick this
 # repo. See docs/DEPLOYMENT.md.
 
+# Production (learnwithbix.com). The Blueprint keeps this service in line with
+# this file, so `plan` and `branch` here are what production runs: Starter so
+# it never sleeps, deployed from main. Changing them here changes production.
 services:
   - type: web
     name: dynamic-learning
     runtime: node
-    plan: free
+    plan: starter
     region: frankfurt
-    branch: dev
+    branch: main
 
     # `npm ci` for a reproducible install from package-lock.json.
     # `--include=dev` is REQUIRED and must not be removed: NODE_ENV=production
@@ -57,3 +60,34 @@ services:
 
       # PORT is injected by Render; server/index.js reads process.env.PORT and
       # falls back to 3001 locally. Do not set it here.
+
+  # Dev: deployed from the dev branch, Free (it sleeps after ~15 idle minutes).
+  # Its own database (MONGODB_DB) so nothing done on dev can touch real
+  # learners' progress, and its own session secret so dev sign-ins don't work on
+  # production.
+  - type: web
+    name: dynamic-learning-dev
+    runtime: node
+    plan: free
+    region: frankfurt
+    branch: dev
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: node server/index.js
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: "22.23.3"
+      - key: NODE_ENV
+        value: production
+      - key: VITE_USE_API
+        value: "true"
+      - key: MONGODB_DB
+        value: dynamic_learning_dev
+      - key: MONGODB_URI
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: RESEND_API_KEY
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
