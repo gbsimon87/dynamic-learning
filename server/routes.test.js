@@ -17,6 +17,7 @@ test("route authorization", { skip: URI ? false : "MONGODB_URI not set" }, async
   const { createApp } = await import("./app.js");
 
   const database = await db.connect(URI, TEST_DB);
+  await db.ensureIndexes();
   const app = createApp({ serveStatic: false });
   const server = app.listen(0);
   await new Promise((resolve) => server.once("listening", resolve));

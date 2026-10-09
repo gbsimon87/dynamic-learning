@@ -51,7 +51,8 @@ test("sign-up with a code", { skip: URI ? false : "MONGODB_URI not set" }, async
     return { verification, sent, async sendSignupCode(email, code) { sent.push({ email, code }); } };
   }
 
-  let clock = Date.parse("2026-10-07T09:00:00Z");
+  // Keep fake-clock expiry dates ahead of MongoDB's real TTL monitor.
+  let clock = Date.now();
   const now = () => clock;
   const mailer = fakeMailer();
   const browser = await start({ mailer, now });

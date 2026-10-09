@@ -191,6 +191,8 @@ function Login() {
         </button>
       </form>
 
+      <p className="auth-switch"><Link to="/forgot-password">Forgot your password?</Link></p>
+
       {remembered && (
         <button type="button" className="lg-not-you" onClick={forgetAccount}>
           Not you? Use a different account

@@ -33,7 +33,7 @@ router.post("/login", throttle, async (req, res, next) => {
     // Identical response for unknown email and wrong password — no enumeration.
     if (!ok) return res.status(401).json({ error: "INVALID_CREDENTIALS" });
 
-    res.cookie(COOKIE_NAME, signSession(parent._id), cookieOptions());
+    res.cookie(COOKIE_NAME, signSession(parent._id, process.env.SESSION_SECRET, parent.sessionVersion ?? 0), cookieOptions());
     return res.json({ parent: publicParent(parent) });
   } catch (err) {
     return next(err);

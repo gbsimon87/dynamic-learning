@@ -1,0 +1,90 @@
+import { act, renderHook, waitFor } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { AuthContext } from "../../src/context/auth-context";
+import { useProgress } from "../../src/hooks/useProgress";
+
+const fake = vi.hoisted(() => ({ getProgress: vi.fn(), saveProgress: vi.fn() }));
+vi.mock("../../src/data/store", () => ({ store: fake }));
+const deferred = () => { let resolve; const promise = new Promise((done) => { resolve = done; }); return { promise, resolve }; };
+const tree = (...ids) => ({ numbers: { topics: { counting: { completedChallenges: ids } } } });
+
+describe("progress hydration and profile isolation", () => {
+  beforeEach(() => { fake.getProgress.mockReset(); fake.saveProgress.mockReset().mockImplementation(async (_id, _year, _subject, data) => ({ data })); });
+  it("does not save before hydration, preserves existing work, and replays without a write", async () => {
+    const load = deferred();
+    fake.getProgress.mockReturnValue(load.promise);
+    const Wrapper = ({ children }) => <AuthContext.Provider value={{ child: { _id: "hydrate-child" } }}>{children}</AuthContext.Provider>;
+    const { result } = renderHook(() => useProgress(2, "math"), { wrapper: Wrapper });
+    act(() => result.current.completeChallenge("numbers", "counting", 2));
+    expect(fake.saveProgress).not.toHaveBeenCalled();
+    await act(async () => load.resolve({ data: tree(1) }));
+    expect(result.current.hydrated).toBe(true);
+    expect(fake.saveProgress).not.toHaveBeenCalled();
+    act(() => result.current.completeChallenge("numbers", "counting", 1));
+    expect(fake.saveProgress).not.toHaveBeenCalled();
+    act(() => result.current.completeChallenge("numbers", "counting", "2"));
+    await waitFor(() => expect(fake.saveProgress).toHaveBeenCalledWith("hydrate-child", 2, "math", tree(1, 2)));
+  });
+  it("switching child during a load never writes outgoing learning to the incoming child", async () => {
+    const oldLoad = deferred();
+    const newLoad = deferred();
+    let child = "old-child";
+    fake.getProgress.mockImplementation((id) => id === "old-child" ? oldLoad.promise : newLoad.promise);
+    const Wrapper = ({ children }) => <AuthContext.Provider value={{ child: { _id: child } }}>{children}</AuthContext.Provider>;
+    const { result, rerender } = renderHook(() => useProgress(2, "math"), { wrapper: Wrapper });
+    child = "new-child";
+    rerender();
+    await act(async () => oldLoad.resolve({ data: tree(1, 2, 3) }));
+    expect(result.current.hydrated).toBe(false);
+    await act(async () => newLoad.resolve({ data: tree(1) }));
+    expect(result.current.progress).toEqual(tree(1));
+    expect(fake.saveProgress).not.toHaveBeenCalled();
+  });
+  it("a failed read stays unwritable until an explicit successful retry", async () => {
+    fake.getProgress.mockRejectedValueOnce(new Error("offline")).mockResolvedValueOnce({ data: tree(1) });
+    const Wrapper = ({ children }) => <AuthContext.Provider value={{ child: { _id: "failed-read-child" } }}>{children}</AuthContext.Provider>;
+    const { result } = renderHook(() => useProgress(2, "math"), { wrapper: Wrapper });
+    await waitFor(() => expect(result.current.loadError).toBe(true));
+    act(() => result.current.completeChallenge("numbers", "counting", 1));
+    expect(fake.saveProgress).not.toHaveBeenCalled();
+    act(() => result.current.retryLoad());
+    await waitFor(() => expect(result.current.hydrated).toBe(true));
+    expect(result.current.progress).toEqual(tree(1));
+    expect(fake.saveProgress).not.toHaveBeenCalled();
+  });
+  it("completions persist across remount, unlock in sequence, and keep a sibling's existing work", async () => {
+    let stored = { ...tree(1), other: { topics: { saved: { completedChallenges: [1, 2] } } } };
+    fake.getProgress.mockImplementation(async () => ({ schemaVersion: 1, data: stored }));
+    fake.saveProgress.mockImplementation(async (_child, _year, _subject, data) => { stored = data; return { data }; });
+    const Wrapper = ({ children }) => <AuthContext.Provider value={{ child: { _id: "reload-child" } }}>{children}</AuthContext.Provider>;
+    const topic = { id: "counting", challenges: [1, 2, 3, 4].map((id) => ({ id })) };
+    const first = renderHook(() => useProgress(2, "math"), { wrapper: Wrapper });
+    await waitFor(() => expect(first.result.current.hydrated).toBe(true));
+    expect(first.result.current.isChallengeUnlocked("numbers", "counting", topic, 1)).toBe(true);
+    expect(first.result.current.isChallengeUnlocked("numbers", "counting", topic, 2)).toBe(false);
+    for (const id of [2, 3, 4]) act(() => first.result.current.completeChallenge("numbers", "counting", id));
+    await waitFor(() => expect(stored.numbers.topics.counting.completedChallenges).toEqual([1, 2, 3, 4]));
+    first.unmount();
+    const second = renderHook(() => useProgress(2, "math"), { wrapper: Wrapper });
+    await waitFor(() => expect(second.result.current.hydrated).toBe(true));
+    expect(second.result.current.isTopicComplete("numbers", "counting", topic)).toBe(true);
+    expect(second.result.current.isCategoryComplete({ id: "numbers", topics: [topic] })).toBe(true);
+    expect(second.result.current.progress.other.topics.saved.completedChallenges).toEqual([1, 2]);
+    const writes = fake.saveProgress.mock.calls.length;
+    act(() => second.result.current.completeChallenge("numbers", "counting", 4));
+    expect(fake.saveProgress).toHaveBeenCalledTimes(writes);
+  });
+  it("a failed save remains visible and its retry cannot replace a newer local completion", async () => {
+    fake.getProgress.mockResolvedValue({ data: tree(1) });
+    fake.saveProgress.mockRejectedValueOnce(new Error("offline")).mockImplementation(async (_id, _year, _subject, data) => ({ data }));
+    const Wrapper = ({ children }) => <AuthContext.Provider value={{ child: { _id: "save-retry-child" } }}>{children}</AuthContext.Provider>;
+    const { result } = renderHook(() => useProgress(2, "math"), { wrapper: Wrapper });
+    await waitFor(() => expect(result.current.hydrated).toBe(true));
+    act(() => result.current.completeChallenge("numbers", "counting", 2));
+    await waitFor(() => expect(result.current.saveError).toBe(true));
+    expect(result.current.progress).toEqual(tree(1, 2));
+    act(() => { result.current.completeChallenge("numbers", "counting", 3); result.current.retrySave(); });
+    await waitFor(() => expect(result.current.saveError).toBe(false));
+    expect(fake.saveProgress.mock.calls.at(-1)[3]).toEqual(tree(1, 2, 3));
+  });
+});

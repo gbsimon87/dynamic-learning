@@ -12,7 +12,7 @@
  */
 import { ObjectId } from "mongodb";
 import * as db from "./db.js";
-import { COOKIE_NAME, verifySession } from "./auth.js";
+import { COOKIE_NAME, sessionPayload } from "./auth.js";
 
 /** @returns {ObjectId|null} — null for any string that is not a valid id. */
 export function toObjectId(value) {
@@ -25,13 +25,14 @@ export function toObjectId(value) {
 
 /** Requires a valid session cookie AND an existing parent. Sets `req.parent`. */
 export async function requireAuth(req, res, next) {
-  const parentId = verifySession(req.cookies?.[COOKIE_NAME]);
+  const session = sessionPayload(req.cookies?.[COOKIE_NAME]);
+  const parentId = session?.sub;
   const _id = parentId && toObjectId(parentId);
   if (!_id) return res.status(401).json({ error: "NOT_SIGNED_IN" });
 
   try {
     const parent = await db.parents().findOne({ _id });
-    if (!parent) return res.status(401).json({ error: "NOT_SIGNED_IN" });
+    if (!parent || (parent.sessionVersion ?? 0) !== (session.sessionVersion ?? 0)) return res.status(401).json({ error: "NOT_SIGNED_IN" });
     req.parent = parent;
     return next();
   } catch (err) {

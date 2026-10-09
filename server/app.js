@@ -11,12 +11,13 @@ import childrenRoutes from "./routes/children.js";
 import progressRoutes from "./routes/progress.js";
 import rewardsRoutes from "./routes/rewards.js";
 import { createSignupRouter } from "./routes/signup.js";
+import { createRecoveryRouter } from "./routes/recovery.js";
 import { createMailerFromEnv } from "./email.js";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.resolve(here, "..", "dist");
 
-export function createApp({ serveStatic = process.env.NODE_ENV === "production", signup = {}, trustProxy = process.env.RENDER === "true" ? 1 : false } = {}) {
+export function createApp({ serveStatic = process.env.NODE_ENV === "production", signup = {}, recovery = {}, trustProxy = process.env.RENDER === "true" ? 1 : false } = {}) {
   const app = express();
   // Render is the single ingress proxy. Direct/local servers trust no headers.
   // Never use `true`: a client-supplied leftmost X-Forwarded-For is untrusted.
@@ -31,6 +32,7 @@ export function createApp({ serveStatic = process.env.NODE_ENV === "production",
     "/api/auth/signup",
     createSignupRouter({ ...signup, mailer: signup.mailer ?? createMailerFromEnv() })
   );
+  app.use("/api/auth/recovery", createRecoveryRouter({ ...recovery, mailer: recovery.mailer ?? signup.mailer ?? createMailerFromEnv() }));
   app.use("/api/auth", authRoutes);
   app.use("/api/children", childrenRoutes);
   app.use("/api/progress", progressRoutes);

@@ -13,9 +13,7 @@ import "./Challenge.css";
  * Keys look like:
  * ../skills/math/challenges/year2/numbers-and-counting/NumbersAndCountingChallenge1.jsx
  */
-const challengeModules = import.meta.glob(
-  "../skills/*/challenges/year*/*/*Challenge*.jsx"
-);
+import { challengeModules } from "./challengeModules";
 
 /** Turn "numbers-and-counting" → "NumbersAndCounting". */
 function capitalizeTopicId(id) {

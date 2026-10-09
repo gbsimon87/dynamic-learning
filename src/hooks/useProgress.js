@@ -3,6 +3,7 @@ import { AuthContext } from "../context/auth-context";
 import { store } from "../data/store";
 import * as rules from "../data/progressRules";
 import { readProgress, saveProgressInOrder } from "../data/progressPersistence";
+import { mergeProgress } from "../../shared/progressDocument.js";
 
 /**
  * Shared curriculum-progress hook — now account-aware.
@@ -102,9 +103,12 @@ export function useProgress(year, subject) {
     // Skip the no-op write that would otherwise fire right after hydration.
     if (serialised === lastSavedRef.current) return;
     let cancelled = false;
-    saveProgressInOrder(store, childId, year, subject, progress).then(() => {
+    saveProgressInOrder(store, childId, year, subject, progress).then((doc) => {
       if (cancelled || loadedKeyRef.current !== documentKey) return;
-      lastSavedRef.current = serialised;
+      lastSavedRef.current = JSON.stringify(doc.data);
+      // The acknowledgement can include completions from another device.
+      // Keep any newer local completion too; never apply a stale snapshot.
+      setProgress((current) => mergeProgress(doc.data, current));
       setSaveError(false);
     }).catch(() => {
       if (!cancelled && loadedKeyRef.current === documentKey) setSaveError(true);

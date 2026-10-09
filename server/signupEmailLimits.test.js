@@ -42,7 +42,8 @@ test("the daily budget is atomic and survives recreated limiters", { skip: URI ?
   const database = await db.connect(URI, `dl_test_email_limits_${process.pid}`);
   await db.ensureIndexes();
   t.after(async () => { await database.dropDatabase(); await db.close(); });
-  let time = Date.parse("2026-10-09T10:00:00Z");
+  const tomorrow = (Math.floor(Date.now() / 86_400_000) + 1) * 86_400_000;
+  let time = tomorrow + 10 * 60 * 60_000;
   const make = () => createSignupEmailLimits({ now: () => time, dailyLimit: 3 });
   const outcomes = await Promise.all(Array.from({ length: 12 }, () => make().reserveSend()));
   assert.equal(outcomes.filter((result) => result.ok).length, 3);
@@ -51,6 +52,6 @@ test("the daily budget is atomic and survives recreated limiters", { skip: URI ?
   }
   assert.equal((await make().reserveSend()).ok, false, "new process/router cannot reset the budget");
   assert.equal((await db.signupEmailBudgets().findOne({})).count, 3);
-  time = Date.parse("2026-10-10T00:00:00Z");
+  time = tomorrow + 86_400_000;
   assert.equal((await make().reserveSend()).ok, true, "next UTC day starts a new budget");
 });

@@ -32,7 +32,7 @@ node_modules/.cache
 *.tsbuildinfo
 
 # === Test & coverage output ===
-# (No test runner yet — see docs/PROJECT_IDEAS.md #8. Ready for Vitest.)
+# Vitest component tests and Node unit tests run through npm test.
 coverage
 *.lcov
 .nyc_output

@@ -38,6 +38,7 @@ import ProblemView from "./pages/curriculum/ProblemView";
 import TrophyRoom, { ChildTrophyRoom } from "./pages/trophies/TrophyRoom";
 
 // === AUTH: parent accounts + child profiles ===
+import { ForgotPassword, ResetPassword } from "./pages/auth/PasswordRecovery";
 import Login from "./pages/auth/Login";
 import SignUpFlow from "./pages/auth/signup/SignUpFlow";
 import Profiles from "./pages/auth/Profiles";
@@ -66,6 +67,8 @@ const router = createBrowserRouter([
 
       // === Auth: ungated, these are how you get an account in the first place ===
       { path: "login", element: <Login /> },
+      { path: "forgot-password", element: <ForgotPassword /> },
+      { path: "reset-password", element: <ResetPassword /> },
       { path: "signup", element: <SignUpFlow /> },
       { path: "profiles", element: <Profiles /> },
       { path: "parent", element: <ParentArea /> },

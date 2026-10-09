@@ -6,6 +6,7 @@
  * would open a new pool per request and exhaust the cluster's connection limit.
  */
 import { MongoClient } from "mongodb";
+import { ensureAccountIndexes } from "./accountIndexes.js";
 
 const DB_NAME = "dynamic_learning";
 
@@ -46,9 +47,11 @@ export const signupEmailBudgets = () => getDb().collection("signupEmailBudgets")
 
 /**
  * Indexes the app relies on. Idempotent; called at boot and by tests.
+ * Account/learning uniqueness is audited and enforced without deleting data.
  * pendingSignups: one record per email, and Mongo deletes each one at `purgeAt`.
  */
 export async function ensureIndexes() {
+  await ensureAccountIndexes(getDb());
   await pendingSignups().createIndex({ email: 1 }, { unique: true });
   await pendingSignups().createIndex({ purgeAt: 1 }, { expireAfterSeconds: 0 });
   await signupEmailBudgets().createIndex({ purgeAt: 1 }, { expireAfterSeconds: 0 });

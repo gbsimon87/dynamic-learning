@@ -13,6 +13,8 @@ import * as db from "../db.js";
 import { requireAuth, requireOwnedChild } from "../middleware.js";
 import { publicRewards } from "../serialize.js";
 import { isRewardsData } from "../../shared/rewardsData.js";
+import { mergeRewards } from "../../shared/mergeRewards.js";
+import { saveLearning } from "../learningWrites.js";
 
 const router = Router();
 router.use(requireAuth);
@@ -29,21 +31,15 @@ router.get("/:childId", requireOwnedChild, async (req, res, next) => {
 router.put("/:childId", requireOwnedChild, async (req, res, next) => {
   try {
     if (!isRewardsData(req.body?.data)) return res.status(400).json({ error: "INVALID_REWARDS" });
-    const now = new Date().toISOString();
-    // Upsert on childId: saving twice never creates a second document.
-    // `createdAt` is only written on insert, so it survives every update.
-    const doc = await db.rewards().findOneAndUpdate(
-      { childId: req.child._id },
-      {
-        $set: {
-          childId: req.child._id,
-          schemaVersion: 1,
-          data: req.body.data,
-          updatedAt: now,
-        },
-        $setOnInsert: { createdAt: now },
-      },
-      { upsert: true, returnDocument: "after" }
+    const { baseData = null, writeId } = req.body;
+    if (baseData !== null && (!isRewardsData(baseData) || writeId === undefined)
+      || writeId !== undefined && (typeof writeId !== "string" || !/^[a-zA-Z0-9-]{16,80}$/.test(writeId))) {
+      return res.status(400).json({ error: "INVALID_REWARDS" });
+    }
+    // Older clients have no baseline: merge conservatively rather than erase.
+    const doc = await saveLearning(db.rewards(), { childId: req.child._id }, (current) =>
+      current ? mergeRewards(current.data, req.body.data, baseData) : req.body.data,
+      { writeId }
     );
     return res.json({ rewards: publicRewards(doc) });
   } catch (err) {

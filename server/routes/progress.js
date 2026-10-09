@@ -10,6 +10,8 @@ import * as db from "../db.js";
 import { requireAuth, requireOwnedChild } from "../middleware.js";
 import { publicProgress } from "../serialize.js";
 import { isProgressData } from "../../shared/progressData.js";
+import { mergeProgress, migrateProgressDocument, PROGRESS_SCHEMA_VERSION } from "../../shared/progressDocument.js";
+import { saveLearning } from "../learningWrites.js";
 
 const router = Router();
 router.use(requireAuth);
@@ -26,7 +28,7 @@ router.get("/:childId/:year/:subject", requireOwnedChild, async (req, res, next)
     const filter = key(req);
     if (!filter) return res.status(400).json({ error: "INVALID_YEAR" });
     const doc = await db.progress().findOne(filter);
-    return res.json({ progress: publicProgress(doc) });
+    return res.json({ progress: publicProgress(migrateProgressDocument(doc)) });
   } catch (err) {
     return next(err);
   }
@@ -38,23 +40,11 @@ router.put("/:childId/:year/:subject", requireOwnedChild, async (req, res, next)
     const filter = key(req);
     if (!filter) return res.status(400).json({ error: "INVALID_YEAR" });
 
-    const now = new Date().toISOString();
-    // Upsert on the triple: saving twice never creates a second document.
-    // `createdAt` is only written on insert, so it survives every update.
-    const doc = await db.progress().findOneAndUpdate(
-      filter,
-      {
-        $set: {
-          ...filter,
-          schemaVersion: 1,
-          data: req.body.data,
-          updatedAt: now,
-        },
-        $setOnInsert: { createdAt: now },
-      },
-      { upsert: true, returnDocument: "after" }
+    const doc = await saveLearning(db.progress(), filter, (current) =>
+      mergeProgress(migrateProgressDocument(current)?.data ?? {}, req.body.data),
+      { schemaVersion: PROGRESS_SCHEMA_VERSION }
     );
-    return res.json({ progress: publicProgress(doc) });
+    return res.json({ progress: publicProgress(migrateProgressDocument(doc)) });
   } catch (err) {
     return next(err);
   }

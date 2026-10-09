@@ -31,7 +31,15 @@ import { normaliseChildPatch } from "../childFields.js";
 import { isProgressData } from "../../../shared/progressData.js";
 import { isRewardsData } from "../../../shared/rewardsData.js";
 
+import { migrateProgressDocument } from "../../../shared/progressDocument.js";
 const BASE = "/api";
+// Track the last acknowledged LOCAL snapshot, not the server's merged reply:
+// the provider still holds its local snapshot until the next authoritative
+// read. Comparing its next snapshot with a merged reply would lose its delta.
+const rewardsBaselines = new Map();
+const rewardWrites = new WeakMap();
+const parentDocument = (doc) => doc && typeof doc._id === "string" && typeof doc.email === "string";
+const childDocument = (doc) => doc && typeof doc._id === "string" && typeof doc.parentId === "string" && typeof doc.name === "string";
 
 /** Thrown for anything that is not a clean, expected response. */
 class ApiError extends Error {
@@ -99,18 +107,32 @@ async function request(path, { method = "GET", body, expect = [200], soft = [] }
  * The store. Keep this interface identical to localStorageStore.js.
  */
 export const store = {
+  async requestPasswordReset(email) {
+    const { data } = await request("/auth/recovery/request", { method: "POST", body: { email: normaliseEmail(email) }, expect: [202] });
+    if (data?.accepted !== true) throw new ApiError("INVALID_RESPONSE");
+    return data;
+  },
+  async resetPassword(body) {
+    const { data } = await request("/auth/recovery/reset", { method: "POST", body });
+    if (data?.reset !== true) throw new ApiError("INVALID_RESPONSE");
+    return data;
+  },
+
   /** Sends a sign-up code, or reports that verification is off. */
   async requestSignupCode(email) {
     const normalised = normaliseEmail(email);
     if (!normalised) throw new ApiError("EMAIL_REQUIRED");
     const { data } = await request("/auth/signup/code", { method: "POST", body: { email: normalised }, expect: [200] });
+    if (!["on", "off"].includes(data?.verification)) throw new ApiError("INVALID_RESPONSE");
     return data;
   },
 
   /** Creates the account and every profile; the server sets the session cookie. */
   async completeSignup(body) {
     const { data } = await request("/auth/signup/complete", { method: "POST", body, expect: [201] });
-    return { parent: data?.parent ?? null, children: data?.children ?? [] };
+    if (!parentDocument(data?.parent) || !Array.isArray(data?.children) || data.children.length === 0
+      || !data.children.every((child) => childDocument(child) && child.parentId === data.parent._id)) throw new ApiError("INVALID_RESPONSE");
+    return { parent: data.parent, children: data.children };
   },
 
   /**
@@ -147,7 +169,8 @@ export const store = {
     });
 
     if (status === 401) return null;
-    return data?.parent ?? null;
+    if (!parentDocument(data?.parent)) throw new ApiError("INVALID_RESPONSE");
+    return data.parent;
   },
 
   /**
@@ -175,7 +198,8 @@ export const store = {
       soft: [401],
     });
     if (status === 401) return null;
-    return data?.parent ?? null;
+    if (!parentDocument(data?.parent)) throw new ApiError("INVALID_RESPONSE");
+    return data.parent;
   },
 
   /**
@@ -186,7 +210,8 @@ export const store = {
   async listChildren(parentId) {
     if (!parentId) return [];
     const { data } = await request("/children");
-    const children = Array.isArray(data?.children) ? data.children : [];
+    if (!Array.isArray(data?.children) || !data.children.every(childDocument)) throw new ApiError("INVALID_RESPONSE");
+    const children = data.children;
     return children.sort((a, b) =>
       String(a.createdAt).localeCompare(String(b.createdAt))
     );
@@ -201,7 +226,8 @@ export const store = {
   async getChild(childId) {
     if (!childId) return null;
     const { data } = await request("/children");
-    const children = Array.isArray(data?.children) ? data.children : [];
+    if (!Array.isArray(data?.children) || !data.children.every(childDocument)) throw new ApiError("INVALID_RESPONSE");
+    const children = data.children;
     return children.find((c) => c._id === childId) ?? null;
   },
 
@@ -224,7 +250,8 @@ export const store = {
       },
       expect: [201],
     });
-    return data?.child ?? null;
+    if (!childDocument(data?.child)) throw new ApiError("INVALID_RESPONSE");
+    return data.child;
   },
 
   /**
@@ -242,7 +269,8 @@ export const store = {
       { method: "PATCH", body: fields, expect: [200], soft: [404] }
     );
     if (status === 404) throw new ApiError("CHILD_NOT_FOUND", { status });
-    return data?.child ?? null;
+    if (!childDocument(data?.child)) throw new ApiError("INVALID_RESPONSE");
+    return data.child;
   },
 
   /**
@@ -275,7 +303,7 @@ export const store = {
     if (!data || !Object.hasOwn(data, "progress") || data.progress !== null && !isProgressData(data.progress?.data)) {
       throw new ApiError("INVALID_RESPONSE");
     }
-    return data.progress;
+    return migrateProgressDocument(data.progress);
   },
 
   /**
@@ -292,7 +320,7 @@ export const store = {
       { method: "PUT", body: { data: data ?? {} }, expect: [200] }
     );
     if (!body?.progress || !isProgressData(body.progress.data)) throw new ApiError("INVALID_RESPONSE");
-    return body.progress;
+    return migrateProgressDocument(body.progress);
   },
 
   /**
@@ -309,6 +337,7 @@ export const store = {
     if (!data || !Object.hasOwn(data, "rewards") || data.rewards !== null && !isRewardsData(data.rewards?.data)) {
       throw new ApiError("INVALID_RESPONSE");
     }
+    rewardsBaselines.set(childId, structuredClone(data.rewards?.data ?? {}));
     return data.rewards;
   },
 
@@ -319,11 +348,19 @@ export const store = {
   async saveRewards(childId, data) {
     if (!childId) throw new ApiError("CHILD_REQUIRED");
 
+    let write = rewardWrites.get(data);
+    if (!write || write.childId !== childId) {
+      if (!rewardsBaselines.has(childId)) await this.getRewards(childId);
+      write = { childId, writeId: crypto.randomUUID(), baseData: structuredClone(rewardsBaselines.get(childId)) };
+      if (data && typeof data === "object") rewardWrites.set(data, write);
+    }
     const { data: body } = await request(
       `/rewards/${encodeURIComponent(childId)}`,
-      { method: "PUT", body: { data: data ?? {} }, expect: [200] }
+      { method: "PUT", body: { data: data ?? {}, baseData: write.baseData, writeId: write.writeId }, expect: [200] }
     );
     if (!body?.rewards || !isRewardsData(body.rewards.data)) throw new ApiError("INVALID_RESPONSE");
+    rewardsBaselines.set(childId, structuredClone(data ?? {}));
+    if (data && typeof data === "object") rewardWrites.delete(data);
     return body.rewards;
   },
 };

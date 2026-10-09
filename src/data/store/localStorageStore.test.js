@@ -46,7 +46,8 @@ test("corrupt rewards stay untouched and quota failures can be retried", async (
   globalThis.localStorage = storage;
   const saved = await store.saveRewards("child", { ...initial.data, xp: 60 });
   assert.equal(saved._id, initial._id);
-  assert.deepEqual(saved.data, { badges: ["first"], xp: 60 });
+  assert.equal(saved.data.xp, 60);
+  assert.deepEqual(saved.data.badges, ["first"]);
 });
 
 test("unreadable progress storage is preserved and never treated as empty", async (t) => {
@@ -237,8 +238,8 @@ test("deleteChild removes the child and its progress, leaving siblings alone", a
   const doomed = await store.createChild(parent._id, { name: "Gus", avatar: "🐸" });
   const keeper = await store.createChild(parent._id, { name: "Hal", avatar: "🦁" });
 
-  await store.saveProgress(doomed._id, 2, "math", { a: 1 });
-  await store.saveProgress(keeper._id, 2, "math", { b: 2 });
+  await store.saveProgress(doomed._id, 2, "math", { a: { topics: { first: { completedChallenges: [1] } } } });
+  await store.saveProgress(keeper._id, 2, "math", { b: { topics: { second: { completedChallenges: [2] } } } });
 
   await store.deleteChild(doomed._id);
 
@@ -246,7 +247,7 @@ test("deleteChild removes the child and its progress, leaving siblings alone", a
   assert.equal(await store.getProgress(doomed._id, 2, "math"), null);
 
   assert.equal((await store.getChild(keeper._id)).name, "Hal");
-  assert.deepEqual((await store.getProgress(keeper._id, 2, "math")).data, { b: 2 });
+  assert.deepEqual((await store.getProgress(keeper._id, 2, "math")).data, { b: { topics: { second: { completedChallenges: [2] } } } });
 
   const raw = JSON.parse(globalThis.localStorage.getItem("dl.progress"));
   assert.equal(raw.length, 1);
@@ -259,7 +260,7 @@ test("the store never touches keys it does not own", async () => {
 
   const parent = await store.createParent({ email: "z@example.com", password: "pw" });
   const child = await store.createChild(parent._id, { name: "Ivy", avatar: "🐧" });
-  await store.saveProgress(child._id, 2, "math", { x: 1 });
+  await store.saveProgress(child._id, 2, "math", { numbers: { topics: { counting: { completedChallenges: [1] } } } });
   await store.deleteChild(child._id);
 
   assert.equal(
@@ -560,4 +561,37 @@ test("completeSignup refuses a learner with two profiles and saves nothing", asy
     /INVALID_CHILDREN/
   );
   assert.equal(memory.get("dl.parents") ?? null, null);
+});
+
+test("concurrent local signups re-read after hashing and preserve existing accounts", async () => {
+  reset();
+  const attempts = await Promise.allSettled([
+    store.createParent({ email: "one@example.com", password: "password" }),
+    store.createParent({ email: "two@example.com", password: "password" }),
+    store.createParent({ email: "one@example.com", password: "password" }),
+  ]);
+  assert.equal(attempts.filter((result) => result.status === "fulfilled").length, 2);
+  assert.deepEqual(JSON.parse(memory.get("dl.parents")).map((parent) => parent.email).sort(), ["one@example.com", "two@example.com"]);
+});
+
+test("future-version local learning cannot be read or overwritten", async () => {
+  reset();
+  const original = JSON.stringify([{ _id: "old", childId: "future-child", year: 2, subject: "math", schemaVersion: 2, data: {} }]);
+  memory.set("dl.progress", original);
+  await assert.rejects(store.getProgress("future-child", 2, "math"), /UNSUPPORTED_PROGRESS_VERSION/);
+  await assert.rejects(store.saveProgress("future-child", 2, "math", {}), /UNSUPPORTED_PROGRESS_VERSION/);
+  assert.equal(memory.get("dl.progress"), original);
+});
+
+test("a stale local completion snapshot preserves siblings and document metadata", async () => {
+  reset();
+  const original = { _id: "old", childId: "stale-child", year: 2, subject: "math", schemaVersion: 1, extra: "keep", data: {
+    numbers: { topics: { counting: { completedChallenges: [1, 2] }, sibling: { completedChallenges: [1] } } },
+  } };
+  memory.set("dl.progress", JSON.stringify([original]));
+  const saved = await store.saveProgress("stale-child", 2, "math", { numbers: { topics: { counting: { completedChallenges: [1, 3] } } } });
+  assert.equal(saved.extra, "keep");
+  assert.equal(saved._id, "old");
+  assert.deepEqual(saved.data.numbers.topics.counting.completedChallenges, [1, 2, 3]);
+  assert.deepEqual(saved.data.numbers.topics.sibling.completedChallenges, [1]);
 });

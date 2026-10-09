@@ -8,6 +8,7 @@ export function createAuthThrottle({
   totalLimit = 120,
   totalWindowMs = 60_000,
   maxAccounts = 2_000,
+  accountKey = (req) => String(req.body?.email ?? "").trim().toLowerCase(),
 } = {}) {
   const accounts = new Map();
   let total = { count: 0, resetAt: 0 };
@@ -21,8 +22,7 @@ export function createAuthThrottle({
     for (const [key, bucket] of accounts) if (time >= bucket.resetAt) accounts.delete(key);
     // Hash the normalised email so arbitrary request strings cannot grow the
     // map's keys without bound, or keep plaintext account names in it.
-    const email = String(req.body?.email ?? "").trim().toLowerCase();
-    const key = createHash("sha256").update(email).digest("hex");
+    const key = createHash("sha256").update(accountKey(req)).digest("hex");
     let account = accounts.get(key);
     if (account?.count >= accountLimit) return reject(account.resetAt);
     if (!account) {

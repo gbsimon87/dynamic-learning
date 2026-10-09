@@ -1,6 +1,5 @@
 /**
- * Outgoing email. One job today: the sign-up code. Password reset (#3) will
- * add a second message here.
+ * Outgoing signup codes and password-reset links share the same transport.
  *
  * Modes (PROJECT_KNOWLEDGE §6 item 17):
  *   send — RESEND_API_KEY and EMAIL_FROM both set: Resend's HTTP API.
@@ -41,25 +40,38 @@ export function signupCodeEmail(code) {
   return { subject, text, html };
 }
 
+export function passwordResetEmail(url) {
+  const safeUrl = url.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+  return {
+    subject: "Reset your Dynamic Learning password",
+    text: `Reset your password: ${url}\n\nThis link works once, for 30 minutes. Your profiles and learning will stay saved. If you did not ask for this, ignore this email.`,
+    html: `<p><a href="${safeUrl}">Reset your password</a></p><p>This link works once, for 30 minutes. Your profiles and learning will stay saved.</p><p>If you did not ask for this, ignore this email.</p>`,
+  };
+}
+
 export function createMailer({ mode, apiKey, from, fetch = globalThis.fetch, log = console.log, timeoutMs = 10_000 }) {
+  async function send(email, message) {
+    if (mode !== "send") throw new Error("EMAIL_DISABLED");
+    const response = await fetch(RESEND_URL, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ from, to: [email], ...message }),
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+    if (!response.ok) throw new Error(`EMAIL_SEND_FAILED:${response.status}`);
+  }
   return {
     verification: mode === "off" ? "off" : "on",
+    async sendPasswordReset(email, url) {
+      if (mode === "log") { log(`[email] password reset for ${maskEmail(email)}: ${url}`); return; }
+      await send(email, passwordResetEmail(url));
+    },
     async sendSignupCode(email, code) {
       if (mode === "log") {
         log(`[email] signup code for ${maskEmail(email)}: ${code}`);
         return;
       }
-      if (mode !== "send") throw new Error("EMAIL_DISABLED");
-      const message = signupCodeEmail(code);
-      const response = await fetch(RESEND_URL, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ from, to: [email], ...message }),
-        signal: AbortSignal.timeout(timeoutMs),
-      });
-      // Keep diagnostics free of provider payloads, which can contain addresses
-      // or message content (including the code).
-      if (!response.ok) throw new Error(`EMAIL_SEND_FAILED:${response.status}`);
+      await send(email, signupCodeEmail(code));
     },
   };
 }

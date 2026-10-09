@@ -29,14 +29,24 @@ import { isRewardsData } from "../../../shared/rewardsData.js";
  *   copy, so a caller cannot mutate stored state behind the store's back (which
  *   in Mongo would be impossible anyway).
  *
- * Progress documents carry `schemaVersion: 1`. PROJECT_KNOWLEDGE §6 item 5 lists
- * the unversioned legacy progress shape as real debt; this is where versioning
- * starts, and `data` holds the curriculum shape verbatim.
+ * Progress documents use the shared version-aware reader. Their `data` tree
+ * remains unchanged; stale saves union completions rather than replacing it.
  *
  * Keys owned here: `dl.parents`, `dl.children`, `dl.progress`, `dl.rewards`.
  * NOT touched: any other key, including `dl.session` (owned by the auth
- * context). The store confines itself to the three keys above.
+ * context). The store confines itself to the four keys above.
  */
+
+import { migrateProgressDocument, mergeProgress, PROGRESS_SCHEMA_VERSION } from "../../../shared/progressDocument.js";
+import { mergeRewards } from "../../../shared/mergeRewards.js";
+const rewardsBaselines = new Map();
+
+// Lock the collection, since different children share a storage key. Modern
+// browsers coordinate tabs through Web Locks; the synchronous fallback still
+// merges fresh storage in browsers without that API.
+function withCollectionLock(key, action) {
+  return globalThis.window && globalThis.navigator?.locks?.request ? navigator.locks.request(key, action) : action();
+}
 
 const KEYS = {
   parents: "dl.parents",
@@ -112,6 +122,8 @@ function publicParent(parent) {
  * ------------------------------------------------------------------ */
 
 export const store = {
+  async requestPasswordReset() { throw new Error("RECOVERY_NOT_SUPPORTED"); },
+  async resetPassword() { throw new Error("RECOVERY_NOT_SUPPORTED"); },
   /**
    * Creates a parent account. Email is trimmed and compared case-insensitively.
    * @throws {Error} `EMAIL_TAKEN` when the email is already registered.
@@ -129,7 +141,7 @@ export const store = {
     // omitting both fields yields a plain parent, so old callers are unaffected.
     const account = normaliseAccountFields({ accountType, ageBand });
 
-    const parents = readCollection(KEYS.parents);
+    const parents = readCollection(KEYS.parents, true);
     if (parents.some((parent) => normaliseEmail(parent.email) === normalised)) {
       throw new Error("EMAIL_TAKEN");
     }
@@ -148,8 +160,12 @@ export const store = {
       ...(typeof emailVerified === "boolean" ? { emailVerified, emailVerifiedAt: null } : {}),
     };
 
-    writeCollection(KEYS.parents, [...parents, parent]);
-    return publicParent(parent);
+    return withCollectionLock(KEYS.parents, () => {
+      const current = readCollection(KEYS.parents, true);
+      if (current.some((p) => normaliseEmail(p.email) === normalised)) throw new Error("EMAIL_TAKEN");
+      if (!writeCollection(KEYS.parents, [...current, parent])) throw new Error("ACCOUNT_SAVE_FAILED");
+      return publicParent(parent);
+    });
   },
 
   /** Browser-only mode has no email: verification is always off. */
@@ -311,7 +327,7 @@ export const store = {
         Number(doc.year) === Number(year) &&
         doc.subject === subject
     );
-    return clone(found) ?? null;
+    return migrateProgressDocument(found ?? null);
   },
 
   /**
@@ -322,29 +338,32 @@ export const store = {
   async saveProgress(childId, year, subject, data) {
     if (!childId) throw new Error("CHILD_REQUIRED");
 
-    const docs = readCollection(KEYS.progress, true);
-    const index = docs.findIndex(
-      (doc) =>
-        doc.childId === childId &&
-        Number(doc.year) === Number(year) &&
-        doc.subject === subject
-    );
+    return withCollectionLock(KEYS.progress, () => {
+      const docs = readCollection(KEYS.progress, true);
+      const index = docs.findIndex(
+        (doc) =>
+          doc.childId === childId &&
+          Number(doc.year) === Number(year) &&
+          doc.subject === subject
+      );
 
-    const base = index === -1 ? null : docs[index];
-    const doc = {
-      _id: base?._id ?? newId(),
-      childId,
-      year: Number(year),
-      subject,
-      schemaVersion: 1,
-      data: structuredClone(data ?? {}),
-      createdAt: base?.createdAt ?? now(),
-      updatedAt: now(),
-    };
+      const base = index === -1 ? null : docs[index];
+      const doc = {
+        ...base,
+        _id: base?._id ?? newId(),
+        childId,
+        year: Number(year),
+        subject,
+        schemaVersion: PROGRESS_SCHEMA_VERSION,
+        data: mergeProgress(migrateProgressDocument(base)?.data ?? {}, data ?? {}),
+        createdAt: base?.createdAt ?? now(),
+        updatedAt: now(),
+      };
 
-    const next = index === -1 ? [...docs, doc] : docs.with(index, doc);
-    if (!writeCollection(KEYS.progress, next)) throw new Error("PROGRESS_SAVE_FAILED");
-    return clone(doc);
+      const next = index === -1 ? [...docs, doc] : docs.with(index, doc);
+      if (!writeCollection(KEYS.progress, next)) throw new Error("PROGRESS_SAVE_FAILED");
+      return clone(doc);
+    });
   },
 
   /**
@@ -360,6 +379,7 @@ export const store = {
       (doc) => doc.childId === childId
     );
     if (found && !isRewardsData(found.data)) throw new Error("INVALID_REWARDS");
+    rewardsBaselines.set(childId, clone(found?.data ?? {}));
     return clone(found) ?? null;
   },
 
@@ -371,21 +391,25 @@ export const store = {
     if (!childId) throw new Error("CHILD_REQUIRED");
     if (!isRewardsData(data ?? {})) throw new Error("INVALID_REWARDS");
 
-    const docs = readCollection(KEYS.rewards, true);
-    const index = docs.findIndex((doc) => doc.childId === childId);
-    const base = index === -1 ? null : docs[index];
+    return withCollectionLock(KEYS.rewards, () => {
+      const docs = readCollection(KEYS.rewards, true);
+      const index = docs.findIndex((doc) => doc.childId === childId);
+      const base = index === -1 ? null : docs[index];
 
-    const doc = {
-      _id: base?._id ?? newId(),
-      childId,
-      schemaVersion: 1,
-      data: structuredClone(data ?? {}),
-      createdAt: base?.createdAt ?? now(),
-      updatedAt: now(),
-    };
+      const doc = {
+        ...base,
+        _id: base?._id ?? newId(),
+        childId,
+        schemaVersion: 1,
+        data: base ? mergeRewards(base.data, data ?? {}, rewardsBaselines.get(childId) ?? null) : structuredClone(data ?? {}),
+        createdAt: base?.createdAt ?? now(),
+        updatedAt: now(),
+      };
 
-    const next = index === -1 ? [...docs, doc] : docs.with(index, doc);
-    if (!writeCollection(KEYS.rewards, next)) throw new Error("REWARDS_SAVE_FAILED");
-    return clone(doc);
+      const next = index === -1 ? [...docs, doc] : docs.with(index, doc);
+      if (!writeCollection(KEYS.rewards, next)) throw new Error("REWARDS_SAVE_FAILED");
+      rewardsBaselines.set(childId, clone(data ?? {}));
+      return clone(doc);
+    });
   },
 };

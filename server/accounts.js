@@ -27,14 +27,11 @@ export async function createParentAccount({ email, password, account, verificati
       ? { emailVerified: verification.verified, emailVerifiedAt: verification.verified ? createdAt : null }
       : {}),
   };
-  const { insertedId } = await db.parents().insertOne(parent);
-
-  // The `email` index is NOT unique, so two concurrent sign-ups can both pass
-  // the check above. The later insert deletes itself.
-  const duplicates = await db.parents().find({ email }, { projection: { _id: 1 } }).sort({ _id: 1 }).toArray();
-  if (duplicates.length > 1 && !insertedId.equals(duplicates[0]._id)) {
-    await db.parents().deleteOne({ _id: insertedId });
-    throw new Error("EMAIL_TAKEN");
+  try {
+    const { insertedId } = await db.parents().insertOne(parent);
+    return { ...parent, _id: insertedId };
+  } catch (err) {
+    if (err.code === 11000) throw new Error("EMAIL_TAKEN");
+    throw err;
   }
-  return { ...parent, _id: insertedId };
 }

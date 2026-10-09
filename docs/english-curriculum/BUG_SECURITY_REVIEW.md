@@ -40,14 +40,13 @@ These application-wide concerns remain open:
   server process. Multiple instances and restarts do not share counters. Add
   coordinated service/proxy throttling before scaling public access; the
   application limiter is not a distributed denial-of-service defence.
-- **Medium — concurrent documents and snapshots:** progress is still saved as
-  whole snapshots. Separate browser tabs/devices can overwrite one another;
-  this review's queue only orders writes inside one app instance. Progress
-  upserts also lack a unique child/year/subject index in repository setup.
-  The parent email index is explicitly non-unique. Audit existing duplicates
-  before adding uniqueness constraints, and implement server-side completion
-  merging or revision checks for simultaneous clients. No live database was
-  modified during this review.
+- **Follow-up, 2026-10-09 — account/learning concurrency source fixes:**
+  completion unions and optimistic revisions protect simultaneous API saves;
+  rewards use explicit conflict merging and retry identities. Startup audits
+  duplicates and converts/adds unique email/progress/rewards indexes without
+  deleting records. Production audit found zero duplicate groups; deployment
+  and live index verification remain pending. See the
+  [account-protection outcome](../PROJECT_KNOWLEDGE.md#account-and-learning-protection-2026-10-09).
 - **Boundary — local mode:** localStorage account data is controlled by anyone
   with browser access; it is not an authorization boundary. API mode checks the
   signed-in parent and child ownership before reading/writing child progress.

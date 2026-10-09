@@ -281,8 +281,21 @@ returns `{ progress, hydrated, isTopicComplete, isChallengeUnlocked,
 isCategoryComplete, isCategoryPassable, isChallengeComplete, completeChallenge,
 loadError, saveError, retryLoad, retrySave }`.
 This replaced logic previously duplicated across `CurriculumPage.jsx` and
-`ProblemView.jsx` (see §6, resolved). The shape above is still unversioned —
-that remains a known gap (§6).
+`ProblemView.jsx` (see §6, resolved). The tree above is unchanged; its document envelope is versioned. As of
+2026-10-09, `shared/progressDocument.js` reads that version in both drivers and
+the API. Missing versions mean v1; future/invalid versions fail closed. Future
+ID/shape changes must bump `PROGRESS_SCHEMA_VERSION`, add a numbered step to
+`PROGRESS_MIGRATIONS`, and include a migration regression fixture. Reads migrate
+copies only; the next real save persists the upgrade. `copyProgressIds` copies
+renames, retaining originals/metadata and merging target collisions. The
+pre-accounts keys above remain deliberately excluded.
+
+**Concurrent saves (2026-10-09):** completions union by numeric identity at every
+category/topic level. API writes use compare-and-swap revisions plus unique
+keys to arbitrate simultaneous inserts. Local writes re-read inside a Web Lock
+on the collection, where available. `useProgress` merges acknowledged remote
+completions with newer local state. Hydration/profile guards and unlock rules
+remain unchanged. A PUT is no longer a way to reset learning.
 
 **Bug/security review, 2026-10-01:** progress reads now fail closed. Only an
 explicit missing document means a new learner; failed API reads, invalid JSON,
@@ -569,8 +582,8 @@ server/app.js        app construction, split out so tests need no port
 server/db.js         ONE MongoClient, connected once and reused
 server/auth.js       PBKDF2-SHA-256 hashing + JWT session cookie `dl_session`
 server/middleware.js requireAuth, requireOwnedChild
-server/routes/       auth, signup, children, progress, rewards
-server/email.js      mailer for sign-up codes (Resend; §6 item 17)
+server/routes/       auth, signup, recovery, children, progress, rewards
+server/email.js      signup and password-recovery mailer (Resend; §6 item 17)
 ```
 
 Endpoints mirror the store interface exactly; see `server/routes/`.
@@ -586,9 +599,16 @@ answered by the browser holding it. On a server it must be enforced:
 - Another family's resource returns **404, not 403**, and a malformed id returns the
   identical 404 — ids cannot be probed.
 - Unknown email and wrong password return an identical 401: no account enumeration.
-- **Duplicate emails are enforced in application code**, because the Atlas index on
-  `parents.email` is NOT unique (see §6 item 8). There is a pre-insert check plus a
-  post-insert reconciliation that deletes its own row if a concurrent signup won.
+- **Duplicate emails and learning documents are enforced by unique indexes** in
+  the new startup setup (2026-10-09). Existing nonunique indexes are converted
+  with `collMod`, preserving records/indexes. A duplicate preflight refuses to
+  start rather than deleting any account or learning. Signup handles MongoDB's
+  duplicate-key error as `EMAIL_TAKEN`; it no longer reconciles by deletion.
+  Production was audited read-only and has zero duplicate groups, but index
+  conversion and deployment are still pending (§6 item 8).
+- Password recovery increments the account's `sessionVersion`; authorization
+  compares it with the signed session version, invalidating every old device's
+  token. Legacy accounts/tokens default to version 0.
 
 Password hashing stays PBKDF2-SHA-256 via `node:crypto` — not for migration (there is
 none, §4.7), but because it needs no native build step on Render's free tier.
@@ -1454,13 +1474,21 @@ a streak and level card (`WeekDots`, `LevelBar`) and a collection summary. The
 Trophy Room and `/parent` show streak, best, level and XP.
 `npm run seed` builds v2 documents with a demo streak.
 
-**Known limit: last save wins.** Each save replaces the whole rewards
-document. `refresh()` narrows this to the same child playing on two devices at
-the very same moment: whichever save is older is lost. Merging on the server is
-still needed for simultaneous devices. Failed or queued snapshots now survive
-profile switching within this app session and retry when that child is reopened
-(`rewardsPersistence.js`); closing/reloading before acknowledgement can still
-lose unsaved work.
+**Concurrent rewards saves (2026-10-09):** server compare-and-swap merging
+preserves all earned badges, maximum milestone/practice counts and streak best,
+and the latest played-day streak state. News uses a three-way baseline: clearing
+seen items preserves concurrent arrivals; a stale award cannot resurrect items
+cleared elsewhere. Established XP uses the submitted delta, with a stable write
+ID preventing repeat payouts across a lost acknowledgement (last 128 writes
+remembered). Old clients and overlapping first backfills use maximum XP to avoid
+counting old learning twice. Milestone counts and overlapping first backfills
+can undercount simultaneous distinct runs; exact attempt accounting remains
+future work. Two devices can also both reward the same apparent first completion
+or spend their own daily practice allowance; no per-attempt ledger exists.
+Local saves use the same merge inside a collection Web Lock where supported;
+browsers without Web Locks have a synchronous best-effort fallback. Remote
+rewards appear on the existing refresh/reload path. Failed/queued snapshots
+remain session-only, so closing before acknowledgement can lose unsaved work.
 
 Unlocked avatars can be redeemed in two places: `/parent` (every profile's
 picture picker — `ProfileBuilder` only ever creates) and, since 2026-09-29, the
@@ -1719,15 +1747,15 @@ without a changelog note or the report was inaccurate.
    scoring. Verified with simulated real mouse drags in-browser (Playwright's
    synthetic `dragTo` doesn't trigger `@hello-pangea/dnd`'s pointer sensor —
    needed manual `mouse.move`/`down`/`up` sequencing with pauses).
-4. **No component-test framework** — pure Speed Reader pacing and story data use
-   Node's built-in `node:test` via `npm test`, with no added dependency. React
-   component tests still need a deliberate Vitest/jsdom/Testing Library setup.
-5. **Fragile IDs** — renaming a curriculum title changes its kebab-case ID and
-   orphans existing progress. Still true, and still with no migration path.
-   **Partially addressed 2026-09-15:** progress documents now carry
-   `schemaVersion: 1` (§4.7), so a future migration has something to branch on —
-   but nothing reads that field yet and the kebab-case IDs inside `data` are
-   exactly as fragile as before.
+4. ~~**No component-test framework**~~ **Implemented 2026-10-09.** Vitest,
+   jsdom and React Testing Library cover progress/rewards hydration, profile
+   switching, retry guards, challenge load failures, signup navigation/code
+   entry/hand-over and recovery. `npm test` runs Node suites then component
+   suites; targeted scripts are `test:unit` and `test:components`.
+5. ~~**No progress migration hook**~~ **Implemented 2026-10-09.** Version-aware,
+   read-time migrations and lossless ID-copy helpers exist in the store/API
+   path. No real curriculum IDs changed and the current schema stays v1.
+   Every future rename still needs its own numbered migration and fixture.
 6. ~~**Duplicated progress logic**~~ **Fixed 2026-08-09.** Read/write of
    `localStorage` progress was implemented separately in `CurriculumPage.jsx`
    and `ProblemView.jsx`; extracted into [useProgress](../src/hooks/useProgress.js)
@@ -1738,19 +1766,19 @@ without a changelog note or the report was inaccurate.
    accounts live in `localStorage` and the PBKDF2 hashing runs client-side. It protects
    nothing against anyone holding the device, and progress neither syncs nor survives
    clearing site data. Fine for a single family device; not an account system.
-8. **The Atlas indexes are NOT unique** — `parents.email` and the
-   `{childId, year, subject}` triple were created through a tool that could not set
-   `unique`. The server compensates in application code (§4.8), but the database itself
-   would still accept duplicates. The `rewards` collection (added 2026-09-19) has
-   **no index at all**, and its `childId` should be unique for the same reason —
-   the route upserts on it. Run, once:
-   `db.parents.createIndex({email:1},{unique:true})`,
-   `db.progress.createIndex({childId:1,year:1,subject:1},{unique:true})` and
-   `db.rewards.createIndex({childId:1},{unique:true})`.
-9. **API-store coverage is partial** (checked 2026-10-09) —
-   `src/data/store/apiStore.test.js` has fetch-mocked progress/rewards response,
-   acknowledgement and network/auth-failure tests. Signup and other store
-   methods still need coverage; the existing Node harness can test them.
+8. **Production account-protection rollout pending** (2026-10-09). Read-only
+   audit of `dynamic_learning` confirmed nonunique parent email/progress indexes,
+   no rewards child index, and zero duplicate groups. New boot setup converts or
+   creates uniqueness safely. Source changes have not been deployed and live
+   indexes have not been modified. Set `PUBLIC_APP_URL` before deploying, rerun
+   `audit:accounts` against the intended database, then verify unique indexes and
+   actual password-reset delivery. Local `.env` targets `dynamic_learning_dev`,
+   which was empty at audit time; do not mistake it for production.
+9. ~~**API-store coverage is partial**~~ **Expanded 2026-10-09.** Fetch-mocked
+   coverage now includes signup, login/session, child CRUD, reset endpoints,
+   invalid acknowledgements, retry details, stable reward-write identities and
+   unsupported progress versions. Malformed successes throw instead of becoming
+   empty accounts/profile lists.
 10. **No whole-app accessibility pass** (checked 2026-10-09) — some kit
    interactions use native buttons or drag-library keyboard support, and
    English/Science plus Solar System have read-aloud support. End-to-end
@@ -1760,8 +1788,9 @@ without a changelog note or the report was inaccurate.
    completion's progress save fails but its rewards save succeeds before the
    back-fill lands, that challenge's 10 XP is never counted. The safe
    direction; accepted.
-12. **Whole-document rewards save** (2026-09-30): the same child playing on two
-   devices at the same moment, last save wins (§5, "Badges, XP & streaks").
+12. **Rewards concurrency limits** (2026-10-09): merges prevent earned-state
+   loss; exact cross-device attempt counting and deduplication remain unavailable.
+   See §5, “Concurrent rewards saves”, for the conservative conflict policy.
 13. **localStorage mode: a corrupt collection reads as empty and the next save
    replaces it** (2026-09-30 note). Existing behaviour for every collection
    (`dl.parents`, `dl.children`, `dl.progress`, `dl.rewards`), unchanged.
@@ -1829,7 +1858,67 @@ without a changelog note or the report was inaccurate.
 
 ---
 
+### Account and learning protection (2026-10-09)
+
+Suggested priority 3's source work (#2, #3, #4, #40) is implemented. The review
+confirmed missing password recovery, snapshot-overwrite races, nonunique
+account/learning keys and an unread progress schema version.
+
+- `/login` now links to `/forgot-password`; `/reset-password` accepts a secret
+  fragment link, removes it from browser history, validates the new password
+  and returns the user to sign-in. Existing auth styles cover both themes.
+- `POST /api/auth/recovery/request` responds identically for unknown, verified
+  and unverified emails before doing delivery work. Per-client/per-account
+  throttles, a persistent shared signup/recovery daily budget and an atomic
+  per-account cooldown limit sends. A random 256-bit token is stored only as a
+  hash, expires after 30 minutes, and is consumed atomically with the password
+  change. A newer request replaces it; failed deliveries invalidate it.
+- Recovery retains the same account/profile IDs, progress and rewards, verifies
+  control of the original email for legacy accounts and invalidates old JWTs
+  through `sessionVersion`. Reset secrets/session metadata are excluded from
+  public account documents. Email-off mode answers `RECOVERY_UNAVAILABLE`;
+  browser-only local accounts explicitly do not support email recovery.
+- Completion unions plus optimistic revisions protect API saves; both drivers
+  have version-aware progress reads. Rewards use the conflict policy in §5.
+  Local signup re-reads accounts after asynchronous hashing, preventing two
+  simultaneous creations from erasing each other. Corrupt parent collections
+  and failed account writes now fail closed.
+- Vitest/jsdom/React Testing Library component coverage runs alongside the
+  existing Node tests. API success envelopes for signup/session/child methods
+  are validated. The existing signup fixtures now use a current/future fake
+  clock, preventing the real MongoDB TTL monitor from deleting their test data.
+- A read-only Atlas audit checked both the empty configured development database
+  and production `dynamic_learning`. Production had zero duplicate groups,
+  nonunique email/progress indexes and no rewards child index. The safe startup
+  converter was tested against an isolated local MongoDB, including refusal to
+  remove duplicate records. No live records/indexes were changed.
+
+**Validation:** 1,333 Node unit/API checks and 17 component checks passed,
+including all MongoDB suites with no skips. `npm run lint`, `npm test` and
+`npm run build` passed in both local and `VITE_USE_API=true` modes. A compatible
+transitive `source-map-js` update removed
+the install-time advisory; npm audit reported zero vulnerabilities. The existing
+large-chunk build warning remains. Tests verify stale snapshots, concurrent first
+inserts, stable reward retries, retained sibling/legacy learning, numeric IDs,
+hydration/remount/profile isolation, signup gate/navigation/code entry/hand-over,
+reset expiry/reuse, old-session rejection and unchanged profile/learning records.
+
+**Outstanding:** interactive browser/physical-device verification (Chrome could
+not launch within the session's permissions), actual recovery-email delivery,
+and deployment/live index conversion. The full curriculum-progress manual
+checklist remains required before claiming interactive verification. See
+[account-protection rollout](DEPLOYMENT.md) and #40.
+The Render blueprint supplies `https://learnwithbix.com` for production reset
+links; the dev service needs its own `PUBLIC_APP_URL`. No deployment performed.
+
+Design references: [OWASP password recovery](https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html),
+[MongoDB index conversion](https://www.mongodb.com/docs/manual/core/index-unique/convert-to-unique/)
+and [Vitest test inclusion](https://vitest.dev/config/include.html).
+
 ### Backlog source audit (2026-10-09)
+
+This is the earlier source snapshot. The account-protection changes recorded
+above supersede its #2/#3/#4/#40 findings.
 
 Checked **all 39 current PROJECT_IDEAS rows**, including all 21 standalone game
 suggestions inside #20, against routes, components, data, stores, server code,
@@ -1916,9 +2005,10 @@ changed; no browser or physical-device verification was performed.
 
 ### Pure-logic tests
 
-`npm test` runs Node's built-in test discovery. Keep these tests React-free.
-Component tests remain deferred until the project deliberately adopts a
-browser-like test environment.
+`npm run test:unit` runs Node's built-in test discovery. Keep these tests React-free.
+`npm test` runs both the Node and component suites.
+Component tests now use Vitest/jsdom/React Testing Library under
+`tests/components/`; see `vitest.config.js`.
 
 ### Modal / overlay pattern
 

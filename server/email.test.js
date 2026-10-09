@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createMailer, emailMode, signupCodeEmail } from "./email.js";
+import { createMailer, emailMode, signupCodeEmail, passwordResetEmail } from "./email.js";
 
 test("mode needs both settings to send, and is never 'log' in production", () => {
   assert.equal(emailMode({ RESEND_API_KEY: "k", EMAIL_FROM: "f" }), "send");
@@ -67,4 +67,14 @@ test("off mode turns verification off and never sends", async () => {
   const mailer = createMailer({ mode: "off" });
   assert.equal(mailer.verification, "off");
   await assert.rejects(mailer.sendSignupCode("a@b.co", "1"), /EMAIL_DISABLED/);
+});
+
+test("password reset uses the existing transport and escapes its HTML link", async () => {
+  const calls = [];
+  const mailer = createMailer({ mode: "send", apiKey: "k", from: "f", fetch: async (_url, init) => { calls.push(JSON.parse(init.body)); return { ok: true }; } });
+  const url = "https://example.com/reset-password#token=abc";
+  await mailer.sendPasswordReset("a@b.co", url);
+  assert.match(calls[0].text, /works once, for 30 minutes/);
+  assert.ok(calls[0].text.includes(url));
+  assert.match(passwordResetEmail('https://example.com/?a="<>&').html, /&quot;&lt;&gt;&amp;/);
 });

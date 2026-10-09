@@ -69,9 +69,9 @@ export async function verifyPassword(password, record) {
 /* ----------------------------- sessions ----------------------------- */
 
 /** @param {string} parentId @returns {string} signed JWT */
-export function signSession(parentId, secret = process.env.SESSION_SECRET) {
+export function signSession(parentId, secret = process.env.SESSION_SECRET, sessionVersion = 0) {
   if (!secret) throw new Error("SESSION_SECRET_REQUIRED");
-  return jwt.sign({ sub: String(parentId) }, secret, {
+  return jwt.sign({ sub: String(parentId), sessionVersion }, secret, {
     expiresIn: Math.floor(SESSION_MAX_AGE_MS / 1000),
   });
 }
@@ -81,10 +81,14 @@ export function signSession(parentId, secret = process.env.SESSION_SECRET) {
  *          wrongly-signed or expired token.
  */
 export function verifySession(token, secret = process.env.SESSION_SECRET) {
+  return sessionPayload(token, secret)?.sub ?? null;
+}
+
+export function sessionPayload(token, secret = process.env.SESSION_SECRET) {
   if (!token || !secret) return null;
   try {
     const payload = jwt.verify(token, secret);
-    return typeof payload?.sub === "string" && payload.sub ? payload.sub : null;
+    return typeof payload?.sub === "string" && payload.sub ? payload : null;
   } catch {
     return null;
   }
