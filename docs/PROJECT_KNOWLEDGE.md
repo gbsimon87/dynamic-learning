@@ -1760,7 +1760,7 @@ without a changelog note or the report was inaccurate.
    `216.24.57.1`, `www` CNAME → `dynamic-learning-zkww.onrender.com`; Render
    redirects `www` to the apex). The live Render service is
    **`dynamic-learning-zkww`** (web service: app + API, Starter so it never
-   sleeps, deploys from `main`). **`dynamic-learning-dev`** (Free, deploys from
+   sleeps, deploys from `main`). **`dynamic-learning-dev-zkww`** (Free, deploys from
    `dev`, its own `MONGODB_DB=dynamic_learning_dev`) is the dev site. Both are
    managed by the Render Blueprint "DEV DL", which auto-syncs `render.yaml`
    from the `dev` branch — so `plan`/`branch` in that file ARE production's;
