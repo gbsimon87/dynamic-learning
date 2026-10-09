@@ -21,45 +21,48 @@ read-only; never delete or edit accounts, progress or rewards to make a step pas
 
 ## 1. Ship the code to dev
 
-- [ ] Commit the uncommitted work (recovery, account indexes, learning writes,
+- [x] Commit the uncommitted work (recovery, account indexes, learning writes,
       progress migrations, `render.yaml`, `.env.example`) on `dev`.
-- [ ] `npm run lint`, `npm test` and `npm run build` pass.
-- [ ] Push `dev`.
+- [x] `npm run lint`, `npm test` and `npm run build` pass.
+- [x] Push `dev`.
 
 ## 2. Configure the dev service
 
 Render → `dynamic-learning-dev-zkww` → **Environment**:
 
-- [ ] `PUBLIC_APP_URL` = `https://dynamic-learning-dev-zkww.onrender.com`
+- [x] `PUBLIC_APP_URL` = `https://dynamic-learning-dev-zkww.onrender.com`
       (reset links point here; it is `sync: false`, so the Blueprint won't set it).
-- [ ] `SIGNUP_EMAIL_DAILY_LIMIT` = `20` (production gets `80`; together they
+- [x] `SIGNUP_EMAIL_DAILY_LIMIT` = `20` (production gets `80`; together they
       must fit the one shared Resend account's daily quota).
-- [ ] `VITE_REST_COUNTRIES_API_KEY` = the REST Countries key (FlagFinder; read at
+- [x] `VITE_REST_COUNTRIES_API_KEY` = the REST Countries key (FlagFinder; read at
       build time, so save with **rebuild and deploy**).
 
 ## 3. Test on dev
 
-- [ ] Boot log shows no `DUPLICATE_ACCOUNT_DATA_REQUIRES_REVIEW`.
-- [ ] **Recovery:** request a reset for a test account → the email arrives → the
+- [x] Boot log shows no `DUPLICATE_ACCOUNT_DATA_REQUIRES_REVIEW`.
+- [x] **Recovery:** request a reset for a test account → the email arrives → the
       link sets a new password → the new password works, the old one doesn't, and
       a second browser that was signed in is signed out.
-- [ ] After recovery, the account's children, progress and rewards are unchanged.
-- [ ] A reused link and an expired link are both refused.
-- [ ] **Concurrent saves:** the same child open in two tabs, a different challenge
+- [x] After recovery, the account's children, progress and rewards are unchanged.
+- [x] A reused link and an expired link are both refused.
+- [x] **Concurrent saves:** the same child open in two tabs, a different challenge
       completed in each → after reload both completions are there and no earned
       reward is lost.
-- [ ] Recovery screens in light and dark theme, by touch and by keyboard.
+- [x] Recovery screens in light and dark theme, by touch and by keyboard.
 
 ## 4. Check production data (read-only), right before deploying
 
-- [ ] `MONGODB_DB=dynamic_learning npm run audit:accounts` → zero duplicate
-      groups for `parents.email`, `progress(childId,year,subject)` and
-      `rewards.childId`. (Zero on 2026-10-09; rerun, sign-ups continue.) If any
-      exist, **stop** — they need a backed-up, reviewed reconciliation plan.
-- [ ] Every production progress document passes `isProgressData`. The read path
-      now throws `INVALID_PROGRESS` on one that doesn't, which would stop that
-      child's progress loading. There is no script for this yet — write a
-      read-only one before deploying.
+Run both from the project folder; each must report **zero**:
+
+```bash
+MONGODB_DB=dynamic_learning npm run audit:accounts   # every "duplicateGroups": 0
+MONGODB_DB=dynamic_learning npm run audit:progress   # "failures": {}
+```
+
+- [ ] Accounts: zero duplicate groups (also 0 on 2026-10-09).
+- [ ] Progress: no failures (4 checked, 0 failed on 2026-10-09).
+
+Anything else → **stop and don't deploy**; change nothing in the data.
 
 ## 5. Configure production
 
