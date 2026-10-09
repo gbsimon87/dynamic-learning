@@ -9,6 +9,7 @@
 import { Router } from "express";
 import * as db from "../db.js";
 import { createAuthThrottle } from "../authThrottle.js";
+import { createSignupEmailLimits } from "../signupEmailLimits.js";
 import { COOKIE_NAME, cookieOptions, signSession } from "../auth.js";
 import { publicChild, publicParent } from "../serialize.js";
 import { ACCOUNT_LEARNER, normaliseAccountFields } from "../../shared/accountTypes.js";
@@ -35,9 +36,11 @@ export function createSignupRouter({
   now = Date.now,
   secret = () => process.env.SESSION_SECRET,
   insertChildren = (docs) => db.children().insertMany(docs),
+  emailLimits = {},
 }) {
   const router = Router();
   const throttle = createAuthThrottle({ now });
+  const limits = createSignupEmailLimits({ now, ...emailLimits });
 
   /** Shared first check. Returns the normalised email, or answers 400 and returns null. */
   function readEmail(req, res) {
@@ -53,7 +56,7 @@ export function createSignupRouter({
     return email;
   }
 
-  router.post("/code", throttle, async (req, res, next) => {
+  router.post("/code", limits.clientThrottle, throttle, async (req, res, next) => {
     try {
       const email = readEmail(req, res);
       if (!email) return undefined;
@@ -95,32 +98,47 @@ export function createSignupRouter({
       // parallel requests may also have read. Only the request whose write
       // lands (insert wins the unique email, or lastSentAt is still what we
       // read) goes on to send; the rest are told to wait.
-      const tooSoon = () =>
-        res
+      const tooSoon = async () => {
+        // A competing send may already have failed and released its cooldown.
+        // Do not describe that race as an email which has just been sent.
+        const current = await db.pendingSignups().findOne({ email });
+        if (!current?.codeHash) return res.status(502).json({ error: "EMAIL_SEND_FAILED" });
+        return res
           .set("Retry-After", String(RESEND_MS / 1000))
           .status(429)
           .json({ error: "CODE_RECENTLY_SENT", retryAfterSeconds: RESEND_MS / 1000 });
+      };
       if (record) {
         const { matchedCount } = await db
           .pendingSignups()
-          .updateOne({ email, lastSentAt: record.lastSentAt }, { $set: fields });
-        if (matchedCount === 0) return tooSoon();
+          .updateOne({ email, lastSentAt: record.lastSentAt, sendCount: record.sendCount, codeHash: record.codeHash }, { $set: fields });
+        if (matchedCount === 0) return await tooSoon();
       } else {
         try {
           await db.pendingSignups().insertOne(fields);
         } catch (err) {
-          if (err?.code === 11000) return tooSoon();
+          if (err?.code === 11000) return await tooSoon();
           throw err;
         }
       }
 
+      const releaseCode = () => db.pendingSignups().updateOne(
+        { email, codeHash, lastSentAt: fields.lastSentAt, sendCount: fields.sendCount },
+        { $set: { codeHash: null, lastSentAt: record?.lastSentAt ?? new Date(0) } }
+      );
       try {
+        const budget = await limits.reserveSend();
+        if (!budget.ok) {
+          await releaseCode();
+          return res.set("Retry-After", String(budget.retryAfterSeconds)).status(429)
+            .json({ error: budget.error, retryAfterSeconds: budget.retryAfterSeconds });
+        }
         await mailer.sendSignupCode(email, code);
       } catch (err) {
         console.error("[email] send failed:", err.message);
         // Keep the record (the send still counts) but make this code
         // unredeemable — only if no newer send has replaced it since.
-        await db.pendingSignups().updateOne({ email, codeHash }, { $set: { codeHash: null } });
+        await releaseCode();
         return res.status(502).json({ error: "EMAIL_SEND_FAILED" });
       }
 

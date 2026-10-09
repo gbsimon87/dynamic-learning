@@ -42,6 +42,19 @@ test("a Resend error is thrown, not swallowed", async () => {
   await assert.rejects(mailer.sendSignupCode("a@b.co", "482913"), /EMAIL_SEND_FAILED:403/);
 });
 
+test("a stalled provider is aborted, letting the caller offer a retry", async (t) => {
+  // AbortSignal.timeout uses an unref'd timer; keep this isolated test alive.
+  const keepAlive = setTimeout(() => {}, 1_000);
+  t.after(() => clearTimeout(keepAlive));
+  const mailer = createMailer({
+    mode: "send", apiKey: "k", from: "f", timeoutMs: 20,
+    fetch: async (_url, { signal }) => new Promise((_resolve, reject) => {
+      signal.addEventListener("abort", () => reject(signal.reason), { once: true });
+    }),
+  });
+  await assert.rejects(mailer.sendSignupCode("a@b.co", "482913"), { name: "TimeoutError" });
+});
+
 test("log mode prints a masked address and the code", async () => {
   const lines = [];
   const mailer = createMailer({ mode: "log", log: (line) => lines.push(line) });

@@ -42,6 +42,7 @@ export const progress = () => getDb().collection("progress");
 export const rewards = () => getDb().collection("rewards");
 
 export const pendingSignups = () => getDb().collection("pendingSignups");
+export const signupEmailBudgets = () => getDb().collection("signupEmailBudgets");
 
 /**
  * Indexes the app relies on. Idempotent; called at boot and by tests.
@@ -50,4 +51,5 @@ export const pendingSignups = () => getDb().collection("pendingSignups");
 export async function ensureIndexes() {
   await pendingSignups().createIndex({ email: 1 }, { unique: true });
   await pendingSignups().createIndex({ purgeAt: 1 }, { expireAfterSeconds: 0 });
+  await signupEmailBudgets().createIndex({ purgeAt: 1 }, { expireAfterSeconds: 0 });
 }

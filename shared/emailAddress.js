@@ -9,10 +9,11 @@ export function normaliseEmail(email) {
 
 // A shape check only: it catches typos like "maya@gmail" before a round trip.
 // Whether the address is real is what the six-digit code proves.
-const SHAPE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const SHAPE = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/;
 
 export function isEmailShaped(email) {
-  return SHAPE.test(normaliseEmail(email));
+  const normalised = normaliseEmail(email);
+  return normalised.length <= 254 && SHAPE.test(normalised);
 }
 
 /** "Maya.Smith@Gmail.com" → "m…@gmail.com" — for screens and server logs. */

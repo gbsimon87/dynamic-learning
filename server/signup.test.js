@@ -25,17 +25,17 @@ test("sign-up with a code", { skip: URI ? false : "MONGODB_URI not set" }, async
   });
 
   /** Starts an app; returns a factory of cookie-keeping "browsers". */
-  async function start(signup) {
-    const server = createApp({ serveStatic: false, signup }).listen(0);
+  async function start(signup, trustProxy = false) {
+    const server = createApp({ serveStatic: false, trustProxy, signup: { ...signup, emailLimits: { clientLimit: 1_000, ...signup.emailLimits } } }).listen(0);
     await new Promise((resolve) => server.once("listening", resolve));
     servers.push(server);
     const base = `http://127.0.0.1:${server.address().port}`;
     return () => {
       let cookie = "";
-      return async (method, path, body) => {
+      return async (method, path, body, headers = {}) => {
         const res = await fetch(base + path, {
           method,
-          headers: { ...(body ? { "content-type": "application/json" } : {}), ...(cookie ? { cookie } : {}) },
+          headers: { ...headers, ...(body ? { "content-type": "application/json" } : {}), ...(cookie ? { cookie } : {}) },
           body: body ? JSON.stringify(body) : undefined,
         });
         const setCookie = res.headers.get("set-cookie");
@@ -81,6 +81,12 @@ test("sign-up with a code", { skip: URI ? false : "MONGODB_URI not set" }, async
   await t.test("bad emails are refused", async () => {
     assert.deepEqual((await browser()("POST", "/api/auth/signup/code", {})).body, { error: "EMAIL_REQUIRED" });
     assert.deepEqual((await browser()("POST", "/api/auth/signup/code", { email: "maya@gmail" })).body, { error: "EMAIL_INVALID" });
+    const hostile = "a@" + ".".repeat(50_000) + "@";
+    for (const path of ["/api/auth/signup/code", "/api/auth/signup/complete"]) {
+      const res = await browser()("POST", path, { email: hostile });
+      assert.equal(res.status, 400);
+      assert.deepEqual(res.body, { error: "EMAIL_INVALID" });
+    }
   });
 
   await t.test("resend waits 30 seconds, then at most five an hour", async () => {
@@ -111,6 +117,127 @@ test("sign-up with a code", { skip: URI ? false : "MONGODB_URI not set" }, async
     assert.deepEqual(res.body, { error: "EMAIL_SEND_FAILED" });
     const record = await database.collection("pendingSignups").findOne({ email: "bounce@example.com" });
     assert.equal(record.codeHash, null);
+  });
+
+  await t.test("a failed first send can be retried immediately, and still counts", async () => {
+    let attempts = 0;
+    const recovering = await start({ mailer: { verification: "on", async sendSignupCode() {
+      if (++attempts === 1) throw new Error("temporary outage");
+    } }, now });
+    const email = "recovering@example.com";
+    assert.equal((await recovering()("POST", "/api/auth/signup/code", { email })).status, 502);
+    assert.equal((await recovering()("POST", "/api/auth/signup/code", { email })).status, 200);
+    const record = await database.collection("pendingSignups").findOne({ email });
+    assert.equal(record.sendCount, 2);
+    assert.ok(record.codeHash);
+    assert.equal(record.lastSentAt.getTime(), clock);
+  });
+
+  await t.test("a failed resend restores the old timestamp and can be retried", async () => {
+    let attempts = 0;
+    const recovering = await start({ mailer: { verification: "on", async sendSignupCode() {
+      if (++attempts === 2) throw new Error("temporary outage");
+    } }, now });
+    const email = "recovering-resend@example.com";
+    assert.equal((await recovering()("POST", "/api/auth/signup/code", { email })).status, 200);
+    const firstSentAt = clock;
+    clock += 31_000;
+    assert.equal((await recovering()("POST", "/api/auth/signup/code", { email })).status, 502);
+    const failed = await database.collection("pendingSignups").findOne({ email });
+    assert.equal(failed.lastSentAt.getTime(), firstSentAt);
+    assert.equal(failed.codeHash, null);
+    assert.equal((await recovering()("POST", "/api/auth/signup/code", { email })).status, 200);
+    assert.equal((await database.collection("pendingSignups").findOne({ email })).sendCount, 3);
+  });
+
+  await t.test("failed deliveries cannot bypass the five-an-hour limit", async () => {
+    const broken = await start({ mailer: { verification: "on", async sendSignupCode() { throw new Error("outage"); } }, now });
+    const email = "always-broken@example.com";
+    for (let i = 0; i < 5; i++) assert.equal((await broken()("POST", "/api/auth/signup/code", { email })).status, 502);
+    const capped = await broken()("POST", "/api/auth/signup/code", { email });
+    assert.equal(capped.status, 429);
+    assert.equal(capped.body.error, "TOO_MANY_CODES");
+    assert.equal((await database.collection("pendingSignups").findOne({ email })).sendCount, 5);
+  });
+
+  await t.test("a stale send racing a failed retry cannot reset its count or imply delivery", async () => {
+    const email = "stale-retry@example.com";
+    const failing = await start({ mailer: { verification: "on", async sendSignupCode() { throw new Error("outage"); } }, now });
+    assert.equal((await failing()("POST", "/api/auth/signup/code", { email })).status, 502);
+    const collection = database.collection("pendingSignups");
+    const proto = Object.getPrototypeOf(collection);
+    const realFindOne = proto.findOne;
+    let markRead;
+    const read = new Promise((resolve) => { markRead = resolve; });
+    let release;
+    const held = new Promise((resolve) => { release = resolve; });
+    let intercepted = false;
+    proto.findOne = async function (...args) {
+      const record = await realFindOne.apply(this, args);
+      if (this.collectionName === "pendingSignups" && args[0]?.email === email && !intercepted) {
+        intercepted = true;
+        markRead();
+        await held;
+      }
+      return record;
+    };
+    const stale = failing()("POST", "/api/auth/signup/code", { email });
+    try {
+      await read;
+      assert.equal((await failing()("POST", "/api/auth/signup/code", { email })).status, 502);
+      release();
+      const res = await stale;
+      assert.equal(res.status, 502);
+      assert.equal(res.body.error, "EMAIL_SEND_FAILED");
+    } finally {
+      release();
+      proto.findOne = realFindOne;
+      await stale;
+    }
+    assert.equal((await collection.findOne({ email })).sendCount, 2, "stale snapshot cannot overwrite a failed send's count");
+  });
+
+  await t.test("one client cannot rotate addresses to bypass email limits", async () => {
+    const limitedMailer = fakeMailer();
+    const limited = await start({ mailer: limitedMailer, now, emailLimits: { clientLimit: 2 } });
+    assert.equal((await limited()("POST", "/api/auth/signup/code", { email: "client1@example.com" })).status, 200);
+    assert.equal((await limited()("POST", "/api/auth/signup/code", { email: "client2@example.com" })).status, 200);
+    const capped = await limited()("POST", "/api/auth/signup/code", { email: "client3@example.com" });
+    assert.equal(capped.status, 429);
+    assert.equal(capped.body.error, "TOO_MANY_ATTEMPTS");
+    assert.equal(limitedMailer.sent.length, 2);
+    assert.equal(await database.collection("pendingSignups").countDocuments({ email: "client3@example.com" }), 0);
+    // Completing an already-sent code is independent of the client send cap.
+    const sent = limitedMailer.sent[0];
+    assert.equal((await limited()("POST", "/api/auth/signup/complete", { ...family(sent.email), code: sent.code })).status, 201);
+  });
+
+  await t.test("proxy headers cannot rotate the client outside the configured trust boundary", async () => {
+    for (const trustProxy of [false, 1]) {
+      const limited = await start({ mailer: fakeMailer(), now, emailLimits: { clientLimit: 1 } }, trustProxy);
+      const prefix = trustProxy ? "proxy" : "direct";
+      const headers = (spoofed) => ({ "x-forwarded-for": `${spoofed}, 192.0.2.1` });
+      assert.equal((await limited()("POST", "/api/auth/signup/code", { email: `${prefix}1@example.com` }, headers("198.51.100.1"))).status, 200);
+      const blocked = await limited()("POST", "/api/auth/signup/code", { email: `${prefix}2@example.com` }, headers("198.51.100.2"));
+      assert.equal(blocked.status, 429);
+      assert.equal(blocked.body.error, "TOO_MANY_ATTEMPTS");
+      if (trustProxy) {
+        assert.equal((await limited()("POST", "/api/auth/signup/code", { email: "proxy3@example.com" }, { "x-forwarded-for": "192.0.2.2" })).status, 200);
+      }
+    }
+  });
+
+  await t.test("an exhausted daily budget does not send or leave a false cooldown", async () => {
+    const limitedMailer = fakeMailer();
+    const limited = await start({ mailer: limitedMailer, now, emailLimits: { dailyLimit: 1 } });
+    const email = "daily-cap@example.com";
+    const blocked = await limited()("POST", "/api/auth/signup/code", { email });
+    assert.equal(blocked.status, 429);
+    assert.equal(blocked.body.error, "TOO_MANY_CODES");
+    assert.equal(limitedMailer.sent.length, 0);
+    const record = await database.collection("pendingSignups").findOne({ email });
+    assert.equal(record.codeHash, null);
+    assert.equal(record.lastSentAt.getTime(), 0);
   });
 
   await t.test("with email off, the code route says so and stores nothing", async () => {

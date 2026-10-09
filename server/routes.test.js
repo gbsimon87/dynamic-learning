@@ -50,6 +50,9 @@ test("route authorization", { skip: URI ? false : "MONGODB_URI not set" }, async
   const a = session();
   const b = session();
   const anon = session();
+  const progressData = (...completedChallenges) => ({
+    numbers: { topics: { counting: { completedChallenges } } },
+  });
 
   // Accounts are created by the sign-up flow (covered in signup.test.js). Here
   // we only need a signed-in parent, so insert one and sign in through /login.
@@ -128,12 +131,12 @@ test("route authorization", { skip: URI ? false : "MONGODB_URI not set" }, async
   });
 
   // --- the critical part: cross-account access ----------------------------
-  await a("PUT", `/api/progress/${childA._id}/2/math`, { data: { secret: "A's progress" } });
+  await a("PUT", `/api/progress/${childA._id}/2/math`, { data: progressData(1) });
 
   await t.test("parent B cannot read or write parent A's child or progress", async () => {
     const probes = [
       ["GET", `/api/progress/${childA._id}/2/math`, undefined],
-      ["PUT", `/api/progress/${childA._id}/2/math`, { data: { hacked: true } }],
+      ["PUT", `/api/progress/${childA._id}/2/math`, { data: progressData(4) }],
       ["DELETE", `/api/children/${childA._id}`, undefined],
     ];
     for (const [method, path, body] of probes) {
@@ -144,7 +147,7 @@ test("route authorization", { skip: URI ? false : "MONGODB_URI not set" }, async
 
     // A's data is untouched by every probe above.
     const stillThere = await a("GET", `/api/progress/${childA._id}/2/math`);
-    assert.deepEqual(stillThere.body.progress.data, { secret: "A's progress" });
+    assert.deepEqual(stillThere.body.progress.data, progressData(1));
     assert.equal((await a("GET", "/api/children")).body.children.length, 1);
   });
 
@@ -165,17 +168,17 @@ test("route authorization", { skip: URI ? false : "MONGODB_URI not set" }, async
 
   // --- progress semantics -------------------------------------------------
   await t.test("progress upserts on the triple and preserves createdAt", async () => {
-    const first = (await a("PUT", `/api/progress/${childA._id}/2/math`, { data: { a: 1 } })).body.progress;
-    const second = (await a("PUT", `/api/progress/${childA._id}/2/math`, { data: { a: 2 } })).body.progress;
+    const first = (await a("PUT", `/api/progress/${childA._id}/2/math`, { data: progressData(1) })).body.progress;
+    const second = (await a("PUT", `/api/progress/${childA._id}/2/math`, { data: progressData(1, 2) })).body.progress;
     assert.equal(first._id, second._id, "no second document");
     assert.equal(first.createdAt, second.createdAt);
     assert.equal(second.schemaVersion, 1);
-    assert.deepEqual(second.data, { a: 2 });
+    assert.deepEqual(second.data, progressData(1, 2));
     assert.equal(await database.collection("progress").countDocuments({ subject: "math" }), 1);
   });
 
   await t.test("year is stored and compared as a Number", async () => {
-    await a("PUT", `/api/progress/${childA._id}/3/math`, { data: { y: 3 } });
+    await a("PUT", `/api/progress/${childA._id}/3/math`, { data: progressData(3) });
     const doc = await database.collection("progress").findOne({ year: 3 });
     assert.equal(typeof doc.year, "number");
     const read = await a("GET", `/api/progress/${childA._id}/3/math`);
@@ -190,11 +193,11 @@ test("route authorization", { skip: URI ? false : "MONGODB_URI not set" }, async
 
   // --- delete cascades ----------------------------------------------------
   await t.test("deleting a child removes its progress, and only its own", async () => {
-    await b("PUT", `/api/progress/${childB._id}/2/math`, { data: { b: 1 } });
+    await b("PUT", `/api/progress/${childB._id}/2/math`, { data: progressData(1) });
     const res = await a("DELETE", `/api/children/${childA._id}`);
     assert.equal(res.status, 204);
     assert.equal(await database.collection("progress").countDocuments({ childId: { $exists: true } }), 1);
-    assert.equal((await b("GET", `/api/progress/${childB._id}/2/math`)).body.progress.data.b, 1);
+    assert.deepEqual((await b("GET", `/api/progress/${childB._id}/2/math`)).body.progress.data, progressData(1));
   });
 
   await t.test("unknown /api routes are JSON 404s, never the SPA shell", async () => {
@@ -204,9 +207,11 @@ test("route authorization", { skip: URI ? false : "MONGODB_URI not set" }, async
   });
 
   await t.test("logout clears the session", async () => {
-    assert.equal((await a("GET", "/api/auth/me")).status, 200);
-    assert.equal((await a("POST", "/api/auth/logout")).status, 204);
-    assert.equal((await a("GET", "/api/auth/me")).status, 401);
+    const signingOut = session();
+    assert.equal((await signingOut("POST", "/api/auth/login", { email: "parent.a@example.com", password: "password-a" })).status, 200);
+    assert.equal((await signingOut("GET", "/api/auth/me")).status, 200);
+    assert.equal((await signingOut("POST", "/api/auth/logout")).status, 204);
+    assert.equal((await signingOut("GET", "/api/auth/me")).status, 401);
   });
 
   // --- child year group ----------------------------------------------------

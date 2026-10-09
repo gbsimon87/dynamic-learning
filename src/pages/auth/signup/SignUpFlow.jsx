@@ -174,7 +174,7 @@ export default function SignUpFlow() {
       if (reason === "EMAIL_TAKEN" || reason === "EMAIL_INVALID") {
         setFieldErrors({ email: reason });
         if (cursor.step !== STEP.account) moveTo(draft, { step: STEP.account }, "back");
-      } else if (reason === "CODE_RECENTLY_SENT" || reason === "TOO_MANY_CODES") {
+      } else if (reason === "CODE_RECENTLY_SENT" || reason === "TOO_MANY_CODES" || reason === "TOO_MANY_ATTEMPTS") {
         if (details.retryAfterSeconds > 0) {
           setClock(Date.now());
           setResendAt(Date.now() + details.retryAfterSeconds * 1000);
@@ -220,7 +220,7 @@ export default function SignUpFlow() {
               await auth.selectChild(child._id);
               playCue("levelUp");
               playEffect("confettiStars");
-              navigate(destinationFor(child));
+              navigate(destinationFor(child), { replace: true });
             }}
           />
         </div>

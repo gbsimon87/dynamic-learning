@@ -720,9 +720,35 @@ email:code)`; the code is never stored. A code lasts 10 minutes, allows 5 wrong
 tries, and a wrong fifth or a failed send sets `codeHash: null` rather than
 deleting the record, so the hourly send cap still holds.
 
+**Sign-up review fixes (2026-10-09, #37).** Email shape validation is bounded
+to 254 characters with disjoint domain-label classes. Failed sends restore the
+previous `lastSentAt` while invalidating the new code and retaining send counts.
+The conditional send write also matches `sendCount` and `codeHash`, so restoring
+a timestamp cannot let a stale retry rewind the count. A losing race checks the
+current code before claiming an email was sent.
+
+`server/signupEmailLimits.js` adds ten `/code` requests per client per hour
+(bounded, hashed in-memory client keys) and a daily send-attempt budget. Express
+trusts one proxy hop when `RENDER=true`, otherwise none. `signupEmailBudgets`
+stores `{ _id: "signup:<UTC day number>", count, purgeAt }`; the built-in unique
+`_id` and conditional increment enforce the budget across workers/restarts, and
+a TTL index removes old counters. No account, child, progress or reward fields
+change. `SIGNUP_EMAIL_DAILY_LIMIT` defaults to 90 and must be a positive integer;
+separate databases need separately allocated budgets within the provider quota.
+Failed/time-out sends spend budget too. Resend calls time out after ten seconds;
+only status diagnostics are retained, and verification-off mode warns at boot.
+
+The code step offers a 64 px retry for transient completion errors while
+retaining all six digits; rejected/expired codes keep their existing new-code
+path. Hand-over navigation replaces the sign-up history entry, email autofocus
+is removed, long resend waits use minutes, and code boxes can shrink on small
+phones. Lint, build and the full database-backed suite pass; server-rendered UI
+checks pass. Interactive browser verification remains open because this session
+has no browser tools. See the sign-up tracker for the outstanding checks.
+
 ⚠️ **Two races are closed in the database, not in the handler.** Sending is gated
 by a **conditional write** (insert on first send, update conditioned on the
-`lastSentAt` that was read); the email goes out only if that write won, so ten
+`lastSentAt`, `sendCount` and `codeHash` that were read); the email goes out only if that write won, so ten
 parallel requests send one email. And each guess **reserves an attempt
 atomically before the code is compared** (`findOneAndUpdate` on
 `attempts < 5`), so at most five guesses are ever compared; the code itself is
@@ -1780,14 +1806,13 @@ without a changelog note or the report was inaccurate.
    dashboard, not the API. A live sign-up received its code on 2026-10-09. The app is to be renamed
    "Learn with Bix" (not started). Deliberately no personal address in this
    file: the repo is public.
-18. **Sign-up final review fixes remain open** (source checked 2026-10-09).
+18. **Sign-up review: interactive verification remains open** (2026-10-09).
    The [tracker](superpowers/plans/2026-10-07-signup-onboarding-tracker.md)
-   records C1 (unbounded/backtracking email validation), I1 (failed-send
-   cooldown), I2 (missing transient-error retry), M5 (mailer timeout), and I3
-   (per-client email limits/send budget). The relevant paths remain in source;
-   email verification is now live, so I3 is no longer a future switch-on task.
-   The recorded database-backed route-test fixture failures also remain to be
-   addressed. Tracked in PROJECT_IDEAS #37; no fixes made in this document review.
+   records fixes for C1/I1/I2/I3/M1/M2/M5 and optional M3/M4. The route-test
+   fixtures now use valid progress trees and an isolated logout session; all
+   database-backed tests pass. Remaining: browser error paths, keyboard/focus,
+   Back after hand-over and narrow layouts in both themes. Browser tools were
+   unavailable in the fix session. Tracked in PROJECT_IDEAS #37.
 
 **Resolved since last review:**
 
@@ -1855,7 +1880,7 @@ not by itself deliver a standalone game or its proposed reward flow.
 | #34 Daily puzzle | [Home](../src/pages/home/Home.jsx), reward/date modules, [routes](../src/main.jsx). | Streak day stamps exist; no date-seeded daily question, daily puzzle view or fixed puzzle reward. |
 | #35 Child intro | Signup [HandOver](../src/pages/auth/signup/HandOver.jsx), [child fields](../src/data/childFields.js), [reward shape](../src/data/rewardsShape.js), [badges](../src/data/badges.js). | No playable profile intro, per-child intro flag/replay or coach marks. The existing `first-steps` badge rewards a curriculum challenge, not an intro. |
 | #36 PostHog | [Analytics wrapper](../src/utils/analytics.js), [wrapper tests](../src/utils/analytics.test.js), [SignUpFlow](../src/pages/auth/signup/SignUpFlow.jsx), [dependencies](../package.json). | Allow-lists/funnel calls exist; no PostHog SDK/transport or consent gate. Hosted project settings/DPA were not verified. |
-| #37 Signup findings | [Email validation](../shared/emailAddress.js), [signup route](../server/routes/signup.js), [steps](../src/pages/auth/signup/steps.jsx), [mailer](../server/email.js), [route tests](../server/routes.test.js). | C1/I1/I2/I3/M1/M2/M5 remain in source; legacy progress fixtures still use rejected shapes. Database-backed suites were skipped in this audit. |
+| #37 Signup findings | [Email validation](../shared/emailAddress.js), [signup route](../server/routes/signup.js), [send limits](../server/signupEmailLimits.js), [steps](../src/pages/auth/signup/steps.jsx), [mailer](../server/email.js), [route tests](../server/routes.test.js). | C1/I1/I2/I3/M1/M2/M5 fixed, plus M3/M4. Database-backed suites pass after fixture repairs. Interactive browser checks remain open. |
 | #38 Interactive review | [English tracker](english-curriculum/IMPLEMENTATION_TRACKER.md), [Science tracker](science-curriculum/y3-science-tracker.md). | Broad playthrough/owner and real-device checks remain pending; implemented wrappers and passing pure tests do not close them. |
 | #39 Rename | [Navbar](../src/components/ui/Navbar.jsx), [Home](../src/pages/home/Home.jsx), [HTML title](../index.html), [email](../server/email.js), [certificate](../src/components/celebration/steps/CertificateStep.jsx). | These still say Dynamic Learning; the live domain/Bix mascot do not complete the product rename. |
 | #40 Concurrency/indexes | [Progress route](../server/routes/progress.js), [rewards route](../server/routes/rewards.js), [database boot](../server/db.js). | Routes still replace snapshots; boot indexes only pending signups. Actual live database indexes/duplicates were not inspected. |

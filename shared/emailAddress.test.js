@@ -17,3 +17,15 @@ test("maskEmail keeps the first letter and the domain", () => {
   assert.equal(maskEmail("Maya.Smith@Gmail.com"), "m…@gmail.com");
   assert.equal(maskEmail("x"), "x");
 });
+
+test("email validation bounds hostile input and rejects empty domain labels", () => {
+  const hostile = "a@" + ".".repeat(50_000) + "@";
+  const start = performance.now();
+  assert.equal(isEmailShaped(hostile), false);
+  assert.ok(performance.now() - start < 50, "oversized input must return promptly");
+  assert.equal(isEmailShaped("a".repeat(249) + "@b.co"), true);
+  assert.equal(isEmailShaped("a".repeat(250) + "@b.co"), false);
+  for (const bad of ["a@.b.co", "a@b..co", "a@b.co.", "a@" + ".".repeat(240) + "@"]) {
+    assert.equal(isEmailShaped(bad), false);
+  }
+});

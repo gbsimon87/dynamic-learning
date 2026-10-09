@@ -88,10 +88,10 @@
 .auth-page .sf-wheel-item.is-chosen { color: var(--au-text); font-size: 1.9rem; font-weight: 800; }
 
 /* Code boxes */
-.auth-page .sf-code { display: flex; justify-content: center; gap: 0.4rem; }
+.auth-page .sf-code { display: flex; justify-content: center; gap: 0.3rem; }
 .auth-page .sf-code.is-invalid { animation: auth-shake 400ms ease both; }
 .auth-page .sf-code-box {
-  flex: 1 1 0; min-width: 44px; max-width: 4rem; height: 4rem; border-radius: 0.75rem; text-align: center; font-size: 1.8rem; font-weight: 700;
+  flex: 1 1 0; min-width: 0; max-width: 4rem; height: 4rem; padding: 0; border-radius: 0.75rem; text-align: center; font-size: 1.8rem; font-weight: 700;
   border: 2px solid var(--au-border); background: var(--au-panel); color: var(--au-text);
 }
 .auth-page .sf-code-box:focus { border-color: var(--au-accent); }

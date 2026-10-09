@@ -58,6 +58,7 @@ same set with placeholders.
 | `MONGODB_DB` | — | Optional. The database name the server uses; defaults to `dynamic_learning`. Leave unset unless you want a different one. |
 | `RESEND_API_KEY` | `re_…` | Resend → **API Keys**. **Leave unset until a domain is verified** — see the note below. |
 | `EMAIL_FROM` | `Dynamic Learning <hello@your-domain>` | Must be on a domain verified in Resend. Set it together with `RESEND_API_KEY`. |
+| `SIGNUP_EMAIL_DAILY_LIMIT` | `90` (default) | Positive integer: sign-up send attempts per UTC day, including failed sends. Budget is shared by workers using the same database. Allocate production/dev budgets within the email account's available quota; their databases have independent counters. |
 | `VITE_USE_API` | `true` | See §4. |
 | `NODE_VERSION` | `22.23.3` | Pinned in `render.yaml`; [Node 22.23.3 LTS](https://nodejs.org/en/blog/release/v22.23.3) satisfies Vite’s Node 22.12+ requirement. |
 | `NODE_ENV` | `production` | Makes the server serve the built `dist/` and set the cookie `Secure` flag. |
@@ -70,6 +71,22 @@ fails the sign-up. Set only one and the server also skips it (and logs a warning
 at boot), so set both or neither. Until a domain is verified in Resend,
 `EMAIL_FROM` can only be `onboarding@resend.dev`, which delivers **only to the Resend account owner**, so
 do not turn it on for real families before the domain is verified.
+
+**Send protection (2026-10-09).** `/signup/code` allows ten requests per client
+per hour, alongside the existing email/request limits and five sends per address
+per hour. The daily send budget is reserved atomically in MongoDB, survives
+restarts, and returns a retry time when exhausted. `SIGNUP_EMAIL_DAILY_LIMIT`
+defaults to 90; invalid values stop app construction rather than disabling the
+cap. Set budgets according to the actual provider quota and other email usage.
+Every Resend call has a 10-second timeout. A failed send still spends its send
+allowances, but releases the resend cooldown so a family can retry immediately.
+
+The server detects Render through its [documented `RENDER` variable](https://render.com/docs/environment-variables#render)
+and uses one trusted proxy hop there. Direct/local servers trust no proxy
+headers. This follows [Express's proxy trust rules](https://expressjs.com/en/guide/behind-proxies/);
+if the ingress topology changes, review the trust boundary. Provider HTTP
+statuses are logged; raw response bodies are excluded because they may contain
+email addresses or codes. A verification-off startup warning is always logged.
 
 `MONGODB_URI`, `SESSION_SECRET`, `RESEND_API_KEY` and `EMAIL_FROM` are declared `sync: false` in `render.yaml`,
 which means Render prompts for them and stores them in its dashboard. They are

@@ -16,8 +16,11 @@ import { createMailerFromEnv } from "./email.js";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.resolve(here, "..", "dist");
 
-export function createApp({ serveStatic = process.env.NODE_ENV === "production", signup = {} } = {}) {
+export function createApp({ serveStatic = process.env.NODE_ENV === "production", signup = {}, trustProxy = process.env.RENDER === "true" ? 1 : false } = {}) {
   const app = express();
+  // Render is the single ingress proxy. Direct/local servers trust no headers.
+  // Never use `true`: a client-supplied leftmost X-Forwarded-For is untrusted.
+  app.set("trust proxy", trustProxy);
   app.use(express.json({ limit: "1mb" }));
   app.use(cookieParser());
 

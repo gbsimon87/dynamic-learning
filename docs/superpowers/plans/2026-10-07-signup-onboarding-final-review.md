@@ -1,5 +1,9 @@
 # Final whole-branch review: sign-up onboarding (450a09c..b517042)
 
+> Historical review below. The findings were addressed in the 2026-10-09 fix
+> round; see **Scoped re-review** at the end. Interactive browser verification
+> remains open and no deployment was performed in that round.
+
 Reviewed in three passes over `final-code.diff`, reading the HEAD files where needed: (1) server, (2) shared/data/stores, (3) client UI. I ran the following myself:
 - `npm test`: 1249 tests, 1247 pass, 0 fail, 2 skipped.
 - `npm run lint`: clean.
@@ -163,3 +167,51 @@ I did not run `npm run build` because it writes `dist/` and this review is read-
 **Ready to merge?** With fixes
 
 **Reasoning:** The atomic code gates, single-use claim, rollback, data minimisation and the under-13 handling are solid and tested. Everything persisted matches the constraints. But C1 is a one-request denial of service on an unauthenticated route and must be fixed first. I1 and I2 are small fixes to the error paths the spec names.
+
+## Scoped re-review — 2026-10-09
+
+Reviewed the working-tree changes to shared validation, signup routing, mailer,
+send limits, client steps/navigation/CSS, fixtures and documentation. This is a
+review by the implementing agent, supported by automated checks; no independent
+review or interactive browser pass is claimed.
+
+| Finding | Result | Evidence |
+|---|---|---|
+| C1 | Fixed | 254-character bound and disjoint domain-label classes; hostile 50k-dot input returns promptly; both routes reject it. |
+| I1 | Fixed | Failed sends invalidate the new code and restore the old timestamp; immediate retry succeeds, failed attempts retain the five-per-hour cap. Conditional writes also match count/hash to prevent stale retries rewinding the count. A losing race with no usable code returns a send error rather than falsely claiming delivery. |
+| I2 | Implemented; interactive check pending | Code screen renders a 64 px retry calling `complete(code)` for a filled code after a transient error. SSR confirms its presence and the invalid/expired exclusions and busy state. Submission still uses the existing duplicate-submit guard. |
+| I3 | Fixed in code | Ten requests/client/hour before database lookup; bounded temporary hashed client keys; configured proxy trust. Mongo-backed atomic daily reservations survive recreated limiters and parallel calls; default 90 attempts/UTC day. Failed sends spend budget, and denied sends leave no redeemable new code or false cooldown. |
+| M1/M2 | Implemented; interactive check pending | Hand-over navigation uses `replace`; email autofocus removed. |
+| M5 | Fixed | Production timeout is 10 seconds; stalled fake-provider test rejects with `TimeoutError`. |
+| M3/M4 | Implemented; visual check pending | Long countdown displays minutes; code boxes shrink without a fixed minimum width while retaining 64 px height and theme tokens. |
+| Legacy route fixtures | Fixed separately | Valid progress trees with numeric completions and an isolated logout session; all 19 authorization subtests pass. |
+
+Validation:
+
+- `MONGODB_URI=mongodb://127.0.0.1:27028 npm test`: **1,303 passed, 0 failed, 0 skipped**. All database suites use throwaway names and drop their own databases.
+- `npm run lint`: pass.
+- `npm run build`: pass (existing chunk-size advisory).
+- Vite SSR loads and renders the actual code-screen component; retry conditions,
+  disabled checking and minute countdown pass.
+- Built `/signup`, its JavaScript asset and `/api/health` succeed over local HTTP.
+- `git diff --check`: pass.
+
+No additional must-fix code issue remains in this scope. The failed-retry
+timestamp restoration required strengthening optimistic writes with count/hash;
+the regression holds a stale read across a competing failed retry and confirms
+the count is not overwritten. Progress/rewards runtime code, existing account
+fields and unlock rules are unchanged.
+
+Operational scope: the daily budget is shared within one MongoDB database;
+production/dev with different databases need their limits allocated within the
+provider account's available quota. Per-client buckets are in memory per router;
+the persistent daily budget remains the shared backstop across restarts/workers.
+Raw provider error bodies are excluded to avoid recording addresses/codes;
+HTTP status diagnostics remain, and verification-off mode warns at startup.
+
+Still required when browser tools are available: failed-send retry, transient
+completion retry, claimed-code failure/new-code recovery, limit messages,
+hand-over/Back, heading focus and keyboard controls, and 320/375/1440 px in both
+themes. No browser or Node REPL control tool was available in this session.
+Backlog #37 is **partial** for that verification only; code fixes and automated
+validation are complete in the working tree, with no deployment performed.

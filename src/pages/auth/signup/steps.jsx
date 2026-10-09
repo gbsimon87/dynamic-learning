@@ -164,7 +164,6 @@ export function AccountBody({ email, secret, errors, busy, onEmail, onSecret, on
           onChange={(event) => onEmail(event.target.value)}
           aria-invalid={errors.email ? "true" : "false"}
           aria-describedby={errors.email ? "sf-email-error" : undefined}
-          autoFocus
         />
         {errors.email && (
           <p className="auth-error" id="sf-email-error" role="alert">
@@ -211,8 +210,13 @@ export function CodeBody({ code, onCode, onComplete, busy, error, invalid, shake
       <CodeInput value={code} onChange={onCode} onComplete={onComplete} disabled={busy} invalid={invalid} shakeKey={shakeKey} />
       {error && <p className="sf-code-msg" role="alert">{error}</p>}
       <div className="auth-actions">
+        {code.length === 6 && error && !invalid && !needsNewCode && (
+          <button type="button" className="auth-btn" onClick={() => onComplete(code)} disabled={busy}>
+            {busy ? "Checking…" : "Try again"}
+          </button>
+        )}
         <button type="button" className={`auth-btn ${needsNewCode ? "" : "auth-btn-quiet"}`} onClick={onResend} disabled={busy || resendIn > 0}>
-          {resendIn > 0 ? `Send a new code in ${resendIn}s` : "Send a new code"}
+          {resendIn > 60 ? `Send a new code in ${Math.ceil(resendIn / 60)} min` : resendIn > 0 ? `Send a new code in ${resendIn}s` : "Send a new code"}
         </button>
         <button type="button" className="auth-btn auth-btn-quiet" onClick={onChangeEmail} disabled={busy}>Change email</button>
       </div>

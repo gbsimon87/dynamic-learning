@@ -41,7 +41,7 @@ export function signupCodeEmail(code) {
   return { subject, text, html };
 }
 
-export function createMailer({ mode, apiKey, from, fetch = globalThis.fetch, log = console.log }) {
+export function createMailer({ mode, apiKey, from, fetch = globalThis.fetch, log = console.log, timeoutMs = 10_000 }) {
   return {
     verification: mode === "off" ? "off" : "on",
     async sendSignupCode(email, code) {
@@ -55,7 +55,10 @@ export function createMailer({ mode, apiKey, from, fetch = globalThis.fetch, log
         method: "POST",
         headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
         body: JSON.stringify({ from, to: [email], ...message }),
+        signal: AbortSignal.timeout(timeoutMs),
       });
+      // Keep diagnostics free of provider payloads, which can contain addresses
+      // or message content (including the code).
       if (!response.ok) throw new Error(`EMAIL_SEND_FAILED:${response.status}`);
     },
   };
@@ -63,8 +66,8 @@ export function createMailer({ mode, apiKey, from, fetch = globalThis.fetch, log
 
 export function createMailerFromEnv(env = process.env) {
   const mode = emailMode(env);
-  if (mode === "off" && (env.RESEND_API_KEY || env.EMAIL_FROM)) {
-    console.warn("[email] RESEND_API_KEY and EMAIL_FROM must both be set — email verification is OFF.");
+  if (mode === "off") {
+    console.warn("[email] email verification is OFF; set both RESEND_API_KEY and EMAIL_FROM to enable it.");
   }
   return createMailer({ mode, apiKey: env.RESEND_API_KEY, from: env.EMAIL_FROM });
 }

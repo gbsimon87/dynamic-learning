@@ -1,6 +1,6 @@
 # Sign-up onboarding — implementation tracker
 
-**Start here to resume.** Branch: `feat/onboarding`. Backlog: PROJECT_IDEAS #21.
+**Start here to resume.** Original branch: `feat/onboarding`. Follow-up: PROJECT_IDEAS #37.
 
 | Document | What it is |
 |---|---|
@@ -8,11 +8,11 @@
 | [Plan](2026-10-07-signup-onboarding.md) | Twelve tasks with the code, tests and commands for each. |
 | This file | What's done, what's next, and every decision made along the way. |
 
-**Last updated:** 2026-10-07 · **Status:** all 12 tasks done; final whole-branch review done — **one fix round left before merge** · **Next:** the fix round below
+**Last updated:** 2026-10-09 · **Status:** all 12 tasks and the review fix round implemented; automated/scoped review passes · **Next:** interactive browser checks below (browser tools unavailable in the fix session)
 
 ## ▶ Resume here
 
-The whole-branch review ([final review](2026-10-07-signup-onboarding-final-review.md)) said **"ready to merge with fixes"**. Do these in ONE fix round, then one scoped re-review, then finish the branch (merge/PR is the owner's call):
+The original whole-branch review ([final review](2026-10-07-signup-onboarding-final-review.md)) said **"ready to merge with fixes"**. All code fixes below are now implemented in the working tree (2026-10-09); see the scoped re-review appended to that review. No merge or deployment was performed. Interactive verification still needs a session with browser tools.
 
 | ID | Fix | Where | Test to add |
 |---|---|---|---|
@@ -23,11 +23,15 @@ The whole-branch review ([final review](2026-10-07-signup-onboarding-final-revie
 | M2 | Remove `autoFocus` from the email input (focus goes to the heading; it can flash the iOS keyboard). | `steps.jsx` | — |
 | M5 | Resend `fetch` has no timeout: add `signal: AbortSignal.timeout(10_000)`. | `server/email.js` | Optional: a fetch that never resolves rejects. |
 
-Optional polish, fine to leave: M3 show minutes (not "3540s") when the resend wait is over 60 s; M4 the six code boxes need 296 px, so they spill at 320 px-wide phones.
+**Fix status:** C1/I1/I2/M1/M2/M5 implemented. Optional M3 (minute countdown) and M4 (shrinking code boxes) are also implemented. I1 additionally guards updates with the previously read count/hash to prevent stale failed retries rewinding the hourly count; losers inspect whether a usable code still exists before answering `CODE_RECENTLY_SENT`.
 
-**Before switching email verification on** (buying a domain, setting `RESEND_API_KEY` / `EMAIL_FROM`), also do **I3**: `/code` has no per-client limit, so a script could make the server email ~120 strangers a minute and burn the Resend quota. Add a per-IP cap and a process-wide daily send budget (set Express `trust proxy` for Render), log Resend's error body, and log at boot when verification is off.
+**I3 implemented:** verification is already live. `/code` now caps requests at ten per client per hour, using `req.ip` with one trusted proxy hop on Render and no trusted headers locally. Client keys are hashed, bounded and temporary. The Mongo-backed daily send-attempt budget defaults to 90 (`SIGNUP_EMAIL_DAILY_LIMIT`), resets at UTC midnight, counts failed/time-out calls and survives restarts/multiple workers. Separate production/dev databases have independent budgets; allocate their combined limits within the provider quota. Verification-off mode always warns at boot. Provider status is retained in diagnostics; raw error bodies were deliberately excluded because they may expose email addresses or codes.
 
-**Known, not caused by this branch:** `server/routes.test.js` has 10 failing sub-tests (progress PUT bodies in an old data shape). Worth a separate fix.
+**Route fixture repair completed separately:** rejected legacy progress payloads now use valid trees with numeric completions, and the logout check uses its own session so later child/reward tests stay authenticated. No production progress, rewards, storage shape or unlock rules changed. The database-backed route suite now passes.
+
+**Validation, 2026-10-09:** lint and production build pass. Full `npm test` runs against disposable local MongoDB with no skips; final counts are recorded in the scoped review. Sign-up regressions cover hostile emails on both endpoints, failed first/resends, failed-send caps, stale retry races, proxy spoofing and budget denial. The budget suite covers parallel reservations, limiter recreation and day rollover. A stalled fake provider times out. Vite SSR loads and renders `CodeBody`, checking transient retry, invalid/expired exclusions, busy disabling and minute countdown. Built `/signup`, its JS asset and `/api/health` are checked over local HTTP. These are render/HTTP checks, not interactive browser evidence.
+
+**Remaining interactive checks:** failed send → immediate retry; network completion error → retained digits → Try again; `SIGNUP_FAILED` retry → expired code → new code; client/hourly/daily limits; hand-over then browser Back; email/code heading focus and keyboard retry; 320/375/1440 px in light/dark themes. Browser and Node REPL controls are unavailable in this session. Existing Task 11 evidence below remains historical and does not close these new checks.
 
 **Running the tests:** unit `npm test`; server tests need a MongoDB — the owner's `.env` has `MONGO_URI`, but the server reads `MONGODB_URI` (+ optional `MONGODB_DB`). A throwaway local one: `mongod --dbpath /tmp/dl-mongo --port 27018 --fork --logpath /tmp/dl-mongo.log` then `MONGODB_URI=mongodb://127.0.0.1:27018 node --test 'server/*.test.js'`.
 
@@ -100,9 +104,9 @@ Record pass/fail and the date. Screenshots go in the session scratchpad, not the
 
 ## Open items (not in this plan)
 
-- **I3 — rate-limit code emails per client** before switching verification on (see Resume here).
+- **#37 interactive browser verification** remains open; code and automated review are complete (see Resume here).
 
-- **Buy a domain and verify it in Resend**, then set `RESEND_API_KEY` and `EMAIL_FROM` on Render. No code change. (PROJECT_KNOWLEDGE §6 item 17.)
+- **Domain and Resend verification:** completed 2026-10-09; see PROJECT_KNOWLEDGE §6 item 17.
 - #35 the child's first-play intro with Bix — starts where the hand-over ends.
 - #3 password reset — adds a second message to `server/email.js`.
 - #36 PostHog — wire `track()` to `posthog.capture`.
