@@ -17,7 +17,7 @@
 > file reflects it. Also update [PROJECT_IDEAS.md](PROJECT_IDEAS.md) when an idea
 > moves between statuses.
 
-**Last reviewed:** 2026-10-01
+**Last reviewed:** 2026-10-09
 
 ---
 
@@ -1721,11 +1721,15 @@ without a changelog note or the report was inaccurate.
    `db.parents.createIndex({email:1},{unique:true})`,
    `db.progress.createIndex({childId:1,year:1,subject:1},{unique:true})` and
    `db.rewards.createIndex({childId:1},{unique:true})`.
-9. **`apiStore` has no unit tests** — it was verified end-to-end in a browser against a
-   real server (signup → profile → challenge → logout → login → progress intact), but
-   has no `fetch`-mocked test file of its own.
-10. **No accessibility pass** — drag-and-drop interactions have no keyboard or
-   screen-reader alternative; no audio support for pre-readers.
+9. **API-store coverage is partial** (checked 2026-10-09) —
+   `src/data/store/apiStore.test.js` has fetch-mocked progress/rewards response,
+   acknowledgement and network/auth-failure tests. Signup and other store
+   methods still need coverage; the existing Node harness can test them.
+10. **No whole-app accessibility pass** (checked 2026-10-09) — some kit
+   interactions use native buttons or drag-library keyboard support, and
+   English/Science plus Solar System have read-aloud support. End-to-end
+   keyboard/screen-reader and both-theme contrast review remains open; Maths
+   and the remaining Skills games still need read-aloud coverage.
 11. **Back-fill can under-pay in one edge case** (2026-09-30). If a first
    completion's progress save fails but its rewards save succeeds before the
    back-fill lands, that challenge's 10 XP is never counted. The safe
@@ -1776,6 +1780,14 @@ without a changelog note or the report was inaccurate.
    dashboard, not the API. A live sign-up received its code on 2026-10-09. The app is to be renamed
    "Learn with Bix" (not started). Deliberately no personal address in this
    file: the repo is public.
+18. **Sign-up final review fixes remain open** (source checked 2026-10-09).
+   The [tracker](superpowers/plans/2026-10-07-signup-onboarding-tracker.md)
+   records C1 (unbounded/backtracking email validation), I1 (failed-send
+   cooldown), I2 (missing transient-error retry), M5 (mailer timeout), and I3
+   (per-client email limits/send budget). The relevant paths remain in source;
+   email verification is now live, so I3 is no longer a future switch-on task.
+   The recorded database-backed route-test fixture failures also remain to be
+   addressed. Tracked in PROJECT_IDEAS #37; no fixes made in this document review.
 
 **Resolved since last review:**
 
@@ -1789,6 +1801,89 @@ without a changelog note or the report was inaccurate.
   challenges through a static
   `import.meta.glob("../skills/*/challenges/year*/*/*Challenge*.jsx")` registry,
   so missing files are detectable and Vite can statically analyse the import.
+
+---
+
+### Backlog source audit (2026-10-09)
+
+Checked **all 39 current PROJECT_IDEAS rows**, including all 21 standalone game
+suggestions inside #20, against routes, components, data, stores, server code,
+dependencies and the linked review trackers. **No current row is fully finished**:
+each still describes missing functionality or outstanding acceptance evidence.
+No whole row was deleted and IDs were preserved.
+
+Shipped parts are recorded below. Narrowed #6 to extending the existing English
+renderer, #13 to standalone creative/picture games, #23 to jokes and extra
+reactions, #27 to activity confirmation/rewards and wider coverage, and #36 to
+connecting the existing analytics wrapper. #6, #27 and #36 now show Partial.
+An existing kit component, similarly named badge or curriculum challenge does
+not by itself deliver a standalone game or its proposed reward flow.
+
+| Idea | Source checked / existing implementation | Why it remains in the backlog |
+|---|---|---|
+| #2 Component tests | [package.json](../package.json), [API tests](../src/data/store/apiStore.test.js); Node tests cover progress/rewards responses. | No Vitest/Testing Library/component environment; hydration, wizard and other API coverage remain. |
+| #3 Password recovery | [Routes](../src/main.jsx), [auth API](../server/routes/auth.js), [mailer](../server/email.js). | No recovery screens, reset endpoint or token lifecycle; mailer sends signup codes only. |
+| #4 Progress migration | [Local store](../src/data/store/localStorageStore.js), [API store](../src/data/store/apiStore.js), [progress route](../server/routes/progress.js). | Version 1 is stored but no progress migration/ID-remapping hook reads it; rewards normalisation is separate. |
+| #5 Free-play kit wrappers | [Skills routes](../src/main.jsx), [Skills hub](../src/pages/skills/SkillsPage.jsx), `src/components/challenge/`. | Money, measurement, position/direction, statistics and place-value kit interactions have no standalone Skills wrappers. |
+| #6 Content format | [EnglishPracticeGame](../src/pages/skills/english/challenges/EnglishPracticeGame.jsx), `src/data/challenges/`. | Choice/sort/build/type rendering and separate JS banks exist; other interactions still need topic-specific JSX rather than data-only authoring. |
+| #7 Accessibility pass | [TileBuilder](../src/components/challenge/TileBuilder.jsx), [SortBins](../src/components/challenge/SortBins.jsx), [DragToOrder](../src/components/challenge/DragToOrder.jsx) and review trackers. | Native-button and drag-library keyboard support exist; no completed whole-app interaction/contrast audit is recorded. |
+| #8 Read-aloud | [Speech utility](../src/utils/speech.js), [SpeakButton](../src/components/challenge/SpeakButton.jsx), English/Science games, [Solar System](../src/pages/skills/geography/SolarSystem.jsx). | Maths and other standalone games still lack shared narration; physical-device speech review remains. |
+| #9 Parent summary | [ParentArea](../src/pages/auth/ParentArea.jsx), [ChallengeShell](../src/components/challenge/ChallengeShell.jsx). | Completion summaries/profile edits exist; no persisted active time or wrong-answer evidence for practice recommendations. |
+| #10 Adaptive difficulty | `src/data/challenges/`, [ChallengeShell](../src/components/challenge/ChallengeShell.jsx). | Fixed challenge levels and transient misses/combos exist; no persisted accuracy/response time or adaptive controller. |
+| #11 Safeguards/consent | [Signup flow rules](../src/data/signupFlow.js), [account rules](../shared/accountTypes.js), [signup API](../server/routes/signup.js). | Entered-age gate exists; no grown-up consent verification/record or completed qualified review is recorded. |
+| #12 Phonics/rhyming | [Skills routes](../src/main.jsx), English banks, [speech utility](../src/utils/speech.js). | No standalone sound-it-out, rhyming-match or syllable-splitter pack or dedicated phoneme audio. Syllables in suffix questions are different content. |
+| #13 Story games | [SettingsCharactersAndPlotGame](../src/pages/skills/english/challenges/year3/SettingsCharactersAndPlotGame.jsx), [stories.json](../src/data/stories.json), [Skills routes](../src/main.jsx). | Curriculum plot-sentence ordering and guided story planning exist; free-choice generation and standalone picture sequencing do not. |
+| #14 Offline/PWA | [Dependencies](../package.json), [entry HTML](../index.html), `public/`, store drivers. | No web-app manifest/service-worker registration/PWA plugin or offline API write/conflict flow. The Science asset manifest is unrelated. |
+| #15 Geography curriculum | [Curriculum registry](../src/data/curriculumRegistry.js), [FlagFinder](../src/pages/skills/geography/FlagFinder.jsx). | Geography is a selectable subject but has no registered curriculum; existing geography games are standalone. |
+| #16 Year 1–2 English | [Curriculum registry](../src/data/curriculumRegistry.js), English datasets/challenge directories. | Only Years 3 and 4 English are registered and implemented. Saved statutory documents are not implementations. |
+| #17 Meteor benchmark | [Meteor controller](../src/pages/skills/geography/meteorExperiment.js), [tracker](solar-system-meteor/IMPLEMENTATION_TRACKER.md). | Feature exists; the required physical phone/tablet timing evidence is explicitly outstanding. |
+| #18 Science diagrams | [Follow-up checklist](science-curriculum/DIAGRAM_REVIEW_FOLLOWUPS.md), diagram components and `scripts/science-assets/`. | All 11 checklist items remain open in source: dog skeleton, leaf water, muscle geometry/titles, labels/Plants, renderer sandboxing, checksums, cache path validation, SVG stripping and built licence notices. |
+| #19 3D constellations | [SolarSystem](../src/pages/skills/geography/SolarSystem.jsx), [ConstellationCard](../src/pages/skills/geography/ConstellationCard.jsx), projection modules. | Card explicitly stays outside the scene; no celestial-sphere constellation controller or real-sky action. |
+| #20 Standalone game list | [All routes](../src/main.jsx), [Skills hub](../src/pages/skills/SkillsPage.jsx) and existing standalone implementations; individual inventory below. | None of its 21 proposed games is implemented as the described standalone activity. |
+| #22 Certificates | [CertificateStep](../src/components/celebration/steps/CertificateStep.jsx), [celebration steps](../src/data/celebrationSteps.js), [TrophyRoom](../src/pages/trophies/TrophyRoom.jsx). | Year print/save exists; no topic/category certificate, avatar/signature/skill statement or reprint entry point. |
+| #23 Jokes/reactions | [Mascot](../src/components/mascot/Mascot.jsx), [celebration messages](../src/data/celebrationMessages.js). | Tap-to-cheer, pointer following and combo reactions exist; no joke catalogue/read-aloud or long-tap/five-tap secrets. |
+| #24 Wardrobe | [Avatars](../src/data/avatars.js), [badges](../src/data/badges.js), [reward shape](../src/data/rewardsShape.js). | Badges unlock pictures; no wearable catalogue, equipped-item data or layered avatar display. |
+| #25 Bix's den | [Routes](../src/main.jsx), [TrophyRoom](../src/pages/trophies/TrophyRoom.jsx), rewards data. | Trophy collections exist; no room, furniture placement or object-fact interaction. |
+| #26 Boss rounds | [ChallengeShell](../src/components/challenge/ChallengeShell.jsx), generators, [routes](../src/main.jsx). | No category-wide mixed-question picker, boss state or boss artwork/play flow. |
+| #27 Real-world missions | [Science activities](../src/data/scienceActivities.js), [PracticalActivityCard](../src/components/challenge/PracticalActivityCard.jsx), [topic map](../src/pages/curriculum/CurriculumPage.jsx). | Sixteen optional activity cards already exist and are read-only; no mission tick-off, grown-up confirmation or mission sticker; coverage is limited to Science. |
+| #28 Teach the grown-up | [Routes](../src/main.jsx), challenge generators, signup [HandOver](../src/pages/auth/signup/HandOver.jsx). | Signup hands over a profile; no child-authored parent quiz or child marking flow. |
+| #29 Pass-and-play | [Skills routes](../src/main.jsx), standalone games, [Profiles](../src/pages/auth/Profiles.jsx). | Profile switching exists; no alternating two-player session, separate scores or cooperative play. |
+| #30 Brain breaks | [RootLayout](../src/layouts/RootLayout.jsx), [ParentArea](../src/pages/auth/ParentArea.jsx), mascot/reward modules. | No active-session break scheduler, movement prompt or grown-up interval setting. |
+| #31 Notebook/passport | [TrophyRoom](../src/pages/trophies/TrophyRoom.jsx), [stickers](../src/data/stickers.js), geography games. | Topic stickers exist; no specimen notebook/fact cards or country/planet exploration stamp persistence. |
+| #32 Seasonal events | Reward/generator modules and [routes](../src/main.jsx). | No dated event-pack configuration, seasonal puzzle flow or event sticker awards. Ordinary story references to autumn/pumpkins are not events. |
+| #33 Curriculum story | [CurriculumPage](../src/pages/curriculum/CurriculumPage.jsx), [CurriculumSelectPage](../src/pages/curriculum/CurriculumSelectPage.jsx). | Topic path and adventure copy exist; no year narrative, between-category scenes or walking-avatar world map. |
+| #34 Daily puzzle | [Home](../src/pages/home/Home.jsx), reward/date modules, [routes](../src/main.jsx). | Streak day stamps exist; no date-seeded daily question, daily puzzle view or fixed puzzle reward. |
+| #35 Child intro | Signup [HandOver](../src/pages/auth/signup/HandOver.jsx), [child fields](../src/data/childFields.js), [reward shape](../src/data/rewardsShape.js), [badges](../src/data/badges.js). | No playable profile intro, per-child intro flag/replay or coach marks. The existing `first-steps` badge rewards a curriculum challenge, not an intro. |
+| #36 PostHog | [Analytics wrapper](../src/utils/analytics.js), [wrapper tests](../src/utils/analytics.test.js), [SignUpFlow](../src/pages/auth/signup/SignUpFlow.jsx), [dependencies](../package.json). | Allow-lists/funnel calls exist; no PostHog SDK/transport or consent gate. Hosted project settings/DPA were not verified. |
+| #37 Signup findings | [Email validation](../shared/emailAddress.js), [signup route](../server/routes/signup.js), [steps](../src/pages/auth/signup/steps.jsx), [mailer](../server/email.js), [route tests](../server/routes.test.js). | C1/I1/I2/I3/M1/M2/M5 remain in source; legacy progress fixtures still use rejected shapes. Database-backed suites were skipped in this audit. |
+| #38 Interactive review | [English tracker](english-curriculum/IMPLEMENTATION_TRACKER.md), [Science tracker](science-curriculum/y3-science-tracker.md). | Broad playthrough/owner and real-device checks remain pending; implemented wrappers and passing pure tests do not close them. |
+| #39 Rename | [Navbar](../src/components/ui/Navbar.jsx), [Home](../src/pages/home/Home.jsx), [HTML title](../index.html), [email](../server/email.js), [certificate](../src/components/celebration/steps/CertificateStep.jsx). | These still say Dynamic Learning; the live domain/Bix mascot do not complete the product rename. |
+| #40 Concurrency/indexes | [Progress route](../server/routes/progress.js), [rewards route](../server/routes/rewards.js), [database boot](../server/db.js). | Routes still replace snapshots; boot indexes only pending signups. Actual live database indexes/duplicates were not inspected. |
+| #41 Skills celebrations | Standalone Skills games, [ChallengeShell](../src/components/challenge/ChallengeShell.jsx), shared celebration kit. | Shared combos/effects/sounds/Bix flow is used by curriculum challenges, not integrated into standalone games. |
+
+**#20 individual game inventory:** checked each named activity against both the
+route list and the standalone game source, so an alternative route/name would
+not count as missing by itself. All remain unbuilt in Skills Mode:
+
+- **Maths (13):** Math Sentence Builder, Compare the Numbers, Math Maze, Clock
+  Quiz, Skip Count Jump, Estimate It!, Magic Squares, Number Line Jump, Odd or
+  Even Sort, Shape Sorter 3D, Pattern Play, Tally Marks Trainer, Math Bingo.
+- **English (7):** Sentence Fixer, Word Picture Puzzle, Riddle Time, Emoji
+  Sentences, Picture Vocabulary, Alphabet Adventure, Listening & Repeat.
+- **Geography (1):** Country Puzzle.
+
+Closest existing games were inspected: Clock Generator displays times without
+a matching quiz; Shape Explorer/ShapeQuiz identifies 2D shapes without 3D
+sorting; Sentence Builder orders correct words without fixing grammar; Word
+Builder fills a missing letter without a picture. Curriculum comparison,
+number-line, pattern, tally, grammar and story interactions have no standalone
+entry points for these ideas.
+
+**Validation:** `npm run lint` and `npm run build` passed; `npm test` reported
+1,248 passed, zero failed and two MongoDB-dependent suites skipped because
+`MONGODB_URI` was unset. Build retains the existing large-chunk warning. This
+was a documentation/source audit: no application, persistence or unlock code
+changed; no browser or physical-device verification was performed.
 
 ---
 
