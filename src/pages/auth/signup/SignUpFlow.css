@@ -21,10 +21,18 @@
 }
 
 /* Family row */
-.auth-page .sf-family { display: flex; justify-content: center; gap: 0.4rem; margin: 0; padding: 0; list-style: none; }
+.auth-page .sf-family { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem 0.75rem; margin: 0; padding: 0; list-style: none; }
 .auth-page .sf-family-face {
+  display: flex; flex-direction: column; align-items: center; gap: 0.2rem; max-width: 4.5rem;
+  animation: sf-face-in 520ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
+}
+.auth-page .sf-family-avatar {
   width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-size: 1.5rem;
-  background: var(--sf-face, var(--au-bg)); animation: sf-face-in 520ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
+  background: var(--sf-face, var(--au-bg));
+}
+.auth-page .sf-family-name {
+  max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: 0.85rem; font-weight: 600; color: var(--au-text);
 }
 @keyframes sf-face-in { from { transform: translateY(60px) scale(1.6); opacity: 0; } to { transform: none; opacity: 1; } }
 
@@ -117,6 +125,7 @@
 
 /* Summary */
 .auth-page .sf-summary { display: grid; gap: 0.75rem; margin: 0; padding: 0; list-style: none; }
+.auth-page .sf-add { margin-top: 1.5rem; }
 .auth-page .sf-summary-card {
   display: grid; grid-template-columns: auto 1fr auto; gap: 0.75rem; align-items: center;
   padding: 0.75rem; border-radius: 1rem; border: 2px solid var(--au-border);

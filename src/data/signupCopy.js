@@ -11,6 +11,14 @@ const SUBJECT_CHEERS = {
   geography: "Let's explore the world!",
 };
 
+const ORDINALS = ["first", "second", "third", "fourth", "fifth", "sixth"];
+
+/** "your child" for one, "your second child" when there are several — so a parent always knows whose turn it is. */
+function whichChild(draft, cursor) {
+  if (draft.learners.length < 2) return "your child";
+  return `your ${ORDINALS[cursor.index] ?? "next"} child`;
+}
+
 function learnerOf(draft, cursor) {
   return cursor.index !== undefined ? draft.learners[cursor.index] : null;
 }
@@ -44,7 +52,7 @@ export function stepTitle(draft, cursor) {
     case STEP.gate: return "Ask a grown-up";
     case STEP.who: return "Who's going to learn?";
     case STEP.count: return "How many children?";
-    case STEP.name: return me ? "What should Bix call you?" : "What should Bix call them?";
+    case STEP.name: return me ? "What should Bix call you?" : `What should Bix call ${whichChild(draft, cursor)}?`;
     case STEP.year: return me ? "Which year's work would you like?" : `Which school year is ${name} in?`;
     case STEP.look: return "Pick a picture and a colour";
     case STEP.subjects: return me ? "What would you like to do?" : `What would ${name} like to do?`;

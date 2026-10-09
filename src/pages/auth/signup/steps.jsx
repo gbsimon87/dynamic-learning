@@ -141,7 +141,7 @@ export function SummaryBody({ draft, onEdit, onAdd, canAdd }) {
         ))}
       </ul>
       {canAdd && (
-        <button type="button" className="auth-btn auth-btn-quiet" onClick={onAdd}>+ Add another child</button>
+        <button type="button" className="auth-btn auth-btn-quiet sf-add" onClick={onAdd}>+ Add another child</button>
       )}
     </>
   );

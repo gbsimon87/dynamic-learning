@@ -1,4 +1,4 @@
-/** The learners finished so far, rising into a row as each is completed. One image to assistive technology (the label names everyone); the faces inside are hidden. */
+/** The learners finished so far, rising into a row as each is completed, each named so a parent of several can see who's done. One image to assistive technology (the label names everyone); the faces inside are hidden. */
 export default function FamilyRow({ learners }) {
   const done = learners.filter((l) => String(l.name ?? "").trim() && l.avatar);
   if (done.length === 0) return null;
@@ -11,7 +11,8 @@ export default function FamilyRow({ learners }) {
           style={learner.colour ? { "--sf-face": `var(${learner.colour})` } : undefined}
           aria-hidden="true"
         >
-          {learner.avatar}
+          <span className="sf-family-avatar">{learner.avatar}</span>
+          <span className="sf-family-name">{learner.name.trim()}</span>
         </li>
       ))}
     </ul>

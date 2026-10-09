@@ -1753,24 +1753,25 @@ without a changelog note or the report was inaccurate.
    a one-directional match test (works because both directions are always
    emitted); `.skills-grid` has an unreachable `max-width: 1400px` inside a
    1200px parent.
-17. **Email verification is pending a sending domain** (decided 2026-10-07,
-   spec `docs/superpowers/specs/2026-10-07-signup-onboarding-design.md`).
-   Sign-up verifies the address with a six-digit code before the account is
-   created, sent through **Resend**. The
-   app has no domain of its own yet — it is served at
-   `dynamic-learning-n72m.onrender.com`, and `onrender.com` belongs to Render, so
-   it cannot be verified as a sender. Until a domain is bought and verified in
-   Resend (SPF/DKIM DNS records), Resend only sends from its test address
-   `onboarding@resend.dev`, and **only to the owner's own Resend account
-   email** — so codes reach the owner and no other family. Agreed behaviour
-   meanwhile: the code step switches on only when `RESEND_API_KEY` **and**
-   `EMAIL_FROM` are set; without them production sign-up skips it and stores
-   the account as `emailVerified: false`, so those accounts can be asked to
-   verify later. Locally, with no key, the server logs the code to the
-   terminal. **The code is built** (`server/email.js`, `server/routes/signup.js`,
-   §5 "Accounts"); **only the domain is pending.** To finish: buy a domain,
-   verify it in Resend, set both env vars on Render (DEPLOYMENT §2) — no code
-   change. Deliberately no personal address in this file: the repo is public.
+17. **Domain and email verification are live; one delivery report is open**
+   (domain set up 2026-10-09; spec
+   `docs/superpowers/specs/2026-10-07-signup-onboarding-design.md`). The app
+   is served at **`learnwithbix.com`** (Namecheap; apex A record →
+   `216.24.57.1`, `www` CNAME → `dynamic-learning-zkww.onrender.com`; Render
+   redirects `www` to the apex). The live Render service is
+   **`dynamic-learning-zkww`** (web service: app + API, deploys from `dev`).
+   The older `dynamic-learning` static site (`dynamic-learning-n72m.onrender.com`,
+   deploys from `main`, no API) is retired and is to be suspended or deleted —
+   attach nothing to it. `learnwithbix.com` is verified in Resend (DKIM TXT
+   `resend._domainkey`, CNAMEs `send`/`rsend`, `_dmarc` TXT — keep these when
+   editing DNS), and `RESEND_API_KEY` + `EMAIL_FROM` (`Bix
+   <hello@learnwithbix.com>`) are set on Render, so the code step is on in
+   production. Keys are sending-only, so sent mail is checked in the Resend
+   dashboard, not the API. **Open:** one live sign-up after the keys were set
+   received no code — not yet known whether the code step was shown (env not
+   loaded) or the mail was held by the recipient. The app is to be renamed
+   "Learn with Bix" (not started). Deliberately no personal address in this
+   file: the repo is public.
 
 **Resolved since last review:**
 

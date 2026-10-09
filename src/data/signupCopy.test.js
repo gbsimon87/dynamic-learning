@@ -27,6 +27,13 @@ test("'Me' changes the wording", () => {
   assert.equal(stepTitle(me, { step: STEP.year, index: 0 }), "Which year's work would you like?");
 });
 
+test("the name question says which child it is about", () => {
+  const family = { ...draft, learners: [learner, { name: "", avatar: null, colour: null }, { name: "" }, { name: "" }] };
+  assert.equal(stepTitle(draft, { step: STEP.name, index: 0 }), "What should Bix call your child?");
+  assert.equal(stepTitle(family, { step: STEP.name, index: 0 }), "What should Bix call your first child?");
+  assert.equal(stepTitle(family, { step: STEP.name, index: 3 }), "What should Bix call your fourth child?");
+});
+
 test("error messages: details are used, unknown codes fall back", () => {
   assert.equal(errorMessage("CODE_INCORRECT", { attemptsLeft: 1 }), "Hmm, let's try that again — 1 try left.");
   assert.equal(errorMessage("CODE_INCORRECT", { attemptsLeft: 3 }), "Hmm, let's try that again — 3 tries left.");
