@@ -4,7 +4,7 @@
 # and third-party-cookie handling that this setup avoids entirely.
 #
 # Usage: commit this file, then Render dashboard > New > Blueprint > pick this
-# repo. See docs/DEPLOYMENT.md.
+# repo. Current setup: docs/PROJECT_KNOWLEDGE.md §6 item 17.
 
 # Production (learnwithbix.com). The Blueprint keeps this service in line with
 # this file, so `plan` and `branch` here are what production runs: Starter so
@@ -54,9 +54,8 @@ services:
       - key: SESSION_SECRET
         sync: false
 
-      # Sign-up email codes (Resend). Leave BOTH unset until a domain is
-      # verified in Resend: with neither set, production skips verification
-      # instead of failing. See docs/DEPLOYMENT.md.
+      # Sign-up and recovery emails (Resend). Set BOTH or neither: with
+      # neither, production skips verification instead of failing.
       - key: RESEND_API_KEY
         sync: false
       - key: EMAIL_FROM

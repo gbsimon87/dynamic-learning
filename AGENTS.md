@@ -18,7 +18,7 @@ deliberately does not repeat them.**
 | Touch progress, persistence, or unlock rules | `curriculum-progress` |
 
 Stack, architecture, commands and current state: `docs/PROJECT_KNOWLEDGE.md`.
-Backlog: `docs/PROJECT_IDEAS.md`. Deployment: `docs/DEPLOYMENT.md`.
+Backlog: `docs/PROJECT_IDEAS.md`. Deployment: `render.yaml` and `docs/PROJECT_KNOWLEDGE.md` §6 item 17.
 
 ## Non-negotiables
 

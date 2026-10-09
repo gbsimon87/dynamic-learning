@@ -54,7 +54,7 @@ decision made in this codebase:
 | Number words | **written-number** | Converts `42` → "forty-two" |
 | Accounts | **Parent email + child profiles** | PBKDF2 password hashing, behind a swappable async store — see §4.7 |
 | Backend | **Express + MongoDB Atlas** | `server/` — optional: the app still runs fully local. See §4.8 |
-| Hosting | **Render.com** | One Web Service serves the API and the built SPA — see [DEPLOYMENT.md](DEPLOYMENT.md) |
+| Hosting | **Render.com** | Each Web Service serves the API and the built SPA (same origin for the session cookie) — see `render.yaml` and §6 item 17 |
 | Linting | **ESLint 9** flat config | `npm run lint` |
 | External APIs | **REST Countries** (`restcountries.com`) | Country names & flags for Flag Finder skill game |
 
@@ -1903,13 +1903,16 @@ inserts, stable reward retries, retained sibling/legacy learning, numeric IDs,
 hydration/remount/profile isolation, signup gate/navigation/code entry/hand-over,
 reset expiry/reuse, old-session rejection and unchanged profile/learning records.
 
-**Outstanding:** interactive browser/physical-device verification (Chrome could
-not launch within the session's permissions), actual recovery-email delivery,
-and deployment/live index conversion. The full curriculum-progress manual
-checklist remains required before claiming interactive verification. See
-[account-protection rollout](DEPLOYMENT.md) and #40.
-The Render blueprint supplies `https://learnwithbix.com` for production reset
-links; the dev service needs its own `PUBLIC_APP_URL`. No deployment performed.
+**Deployed 2026-10-10.** Verified on dev (recovery, link reuse/expiry, concurrent
+saves, both themes) and in production: `parents.email`,
+`progress(childId,year,subject)` and `rewards.childId` are unique with zero
+duplicate groups; all progress documents pass `migrateProgressDocument`.
+Production's first boot failed with `user is not allowed to do action [collMod]`
+— converting an existing index needs `dbAdmin` on `dynamic_learning`, which the
+readWrite Atlas user lacked; granting it fixed the boot (Render kept the previous
+version live meanwhile). Read-only checks before any future index or progress
+change: `MONGODB_DB=dynamic_learning npm run audit:accounts` (zero
+`duplicateGroups`) and `npm run audit:progress` (no `failures`).
 
 Design references: [OWASP password recovery](https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html),
 [MongoDB index conversion](https://www.mongodb.com/docs/manual/core/index-unique/convert-to-unique/)
