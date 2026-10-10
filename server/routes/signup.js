@@ -6,6 +6,7 @@
  *                     profile in one go, and signs in.
  * Spec: docs/superpowers/specs/2026-10-07-signup-onboarding-design.md §5
  */
+import { errorSummary } from "../logError.js";
 import { Router } from "express";
 import * as db from "../db.js";
 import { createAuthThrottle } from "../authThrottle.js";
@@ -135,7 +136,7 @@ export function createSignupRouter({
         }
         await mailer.sendSignupCode(email, code);
       } catch (err) {
-        console.error("[email] send failed:", err.message);
+        console.error("[email] send failed:", errorSummary(err));
         // Keep the record (the send still counts) but make this code
         // unredeemable — only if no newer send has replaced it since.
         await releaseCode();
@@ -231,12 +232,12 @@ export function createSignupRouter({
         const { insertedIds } = await insertChildren(docs);
         docs = docs.map((doc, i) => ({ ...doc, _id: insertedIds[i] }));
       } catch (err) {
-        console.error("[signup] a profile failed to save; rolling back:", err.message);
+        console.error("[signup] a profile failed to save; rolling back:", errorSummary(err));
         try {
           await db.children().deleteMany({ parentId: parent._id });
           await db.parents().deleteOne({ _id: parent._id });
         } catch (rollbackErr) {
-          console.error("[signup] rollback failed; leftover parent", String(parent._id), rollbackErr.message);
+          console.error("[signup] rollback failed; leftover parent", String(parent._id), errorSummary(rollbackErr));
         }
         return res.status(500).json({ error: "SIGNUP_FAILED" });
       }

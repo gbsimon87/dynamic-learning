@@ -18,6 +18,7 @@
     "audit:progress": "node --env-file-if-exists=.env scripts/auditProgress.js"
   },
   "dependencies": {
+    "@fontsource/abeezee": "^5.2.5",
     "@hello-pangea/dnd": "^18.0.1",
     "@turf/turf": "^7.2.0",
     "canvas-confetti": "^1.9.4",

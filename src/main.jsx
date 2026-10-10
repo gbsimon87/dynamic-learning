@@ -50,6 +50,9 @@ import CurriculumPage from "./pages/curriculum/CurriculumPage";
 import CurriculumSelectPage from "./pages/curriculum/CurriculumSelectPage";
 import NotFound from "./pages/NotFound";
 
+// Self-hosted so no page load sends a visitor's IP address to Google Fonts.
+import "@fontsource/abeezee/400.css";
+import "@fontsource/abeezee/400-italic.css";
 import "./App.css";
 import "./index.css";
 import "leaflet/dist/leaflet.css";
@@ -126,6 +129,9 @@ const router = createBrowserRouter([
 
       // === Third-party notices for the Science artwork (lazy: holds full licence texts) ===
       { path: "credits", lazy: () => import("./pages/credits/Credits").then((m) => ({ Component: m.default })) },
+
+      // === Privacy (placeholder until the #11 review; lazy like credits) ===
+      { path: "privacy", lazy: () => import("./pages/privacy/Privacy").then((m) => ({ Component: m.default })) },
 
       // === Catch-all: any unmatched path ===
       { path: "*", element: <NotFound /> },

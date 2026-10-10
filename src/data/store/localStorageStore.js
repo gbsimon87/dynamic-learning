@@ -227,6 +227,31 @@ export const store = {
     return ok ? publicParent(parent) : null;
   },
 
+  /**
+   * Deletes a parent account and everything it owns, after re-checking the
+   * password. Same contract as the API driver: a wrong password throws
+   * WRONG_PASSWORD and deletes nothing.
+   * @returns {Promise<void>}
+   */
+  async deleteAccount({ parentId, password }) {
+    const parent = readCollection(KEYS.parents).find((doc) => doc._id === parentId);
+    if (!parent) throw new Error("NOT_SIGNED_IN");
+    const ok = await verifyPassword(password, {
+      hash: parent.passwordHash,
+      salt: parent.passwordSalt,
+      iterations: parent.iterations,
+    });
+    if (!ok) throw new Error("WRONG_PASSWORD");
+
+    const childIds = new Set(
+      readCollection(KEYS.children).filter((child) => child.parentId === parentId).map((child) => child._id)
+    );
+    writeCollection(KEYS.progress, readCollection(KEYS.progress).filter((doc) => !childIds.has(doc.childId)));
+    writeCollection(KEYS.rewards, readCollection(KEYS.rewards).filter((doc) => !childIds.has(doc.childId)));
+    writeCollection(KEYS.children, readCollection(KEYS.children).filter((child) => child.parentId !== parentId));
+    writeCollection(KEYS.parents, readCollection(KEYS.parents).filter((doc) => doc._id !== parentId));
+  },
+
   /** @returns {Promise<object[]>} this parent's children, oldest first. */
   async listChildren(parentId) {
     if (!parentId) return [];

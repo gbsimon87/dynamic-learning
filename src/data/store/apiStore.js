@@ -184,6 +184,16 @@ export const store = {
   },
 
   /**
+   * Deletes the signed-in account, every profile on it and their progress and
+   * rewards. The server re-checks the password; a wrong one throws
+   * WRONG_PASSWORD and deletes nothing.
+   * @returns {Promise<void>}
+   */
+  async deleteAccount({ password }) {
+    await request("/auth/account", { method: "DELETE", body: { password }, expect: [204] });
+  },
+
+  /**
    * Resolves the signed-in parent from the session cookie.
    *
    * `AuthContext.resolveParent` duck-types for exactly this method

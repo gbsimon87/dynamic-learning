@@ -13,6 +13,7 @@ import rewardsRoutes from "./routes/rewards.js";
 import { createSignupRouter } from "./routes/signup.js";
 import { createRecoveryRouter } from "./routes/recovery.js";
 import { createMailerFromEnv } from "./email.js";
+import { errorSummary } from "./logError.js";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.resolve(here, "..", "dist");
@@ -53,7 +54,7 @@ export function createApp({ serveStatic = process.env.NODE_ENV === "production",
 
   // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
-    console.error("[api]", err);
+    console.error("[api]", errorSummary(err));
     if (res.headersSent) return;
     res.status(500).json({ error: "SERVER_ERROR" });
   });

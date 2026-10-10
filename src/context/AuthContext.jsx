@@ -254,17 +254,29 @@ export function AuthProvider({ children: subtree }) {
     }
   }, []);
 
-  const signOut = useCallback(async () => {
-    await signOutSession(store, () => {
-      clearSession();
-      // Forget the welcome-back faces only after the cookie is gone.
-      clearLastAccount();
-      setParent(null);
-      setChildProfiles([]);
-      setChild(null);
-      setError(null);
-    });
+  const forgetIdentity = useCallback(() => {
+    clearSession();
+    // Forget the welcome-back faces only after the cookie is gone.
+    clearLastAccount();
+    setParent(null);
+    setChildProfiles([]);
+    setChild(null);
+    setError(null);
   }, []);
+
+  const signOut = useCallback(async () => {
+    await signOutSession(store, forgetIdentity);
+  }, [forgetIdentity]);
+
+  /** Irreversible. Throws WRONG_PASSWORD (nothing deleted) on a bad password. */
+  const deleteAccount = useCallback(
+    async (password) => {
+      if (!parent) throw new Error("NOT_SIGNED_IN");
+      await store.deleteAccount({ parentId: parent._id, password });
+      forgetIdentity();
+    },
+    [parent, forgetIdentity]
+  );
 
   const selectChild = useCallback(
     async (childId) => {
@@ -413,6 +425,7 @@ export function AuthProvider({ children: subtree }) {
       selectChild,
       updateChild,
       removeChild,
+      deleteAccount,
     }),
     [
       parent,
@@ -429,6 +442,7 @@ export function AuthProvider({ children: subtree }) {
       selectChild,
       updateChild,
       removeChild,
+      deleteAccount,
     ]
   );
 

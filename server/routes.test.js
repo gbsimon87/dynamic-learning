@@ -310,4 +310,33 @@ test("route authorization", { skip: URI ? false : "MONGODB_URI not set" }, async
       "a recycled id must not inherit badges"
     );
   });
+
+  await t.test("deleting an account needs the password and removes only that family's data", async () => {
+    const c = session();
+    const others = { a: (await a("GET", "/api/children")).body, b: (await b("GET", "/api/children")).body };
+    assert.equal((await makeParent(c, "parent.c@example.com", "password-c")).status, 200);
+    const kid = (await c("POST", "/api/children", { name: "Cleo" })).body.child;
+    await c("PUT", `/api/progress/${kid._id}/2/math`, { data: progressData(1) });
+    await c("PUT", `/api/rewards/${kid._id}`, { data: { badges: [] } });
+    const before = {
+      progress: await database.collection("progress").countDocuments({}),
+      rewards: await database.collection("rewards").countDocuments({}),
+    };
+
+    assert.equal((await anon("DELETE", "/api/auth/account", { password: "password-c" })).status, 401);
+    const wrong = await c("DELETE", "/api/auth/account", { password: "nope" });
+    assert.equal(wrong.status, 403);
+    assert.deepEqual(wrong.body, { error: "WRONG_PASSWORD" });
+    assert.equal(await database.collection("parents").countDocuments({ email: "parent.c@example.com" }), 1);
+
+    assert.equal((await c("DELETE", "/api/auth/account", { password: "password-c" })).status, 204);
+    assert.equal(await database.collection("parents").countDocuments({ email: "parent.c@example.com" }), 0);
+    assert.equal(await database.collection("children").countDocuments({ name: "Cleo" }), 0);
+    assert.equal(await database.collection("progress").countDocuments({}), before.progress - 1);
+    assert.equal(await database.collection("rewards").countDocuments({}), before.rewards - 1);
+    assert.equal((await c("GET", "/api/auth/me")).status, 401, "the session ends with the account");
+    // Other families are untouched.
+    assert.deepEqual((await a("GET", "/api/children")).body, others.a);
+    assert.deepEqual((await b("GET", "/api/children")).body, others.b);
+  });
 });

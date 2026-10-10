@@ -1,0 +1,9 @@
+/* A link inside a sentence: stays in the line, but its padding keeps a tall tap area. */
+.privacy-inline-link {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  padding: 0.75rem 0;
+  overflow-wrap: anywhere;
+}

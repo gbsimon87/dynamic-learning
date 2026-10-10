@@ -197,6 +197,10 @@ export function AccountBody({ email, secret, errors, busy, onEmail, onSecret, on
         hint={null}
       />
       {errors.form && <p className="auth-error" role="alert">{errors.form}</p>}
+      <p className="auth-hint">
+        {/* A new tab, so the half-finished form is still here afterwards. */}
+        <Link to="/privacy" target="_blank" rel="noopener">How we look after your information</Link>
+      </p>
       <div className="sf-continue">
         <button className="auth-btn" type="submit" disabled={busy}>{busy ? "Sending…" : "Send my code →"}</button>
       </div>

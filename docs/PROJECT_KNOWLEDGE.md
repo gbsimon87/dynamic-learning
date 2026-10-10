@@ -1237,6 +1237,26 @@ directory without accessing learner data. Browser interaction, layouts and real
 saved-progress playthroughs remain pending. Details and limits: [final bug/security
 review](science-curriculum/BUG_SECURITY_REVIEW.md).
 
+### Privacy groundwork for #11 (2026-10-10)
+Low-risk changes made while the qualified review (#11) is pending; the brief for
+that review is [safeguarding/REVIEW_BRIEF.md](safeguarding/REVIEW_BRIEF.md).
+- **Fonts self-hosted.** ABeeZee comes from `@fontsource/abeezee`, imported in
+  `src/main.jsx`; `index.html` no longer calls Google Fonts.
+- **No personal data in server logs.** Unexpected errors are logged through
+  `errorSummary` (`server/logError.js`): name, code and stack frames, never the
+  message (a Mongo duplicate-key message can contain an email).
+- **Whole-account deletion.** `DELETE /api/auth/account` with `{ password }`
+  removes the account, every child profile, their progress and rewards, and any
+  pending sign-up for the email; the parent document goes last so a part-way
+  failure can be retried. A wrong password is `403 WRONG_PASSWORD`; attempts are
+  throttled per account. Both store drivers implement `deleteAccount`, exposed
+  as `deleteAccount(password)` on the auth context and offered in `/parent` →
+  Account behind a two-step password confirmation.
+- **Placeholder privacy page** at `/privacy`, linked from the sign-up account
+  step (new tab) and `/parent`. It states that it is not the reviewed notice.
+- **MongoDB Atlas** runs on AWS Ireland (eu-west-1), a 3-node replica set.
+  **Atlas backups are inactive.**
+
 ### Development seed (2026-09-19)
 
 ```bash
@@ -1963,7 +1983,7 @@ not by itself deliver a standalone game or its proposed reward flow.
 | #8 Read-aloud | [Speech utility](../src/utils/speech.js), [SpeakButton](../src/components/challenge/SpeakButton.jsx), English/Science games, [Solar System](../src/pages/skills/geography/SolarSystem.jsx). | Maths and other standalone games still lack shared narration; physical-device speech review remains. |
 | #9 Parent summary | [ParentArea](../src/pages/auth/ParentArea.jsx), [ChallengeShell](../src/components/challenge/ChallengeShell.jsx). | Completion summaries/profile edits exist; no persisted active time or wrong-answer evidence for practice recommendations. |
 | #10 Adaptive difficulty | `src/data/challenges/`, [ChallengeShell](../src/components/challenge/ChallengeShell.jsx). | Fixed challenge levels and transient misses/combos exist; no persisted accuracy/response time or adaptive controller. |
-| #11 Safeguards/consent | [Signup flow rules](../src/data/signupFlow.js), [account rules](../shared/accountTypes.js), [signup API](../server/routes/signup.js). | Entered-age gate exists; no grown-up consent verification/record or completed qualified review is recorded. |
+| #11 Safeguards/consent | [Signup flow rules](../src/data/signupFlow.js), [account rules](../shared/accountTypes.js), [signup API](../server/routes/signup.js). | Entered-age gate exists; no grown-up consent verification/record or completed qualified review is recorded. Reviewer brief and privacy groundwork done 2026-10-10 (see "Privacy groundwork for #11"). |
 | #12 Phonics/rhyming | [Skills routes](../src/main.jsx), English banks, [speech utility](../src/utils/speech.js). | No standalone sound-it-out, rhyming-match or syllable-splitter pack or dedicated phoneme audio. Syllables in suffix questions are different content. |
 | #13 Story games | [SettingsCharactersAndPlotGame](../src/pages/skills/english/challenges/year3/SettingsCharactersAndPlotGame.jsx), [stories.json](../src/data/stories.json), [Skills routes](../src/main.jsx). | Curriculum plot-sentence ordering and guided story planning exist; free-choice generation and standalone picture sequencing do not. |
 | #14 Offline/PWA | [Dependencies](../package.json), [entry HTML](../index.html), `public/`, store drivers. | No web-app manifest/service-worker registration/PWA plugin or offline API write/conflict flow. The Science asset manifest is unrelated. |

@@ -354,8 +354,84 @@ function ChildRewards({ child, rewards, onChangeAvatar }) {
   );
 }
 
+/**
+ * Deletes the whole account. Two deliberate steps — open, then type the
+ * password — because a child can be holding the device and nothing comes back.
+ */
+function DeleteAccount({ isLearner, onDelete }) {
+  const [open, setOpen] = useState(false);
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  if (!open) {
+    return (
+      <button type="button" className="parent-area-danger-btn" onClick={() => setOpen(true)}>
+        Delete account
+      </button>
+    );
+  }
+
+  const submit = async (event) => {
+    event.preventDefault();
+    if (busy || !password) return;
+    setBusy(true);
+    setError("");
+    try {
+      await onDelete(password);
+    } catch (err) {
+      setError(
+        err?.message === "WRONG_PASSWORD"
+          ? "That password isn’t right. Nothing has been deleted."
+          : err?.message === "TOO_MANY_ATTEMPTS"
+            ? "Too many tries. Wait a few minutes, then try again."
+            : "We couldn’t delete the account. Check your connection and try again."
+      );
+      setBusy(false);
+    }
+  };
+
+  return (
+    <form className="parent-area-delete" onSubmit={submit}>
+      <p className="parent-area-confirm-text">
+        {isLearner
+          ? "This deletes your account, your profile and all your progress, badges and stickers."
+          : "This deletes your account, every child profile on it, and all their progress, badges and stickers."}{" "}
+        <strong>It cannot be undone.</strong>
+      </p>
+      <label className="parent-area-name">
+        <span>Type your password to confirm</span>
+        <input
+          type="password"
+          autoComplete="current-password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+        />
+      </label>
+      {error && <p className="parent-area-name-error" role="alert">{error}</p>}
+      <span className="parent-area-confirm-actions">
+        <button type="submit" className="parent-area-danger-btn" disabled={busy || !password}>
+          {busy ? "Deleting…" : "Delete everything"}
+        </button>
+        <button
+          type="button"
+          className="parent-area-secondary-btn"
+          disabled={busy}
+          onClick={() => {
+            setOpen(false);
+            setPassword("");
+            setError("");
+          }}
+        >
+          Keep my account
+        </button>
+      </span>
+    </form>
+  );
+}
+
 function ParentArea() {
-  const { parent, children, status, isLearner, signOut, removeChild, updateChild } =
+  const { parent, children, status, isLearner, signOut, removeChild, updateChild, deleteAccount } =
     useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -571,6 +647,16 @@ function ParentArea() {
           >
             {signingOut ? "Signing out…" : "Sign out"}
           </button>
+          <DeleteAccount
+            isLearner={isLearner}
+            onDelete={async (password) => {
+              await deleteAccount(password);
+              navigate("/", { replace: true });
+            }}
+          />
+          <p className="parent-area-note">
+            <Link to="/privacy">How we look after your information</Link>
+          </p>
         </section>
       </main>
     </div>

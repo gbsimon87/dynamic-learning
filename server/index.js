@@ -5,6 +5,7 @@
  */
 import * as db from "./db.js";
 import { createApp } from "./app.js";
+import { errorSummary } from "./logError.js";
 
 const PORT = Number(process.env.PORT) || 3001;
 
@@ -30,7 +31,7 @@ try {
 try {
   await db.ensureIndexes();
 } catch (err) {
-  console.error("FATAL: could not create MongoDB indexes:", err.message);
+  console.error("FATAL: could not create MongoDB indexes:", errorSummary(err), "(run npm run audit:accounts for details)");
   process.exit(1);
 }
 
