@@ -23,6 +23,7 @@ cover.
 
 | File | Covers |
 |---|---|
+| [year-1-maths.md](year-1-maths.md) | Key Stage 1, Year 1, with the key stage 1 introduction |
 | [year-2-maths.md](year-2-maths.md) | Key Stage 1, Year 2, with the dataset mapping |
 | [year-3-maths.md](year-3-maths.md) | Lower Key Stage 2, Year 3, with the dataset mapping |
 | [year-4-maths.md](year-4-maths.md) | Year 4 |
