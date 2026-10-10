@@ -1,6 +1,8 @@
 import PracticalActivityCard from "../../components/challenge/PracticalActivityCard";
 import { completedScienceActivity } from "../../data/scienceActivities.js";
 import { useCallback, useEffect, useRef, useState } from "react";
+import CoachMark from "../../components/coach/CoachMark";
+import { TIPS } from "../../data/intro";
 import { Link, Navigate, useParams } from "react-router";
 import {
   getSubjectName,
@@ -406,6 +408,11 @@ function CurriculumPage() {
           </p>
         )}
       </section>
+
+      <CoachMark id={TIPS.map}>
+        This is your quest map! Tap “Keep going” or a glowing stop to play.
+        Finish a topic to win its sticker.
+      </CoachMark>
 
       {/* ===== QUEST MAP ===== */}
       <QuestRail stops={stops}>

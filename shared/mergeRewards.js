@@ -9,6 +9,9 @@ const maximum = (a, b) => Math.max(Number(a) || 0, Number(b) || 0);
  * backfills use the maximum, so the same old learning is never paid twice.
  * A news clear removes only items seen by that client, keeping new arrivals.
  * Streak state follows the latest played day, retaining best/recent history.
+ * The intro, once done anywhere, stays done; shown coach marks only accumulate.
+ * Puzzle days union; the total never regresses (simultaneous different days
+ * on two devices can undercount by one, like milestone counts).
  */
 export function mergeRewards(currentData, incomingData, baseData = null) {
   const current = normaliseRewards(currentData);
@@ -42,5 +45,13 @@ export function mergeRewards(currentData, incomingData, baseData = null) {
     practice: { ...practice, count: current.practice.day === incoming.practice.day
       ? maximum(current.practice.count, incoming.practice.count) : practice.count },
     recentStickers: union(current.recentStickers, incoming.recentStickers).slice(-5),
+    intro: current.intro.done || incoming.intro.done
+      ? { ...current.intro, ...incoming.intro, done: true,
+        doneAt: [current.intro.doneAt, incoming.intro.doneAt].filter(Boolean).sort()[0] ?? null }
+      : { ...current.intro, ...incoming.intro },
+    tips: union(current.tips, incoming.tips),
+    puzzles: { ...current.puzzles, ...incoming.puzzles,
+      days: union(current.puzzles.days, incoming.puzzles.days).sort().slice(-60),
+      total: maximum(current.puzzles.total, incoming.puzzles.total) },
   };
 }

@@ -13,6 +13,8 @@ import { useRewards } from "../../hooks/useRewards";
 import { grownUpXp } from "../../data/xp";
 import { streakStatus, localDay } from "../../data/streak";
 import { stickerKey } from "../../data/news";
+import { TIPS } from "../../data/intro";
+import CoachMark from "../../components/coach/CoachMark";
 import "./TrophyRoom.css";
 
 function earnedOn(rewards, badgeId) {
@@ -238,6 +240,13 @@ function TrophyCabinet({ viewed, grownUp = false }) {
         <p role="status" className="trophy-loading">Opening the trophy cabinet…</p>
       ) : (
         <>
+          {!grownUp && (
+            <CoachMark id={TIPS.trophies}>
+              Your stickers and badges live here! Finish a topic to add a new
+              sticker to your book.
+            </CoachMark>
+          )}
+
           <ul className="trophy-summary" aria-label="Collection so far">
             <li><strong>{held}</strong> of {BADGES.length} badges</li>
             <li><strong>{stickers.earned}</strong> of {stickers.total} stickers</li>

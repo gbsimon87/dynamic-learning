@@ -17,7 +17,7 @@
 > file reflects it. Also update [PROJECT_IDEAS.md](PROJECT_IDEAS.md) when an idea
 > moves between statuses.
 
-**Last reviewed:** 2026-10-09
+**Last reviewed:** 2026-10-10
 
 ---
 
@@ -123,9 +123,11 @@ src/
 │   ├── mascot/Mascot.jsx     # Bix — homepage, combo line, Trophy Room
 │   ├── celebration/          # Completion sequence, steps/ (incl. LevelUpStep, StreakStep), fx/ (particles), sound/ (cues + mute)
 │   ├── rewards/              # LevelBar, WeekDots: shared XP bar and Mon–Sun streak dots
+│   ├── coach/CoachMark.jsx   # First-visit tips from Bix, shown once per child (§5, "First play")
+│   ├── brainBreak/           # BrainBreak (mounted in RootLayout) + breakSetting.js, the device interval (§5)
 │   ├── challenge/            # The shared challenge kit: maths + the English kit (LetterInput, TileBuilder,
 │   │                         #   WordPicker, ReadingPassage, SortBins, SpeakButton, HintNote; english-kit.css; hints.js)
-│   ├── ui/Navbar.jsx
+│   ├── ui/Navbar.jsx, ui/useModalDialog.js   # useModalDialog: the one modal behaviour (§7)
 │   ├── ClockPanel.jsx, ReadingNumbersPanel.jsx, DualLabelClock.jsx,
 │   ├── MapGame.jsx, MultiplicationGrid.jsx, ShapeQuiz.jsx
 ├── data/
@@ -137,7 +139,10 @@ src/
 │   │                            #   our Y3/Y4 split), cast.js, passages*.js, textChecks.js (British spelling)
 │   ├── avatars.js               # Starter profile emoji + colour tokens
 │   ├── badges.js                # Badge catalogue + earnBadges (§5)
-│   ├── rewardsShape.js          # normaliseRewards: the v2 rewards shape, migrated on read (§5)
+│   ├── rewardsShape.js          # normaliseRewards: the v3 rewards shape, migrated on read (§5)
+│   ├── intro.js                 # Bix's intro: who sees it, finishIntro, coach-mark tips (§5, "First play")
+│   ├── dailyPuzzle.js           # Seeded puzzle per day + one-star-a-day reward (§5, "First play")
+│   ├── brainBreaks.js           # Break activities, interval setting, which routes count (§5, "First play")
 │   ├── xp.js, streak.js         # XP, levels, back-fill · streak, freezes, week dots (pure, §5)
 │   ├── news.js                  # "Something new": addNews / clearNews / hasNews (§5)
 │   ├── awardRun.js              # Everything one finished challenge changes, in one pure step (§5)
@@ -168,7 +173,9 @@ scripts/                      # Dev tooling, Node-only
 │   ├── toKebabCase.js        # Generates the IDs used in URLs + storage keys
 │   └── speech.js             # One British speech-synthesis voice (Solar System + English kit)
 ├── pages/
-│   ├── home/Home.jsx, HomeAchievements.jsx   # HomeAchievements: something-new, streak/level and collection cards
+│   ├── home/Home.jsx, HomeAchievements.jsx   # HomeAchievements: something-new, streak/level, collection and daily-puzzle cards
+│   ├── intro/                # BixIntro (`/hello`, lazy) + StarBasket (drag / tap / keys lesson)
+│   ├── puzzle/DailyPuzzle.jsx   # `/daily-puzzle`, lazy, ungated
 │   ├── auth/                 # Login, signup/ (SignUpFlow), Profiles, ParentArea
 │   ├── skills/
 │   │   ├── SkillsPage.jsx    # Skills hub — links to every skill game
@@ -1375,7 +1382,8 @@ stance.** Streaks, XP, levels and "something new" shipped on 2026-09-30.
 The day stamps streaks were waiting for live in the **rewards document**, not
 progress, which is untouched.
 
-**The v2 rewards shape** (`data`; `rewardsShape.js`, `REWARDS_SCHEMA_VERSION = 2`).
+**The rewards shape** (`data`; `rewardsShape.js`, `REWARDS_SCHEMA_VERSION = 3`
+since 2026-10-10; the v3 fields are below the table).
 The stored envelope's own `schemaVersion` stays 1; the shape version is
 `data.schemaVersion`.
 
@@ -1389,11 +1397,16 @@ The stored envelope's own `schemaVersion` stays 1; the shape version is
 | `news` | `{ badges: [ids], stickers: ["year/subject/topicId"] }`, earned but not yet looked at |
 | `recentStickers` | `"year/subject/topicId"`, newest last, at most 5 |
 | `practice` | `{ day, count }`: replays that earned XP on `day`; resets on a new day |
+| `intro` (v3) | `{ done, doneAt }`: Bix's first-play intro finished or skipped, per child |
+| `tips` (v3) | Ids of first-visit coach marks already shown (`"map"`, `"trophies"`) |
+| `puzzles` (v3) | `{ days, total }`: Daily Bix puzzle days solved (last 60) and stars ever won |
 
 **Migration happens on read and loses nothing.** `normaliseRewards` fills
 missing fields with defaults, never removes or rewrites an existing one
-(unknown fields survive) and never throws. A v1 document reads as v2 in memory
-and is written as v2 only on its next real save. `earnBadges` no longer sets
+(unknown fields survive) and never throws. A v1 or v2 document reads as v3 in
+memory and is written as v3 only on its next real save. `shared/mergeRewards.js`
+merges the v3 fields conservatively: a done intro stays done (earliest
+`doneAt`), tips and puzzle days union, the puzzle total never regresses. `earnBadges` no longer sets
 `schemaVersion`; `normaliseRewards` owns it.
 
 **Phase 0 rule: a failed read is never followed by a write.** Only a rewards
@@ -1515,6 +1528,61 @@ picture picker — `ProfileBuilder` only ever creates) and, since 2026-09-29, th
 "Make it my picture" button on the celebration's unlock step, for the child who
 just won it. Both call `updateChild`. Locked pictures are still shown,
 padlocked: a reward nobody knows about motivates nobody.
+
+### First play: Bix's intro, coach marks, daily puzzle & brain breaks (2026-10-10)
+
+Four features from three backlog ideas (#35 with its coach marks, #34, #30), all in the **rewards
+document or on the device** — progress is untouched.
+
+**Bix's intro (`/hello`, `src/pages/intro/BixIntro.jsx`).** A six-step playable
+hello: greeting by name, tap Bix, put the star in the basket (`StarBasket`:
+drag, tap-then-tap, or arrow keys + Enter), the controls a challenge really has
+(read-aloud is named as English and Science only, until Maths gets it under #8),
+a can't-get-it-wrong favourite pick that awards the **Met Bix** badge, then on
+to the page the child was heading for. Skip is on every step. Every line is on
+screen and is also spoken when sound is on.
+- **Who is sent there:** `RequireChild` redirects to `/hello` only when
+  `introEligible` holds — no XP, no badges, no streak day, nothing waiting to be
+  back-filled, intro not done — and only for grown-up accounts' children, never
+  learner accounts. It waits for the rewards read; a failed read lets the child
+  through rather than blocking the curriculum.
+- **The flag** is `intro.done` in the rewards document (never progress).
+  Skipping sets it with no badge; finishing a replay later still awards the
+  badge once. A grown-up replays it from `/parent` → "Play Bix's hello game
+  with …", which selects that child first so the badge is theirs.
+- **Met Bix** has `level: "intro"`, which no completion milestone produces, so
+  `earnBadges` can never award it; only `intro.finishIntro` does.
+
+**Coach marks (`components/coach/CoachMark.jsx`).** One-time tips on the quest
+map (`CurriculumPage`) and the child's own Trophy Room. A tip is recorded in
+`tips` the moment it appears and stays until "Got it" or the child moves on.
+Nothing shows before a good rewards read.
+
+**Daily Bix puzzle (`/daily-puzzle`, `data/dailyPuzzle.js`).** One puzzle per
+local day from a generator seeded by the date, so every device agrees without a
+backend. Four kinds rotate by day (what comes next, odd one out, riddle, missing
+number); tests check two years of dates for exactly one correct option, distinct
+options and no negatives, and that odd-one-out never mixes overlapping groups.
+Ungated; a signed-in child earns **one puzzle star per day** (fixed, never
+random), stored in `puzzles`. There is deliberately no puzzle streak. Linked from
+a card in `HomeAchievements`.
+
+**Brain breaks (`components/brainBreak/`, `data/brainBreaks.js`).** Mounted once
+in `RootLayout`. Counts **active play** in 5-second ticks — tab visible and a tap
+or key press in the last minute — on play routes only (`countsTowardsBreak`
+excludes `/parent`, sign-in, sign-up, `/profiles`, `/privacy`, `/credits`,
+`/hello`). At the interval a small card offers "Let's move!" or "Not now"; it
+never covers the question. The break is a modal (shared `useModalDialog`) with
+one of ten activities, "Another one!", "I did it!" and "Back to playing";
+Escape leaves. Both "Not now" and finishing restart the count. The interval
+(10/15/20/30 min or off, default 15) is a **device** setting in
+`localStorage` `dl.brainBreak`, set in `/parent` → Brain breaks, beside Sound.
+
+**A profile switch can't borrow the previous child's rewards.**
+`RewardsProvider` now records which child its state was read for and reports
+`loading` (not `ready`) for the one render after a switch, before its load
+effect resets. Without it the intro redirect could judge a new child by the old
+child's document. Covered in `tests/components/rewards.test.jsx`.
 
 ### Topic stickers & the Trophy Room (2026-09-29)
 
@@ -2001,12 +2069,12 @@ not by itself deliver a standalone game or its proposed reward flow.
 | #27 Real-world missions | [Science activities](../src/data/scienceActivities.js), [PracticalActivityCard](../src/components/challenge/PracticalActivityCard.jsx), [topic map](../src/pages/curriculum/CurriculumPage.jsx). | Sixteen optional activity cards already exist and are read-only; no mission tick-off, grown-up confirmation or mission sticker; coverage is limited to Science. |
 | #28 Teach the grown-up | [Routes](../src/main.jsx), challenge generators, signup [HandOver](../src/pages/auth/signup/HandOver.jsx). | Signup hands over a profile; no child-authored parent quiz or child marking flow. |
 | #29 Pass-and-play | [Skills routes](../src/main.jsx), standalone games, [Profiles](../src/pages/auth/Profiles.jsx). | Profile switching exists; no alternating two-player session, separate scores or cooperative play. |
-| #30 Brain breaks | [RootLayout](../src/layouts/RootLayout.jsx), [ParentArea](../src/pages/auth/ParentArea.jsx), mascot/reward modules. | No active-session break scheduler, movement prompt or grown-up interval setting. |
+| #30 Brain breaks | [RootLayout](../src/layouts/RootLayout.jsx), [ParentArea](../src/pages/auth/ParentArea.jsx), mascot/reward modules. | No active-session break scheduler, movement prompt or grown-up interval setting. **Shipped 2026-10-10:** §5, "First play"; row removed from the backlog. |
 | #31 Notebook/passport | [TrophyRoom](../src/pages/trophies/TrophyRoom.jsx), [stickers](../src/data/stickers.js), geography games. | Topic stickers exist; no specimen notebook/fact cards or country/planet exploration stamp persistence. |
 | #32 Seasonal events | Reward/generator modules and [routes](../src/main.jsx). | No dated event-pack configuration, seasonal puzzle flow or event sticker awards. Ordinary story references to autumn/pumpkins are not events. |
 | #33 Curriculum story | [CurriculumPage](../src/pages/curriculum/CurriculumPage.jsx), [CurriculumSelectPage](../src/pages/curriculum/CurriculumSelectPage.jsx). | Topic path and adventure copy exist; no year narrative, between-category scenes or walking-avatar world map. |
-| #34 Daily puzzle | [Home](../src/pages/home/Home.jsx), reward/date modules, [routes](../src/main.jsx). | Streak day stamps exist; no date-seeded daily question, daily puzzle view or fixed puzzle reward. |
-| #35 Child intro | Signup [HandOver](../src/pages/auth/signup/HandOver.jsx), [child fields](../src/data/childFields.js), [reward shape](../src/data/rewardsShape.js), [badges](../src/data/badges.js). | No playable profile intro, per-child intro flag/replay or coach marks. The existing `first-steps` badge rewards a curriculum challenge, not an intro. |
+| #34 Daily puzzle | [Home](../src/pages/home/Home.jsx), reward/date modules, [routes](../src/main.jsx). | Streak day stamps exist; no date-seeded daily question, daily puzzle view or fixed puzzle reward. **Shipped 2026-10-10:** §5, "First play"; row removed from the backlog. |
+| #35 Child intro | Signup [HandOver](../src/pages/auth/signup/HandOver.jsx), [child fields](../src/data/childFields.js), [reward shape](../src/data/rewardsShape.js), [badges](../src/data/badges.js). | No playable profile intro, per-child intro flag/replay or coach marks. The existing `first-steps` badge rewards a curriculum challenge, not an intro. **Shipped 2026-10-10:** §5, "First play"; row removed from the backlog. |
 | #36 PostHog | [Analytics wrapper](../src/utils/analytics.js), [wrapper tests](../src/utils/analytics.test.js), [SignUpFlow](../src/pages/auth/signup/SignUpFlow.jsx), [dependencies](../package.json). | Allow-lists/funnel calls exist; no PostHog SDK/transport or consent gate. Hosted project settings/DPA were not verified. |
 | #37 Signup findings | [Email validation](../shared/emailAddress.js), [signup route](../server/routes/signup.js), [send limits](../server/signupEmailLimits.js), [steps](../src/pages/auth/signup/steps.jsx), [mailer](../server/email.js), [route tests](../server/routes.test.js). | C1/I1/I2/I3/M1/M2/M5 fixed, plus M3/M4. Database-backed suites pass after fixture repairs. Interactive browser checks remain open. |
 | #38 Interactive review | [English tracker](english-curriculum/IMPLEMENTATION_TRACKER.md), [Science tracker](science-curriculum/y3-science-tracker.md). | Broad playthrough/owner and real-device checks remain pending; implemented wrappers and passing pure tests do not close them. |
@@ -2051,10 +2119,11 @@ Component tests now use Vitest/jsdom/React Testing Library under
 
 ### Modal / overlay pattern
 
-`src/pages/skills/english/ReaderOverlay.jsx` is the app's first modal. It remains
-local to Speed Reader and accepts only `children`, `onClose`, and `label`. When a
-second game needs a modal, move and generalise this implementation under
-`src/components/ui/` instead of creating a second focus/scroll-lock pattern.
+The modal behaviour — focus in, Tab trapped, Escape closes, page scroll locked,
+focus returned on close — lives in `src/components/ui/useModalDialog.js`
+(2026-10-10). Speed Reader's `ReaderOverlay.jsx` and the brain-break dialog both
+use it. A new modal uses the hook and supplies only its own markup and CSS;
+never write a second focus/scroll-lock implementation.
 
 ### Add a new Skill game
 1. Create `src/pages/skills/<subject>/<GameName>.jsx` + `<GameName>.css`.

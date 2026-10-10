@@ -29,6 +29,17 @@ import { normaliseRewards } from "./rewardsShape.js";
  */
 export const BADGES = [
   {
+    // Not a milestone: awarded only by intro.finishIntro when a child plays
+    // Bix's hello game to the end. No completion ever earns level "intro".
+    id: "met-bix",
+    level: "intro",
+    once: true,
+    icon: "👋",
+    name: "Met Bix",
+    blurb: "You played Bix's hello game!",
+    hint: "Play Bix's hello game",
+  },
+  {
     id: "first-steps",
     level: "challenge",
     once: true,

@@ -1,0 +1,400 @@
+/* Bix's first-play intro (/hello). Scoped under .bix-intro; colours are
+   theme tokens with a body.dark pair, never literals (PROJECT_KNOWLEDGE §9). */
+.bix-intro {
+  --bi-bg: var(--light-bg);
+  --bi-panel: var(--light-panel);
+  --bi-text: var(--light-text);
+  --bi-accent: var(--light-accent);
+  --bi-on-accent: var(--on-light-accent);
+  --bi-soft: #f0e6e8;
+  --bi-border: #e6dcde;
+  --bi-shadow: var(--panel-shadow);
+
+  min-height: calc(100dvh - var(--navbar-height));
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--bi-bg);
+  color: var(--bi-text);
+}
+
+body.dark .bix-intro {
+  --bi-bg: var(--dark-bg);
+  --bi-panel: var(--dark-panel);
+  --bi-text: var(--dark-text);
+  --bi-accent: var(--dark-accent);
+  --bi-on-accent: var(--on-dark-accent);
+  --bi-soft: #3a3437;
+  --bi-border: #443b3f;
+}
+
+.bix-intro-loading {
+  font-size: 1.2rem;
+}
+
+/* Portrait / phone: one column, Bix on top, buttons at the bottom of the card
+   where a thumb reaches them. */
+.bix-intro-card {
+  width: min(100%, 960px);
+  box-sizing: border-box;
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-radius: 24px;
+  background: var(--bi-panel);
+  box-shadow: 0 10px 30px var(--bi-shadow);
+}
+
+.bix-intro-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.bix-intro-mascot-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+/* Bix's features are pixel-sized, so he is scaled with zoom (as Mascot.css does). */
+.bix-intro .bix-intro-mascot {
+  zoom: 0.7;
+}
+
+.bix-intro .bix-intro-mascot.is-tappable {
+  outline: 4px dashed var(--bi-accent);
+  outline-offset: 12px;
+  border-radius: 50%;
+}
+
+.bix-intro-bubble {
+  margin: 0;
+  max-width: 34rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: 1.1rem;
+  background: var(--bi-soft);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.bix-intro-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.bix-intro-heading {
+  margin: 0;
+  font-size: 1.6rem;
+  text-align: center;
+}
+
+.bix-intro-heading:focus {
+  outline: none;
+}
+
+.bix-intro-hint {
+  margin: 0;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.bix-intro-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.6rem;
+}
+
+.bix-intro-primary {
+  min-height: 64px;
+  padding: 0.8rem 1.4rem;
+  border: none;
+  border-radius: 16px;
+  background: var(--bi-accent);
+  color: var(--bi-on-accent);
+  font: inherit;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.bix-intro-skip,
+.bix-intro-repeat {
+  min-height: 48px;
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--bi-border);
+  border-radius: 14px;
+  background: transparent;
+  color: var(--bi-text);
+  font: inherit;
+  font-size: 1.05rem;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.bix-intro-repeat {
+  align-self: center;
+}
+
+.bix-intro-primary:focus-visible,
+.bix-intro-skip:focus-visible,
+.bix-intro-repeat:focus-visible,
+.bix-intro-choice:focus-visible,
+.bix-intro-demo:focus-visible,
+.star-basket-star:focus-visible,
+.star-basket-basket:focus-visible {
+  outline: 4px solid var(--bi-text);
+  outline-offset: 3px;
+}
+
+/* The controls lesson */
+.bix-intro-controls {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bix-intro-controls li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.1rem;
+}
+
+.bix-intro-demo {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border: 2px solid var(--bi-border);
+  border-radius: 999px;
+  background: var(--bi-soft);
+  color: var(--bi-text);
+  font: inherit;
+  font-weight: 700;
+  box-sizing: border-box;
+}
+
+button.bix-intro-demo {
+  cursor: pointer;
+}
+
+/* The warm-up: every answer is right */
+.bix-intro-choices {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.bix-intro-choice {
+  min-height: 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  border: 3px solid var(--bi-border);
+  border-radius: 18px;
+  background: var(--bi-soft);
+  color: var(--bi-text);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.bix-intro-choice span {
+  font-size: 2.2rem;
+}
+
+.bix-intro-choice.is-picked {
+  border-color: var(--bi-accent);
+}
+
+.bix-intro-choice:disabled:not(.is-picked) {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.bix-intro-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem 1rem;
+  border-radius: 18px;
+  border: 3px solid var(--bi-accent);
+  font-size: 1.1rem;
+  animation: bix-intro-pop 420ms cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+
+.bix-intro-badge-icon {
+  font-size: 2.6rem;
+}
+
+.bix-intro-badge-blurb {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.bix-intro-dots {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bix-intro-dots li {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--bi-border);
+}
+
+.bix-intro-dots li.is-done {
+  background: var(--bi-accent);
+}
+
+/* The star and the basket */
+.star-basket {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.star-basket-track {
+  position: relative;
+  height: 96px;
+  border-radius: 48px;
+  background: var(--bi-soft);
+  touch-action: none;
+}
+
+.star-basket-star,
+.star-basket-basket {
+  position: absolute;
+  top: 50%;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  font-size: 2.6rem;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.star-basket-star {
+  transform: translate(-50%, -50%);
+  border: 3px solid var(--bi-accent);
+  background: var(--bi-panel);
+  transition: left 200ms ease;
+  z-index: 1;
+}
+
+.star-basket-star.is-dragging {
+  transition: none;
+  cursor: grabbing;
+}
+
+.star-basket-star.is-picked {
+  box-shadow: 0 0 0 6px var(--bi-accent);
+}
+
+.star-basket-basket {
+  right: 8px;
+  transform: translateY(-50%);
+  border: 3px dashed var(--bi-border);
+  background: transparent;
+  color: inherit;
+}
+
+.star-basket-basket.is-ready {
+  border-color: var(--bi-accent);
+}
+
+.star-basket-basket:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.star-basket-basket.is-full::after {
+  content: "⭐";
+  position: absolute;
+  top: -6px;
+  font-size: 1.6rem;
+}
+
+.star-basket-help {
+  margin: 0;
+  text-align: center;
+  font-size: 1.05rem;
+}
+
+/* The keyboard path is shown where a keyboard is likely. */
+.star-basket-keys {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .star-basket-keys {
+    display: inline;
+  }
+}
+
+/* Wide screens: Bix beside the card */
+@media (min-width: 760px) {
+  .bix-intro-card {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    align-items: center;
+    padding: 2rem;
+  }
+
+  .bix-intro-heading {
+    text-align: left;
+  }
+
+  .bix-intro-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .bix-intro-primary {
+    flex: 1 1 auto;
+  }
+}
+
+@keyframes bix-intro-pop {
+  from { transform: scale(0.6); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bix-intro-badge {
+    animation: none;
+  }
+
+  .star-basket-star {
+    transition: none;
+  }
+}

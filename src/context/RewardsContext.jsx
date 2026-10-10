@@ -7,9 +7,12 @@ import { normaliseRewards } from "../data/rewardsShape";
 import { awardRun } from "../data/awardRun";
 import { XP, backfillXp, displayXp } from "../data/xp";
 import { clearNews as clearNewsFrom, hasNews } from "../data/news";
+import { finishIntro as finishIntroIn, markTip as markTipIn } from "../data/intro";
+import { recordPuzzle } from "../data/dailyPuzzle";
 import { loadResumeCandidates } from "../data/resumeCandidates";
 import { isChallengeImplemented } from "../data/challengeAvailability";
 
+const EMPTY = normaliseRewards(null);
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
 /**
@@ -17,8 +20,11 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
  * (challenge page, navbar, home, Trophy Room), so the "something new" dot
  * moves the instant a sticker is won.
  *
- * Writes at exactly two moments: `award` (a challenge finished) and
- * `clearNews` (the child opened their own Trophy Room). Guards, as in
+ * Writes at four moments: `award` (a challenge finished), `clearNews` (the
+ * child opened their own Trophy Room), `finishIntro` (Bix's hello game was
+ * finished or skipped), `markTip` (a first-visit coach mark was shown) and
+ * `solvePuzzle` (the day's Daily Bix puzzle was solved: one star per day).
+ * The last three only ever write after a good read. Guards, as in
  * useProgress:
  *   - `loadedKeyRef`: never write one child's rewards into another's document
  *   - a FAILED read stays `failed`, never `ready`, so it can never be followed
@@ -53,6 +59,7 @@ export function RewardsProvider({ children }) {
     status: "idle",
     rewards: latestRef.current,
     pendingBackfill: null,
+    forChild: null,
   });
 
   const send = useCallback((forChild, doc) => {
@@ -94,7 +101,7 @@ export function RewardsProvider({ children }) {
     sendingRef.current.failed = false;
     statusRef.current = childId ? "loading" : "idle";
     backfillRef.current = null;
-    setState({ status: statusRef.current, rewards: latestRef.current, pendingBackfill: null });
+    setState({ status: statusRef.current, rewards: latestRef.current, pendingBackfill: null, forChild: childId });
     if (!childId) return () => {
       cancelled = true;
     };
@@ -143,7 +150,7 @@ export function RewardsProvider({ children }) {
       latestRef.current = rewards;
       backfillRef.current = rewards.xpBackfilled ? null : backfill;
       statusRef.current = "ready";
-      setState({ status: "ready", rewards, pendingBackfill: backfillRef.current });
+      setState({ status: "ready", rewards, pendingBackfill: backfillRef.current, forChild: childId });
       if (mine.length > 0) save(childId, rewards);
     })();
 
@@ -228,19 +235,59 @@ export function RewardsProvider({ children }) {
     save(childId, clearNewsFrom(latestRef.current));
   }, [childId, save]);
 
+  /** Bix's intro finished (`completed`) or skipped. Returns the badges won, or null before a good read. */
+  const finishIntro = useCallback(
+    ({ completed = false } = {}) => {
+      if (statusRef.current !== "ready" || loadedKeyRef.current !== childId) return null;
+      const result = finishIntroIn(latestRef.current, { at: new Date().toISOString(), completed });
+      if (result.rewards !== latestRef.current) save(childId, result.rewards);
+      return result.awarded;
+    },
+    [childId, save]
+  );
+
+  const markTip = useCallback(
+    (id) => {
+      if (statusRef.current !== "ready" || loadedKeyRef.current !== childId) return;
+      const next = markTipIn(latestRef.current, id);
+      if (next !== latestRef.current) save(childId, next);
+    },
+    [childId, save]
+  );
+
+  /** Today's puzzle solved. True when a NEW star was stored, false otherwise. */
+  const solvePuzzle = useCallback(
+    (day) => {
+      if (statusRef.current !== "ready" || loadedKeyRef.current !== childId) return false;
+      const next = recordPuzzle(latestRef.current, day);
+      if (next === latestRef.current) return false;
+      save(childId, next);
+      return true;
+    },
+    [childId, save]
+  );
+
+  // For the one render after a profile switch, before the load effect resets
+  // state, `state` still holds the previous child's rewards. Report "loading"
+  // then, so nothing (the intro redirect, a coach mark) judges the new child
+  // by the old child's document.
+  const current = state.forChild === childId;
   const value = useMemo(
     () => ({
-      rewards: state.rewards,
-      status: state.status,
-      hydrated: state.status === "ready",
-      pendingBackfill: state.pendingBackfill,
-      xp: displayXp(state.rewards, state.pendingBackfill),
+      rewards: current ? state.rewards : EMPTY,
+      status: current ? state.status : "loading",
+      hydrated: current && state.status === "ready",
+      pendingBackfill: current ? state.pendingBackfill : null,
+      xp: current ? displayXp(state.rewards, state.pendingBackfill) : 0,
       award,
       clearNews,
+      finishIntro,
+      markTip,
+      solvePuzzle,
       retry: refresh,
       refresh,
     }),
-    [state, award, clearNews, refresh]
+    [state, current, award, clearNews, finishIntro, markTip, solvePuzzle, refresh]
   );
 
   return <RewardsContext.Provider value={value}>{children}</RewardsContext.Provider>;

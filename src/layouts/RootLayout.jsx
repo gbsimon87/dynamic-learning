@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router';
 import Navbar from '../components/ui/Navbar';
+import BrainBreak from '../components/brainBreak/BrainBreak';
 
 function RootLayout() {
   return (
@@ -8,6 +9,7 @@ function RootLayout() {
       <main>
         <Outlet />
       </main>
+      <BrainBreak />
     </>
   );
 }

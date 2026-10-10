@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { REWARDS_SCHEMA_VERSION } from "./rewardsShape.js";
 import { awardRun } from "./awardRun.js";
 import { normaliseRewards } from "./rewardsShape.js";
 
@@ -8,7 +9,7 @@ const V1 = { schemaVersion: 1, badges: [{ id: "first-steps", level: "challenge" 
 
 test("a first completion adds XP, starts a streak and stores v2 without losing v1 data", () => {
   const r = awardRun(V1, { ...base, earned: ["challenge"], firstTime: true, today: "2026-09-30", pendingBackfill: 30 });
-  assert.equal(r.rewards.schemaVersion, 2);
+  assert.equal(r.rewards.schemaVersion, REWARDS_SCHEMA_VERSION);
   assert.equal(JSON.stringify(r.rewards.badges), JSON.stringify(V1.badges));
   assert.equal(r.rewards.counts.challenge, 4);
   assert.equal(r.xpGained, 10);

@@ -49,3 +49,13 @@ test("unknown fields inside practice survive", () => {
   const out = normaliseRewards({ practice: { day: "2026-01-02", count: 2, future: "kept" } });
   assert.deepEqual(out.practice, { day: "2026-01-02", count: 2, future: "kept" });
 });
+
+test("v3: intro and tips default, keep unknown keys and drop junk", () => {
+  const out = normaliseRewards(V1);
+  assert.deepEqual(out.intro, { done: false, doneAt: null });
+  assert.deepEqual(out.tips, []);
+  const kept = normaliseRewards({ intro: { done: true, doneAt: "2026-10-10T09:00:00.000Z", extra: 1 }, tips: ["map", 4, null] });
+  assert.deepEqual(kept.intro, { done: true, doneAt: "2026-10-10T09:00:00.000Z", extra: 1 });
+  assert.deepEqual(kept.tips, ["map"]);
+  assert.equal(normaliseRewards({ intro: { done: "yes", doneAt: "soon" } }).intro.done, false);
+});

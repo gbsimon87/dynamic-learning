@@ -5,7 +5,8 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  // Agent worktrees are whole checkouts of their own; lint them from inside.
+  globalIgnores(['dist', '.claude/worktrees']),
   {
     files: ['**/*.{js,jsx}'],
     ignores: ['server/**', 'scripts/**'],

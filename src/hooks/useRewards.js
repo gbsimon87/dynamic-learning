@@ -10,6 +10,9 @@ const INERT = {
   xp: 0,
   award: () => null,
   clearNews: () => {},
+  finishIntro: () => null,
+  markTip: () => {},
+  solvePuzzle: () => false,
   retry: () => {},
   refresh: () => {},
 };

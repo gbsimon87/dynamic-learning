@@ -1,0 +1,173 @@
+/* The Daily Bix puzzle. Scoped under .daily-puzzle; theme tokens with a body.dark pair. */
+.daily-puzzle {
+  --dp-bg: var(--light-bg);
+  --dp-panel: var(--light-panel);
+  --dp-text: var(--light-text);
+  --dp-accent: var(--light-accent);
+  --dp-on-accent: var(--on-light-accent);
+  --dp-soft: #f0e6e8;
+  --dp-border: #e6dcde;
+  --dp-muted: #5c5157;
+
+  min-height: calc(100dvh - var(--navbar-height));
+  box-sizing: border-box;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1rem;
+  color: var(--dp-text);
+}
+
+body.dark .daily-puzzle {
+  --dp-bg: var(--dark-bg);
+  --dp-panel: var(--dark-panel);
+  --dp-text: var(--dark-text);
+  --dp-accent: var(--dark-accent);
+  --dp-on-accent: var(--on-dark-accent);
+  --dp-soft: #3a3437;
+  --dp-border: #443b3f;
+  --dp-muted: #bdb0b4;
+}
+
+.daily-puzzle-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.daily-puzzle .daily-puzzle-bix {
+  zoom: 0.45;
+  flex: none;
+}
+
+.daily-puzzle-eyebrow {
+  margin: 0;
+  color: var(--dp-muted);
+  font-size: 1rem;
+}
+
+.daily-puzzle-title {
+  margin: 0.2rem 0 0;
+  font-size: 1.8rem;
+}
+
+.daily-puzzle-card {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-radius: 22px;
+  background: var(--dp-panel);
+  box-shadow: 0 8px 24px var(--panel-shadow);
+}
+
+.daily-puzzle-question-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.daily-puzzle-question {
+  flex: 1;
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.daily-puzzle-show {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.daily-puzzle-item {
+  min-width: 56px;
+  min-height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.6rem;
+  border-radius: 14px;
+  background: var(--dp-soft);
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.daily-puzzle-item.is-blank {
+  border: 3px dashed var(--dp-accent);
+  background: transparent;
+}
+
+.daily-puzzle-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.6rem;
+}
+
+.daily-puzzle-option {
+  min-height: 72px;
+  padding: 0.6rem;
+  border: 3px solid var(--dp-border);
+  border-radius: 18px;
+  background: var(--dp-soft);
+  color: var(--dp-text);
+  font: inherit;
+  font-size: 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.daily-puzzle-option:focus-visible {
+  outline: 4px solid var(--dp-text);
+  outline-offset: 3px;
+}
+
+.daily-puzzle-option.is-struck {
+  text-decoration: line-through;
+  opacity: 0.55;
+  cursor: default;
+}
+
+.daily-puzzle-option.is-answer {
+  border-color: var(--dp-accent);
+  background: var(--dp-accent);
+  color: var(--dp-on-accent);
+}
+
+.daily-puzzle-option:disabled:not(.is-answer):not(.is-struck) {
+  cursor: default;
+}
+
+.daily-puzzle-feedback {
+  min-height: 1.5em;
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.daily-puzzle-reward {
+  padding: 0.8rem 1rem;
+  border: 3px solid var(--dp-accent);
+  border-radius: 18px;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.daily-puzzle-reward p {
+  margin: 0.3rem 0;
+}
+
+.daily-puzzle-reward a {
+  color: var(--dp-text);
+  font-weight: 700;
+}
+
+.daily-puzzle-tomorrow,
+.daily-puzzle-note {
+  color: var(--dp-muted);
+  font-size: 1rem;
+  text-align: center;
+}

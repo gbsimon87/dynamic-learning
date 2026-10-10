@@ -6,6 +6,7 @@ import { localDay, streakStatus, weekDots } from "../../data/streak";
 import { hasNews } from "../../data/news";
 import { BADGES, heldBadgeIds } from "../../data/badges";
 import { countAllStickers, findSticker } from "../../data/stickers";
+import { solvedOn } from "../../data/dailyPuzzle";
 import LevelBar from "../../components/rewards/LevelBar";
 import WeekDots from "../../components/rewards/WeekDots";
 import "./HomeAchievements.css";
@@ -78,6 +79,17 @@ export default function HomeAchievements({ candidates = [] }) {
               Latest: {latestSticker.name}
             </p>
           )}
+        </Link>
+
+        <Link className="home-ach-card home-ach-puzzle" to="/daily-puzzle">
+          <p className="home-ach-eyebrow">Bix’s daily puzzle</p>
+          <p className="home-ach-big">
+            <span aria-hidden="true">🧩 </span>
+            {solvedOn(rewards, today) ? "Solved today!" : "Today’s puzzle is ready"}
+          </p>
+          <p className="home-ach-note">
+            <span aria-hidden="true">⭐</span> {plural(rewards.puzzles.total, "puzzle star", "puzzle stars")}
+          </p>
         </Link>
       </div>
     </section>

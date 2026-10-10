@@ -8,8 +8,11 @@
  *
  * v1 (2026-09-19): badges, counts.
  * v2 (2026-09-30): + xp, xpBackfilled, streak, news, recentStickers, practice.
+ * v3 (2026-10-10): + intro (Bix's first-play intro, done once per child),
+ *                  tips (first-visit coach marks already shown),
+ *                  puzzles (Daily Bix puzzle: days solved, last 60, and total).
  */
-export const REWARDS_SCHEMA_VERSION = 2;
+export const REWARDS_SCHEMA_VERSION = 3;
 
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -27,12 +30,17 @@ function day(value) {
   return typeof value === "string" && DAY.test(value) ? value : null;
 }
 const isDay = (value) => day(value) !== null;
+function iso(value) {
+  return typeof value === "string" && !Number.isNaN(Date.parse(value)) ? value : null;
+}
 
 export function normaliseRewards(data) {
   const source = obj(data);
   const streak = obj(source.streak);
   const news = obj(source.news);
   const practice = obj(source.practice);
+  const intro = obj(source.intro);
+  const puzzles = obj(source.puzzles);
 
   return {
     ...source,
@@ -53,5 +61,8 @@ export function normaliseRewards(data) {
     news: { ...news, badges: list(news.badges), stickers: list(news.stickers) },
     recentStickers: list(source.recentStickers),
     practice: { ...practice, day: day(practice.day), count: int(practice.count) },
+    intro: { ...intro, done: intro.done === true, doneAt: iso(intro.doneAt) },
+    tips: list(source.tips).filter((id) => typeof id === "string"),
+    puzzles: { ...puzzles, days: list(puzzles.days).filter(isDay), total: int(puzzles.total) },
   };
 }

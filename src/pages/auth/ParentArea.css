@@ -630,4 +630,14 @@ body.dark .parent-area-page {
   text-decoration: underline;
 }
 
+.parent-area-page .parent-area-intro-replay {
+  display: flex;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .parent-area-page .parent-area-stats { font-size: 0.95rem; color: var(--pa-muted); margin: 0.2rem 0 0.6rem; }

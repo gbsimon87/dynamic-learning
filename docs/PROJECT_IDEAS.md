@@ -61,6 +61,11 @@ Item-by-item source evidence: [backlog audit in PROJECT_KNOWLEDGE.md](PROJECT_KN
   PROJECT_KNOWLEDGE on 2026-10-09. The sending-domain prerequisite is closed;
   sign-up fixes and their interactive checks are done (2026-10-10). The app was renamed
   **Learn with Bix** on 2026-10-10.
+- **First-play kit shipped 2026-10-10:** Bix's playable intro (`/hello`) with
+  first-visit coach marks, the Daily Bix puzzle and brain breaks. Rewards are
+  now **v3** (`intro`, `tips`, `puzzles`); see PROJECT_KNOWLEDGE §5, "First
+  play". New per-child flags belong in the rewards document the same way; a
+  new modal uses `src/components/ui/useModalDialog.js`.
 - Ideas should serve the **registered curricula (Years 2–4)** and both account
   types where relevant, while keeping the core experience suitable for 6–8 year olds.
 
@@ -122,12 +127,9 @@ below reflects current risks and dependencies; it does not commit ideas to work.
 | 27 | **Real-world missions: confirmation & rewards** | Optional grown-up activities already appear after completed Year 3 Science topics, from `scienceActivities.js` through `PracticalActivityCard.jsx`. Remaining: child tick-off, a grown-up's "We did it!" confirmation and a mission sticker, plus activity cards for the other topics/subjects. Reuse the existing read-only cards and eligibility checks; define mission awards separately from curriculum completions. | 🟡 Partial |
 | 28 | **Teach the grown-up** | The child picks a topic they've finished and **sets a quiz for a parent** (choosing from generated questions, or making up the numbers), then hands over the device and marks the grown-up's answers — with Bix cheering the child on as the teacher. Explaining things to someone else is one of the strongest ways to learn, and catching a grown-up out is hugely motivating at this age. | ⚪ Idea |
 | 29 | **Pass-and-play for two** | Siblings, or a child and a grown-up, take turns on one device: same question style, each with their own avatar and score, and a "pass the tablet" screen between turns. Co-operative mode as well as head-to-head, so a younger sibling isn't always losing. Skills Mode only, so curriculum progress isn't affected. | ⚪ Idea |
-| 30 | **Brain breaks** | After about 15 minutes, Bix suggests a 60-second movement break: "Jump like a kangaroo 5 times!", "Stretch as tall as a giraffe!", with a fun animation to copy. Optional and skippable. It also gives grown-ups a gentle cue about session length, which helps families trust the app. A grown-up setting can change the interval or turn it off. | ⚪ Idea |
 | 31 | **Science field notebook & geography passport** | Collecting is a big draw at this age. **Science:** finishing a topic adds an illustrated specimen card to a notebook — the posed skeletons, rocks, fossils and flowers already drawn for Year 3 Science — each with one tap-to-hear fact. **Geography:** Flag Finder and the Solar System stamp a passport for each country or planet explored. Reuses existing art; mostly a collection view plus unlock rules. | ⚪ Idea |
 | 32 | **Seasonal events** | Short, time-limited packs reskinning existing generators: Halloween counting with pumpkins and bats (October), an Advent calendar of daily puzzles (December), Easter-egg hunting with position and direction. Nothing is lost when an event ends — its stickers stay in the Trophy Room. A reason to come back that isn't a streak. Needs an event config with dates and theme assets. | ⚪ Idea |
 | 33 | **Story adventure across the curriculum** | Give each year a light storyline: "Bix's rocket is broken — finish topics to find the parts." Short animated scenes (a few frames plus speech) play between categories, and the topic map becomes a **world map** the child's avatar walks along. Turns a list of topics into a journey with a goal. Ties into the Solar System scene for the finale. Big on art and writing, small on logic; needs the read-aloud work in #8. | ⚪ Idea |
-| 34 | **Daily Bix puzzle** | One special puzzle a day — a logic riddle, a "what comes next", an odd one out — answerable in under two minutes, with a small fixed reward (no random prizes). Something new each day without the pressure of a streak. A seeded generator per date means no backend work is needed to choose the puzzle. | ⚪ Idea |
-| 35 | **First-play intro with Bix** | The child-facing half of the question-led sign-up (shipped 2026-10-07; the hand-over ends where this starts): the first time a **child** opens their profile, nothing welcomes them. Add a **90-second playable intro**, the same on phone and desktop, where every step is something to do rather than read. (1) Bix pops up and says hello **using their name**, read aloud with a caption. (2) "Tap me!" teaches tapping; Bix giggles. (3) "Drag the star into my basket" teaches dragging, with a tap alternative, with a working keyboard path (arrow keys plus Enter) shown on desktop. (4) Teach controls actually present in the chosen challenge: back and, where available, read-aloud. Hints currently appear after two misses rather than through a hint button; Maths read-aloud depends on #8. (5) One warm-up question they can't get wrong, with the full celebration and a **"First Steps" sticker**. (6) Bix walks them to their first topic. A **Skip** button is always visible; a grown-up can replay the intro from `/parent`. Layout: one column and thumb-reachable buttons in portrait, side by side on wide screens, 64 px targets, honours reduced motion. The "has done the intro" flag is **per child** and belongs in the rewards document or a whitelisted child field (`childFields.js`) — **never** the progress document. Follow-on: **first-visit coach marks** on the topic map and the Trophy Room ("Your stickers live here!"), each shown once. | ⚪ Idea |
 | 36 | **Wire privacy-hardened analytics (PostHog)** | The sign-up funnel already calls `track()` in `src/utils/analytics.js`, with event/property allow-lists and tests; it sends nothing. Remaining: install and wire PostHog through that wrapper, consent gating and deployment configuration for an audience of children: **EU Cloud** (Frankfurt) and a signed **DPA**; **IP capture off** at project level; **autocapture off** (explicit events only); **session replay off**; `person_profiles: 'identified_only'` and never `identify()` with an email or a child's name — use a random app-generated id, which is still pseudonymous personal data, not "zero-PII". Track **grown-ups' and learners' actions, not children's**, unless a grown-up has opted in; capture starts opted out on child profiles. Tie the consent wording to #11. | 🟡 Partial |
 | 38 | **Finish English & Science interactive review** | Implementation and automated checks exist, but broad interactive and owner review remains open in the [English tracker](english-curriculum/IMPLEMENTATION_TRACKER.md) and [Science tracker](science-curriculum/y3-science-tracker.md). Use disposable profiles to check wrong answers/hints, keyboard/touch controls, guided enquiries/reset, full completions, celebrations, saved progress/reload/replay, child switching, phone layouts, both themes and real-device speech. Initial React renders are not playthrough evidence. | 🟡 Partial |
 | 41 | **Skills Mode celebrations** | Reuse the shared answer effects, gentle retry feedback, combos, sounds and Bix reactions in existing standalone games. Define suitable game events rather than assuming the curriculum’s four-challenge completion contract. Keep Skills Mode ungated; decide any persistent rewards separately before extending XP/streak rules. Honour mute, reduced motion, keyboard/touch use and both themes. | ⚪ Idea |
@@ -147,9 +149,10 @@ Step 1 can run alongside the others: #11 is mostly outside review, not code.
    owner review), with #7 (accessibility) fixed in the same interactions rather
    than as a separate pass. Run #17's physical-device benchmark whenever a
    phone/tablet is to hand; it needs no more code.
-3. **Make the first visit welcoming:** #8 (Maths read-aloud) **before** #35
-   (playable child intro), whose Bix greeting and controls step rely on it.
-   Quick wins alongside: #23 (Bix's jokes) and #22 (topic certificates, reprint).
+3. **Finish the welcome:** #8 (Maths read-aloud). The shipped intro's controls
+   step names read-aloud as English and Science only; widen its wording when
+   Maths gets it. Quick wins alongside: #23 (Bix's jokes) and #22 (topic
+   certificates, reprint).
 4. **Reduce the cost of expansion:** #6 (authoring format) first, because it
    makes #16 (Year 1–2 English) and #15 (Geography) much cheaper. Then #5
    (free-play wrappers) with #41 (Skills celebrations) so new games launch with
@@ -160,12 +163,12 @@ Step 1 can run alongside the others: #11 is mostly outside review, not code.
    (analytics) follows the same consent decision.
 6. **Delight backlog, by dependency:**
    - **Reuses what exists (cheapest):** #31 (notebook/passport from existing
-     art), #27 (mission tick-off), #34 (daily puzzle, no backend), #26 (boss
-     rounds; needs a mixed-question picker).
+     art), #27 (mission tick-off), #26 (boss rounds; needs a mixed-question
+     picker).
    - **Chains:** #24 (wardrobe) → #25 (Bix's den); #8 → #12 (phonics) and #33
      (story adventure).
    - **Standalone:** #13 (stories), #28 (teach the grown-up), #29
-     (pass-and-play), #30 (brain breaks), #19 (3D constellations).
+     (pass-and-play), #19 (3D constellations).
    - **Date-bound:** #32 (seasonal events) — plan a pack a term ahead of its
      season; this year's October slot has passed.
    - **Needs a design decision first:** #14 (offline/PWA) — agree the offline

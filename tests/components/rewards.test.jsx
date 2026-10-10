@@ -46,3 +46,22 @@ it("read failure blocks writes; retry drains the queued run against saved reward
   expect(result.current.xp).toBe(50);
   expect(fake.saveRewards.mock.calls[0][0]).toBe("failed-reward-child");
 });
+it("right after a profile switch, the old child's rewards are never reported as the new child's", async () => {
+  let child = "first-switch-child";
+  fake.getRewards.mockImplementation((id) => id === "first-switch-child"
+    ? Promise.resolve({ data: { xp: 70, xpBackfilled: true } })
+    : new Promise(() => {}));
+  const renders = [];
+  const Wrapper = ({ children }) => <AuthContext.Provider value={{ child: { _id: child } }}><RewardsProvider>{children}</RewardsProvider></AuthContext.Provider>;
+  const { rerender } = renderHook(() => {
+    const value = useContext(RewardsContext);
+    renders.push({ child, hydrated: value.hydrated, xp: value.rewards.xp });
+    return value;
+  }, { wrapper: Wrapper });
+  await waitFor(() => expect(renders.at(-1).hydrated).toBe(true));
+  child = "second-switch-child";
+  rerender();
+  const after = renders.filter((r) => r.child === "second-switch-child");
+  expect(after.length).toBeGreaterThan(0);
+  expect(after.some((r) => r.hydrated || r.xp === 70)).toBe(false);
+});

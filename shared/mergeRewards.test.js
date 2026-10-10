@@ -40,3 +40,20 @@ test("legacy/backfill conflict is conservative; scores/counts/history never regr
   assert.equal(merged.streak.current, 5);
   assert.deepEqual(merged.streak.recent, ["2026-10-08", "2026-10-09"]);
 });
+
+test("a finished intro and shown coach marks survive a stale snapshot", () => {
+  const current = { intro: { done: true, doneAt: "2026-10-10T09:00:00.000Z" }, tips: ["map"] };
+  const stale = { intro: { done: false }, tips: ["trophies"] };
+  const merged = mergeRewards(current, stale, {});
+  assert.deepEqual(merged.intro, { done: true, doneAt: "2026-10-10T09:00:00.000Z" });
+  assert.deepEqual(merged.tips.sort(), ["map", "trophies"]);
+  const both = mergeRewards({ intro: { done: true, doneAt: "2026-10-11T09:00:00.000Z" } },
+    { intro: { done: true, doneAt: "2026-10-10T09:00:00.000Z" } });
+  assert.equal(both.intro.doneAt, "2026-10-10T09:00:00.000Z");
+});
+
+test("puzzle days union and the total never regresses", () => {
+  const merged = mergeRewards({ puzzles: { days: ["2026-10-09"], total: 4 } }, { puzzles: { days: ["2026-10-10"], total: 3 } });
+  assert.deepEqual(merged.puzzles.days, ["2026-10-09", "2026-10-10"]);
+  assert.equal(merged.puzzles.total, 4);
+});

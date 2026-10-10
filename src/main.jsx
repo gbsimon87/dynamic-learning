@@ -99,6 +99,9 @@ const router = createBrowserRouter([
           // Trophy Room: badges + topic stickers. Gated like the curriculum,
           // since it shows a specific child's progress.
           { path: "trophies", element: <TrophyRoom /> },
+
+          // Bix's first-play intro (once per child; replayable from /parent)
+          { path: "hello", lazy: () => import("./pages/intro/BixIntro").then((m) => ({ Component: m.default })) },
         ],
       },
 
@@ -126,6 +129,9 @@ const router = createBrowserRouter([
       { path: "flag-finder", element: <FlagFinder /> },
       { path: "city-spotlight", element: <CitySpotlight /> },
       { path: "solar-system", element: <SolarSystem /> },
+
+      // === Daily Bix puzzle: ungated; a signed-in child collects one star a day ===
+      { path: "daily-puzzle", lazy: () => import("./pages/puzzle/DailyPuzzle").then((m) => ({ Component: m.default })) },
 
       // === Third-party notices for the Science artwork (lazy: holds full licence texts) ===
       { path: "credits", lazy: () => import("./pages/credits/Credits").then((m) => ({ Component: m.default })) },

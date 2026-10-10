@@ -1,0 +1,66 @@
+/* A first-visit tip. Theme tokens with a body.dark pair; large tap target. */
+.coach-mark {
+  --cm-panel: var(--light-panel);
+  --cm-text: var(--light-text);
+  --cm-accent: var(--light-accent);
+  --cm-on-accent: var(--on-light-accent);
+
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 40rem;
+  margin: 0.75rem auto;
+  padding: 0.75rem 1rem;
+  border: 3px solid var(--cm-accent);
+  border-radius: 18px;
+  background: var(--cm-panel);
+  color: var(--cm-text);
+  box-shadow: 0 6px 18px var(--panel-shadow);
+  box-sizing: border-box;
+  animation: coach-mark-in 320ms ease-out both;
+}
+
+body.dark .coach-mark {
+  --cm-panel: var(--dark-panel);
+  --cm-text: var(--dark-text);
+  --cm-accent: var(--dark-accent);
+  --cm-on-accent: var(--on-dark-accent);
+}
+
+.coach-mark-bix {
+  font-size: 1.8rem;
+}
+
+.coach-mark-text {
+  flex: 1;
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.coach-mark-close {
+  min-height: 48px;
+  min-width: 48px;
+  padding: 0.4rem 1rem;
+  border: none;
+  border-radius: 14px;
+  background: var(--cm-accent);
+  color: var(--cm-on-accent);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.coach-mark-close:focus-visible {
+  outline: 4px solid var(--cm-text);
+  outline-offset: 3px;
+}
+
+@keyframes coach-mark-in {
+  from { transform: translateY(-8px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coach-mark { animation: none; }
+}

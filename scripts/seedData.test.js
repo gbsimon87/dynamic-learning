@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { REWARDS_SCHEMA_VERSION } from "../src/data/rewardsShape.js";
 
 import { SEED_CHILDREN, SEED_PARENT, buildProgress, buildRewards, withSeedStreak } from "./seedData.js";
 import { year2MathCurriculum } from "../src/data/year2MathCurriculum.js";
@@ -126,10 +127,10 @@ test("no badge is ever awarded twice across years", () => {
   assert.equal(new Set(ids).size, ids.length);
 });
 
-test("seeded rewards are v2 with XP matching the completions", () => {
+test("seeded rewards are the current version with XP matching the completions", () => {
   const isBuilt = () => true;
   const rewards = buildRewards([{ curriculum: year2MathCurriculum, isBuilt, count: 7, year: 2, subject: "math" }]);
-  assert.equal(rewards.schemaVersion, 2);
+  assert.equal(rewards.schemaVersion, REWARDS_SCHEMA_VERSION);
   assert.equal(rewards.xp, 70);
   assert.equal(rewards.xpBackfilled, true);
 });

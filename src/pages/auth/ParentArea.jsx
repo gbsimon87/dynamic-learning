@@ -16,6 +16,8 @@ import { useTrophyData } from "../../hooks/useTrophyData";
 import { streakStatus, localDay } from "../../data/streak";
 import { isYearAvailable } from "../../data/curriculumRegistry";
 import FloatingGlyphBackground from "../../components/FloatingGlyphBackground";
+import { BREAK_CHOICES } from "../../data/brainBreaks";
+import { useBreakMinutes } from "../../components/brainBreak/breakSetting";
 import "./ParentArea.css";
 
 /**
@@ -272,7 +274,7 @@ function NameEditor({ child, onChange }) {
  *
  * Read-only for badges: a grown-up can see what was earned, never grant it.
  */
-function ChildRewards({ child, rewards, onChangeAvatar }) {
+function ChildRewards({ child, rewards, onChangeAvatar, onReplayIntro, isLearner }) {
   const [saving, setSaving] = useState(false);
   const r = normaliseRewards(rewards);
   // Read-only back-fill for a child who has not played since XP began. Its
@@ -327,6 +329,12 @@ function ChildRewards({ child, rewards, onChangeAvatar }) {
       <Link className="parent-area-trophies-link" to={`/parent/trophies/${child._id}`}>
         See {child.name}’s Trophy Room <span aria-hidden="true">🏆 →</span>
       </Link>
+
+      {/* Bix's hello game, played together. Switches to this child, so it is
+          their badge and their intro flag. */}
+      <button type="button" className="parent-area-trophies-link parent-area-intro-replay" onClick={() => onReplayIntro(child._id)}>
+        {isLearner ? "Play Bix’s hello game" : `Play Bix’s hello game with ${child.name}`} <span aria-hidden="true">👋 →</span>
+      </button>
 
       <p className="parent-area-rewards-title" id={`avatar-${child._id}`}>
         Picture
@@ -430,8 +438,43 @@ function DeleteAccount({ isLearner, onDelete }) {
   );
 }
 
+/**
+ * Brain breaks: how often Bix suggests a movement break, or off. A DEVICE
+ * setting like the mute switch (brainBreak/breakSetting.js), so it applies to
+ * whoever plays on this device and is never learner data.
+ */
+function BrainBreakSetting({ isLearner }) {
+  const [minutes, setMinutes] = useBreakMinutes();
+  const options = [...BREAK_CHOICES.map((value) => ({ value, label: `${value} min` })), { value: null, label: "Off" }];
+
+  return (
+    <section className="parent-area-section" aria-labelledby="parent-area-breaks">
+      <h2 className="parent-area-section-title" id="parent-area-breaks">Brain breaks</h2>
+      <p className="parent-area-note">
+        After a stretch of play, Bix suggests a one-minute movement break, like
+        hopping like a frog. {isLearner ? "You" : "Children"} can always say
+        “Not now”. Only active play counts: time on this page, or away from the
+        screen, does not. This setting is for this device.
+      </p>
+      <div className="parent-area-year-row" role="group" aria-labelledby="parent-area-breaks">
+        {options.map((option) => (
+          <button
+            key={option.label}
+            type="button"
+            className={`parent-area-year-btn ${minutes === option.value ? "selected" : ""}`}
+            aria-pressed={minutes === option.value}
+            onClick={() => setMinutes(option.value)}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function ParentArea() {
-  const { parent, children, status, isLearner, signOut, removeChild, updateChild, deleteAccount } =
+  const { parent, children, status, isLearner, signOut, removeChild, updateChild, deleteAccount, selectChild } =
     useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -456,6 +499,15 @@ function ParentArea() {
   // reload. Progress cannot change from this screen, so it needs no bump.
   const [rewardsBump, setRewardsBump] = useState(0);
   const { rewards } = useChildrenRewards(children, rewardsBump);
+
+  const replayIntro = async (childId) => {
+    try {
+      await selectChild(childId);
+      navigate("/hello");
+    } catch {
+      // The profile could not be selected; stay here.
+    }
+  };
 
   const editChild = async (childId, patch) => {
     const out = await updateChild(childId, patch);
@@ -598,6 +650,8 @@ function ParentArea() {
                       child={kid}
                       rewards={rewards[kid._id]}
                       onChangeAvatar={editChild}
+                      onReplayIntro={replayIntro}
+                      isLearner={isLearner}
                     />
                   )}
 
@@ -635,6 +689,8 @@ function ParentArea() {
             it off, then check the volume.
           </p>
         </section>
+
+        <BrainBreakSetting isLearner={isLearner} />
 
         <section className="parent-area-section">
           <h2 className="parent-area-section-title">Account</h2>
