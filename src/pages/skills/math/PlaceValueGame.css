@@ -1,0 +1,24 @@
+/* Place Value Blocks: the big-digit card for "what is the 4 worth?". The
+   blocks themselves are styled by challenge-kit.css. */
+.place-value-digits {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0.4rem auto 1.6rem;
+  font-size: clamp(2.6rem, 10vw, 3.4rem);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.place-value-digit {
+  min-width: 1.4em;
+  padding: 0.1em 0.2em;
+  border: 3px solid transparent;
+  border-radius: 14px;
+  background: var(--ck-muted);
+}
+
+/* The accent as a border, never as text colour (PROJECT_KNOWLEDGE §9). */
+.place-value-digit.is-asked {
+  border-color: var(--ck-accent);
+}

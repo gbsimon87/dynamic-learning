@@ -1,0 +1,198 @@
+/* ===========================================================
+   FREE-PLAY KIT (Skills Mode games on the challenge kit)
+   Every rule is scoped under .free-play-* (CSS is global here).
+   Colours come from the kit's --ck-* tokens, which are the
+   App.css --light-* / --dark-* pairs, so both themes work.
+=========================================================== */
+
+.free-play-page {
+  padding: 1.5rem 1.25rem 3rem;
+  text-align: center;
+  color: var(--light-text);
+}
+
+body.dark .free-play-page {
+  color: var(--dark-text);
+}
+
+.free-play-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 760px;
+  margin: 0 auto 1.25rem;
+}
+
+.free-play-back {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 48px;
+  padding: 0 0.9rem;
+  border-radius: 999px;
+  font-weight: 700;
+  color: inherit;
+  text-decoration: none;
+}
+
+.free-play-back:hover {
+  background: var(--ck-muted);
+}
+
+.free-play-back:focus-visible {
+  outline: 3px solid var(--ck-accent);
+  outline-offset: 2px;
+}
+
+.free-play-title {
+  font-size: clamp(1.6rem, 5vw, 2.1rem);
+  line-height: 1.2;
+}
+
+.free-play-intro {
+  max-width: 36rem;
+  font-size: 1.05rem;
+  line-height: 1.45;
+  opacity: 0.85;
+}
+
+/* --- level picker + stars --- */
+.free-play-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.9rem;
+  margin-bottom: 1.4rem;
+}
+
+.free-play-levels {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--ck-muted);
+}
+
+.free-play-levels .free-play-level {
+  min-height: 48px;
+  min-width: 48px;
+  margin-top: 0;
+  padding: 0 1rem;
+  border: none;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ck-text);
+  background: transparent;
+  cursor: pointer;
+}
+
+.free-play-levels .free-play-level:hover:not(.is-active) {
+  background: var(--ck-border);
+}
+
+/* The accent is a fill, with the matching on-accent ink (PROJECT_KNOWLEDGE §9). */
+.free-play-levels .free-play-level.is-active {
+  color: var(--ck-on-accent);
+  background: var(--ck-accent);
+}
+
+.free-play-levels .free-play-level:focus-visible {
+  outline: 3px solid var(--ck-text);
+  outline-offset: 2px;
+}
+
+.free-play-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.free-play-pip {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ck-muted);
+  box-shadow: inset 0 0 0 2px var(--ck-border);
+  transition: background-color 250ms ease, transform 250ms ease;
+}
+
+.free-play-pip.is-filled {
+  background: var(--ck-accent);
+  box-shadow: none;
+  animation: free-play-pip-pop 380ms cubic-bezier(.2, 1.6, .5, 1);
+}
+
+@keyframes free-play-pip-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.45); }
+  100% { transform: scale(1); }
+}
+
+.free-play-star-count {
+  margin-left: 0.35rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- prompt --- */
+.free-play-prompt-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1.2rem;
+}
+
+.free-play-prompt-row .free-play-prompt {
+  margin-bottom: 0;
+  font-size: clamp(1.2rem, 3.6vw, 1.45rem);
+  font-weight: 700;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+.free-play-prompt:focus {
+  outline: none;
+}
+
+.free-play-prompt:focus-visible {
+  outline: 3px solid var(--ck-accent);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+.free-play-stage {
+  min-width: 0;
+}
+
+/* The check button sits clear of whatever kit widget is above it. */
+.free-play-stage .submit-btn {
+  margin-top: 0.4rem;
+}
+
+/* --- milestone: the combo's look, a size up --- */
+.free-play-feedback.free-play-milestone {
+  font-size: 1.3rem;
+}
+
+.free-play-feedback.free-play-milestone .challenge-feedback-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.5rem;
+}
+
+@media (max-width: 520px) {
+  .free-play-page { padding: 1rem 1rem 2rem; }
+  .free-play-toolbar { justify-content: center; }
+  .free-play-levels .free-play-level { padding: 0 0.8rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .free-play-pip { transition: none; }
+  .free-play-pip.is-filled { animation: none; }
+}

@@ -125,6 +125,7 @@ src/
 │   ├── celebration/          # Completion sequence, steps/ (incl. LevelUpStep, StreakStep), fx/ (particles), sound/ (cues + mute)
 │   ├── rewards/              # LevelBar, WeekDots: shared XP bar and Mon–Sun streak dots
 │   ├── certificate/          # Certificate (+ print sheet), CertificateDialog, BixSignature (§5, "Certificates")
+│   ├── skills/               # FreePlayShell (endless Skills games), useAnswerFeedback, AnswerFeedbackLine (§5)
 │   ├── coach/CoachMark.jsx   # First-visit tips from Bix, shown once per child (§5, "First play")
 │   ├── brainBreak/           # BrainBreak (mounted in RootLayout) + breakSetting.js, the device interval (§5)
 │   ├── challenge/            # The shared challenge kit: maths + the English kit (LetterInput, TileBuilder,
@@ -144,6 +145,7 @@ src/
 │   ├── avatars.js               # Starter profile emoji + colour tokens
 │   ├── badges.js                # Badge catalogue + earnBadges (§5)
 │   ├── rewardsShape.js          # normaliseRewards: the v3 rewards shape, migrated on read (§5)
+│   ├── freePlay/                # Pure generators for the free-play games: money, measure, robot, charts, placeValue (§5)
 │   ├── certificates.js, certificateSkills.js   # Which certificates a child holds (derived) + "I can…" lines (§5)
 │   ├── bixJokes.js              # Bix's joke pool + nextJoke (never repeats until all told) (§5)
 │   ├── mathSpeech.js            # On-screen maths → spoken words ("6 × 5 = ?" → "6 times 5 equals what?") (§5)
@@ -1684,6 +1686,27 @@ renders them inside `ChallengeShell` with the shared kit.
   answers, the unfair cases) and `tests/components/dataChallenge.test.jsx`
   (each interactive kind answered through the real kit).
 
+### Free-play Skills games on the challenge kit (#5, 2026-10-10)
+
+Five ungated Skills Mode games reuse the curriculum kit: **Money Match**
+(`/money`, CoinTray), **Measure It** (`/measure`, ScaleReader / MeasureDrag),
+**Robot Moves** (`/robot-moves`, RobotGrid / PositionBoard), **Chart
+Detective** (`/charts`, tally / pictogram / bar) and **Place Value Blocks**
+(`/place-value`). Registered in `main.jsx` and `SkillsPage.jsx` as usual.
+- `components/skills/FreePlayShell.jsx` is the loop: endless questions from a
+  pure `makeQuestion(rng, level)`, Easier / Medium / Harder (a level change
+  starts a fresh game), the same question never twice running, a submission
+  gate against double taps, focus moved to the new prompt, and a 🔊 button.
+  No onComplete, no progress, nothing stored.
+- `useAnswerFeedback` + `AnswerFeedbackLine` bring the curriculum's
+  per-answer celebration to Skills Mode: a rotating line, sparkle and sound for
+  right, 🔥 combo every three right first time, a 🌟 milestone every five, a
+  kind retry line and wobble for a miss. Mute and reduced motion are honoured
+  where they live. Exported separately so the older games can adopt it (#41).
+- Generators in `data/freePlay/` are pure and tested (unique chart values so
+  most/least never tie, bounded retries, UK coins only); the shell in
+  `tests/components/freePlay.test.jsx`.
+
 ### Topic stickers & the Trophy Room (2026-09-29)
 
 **Stickers are derived, never stored.** `stickers.js` marks a topic's sticker
@@ -2145,7 +2168,7 @@ not by itself deliver a standalone game or its proposed reward flow.
 | #2 Component tests | [package.json](../package.json), [API tests](../src/data/store/apiStore.test.js); Node tests cover progress/rewards responses. | No Vitest/Testing Library/component environment; hydration, wizard and other API coverage remain. |
 | #3 Password recovery | [Routes](../src/main.jsx), [auth API](../server/routes/auth.js), [mailer](../server/email.js). | No recovery screens, reset endpoint or token lifecycle; mailer sends signup codes only. |
 | #4 Progress migration | [Local store](../src/data/store/localStorageStore.js), [API store](../src/data/store/apiStore.js), [progress route](../server/routes/progress.js). | Version 1 is stored but no progress migration/ID-remapping hook reads it; rewards normalisation is separate. |
-| #5 Free-play kit wrappers | [Skills routes](../src/main.jsx), [Skills hub](../src/pages/skills/SkillsPage.jsx), `src/components/challenge/`. | Money, measurement, position/direction, statistics and place-value kit interactions have no standalone Skills wrappers. |
+| #5 Free-play kit wrappers | [Skills routes](../src/main.jsx), [Skills hub](../src/pages/skills/SkillsPage.jsx), `src/components/challenge/`. | Money, measurement, position/direction, statistics and place-value kit interactions have no standalone Skills wrappers. **Shipped 2026-10-10:** §5, "Free-play Skills games"; row removed. |
 | #6 Content format | [EnglishPracticeGame](../src/pages/skills/english/challenges/EnglishPracticeGame.jsx), `src/data/challenges/`. | Choice/sort/build/type rendering and separate JS banks exist; other interactions still need topic-specific JSX rather than data-only authoring. **Format and renderer shipped 2026-10-10:** §5, "Questions as data". |
 | #7 Accessibility pass | [TileBuilder](../src/components/challenge/TileBuilder.jsx), [SortBins](../src/components/challenge/SortBins.jsx), [DragToOrder](../src/components/challenge/DragToOrder.jsx) and review trackers. | Native-button and drag-library keyboard support exist; no completed whole-app interaction/contrast audit is recorded. |
 | #8 Read-aloud | [Speech utility](../src/utils/speech.js), [SpeakButton](../src/components/challenge/SpeakButton.jsx), English/Science games, [Solar System](../src/pages/skills/geography/SolarSystem.jsx). | Maths and other standalone games still lack shared narration; physical-device speech review remains. **Maths shipped 2026-10-10:** §5, "Maths read-aloud". |

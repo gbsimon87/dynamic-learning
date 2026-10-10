@@ -40,6 +40,11 @@ const GROUPS = [
       { to: "/missing-number", icon: "❓", label: "Missing Number" },
       { to: "/number-bonds", icon: "🔗", label: "Number Bonds" },
       { to: "/fraction-fun", icon: "🍕", label: "Fraction Fun" },
+      { to: "/money", icon: "🪙", label: "Money Match" },
+      { to: "/measure", icon: "📏", label: "Measure It" },
+      { to: "/robot-moves", icon: "🤖", label: "Robot Moves" },
+      { to: "/charts", icon: "📊", label: "Chart Detective" },
+      { to: "/place-value", icon: "🧱", label: "Place Value Blocks" },
     ],
   },
   {

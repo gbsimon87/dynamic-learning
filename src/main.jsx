@@ -16,6 +16,11 @@ import MathPractice from "./pages/skills/math/MathPractice";
 import FindTheMissingNumber from "./pages/skills/math/FindTheMissingNumber";
 import NumberBonds from "./pages/skills/math/NumberBonds";
 import FractionFun from "./pages/skills/math/FractionFun";
+import MoneyMatch from "./pages/skills/math/MoneyMatch";
+import MeasureIt from "./pages/skills/math/MeasureIt";
+import RobotMoves from "./pages/skills/math/RobotMoves";
+import ChartDetective from "./pages/skills/math/ChartDetective";
+import PlaceValueGame from "./pages/skills/math/PlaceValueGame";
 import ShapeExplorer from "./pages/skills/math/ShapeExplorer";
 
 // === SKILLS: English ===
@@ -113,6 +118,12 @@ const router = createBrowserRouter([
       { path: "missing-number", element: <FindTheMissingNumber /> },
       { path: "number-bonds", element: <NumberBonds /> },
       { path: "fraction-fun", element: <FractionFun /> },
+      // Free-play games on the challenge kit (components/skills/FreePlayShell).
+      { path: "money", element: <MoneyMatch /> },
+      { path: "measure", element: <MeasureIt /> },
+      { path: "robot-moves", element: <RobotMoves /> },
+      { path: "charts", element: <ChartDetective /> },
+      { path: "place-value", element: <PlaceValueGame /> },
       { path: "shapes", element: <ShapeExplorer /> },
 
       // === English Skills ===

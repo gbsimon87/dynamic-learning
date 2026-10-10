@@ -85,6 +85,14 @@ Check `src/components/` first. `ClockPanel`, `ReadingNumbersPanel`,
 and several are general enough to back a new game. A map-based game should build
 on `MapGame` and the GeoJSON already in `public/`, not a fresh Leaflet setup.
 
+**A question-and-answer game should start on `FreePlayShell`**
+(`src/components/skills/`): it already gives levels, endless questions,
+read-aloud, double-tap protection and the curriculum's right / combo /
+milestone / retry feedback. Write a pure `makeQuestion(rng, level)` in
+`src/data/freePlay/` and render the interaction with the challenge kit, as
+`MoneyMatch.jsx` does. A game with its own loop can still use
+`useAnswerFeedback` + `AnswerFeedbackLine` for the feedback alone.
+
 ## Verify before claiming completion
 
 1. `npm run lint` passes.

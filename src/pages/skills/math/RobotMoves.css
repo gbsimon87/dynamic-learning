@@ -1,0 +1,38 @@
+/* Robot Moves: the program builder. Grids, choices and buttons are the
+   kit's own (challenge-kit.css); this only lays the builder out. */
+.robot-moves-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem;
+  margin-bottom: 1rem;
+}
+
+.robot-moves-buttons .robot-moves-step {
+  min-width: 0;
+  font-size: 1.1rem;
+}
+
+.robot-moves-program {
+  min-height: 2.6rem;
+  margin-bottom: 0.8rem;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.robot-moves-empty {
+  font-size: 1rem;
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+.robot-moves-edit {
+  display: flex;
+  justify-content: center;
+  gap: 0.7rem;
+  margin-bottom: 1.2rem;
+}
+
+.robot-moves-edit .scale-step-btn {
+  padding: 0 1rem;
+}

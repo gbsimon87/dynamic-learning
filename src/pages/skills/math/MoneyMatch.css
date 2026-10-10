@@ -1,0 +1,14 @@
+/* Money Match: the coins to count are the kit's .coin, shown rather than
+   tapped. Everything else is styled by challenge-kit.css. */
+.money-match-coins {
+  margin: 0.5rem auto 1.6rem;
+  max-width: 520px;
+}
+
+.money-match-coins .money-match-coin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  font-size: 1.05rem;
+}
