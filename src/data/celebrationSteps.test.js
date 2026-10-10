@@ -56,7 +56,7 @@ test("an unearned sticker is never revealed", () => {
   assert.deepEqual(types(steps), ["headline"]);
 });
 
-test("only a finished year adds the certificate, just before next", () => {
+test("a finished year adds the year certificate, just before next", () => {
   const year = buildCelebrationSteps({
     level: "year",
     earned: ["challenge", "topic", "category", "subject", "year"],
@@ -66,13 +66,38 @@ test("only a finished year adds the certificate, just before next", () => {
   });
   assert.deepEqual(types(year), ["headline", "progress", "sticker", "certificate", "next"]);
   assert.equal(year[0].effect, "fireworksFinale");
+  assert.equal(year[3].kind, "year");
+  assert.equal(year[3].cue, "certificate");
+});
 
+test("a finished subject (year not done) gets a subject certificate, only one", () => {
   const subject = buildCelebrationSteps({
     level: "subject",
     earned: ["challenge", "topic", "category", "subject"],
     sticker,
   });
-  assert.ok(!types(subject).includes("certificate"));
+  const certificates = subject.filter((step) => step.type === "certificate");
+  assert.equal(certificates.length, 1);
+  assert.equal(certificates[0].kind, "subject");
+});
+
+test("a finished quest gets its certificate after the badges, before next", () => {
+  const steps = buildCelebrationSteps({
+    level: "category",
+    earned: ["challenge", "topic", "category"],
+    badges: [getBadge("topic-finisher")],
+    sticker,
+    yearBefore: before,
+    yearAfter: after,
+  });
+  assert.deepEqual(types(steps), ["headline", "progress", "sticker", "badge", "unlock", "certificate", "next"]);
+  assert.equal(steps.at(-2).kind, "category");
+  assert.equal(steps.at(-2).cue, "badge");
+});
+
+test("a topic gets no certificate step: it lives behind the sticker", () => {
+  const steps = buildCelebrationSteps({ level: "topic", earned: ["challenge", "topic"], sticker });
+  assert.deepEqual(types(steps), ["headline", "sticker", "next"]);
 });
 
 test("tiers escalate: each level has an effect and a cue", () => {

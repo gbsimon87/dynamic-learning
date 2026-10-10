@@ -27,7 +27,7 @@ export function fullTopicComplete(progress, categoryId, topic, isBuilt) {
     isTopicComplete(progress, categoryId, topic.id, topic);
 }
 
-function fullCategoryComplete(progress, category, isBuilt) {
+export function fullCategoryComplete(progress, category, isBuilt) {
   return category.topics.length > 0 &&
     category.topics.every((topic) =>
       fullTopicComplete(progress, category.id, topic, isBuilt)

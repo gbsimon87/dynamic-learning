@@ -27,6 +27,15 @@ export const TIERS = {
 };
 
 const BIG_LEVELS = new Set(["topic", "category", "subject", "year"]);
+
+/** Biggest first: only the first one earned gets a certificate step. */
+const CERTIFICATE_LEVELS = ["year", "subject", "category"];
+/** A quest's certificate is a reveal; a subject's or year's shares the finale. */
+const CERTIFICATE_TIERS = {
+  year: { effect: "confetti", cue: "certificate" },
+  subject: { effect: "confetti", cue: "certificate" },
+  category: { effect: "stars", cue: "badge" },
+};
 const STREAK_STEPS = new Set(["started", "extended", "saved", "restarted"]);
 
 /**
@@ -89,8 +98,13 @@ export function buildCelebrationSteps({
     middle.push({ type: "streak", ...streak, effect: milestone ? "confettiStars" : "burst", cue: "streak" });
   }
 
-  if (earned.includes("year")) {
-    middle.push({ type: "certificate", effect: "confetti", cue: "certificate" });
+  // One certificate, for the biggest thing finished: a year (needs every
+  // subject), else a subject, else a quest. A topic's certificate is not a
+  // step — it sits behind "See my certificate" on the sticker, which keeps a
+  // topic's sequence short.
+  const certificateKind = CERTIFICATE_LEVELS.find((kind) => earned.includes(kind));
+  if (certificateKind) {
+    middle.push({ type: "certificate", kind: certificateKind, ...CERTIFICATE_TIERS[certificateKind] });
   }
 
   if (middle.length === 0) return [{ ...headline, final: true }];

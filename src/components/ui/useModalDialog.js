@@ -7,8 +7,8 @@ const FOCUSABLE =
  * The app's one modal behaviour (PROJECT_KNOWLEDGE §7, "Modal / overlay
  * pattern"): while mounted, focus moves into the panel, Tab is trapped inside
  * it, Escape calls `onClose`, the page behind stops scrolling, and focus goes
- * back where it was on unmount. Used by Speed Reader's ReaderOverlay and the
- * brain-break dialog.
+ * back where it was on unmount. Used by ui/Dialog.jsx (certificates), Speed
+ * Reader's ReaderOverlay and the brain-break dialog.
  *
  * Returns the ref for the panel element (give it `tabIndex={-1}`).
  */

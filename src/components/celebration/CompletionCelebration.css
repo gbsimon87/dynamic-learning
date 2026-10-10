@@ -406,29 +406,10 @@ button.completion-celebration-secondary { background: transparent; }
   animation: completion-medal-in 580ms 120ms cubic-bezier(.2, 1.5, .5, 1) both;
 }
 
-/* Certificate */
-.celebration-certificate {
-  margin: 1.2rem auto 0.4rem;
-  padding: clamp(1.2rem, 4vw, 2rem);
-  border: 6px double var(--celebration-border);
-  border-radius: 18px;
-  background: var(--celebration-wash);
-  color: var(--celebration-ink);
-}
-
-.celebration-certificate p { margin: 0.3rem 0; }
-.celebration-certificate-title {
-  font-size: clamp(1.3rem, 4vw, 1.8rem);
-  font-weight: 800;
-  letter-spacing: 0.03em;
-}
-.celebration-certificate-small { color: var(--celebration-muted); }
-.celebration-certificate-name {
-  font-size: clamp(1.8rem, 6vw, 2.6rem);
-  font-weight: 800;
-}
-.celebration-certificate-seal { font-size: 3rem; line-height: 1.2; }
-.celebration-certificate-date { font-size: 0.9rem; color: var(--celebration-muted); }
+/* Certificate: the certificate itself (and its print stylesheet) lives in
+   components/certificate/Certificate.css, shared with the Trophy Room. */
+.completion-celebration-step-certificate .certificate { margin-top: 0.8rem; }
+.celebration-see-certificate { margin-top: 0.4rem; }
 .celebration-print { margin-top: 0.8rem; }
 
 @media (max-width: 500px) {
@@ -447,24 +428,6 @@ button.completion-celebration-secondary { background: transparent; }
 @keyframes celebration-fade {
   from { opacity: 0; }
   to { opacity: 1; }
-}
-
-/* Printing the certificate: only the certificate. */
-@media print {
-  body { background: #fff !important; }
-  body * { visibility: hidden; }
-  .celebration-certificate,
-  .celebration-certificate * { visibility: visible; }
-  .celebration-certificate {
-    /* Fixed, not absolute: the card is a positioned ancestor, and absolute
-       left the certificate floating halfway down the sheet. */
-    position: fixed;
-    inset: 1.5cm 1.5cm auto;
-    background: #fff;
-    color: #000;
-  }
-  .celebration-certificate-small,
-  .celebration-certificate-date { color: #333; }
 }
 
 /* Every step must fit one screen with Continue in view — a button below the

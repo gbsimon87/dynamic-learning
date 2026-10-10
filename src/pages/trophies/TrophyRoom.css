@@ -374,3 +374,71 @@ body.dark .trophy-badge.is-locked .trophy-badge-icon {
   cursor: pointer;
 }
 body.dark .trophy-retry { background: var(--dark-accent); color: var(--on-dark-accent); }
+
+/* ===== CERTIFICATES =====
+   Earned stickers, finished quests and finished years open a certificate to
+   reprint. Buttons only — nothing here writes. */
+.trophy-sticker-button {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 0.25rem;
+  width: 100%;
+  min-height: 48px;
+  padding: 0.3rem 0.2rem 0.4rem;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+}
+
+.trophy-sticker-button:hover { background: var(--tr-locked); }
+.trophy-sticker-button:focus-visible { outline: 3px solid var(--tr-ink); outline-offset: 2px; }
+
+.trophy-sticker-cert {
+  color: var(--tr-ink);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.trophy-quest-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.2rem 0.8rem;
+}
+
+.trophy-certs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 0 1rem 0.4rem;
+}
+
+.trophy-cert-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  min-height: 48px;
+  padding: 0.4rem 1.1rem;
+  border: 3px solid var(--tr-edge);
+  border-radius: 999px;
+  background: var(--tr-wash);
+  color: var(--tr-ink);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.trophy-cert-button:hover { filter: brightness(1.04); }
+.trophy-cert-button:focus-visible { outline: 3px solid var(--tr-ink); outline-offset: 3px; }
+
+@media (max-width: 560px) {
+  .trophy-quest-head .trophy-cert-button { width: 100%; margin-bottom: 0.4rem; }
+}

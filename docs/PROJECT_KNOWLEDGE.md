@@ -124,12 +124,13 @@ src/
 │   │                         #   JokeBubble, BixJokeCard (end of a topic), useBixJoke
 │   ├── celebration/          # Completion sequence, steps/ (incl. LevelUpStep, StreakStep), fx/ (particles), sound/ (cues + mute)
 │   ├── rewards/              # LevelBar, WeekDots: shared XP bar and Mon–Sun streak dots
+│   ├── certificate/          # Certificate (+ print sheet), CertificateDialog, BixSignature (§5, "Certificates")
 │   ├── coach/CoachMark.jsx   # First-visit tips from Bix, shown once per child (§5, "First play")
 │   ├── brainBreak/           # BrainBreak (mounted in RootLayout) + breakSetting.js, the device interval (§5)
 │   ├── challenge/            # The shared challenge kit: maths + the English kit (LetterInput, TileBuilder,
 │   │                         #   WordPicker, ReadingPassage, SortBins, SpeakButton, HintNote; english-kit.css; hints.js)
 │   │                         #   readAloud.js + challenge-context.js: Maths "Read it to me" (§5)
-│   ├── ui/Navbar.jsx, ui/useModalDialog.js   # useModalDialog: the one modal behaviour (§7)
+│   ├── ui/Navbar.jsx, ui/useModalDialog.js, ui/Dialog.jsx   # the one modal behaviour + a ready-made dialog (§7)
 │   ├── ClockPanel.jsx, ReadingNumbersPanel.jsx, DualLabelClock.jsx,
 │   ├── MapGame.jsx, MultiplicationGrid.jsx, ShapeQuiz.jsx
 ├── data/
@@ -142,6 +143,7 @@ src/
 │   ├── avatars.js               # Starter profile emoji + colour tokens
 │   ├── badges.js                # Badge catalogue + earnBadges (§5)
 │   ├── rewardsShape.js          # normaliseRewards: the v3 rewards shape, migrated on read (§5)
+│   ├── certificates.js, certificateSkills.js   # Which certificates a child holds (derived) + "I can…" lines (§5)
 │   ├── bixJokes.js              # Bix's joke pool + nextJoke (never repeats until all told) (§5)
 │   ├── mathSpeech.js            # On-screen maths → spoken words ("6 × 5 = ?" → "6 times 5 equals what?") (§5)
 │   ├── intro.js                 # Bix's intro: who sees it, finishIntro, coach-mark tips (§5, "First play")
@@ -422,7 +424,8 @@ certificate step and the `counts.year` tally. There is no back-fill: on
   Skills games define globally.
 - **On completion** — `buildCelebrationSteps` (pure, tested) turns the milestone
   result into a SEQUENCE: headline → year progress → topic sticker → one step
-  per badge → avatar unlock → level-up → streak → certificate (year only) → next.
+  per badge → avatar unlock → level-up → streak → certificate (the biggest of
+  year, subject or quest; a topic's is behind "See my certificate" on its sticker) → next.
   Each step waits for Continue; "Skip" is on every step. A plain challenge or a
   practice replay is a single screen, unless it earns a level-up or is the day's
   first finished challenge (then headline → streak → next). Effects and sound escalate by tier (`TIERS`).
@@ -1631,6 +1634,33 @@ counter, with no change to the ~330 challenge files:
   region; movement stops under reduced motion, the text and hat still show.
 - Spoken only while the app's sound is on; the words on screen carry it muted.
 
+### Certificates (#22, 2026-10-10)
+
+Every topic, quest (category), subject and year has a certificate with the
+child's name, picture and colour, the date, a kid-friendly "I can…" line and
+Bix's signature (`components/certificate/`).
+- **Derived, never stored**, like stickers: `data/certificates.js` uses the
+  same milestone functions as the celebration (`fullTopicComplete`,
+  `fullCategoryComplete`, `fullSubjectComplete`, `allSubjectsComplete`), so a
+  certificate cannot disagree with the moment it celebrates. With no "earned
+  on" date, a reprint is dated the day it is printed and says so.
+- **"I can…" lines** (`data/certificateSkills.js`): one per topic, keyed
+  `year/subject/topicId`, written inside each topic's row in `docs/curriculum/`.
+  Tests require a line for every registered topic, no orphans, at most 80
+  characters, "I can/I know" and British spelling; a new topic without one gets
+  a templated line. Quest, subject and year lines say what it took instead of
+  repeating the achievement.
+- **Where:** the celebration adds ONE certificate step for the biggest thing
+  finished (year, else subject, else quest); a topic's opens from "See my
+  certificate" on its sticker step, keeping a topic's sequence short. In the
+  Trophy Room, every collected sticker, "Quest certificate" and the
+  subject/year buttons open a certificate in a dialog to reprint.
+- **Printing** renders a print-only copy into `<body>` and the print
+  stylesheet shows only that, so "Print or save" gives one A4 / Letter page from
+  any screen. Render at most one printable certificate at a time.
+- The dialog is `ui/Dialog.jsx` (portal, backdrop, close button) on the shared
+  `useModalDialog`.
+
 ### Topic stickers & the Trophy Room (2026-09-29)
 
 **Stickers are derived, never stored.** `stickers.js` marks a topic's sticker
@@ -2108,7 +2138,7 @@ not by itself deliver a standalone game or its proposed reward flow.
 | #18 Science diagrams | [Follow-up checklist](science-curriculum/DIAGRAM_REVIEW_FOLLOWUPS.md), diagram components and `scripts/science-assets/`. | All 11 checklist items remain open in source: dog skeleton, leaf water, muscle geometry/titles, labels/Plants, renderer sandboxing, checksums, cache path validation, SVG stripping and built licence notices. |
 | #19 3D constellations | [SolarSystem](../src/pages/skills/geography/SolarSystem.jsx), [ConstellationCard](../src/pages/skills/geography/ConstellationCard.jsx), projection modules. | Card explicitly stays outside the scene; no celestial-sphere constellation controller or real-sky action. |
 | #20 Standalone game list | [All routes](../src/main.jsx), [Skills hub](../src/pages/skills/SkillsPage.jsx) and existing standalone implementations; individual inventory below. | None of its 21 proposed games is implemented as the described standalone activity. |
-| #22 Certificates | [CertificateStep](../src/components/celebration/steps/CertificateStep.jsx), [celebration steps](../src/data/celebrationSteps.js), [TrophyRoom](../src/pages/trophies/TrophyRoom.jsx). | Year print/save exists; no topic/category certificate, avatar/signature/skill statement or reprint entry point. |
+| #22 Certificates | [CertificateStep](../src/components/celebration/steps/CertificateStep.jsx), [celebration steps](../src/data/celebrationSteps.js), [TrophyRoom](../src/pages/trophies/TrophyRoom.jsx). | Year print/save exists; no topic/category certificate, avatar/signature/skill statement or reprint entry point. **Shipped 2026-10-10:** §5, "Certificates"; row removed. |
 | #23 Jokes/reactions | [Mascot](../src/components/mascot/Mascot.jsx), [celebration messages](../src/data/celebrationMessages.js). | Tap-to-cheer, pointer following and combo reactions exist; no joke catalogue/read-aloud or long-tap/five-tap secrets. **Shipped 2026-10-10:** §5, "Bix's jokes"; row removed. |
 | #24 Wardrobe | [Avatars](../src/data/avatars.js), [badges](../src/data/badges.js), [reward shape](../src/data/rewardsShape.js). | Badges unlock pictures; no wearable catalogue, equipped-item data or layered avatar display. |
 | #25 Bix's den | [Routes](../src/main.jsx), [TrophyRoom](../src/pages/trophies/TrophyRoom.jsx), rewards data. | Trophy collections exist; no room, furniture placement or object-fact interaction. |
@@ -2168,9 +2198,11 @@ Component tests now use Vitest/jsdom/React Testing Library under
 
 The modal behaviour — focus in, Tab trapped, Escape closes, page scroll locked,
 focus returned on close — lives in `src/components/ui/useModalDialog.js`
-(2026-10-10). Speed Reader's `ReaderOverlay.jsx` and the brain-break dialog both
-use it. A new modal uses the hook and supplies only its own markup and CSS;
-never write a second focus/scroll-lock implementation.
+(2026-10-10). `ui/Dialog.jsx` wraps it in a ready-made portal, backdrop and
+close button (certificates use it); Speed Reader's `ReaderOverlay.jsx` and the
+brain-break dialog use the hook with their own markup. A new modal uses
+`Dialog`, or the hook when it needs its own look; never write a second
+focus/scroll-lock implementation.
 
 ### Add a new Skill game
 1. Create `src/pages/skills/<subject>/<GameName>.jsx` + `<GameName>.css`.
