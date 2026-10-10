@@ -8,7 +8,8 @@
 Statutory text is reproduced verbatim. Do not paraphrase it — the wording is
 the specification. History is set out per key stage, not per year: key stage 2 covers years
 3 to 6. The purpose of study and aims, which apply to every key stage, come
-first. The mapping to our dataset is at the end.
+first. Key stage 1 is in [key-stage-1-history.md](key-stage-1-history.md).
+The mapping to our dataset is at the end.
 
 ---
 

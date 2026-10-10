@@ -862,10 +862,11 @@ phonetic alphabet chart. The appendix text was extracted from the DfE PDFs and
 checked word for word against them. Files are indexed in
 `docs/curriculum/README.md`.
 
-Also saved 2026-10-11: Geography for key stages 1 and 2 (per key stage, as the
+Also saved 2026-10-11: Geography and History for key stages 1 and 2 (per key stage, as the
 curriculum sets it out; the year split is ours to record), and proper headers,
 headings and lists for Year 4 and Year 5 Science and key stage 2 History, whose
-text was already verbatim.
+text was already verbatim. Every History and Geography file records its own
+year split, since the curriculum sets these out per key stage.
 
 ### Curriculum Mode — built challenges
 **Year 2 Mathematics** has all thirty-nine topics built — the year is complete:

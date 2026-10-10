@@ -49,8 +49,11 @@ choice and must be written down in the file's mapping section.
 
 ### History
 
+Set out per key stage, not per year, like Geography.
+
 | File | Covers |
 |---|---|
+| [key-stage-1-history.md](key-stage-1-history.md) | Key stage 1 (years 1 and 2), with the purpose of study and aims |
 | [key-stage-2-history.md](key-stage-2-history.md) | Key stage 2 (years 3 to 6), with the purpose of study and aims |
 
 ## How to use these
