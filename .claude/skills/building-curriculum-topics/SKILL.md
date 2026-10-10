@@ -35,7 +35,8 @@ to advance, so no challenge can complete early.
 
 Put generators in `src/data/challenges/<topic>.js`: no React, and take `rng` as
 a parameter so challenges randomise per mount while tests stay deterministic.
-Unit-test them with `node --test` (the project has no component test runner).
+Unit-test them with `node --test`; component tests (Vitest + jsdom) live in
+`tests/components/`.
 
 **An ambiguous dataset must answer `null`, not a guess.** Two rows on the same
 count give "which has most?" two correct answers while the challenge accepts
@@ -61,6 +62,46 @@ the first cut of `TallyChart`.
 **Update state functionally, never from the prop.** Two taps land in the same
 React batch, so `onChange(value + key)` makes the second overwrite the first —
 a child double-tapping loses a digit. Write `onChange((prev) => prev + key)`.
+
+## Or author the questions as data
+
+A challenge whose interaction is one of the shared kinds needs no JSX of its
+own. Return `{ kind, ...fields }` objects from the pure builder and render with
+`src/components/challenge/data/DataChallenge.jsx`:
+
+```jsx
+export default function MyTopicChallenge2({ onComplete }) {
+  return <DataChallenge level={2} build={buildMyTopic} titles={TITLES} onComplete={onComplete} />;
+}
+```
+
+The rules for each kind (starting response, when Check is ready, whether an
+answer is right, what makes a question unfair) are in
+`src/data/challenges/questionKinds.js`. Lint a bank in its unit test with
+`assert.deepEqual(lintBuild(buildMyTopic, { titles: TITLES, year }), [])`: it
+runs every level over 50 seeds and catches missing answers, duplicate or
+equal-fraction options, ties, already-sorted orders, Year 2 negatives and US
+spelling.
+
+| kind | fields | answered by |
+|---|---|---|
+| `choice` | `options`, `answer`, `variant?` | ChoiceGrid |
+| `number` | `answer`, `label?`, `maxDigits?` | NumberInput |
+| `type` | `answer`, `spoken?`, `maxLength?`, `apostrophe?` | LetterInput |
+| `build` | `tiles: [{id,label}]`, `answer`, `letters?`, `fixed?` | TileBuilder |
+| `sort` | `bins: [{id,label}]`, `cards: [{id,label,bin}]` | SortBins |
+| `order` | `items: [{id,label,value?}]` (start order), `answer: ids` | DragToOrder |
+| `pick` | `tokens`, `answer: index`, `mode?`, `pickable?`, `hinted?` | WordPicker |
+| `sequence` | `terms`, `gaps: indices`, `captions?`, `highlight?` | NumberLine + keypad |
+| `chart` | `chart: {type: bar/pictogram/tally, rows, …}`, `answer`, `options?`, `ask?` | chart + options or keypad |
+| `clock` | read: `time`, `answer`, `options?` · set: `time`, `start?`, `minuteStep?` | ClockFace (+ TimeSetter) |
+| `coins` | count: `coins`, `answer` · make: `target` | coin row + keypad · CoinTray |
+| `fraction` | read: `parts`, `shaded`, `answer`, `options?` · shade: `parts`, `answer` | FractionBar · FractionShadeBoard |
+| `placeValue` | read: `blocks`, `answer`, `ask?` · build: `answer`, `exact?` | PlaceValueBlocks |
+
+Every kind also takes `prompt`, `rule`, `passage`, `text`, `equation`,
+`sentence` (one `___`), `hint` (after two misses; strikes one wrong `choice`
+option) and `speak` (adds a 🔊 button). `**bold**` marks stressed words.
 
 ## Name the files by computing, not by spelling
 

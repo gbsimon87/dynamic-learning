@@ -130,6 +130,7 @@ src/
 │   ├── challenge/            # The shared challenge kit: maths + the English kit (LetterInput, TileBuilder,
 │   │                         #   WordPicker, ReadingPassage, SortBins, SpeakButton, HintNote; english-kit.css; hints.js)
 │   │                         #   readAloud.js + challenge-context.js: Maths "Read it to me" (§5)
+│   │                         #   data/DataChallenge.jsx: draws questions authored as data (§5)
 │   ├── ui/Navbar.jsx, ui/useModalDialog.js, ui/Dialog.jsx   # the one modal behaviour + a ready-made dialog (§7)
 │   ├── ClockPanel.jsx, ReadingNumbersPanel.jsx, DualLabelClock.jsx,
 │   ├── MapGame.jsx, MultiplicationGrid.jsx, ShapeQuiz.jsx
@@ -163,6 +164,7 @@ src/
 │   ├── celebrationSteps.js      # Which celebration steps, effects, cues
 │   ├── celebrationMessages.js   # Rotating, never-repeating headlines
 │   ├── challenges/              # Pure question generators, unit-tested
+│   │   ├── questionKinds.js     # The 13 data question kinds: rules, validateQuestion, lintBuild (§5)
 │   │   └── english/             # One builder per English topic (+ shared.js); Year 4 ones are year4*.js
 │   ├── store/                   # THE BACKEND SEAM (§4.7)
 │   │   ├── index.js             # Swap point: re-exports the active store
@@ -1661,6 +1663,27 @@ Bix's signature (`components/certificate/`).
 - The dialog is `ui/Dialog.jsx` (portal, backdrop, close button) on the shared
   `useModalDialog`.
 
+### Questions as data (#6, 2026-10-10)
+
+A challenge can be authored as data instead of JSX: its pure builder returns
+`{ kind, ...fields }` questions and `components/challenge/data/DataChallenge.jsx`
+renders them inside `ChallengeShell` with the shared kit.
+- `data/challenges/questionKinds.js` holds every rule that is not React, per
+  kind: the starting response, when Check is ready, whether a response is
+  right, the sentence-blank text, and `validate` (what would make a question
+  unfair). `validateQuestion` adds the shared checks (something tells the
+  learner what to do, one `___`, balanced `**`, no Year 2 negatives, British
+  spelling); `lintBuild` runs a builder over every level and 50 seeds.
+- Kinds: choice, number, type, build, sort, order, pick, sequence, chart (bar,
+  pictogram, tally), clock (read / set), coins (count / make), fraction (read /
+  shade), placeValue (read / build). The field table is in the
+  `building-curriculum-topics` skill.
+- Generalises `EnglishPracticeGame` (choice / sort / build / type), which is
+  unchanged for now. No shipped challenge uses `DataChallenge` yet.
+- Tested in `questionKinds.test.js` (a sound sample per kind, right and wrong
+  answers, the unfair cases) and `tests/components/dataChallenge.test.jsx`
+  (each interactive kind answered through the real kit).
+
 ### Topic stickers & the Trophy Room (2026-09-29)
 
 **Stickers are derived, never stored.** `stickers.js` marks a topic's sticker
@@ -2123,7 +2146,7 @@ not by itself deliver a standalone game or its proposed reward flow.
 | #3 Password recovery | [Routes](../src/main.jsx), [auth API](../server/routes/auth.js), [mailer](../server/email.js). | No recovery screens, reset endpoint or token lifecycle; mailer sends signup codes only. |
 | #4 Progress migration | [Local store](../src/data/store/localStorageStore.js), [API store](../src/data/store/apiStore.js), [progress route](../server/routes/progress.js). | Version 1 is stored but no progress migration/ID-remapping hook reads it; rewards normalisation is separate. |
 | #5 Free-play kit wrappers | [Skills routes](../src/main.jsx), [Skills hub](../src/pages/skills/SkillsPage.jsx), `src/components/challenge/`. | Money, measurement, position/direction, statistics and place-value kit interactions have no standalone Skills wrappers. |
-| #6 Content format | [EnglishPracticeGame](../src/pages/skills/english/challenges/EnglishPracticeGame.jsx), `src/data/challenges/`. | Choice/sort/build/type rendering and separate JS banks exist; other interactions still need topic-specific JSX rather than data-only authoring. |
+| #6 Content format | [EnglishPracticeGame](../src/pages/skills/english/challenges/EnglishPracticeGame.jsx), `src/data/challenges/`. | Choice/sort/build/type rendering and separate JS banks exist; other interactions still need topic-specific JSX rather than data-only authoring. **Format and renderer shipped 2026-10-10:** §5, "Questions as data". |
 | #7 Accessibility pass | [TileBuilder](../src/components/challenge/TileBuilder.jsx), [SortBins](../src/components/challenge/SortBins.jsx), [DragToOrder](../src/components/challenge/DragToOrder.jsx) and review trackers. | Native-button and drag-library keyboard support exist; no completed whole-app interaction/contrast audit is recorded. |
 | #8 Read-aloud | [Speech utility](../src/utils/speech.js), [SpeakButton](../src/components/challenge/SpeakButton.jsx), English/Science games, [Solar System](../src/pages/skills/geography/SolarSystem.jsx). | Maths and other standalone games still lack shared narration; physical-device speech review remains. **Maths shipped 2026-10-10:** §5, "Maths read-aloud". |
 | #9 Parent summary | [ParentArea](../src/pages/auth/ParentArea.jsx), [ChallengeShell](../src/components/challenge/ChallengeShell.jsx). | Completion summaries/profile edits exist; no persisted active time or wrong-answer evidence for practice recommendations. |
