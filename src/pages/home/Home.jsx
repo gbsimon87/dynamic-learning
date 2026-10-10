@@ -112,7 +112,7 @@ function heroState({ child, resume }) {
   }
 
   return {
-    title: "Dynamic Learning",
+    title: "Learn with Bix",
     subtitle: "Skills, challenges and a whole curriculum to explore, one step at a time.",
     cta: { label: "Start learning", href: "/curriculum" },
   };

@@ -1,6 +1,6 @@
 ---
 name: curriculum-progress
-description: Use when touching curriculum progress, localStorage persistence, or the category/topic/challenge unlock rules in the Dynamic Learning app - this data is a learner's real progress with no backup, so changes here need deliberate care and manual verification.
+description: Use when touching curriculum progress, localStorage persistence, or the category/topic/challenge unlock rules in the Learn with Bix app - this data is a learner's real progress with no backup, so changes here need deliberate care and manual verification.
 ---
 
 # Curriculum Progress & Unlocking

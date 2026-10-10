@@ -1,4 +1,4 @@
-# Dynamic Learning — agent guide
+# Learn with Bix — agent guide
 
 React + Vite learning app for 6–8 year olds. Two modes: **Skills Mode**
 (standalone, ungated mini-games) and **Curriculum Mode** (gated, progress-tracked

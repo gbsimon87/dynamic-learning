@@ -1,4 +1,4 @@
-# 💡 Project Ideas — Dynamic Learning App
+# 💡 Project Ideas — Learn with Bix
 
 > **⚠️ AI-MAINTAINED DOCUMENT — UPCOMING WORK ONLY.**
 > Nothing that is finished belongs in this file. When an idea ships, **delete its
@@ -6,7 +6,7 @@
 > [PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md), which is where history lives.
 > The same goes for bugs: a fixed bug is deleted here and written up there.
 
-**Last reviewed:** 2026-10-09
+**Last reviewed:** 2026-10-10
 
 Item-by-item source evidence: [backlog audit in PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md#backlog-source-audit-2026-10-09).
 
@@ -59,8 +59,8 @@ Item-by-item source evidence: [backlog audit in PROJECT_KNOWLEDGE.md](PROJECT_KN
   keeping the MP3s in the public repo was cleared with a lawyer.
 - **Domain and sign-up email verification are live** as recorded in
   PROJECT_KNOWLEDGE on 2026-10-09. The sending-domain prerequisite is closed;
-  the sign-up code fixes are implemented; interactive verification remains open (#37). The recorded **Learn with Bix**
-  rename is separate work (#39).
+  the sign-up code fixes are implemented; interactive verification remains open (#37). The app was renamed
+  **Learn with Bix** on 2026-10-10.
 - Ideas should serve the **registered curricula (Years 2–4)** and both account
   types where relevant, while keeping the core experience suitable for 6–8 year olds.
 
@@ -132,8 +132,6 @@ below reflects current risks and dependencies; it does not commit ideas to work.
 | 36 | **Wire privacy-hardened analytics (PostHog)** | The sign-up funnel already calls `track()` in `src/utils/analytics.js`, with event/property allow-lists and tests; it sends nothing. Remaining: install and wire PostHog through that wrapper, consent gating and deployment configuration for an audience of children: **EU Cloud** (Frankfurt) and a signed **DPA**; **IP capture off** at project level; **autocapture off** (explicit events only); **session replay off**; `person_profiles: 'identified_only'` and never `identify()` with an email or a child's name — use a random app-generated id, which is still pseudonymous personal data, not "zero-PII". Track **grown-ups' and learners' actions, not children's**, unless a grown-up has opted in; capture starts opted out on child profiles. Tie the consent wording to #11. | 🟡 Partial |
 | 37 | **Close sign-up review findings** | Code fixes implemented 2026-10-09: **C1** bounded email validation; **I1** failed-send cooldown release with stale-write protection; **I2** transient-error retry; **I3** per-client limits and a persistent daily send budget; **M1/M2/M5** navigation, focus and mail timeout. Optional M3/M4 countdown/narrow-screen fixes also included. Legacy progress fixtures and logout-session isolation are repaired; full database-backed tests, lint, build and server-rendered code-screen checks pass. Scoped re-review recorded in the [tracker](superpowers/plans/2026-10-07-signup-onboarding-tracker.md). **Remaining: interactive error-path, navigation/focus and both-theme browser checks**, unavailable in the fix session. | 🟡 Partial |
 | 38 | **Finish English & Science interactive review** | Implementation and automated checks exist, but broad interactive and owner review remains open in the [English tracker](english-curriculum/IMPLEMENTATION_TRACKER.md) and [Science tracker](science-curriculum/y3-science-tracker.md). Use disposable profiles to check wrong answers/hints, keyboard/touch controls, guided enquiries/reset, full completions, celebrations, saved progress/reload/replay, child switching, phone layouts, both themes and real-device speech. Coordinate with #18; initial React renders are not playthrough evidence. | 🟡 Partial |
-| 39 | **Rename the app to Learn with Bix** | The name is recorded in PROJECT_KNOWLEDGE §6 item 17 and the domain is live; the product rename has not started. Update visible app branding, document title, sign-up email subject and certificates consistently, then verify the affected screens and email template. Preserve existing curriculum IDs, storage keys and account/progress records. | 🔵 Planned |
-| 40 | **Verify production account-protection rollout** | Deployed and verified 2026-10-10: production indexes unique with zero duplicates, progress audit clean, `PUBLIC_APP_URL` set, recovery and concurrent saves tested. See [account-protection outcome](PROJECT_KNOWLEDGE.md#account-and-learning-protection-2026-10-09). | ✅ Done |
 | 41 | **Skills Mode celebrations** | Reuse the shared answer effects, gentle retry feedback, combos, sounds and Bix reactions in existing standalone games. Define suitable game events rather than assuming the curriculum’s four-challenge completion contract. Keep Skills Mode ungated; decide any persistent rewards separately before extending XP/streak rules. Honour mute, reduced motion, keyboard/touch use and both themes. | ⚪ Idea |
 
 ---
@@ -146,15 +144,11 @@ below reflects current risks and dependencies; it does not commit ideas to work.
    (English/Science playthroughs and owner review), with #7 (accessibility)
    alongside the affected interactions. Run #17's physical-device benchmark
    when a phone/tablet is available; it does not need more feature code first.
-3. **Protect existing accounts and learning:** #40 (deploy and verify the
-   implemented recovery/concurrency/index fixes, plus interactive checks). The
-   migration hook and component/API test setup are implemented; future ID/schema
-   renames still need their own migration fixture.
-4. **Make the first visit clearer:** #39 (recorded product rename), #35
+3. **Make the first visit clearer:** #35
    (playable child intro) and #8 (remaining read-aloud coverage). Small follow-ons:
    #22 (extend existing certificates) and #23 (Bix’s jokes).
-5. **Reduce the cost of expansion:** #6 (authoring format), then #5 (free-play
+4. **Reduce the cost of expansion:** #6 (authoring format), then #5 (free-play
    wrappers), #41 (Skills celebrations) and further curriculum/game ideas.
-6. **Add evidence before adapting:** define session/attempt recording for #9
+5. **Add evidence before adapting:** define session/attempt recording for #9
    and #10, keeping it separate from the completion store. Review #11 for the
    actual audience and resolve consent choices before #36 adds analytics.

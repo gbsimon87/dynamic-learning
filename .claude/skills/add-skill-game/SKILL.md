@@ -1,6 +1,6 @@
 ---
 name: add-skill-game
-description: Use when adding a new standalone Skills Mode mini-game (math, english, geometry, or geography) to the Dynamic Learning app - covers the two required registration points, folder placement, and the conventions that keep games consistent.
+description: Use when adding a new standalone Skills Mode mini-game (math, english, geometry, or geography) to the Learn with Bix app - covers the two required registration points, folder placement, and the conventions that keep games consistent.
 ---
 
 # Adding a Skills Mode Game

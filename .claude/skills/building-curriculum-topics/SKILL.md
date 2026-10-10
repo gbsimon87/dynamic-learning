@@ -1,6 +1,6 @@
 ---
 name: building-curriculum-topics
-description: Use when building all four challenges for a Year 2+ Maths or Year 3+ English curriculum topic in the Dynamic Learning app - covers the shared challenge kit, the pure generator pattern, the computed file names the loader depends on, and how to verify a topic in the browser without clicking through it by hand.
+description: Use when building all four challenges for a Year 2+ Maths or Year 3+ English curriculum topic in the Learn with Bix app - covers the shared challenge kit, the pure generator pattern, the computed file names the loader depends on, and how to verify a topic in the browser without clicking through it by hand.
 ---
 
 # Building a Curriculum Topic

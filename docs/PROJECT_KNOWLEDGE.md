@@ -1,4 +1,4 @@
-# 📖 Project Knowledge — Dynamic Learning App
+# 📖 Project Knowledge — Learn with Bix
 
 > **⚠️ THIS DOCUMENT IS AI-MAINTAINED.**
 >
@@ -23,7 +23,7 @@
 
 ## 1. What This Project Is
 
-**Dynamic Learning** is an interactive web learning platform for primary-school
+**Learn with Bix** (formerly Dynamic Learning) is an interactive web learning platform for primary-school
 children (built first for ~6-year-olds / **UK Year 2**; Curriculum Mode now
 also covers Year 3 Maths and Years 3–4 English). It teaches Maths, English,
 Geometry and Geography through browser-based mini-games.
@@ -1832,8 +1832,11 @@ without a changelog note or the report was inaccurate.
    editing DNS), and `RESEND_API_KEY` + `EMAIL_FROM` (`Bix
    <hello@learnwithbix.com>`) are set on Render, so the code step is on in
    production. Keys are sending-only, so sent mail is checked in the Resend
-   dashboard, not the API. A live sign-up received its code on 2026-10-09. The app is to be renamed
-   "Learn with Bix" (not started). Deliberately no personal address in this
+   dashboard, not the API. A live sign-up received its code on 2026-10-09. The app was renamed
+   "Learn with Bix" on 2026-10-10 (navbar, home, footer, HTML title, emails,
+   certificate, docs, package name). Infrastructure identifiers keep the old
+   name on purpose: the `dynamic_learning` / `dynamic_learning_dev` databases,
+   the Render service names/URLs and the repo, so no account or progress moves. Deliberately no personal address in this
    file: the repo is public.
 18. **Sign-up review: interactive verification remains open** (2026-10-09).
    The [tracker](superpowers/plans/2026-10-07-signup-onboarding-tracker.md)
@@ -1974,7 +1977,7 @@ not by itself deliver a standalone game or its proposed reward flow.
 | #36 PostHog | [Analytics wrapper](../src/utils/analytics.js), [wrapper tests](../src/utils/analytics.test.js), [SignUpFlow](../src/pages/auth/signup/SignUpFlow.jsx), [dependencies](../package.json). | Allow-lists/funnel calls exist; no PostHog SDK/transport or consent gate. Hosted project settings/DPA were not verified. |
 | #37 Signup findings | [Email validation](../shared/emailAddress.js), [signup route](../server/routes/signup.js), [send limits](../server/signupEmailLimits.js), [steps](../src/pages/auth/signup/steps.jsx), [mailer](../server/email.js), [route tests](../server/routes.test.js). | C1/I1/I2/I3/M1/M2/M5 fixed, plus M3/M4. Database-backed suites pass after fixture repairs. Interactive browser checks remain open. |
 | #38 Interactive review | [English tracker](english-curriculum/IMPLEMENTATION_TRACKER.md), [Science tracker](science-curriculum/y3-science-tracker.md). | Broad playthrough/owner and real-device checks remain pending; implemented wrappers and passing pure tests do not close them. |
-| #39 Rename | [Navbar](../src/components/ui/Navbar.jsx), [Home](../src/pages/home/Home.jsx), [HTML title](../index.html), [email](../server/email.js), [certificate](../src/components/celebration/steps/CertificateStep.jsx). | These still say Dynamic Learning; the live domain/Bix mascot do not complete the product rename. |
+| #39 Rename | [Navbar](../src/components/ui/Navbar.jsx), [Home](../src/pages/home/Home.jsx), [HTML title](../index.html), [email](../server/email.js), [certificate](../src/components/celebration/steps/CertificateStep.jsx). | Renamed to Learn with Bix 2026-10-10; database and Render identifiers intentionally unchanged. |
 | #40 Concurrency/indexes | [Progress route](../server/routes/progress.js), [rewards route](../server/routes/rewards.js), [database boot](../server/db.js). | Routes still replace snapshots; boot indexes only pending signups. Actual live database indexes/duplicates were not inspected. |
 | #41 Skills celebrations | Standalone Skills games, [ChallengeShell](../src/components/challenge/ChallengeShell.jsx), shared celebration kit. | Shared combos/effects/sounds/Bix flow is used by curriculum challenges, not integrated into standalone games. |
 

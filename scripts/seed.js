@@ -106,7 +106,7 @@ async function main() {
     );
   }
 
-  console.log("\n  Dynamic Learning — development seed");
+  console.log("\n  Learn with Bix — development seed");
   console.log(
     uri ? `  mongodb   ${safeHost(uri)} / ${dbName}` : "  mongodb   (skipped — MONGODB_URI not set)"
   );

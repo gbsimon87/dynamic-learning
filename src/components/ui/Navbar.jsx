@@ -56,7 +56,7 @@ function Navbar() {
     <nav ref={navRef} className={`navbar ${hidden ? 'hidden' : ''}`}>
       {/* Shortened brand: the mark carries the identity in the tight space a
           phone bar has, and the full name stays as the accessible name. */}
-      <Link to="/" className="logo" aria-label="Dynamic Learning, home">
+      <Link to="/" className="logo" aria-label="Learn with Bix, home">
         <span className="logo-mark" aria-hidden="true">DL</span>
       </Link>
 

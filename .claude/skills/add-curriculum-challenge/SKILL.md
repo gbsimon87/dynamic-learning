@@ -1,6 +1,6 @@
 ---
 name: add-curriculum-challenge
-description: Use when adding, building, or fixing a Curriculum Mode challenge for any year/subject/topic in the Dynamic Learning app - covers the strict file-path naming convention the dynamic loader depends on, the onComplete contract, and progress unlocking.
+description: Use when adding, building, or fixing a Curriculum Mode challenge for any year/subject/topic in the Learn with Bix app - covers the strict file-path naming convention the dynamic loader depends on, the onComplete contract, and progress unlocking.
 ---
 
 # Adding a Curriculum Challenge

@@ -20,7 +20,7 @@ export default function HomeFooter() {
         <div className="home-footer-brand">
           <span className="home-footer-mark" aria-hidden="true">DL</span>
           <div>
-            <p className="home-footer-name">Dynamic Learning</p>
+            <p className="home-footer-name">Learn with Bix</p>
             <p className="home-footer-tagline">
               Practice and challenges for 6 to 8 year olds, built around the UK
               National Curriculum.

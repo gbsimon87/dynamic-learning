@@ -20,7 +20,7 @@ export function emailMode(env) {
 }
 
 export function signupCodeEmail(code) {
-  const subject = `Your Dynamic Learning code: ${code}`;
+  const subject = `Your Learn with Bix code: ${code}`;
   const text = [
     "Bix says hi! 👋",
     "",
@@ -43,7 +43,7 @@ export function signupCodeEmail(code) {
 export function passwordResetEmail(url) {
   const safeUrl = url.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
   return {
-    subject: "Reset your Dynamic Learning password",
+    subject: "Reset your Learn with Bix password",
     text: `Reset your password: ${url}\n\nThis link works once, for 30 minutes. Your profiles and learning will stay saved. If you did not ask for this, ignore this email.`,
     html: `<p><a href="${safeUrl}">Reset your password</a></p><p>This link works once, for 30 minutes. Your profiles and learning will stay saved.</p><p>If you did not ask for this, ignore this email.</p>`,
   };

@@ -1,4 +1,4 @@
-# 🌟 Dynamic Learning App
+# 🌟 Learn with Bix
 
 A modern, interactive learning platform built with **React** and **Vite**.  
 The app combines playful *skills-based games* with a structured *curriculum system* that helps learners progress through challenges step-by-step.
@@ -7,7 +7,7 @@ The app combines playful *skills-based games* with a structured *curriculum syst
 
 ## 🚀 Overview
 
-Dynamic Learning is designed for primary-level learners to explore topics like **Math**, **English**, **Geometry**, and **Geography** through two distinct learning modes:
+Learn with Bix is designed for primary-level learners to explore topics like **Math**, **English**, **Geometry**, and **Geography** through two distinct learning modes:
 
 1. **Skills Mode** — independent, interactive games that let users freely explore and practice topics.  
 2. **Curriculum Mode** — a structured, progressive system where learners complete challenges in order to unlock new topics and categories.

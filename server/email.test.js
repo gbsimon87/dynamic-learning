@@ -13,7 +13,7 @@ test("mode needs both settings to send, and is never 'log' in production", () =>
 
 test("the email carries the code in the subject, text and html", () => {
   const { subject, text, html } = signupCodeEmail("482913");
-  assert.equal(subject, "Your Dynamic Learning code: 482913");
+  assert.equal(subject, "Your Learn with Bix code: 482913");
   assert.match(text, /482913/);
   assert.match(text, /10 minutes/);
   assert.match(html, /482913/);

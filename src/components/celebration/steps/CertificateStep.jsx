@@ -22,7 +22,7 @@ export default function CertificateStep({ year, subjectName, childName, headingR
           finished every Year {year} {subjectName} challenge
         </p>
         <p className="celebration-certificate-seal" aria-hidden="true">🏆</p>
-        <p className="celebration-certificate-date">{date} · Dynamic Learning</p>
+        <p className="celebration-certificate-date">{date} · Learn with Bix</p>
       </div>
 
       <button
