@@ -32,3 +32,7 @@ test("readings are spoken in words", () => {
   assert.equal(sayMeasure(-5, "°C"), "minus 5 degrees");
   assert.equal(formatMeasure(20, "°C"), "20°C");
 });
+
+test("no scale reaches below zero: negative numbers are Year 4, not Years 2–3", () => {
+  for (const scale of Object.values(SCALES).flat()) assert.ok(scale.min >= 0, scale.instrument);
+});

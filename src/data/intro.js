@@ -23,14 +23,19 @@ export const TIPS = {
  * XP, no badges, no streak day, and no completions waiting to be back-filled.
  * A child who already plays never has it forced on them; a grown-up can
  * replay it from /parent.
+ *
+ * Before the one-off XP back-fill is stored, only a back-fill KNOWN to be 0
+ * proves there is nothing to count: `null` means the progress read failed, and
+ * a child from before XP existed would otherwise look brand new.
  */
 export function introEligible(rewards, { pendingBackfill = null } = {}) {
   if (!rewards || rewards.intro?.done) return false;
+  const noOldWork = rewards.xpBackfilled === true || pendingBackfill === 0;
   return (
     (rewards.xp ?? 0) === 0 &&
     (rewards.badges ?? []).length === 0 &&
     !rewards.streak?.lastDay &&
-    !(pendingBackfill > 0)
+    noOldWork
   );
 }
 

@@ -5,6 +5,7 @@ import { createSubmissionGate } from "../../data/submissionGate";
 import { playCue } from "../celebration/sound/player";
 import { playEffect } from "../celebration/fx/effects";
 import Mascot from "../mascot/Mascot";
+import { wobble } from "./wobble";
 import SpeakButton from "./SpeakButton";
 import { ChallengeContext } from "./challenge-context";
 import { readAloudText } from "./readAloud";
@@ -47,22 +48,6 @@ import "./challenge-kit.css";
  *              say (a picture with no words); it replaces the screen reading
  *              and still goes through `mathToSpeech`
  */
-
-function wobble(element) {
-  if (!element?.animate) return;
-  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
-  element.animate(
-    [
-      { transform: "translateX(0)" },
-      { transform: "translateX(-7px)" },
-      { transform: "translateX(6px)" },
-      { transform: "translateX(-4px)" },
-      { transform: "translateX(2px)" },
-      { transform: "translateX(0)" },
-    ],
-    { duration: 420, easing: "ease-out" }
-  );
-}
 
 function ChallengeShell({ title, questions, render, onComplete, readAloud, speak }) {
   const challenge = useContext(ChallengeContext);

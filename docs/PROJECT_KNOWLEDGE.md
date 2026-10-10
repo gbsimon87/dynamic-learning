@@ -1553,10 +1553,13 @@ a can't-get-it-wrong favourite pick that awards the **Met Bix** badge, then on
 to the page the child was heading for. Skip is on every step. Every line is on
 screen and is also spoken when sound is on.
 - **Who is sent there:** `RequireChild` redirects to `/hello` only when
-  `introEligible` holds — no XP, no badges, no streak day, nothing waiting to be
-  back-filled, intro not done — and only for grown-up accounts' children, never
-  learner accounts. It waits for the rewards read; a failed read lets the child
-  through rather than blocking the curriculum.
+  `introEligible` holds — no XP, no badges, no streak day, a back-fill KNOWN to
+  be empty (an unknown one, after a failed progress read, counts as old work),
+  intro not done — and only for grown-up accounts' children, never learner
+  accounts. It waits for each child's FIRST rewards read of the session only; a
+  failed read lets the child through, and later re-reads (retries, refreshes)
+  never blank the page. Blanking on every re-read unmounted the page that asked
+  for it, which asked again on remount, in a loop.
 - **The flag** is `intro.done` in the rewards document (never progress).
   Skipping sets it with no badge; finishing a replay later still awards the
   badge once. A grown-up replays it from `/parent` → "Play Bix's hello game
@@ -1585,7 +1588,8 @@ excludes `/parent`, sign-in, sign-up, `/profiles`, `/privacy`, `/credits`,
 `/hello`). At the interval a small card offers "Let's move!" or "Not now"; it
 never covers the question. The break is a modal (shared `useModalDialog`) with
 one of ten activities, "Another one!", "I did it!" and "Back to playing";
-Escape leaves. Both "Not now" and finishing restart the count. The interval
+Escape leaves. `useModalDialog` keeps a stack, so a break that opens over a
+certificate or the Speed Reader is the only dialog that answers Escape and Tab. Both "Not now" and finishing restart the count. The interval
 (10/15/20/30 min or off, default 15) is a **device** setting in
 `localStorage` `dl.brainBreak`, set in `/parent` → Brain breaks, beside Sound.
 

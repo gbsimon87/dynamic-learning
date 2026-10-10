@@ -36,13 +36,13 @@ export const SCALES = {
   2: [
     { instrument: "ruler", min: 0, max: 30, majorStep: 5, minorStep: 1, step: 1 },
     { instrument: "kitchen", min: 0, max: 100, majorStep: 10, minorStep: 2, step: 2 },
-    { instrument: "thermometer", min: -10, max: 40, majorStep: 10, minorStep: 5, step: 5 },
+    { instrument: "thermometer", min: 0, max: 40, majorStep: 10, minorStep: 5, step: 5 },
     { instrument: "jug", min: 0, max: 500, majorStep: 100, minorStep: 50, step: 50 },
   ],
   3: [
     { instrument: "rulerMm", min: 0, max: 100, majorStep: 10, minorStep: 5, step: 5 },
     { instrument: "kitchen", min: 0, max: 1000, majorStep: 100, minorStep: 50, step: 50 },
-    { instrument: "thermometer", min: -10, max: 50, majorStep: 10, minorStep: 2, step: 2 },
+    { instrument: "thermometer", min: 0, max: 50, majorStep: 10, minorStep: 2, step: 2 },
     { instrument: "jug", min: 0, max: 1000, majorStep: 100, minorStep: 50, step: 50 },
   ],
 };

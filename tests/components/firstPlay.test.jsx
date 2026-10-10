@@ -13,10 +13,9 @@ vi.mock("../../src/components/celebration/sound/player", () => ({
   playCue: () => {}, isMuted: () => true, setMuted: () => {}, subscribe: () => () => {},
 }));
 
-function guarded(rewards, { isLearner = false } = {}) {
-  const value = { status: "ready", hydrated: true, rewards: normaliseRewards(rewards), pendingBackfill: null };
-  return render(
-    <AuthContext.Provider value={{ status: "ready", isLearner, child: { _id: "c1", name: "Ada" } }}>
+function guardedTree(value, { isLearner = false, childId = "c1" } = {}) {
+  return (
+    <AuthContext.Provider value={{ status: "ready", isLearner, child: { _id: childId, name: "Ada" } }}>
       <RewardsContext.Provider value={value}>
         <MemoryRouter initialEntries={["/curriculum"]}>
           <Routes>
@@ -31,6 +30,11 @@ function guarded(rewards, { isLearner = false } = {}) {
   );
 }
 
+function guarded(rewards, options) {
+  const value = { status: "ready", hydrated: true, rewards: normaliseRewards(rewards), pendingBackfill: 0 };
+  return render(guardedTree(value, options));
+}
+
 describe("first play", () => {
   it("sends a child who has never played to Bix's intro", () => {
     guarded(null);
@@ -42,6 +46,17 @@ describe("first play", () => {
     expect(screen.getByText("topics")).toBeTruthy();
     guarded({ intro: { done: true } });
     expect(screen.getAllByText("topics")).toHaveLength(2);
+  });
+
+  it("waits only for the first read: a later re-read never blanks the page (no remount loop)", () => {
+    const fresh = normaliseRewards(null);
+    const at = (status) => ({ status, hydrated: status === "ready", rewards: fresh, pendingBackfill: null });
+    const { rerender } = render(guardedTree(at("loading"), { childId: "loop-child" }));
+    expect(screen.queryByText("topics")).toBeNull();
+    rerender(guardedTree(at("failed"), { childId: "loop-child" }));
+    expect(screen.getByText("topics")).toBeTruthy();
+    rerender(guardedTree(at("loading"), { childId: "loop-child" }));
+    expect(screen.getByText("topics")).toBeTruthy();
   });
 
   it("never sends a learner account to the intro", () => {

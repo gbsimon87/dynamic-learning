@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { expect, it } from "vitest";
+import { expect, it, vi } from "vitest";
 import { AuthContext } from "../../src/context/auth-context";
 import CertificateStep from "../../src/components/celebration/steps/CertificateStep";
 import StickerStep from "../../src/components/celebration/steps/StickerStep";
@@ -46,4 +46,19 @@ it("a topic's sticker opens its certificate in a dialog, and Escape closes it", 
   expect(dialog.textContent).toContain("finished every challenge in the Tenths topic");
   fireEvent.keyDown(document, { key: "Escape" });
   expect(screen.queryByRole("dialog")).toBeNull();
+});
+
+it("with two dialogs open, Escape closes only the top one", async () => {
+  const { default: Dialog } = await import("../../src/components/ui/Dialog");
+  const closeLower = vi.fn();
+  const closeUpper = vi.fn();
+  render(
+    <>
+      <Dialog label="Lower" onClose={closeLower}><button type="button">Lower button</button></Dialog>
+      <Dialog label="Upper" onClose={closeUpper}><button type="button">Upper button</button></Dialog>
+    </>
+  );
+  fireEvent.keyDown(document, { key: "Escape" });
+  expect(closeUpper).toHaveBeenCalledTimes(1);
+  expect(closeLower).not.toHaveBeenCalled();
 });

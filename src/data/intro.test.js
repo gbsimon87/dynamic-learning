@@ -8,12 +8,14 @@ const AT = "2026-10-10T09:00:00.000Z";
 const fresh = () => normaliseRewards(null);
 
 test("only a child who has never played is offered the intro automatically", () => {
-  assert.equal(introEligible(fresh()), true);
+  assert.equal(introEligible(fresh(), { pendingBackfill: 0 }), true);
+  assert.equal(introEligible(normaliseRewards({ xpBackfilled: true })), true);
+  assert.equal(introEligible(fresh()), false, "back-fill unknown (progress read failed): not new");
   assert.equal(introEligible(normaliseRewards({ xp: 10 })), false);
   assert.equal(introEligible(normaliseRewards({ badges: [{ id: "first-steps" }] })), false);
   assert.equal(introEligible(normaliseRewards({ streak: { lastDay: "2026-10-09" } })), false);
   assert.equal(introEligible(fresh(), { pendingBackfill: 40 }), false);
-  assert.equal(introEligible(normaliseRewards({ intro: { done: true } })), false);
+  assert.equal(introEligible(normaliseRewards({ intro: { done: true } }), { pendingBackfill: 0 }), false);
   assert.equal(introEligible(null), false);
 });
 

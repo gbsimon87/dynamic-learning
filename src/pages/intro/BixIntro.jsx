@@ -8,7 +8,7 @@ import { playEffect } from "../../components/celebration/fx/effects";
 import Mascot from "../../components/mascot/Mascot";
 import { isNarrationSupported, speak, stopNarration } from "../../utils/speech";
 import { destinationFor } from "../../data/signupFlow";
-import { getBadge } from "../../data/badges";
+import { getBadge, heldBadgeIds } from "../../data/badges";
 import { INTRO_BADGE_ID } from "../../data/intro";
 import StarBasket from "./StarBasket";
 import "./BixIntro.css";
@@ -58,7 +58,7 @@ export default function BixIntro() {
   const auth = useContext(AuthContext);
   const child = auth?.child;
   const name = child?.name ?? "friend";
-  const { hydrated, status, finishIntro } = useRewards();
+  const { hydrated, status, rewards, finishIntro } = useRewards();
   const [muted] = useSoundMuted();
   const navigate = useNavigate();
   const location = useLocation();
@@ -130,9 +130,13 @@ export default function BixIntro() {
   const pick = (option) => {
     if (picked) return;
     setPicked(option);
+    const alreadyHeld = heldBadgeIds(rewards).has(INTRO_BADGE_ID);
     const awarded = finish(true);
-    setBadge(awarded[0] ?? getBadge(INTRO_BADGE_ID));
-    playCue("badge");
+    // "New badge" only when one was really stored: a replay already holds
+    // it, and a refused save (no good read) stored nothing.
+    if (awarded[0]) setBadge({ ...awarded[0], isNew: true });
+    else if (alreadyHeld) setBadge({ ...getBadge(INTRO_BADGE_ID), isNew: false });
+    playCue(awarded[0] ? "badge" : "correctLast");
     // Wait a frame so the badge card exists to burst from.
     window.requestAnimationFrame(() => burst("confettiStars", badgeRef.current));
   };
@@ -230,7 +234,7 @@ export default function BixIntro() {
             <div className="bix-intro-badge" ref={badgeRef} role="status">
               <span className="bix-intro-badge-icon" aria-hidden="true">{badge.icon}</span>
               <span>
-                <strong>New badge: {badge.name}!</strong>
+                <strong>{badge.isNew ? `New badge: ${badge.name}!` : `You already have the ${badge.name} badge!`}</strong>
                 <span className="bix-intro-badge-blurb">It's in your Trophy Room.</span>
               </span>
             </div>
@@ -277,7 +281,7 @@ export default function BixIntro() {
             )}
             {step === "done" && (
               <Link className="bix-intro-skip" to="/trophies" onClick={() => finish(false)}>
-                See my badge <span aria-hidden="true">🏆</span>
+                My Trophy Room <span aria-hidden="true">🏆</span>
               </Link>
             )}
           </div>

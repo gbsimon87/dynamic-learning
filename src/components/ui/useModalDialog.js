@@ -3,6 +3,11 @@ import { useEffect, useRef } from "react";
 const FOCUSABLE =
   'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
+// Open dialogs, newest last. Only the top one answers Escape and traps Tab: a
+// brain break can open over a certificate or the Speed Reader, and two
+// document listeners would otherwise both close, and fight over focus.
+const openDialogs = [];
+
 /**
  * The app's one modal behaviour (PROJECT_KNOWLEDGE §7, "Modal / overlay
  * pattern"): while mounted, focus moves into the panel, Tab is trapped inside
@@ -37,7 +42,10 @@ export function useModalDialog(onClose) {
   }, []);
 
   useEffect(() => {
+    const token = {};
+    openDialogs.push(token);
     const handleKeyDown = (event) => {
+      if (openDialogs.at(-1) !== token) return;
       if (event.key === "Escape") {
         event.preventDefault();
         onCloseRef.current?.();
@@ -70,7 +78,10 @@ export function useModalDialog(onClose) {
     };
 
     document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      openDialogs.splice(openDialogs.indexOf(token), 1);
+    };
   }, []);
 
   return panelRef;

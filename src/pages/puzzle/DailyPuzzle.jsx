@@ -112,8 +112,13 @@ export default function DailyPuzzle() {
             {child && newStar && (
               <p><span aria-hidden="true">⭐</span> You won today’s puzzle star! That’s {total} so far.</p>
             )}
-            {child && !newStar && (alreadyHad || !hydrated) && (
+            {child && !newStar && alreadyHad && (
               <p><span aria-hidden="true">⭐</span> You already have today’s star. Come back tomorrow for a new puzzle!</p>
+            )}
+            {/* The rewards read has not landed (or failed): nothing was stored,
+                so never claim the star is already theirs. */}
+            {child && !newStar && !alreadyHad && (
+              <p>Brilliant solving! We couldn’t save your star just now, so solve it again a bit later to collect it.</p>
             )}
             {!child && (
               <p>

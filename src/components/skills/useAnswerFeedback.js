@@ -3,6 +3,7 @@ import { nextMessage } from "../../data/celebrationMessages";
 import { INITIAL_ANSWER_STATE, milestoneMessage, nextAnswer } from "../../data/freePlay/feedback";
 import { playCue, preloadSounds } from "../celebration/sound/player";
 import { playEffect } from "../celebration/fx/effects";
+import { wobble } from "../challenge/wobble";
 
 /**
  * The curriculum's per-answer celebration, for Skills Mode games.
@@ -30,26 +31,6 @@ import { playEffect } from "../celebration/fx/effects";
 
 const SOUND = { correct: "correct", combo: "combo", milestone: "correctLast", wrong: "wrong" };
 const EFFECT = { correct: "sparkle", combo: "stars", milestone: "burst" };
-
-function reducedMotion() {
-  return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
-}
-
-/** The gentle side-to-side shake for a miss. A no-op under reduced motion. */
-export function wobble(element) {
-  if (!element?.animate || reducedMotion()) return;
-  element.animate(
-    [
-      { transform: "translateX(0)" },
-      { transform: "translateX(-7px)" },
-      { transform: "translateX(6px)" },
-      { transform: "translateX(-4px)" },
-      { transform: "translateX(2px)" },
-      { transform: "translateX(0)" },
-    ],
-    { duration: 420, easing: "ease-out" }
-  );
-}
 
 export function useAnswerFeedback() {
   const [feedback, setFeedback] = useState(null);
