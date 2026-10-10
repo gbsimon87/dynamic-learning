@@ -120,7 +120,7 @@ and what is left. File names and engineering detail are in
 | 12 | **Phonics and rhyming games** | Sound out words, match rhymes, split words into syllables: early reading practice. | **Left:** all of it. Needs proper letter-sound recordings first; the browser voice reads whole words, not phonics sounds. | ⚪ Idea |
 | 13 | **Story Maker and Story Sequencer** | Pick a character, a place and an action to build a silly story, or put picture cards in the right order. | **Left:** all of it. Some story material in Year 3 English could be reused. | ⚪ Idea |
 | 14 | **Works offline, installs like an app** | Install it on a tablet and keep playing without internet. Useful on shared school devices. | **Left:** all of it. The risk: progress made offline has to merge safely once back online, or a child loses work. Decide how before building anything. | ⚪ Idea |
-| 15 | **Geography curriculum** | A proper topic path, like Maths has, for continents, oceans, landforms, weather, and day and night. | **Left:** all of it. First match the topics to the national curriculum text in `docs/curriculum/`. Game ideas are in [notes_geography.md](notes_geography.md). | ⚪ Idea |
+| 15 | **Geography curriculum** | A proper topic path, like Maths has, for continents, oceans, landforms, weather, and day and night. | **Left:** all of it. The national curriculum text is saved (key stages 1 and 2 in `docs/curriculum/`). It is set out per key stage, not per year, so first decide which year teaches which requirement and write that down. Game ideas are in [notes_geography.md](notes_geography.md). | ⚪ Idea |
 | 16 | **Year 1 and 2 English** | Years 3 and 4 English exist; add Years 1 and 2. | **Left:** all of it. The national curriculum text for both years, including the spelling lists and grammar requirements, is saved in `docs/curriculum/`. Build it with #6's data format. | ⚪ Idea |
 | 17 | **Solar System meteor: test on real devices** | The meteor shower in the Solar System is built and runs smoothly on a computer. | **Left:** measure how smoothly it runs on a real phone and a real tablet. No more code needed. | 🟡 Partial |
 | 19 | **Constellations in the 3D sky** | The constellation card is a flat picture today. Add a "Find it in the real sky →" button that flies the 3D view to that constellation among the stars. | **Left:** all of it. | ⚪ Idea |
@@ -203,7 +203,9 @@ The detail behind the rows above, for whoever picks one up.
   sentences, choosing story parts). `stories.json` feeds only `SpeedReader`.
 - **#14** Offline progress needs a queue and a conflict rule that works with the
   API store. No manifest, service worker or PWA plugin exists yet.
-- **#15** [Flag Finder](../src/pages/skills/geography/FlagFinder.jsx) could
+- **#15** Sources: [key-stage-1-geography.md](curriculum/key-stage-1-geography.md)
+  and [key-stage-2-geography.md](curriculum/key-stage-2-geography.md); record the
+  year split in their mapping sections. [Flag Finder](../src/pages/skills/geography/FlagFinder.jsx) could
   support continent practice once its country data is extended and checked.
 - **#16** Sources: [year-1-english.md](curriculum/year-1-english.md),
   [year-2-english.md](curriculum/year-2-english.md), their spelling appendices

@@ -34,14 +34,24 @@ cover.
 | File | Covers |
 |---|---|
 | [year-3-science.md](year-3-science.md) | Year 3, the shared lower Key Stage 2 enquiry requirements, and the dataset mapping |
-| [year-4-science.md](year-4-science.md) | Year 4 |
-| [year-5-science.md](year-5-science.md) | Year 5 |
+| [year-4-science.md](year-4-science.md) | Year 4, with the lower key stage 2 introduction and *Working scientifically* |
+| [year-5-science.md](year-5-science.md) | Year 5, with the upper key stage 2 introduction and *Working scientifically* |
+
+### Geography
+
+Set out per key stage, not per year. Splitting a key stage into years is our
+choice and must be written down in the file's mapping section.
+
+| File | Covers |
+|---|---|
+| [key-stage-1-geography.md](key-stage-1-geography.md) | Key stage 1 (years 1 and 2), with the purpose of study and aims |
+| [key-stage-2-geography.md](key-stage-2-geography.md) | Key stage 2 (years 3 to 6), with the purpose of study and aims |
 
 ### History
 
 | File | Covers |
 |---|---|
-| [key-stage-2-history.md](key-stage-2-history.md) | Key Stage 2 |
+| [key-stage-2-history.md](key-stage-2-history.md) | Key stage 2 (years 3 to 6), with the purpose of study and aims |
 
 ## How to use these
 
@@ -62,7 +72,8 @@ face, partitioning 23 as both 20 + 3 and 10 + 13.
 
 ## Adding a year or subject
 
-Save the programme of study verbatim as `year-<n>-<subject>.md` — year first, so
+Save the programme of study verbatim as `year-<n>-<subject>.md` (or
+`key-stage-<n>-<subject>.md` for subjects set out per key stage) — year first, so
 the directory sorts by school year — keep the source URL and retrieval date in
 its header, and add a mapping table from our
 dataset topics to its statutory bullets. For English, also save that year's
