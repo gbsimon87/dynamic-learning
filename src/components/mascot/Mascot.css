@@ -294,3 +294,323 @@ body.dark .mascot {
 @media (prefers-reduced-motion: reduce) {
   .mascot .mascot-face { transition: none; }
 }
+
+/* ===== SECRETS + JOKES: SHARED TOKENS =====
+   Every colour from the --light-* / --dark-* theme tokens. Declared on .mascot
+   too, because the secret's caption is drawn inside the button. */
+.mascot,
+.mascot-joker,
+.bix-joke-card {
+  --joke-ink: var(--light-text);
+  --joke-surface: var(--light-panel);
+  --joke-accent: var(--light-accent);
+  --joke-on-accent: var(--on-light-accent);
+  --joke-shadow: var(--panel-shadow);
+}
+
+body.dark .mascot,
+body.dark .mascot-joker,
+body.dark .bix-joke-card {
+  --joke-ink: var(--dark-text);
+  --joke-surface: var(--dark-panel);
+  --joke-accent: var(--dark-accent);
+  --joke-on-accent: var(--on-dark-accent);
+}
+
+/* A held finger tells a joke; it must not select text or open a menu. */
+.mascot {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* ===== SECRETS (five quick taps) ===== */
+/* The hat sits between his antennae. Sized from the body's own width, so it
+   fits every Bix from the homepage hero to the Trophy Room. */
+.mascot-body {
+  container-type: inline-size;
+}
+
+.mascot-hat {
+  position: absolute;
+  top: -27%;
+  left: 50%;
+  z-index: 1;
+  font-size: 2rem;
+  font-size: 30cqw;
+  line-height: 1;
+  translate: -50% 0;
+  animation: mascot-hat-on 420ms cubic-bezier(0.2, 1.6, 0.4, 1) both;
+}
+
+.mascot.is-sneeze .mascot-body {
+  animation: mascot-sneeze 900ms ease-out;
+}
+
+.mascot.is-wobble .mascot-body {
+  animation: mascot-wobble 1100ms ease-in-out;
+}
+
+/* The secret's words, so it never depends on sound or on seeing movement. */
+.mascot-secret {
+  position: absolute;
+  bottom: 4%;
+  left: 50%;
+  z-index: 2;
+  width: max-content;
+  max-width: 124%;
+  padding: 0.3rem 0.7rem;
+  border: 2px solid var(--joke-accent);
+  border-radius: 14px;
+  background: var(--joke-surface);
+  box-shadow: 0 4px 10px var(--joke-shadow);
+  color: var(--joke-ink);
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: center;
+  pointer-events: none;
+  translate: -50% 0;
+  animation: mascot-secret-in 260ms ease-out both;
+}
+
+/* The medium Bix is zoomed to 0.62; keep his caption a readable size. */
+.mascot.mascot-medium .mascot-secret {
+  font-size: calc(1rem / 0.62);
+}
+
+@keyframes mascot-hat-on {
+  0% { transform: translateY(-30%) scale(0.2); opacity: 0; }
+  100% { transform: none; opacity: 1; }
+}
+
+/* Wind up, ACHOO with a little bounce backwards, settle. */
+@keyframes mascot-sneeze {
+  0% { transform: none; }
+  30% { transform: scale(1.04, 0.95) rotate(4deg); }
+  45% { transform: translate(-7%, -8%) rotate(-12deg) scale(0.96, 1.06); }
+  70% { transform: translate(-2%, 0) rotate(-3deg); }
+  100% { transform: none; }
+}
+
+@keyframes mascot-wobble {
+  0%, 100% { transform: none; }
+  15% { transform: rotate(-10deg); }
+  30% { transform: rotate(9deg); }
+  45% { transform: rotate(-7deg); }
+  60% { transform: rotate(5deg); }
+  75% { transform: rotate(-3deg); }
+}
+
+@keyframes mascot-secret-in {
+  0% { opacity: 0; transform: translateY(20%); }
+  100% { opacity: 1; transform: none; }
+}
+
+/* ===== JOKES ===== */
+.mascot-joker {
+  display: grid;
+  justify-items: center;
+  gap: 0.9rem;
+}
+
+.mascot-joker-figure {
+  display: grid;
+  justify-items: center;
+  gap: 0.7rem;
+}
+
+.mascot-joke-button,
+.mascot-joke-action,
+.mascot-joke-close {
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 140ms ease-out;
+}
+
+.mascot-joke-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 48px;
+  padding: 0.55rem 1.1rem;
+  border: 3px solid var(--joke-accent);
+  border-radius: 999px;
+  background: var(--joke-surface);
+  box-shadow: 0 4px 0 var(--joke-shadow);
+  color: var(--joke-ink);
+  font-size: 1rem;
+  line-height: 1.15;
+}
+
+.mascot-joke-button:hover,
+.mascot-joke-action:hover,
+.mascot-joke-close:hover {
+  transform: translateY(-2px);
+}
+
+.mascot-joke-button:active,
+.mascot-joke-action:active,
+.mascot-joke-close:active {
+  transform: translateY(2px);
+}
+
+.mascot-joke-button:focus-visible,
+.mascot-joke-action:focus-visible,
+.mascot-joke-close:focus-visible {
+  outline: 3px solid var(--joke-ink);
+  outline-offset: 3px;
+}
+
+/* The speech bubble, with its tail pointing up at Bix. */
+.mascot-joke-bubble {
+  position: relative;
+  box-sizing: border-box;
+  width: 20rem;
+  max-width: calc(100vw - 2.5rem);
+  margin-top: 0.4rem;
+  padding: 1rem 1.1rem;
+  border: 3px solid var(--joke-accent);
+  border-radius: 22px;
+  background: var(--joke-surface);
+  box-shadow: 0 10px 24px var(--joke-shadow);
+  color: var(--joke-ink);
+  text-align: center;
+  animation: mascot-bubble-in 240ms ease-out both;
+}
+
+.mascot-joke-bubble::before {
+  content: "";
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  width: 22px;
+  height: 22px;
+  border-top: 3px solid var(--joke-accent);
+  border-left: 3px solid var(--joke-accent);
+  border-radius: 5px 0 0 0;
+  background: var(--joke-surface);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.mascot-joke-setup {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.mascot-joke-punchline {
+  margin: 0.6rem 0 0;
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.mascot-joke-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+}
+
+.mascot-joke-action {
+  min-height: 52px;
+  padding: 0.6rem 1.3rem;
+  border: 0;
+  border-radius: 14px;
+  background: var(--joke-accent);
+  color: var(--joke-on-accent);
+  font-size: 1.05rem;
+}
+
+.mascot-joke-close {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: 2px solid var(--joke-accent);
+  border-radius: 14px;
+  background: transparent;
+  color: var(--joke-ink);
+  font-size: 1.2rem;
+}
+
+@keyframes mascot-bubble-in {
+  0% { opacity: 0; transform: translateY(-8px) scale(0.96); }
+  100% { opacity: 1; transform: none; }
+}
+
+/* ===== END-OF-TOPIC JOKE CARD =====
+   Compact, and below the next actions, so "Next challenge" stays the focal,
+   thumb-reachable button. */
+.bix-joke-card {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  box-sizing: border-box;
+  width: min(100%, 26rem);
+  margin: 1.2rem auto 0;
+  padding: 0.7rem 0.9rem;
+  border: 2px dashed var(--joke-accent);
+  border-radius: 18px;
+  color: var(--joke-ink);
+  text-align: left;
+}
+
+.bix-joke-card-bix {
+  flex: none;
+  display: grid;
+  place-items: center;
+}
+
+.bix-joke-card-body {
+  display: grid;
+  justify-items: start;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.bix-joke-card-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.bix-joke-card .mascot-joke-setup { font-size: 1.05rem; }
+.bix-joke-card .mascot-joke-punchline { margin: 0; font-size: 1.15rem; }
+
+.bix-joke-card .mascot-joke-action {
+  min-height: 48px;
+  padding: 0.5rem 1.1rem;
+  font-size: 1rem;
+}
+
+/* ===== REDUCED MOTION: secrets and jokes keep their words and hat ===== */
+@media (prefers-reduced-motion: reduce) {
+  .mascot-hat,
+  .mascot-secret,
+  .mascot-joke-bubble,
+  .mascot.is-sneeze .mascot-body,
+  .mascot.is-wobble .mascot-body {
+    animation: none;
+  }
+
+  .mascot-joke-button,
+  .mascot-joke-action,
+  .mascot-joke-close {
+    transition: none;
+  }
+
+  .mascot-joke-button:hover,
+  .mascot-joke-action:hover,
+  .mascot-joke-close:hover,
+  .mascot-joke-button:active,
+  .mascot-joke-action:active,
+  .mascot-joke-close:active {
+    transform: none;
+  }
+}

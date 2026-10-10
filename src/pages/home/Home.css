@@ -162,6 +162,53 @@ body.dark .home-page {
     grid-row: 1;
   }
 
+  /* With Bix's joke bubble: Bix and his joke button keep the top line beside
+     the greeting, and the bubble, when open, takes a full-width line under
+     it — `display: contents` lets it escape the narrow mascot column. */
+  .home-hero-inner.is-signed-in .home-hero-mascot:has(.mascot-joker),
+  .home-hero-inner.is-signed-in .mascot-joker {
+    display: contents;
+  }
+
+  .home-hero-inner.is-signed-in .mascot-joker-figure {
+    grid-column: 2;
+    grid-row: 1;
+    gap: 0.45rem;
+  }
+
+  .home-hero-inner.is-signed-in .mascot-joke-bubble {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: center;
+    margin-block: 0.6rem 0.4rem;
+  }
+
+  /* Bix is small here; his secret's words sit to his left, in the space
+     above the greeting, instead of covering his face. */
+  .home-hero-inner.is-signed-in .mascot-secret {
+    top: 2%;
+    right: 92%;
+    bottom: auto;
+    left: auto;
+    max-width: none;
+    translate: none;
+    font-size: 0.95rem;
+  }
+
+  /* The tail points up at Bix's column, not the middle of the line. */
+  .home-hero-inner.is-signed-in .mascot-joke-bubble::before {
+    left: auto;
+    right: 3rem;
+    transform: rotate(45deg);
+  }
+
+  .home-hero-inner.is-signed-in .mascot-joke-button {
+    max-width: 8.5rem;
+    padding-inline: 0.6rem;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
   /* Bix shares a line now, so he shrinks to fit beside a name. */
   .home-hero-inner.is-signed-in .mascot {
     width: clamp(88px, 24vw, 130px);

@@ -293,8 +293,10 @@ function Home() {
             </div>
           </div>
 
+          {/* `jokes`: a "Tell me a joke" button beside him, and a long press
+              on Bix himself, tell a joke in a speech bubble. */}
           <div className="home-hero-mascot">
-            <Mascot />
+            <Mascot jokes />
           </div>
         </div>
       </section>

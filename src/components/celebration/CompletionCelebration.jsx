@@ -14,6 +14,7 @@ import UnlockStep from "./steps/UnlockStep";
 import CertificateStep from "./steps/CertificateStep";
 import LevelUpStep from "./steps/LevelUpStep";
 import StreakStep from "./steps/StreakStep";
+import BixJokeCard from "../mascot/BixJokeCard";
 import "./CompletionCelebration.css";
 
 const STEP_COMPONENTS = {
@@ -26,6 +27,9 @@ const STEP_COMPONENTS = {
   levelUp: LevelUpStep,
   streak: StreakStep,
 };
+
+// Finishing a topic, or anything bigger, earns a joke from Bix on the last step.
+const JOKE_LEVELS = new Set(["topic", "category", "subject", "year"]);
 
 function NextStep({ headingRef, focalRef }) {
   return (
@@ -175,6 +179,8 @@ export default function CompletionCelebration({
             </Link>
           </div>
         )}
+
+        {step.final && JOKE_LEVELS.has(result.level) && <BixJokeCard />}
 
         {steps.length > 1 && (
           <ol className="completion-celebration-dots" aria-hidden="true">

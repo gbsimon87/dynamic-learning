@@ -120,7 +120,8 @@ src/
 ├── components/               # Shared, reusable pieces
 │   ├── RequireChild.jsx      # Route guard for Curriculum Mode (§4.7)
 │   ├── ProgressRing.jsx      # The one percent dial, shared by 3 screens
-│   ├── mascot/Mascot.jsx     # Bix — homepage, combo line, Trophy Room
+│   ├── mascot/Mascot.jsx     # Bix — homepage, combo line, Trophy Room; secrets + `jokes` (§5, "Bix's jokes")
+│   │                         #   JokeBubble, BixJokeCard (end of a topic), useBixJoke
 │   ├── celebration/          # Completion sequence, steps/ (incl. LevelUpStep, StreakStep), fx/ (particles), sound/ (cues + mute)
 │   ├── rewards/              # LevelBar, WeekDots: shared XP bar and Mon–Sun streak dots
 │   ├── coach/CoachMark.jsx   # First-visit tips from Bix, shown once per child (§5, "First play")
@@ -141,6 +142,7 @@ src/
 │   ├── avatars.js               # Starter profile emoji + colour tokens
 │   ├── badges.js                # Badge catalogue + earnBadges (§5)
 │   ├── rewardsShape.js          # normaliseRewards: the v3 rewards shape, migrated on read (§5)
+│   ├── bixJokes.js              # Bix's joke pool + nextJoke (never repeats until all told) (§5)
 │   ├── mathSpeech.js            # On-screen maths → spoken words ("6 × 5 = ?" → "6 times 5 equals what?") (§5)
 │   ├── intro.js                 # Bix's intro: who sees it, finishIntro, coach-mark tips (§5, "First play")
 │   ├── dailyPuzzle.js           # Seeded puzzle per day + one-star-a-day reward (§5, "First play")
@@ -1612,6 +1614,23 @@ counter, with no change to the ~330 challenge files:
   drag-and-build interactions read their tiles as a list after the statement,
   which is faithful to the screen but noisy (#8, remaining).
 
+### Bix's jokes & silly secrets (#23, 2026-10-10)
+
+- **Jokes** (`data/bixJokes.js`): 42 maths, science and word jokes, checked by
+  tests for length, a question-then-answer shape, British spelling and unique
+  ids. `nextJoke` never repeats one until all have been told; the told list is
+  per tab (`sessionStorage` `dl.bixJokesTold`), never learner data.
+- **Where:** the homepage Bix (`<Mascot jokes />`) has a "Tell me a joke"
+  button and a long press on Bix; the celebration's final step for a topic or
+  anything bigger shows `BixJokeCard`. Child-paced: setup, then the punchline
+  only when the child taps "Tell me!" — no timers. One action button whose
+  words change, so keyboard focus stays put; Escape closes the bubble.
+- **Secrets:** five quick taps on any non-decorative Bix make him sneeze, then
+  wobble, then change hat, in that order. The hat lives in module memory only
+  (gone on reload). Each shows a line of text and is announced in a live
+  region; movement stops under reduced motion, the text and hat still show.
+- Spoken only while the app's sound is on; the words on screen carry it muted.
+
 ### Topic stickers & the Trophy Room (2026-09-29)
 
 **Stickers are derived, never stored.** `stickers.js` marks a topic's sticker
@@ -2090,7 +2109,7 @@ not by itself deliver a standalone game or its proposed reward flow.
 | #19 3D constellations | [SolarSystem](../src/pages/skills/geography/SolarSystem.jsx), [ConstellationCard](../src/pages/skills/geography/ConstellationCard.jsx), projection modules. | Card explicitly stays outside the scene; no celestial-sphere constellation controller or real-sky action. |
 | #20 Standalone game list | [All routes](../src/main.jsx), [Skills hub](../src/pages/skills/SkillsPage.jsx) and existing standalone implementations; individual inventory below. | None of its 21 proposed games is implemented as the described standalone activity. |
 | #22 Certificates | [CertificateStep](../src/components/celebration/steps/CertificateStep.jsx), [celebration steps](../src/data/celebrationSteps.js), [TrophyRoom](../src/pages/trophies/TrophyRoom.jsx). | Year print/save exists; no topic/category certificate, avatar/signature/skill statement or reprint entry point. |
-| #23 Jokes/reactions | [Mascot](../src/components/mascot/Mascot.jsx), [celebration messages](../src/data/celebrationMessages.js). | Tap-to-cheer, pointer following and combo reactions exist; no joke catalogue/read-aloud or long-tap/five-tap secrets. |
+| #23 Jokes/reactions | [Mascot](../src/components/mascot/Mascot.jsx), [celebration messages](../src/data/celebrationMessages.js). | Tap-to-cheer, pointer following and combo reactions exist; no joke catalogue/read-aloud or long-tap/five-tap secrets. **Shipped 2026-10-10:** §5, "Bix's jokes"; row removed. |
 | #24 Wardrobe | [Avatars](../src/data/avatars.js), [badges](../src/data/badges.js), [reward shape](../src/data/rewardsShape.js). | Badges unlock pictures; no wearable catalogue, equipped-item data or layered avatar display. |
 | #25 Bix's den | [Routes](../src/main.jsx), [TrophyRoom](../src/pages/trophies/TrophyRoom.jsx), rewards data. | Trophy collections exist; no room, furniture placement or object-fact interaction. |
 | #26 Boss rounds | [ChallengeShell](../src/components/challenge/ChallengeShell.jsx), generators, [routes](../src/main.jsx). | No category-wide mixed-question picker, boss state or boss artwork/play flow. |

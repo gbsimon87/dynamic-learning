@@ -9,7 +9,9 @@ import HandOver from "../../src/pages/auth/signup/HandOver";
 import CodeInput from "../../src/pages/auth/signup/parts/CodeInput";
 import { DRAFT_KEY, STEP, emptyDraft, serialiseDraft } from "../../src/data/signupFlow";
 
-vi.mock("../../src/components/celebration/sound/player", () => ({ playCue: vi.fn() }));
+vi.mock("../../src/components/celebration/sound/player", () => ({
+  playCue: vi.fn(), isMuted: () => true, setMuted: vi.fn(), subscribe: () => () => {},
+}));
 vi.mock("../../src/components/celebration/fx/effects", () => ({ playEffect: vi.fn() }));
 const auth = { requestSignupCode: vi.fn(), completeSignup: vi.fn(), selectChild: vi.fn() };
 beforeEach(() => { Object.values(auth).forEach((fn) => fn.mockReset()); });
