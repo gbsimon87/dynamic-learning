@@ -48,6 +48,22 @@ body.dark {
   opacity: 0.75;
 }
 
+/* Maths: "Read it to me" sits beside the counter, so it is found in the
+   same place on every question without crowding the question itself. The
+   button's own look (48px tall, both themes) is .speak-btn in english-kit.css. */
+.challenge-progress-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 1rem;
+}
+
+.challenge-progress-row .speak-btn.challenge-read-aloud {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
 /* One segment per question, filling as each is answered. */
 .challenge-progress-bar {
   display: flex;

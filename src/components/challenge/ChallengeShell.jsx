@@ -1,10 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { nextMessage } from "../../data/celebrationMessages";
 import { nextStreak } from "../../data/answerStreak";
 import { createSubmissionGate } from "../../data/submissionGate";
 import { playCue } from "../celebration/sound/player";
 import { playEffect } from "../celebration/fx/effects";
 import Mascot from "../mascot/Mascot";
+import SpeakButton from "./SpeakButton";
+import { ChallengeContext } from "./challenge-context";
+import { readAloudText } from "./readAloud";
+import { mathToSpeech } from "../../data/mathSpeech";
 import "./challenge-kit.css";
 
 /**
@@ -30,6 +34,18 @@ import "./challenge-kit.css";
  * advances. Challenges that offer a hint show it from `misses >= 2`
  * (`HINT_AFTER` in hints.js); the shell itself never reveals an answer, and
  * a hint changes nothing that is earned.
+ *
+ * Read it to me: on a Maths curriculum challenge (ChallengeContext subject
+ * "math", from ProblemView) a 🔊 button beside the question counter reads the
+ * title and the visible question, options last ("Is it 18, 20 or 16?"),
+ * through `mathToSpeech` so "6 × 5 = ?" is said as "6 times 5 equals what?".
+ * See readAloud.js for what is and is not read. Never automatic; follows the
+ * app-wide mute exactly as SpeakButton does; absent without a voice.
+ *
+ * `readAloud`  force the button on or off, whatever the subject
+ * `speak`      (question) => string, for a question the screen alone cannot
+ *              say (a picture with no words); it replaces the screen reading
+ *              and still goes through `mathToSpeech`
  */
 
 function wobble(element) {
@@ -48,12 +64,15 @@ function wobble(element) {
   );
 }
 
-function ChallengeShell({ title, questions, render, onComplete }) {
+function ChallengeShell({ title, questions, render, onComplete, readAloud, speak }) {
+  const challenge = useContext(ChallengeContext);
+  const showReadAloud = readAloud ?? challenge?.subject === "math";
   const [index, setIndex] = useState(0);
   const [feedback, setFeedback] = useState(null);
   const [locked, setLocked] = useState(false);
   const [misses, setMisses] = useState(0);
   const answerRef = useRef(null);
+  const titleRef = useRef(null);
   const feedbackRef = useRef(null);
   const timerRef = useRef(null);
   const submissionRef = useRef(null);
@@ -131,11 +150,36 @@ function ChallengeShell({ title, questions, render, onComplete }) {
   // appears, so the reward lands with the tick.
   const filled = index + (locked ? 1 : 0);
 
+  // Worked out at the tap, from what is on screen now (a hint may have
+  // appeared since the question did).
+  const spokenQuestion = () => {
+    const titleText = titleRef.current?.textContent ?? "";
+    if (speak) {
+      const own = speak(questions[index]);
+      if (own) return [mathToSpeech(titleText), mathToSpeech(own)].filter(Boolean).join(". ");
+    }
+    return readAloudText(answerRef.current, titleText);
+  };
+
+  const counter = (
+    <div className="challenge-progress">
+      Question {index + 1} of {questions.length}
+    </div>
+  );
+
   return (
     <div className="challenge-container">
-      <div className="challenge-progress">
-        Question {index + 1} of {questions.length}
-      </div>
+      {showReadAloud ? (
+        <div className="challenge-progress-row">
+          {counter}
+          <SpeakButton
+            getText={spokenQuestion}
+            resetKey={index}
+            label="Read it to me"
+            className="challenge-read-aloud"
+          />
+        </div>
+      ) : counter}
       <div
         className="challenge-progress-bar"
         role="progressbar"
@@ -152,7 +196,7 @@ function ChallengeShell({ title, questions, render, onComplete }) {
         ))}
       </div>
 
-      {title && <h3 className="challenge-title">{title}</h3>}
+      {title && <h3 ref={titleRef} className="challenge-title">{title}</h3>}
 
       <div ref={answerRef}>
         {render({ question: questions[index], submit, locked, index, misses })}

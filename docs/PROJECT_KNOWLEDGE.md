@@ -127,6 +127,7 @@ src/
 │   ├── brainBreak/           # BrainBreak (mounted in RootLayout) + breakSetting.js, the device interval (§5)
 │   ├── challenge/            # The shared challenge kit: maths + the English kit (LetterInput, TileBuilder,
 │   │                         #   WordPicker, ReadingPassage, SortBins, SpeakButton, HintNote; english-kit.css; hints.js)
+│   │                         #   readAloud.js + challenge-context.js: Maths "Read it to me" (§5)
 │   ├── ui/Navbar.jsx, ui/useModalDialog.js   # useModalDialog: the one modal behaviour (§7)
 │   ├── ClockPanel.jsx, ReadingNumbersPanel.jsx, DualLabelClock.jsx,
 │   ├── MapGame.jsx, MultiplicationGrid.jsx, ShapeQuiz.jsx
@@ -140,6 +141,7 @@ src/
 │   ├── avatars.js               # Starter profile emoji + colour tokens
 │   ├── badges.js                # Badge catalogue + earnBadges (§5)
 │   ├── rewardsShape.js          # normaliseRewards: the v3 rewards shape, migrated on read (§5)
+│   ├── mathSpeech.js            # On-screen maths → spoken words ("6 × 5 = ?" → "6 times 5 equals what?") (§5)
 │   ├── intro.js                 # Bix's intro: who sees it, finishIntro, coach-mark tips (§5, "First play")
 │   ├── dailyPuzzle.js           # Seeded puzzle per day + one-star-a-day reward (§5, "First play")
 │   ├── brainBreaks.js           # Break activities, interval setting, which routes count (§5, "First play")
@@ -171,7 +173,7 @@ scripts/                      # Dev tooling, Node-only
 └── seedBuilt.js              # Which challenges exist, read from disk
 ├── utils/
 │   ├── toKebabCase.js        # Generates the IDs used in URLs + storage keys
-│   └── speech.js             # One British speech-synthesis voice (Solar System + English kit)
+│   └── speech.js             # One British speech-synthesis voice (Solar System, English/Science kit, Maths read-aloud)
 ├── pages/
 │   ├── home/Home.jsx, HomeAchievements.jsx   # HomeAchievements: something-new, streak/level, collection and daily-puzzle cards
 │   ├── intro/                # BixIntro (`/hello`, lazy) + StarBasket (drag / tap / keys lesson)
@@ -1584,6 +1586,32 @@ Escape leaves. Both "Not now" and finishing restart the count. The interval
 effect resets. Without it the intro redirect could judge a new child by the old
 child's document. Covered in `tests/components/rewards.test.jsx`.
 
+### Maths read-aloud (#8, 2026-10-10)
+
+Every Maths curriculum challenge shows **"Read it to me"** beside the question
+counter, with no change to the ~330 challenge files:
+- `ProblemView` provides `ChallengeContext` (`{ year, subject }`);
+  `ChallengeShell` shows the button when `subject === "math"` (or when its
+  `readAloud` prop forces it). English and Science keep their own SpeakButtons.
+- At the tap, `readAloud.js` walks the rendered question: visible text in screen
+  order (side-by-side cells join with commas), then the answer options gathered
+  as "Is it 18, 20 or 16?". It never reads pictures (`svg`, `img`,
+  `role="img"` — their labels are often the answer), controls, form fields,
+  hidden content, or visual aids listed in `SKIP` (scales, clocks, place-value
+  blocks, charts). `data-read-aloud="skip"` opts any element out; a challenge
+  whose screen cannot be read this way passes `speak={(question) => string}`.
+- `data/mathSpeech.js` turns symbols into words: operators, a blank as "what"
+  in a sum or "blank" in a list, money, fractions, unit symbols after a number,
+  `4s` as "fours", arrows, emoji names. It leaves clock times and hyphenated
+  words alone. Unit-tested in `mathSpeech.test.js`; the walker and the
+  Maths-only button in `tests/components/readAloud.test.jsx`.
+- Never automatic; follows the app-wide mute like every SpeakButton; renders
+  nothing without a speech voice. `SpeakButton` gained `getText` + `resetKey`
+  (work the words out at the tap) and `className`.
+- Spot-checked 48 of 332 challenges in the browser: readings are accurate. Some
+  drag-and-build interactions read their tiles as a list after the statement,
+  which is faithful to the screen but noisy (#8, remaining).
+
 ### Topic stickers & the Trophy Room (2026-09-29)
 
 **Stickers are derived, never stored.** `stickers.js` marks a topic's sticker
@@ -2048,7 +2076,7 @@ not by itself deliver a standalone game or its proposed reward flow.
 | #5 Free-play kit wrappers | [Skills routes](../src/main.jsx), [Skills hub](../src/pages/skills/SkillsPage.jsx), `src/components/challenge/`. | Money, measurement, position/direction, statistics and place-value kit interactions have no standalone Skills wrappers. |
 | #6 Content format | [EnglishPracticeGame](../src/pages/skills/english/challenges/EnglishPracticeGame.jsx), `src/data/challenges/`. | Choice/sort/build/type rendering and separate JS banks exist; other interactions still need topic-specific JSX rather than data-only authoring. |
 | #7 Accessibility pass | [TileBuilder](../src/components/challenge/TileBuilder.jsx), [SortBins](../src/components/challenge/SortBins.jsx), [DragToOrder](../src/components/challenge/DragToOrder.jsx) and review trackers. | Native-button and drag-library keyboard support exist; no completed whole-app interaction/contrast audit is recorded. |
-| #8 Read-aloud | [Speech utility](../src/utils/speech.js), [SpeakButton](../src/components/challenge/SpeakButton.jsx), English/Science games, [Solar System](../src/pages/skills/geography/SolarSystem.jsx). | Maths and other standalone games still lack shared narration; physical-device speech review remains. |
+| #8 Read-aloud | [Speech utility](../src/utils/speech.js), [SpeakButton](../src/components/challenge/SpeakButton.jsx), English/Science games, [Solar System](../src/pages/skills/geography/SolarSystem.jsx). | Maths and other standalone games still lack shared narration; physical-device speech review remains. **Maths shipped 2026-10-10:** §5, "Maths read-aloud". |
 | #9 Parent summary | [ParentArea](../src/pages/auth/ParentArea.jsx), [ChallengeShell](../src/components/challenge/ChallengeShell.jsx). | Completion summaries/profile edits exist; no persisted active time or wrong-answer evidence for practice recommendations. |
 | #10 Adaptive difficulty | `src/data/challenges/`, [ChallengeShell](../src/components/challenge/ChallengeShell.jsx). | Fixed challenge levels and transient misses/combos exist; no persisted accuracy/response time or adaptive controller. |
 | #11 Safeguards/consent | [Signup flow rules](../src/data/signupFlow.js), [account rules](../shared/accountTypes.js), [signup API](../server/routes/signup.js). | Entered-age gate exists; no grown-up consent verification/record or completed qualified review is recorded. Reviewer brief and privacy groundwork done 2026-10-10 (see "Privacy groundwork for #11"). |

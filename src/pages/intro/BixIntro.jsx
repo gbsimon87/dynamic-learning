@@ -42,7 +42,7 @@ function lineFor(step, name, extra) {
     case "drag":
       return extra.dropped ? "You did it! My star is safe in my basket." : "Can you put the star in my basket?";
     case "controls":
-      return "In English and Science, tap Read it to me to hear the question. Tap Curriculum at the top to go back to your topics.";
+      return "In a challenge, tap Read it to me to hear the question. Tap Curriculum at the top to go back to your topics.";
     case "warmup":
       return extra.picked ? `${extra.picked}? Great choice! Me too!` : "Last one! Which do you like best?";
     case "done":
@@ -194,7 +194,7 @@ export default function BixIntro() {
             ) : (
               <span className="bix-intro-demo is-static"><span aria-hidden="true">🔊</span> Read it to me</span>
             )}
-            <span>reads English and Science questions out loud.{heard ? " Like that!" : " Try it!"}</span>
+            <span>reads the question out loud.{heard ? " Like that!" : " Try it!"}</span>
           </li>
           <li>
             <span className="bix-intro-demo is-static"><span aria-hidden="true">📚</span> Curriculum</span>

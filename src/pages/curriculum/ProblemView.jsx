@@ -1,7 +1,8 @@
 import { completedScienceActivity } from "../../data/scienceActivities.js";
 import { Navigate, useParams } from "react-router";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import Challenge from "./Challenge";
+import { ChallengeContext } from "../../components/challenge/challenge-context";
 import CompletionCelebration from "../../components/celebration/CompletionCelebration";
 import { useProgress } from "../../hooks/useProgress";
 import { useOtherSubjectsProgress } from "../../hooks/useOtherSubjectsProgress";
@@ -27,6 +28,8 @@ import "./ProblemView.css";
 
 function ProblemView() {
   const { year, subject, categoryId, topicId, challengeId } = useParams();
+  // Tells the challenge kit which subject it is in (Maths gets read-aloud).
+  const challengeContext = useMemo(() => ({ year, subject }), [year, subject]);
   const { award, refresh } = useRewards();
   const child = useContext(AuthContext)?.child;
   const childName = child?.name;
@@ -210,12 +213,14 @@ function ProblemView() {
         )}
       </header>
 
-      <Challenge
-        key={positionKey}
-        challengeId={challengeId}
-        onComplete={handleComplete}
-        alreadyCompleted={alreadyCompleted}
-      />
+      <ChallengeContext.Provider value={challengeContext}>
+        <Challenge
+          key={positionKey}
+          challengeId={challengeId}
+          onComplete={handleComplete}
+          alreadyCompleted={alreadyCompleted}
+        />
+      </ChallengeContext.Provider>
     </div>
   );
 }

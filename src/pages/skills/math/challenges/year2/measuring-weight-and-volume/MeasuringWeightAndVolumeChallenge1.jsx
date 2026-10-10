@@ -52,7 +52,7 @@ function ReadScale({ question, submit, locked }) {
 
   return (
     <>
-      <p className="challenge-prompt">How heavy is the {question.thing}?</p>
+      <p className="challenge-prompt">How heavy is the bag of {question.thing}?</p>
 
       <ScaleReader
         min={0}

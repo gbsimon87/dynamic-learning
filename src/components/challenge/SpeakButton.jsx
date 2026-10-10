@@ -15,8 +15,13 @@ import "./english-kit.css";
  *
  * On a device with no speech voice it renders nothing, so a challenge must
  * never depend on it alone (see `isNarrationSupported`).
+ *
+ * `getText` instead of `text` works the words out at the moment of the tap
+ * (Maths "Read it to me" reads the question off the screen). Pass `resetKey`
+ * with it, e.g. the question index: changing it stops the voice, as a new
+ * `text` does. `className` adds to the button's own classes.
  */
-function SpeakButton({ text, label = "Hear it", compact = false }) {
+function SpeakButton({ text, getText, resetKey, label = "Hear it", compact = false, className = "" }) {
   const [muted, toggleMuted] = useSoundMuted();
   const [speaking, setSpeaking] = useState(false);
   const requestRef = useRef(0);
@@ -28,7 +33,7 @@ function SpeakButton({ text, label = "Hear it", compact = false }) {
       requestRef.current += 1;
       stopNarration();
     };
-  }, [text]);
+  }, [text, resetKey]);
   useEffect(() => {
     if (muted) stopNarration();
   }, [muted]);
@@ -37,9 +42,10 @@ function SpeakButton({ text, label = "Hear it", compact = false }) {
 
   const handleClick = async () => {
     if (muted) toggleMuted();
+    const words = getText ? getText() : text;
     const request = ++requestRef.current;
     setSpeaking(true);
-    await speakAndWait(text);
+    await speakAndWait(words);
     if (request === requestRef.current) setSpeaking(false);
   };
 
@@ -48,7 +54,7 @@ function SpeakButton({ text, label = "Hear it", compact = false }) {
   return (
     <button
       type="button"
-      className={`speak-btn ${compact ? "is-compact" : ""} ${speaking ? "is-speaking" : ""}`}
+      className={`speak-btn ${compact ? "is-compact" : ""} ${speaking ? "is-speaking" : ""} ${className}`}
       onClick={handleClick}
       aria-label={shown}
       title={shown}
