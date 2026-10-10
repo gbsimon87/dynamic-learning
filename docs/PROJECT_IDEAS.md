@@ -121,7 +121,7 @@ and what is left. File names and engineering detail are in
 | 13 | **Story Maker and Story Sequencer** | Pick a character, a place and an action to build a silly story, or put picture cards in the right order. | **Left:** all of it. Some story material in Year 3 English could be reused. | ⚪ Idea |
 | 14 | **Works offline, installs like an app** | Install it on a tablet and keep playing without internet. Useful on shared school devices. | **Left:** all of it. The risk: progress made offline has to merge safely once back online, or a child loses work. Decide how before building anything. | ⚪ Idea |
 | 15 | **Geography curriculum** | A proper topic path, like Maths has, for continents, oceans, landforms, weather, and day and night. | **Left:** all of it. First match the topics to the national curriculum text in `docs/curriculum/`. Game ideas are in [notes_geography.md](notes_geography.md). | ⚪ Idea |
-| 16 | **Year 1 and 2 English** | Years 3 and 4 English exist; add Years 1 and 2. | **Left:** all of it. The national curriculum text is already saved. Build it with #6's data format. | ⚪ Idea |
+| 16 | **Year 1 and 2 English** | Years 3 and 4 English exist; add Years 1 and 2. | **Left:** all of it. The national curriculum text for both years, including the spelling lists and grammar requirements, is saved in `docs/curriculum/`. Build it with #6's data format. | ⚪ Idea |
 | 17 | **Solar System meteor: test on real devices** | The meteor shower in the Solar System is built and runs smoothly on a computer. | **Left:** measure how smoothly it runs on a real phone and a real tablet. No more code needed. | 🟡 Partial |
 | 19 | **Constellations in the 3D sky** | The constellation card is a flat picture today. Add a "Find it in the real sky →" button that flies the 3D view to that constellation among the stars. | **Left:** all of it. | ⚪ Idea |
 | 20 | **More Skills games (from the original notes)** | **Maths:** Math Sentence Builder, Compare the Numbers, Math Maze, Clock Quiz, Skip Count Jump, Estimate It!, Magic Squares, Number Line Jump, Odd or Even Sort, Shape Sorter 3D, Pattern Play, Tally Marks Trainer, Math Bingo. **English:** Sentence Fixer, Word Picture Puzzle, Riddle Time, Emoji Sentences, Picture Vocabulary, Alphabet Adventure, Listening & Repeat. **Geography:** Country Puzzle. | **Left:** pick any and build it on the free-play game frame, so it gets levels, read-aloud and celebrations for free. | ⚪ Idea |
@@ -205,7 +205,12 @@ The detail behind the rows above, for whoever picks one up.
   API store. No manifest, service worker or PWA plugin exists yet.
 - **#15** [Flag Finder](../src/pages/skills/geography/FlagFinder.jsx) could
   support continent practice once its country data is extended and checked.
-- **#16** Interactive review of Years 3–4 is tracked in
+- **#16** Sources: [year-1-english.md](curriculum/year-1-english.md),
+  [year-2-english.md](curriculum/year-2-english.md), their spelling appendices
+  (`english-appendix-1-year-1.md`, `-year-2.md`) and
+  [english-spoken-language-years-1-to-6.md](curriculum/english-spoken-language-years-1-to-6.md).
+  Add a mapping section to each year file as topics are planned, as Years 3–4
+  have. Interactive review of Years 3–4 is tracked in
   [IMPLEMENTATION_TRACKER.md](english-curriculum/IMPLEMENTATION_TRACKER.md).
 - **#17** Pure tests T1–T10 pass; desktop checks and a production preview
   (median 8.3 ms per frame) are recorded. Simulated phone viewports don't count.

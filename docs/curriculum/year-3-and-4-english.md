@@ -13,6 +13,20 @@ The mapping to our dataset is at the end.
 
 ---
 
+## Lower key stage 2 – years 3 and 4
+
+By the beginning of year 3, pupils should be able to read books written at an age-appropriate interest level. They should be able to read them accurately and at a speed that is sufficient for them to focus on understanding what they read rather than on decoding individual words. They should be able to decode most new words outside their spoken vocabulary, making a good approximation to the word’s pronunciation. As their decoding skills become increasingly secure, teaching should be directed more towards developing their vocabulary and the breadth and depth of their reading, making sure that they become independent, fluent and enthusiastic readers who read widely and frequently. They should be developing their understanding and enjoyment of stories, poetry, plays and non-fiction, and learning to read silently. They should also be developing their knowledge and skills in reading non-fiction about a wide range of subjects. They should be learning to justify their views about what they have read: with support at the start of year 3 and increasingly independently by the end of year 4.
+
+Pupils should be able to write down their ideas with a reasonable degree of accuracy and with good sentence punctuation. Teachers should therefore be consolidating pupils’ writing skills, their vocabulary, their grasp of sentence structure and their knowledge of linguistic terminology. Teaching them to develop as writers involves teaching them to enhance the effectiveness of what they write as well as increasing their competence. Teachers should make sure that pupils build on what they have learnt, particularly in terms of the range of their writing and the more varied grammar, vocabulary and narrative structures from which they can draw to express their ideas. Pupils should be beginning to understand how writing can be different from speech. Joined handwriting should be the norm; pupils should be able to use it fast enough to keep pace with what they want to say.
+
+Pupils’ spelling of common words should be correct, including common exception words and other words that they have learnt - see English appendix 1. Pupils should spell words as accurately as possible using their phonic knowledge and other knowledge of spelling, such as morphology and etymology.
+
+Most pupils will not need further direct teaching of word reading skills: they are able to decode unfamiliar words accurately, and need very few repeated experiences of this before the word is stored in such a way that they can read it without overt sound-blending. They should demonstrate understanding of figurative language, distinguish shades of meaning among related words and use age-appropriate, academic vocabulary.
+
+As in key stage 1, however, pupils who are still struggling to decode need to be taught to do this urgently through a rigorous and systematic phonics programme so that they catch up rapidly with their peers. If they cannot decode independently and fluently, they will find it increasingly difficult to understand what they read and to write down what they want to say. As far as possible, however, these pupils should follow the year 3 and 4 programme of study in terms of listening to new books, hearing and learning new vocabulary and grammatical structures, and discussing these.
+
+Specific requirements for pupils to discuss what they are learning and to develop their wider skills in spoken language form part of this programme of study. In years 3 and 4, pupils should become more familiar with and confident in using language in a greater variety of situations, for a variety of audiences and purposes, including through drama, formal presentations and debate.
+
 Years 3 and 4 programme of study
 Reading - word reading
 Pupils should be taught to:

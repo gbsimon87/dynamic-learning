@@ -853,6 +853,15 @@ with every topic in our dataset mapped to the statutory requirement it serves,
 and a list of requirements no topic covers yet. Read the relevant row before
 authoring questions for a topic.
 
+English is complete for Years 1–6 as of 2026-10-11: each year's programme of
+study with its key stage introduction and its part of Appendix 2 (grammar and
+punctuation, bold glossary terms kept), the spelling appendix for every year
+(`english-appendix-1-*.md`, including the Years 1–2 common exception words and
+both statutory word lists), the shared spoken language requirements and the
+phonetic alphabet chart. The appendix text was extracted from the DfE PDFs and
+checked word for word against them. Files are indexed in
+`docs/curriculum/README.md`.
+
 ### Curriculum Mode — built challenges
 **Year 2 Mathematics** has all thirty-nine topics built — the year is complete:
 
