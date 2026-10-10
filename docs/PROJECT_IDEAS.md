@@ -51,21 +51,24 @@ Item-by-item source evidence: [backlog audit in PROJECT_KNOWLEDGE.md](PROJECT_KN
 - **`npm run seed` exists** (2026-09-19) and creates a test parent with two
   children who have different progress through both years. Use it rather than
   clicking through the curriculum by hand to reach a state worth looking at.
-- **Celebrations + Trophy Room shipped 2026-09-29** (Curriculum Mode only), with
+- **Celebrations + Trophy Room shipped 2026-09-29** (Curriculum Mode), with
   Bix the mascot joining combos and the Trophy Room. **Streaks, XP, levels and
-  a "something new" dot shipped 2026-09-30**. Still
-  open: the same kit for Skills Mode games. Recorded sounds shipped the same day (Mixkit,
+  a "something new" dot shipped 2026-09-30**. Skills Mode has the answer
+  feedback kit since 2026-10-10, used by the free-play games; the older games
+  still need it (#41). Recorded sounds shipped the same day (Mixkit,
   see docs/sounds/README.md). The Mixkit licence covers use in the app;
   keeping the MP3s in the public repo was cleared with a lawyer.
 - **Domain and sign-up email verification are live** as recorded in
   PROJECT_KNOWLEDGE on 2026-10-09. The sending-domain prerequisite is closed;
   sign-up fixes and their interactive checks are done (2026-10-10). The app was renamed
   **Learn with Bix** on 2026-10-10.
-- **First-play kit shipped 2026-10-10:** Bix's playable intro (`/hello`) with
-  first-visit coach marks, the Daily Bix puzzle and brain breaks. Rewards are
-  now **v3** (`intro`, `tips`, `puzzles`); see PROJECT_KNOWLEDGE §5, "First
-  play". New per-child flags belong in the rewards document the same way; a
-  new modal uses `src/components/ui/useModalDialog.js`.
+- **Shipped 2026-10-10:** the first-play kit (Bix's intro at `/hello`,
+  first-visit coach marks, the Daily Bix puzzle, brain breaks), Maths
+  read-aloud, Bix's jokes, certificates, questions as data and five free-play
+  games. Rewards are now **v3** (`intro`, `tips`, `puzzles`); see
+  PROJECT_KNOWLEDGE §5. New per-child flags belong in the rewards document the
+  same way; a new modal uses `src/components/ui/Dialog.jsx` (or the
+  `useModalDialog` hook).
 - Ideas should serve the **registered curricula (Years 2–4)** and both account
   types where relevant, while keeping the core experience suitable for 6–8 year olds.
 

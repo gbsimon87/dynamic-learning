@@ -1565,7 +1565,9 @@ screen and is also spoken when sound is on.
   badge once. A grown-up replays it from `/parent` → "Play Bix's hello game
   with …", which selects that child first so the badge is theirs.
 - **Met Bix** has `level: "intro"`, which no completion milestone produces, so
-  `earnBadges` can never award it; only `intro.finishIntro` does.
+  `earnBadges` can never award it; only `intro.finishIntro` does. The warm-up
+  says "New badge" only when `finishIntro` really stored one: a replay says
+  "You already have the Met Bix badge!", and a refused save claims nothing.
 
 **Coach marks (`components/coach/CoachMark.jsx`).** One-time tips on the quest
 map (`CurriculumPage`) and the child's own Trophy Room. A tip is recorded in
@@ -1579,7 +1581,9 @@ number); tests check two years of dates for exactly one correct option, distinct
 options and no negatives, and that odd-one-out never mixes overlapping groups.
 Ungated; a signed-in child earns **one puzzle star per day** (fixed, never
 random), stored in `puzzles`. There is deliberately no puzzle streak. Linked from
-a card in `HomeAchievements`.
+a card in `HomeAchievements`. If the star cannot be stored (the rewards read is
+still loading or failed), the page says so rather than claiming the child
+already has it. The generator uses the shared helpers in `data/freePlay/random.js`.
 
 **Brain breaks (`components/brainBreak/`, `data/brainBreaks.js`).** Mounted once
 in `RootLayout`. Counts **active play** in 5-second ticks — tab visible and a tap
@@ -1708,8 +1712,11 @@ Detective** (`/charts`, tally / pictogram / bar) and **Place Value Blocks**
   kind retry line and wobble for a miss. Mute and reduced motion are honoured
   where they live. Exported separately so the older games can adopt it (#41).
 - Generators in `data/freePlay/` are pure and tested (unique chart values so
-  most/least never tie, bounded retries, UK coins only); the shell in
-  `tests/components/freePlay.test.jsx`.
+  most/least never tie, bounded retries, UK coins only, no scale below zero —
+  negative numbers are Year 4); the shell in `tests/components/freePlay.test.jsx`.
+- The miss wobble is one shared function, `components/challenge/wobble.js`,
+  used by both `ChallengeShell` and `useAnswerFeedback`, so Curriculum and
+  Skills Mode feel the same.
 
 ### Topic stickers & the Trophy Room (2026-09-29)
 
@@ -2252,7 +2259,8 @@ focus returned on close — lives in `src/components/ui/useModalDialog.js`
 close button (certificates use it); Speed Reader's `ReaderOverlay.jsx` and the
 brain-break dialog use the hook with their own markup. A new modal uses
 `Dialog`, or the hook when it needs its own look; never write a second
-focus/scroll-lock implementation.
+focus/scroll-lock implementation. Open dialogs form a stack: only the top one
+answers Escape and traps Tab.
 
 ### Add a new Skill game
 1. Create `src/pages/skills/<subject>/<GameName>.jsx` + `<GameName>.css`.
