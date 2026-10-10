@@ -10,7 +10,7 @@
 
 Item-by-item source evidence: [backlog audit in PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md#backlog-source-audit-2026-10-09).
 
-### Context for prioritisation
+## Context for prioritisation
 - Curriculum Mode ships **UK Year 2 Maths** and **Year 3 Maths** (44 topics,
   176 challenges), **Year 3 and Year 4 English** (2026-10-01) and **Year 3
   Science** (21 topics, 84 challenges, 2026-10-03), plus standalone Skills Mode
@@ -59,12 +59,12 @@ Item-by-item source evidence: [backlog audit in PROJECT_KNOWLEDGE.md](PROJECT_KN
   keeping the MP3s in the public repo was cleared with a lawyer.
 - **Domain and sign-up email verification are live** as recorded in
   PROJECT_KNOWLEDGE on 2026-10-09. The sending-domain prerequisite is closed;
-  the sign-up code fixes are implemented; interactive verification remains open (#37). The app was renamed
+  sign-up fixes and their interactive checks are done (2026-10-10). The app was renamed
   **Learn with Bix** on 2026-10-10.
 - Ideas should serve the **registered curricula (Years 2–4)** and both account
   types where relevant, while keeping the core experience suitable for 6–8 year olds.
 
-### What 6–8 year olds enjoy (the lens for #22 onwards)
+## What 6–8 year olds enjoy (the lens for #22 onwards)
 - **Doing, not reading.** They learn an app by tapping it. A screen of text is
   skipped; one spoken sentence plus one thing to tap is not.
 - **Wins in seconds.** Under a minute to the first success, and short rounds
@@ -82,7 +82,7 @@ Item-by-item source evidence: [backlog audit in PROJECT_KNOWLEDGE.md](PROJECT_KN
   nothing that sells. Every idea below has to work with touch, mouse and
   keyboard, and with sound off.
 
-### Status key
+## Status key
 | Status | Meaning |
 |---|---|
 | 🟡 Partial | Started; some of it exists |
@@ -112,7 +112,6 @@ below reflects current risks and dependencies; it does not commit ideas to work.
 | 15 | **Geography curriculum expansion** | Turn continents, oceans, landforms, habitats, weather and day/night into a structured topic path. Use `docs/curriculum/` as the authority and map topics to the statutory requirements before implementation; source game ideas in [notes_geography.md](notes_geography.md). [Flag Finder](../src/pages/skills/geography/FlagFinder.jsx) could support continent-focused practice, subject to adding and validating the required country metadata. | ⚪ Idea |
 | 16 | **Year 1–2 English curriculum** | Years 3 and 4 are implemented (2026-10-01), with interactive review tracked in [IMPLEMENTATION_TRACKER.md](english-curriculum/IMPLEMENTATION_TRACKER.md). Remaining expansion: Year 1–2 English; programmes of study are already saved in `docs/curriculum/`. | ⚪ Idea |
 | 17 | **Solar System meteor: physical-device benchmark** | The meteor experiment is implemented and locally verified: pure tests T1–T10 pass, desktop browser checks and ten-cycle resource checks are recorded, and the production preview ran at a median 8.3 ms. **Remaining: physical phone/tablet performance evidence**; simulated phone viewports do not close it. Follow the [implementation plan](solar-system-meteor/IMPLEMENTATION_PLAN.md) and [progress tracker](solar-system-meteor/IMPLEMENTATION_TRACKER.md). | 🟡 Partial |
-| 18 | **Science diagram review follow-ups** | Six bugs (the dog card shows no skeleton, the leaf account is drawn underwater, and four smaller ones) and five low-risk asset-script and licence items, found reviewing the illustrated Year 3 Science diagrams on 2026-10-04. Checklist in [DIAGRAM_REVIEW_FOLLOWUPS.md](science-curriculum/DIAGRAM_REVIEW_FOLLOWUPS.md). | 🔵 Planned |
 | 19 | **Constellations in the 3D sky (stage two)** | The constellation card ships as a flat projection. Stage two adds a `constellationSky.js` module shaped like `meteorExperiment.js` (`enter / update / resize / exit / dispose / isActive`): a `THREE.Group` on a celestial sphere at radius ≈2700 from the same RA/Dec via `raDecToUnitVector`, with `Points` for stars, `LineSegments` for the figure and a `createLabel()` sprite. To solve: framing a point outward on the sphere within `controls.minDistance` 1.5 / `maxDistance` 3000 and a far plane of 5000; `depthTest: false` plus a `renderOrder` so planets do not slice through the figure; dimming the random star field at radius 3000 while active. The card gains a "Find it in the real sky →" button. | ⚪ Idea |
 | 20 | **Unbuilt Skills Mode game ideas** | From the original notes; intended routes in brackets. **Maths:** Math Sentence Builder (`/math-sentences`, word problem → equation), Compare the Numbers (`/compare-numbers`), Math Maze (`/math-maze`, solve to move through a maze), Clock Quiz (`/clock-quiz`, match analogue/digital times), Skip Count Jump (`/skip-count`), Estimate It! (`/estimate`, guess how many then reveal), Magic Squares (`/magic-squares`, 3×3 equal sums), Number Line Jump (`/number-line`, animated +2/−3 jumps), Odd or Even Sort (`/odd-even-sort`), Shape Sorter 3D (`/shape-sorter`), Pattern Play (`/pattern-play`, ABAB/AABB), Tally Marks Trainer (`/tally-trainer`), Math Bingo (`/math-bingo`). **English:** Sentence Fixer (`/sentence-fixer`, correct “the dog run fast”), Word Picture Puzzle (`/word-picture-puzzle`, fill a part-hidden word), Riddle Time (`/riddle-time`), Emoji Sentences (`/emoji-sentences`, decode emojis into words), Picture Vocabulary (`/picture-vocabulary`, pick the word for an image), Alphabet Adventure (`/alphabet-adventure`, letter order), Listening & Repeat (`/listening-repeat`, needs #8). **Geography:** Country Puzzle (`/country-puzzle`, assemble a continent). Money (`/money`, `/money-basics`), Measurement Match and Place Value Blocks are #5; phonics games are #12; stories are #13; other geography is #15. | ⚪ Idea |
 | 22 | **Topic/category certificates & personalisation** | A **year-completion certificate with the child’s name, date and “Print or save” already ships** in `CertificateStep.jsx`; the year milestone requires all registered subjects. Remaining: topic/category certificates, the child’s avatar, a kid-friendly skill statement and Bix’s signature. Reuse the existing print stylesheet and milestone calculations, and provide a way to reprint after leaving the celebration. | 🟡 Partial |
@@ -130,25 +129,45 @@ below reflects current risks and dependencies; it does not commit ideas to work.
 | 34 | **Daily Bix puzzle** | One special puzzle a day — a logic riddle, a "what comes next", an odd one out — answerable in under two minutes, with a small fixed reward (no random prizes). Something new each day without the pressure of a streak. A seeded generator per date means no backend work is needed to choose the puzzle. | ⚪ Idea |
 | 35 | **First-play intro with Bix** | The child-facing half of the question-led sign-up (shipped 2026-10-07; the hand-over ends where this starts): the first time a **child** opens their profile, nothing welcomes them. Add a **90-second playable intro**, the same on phone and desktop, where every step is something to do rather than read. (1) Bix pops up and says hello **using their name**, read aloud with a caption. (2) "Tap me!" teaches tapping; Bix giggles. (3) "Drag the star into my basket" teaches dragging, with a tap alternative, with a working keyboard path (arrow keys plus Enter) shown on desktop. (4) Teach controls actually present in the chosen challenge: back and, where available, read-aloud. Hints currently appear after two misses rather than through a hint button; Maths read-aloud depends on #8. (5) One warm-up question they can't get wrong, with the full celebration and a **"First Steps" sticker**. (6) Bix walks them to their first topic. A **Skip** button is always visible; a grown-up can replay the intro from `/parent`. Layout: one column and thumb-reachable buttons in portrait, side by side on wide screens, 64 px targets, honours reduced motion. The "has done the intro" flag is **per child** and belongs in the rewards document or a whitelisted child field (`childFields.js`) — **never** the progress document. Follow-on: **first-visit coach marks** on the topic map and the Trophy Room ("Your stickers live here!"), each shown once. | ⚪ Idea |
 | 36 | **Wire privacy-hardened analytics (PostHog)** | The sign-up funnel already calls `track()` in `src/utils/analytics.js`, with event/property allow-lists and tests; it sends nothing. Remaining: install and wire PostHog through that wrapper, consent gating and deployment configuration for an audience of children: **EU Cloud** (Frankfurt) and a signed **DPA**; **IP capture off** at project level; **autocapture off** (explicit events only); **session replay off**; `person_profiles: 'identified_only'` and never `identify()` with an email or a child's name — use a random app-generated id, which is still pseudonymous personal data, not "zero-PII". Track **grown-ups' and learners' actions, not children's**, unless a grown-up has opted in; capture starts opted out on child profiles. Tie the consent wording to #11. | 🟡 Partial |
-| 37 | **Close sign-up review findings** | Code fixes implemented 2026-10-09: **C1** bounded email validation; **I1** failed-send cooldown release with stale-write protection; **I2** transient-error retry; **I3** per-client limits and a persistent daily send budget; **M1/M2/M5** navigation, focus and mail timeout. Optional M3/M4 countdown/narrow-screen fixes also included. Legacy progress fixtures and logout-session isolation are repaired; full database-backed tests, lint, build and server-rendered code-screen checks pass. Scoped re-review recorded in the [tracker](superpowers/plans/2026-10-07-signup-onboarding-tracker.md). **Remaining: interactive error-path, navigation/focus and both-theme browser checks**, unavailable in the fix session. | 🟡 Partial |
-| 38 | **Finish English & Science interactive review** | Implementation and automated checks exist, but broad interactive and owner review remains open in the [English tracker](english-curriculum/IMPLEMENTATION_TRACKER.md) and [Science tracker](science-curriculum/y3-science-tracker.md). Use disposable profiles to check wrong answers/hints, keyboard/touch controls, guided enquiries/reset, full completions, celebrations, saved progress/reload/replay, child switching, phone layouts, both themes and real-device speech. Coordinate with #18; initial React renders are not playthrough evidence. | 🟡 Partial |
+| 38 | **Finish English & Science interactive review** | Implementation and automated checks exist, but broad interactive and owner review remains open in the [English tracker](english-curriculum/IMPLEMENTATION_TRACKER.md) and [Science tracker](science-curriculum/y3-science-tracker.md). Use disposable profiles to check wrong answers/hints, keyboard/touch controls, guided enquiries/reset, full completions, celebrations, saved progress/reload/replay, child switching, phone layouts, both themes and real-device speech. Initial React renders are not playthrough evidence. | 🟡 Partial |
 | 41 | **Skills Mode celebrations** | Reuse the shared answer effects, gentle retry feedback, combos, sounds and Bix reactions in existing standalone games. Define suitable game events rather than assuming the curriculum’s four-challenge completion contract. Keep Skills Mode ungated; decide any persistent rewards separately before extending XP/streak rules. Honour mute, reduced motion, keyboard/touch use and both themes. | ⚪ Idea |
 
 ---
 
 ## 🎯 Suggested Order
 
-1. **Finish sign-up verification:** #37 code fixes and automated review are done.
-   Complete the remaining interactive browser checks; email verification is live.
-2. **Finish reviewing shipped content:** #18 (Science diagrams) and #38
-   (English/Science playthroughs and owner review), with #7 (accessibility)
-   alongside the affected interactions. Run #17's physical-device benchmark
-   when a phone/tablet is available; it does not need more feature code first.
-3. **Make the first visit clearer:** #35
-   (playable child intro) and #8 (remaining read-aloud coverage). Small follow-ons:
-   #22 (extend existing certificates) and #23 (Bix’s jokes).
-4. **Reduce the cost of expansion:** #6 (authoring format), then #5 (free-play
-   wrappers), #41 (Skills celebrations) and further curriculum/game ideas.
-5. **Add evidence before adapting:** define session/attempt recording for #9
-   and #10, keeping it separate from the completion store. Review #11 for the
-   actual audience and resolve consent choices before #36 adds analytics.
+Ordered by risk to real users first, then by what unblocks the most later work.
+Step 1 can run alongside the others: #11 is mostly outside review, not code.
+
+1. **Start the safeguarding review now:** #11. The app is live for children and
+   the under-13 gate trusts the entered age. Qualified review takes calendar
+   time and its outcome constrains #36 (analytics) and the attempt recording in
+   step 5, so begin it before building either.
+2. **Finish reviewing shipped content:** #38 (English/Science playthroughs and
+   owner review), with #7 (accessibility) fixed in the same interactions rather
+   than as a separate pass. Run #17's physical-device benchmark whenever a
+   phone/tablet is to hand; it needs no more code.
+3. **Make the first visit welcoming:** #8 (Maths read-aloud) **before** #35
+   (playable child intro), whose Bix greeting and controls step rely on it.
+   Quick wins alongside: #23 (Bix's jokes) and #22 (topic certificates, reprint).
+4. **Reduce the cost of expansion:** #6 (authoring format) first, because it
+   makes #16 (Year 1–2 English) and #15 (Geography) much cheaper. Then #5
+   (free-play wrappers) with #41 (Skills celebrations) so new games launch with
+   feedback, then picks from #20.
+5. **Add evidence before adapting:** once #11 has settled what may be recorded,
+   build session/attempt recording, separate from the completion store, then #9
+   (time spent, topics needing practice) and #10 (adaptive difficulty). #36
+   (analytics) follows the same consent decision.
+6. **Delight backlog, by dependency:**
+   - **Reuses what exists (cheapest):** #31 (notebook/passport from existing
+     art), #27 (mission tick-off), #34 (daily puzzle, no backend), #26 (boss
+     rounds; needs a mixed-question picker).
+   - **Chains:** #24 (wardrobe) → #25 (Bix's den); #8 → #12 (phonics) and #33
+     (story adventure).
+   - **Standalone:** #13 (stories), #28 (teach the grown-up), #29
+     (pass-and-play), #30 (brain breaks), #19 (3D constellations).
+   - **Date-bound:** #32 (seasonal events) — plan a pack a term ahead of its
+     season; this year's October slot has passed.
+   - **Needs a design decision first:** #14 (offline/PWA) — agree the offline
+     progress queue and conflict rule before any service worker, because a
+     bad merge loses learner progress.

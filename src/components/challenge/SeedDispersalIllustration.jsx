@@ -1,4 +1,5 @@
 import { useId, useState } from "react";
+import ScienceCredit from "./ScienceCredit";
 import SeedDispersalFigure from "./SeedDispersalFigure";
 import { CREDITS, fluent } from "./scienceArt.js";
 import "./science-kit.css";
@@ -43,7 +44,7 @@ export default function SeedDispersalIllustration(props) {
       <figcaption>
         {feature}
         {evidence && <p>{evidence}</p>}
-        {FLUENT_KINDS[kind] && <span className="science-credit">{CREDITS.fluent}</span>}
+        {FLUENT_KINDS[kind] && <ScienceCredit>{CREDITS.fluent}</ScienceCredit>}
       </figcaption>
     </figure>
   );

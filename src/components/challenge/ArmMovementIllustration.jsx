@@ -1,5 +1,7 @@
 import { useId, useState } from "react";
 import MovementFigure from "./MovementFigure";
+import ScienceCredit from "./ScienceCredit";
+import { CREDITS } from "./scienceArt.js";
 import { MOVEMENT_POSES } from "../../data/movementDiagram.js";
 import { lensPath } from "../../data/scienceDiagrams.js";
 import arm from "../../assets/science/bodyparts3d/arm.json";
@@ -73,7 +75,7 @@ export default function ArmMovementIllustration({ pose = "straight" }) {
       </svg>
       <figcaption>
         {description} The thin ends stand for tendons, which join each muscle to a bone. This simplified arm model shows one pair; real movement uses more muscles.
-        <span className="science-credit">{arm.credit}</span>
+        <ScienceCredit>{CREDITS.bones}</ScienceCredit>
       </figcaption>
     </figure>
   );

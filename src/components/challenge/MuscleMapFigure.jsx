@@ -1,4 +1,6 @@
 import { useId } from "react";
+import ScienceCredit from "./ScienceCredit";
+import { CREDITS } from "./scienceArt.js";
 import { FRONT_MUSCLES } from "../../assets/science/body-muscles/muscles.front.js";
 import { BACK_MUSCLES } from "../../assets/science/body-muscles/muscles.back.js";
 import "./science-kit.css";
@@ -32,18 +34,26 @@ export default function MuscleMapFigure({ highlight = ["biceps", "triceps"], cap
   return (
     <figure className="science-life-figure science-illustration science-muscle-map">
       <div className="science-muscle-map-views">
-        {VIEWS.map((view) => (
-          <svg key={view.id} viewBox={view.viewBox} role="img" aria-labelledby={`${id}-${view.id}`}>
-            <title id={`${id}-${view.id}`}>{`${view.label} of a body. Coloured muscles: ${names.join(", ")}.`}</title>
-            {view.muscles.map((muscle) => (
-              <path key={muscle.id} d={muscle.path} className={isLit(muscle.id) ? "is-lit" : ""} data-muscle-region={muscle.id} />
-            ))}
-          </svg>
-        ))}
+        {VIEWS.map((view) => {
+          // Name only the groups this view actually colours.
+          const shown = groups.filter((group) => view.muscles.some((muscle) => group.match.test(muscle.id)));
+          const title = `${view.label} of a body. ${shown.length ? `Coloured muscles: ${shown.map((group) => group.label.toLowerCase()).join(", ")}.` : "No muscles coloured."}`;
+          return (
+            <div key={view.id} className="science-muscle-map-view">
+              <svg viewBox={view.viewBox} role="img" aria-labelledby={`${id}-${view.id}`}>
+                <title id={`${id}-${view.id}`}>{title}</title>
+                {view.muscles.map((muscle) => (
+                  <path key={muscle.id} d={muscle.path} className={isLit(muscle.id) ? "is-lit" : ""} data-muscle-region={muscle.id} />
+                ))}
+              </svg>
+              <span className="science-muscle-map-label" aria-hidden="true">{view.label}</span>
+            </div>
+          );
+        })}
       </div>
       <figcaption>
         {caption ?? `Muscles cover the skeleton. The coloured ones are on the ${names.join(" and the ")}.`}
-        <span className="science-credit">Muscle map: Body Muscles © Ivan Vulović, Apache-2.0</span>
+        <ScienceCredit>{CREDITS.muscles}</ScienceCredit>
       </figcaption>
     </figure>
   );

@@ -266,3 +266,11 @@ body.dark .navbar-streak-badge { background: var(--dark-accent); color: var(--on
   .navbar-stats { display: none; }
   .navbar-streak-badge { display: inline-block; }
 }
+
+/* The narrowest phones (320px): the signed-out bar ran 8px past the screen.
+   Tighten the gaps and the sign-in pill rather than dropping a control. */
+@media (max-width: 360px) {
+  nav.navbar { gap: 0.35rem; padding-inline: 0.75rem; }
+  .navbar-links { gap: 0.15rem; }
+  .navbar-auth-link { padding: 0.4rem 0.5rem; }
+}

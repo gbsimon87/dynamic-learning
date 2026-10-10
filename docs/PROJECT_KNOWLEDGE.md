@@ -1838,15 +1838,28 @@ without a changelog note or the report was inaccurate.
    name on purpose: the `dynamic_learning` / `dynamic_learning_dev` databases,
    the Render service names/URLs and the repo, so no account or progress moves. Deliberately no personal address in this
    file: the repo is public.
-18. **Sign-up review: interactive verification remains open** (2026-10-09).
-   The [tracker](superpowers/plans/2026-10-07-signup-onboarding-tracker.md)
-   records fixes for C1/I1/I2/I3/M1/M2/M5 and optional M3/M4. The route-test
-   fixtures now use valid progress trees and an isolated logout session; all
-   database-backed tests pass. Remaining: browser error paths, keyboard/focus,
-   Back after hand-over and narrow layouts in both themes. Browser tools were
-   unavailable in the fix session. Tracked in PROJECT_IDEAS #37.
-
 **Resolved since last review:**
+
+- **Sign-up interactive checks closed** (#37, 2026-10-10). All seven checks
+  ran in Playwright against a throwaway local MongoDB with a stubbed mail
+  provider (results per check in the
+  [tracker](superpowers/plans/2026-10-07-signup-onboarding-tracker.md)). Fixes
+  from that run: the logged-out navbar overflowed 8px at 320px (tightened in
+  `Navbar.css` under 360px); daily-limit waits now read in hours, not "1426
+  minutes" (`signupCopy.js`); "Send a new code" no longer drops keyboard focus
+  to `<body>` — focus returns to the first code box once the send settles
+  (`CodeBody` in `steps.jsx`). Not verified: real Resend delivery, a real
+  hour/UTC-midnight rollover, and client limits behind Render's proxy.
+- **Science diagram review follow-ups closed** (#18, 2026-10-10). All eleven
+  items in [DIAGRAM_REVIEW_FOLLOWUPS.md](science-curriculum/DIAGRAM_REVIEW_FOLLOWUPS.md):
+  the dog card draws its skeleton (our own `DogSkeleton.jsx`, no credit needed); the leaf account is no longer underwater;
+  the back muscle now lengthens straight→half→bent (re-rendered `arm.json`,
+  guarded by `armMuscleLengths.test.js`); muscle-map titles match each view
+  with visible Front/Back labels; label fixes; hoverfly captioned as a fly;
+  asset scripts run Chrome sandboxed with network blocked, verify sha256s from
+  `sources.json` and validate cache paths; SVGO strips scripts and a test
+  rejects active SVG content; a `/credits` page carries every licence text and
+  is linked from each Science caption. Checked in the browser in both themes.
 
 - **Numbers and Counting Challenge 3 rejected correct answers** (found
   2026-08-09, fixed 2026-09-18). `handleSubmit` compared

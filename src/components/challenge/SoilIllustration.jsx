@@ -1,4 +1,5 @@
 import { useId } from "react";
+import ScienceCredit from "./ScienceCredit";
 import { CREDITS, fluent } from "./scienceArt.js";
 import "./science-kit.css";
 
@@ -34,7 +35,7 @@ export default function SoilIllustration({ features, sampleId }) {
       </svg>
       <figcaption>
         Sample {sampleId}: supplied magnified notes. These pictures show selected components, not exact sizes or amounts.
-        <span className="science-credit">{CREDITS.fluent}</span>
+        <ScienceCredit>{CREDITS.fluent}</ScienceCredit>
       </figcaption>
       <ul>{features.map((c) => <li key={c.id}><strong>{c.letter}</strong>: {c.text}.</li>)}</ul>
     </figure>

@@ -35,7 +35,7 @@ export const OBSERVATIONS = [
 export const DIAGRAM_CASES = ["straight", "branching", "woody", "bending"].flatMap((form) =>
   ["broad", "narrow", "small", "rounded"].map((leafShape) => ({
     id: `${form}-${leafShape}`, form, leafShape,
-    description: `A flowering plant with a ${form === "woody" ? "woody trunk" : `${form} stalk`} and ${leafShape} flat shapes. The soil is shown cut away so you can see the parts below it.`,
+    description: `A flowering plant with a ${form === "woody" ? "woody trunk" : `${form} stalk`} and ${form === "woody" ? "many small flat shapes" : `${leafShape} flat shapes`}. The soil is shown cut away so you can see the parts below it.`,
   }))
 );
 

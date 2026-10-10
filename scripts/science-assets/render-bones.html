@@ -203,7 +203,7 @@ try {
     // Where the model muscles attach, read off the posed bones:
     // biceps from the front of the upper humerus to the front of the radius
     // just below the elbow; triceps from the back of the upper humerus to the
-    // point of the elbow (the top of the ulna).
+    // back of the ulna just below the point of the elbow.
     const along = (v) => v.dot(forward);
     const band = (vs, y0, y1) => vs.filter((v) => v.y >= y0 && v.y <= y1);
     const upper = band(hv, maxY - (maxY - minY) * 0.3, maxY - (maxY - minY) * 0.2);
@@ -217,7 +217,13 @@ try {
     const forearmFront = forward.clone().applyQuaternion(q);
     const ahead = (v) => v.dot(forearmFront);
     const bicepsInsert = radialBand.reduce((a, b) => (ahead(b) > ahead(a) ? b : a));
-    const olecranon = near(ulna, 0, 0.05).reduce((a, b) => (ahead(b) < ahead(a) ? b : a));
+    // The triceps fixes onto the olecranon, the hook of the ulna that sticks
+    // up behind the elbow joint. Take its back-and-top corner in the forearm's
+    // own frame, so the point swings round behind the joint as the arm bends
+    // and the triceps lengthens (it shortens if taken from the bare back).
+    const forearmUp = new THREE.Vector3(0, 1, 0).applyQuaternion(q);
+    const hook = forearmFront.clone().negate().add(forearmUp).normalize();
+    const tricepsInsert = near(ulna, 0, 0.05).reduce((a, b) => (b.dot(hook) > a.dot(hook) ? b : a));
     const hand = arm.filter((m) => /phalanx|finger|thumb/i.test(m.userData.name)).flatMap(worldVertices);
     const handCentre = hand.reduce((s, v) => s.add(v), new THREE.Vector3()).divideScalar(hand.length);
     const anchorsOut = {
@@ -226,7 +232,7 @@ try {
       bicepsOrigin: project(bicepsOrigin),
       bicepsInsert: project(bicepsInsert),
       tricepsOrigin: project(tricepsOrigin),
-      tricepsInsert: project(olecranon),
+      tricepsInsert: project(tricepsInsert),
       hand: project(handCentre),
     };
     for (const key of Object.keys(anchorsOut)) anchorsOut[key] = { x: +anchorsOut[key].x.toFixed(4), y: +anchorsOut[key].y.toFixed(4) };

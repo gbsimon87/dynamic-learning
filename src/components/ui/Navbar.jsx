@@ -57,7 +57,7 @@ function Navbar() {
       {/* Shortened brand: the mark carries the identity in the tight space a
           phone bar has, and the full name stays as the accessible name. */}
       <Link to="/" className="logo" aria-label="Learn with Bix, home">
-        <span className="logo-mark" aria-hidden="true">DL</span>
+        <span className="logo-mark" aria-hidden="true">LB</span>
       </Link>
 
       {/* The theme toggle used to be the ONLY control here, so from any game the

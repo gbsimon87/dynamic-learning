@@ -8,7 +8,7 @@
 | [Plan](2026-10-07-signup-onboarding.md) | Twelve tasks with the code, tests and commands for each. |
 | This file | What's done, what's next, and every decision made along the way. |
 
-**Last updated:** 2026-10-09 · **Status:** all 12 tasks and the review fix round implemented; automated/scoped review passes · **Next:** interactive browser checks below (browser tools unavailable in the fix session)
+**Last updated:** 2026-10-10 · **Status:** all 12 tasks and the review fix round implemented; automated/scoped review passes · **Next:** interactive checks run 2026-10-10 — all pass except the 320 px navbar overflow; see findings below
 
 ## ▶ Resume here
 
@@ -31,7 +31,19 @@ The original whole-branch review ([final review](2026-10-07-signup-onboarding-fi
 
 **Validation, 2026-10-09:** lint and production build pass. Full `npm test` runs against disposable local MongoDB with no skips; final counts are recorded in the scoped review. Sign-up regressions cover hostile emails on both endpoints, failed first/resends, failed-send caps, stale retry races, proxy spoofing and budget denial. The budget suite covers parallel reservations, limiter recreation and day rollover. A stalled fake provider times out. Vite SSR loads and renders `CodeBody`, checking transient retry, invalid/expired exclusions, busy disabling and minute countdown. Built `/signup`, its JS asset and `/api/health` are checked over local HTTP. These are render/HTTP checks, not interactive browser evidence.
 
-**Remaining interactive checks:** failed send → immediate retry; network completion error → retained digits → Try again; `SIGNUP_FAILED` retry → expired code → new code; client/hourly/daily limits; hand-over then browser Back; email/code heading focus and keyboard retry; 320/375/1440 px in light/dark themes. Browser and Node REPL controls are unavailable in this session. Existing Task 11 evidence below remains historical and does not close these new checks.
+**Remaining interactive checks — run 2026-10-10** (Playwright against a `VITE_USE_API=true` build served by `vite preview`, API on a throwaway local MongoDB `dl_signup_check`, `send` mode with a preloaded `fetch` stub for Resend so no email left the machine; failures via request interception and local-db edits; no app code changed):
+
+| Check | Result (2026-10-10) | Notes |
+|---|---|---|
+| Failed send → immediate retry | ✅ pass | Provider 500 → 502 "I couldn't send the email. Try again?"; immediate retry is not 429 (another 502 while failing, 200 → code step once it works). |
+| Network completion error → retained digits → Try again | ✅ pass | Aborted `/complete`: "I can't reach the internet. Try again?", all six digits kept, 64 px Try again shown. |
+| `SIGNUP_FAILED` retry → expired code → new code | ✅ pass | 500 `SIGNUP_FAILED`: "nothing was saved", digits kept, Try again. Code expired in db → Try again → `CODE_EXPIRED`, boxes cleared, Try again hidden, "Send a new code" primary → new code → 201 account. |
+| Client / hourly / daily limits | ✅ pass | Hourly (`sendCount` 5): 429 `TOO_MANY_CODES`, "try again in 60 minutes", resend shows "in 60 min". Daily budget at 90: 429, but copy reads "try again in 1426 minutes" (see findings). 11th `/code` from one client: 429 `TOO_MANY_ATTEMPTS`, "55 minutes". |
+| Hand-over then browser Back | ✅ pass | `/` → `/signup` → … → Let's go → `/`; Back stays on `/` (signed-in home), no blank sign-up. |
+| Email/code heading focus and keyboard retry | ✅ pass (minor finding) | Focus lands on the "Your email and a password" / "Check your email" h1. Tab from last digit reaches Try again; Enter retries. Finding: after "Send a new code", focus drops to `<body>` (the button disables). |
+| 320/375/1440 px, light/dark | ⚠️ 375/1440 pass; 320 fails | Code boxes 38/47/64 px wide, all 64 px tall; buttons 64 px; both themes. At 320 px the page scrolls sideways by 8 px: the navbar's "Sign in" link (`.navbar-links` / `.navbar-auth-link`, `src/components/ui/Navbar.css`) overflows. |
+
+Screenshots are in that session's scratchpad (not the repo). Superseded note: earlier sessions had no browser controls.
 
 **Running the tests:** unit `npm test`; server tests need a MongoDB — the owner's `.env` has `MONGO_URI`, but the server reads `MONGODB_URI` (+ optional `MONGODB_DB`). A throwaway local one: `mongod --dbpath /tmp/dl-mongo --port 27018 --fork --logpath /tmp/dl-mongo.log` then `MONGODB_URI=mongodb://127.0.0.1:27018 node --test 'server/*.test.js'`.
 

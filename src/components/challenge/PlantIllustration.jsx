@@ -1,4 +1,5 @@
 import { useId, useState } from "react";
+import ScienceCredit from "./ScienceCredit";
 import PlantFigure from "./PlantFigure";
 import { PLANT_FEATURES } from "../../data/plantDiagram.js";
 import { LABEL_X, SOIL_Y, plantShape, treePlacement } from "../../data/plantArt.js";
@@ -49,7 +50,7 @@ export default function PlantIllustration(props) {
       </svg>
       <figcaption>
         {diagram.description}
-        <span className="science-credit">{CREDITS.bioicons}. {woody ? CREDITS.tree : CREDITS.fluent}</span>
+        <ScienceCredit>{CREDITS.bioicons}. {woody ? CREDITS.tree : CREDITS.fluent}</ScienceCredit>
       </figcaption>
     </figure>
   );

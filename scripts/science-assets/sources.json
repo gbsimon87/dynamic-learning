@@ -1,5 +1,5 @@
 {
-  "$comment": "Every third-party file the Science diagrams use, pinned to a commit. Scripts in this folder fetch ONLY what is listed here; nothing is a runtime dependency. See docs/PROJECT_KNOWLEDGE.md (Year 3 Science, illustrated diagrams).",
+  "$comment": "Every third-party file the Science diagrams use, pinned to a commit. Scripts in this folder fetch ONLY what is listed here; nothing is a runtime dependency. See docs/PROJECT_KNOWLEDGE.md (Year 3 Science, illustrated diagrams). sha256 holds the hash of every file fetched as downloaded (before any transform), checked on download and on cache reuse; bodyparts3d also lists the atlas chunks render-bones.mjs needs.",
   "bodyparts3d": {
     "repo": "ashemag/human-atlas",
     "commit": "1c38bf35c254a891200d3cedecfd57abebe83d8d",
@@ -10,6 +10,14 @@
       "public/models/atlas.json",
       "public/ATTRIBUTION.md"
     ],
+    "sha256": {
+      "public/models/atlas.json": "c359f4bcd2cba90b7411d66d5e9fc04dc81294d46cd5c1e8b212c824f2e5bbee",
+      "public/ATTRIBUTION.md": "40e5a3d5ce2a9bc942972daafa2da63c9ee8135216858dccf358d3dd85bde501",
+      "public/models/body-0.bin": "b33b2b5aac20f35fbf6871f916607bf3c4d386321c8c0fdadcca6b5d24e3641e",
+      "public/models/body-11.bin": "e8c1afe7f30fe710ad164ec9cd2287a32881606e7eb590af47d76b3f84405027",
+      "public/models/body-12.bin": "61a6c8da89bb20df50c575964ac81aa4090eabfc2cb27ad2155aea325f31c6c0",
+      "public/models/body-13.bin": "4c51b6be85d5b705d2b52b79b9ad1cdae0b65ad03c9402a2f2673c7633fd94f3"
+    },
     "outputs": "src/assets/science/bodyparts3d",
     "renderedBy": "scripts/science-assets/render-bones.mjs"
   },
@@ -46,6 +54,33 @@
       "assets/Fly/Color/fly_color.svg",
       "assets/Chestnut/Color/chestnut_color.svg"
     ],
+    "sha256": {
+      "LICENSE": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+      "assets/Dog/Color/dog_color.svg": "26e7f98e91676f9ad6cb3f72f564fb64ff9c1451ec54336bb682dafdedf78121",
+      "assets/Bird/Color/bird_color.svg": "e59c33cd8568e48b343a0a01f2205e5a3f2c3f8e763151889851c041206c540f",
+      "assets/Fish/Color/fish_color.svg": "e1bfd0beb123366e4e83b7b5a7b571a810c875661f3edd31d33c3511e9888eb6",
+      "assets/Crab/Color/crab_color.svg": "86deb790f5d5b43f9103ea2f9c4d5b61f1854518b30f563076d79456fbed3097",
+      "assets/Beetle/Color/beetle_color.svg": "8caadc486100385a5b356a518bc8d3dec60b7c0feb79e6f8ed92de3d0c935756",
+      "assets/Snail/Color/snail_color.svg": "f5abc8a8a9ea3358bed1db7ac923568771a9c39e8aed75836761a53ec0fab383",
+      "assets/Worm/Color/worm_color.svg": "add389fe3cd1e1456ec4dff9b65e0d4e1bc1a3329123f6967dc825c3e254fbd8",
+      "assets/Skull/Color/skull_color.svg": "d6f300a6c94e2d2e28d5c2a646743eb489b6ca5acd2e4ae633bacbd1ae3a7099",
+      "assets/Bone/Color/bone_color.svg": "b5c20c587409cf119d133a5de1f8c3cb7a3ed987e4f1d1c0a411a5b1fb844534",
+      "assets/Spiral shell/Color/spiral_shell_color.svg": "f63d49e4f7a5e805a93a0aa1002c45fd6631089a6e1136e5f615a73c47f3424a",
+      "assets/Herb/Color/herb_color.svg": "cdf84f0a561e26ba42267a7676b09616f16856e4745d14661bae65403a0ebf86",
+      "assets/Rock/Color/rock_color.svg": "9d510f11dcfe0d5d51b4925957b780160a1d13a607bfa10481b9266c66b2dd44",
+      "assets/Fallen leaf/Color/fallen_leaf_color.svg": "caae0cfc351a2ef5d54d8b04a03111da6ce78bf116e259d3136508420ac59c87",
+      "assets/Wind face/Color/wind_face_color.svg": "c69f486072abf382ab368a2ff033c5e8a6c193c42331094d2abda1efaed66d46",
+      "assets/Droplet/Color/droplet_color.svg": "8d8098dc19d1d336865f5bc5e6071b312f3907871f40954541016aa36576fc49",
+      "assets/Magnifying glass tilted left/Color/magnifying_glass_tilted_left_color.svg": "381ec02fb4392dfda0870c028af938fa738c32b39b74a2b206c4ca7c00ac832e",
+      "assets/Blossom/Color/blossom_color.svg": "6d309fe874e62f6ccb36b314a023c1a91cae4d4a50e19d41fb5d13db4f8c44a3",
+      "assets/Seedling/Color/seedling_color.svg": "0d45f7f42154c900500579fe1816dfd35776b7b5e843b15476c0b3f2dd7353ac",
+      "assets/Potted plant/Color/potted_plant_color.svg": "7c70a7674ebb2a47f7ab0b29be8e2669fcdfaca07576dbc3bddd07c501e055ce",
+      "assets/Sun/Color/sun_color.svg": "d0540f2589e41ceb725db6a36b8f691a301b3c7e9de9ed98772b2adf501328a7",
+      "assets/Honeybee/Color/honeybee_color.svg": "ebddcd27aff2a6c7ce99f9c7d068cfe622be1c2aefcb88237d32cda1cfe51177",
+      "assets/Butterfly/Color/butterfly_color.svg": "2dd693062688feff37533a657a3d11fb5a1987f0a024c4dde9c105c992713e5a",
+      "assets/Fly/Color/fly_color.svg": "e937ab001d4243a25147a8d63359d5c70fcf73b5fda988d1a1becb2ae9f7d9d2",
+      "assets/Chestnut/Color/chestnut_color.svg": "df0a96a45c6fb3bd67bdb33db39e025aa1f1190d99fa23ae95fadfd0cbacd479"
+    },
     "outputs": "src/assets/science/fluentui-emoji"
   },
   "body-muscles": {
@@ -60,6 +95,12 @@
       "src/data/muscles.front.ts",
       "src/data/muscles.back.ts"
     ],
+    "sha256": {
+      "LICENSE": "6ec6284a36548009b203229ecf151d5bfaddf019c7b69b1a78b3db304c130a50",
+      "NOTICE": "e92c2057c97d4324153ca5a1cea81938a98759bcce8a8ed6f8fbc5f41934e8c7",
+      "src/data/muscles.front.ts": "888efddc734aa151f0e135ce748d6c3e775de90bae256c64dc57ee683980449d",
+      "src/data/muscles.back.ts": "92d2b95ca920c7106bf076049bef4970f92eeaf272ddad5ab070182786a469ee"
+    },
     "transform": "ts-data",
     "outputs": "src/assets/science/body-muscles"
   },
@@ -75,6 +116,12 @@
       "assets/svg/65000.svg",
       "assets/svg/70000.svg"
     ],
+    "sha256": {
+      "LICENSE": "b1512da67d20cab03cc045afd1f819ae5b41091aa42a72bfc72e4f3c11c184f7",
+      "assets/svg/30000.svg": "5a72d634ac7c698ec3c71690ce0f182c6c1debc6214a6f0624e14dacfd7719de",
+      "assets/svg/65000.svg": "ef12674003458867a7a3898bf4c0b66269f6a7a826646608d8ec4858a1e807f3",
+      "assets/svg/70000.svg": "4ce260955ba61cc115771f962aaef0fd27dcc1c21bc0a2ea34483081b09327cf"
+    },
     "outputs": "src/assets/science/lithology-patterns",
     "$names": {
       "30000": "sandstone",
@@ -94,6 +141,11 @@
       "static/icons/cc-by-4.0/Plants_Algae/Frédéric_Bouché/Arabidopsis_Flower.svg",
       "static/icons/cc-by-4.0/Plants_Algae/Frédéric_Bouché/Arabidopsis_plant.svg"
     ],
+    "sha256": {
+      "static/icons/cc-by-4.0/LICENSE": "94d68dcd271b88cc97a783fe18ddb516ff4ce599550c1603af30e711f6c23998",
+      "static/icons/cc-by-4.0/Plants_Algae/Frédéric_Bouché/Arabidopsis_Flower.svg": "e73299e085504e0030feb836c7945a633ae2082a8486dfe6423d1ed107d0a835",
+      "static/icons/cc-by-4.0/Plants_Algae/Frédéric_Bouché/Arabidopsis_plant.svg": "a7cad4a32459abdb103ecfc303835dfeef0d982930a1fb4008baecd9de3dc111"
+    },
     "transform": "strip-frame",
     "$strip": {
       "Arabidopsis_Flower.svg": [
@@ -118,6 +170,15 @@
       "src/lib/rng.js",
       "src/lib/trellis.js"
     ],
+    "sha256": {
+      "LICENSE": "20e4afadfb10c67952b3d73cd2982d21d165ab4ae82b0dd9e4d6f2166ee349b6",
+      "src/lib/tree.js": "a1b7bd933cb2078e9373c9c853c620be8a3edc84a9edda6a4073c8ad2a31f934",
+      "src/lib/options.js": "092e20ee9073d7402e2fa04d570c17ff150276b5f8c941b3da629edf4ecfe0b9",
+      "src/lib/branch.js": "f71a5e0df6b74ae521942f1722e5a0dd17707add05f12691da96231fdeff8571",
+      "src/lib/enums.js": "d83df789447a421baaecfd18cc8187bf3f80f6cf6e7ba7866812ed527f104092",
+      "src/lib/rng.js": "e4f2bfff79a0a6af3f909f106876e9208be1bb88cc7f7d1541a6858cbaa0c3c8",
+      "src/lib/trellis.js": "ca623b4fbbee1a11aa14be213f5132928ecbe37f91db7424081fe9d681fc765b"
+    },
     "outputs": "src/assets/science/ez-tree",
     "renderedBy": "scripts/science-assets/render-trees.mjs"
   }

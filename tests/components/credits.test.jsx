@@ -1,0 +1,26 @@
+import { render, screen, within } from "@testing-library/react";
+import { MemoryRouter } from "react-router";
+import { expect, it } from "vitest";
+import manifest from "../../src/assets/science/manifest.json";
+import Credits from "../../src/pages/credits/Credits";
+import ScienceCredit from "../../src/components/challenge/ScienceCredit";
+import { LICENCES } from "../../src/data/thirdPartyNotices";
+
+it("lists every manifest source with its licence, link and full text", () => {
+  const { container } = render(<MemoryRouter><Credits /></MemoryRouter>);
+  for (const [id, source] of Object.entries(manifest.sources)) {
+    const card = container.querySelector(`li[id="${id}"]`);
+    expect(card, id).not.toBeNull();
+    const link = within(card).getByRole("link", { name: LICENCES[source.license].name });
+    expect(link.getAttribute("href")).toBe(LICENCES[source.license].url);
+    expect([...card.querySelectorAll("pre")].at(-1)?.textContent.length, id).toBeGreaterThan(500);
+    if (source.attribution.includes("Adapted:")) expect(card.textContent).toMatch(/Adapted:/);
+  }
+  expect(container.textContent).toMatch(/This product includes software developed by Ivan Vulović/);
+});
+
+it("CC BY captions link the licence and the credits page", () => {
+  render(<MemoryRouter><ScienceCredit>Bones: BodyParts3D © DBCLS, CC BY 4.0, adapted</ScienceCredit></MemoryRouter>);
+  expect(screen.getByRole("link", { name: "CC BY 4.0 licence" }).getAttribute("href")).toBe("https://creativecommons.org/licenses/by/4.0/");
+  expect(screen.getByRole("link", { name: "All credits" }).getAttribute("href")).toBe("/credits");
+});

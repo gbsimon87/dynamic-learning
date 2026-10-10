@@ -1,4 +1,5 @@
 import { useId } from "react";
+import ScienceCredit from "./ScienceCredit";
 import { CREDITS, fluent, sediment } from "./scienceArt.js";
 import "./science-kit.css";
 
@@ -34,7 +35,7 @@ function Layer({ id, rock, d, ...rest }) {
 
 /** A label on a small backing card, readable on any layer. */
 function LayerLabel({ x, y, children }) {
-  const width = children.length * 7.4 + 12;
+  const width = children.length * 8.3 + 12;
   return (
     <g className="science-layer-label">
       <rect x={x - 6} y={y - 15} width={width} height="21" rx="6" />
@@ -64,7 +65,8 @@ export default function FossilLayersIllustration({ kind, phase, description }) {
         </defs>
 
         {/* Water above the sea or lake bed while the living thing is alive. */}
-        {life && <path d="M20 20 H300 V155 H20 Z" fill={`url(#${id}-water)`} />}
+        {/* A leaf grows on land beside the lake, so only the other accounts show water. */}
+        {life && kind !== "leaf" && <path d="M20 20 H300 V155 H20 Z" fill={`url(#${id}-water)`} />}
         <Layer id={id} rock="limestone" data-fossil-layer="base" d="M20 155 H300 V215 H20 Z" />
         {!life && !exposed && (
           <g data-fossil-layer="cover">
@@ -114,7 +116,7 @@ export default function FossilLayersIllustration({ kind, phase, description }) {
       </svg>
       <figcaption>
         {description} Simplified picture; buried details are shown in cutaway. No exact timescale or size is represented.
-        <span className="science-credit">{CREDITS.lithology}. {CREDITS.fluent}</span>
+        <ScienceCredit>{CREDITS.lithology}. {CREDITS.fluent}</ScienceCredit>
       </figcaption>
     </figure>
   );

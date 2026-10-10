@@ -1,6 +1,6 @@
 # Year 3 Science diagrams: review follow-ups
 
-**Status: open, not started.** Found in the bug and security review of commits
+**Status: done 2026-10-10** (all eleven items below). Found in the bug and security review of commits
 `11c74a0`, `a792628`, `2de40f9` and `f4837d6` on 2026-10-04 (the illustrated
 anatomy, rocks and plants diagrams; see PROJECT_KNOWLEDGE, "Year 3
 Science"). Nothing here is high severity, and nothing
@@ -12,7 +12,8 @@ Tick items off as they are done. Run `npm run lint`, `npm test` and
 
 ## Bugs
 
-- [ ] **1. Medium: the dog card shows no skeleton.**
+- [x] **1. Medium: the dog card shows no skeleton.**
+  - Done: `SkeletonIllustration` renders `DogSkeleton.jsx`, a side-view dog skeleton drawn for this app (no third-party art, no credit needed; 2026-10-10). `SkeletonFigure` stays as the fallback.
   [SkeletonIllustration.jsx](../../src/components/challenge/SkeletonIllustration.jsx)
   (`animal !== "human"` branch, `AnimalPicture`).
   - The dog questions ask about its skull, rib cage and backbone (rows 26–28
@@ -23,13 +24,15 @@ Tick items off as they are done. Run `npm run lint`, `npm test` and
     described them for screen readers.
   - **Fix:** use `SkeletonFigure` for `dog`. Keep the emoji for the crab and
     beetle, whose skeleton is on the outside.
-- [ ] **2. Low-medium: the leaf account draws a land plant underwater.**
+- [x] **2. Low-medium: the leaf account draws a land plant underwater.**
+  - Done: the water path is drawn only when `kind !== "leaf"`.
   [FossilLayersIllustration.jsx](../../src/components/challenge/FossilLayersIllustration.jsx)
   (the water path in the `life` phase).
   - Account `lake-leaf` says "A leaf grows on a living plant near mud beside a
     lake", but the picture puts the plant inside the water.
   - **Fix:** draw the water only when `kind !== "leaf"`.
-- [ ] **3. Low: the back muscle doesn't get longer from half-bent to bent.**
+- [x] **3. Low: the back muscle doesn't get longer from half-bent to bent.**
+  - Done: triceps now inserts on the olecranon's back-top corner (forearm frame); back 83.8 → 89.9 → 91.6, front 100.1 → 87.3 → 72.2; `src/data/armMuscleLengths.test.js` checks the order.
   [ArmMovementIllustration.jsx](../../src/components/challenge/ArmMovementIllustration.jsx).
   - Drawn lengths in SVG units, from the anchors in `bodyparts3d/arm.json`:
 
@@ -44,7 +47,8 @@ Tick items off as they are done. Run `npm run lint`, `npm test` and
   - **Fix:** adjust the triceps attachment points (in `render-bones.html`,
     `renderArm`, then re-render), and add a test that each muscle's drawn
     length follows the `MOVEMENT_POSES` order.
-- [ ] **4. Low: each muscle-map view says both muscles are coloured.**
+- [x] **4. Low: each muscle-map view says both muscles are coloured.**
+  - Done: each title lists only the groups lit in that view; "Front"/"Back" shown as visible labels.
   [MuscleMapFigure.jsx](../../src/components/challenge/MuscleMapFigure.jsx).
   - Both `<title>`s list "front of the upper arm, back of the upper arm",
     but the front view colours only the biceps and the back view only the
@@ -52,7 +56,8 @@ Tick items off as they are done. Run `npm run lint`, `npm test` and
   - There is no visible "Front" or "Back" label.
   - **Fix:** build each title from the groups that match in that view, and
     show `view.label` as visible text.
-- [ ] **5. Low (cosmetic): two labels.**
+- [x] **5. Low (cosmetic): two labels.**
+  - Done: `LayerLabel` width uses 8.3 per character; "Fossil imprint" moved to y 22 with its leader line.
   - "Shell-shaped mould" overruns its card by about 8 px. `LayerLabel` in
     `FossilLayersIllustration.jsx` estimates width as `length * 7.4 + 12`;
     use about 8.3, or measure the text.
@@ -60,7 +65,8 @@ Tick items off as they are done. Run `npm run lint`, `npm test` and
     [RockSampleIllustration.jsx](../../src/components/challenge/RockSampleIllustration.jsx)
     sits partly on the pale rock, which is hard to read in dark mode. Move it
     to y ≈ 22, or give it a halo (`paint-order: stroke`).
-- [ ] **6. Low (Plants).**
+- [x] **6. Low (Plants).**
+  - Done: woody descriptions say "many small flat shapes" (no leaf shape); the hoverfly picture is captioned "Fly carrying pollen".
   - The woody plant always shows the same tree leaves, while its description
     names one of four leaf shapes (e.g. "narrow flat shapes"). No question
     asks about the leaf shape. Either render the tree per leaf shape, or word
@@ -71,32 +77,37 @@ Tick items off as they are done. Run `npm run lint`, `npm test` and
 
 ## Security and licences
 
-- [ ] **7. Low: Chrome runs without its sandbox in the render scripts.**
+- [x] **7. Low: Chrome runs without its sandbox in the render scripts.**
   `scripts/science-assets/render-bones.mjs` and `render-trees.mjs`.
   - playwright-core turns the sandbox off unless told otherwise. The page also
     runs the downloaded ez-tree code and can reach any website.
   - **Fix:** pass `chromiumSandbox: true` to `chromium.launch`, and add
     `page.route("**", (r) => r.abort())` before the `render.local` route.
-- [ ] **8. Low: downloads are pinned to a commit but not checksummed.**
+  - Done: both scripts launch with `chromiumSandbox: true` and abort every request the `render.local` route does not serve.
+- [x] **8. Low: downloads are pinned to a commit but not checksummed.**
   `vendor.mjs`, `render-bones.mjs`, `render-trees.mjs`.
   - GitHub serves commits that exist only in a fork under the original repo's
     name, and the `node_modules/.cache` copies are trusted without a check.
   - **Fix:** store a sha256 per file in `sources.json`, verify it on download
     and on cache reuse, and confirm each pinned commit is on the upstream
     default branch.
-- [ ] **9. Low: a file path comes from downloaded data.** `render-bones.mjs`
+  - Done: `sources.json` holds a `sha256` per file (incl. the atlas chunks), checked by `pinned.mjs` on download and cache reuse; all six commits equal their repo's `main` HEAD (`gh api compare`, 2026-10-10).
+- [x] **9. Low: a file path comes from downloaded data.** `render-bones.mjs`
   writes `atlas.chunks[id].url` (from the downloaded `atlas.json`) under the
   cache with `path.join`. A `../` in it would write outside the cache. It is
   safe with today's values.
   - **Fix:** accept only `/^\/models\/body-\d+\.bin$/`, or check the
     resolved path stays inside the cache folder.
-- [ ] **10. Low: nothing strips scripts from future SVGs.** SVGO's
+  - Done: both — chunk urls must match the regex, and `cachedDownload` rejects paths resolving outside the cache.
+- [x] **10. Low: nothing strips scripts from future SVGs.** SVGO's
   `preset-default` in `vendor.mjs` does not remove scripts, and no test
   checks. All 29 current SVGs are clean.
   - **Fix:** add the `removeScripts` plugin, and a test in
     `src/data/scienceAssets.test.js` that rejects `<script`, `on*=`,
     `foreignObject`, `javascript:` and any href or `url()` that isn't `#…`.
-- [ ] **11. Low: licence notices are incomplete in the built app.**
+  - Done: `removeScripts` added to the SVGO config; the new test checks every SVG in the repo (all pass).
+- [x] **11. Low: licence notices are incomplete in the built app.**
+  - **Done:** `/credits` (src/pages/credits) is built from the manifest with every LICENSE/NOTICE bundled via `?raw`; `ScienceCredit` captions link it, and CC BY ones link the licence and say "adapted".
   - The CC BY 4.0 captions (Bioicons, BodyParts3D) give no licence link and
     don't say the art was adapted.
   - The MIT (Fluent, Equinor, ez-tree) and Apache-2.0 (body-muscles, with its

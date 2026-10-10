@@ -1,0 +1,16 @@
+.credits-page { max-width: 48rem; margin: 0 auto; padding: 2rem 1rem 3rem; color: var(--light-text); line-height: 1.5; }
+body.dark .credits-page { color: var(--dark-text); }
+.credits-title { color: var(--light-text); }
+body.dark .credits-title { color: var(--dark-accent); }
+.credits-list { list-style: none; padding: 0; display: grid; gap: 1rem; }
+.credits-card { background: var(--light-panel); border: 2px solid var(--light-accent); border-radius: 18px; padding: 1rem 1.25rem; }
+body.dark .credits-card { background: var(--dark-panel); border-color: var(--dark-accent); }
+.credits-card h2 { margin: 0 0 .5rem; font-size: 1.3rem; }
+.credits-link {
+  display: inline-flex; align-items: center; min-height: 48px; padding: 0 .25rem;
+  color: inherit; font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px;
+}
+.credits-card summary { min-height: 48px; display: flex; align-items: center; cursor: pointer; font-weight: 700; }
+.credits-card pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .85rem; max-height: 24rem; overflow: auto; padding: .75rem; border-radius: 12px; background: var(--light-bg); color: var(--light-text); }
+body.dark .credits-card pre { background: var(--dark-bg); color: var(--dark-text); }
+.credits-home { margin-top: 1rem; }

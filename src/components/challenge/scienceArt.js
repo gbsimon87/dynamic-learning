@@ -28,6 +28,8 @@ export const treeImage = (file) => find(TREES, file);
 export const CREDITS = {
   fluent: "Pictures: Fluent Emoji © Microsoft, MIT",
   lithology: "Rock layers: Equinor lithology patterns, MIT",
-  bioicons: "Flower and roots: Frédéric Bouché via Bioicons, CC BY 4.0",
+  bioicons: "Flower and roots: Frédéric Bouché via Bioicons, CC BY 4.0, adapted",
+  bones: "Bones: BodyParts3D © DBCLS, CC BY 4.0, adapted",
+  muscles: "Muscle map: Body Muscles © Ivan Vulović, Apache-2.0",
   tree: "Tree: grown with ez-tree © Daniel Greenheck, MIT",
 };

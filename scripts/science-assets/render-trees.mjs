@@ -19,7 +19,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright-core";
+import { launchIsolatedPage } from "./isolatedPage.mjs";
+import { cachedDownload } from "./pinned.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const SOURCE = JSON.parse(fs.readFileSync(path.join(ROOT, "scripts/science-assets/sources.json"), "utf8"))["ez-tree"];
@@ -27,16 +28,7 @@ const CACHE = path.join(ROOT, "node_modules/.cache/science-assets/ez-tree", SOUR
 const OUT = path.join(ROOT, SOURCE.outputs);
 const CHROME = process.env.CHROME_PATH ?? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 
-async function cached(file) {
-  const target = path.join(CACHE, file);
-  if (fs.existsSync(target)) return fs.readFileSync(target);
-  const response = await fetch(`https://raw.githubusercontent.com/${SOURCE.repo}/${SOURCE.commit}/${file}`);
-  if (!response.ok) throw new Error(`${response.status} fetching ${file}`);
-  const buffer = Buffer.from(await response.arrayBuffer());
-  fs.mkdirSync(path.dirname(target), { recursive: true });
-  fs.writeFileSync(target, buffer);
-  return buffer;
-}
+const cached = (file) => cachedDownload(SOURCE, CACHE, file);
 
 const lib = {};
 for (const file of SOURCE.files) lib[file] = await cached(file);
@@ -47,9 +39,7 @@ const PRESETS_STUB = "export const TreePreset = {}; export function loadPreset()
 const THREE_DIR = path.join(ROOT, "node_modules/three/build");
 const PAGE = fs.readFileSync(path.join(ROOT, "scripts/science-assets/render-trees.html"));
 
-const browser = await chromium.launch({ executablePath: CHROME, args: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader"] });
-const page = await browser.newPage();
-page.on("console", (message) => console.log(`[page] ${message.text()}`));
+const { browser, page } = await launchIsolatedPage(CHROME);
 await page.route("http://render.local/**", async (route) => {
   const url = new URL(route.request().url());
   if (url.pathname === "/") return route.fulfill({ body: PAGE, contentType: "text/html" });

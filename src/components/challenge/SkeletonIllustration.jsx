@@ -1,5 +1,8 @@
 import { useId, useState } from "react";
+import ScienceCredit from "./ScienceCredit";
+import { CREDITS } from "./scienceArt.js";
 import SkeletonFigure from "./SkeletonFigure";
+import DogSkeleton from "./DogSkeleton";
 import { FEATURES } from "../../data/challenges/science/skeletonsForSupportAndProtection.js";
 import { spreadLabels } from "../../data/scienceDiagrams.js";
 import skeleton from "../../assets/science/bodyparts3d/skeleton.json";
@@ -30,6 +33,8 @@ export default function SkeletonIllustration(props) {
   const [failed, setFailed] = useState(false);
   const id = useId();
   if (failed) return <SkeletonFigure {...props} />;
+  // The dog has a skeleton inside, so draw its bones; the others are outside.
+  if (animal === "dog") return <DogSkeleton />;
   if (animal !== "human") return <AnimalPicture animal={animal} onError={() => setFailed(true)} />;
 
   const view = skeleton.poses[pose] ?? skeleton.poses.wide;
@@ -73,7 +78,7 @@ export default function SkeletonIllustration(props) {
       </svg>
       <figcaption>
         Bones of a human body, seen from the front. Some small bones are hard to see at this size.
-        <span className="science-credit">{skeleton.credit}</span>
+        <ScienceCredit>{CREDITS.bones}</ScienceCredit>
       </figcaption>
     </figure>
   );
@@ -88,7 +93,7 @@ function AnimalPicture({ animal, onError }) {
       <img src={src} alt={`A ${animal}`} width="160" height="160" onError={onError} />
       <figcaption>
         Read the card to find out what supports and protects its body.
-        <span className="science-credit">Picture: Fluent Emoji © Microsoft, MIT</span>
+        <ScienceCredit>{CREDITS.fluent}</ScienceCredit>
       </figcaption>
     </figure>
   );

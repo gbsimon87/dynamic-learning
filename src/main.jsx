@@ -124,6 +124,9 @@ const router = createBrowserRouter([
       { path: "city-spotlight", element: <CitySpotlight /> },
       { path: "solar-system", element: <SolarSystem /> },
 
+      // === Third-party notices for the Science artwork (lazy: holds full licence texts) ===
+      { path: "credits", lazy: () => import("./pages/credits/Credits").then((m) => ({ Component: m.default })) },
+
       // === Catch-all: any unmatched path ===
       { path: "*", element: <NotFound /> },
     ],

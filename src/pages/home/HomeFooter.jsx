@@ -18,7 +18,7 @@ export default function HomeFooter() {
     <footer className="home-footer">
       <div className="home-footer-inner">
         <div className="home-footer-brand">
-          <span className="home-footer-mark" aria-hidden="true">DL</span>
+          <span className="home-footer-mark" aria-hidden="true">LB</span>
           <div>
             <p className="home-footer-name">Learn with Bix</p>
             <p className="home-footer-tagline">

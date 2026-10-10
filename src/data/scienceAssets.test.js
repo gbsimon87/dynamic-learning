@@ -83,3 +83,31 @@ test("arm anchors: the elbow sits between shoulder and hand, and the front muscl
   // The hand rises as the arm bends.
   assert.ok(armModel.poses.bent.anchors.hand.y < armModel.poses.straight.anchors.hand.y);
 });
+
+test("no SVG in the repo carries scripts, event handlers or outside links", () => {
+  const svgs = [];
+  const walk = (dir) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (["node_modules", "dist", ".git"].includes(entry.name)) continue;
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) walk(full);
+      else if (entry.name.endsWith(".svg")) svgs.push(full);
+    }
+  };
+  walk(ROOT);
+  assert.ok(svgs.length > 0, "found no SVGs");
+  for (const file of svgs) {
+    const svg = fs.readFileSync(file, "utf8");
+    const name = path.relative(ROOT, file);
+    assert.doesNotMatch(svg, /<script/i, `${name}: <script>`);
+    assert.doesNotMatch(svg, /\son[a-z]+\s*=/i, `${name}: event handler attribute`);
+    assert.doesNotMatch(svg, /foreignObject/i, `${name}: foreignObject`);
+    assert.doesNotMatch(svg, /javascript:/i, `${name}: javascript: link`);
+    for (const [, value] of svg.matchAll(/\bhref\s*=\s*["']([^"']*)["']/gi)) {
+      assert.ok(value.startsWith("#"), `${name}: href="${value}" is not a local #id`);
+    }
+    for (const [, value] of svg.matchAll(/url\(\s*["']?([^)"']*)/gi)) {
+      assert.ok(value.startsWith("#"), `${name}: url(${value}) is not a local #id`);
+    }
+  }
+});

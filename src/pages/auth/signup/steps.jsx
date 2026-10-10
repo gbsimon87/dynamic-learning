@@ -3,7 +3,7 @@ import { CHILD_NAME_MAX } from "../../../data/childFields";
 import { CURRICULUM_SUBJECTS, getSubjectName } from "../../../data/curriculumRegistry";
 import { EXPLORING, birthYearOptions, subjectsForYear } from "../../../data/signupFlow";
 import { MIN_PASSWORD_LENGTH, passwordStrength } from "../../../data/passwordStrength";
-import { ERROR_MESSAGES } from "../../../data/signupCopy";
+import { ERROR_MESSAGES, formatWait } from "../../../data/signupCopy";
 import PasswordField from "../PasswordField";
 import ChoiceCards from "./parts/ChoiceCards";
 import CodeInput from "./parts/CodeInput";
@@ -205,6 +205,7 @@ export function AccountBody({ email, secret, errors, busy, onEmail, onSecret, on
 }
 
 export function CodeBody({ code, onCode, onComplete, busy, error, invalid, shakeKey, resendIn, onResend, onChangeEmail, needsNewCode }) {
+  const resendBlocked = busy || resendIn > 0;
   return (
     <>
       <CodeInput value={code} onChange={onCode} onComplete={onComplete} disabled={busy} invalid={invalid} shakeKey={shakeKey} />
@@ -215,8 +216,10 @@ export function CodeBody({ code, onCode, onComplete, busy, error, invalid, shake
             {busy ? "Checking…" : "Try again"}
           </button>
         )}
-        <button type="button" className={`auth-btn ${needsNewCode ? "" : "auth-btn-quiet"}`} onClick={onResend} disabled={busy || resendIn > 0}>
-          {resendIn > 60 ? `Send a new code in ${Math.ceil(resendIn / 60)} min` : resendIn > 0 ? `Send a new code in ${resendIn}s` : "Send a new code"}
+        {/* aria-disabled, not disabled: a disabled button drops keyboard focus to
+            <body> the moment it is pressed. */}
+        <button type="button" className={`auth-btn ${needsNewCode ? "" : "auth-btn-quiet"}`} onClick={() => !resendBlocked && onResend()} aria-disabled={resendBlocked}>
+          {resendIn > 0 ? `Send a new code in ${formatWait(resendIn)}` : "Send a new code"}
         </button>
         <button type="button" className="auth-btn auth-btn-quiet" onClick={onChangeEmail} disabled={busy}>Change email</button>
       </div>

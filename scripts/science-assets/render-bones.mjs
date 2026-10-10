@@ -20,7 +20,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright-core";
+import { launchIsolatedPage } from "./isolatedPage.mjs";
+import { cachedDownload } from "./pinned.mjs";
 import { ANCHOR_PARTS, ARM_POSES, GROUPS, POSES, isForearm, selectSkeleton, sideOf } from "./bones.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
@@ -29,18 +30,7 @@ const CACHE = path.join(ROOT, "node_modules/.cache/science-assets/bodyparts3d", 
 const OUT = path.join(ROOT, SOURCE.outputs);
 const CHROME = process.env.CHROME_PATH ?? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 
-const raw = (file) => `https://raw.githubusercontent.com/${SOURCE.repo}/${SOURCE.commit}/${file}`;
-
-async function cached(file) {
-  const target = path.join(CACHE, file);
-  if (fs.existsSync(target)) return fs.readFileSync(target);
-  const response = await fetch(raw(file));
-  if (!response.ok) throw new Error(`${response.status} fetching ${file}`);
-  const buffer = Buffer.from(await response.arrayBuffer());
-  fs.mkdirSync(path.dirname(target), { recursive: true });
-  fs.writeFileSync(target, buffer);
-  return buffer;
-}
+const cached = (file) => cachedDownload(SOURCE, CACHE, file);
 
 const atlas = JSON.parse(await cached("public/models/atlas.json"));
 const parts = selectSkeleton(atlas);
@@ -50,7 +40,13 @@ console.log(`${parts.length} bones from ${chunkIds.length} of ${atlas.chunks.len
 // One payload: per part, its positions (Float32), normals (Int16) and indices
 // (Uint32) copied out of its chunk, the same layout human-atlas packs.
 const chunks = {};
-for (const id of chunkIds) chunks[id] = await cached(atlas.chunks[id].url.replace(/^\//, "public/"));
+for (const id of chunkIds) {
+  // The url comes from downloaded data; accept only the expected shape so it
+  // cannot name a path outside the cache (cachedDownload also checks).
+  const url = atlas.chunks[id]?.url;
+  if (!/^\/models\/body-\d+\.bin$/.test(url)) throw new Error(`unexpected chunk url ${JSON.stringify(url)}`);
+  chunks[id] = await cached(`public${url}`);
+}
 const segments = [];
 let offset = 0;
 const take = (buffer, start, bytes) => {
@@ -80,9 +76,7 @@ const payload = Buffer.concat(segments);
 const THREE_DIR = path.join(ROOT, "node_modules/three/build");
 const PAGE = fs.readFileSync(path.join(ROOT, "scripts/science-assets/render-bones.html"));
 
-const browser = await chromium.launch({ executablePath: CHROME, args: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader"] });
-const page = await browser.newPage();
-page.on("console", (message) => console.log(`[page] ${message.text()}`));
+const { browser, page } = await launchIsolatedPage(CHROME);
 await page.route("http://render.local/**", async (route) => {
   const url = new URL(route.request().url());
   if (url.pathname === "/") return route.fulfill({ body: PAGE, contentType: "text/html" });

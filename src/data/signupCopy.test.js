@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { STEP, emptyDraft, withBirthYear } from "./signupFlow.js";
-import { bixLine, errorMessage, stepTitle } from "./signupCopy.js";
+import { bixLine, errorMessage, formatWait, stepTitle } from "./signupCopy.js";
 
 const learner = { name: "Maya", avatar: "🦊", colour: "--profile-colour-sky", yearGroup: 3, subjects: ["science"] };
 const draft = { ...withBirthYear(emptyDraft(), 1990, 2026), learnFor: "children", learners: [learner], email: "maya.parent@gmail.com" };
@@ -38,6 +38,11 @@ test("error messages: details are used, unknown codes fall back", () => {
   assert.equal(errorMessage("CODE_INCORRECT", { attemptsLeft: 1 }), "Hmm, let's try that again — 1 try left.");
   assert.equal(errorMessage("CODE_INCORRECT", { attemptsLeft: 3 }), "Hmm, let's try that again — 3 tries left.");
   assert.equal(errorMessage("TOO_MANY_CODES", { retryAfterSeconds: 61 }), "Let's take a break — try again in 2 minutes.");
+  assert.equal(errorMessage("TOO_MANY_CODES", { retryAfterSeconds: 3600 }), "Let's take a break — try again in 60 minutes.");
+  assert.equal(errorMessage("TOO_MANY_CODES", { retryAfterSeconds: 85560 }), "Let's take a break — try again in 24 hours.");
+  assert.equal(formatWait(30), "30 seconds");
+  assert.equal(formatWait(3660), "2 hours");
+  assert.equal(formatWait(3600), "60 minutes");
   assert.equal(errorMessage("WHAT_IS_THIS"), errorMessage("SIGNUP_FAILED"));
   assert.equal(errorMessage("HANDOVER_FAILED"), "Hmm, that didn't work. Tap again!");
 });

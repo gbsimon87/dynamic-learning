@@ -16,6 +16,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { optimize } from "svgo";
+import { download } from "./pinned.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const SOURCES = JSON.parse(fs.readFileSync(path.join(ROOT, "scripts/science-assets/sources.json"), "utf8"));
@@ -27,15 +28,10 @@ const SVGO = {
     // Keep the viewBox so the pictures scale; drop ids that would collide
     // when several inline SVGs share a page.
     "preset-default", // SVGO 4 keeps viewBox by default
+    "removeScripts", // not in preset-default; also drops on* handlers and javascript: links
     { name: "prefixIds", params: { prefix: (_, info) => path.basename(info.path, ".svg") } },
   ],
 };
-
-async function fetchFile(source, file) {
-  const response = await fetch(`https://raw.githubusercontent.com/${source.repo}/${source.commit}/${file}`);
-  if (!response.ok) throw new Error(`${response.status} fetching ${source.repo}/${file}`);
-  return Buffer.from(await response.arrayBuffer());
-}
 
 /**
  * body-muscles ships its path data as TypeScript. Turn each file into a plain
@@ -95,7 +91,7 @@ for (const [id, source] of Object.entries(SOURCES)) {
   }
   fs.mkdirSync(out, { recursive: true });
   for (const file of source.files) {
-    let body = await fetchFile(source, file);
+    let body = await download(source, file);
     let name = path.basename(file);
     if (source.transform === "ts-data" && name.endsWith(".ts")) {
       body = Buffer.from(tsDataToJs(body.toString("utf8"), file));

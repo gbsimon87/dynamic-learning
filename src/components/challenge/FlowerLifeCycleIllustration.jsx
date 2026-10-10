@@ -1,4 +1,5 @@
 import { useId, useState } from "react";
+import ScienceCredit from "./ScienceCredit";
 import FlowerLifeCycleFigure from "./FlowerLifeCycleFigure";
 import { Roots, Soil, PlantDefs, Stem } from "./PlantArt";
 import { SOIL_Y } from "../../data/plantArt.js";
@@ -16,7 +17,14 @@ const STIGMA = toScene({ x: 143, y: 47 });
 const ANTHER = toScene({ x: 165, y: 64 });
 const LABEL_X = 214;
 
-const POLLINATOR = { bee: "honeybee", insect: "honeybee", butterfly: "butterfly", hoverfly: "fly" };
+// Fluent art and caption per pollinator. The hoverfly is drawn with Fluent's
+// housefly, so its picture is captioned as a fly.
+const POLLINATOR = {
+  bee: { art: "honeybee", name: "Bee" },
+  insect: { art: "honeybee", name: "Insect" },
+  butterfly: { art: "butterfly", name: "Butterfly" },
+  hoverfly: { art: "fly", name: "Fly" },
+};
 const CASE_NAME = { capsule: "Seed capsule", pod: "Pod", fruit: "Fruit" };
 
 /**
@@ -66,7 +74,7 @@ export default function FlowerLifeCycleIllustration(props) {
       {(evidence || credit) && (
         <figcaption>
           {evidence}
-          {credit && <span className="science-credit">{credit}</span>}
+          {credit && <ScienceCredit>{credit}</ScienceCredit>}
         </figcaption>
       )}
     </figure>
@@ -88,7 +96,7 @@ function Label({ from, x, y, children }) {
 function FlowerStage({ phase, pollinator, pollinated, onError }) {
   const clip = `${useId().replace(/:/g, "")}-flower`;
   const { crop, file, at } = FLOWER;
-  const art = POLLINATOR[pollinator] ?? "honeybee";
+  const { art, name } = POLLINATOR[pollinator] ?? POLLINATOR.insect;
   return (
     <g data-life-stage="flower">
       <svg x={at.x} y={at.y} width={crop.width} height={crop.height} style={{ width: crop.width, height: crop.height }} viewBox={`${crop.x} ${crop.y} ${crop.width} ${crop.height}`}>
@@ -106,7 +114,7 @@ function FlowerStage({ phase, pollinator, pollinated, onError }) {
         <g data-pollinator={pollinator}>
           <path className="science-transfer-path" d={`M262 214 Q200 170 ${STIGMA.x + 6} ${STIGMA.y + 4}`} />
           <image href={fluent(art)} x={246} y={196} width={74} height={74} onError={onError} />
-          <text className="science-svg-text" x={350} y={296} textAnchor="end">{pollinator === "insect" ? "Insect" : pollinator[0].toUpperCase() + pollinator.slice(1)} carrying pollen</text>
+          <text className="science-svg-text" x={350} y={296} textAnchor="end">{name} carrying pollen</text>
         </g>
       )}
       {phase === "wind" && (

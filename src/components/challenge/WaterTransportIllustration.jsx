@@ -1,4 +1,5 @@
 import { useId, useState } from "react";
+import ScienceCredit from "./ScienceCredit";
 import WaterTransportFigure from "./WaterTransportFigure";
 import { LABEL_X, SOIL_Y, plantShape, treePlacement } from "../../data/plantArt.js";
 import { spreadLabels } from "../../data/scienceDiagrams.js";
@@ -113,7 +114,7 @@ export default function WaterTransportIllustration(props) {
       </svg>
       <figcaption>
         {plan.rooted ? "A rooted flowering plant. The soil is shown cut away." : "A cut stem with no roots. Stem sections are shown as an inside view; dots mark dye seen in the observation."} {evidence}
-        <span className="science-credit">{plan.rooted ? `${CREDITS.bioicons}. ${model === "tree" ? CREDITS.tree : CREDITS.fluent}` : CREDITS.fluent}</span>
+        <ScienceCredit>{plan.rooted ? `${CREDITS.bioicons}. ${model === "tree" ? CREDITS.tree : CREDITS.fluent}` : CREDITS.fluent}</ScienceCredit>
       </figcaption>
     </figure>
   );

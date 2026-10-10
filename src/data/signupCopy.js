@@ -85,14 +85,25 @@ export const ERROR_MESSAGES = {
   SIGNUP_FAILED: "Something went wrong — nothing was saved. Try again?",
 };
 
+const plural = (n, unit) => `${n} ${unit}${n === 1 ? "" : "s"}`;
+
+/**
+ * A wait in words. The daily budget can mean most of a day, and "1426
+ * minutes" means nothing to a family, so anything over an hour is in hours.
+ */
+export function formatWait(seconds) {
+  if (seconds < 60) return plural(Math.max(1, Math.ceil(seconds)), "second");
+  const minutes = Math.ceil(seconds / 60);
+  return minutes > 60 ? plural(Math.ceil(minutes / 60), "hour") : plural(minutes, "minute");
+}
+
 export function errorMessage(code, details = {}) {
   if (code === "CODE_INCORRECT" && Number.isInteger(details?.attemptsLeft)) {
     const n = details.attemptsLeft;
     return `Hmm, let's try that again — ${n} ${n === 1 ? "try" : "tries"} left.`;
   }
   if ((code === "TOO_MANY_CODES" || code === "TOO_MANY_ATTEMPTS") && details?.retryAfterSeconds > 0) {
-    const minutes = Math.ceil(details.retryAfterSeconds / 60);
-    return `Let's take a break — try again in ${minutes} ${minutes === 1 ? "minute" : "minutes"}.`;
+    return `Let's take a break — try again in ${formatWait(Math.max(60, details.retryAfterSeconds))}.`;
   }
   return ERROR_MESSAGES[code] ?? ERROR_MESSAGES.SIGNUP_FAILED;
 }

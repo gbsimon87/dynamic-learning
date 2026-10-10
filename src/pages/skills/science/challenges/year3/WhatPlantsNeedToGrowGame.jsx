@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import ScienceCredit from "../../../../../components/challenge/ScienceCredit";
 import ChallengeShell from "../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../components/challenge/ChoiceGrid";
 import DataTable from "../../../../../components/challenge/DataTable";
@@ -45,7 +46,7 @@ function ShortRound({ question, submit, locked, hint }) {
     <Vocabulary />
     <p className="challenge-prompt">{question.prompt}</p>
     <SpeakButton text={`${question.prompt} ${question.evidence ?? question.guide ?? question.comparison}`} label="Hear the question" />
-    {question.level === 1 && <><div className="science-needs-guide">{NEEDS.map((need) => <div key={need.id}><NeedIcon need={need} /><strong>{need.label}</strong><p>{need.gloss}</p></div>)}</div>{isIllustrated() && <p className="science-credit">{CREDITS.fluent}</p>}<p className="science-observation">{question.evidence}</p></>}
+    {question.level === 1 && <><div className="science-needs-guide">{NEEDS.map((need) => <div key={need.id}><NeedIcon need={need} /><strong>{need.label}</strong><p>{need.gloss}</p></div>)}</div>{isIllustrated() && <ScienceCredit as="p">{CREDITS.fluent}</ScienceCredit>}<p className="science-observation">{question.evidence}</p></>}
     {question.level === 2 && <div className="science-observation"><strong>Care card for these flowering plant types</strong><p>{question.guide}</p></div>}
     {question.level === 3 ? <FairTestBoard prompt={question.prompt} comparison={question.comparison} cards={question.cards} placement={placement} disabled={locked} onPlace={(id, bin) => {
       if (locked || accepted.current || !question.cards.some((card) => card.id === id) || !["change", "keep", null].includes(bin)) return;

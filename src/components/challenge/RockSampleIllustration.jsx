@@ -1,4 +1,5 @@
 import { useId } from "react";
+import ScienceCredit from "./ScienceCredit";
 import { specimenText } from "../../data/challenges/science/comparingAndGroupingRocks.js";
 import { CREDITS, fluent } from "./scienceArt.js";
 import "./science-kit.css";
@@ -78,16 +79,16 @@ export default function RockSampleIllustration({ specimen }) {
         <path d={ROCK} className="science-rock-outline" />
         {specimen.fossil && (
           <g className="science-callout science-illustration-callout">
-            <path className="science-callout-halo" d="M238 125 L270 62" />
-            <path d="M238 125 L270 62" />
-            <text x="200" y="40">Fossil imprint</text>
+            <path className="science-callout-halo" d="M238 125 L270 28" />
+            <path d="M238 125 L270 28" />
+            <text x="200" y="22">Fossil imprint</text>
           </g>
         )}
         <image href={fluent("magnifying_glass_tilted_left")} x="6" y="4" width="40" height="40" aria-hidden="true" />
       </svg>
       <figcaption>
         {specimenText(specimen)} Magnified drawing; shapes are simplified. Features not shown may be too small to see. Appearance alone does not identify a rock or prove a test result.
-        <span className="science-credit">{CREDITS.fluent}</span>
+        <ScienceCredit>{CREDITS.fluent}</ScienceCredit>
       </figcaption>
     </figure>
   );
