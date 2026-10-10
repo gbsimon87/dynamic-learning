@@ -105,69 +105,145 @@ below reflects current risks and dependencies; it does not commit ideas to work.
 
 ## 💡 Ideas
 
-| # | Idea | Description | Status |
-|---|---|---|---|
-| 6 | **Extend the shared content authoring format** | **The format and renderer shipped 2026-10-10:** 13 question kinds (choice, number, type, build, sort, order, pick, sequence, chart, clock, coins, fraction, place value) are defined as data in `src/data/challenges/questionKinds.js`, linted by `lintBuild`, and drawn by `src/components/challenge/data/DataChallenge.jsx` (PROJECT_KNOWLEDGE §5, “Questions as data”; how-to in the `building-curriculum-topics` skill). Remaining: no shipped challenge uses it yet. Author the next new topics (#16, #15) with it, and move `EnglishPracticeGame` onto it once its English challenges can be replayed side by side to prove nothing changed. Interactions outside the 13 kinds (scales, robot grids, science enquiries) still need their own JSX. | 🟡 Partial |
-| 7 | **Accessibility & keyboard pass** | Audit real keyboard/touch playthroughs, screen-reader labels, focus management, reduced motion and computed contrast across both themes. Existing support includes native buttons in `TileBuilder`, `SortBins` and `PlaceValueBlocks`, key handlers in `MeasureDrag` / `LetterInput`, and drag handles supplied by `@hello-pangea/dnd` in `DragToOrder`. Counting `onKeyDown` handlers is not a keyboard audit. Identify actual gaps, add alternatives where needed and verify every interaction end to end. | ⚪ Idea |
-| 8 | **Audio & read-aloud support** | **Maths curriculum read-aloud shipped 2026-10-10:** every Year 2–3 Maths challenge has a “Read it to me” button that reads the visible question and options through `mathToSpeech` (PROJECT_KNOWLEDGE §5, “Maths read-aloud”). Years 3–4 English, Year 3 Science and Solar System already had narration. Remaining: the other Skills Mode games, a review of the read-aloud on the drag-and-build Maths interactions (some read their tiles as a list), and speech on real devices as part of #38. Preserve visible text and a sound-off path. Phonics (#12) additionally needs reliable letter/phoneme audio; whole-word speech alone is not its content source. | 🟡 Partial |
-| 9 | **Parent / teacher summary view** | `/parent` already shows per-child year/category/topic breakdowns, badges and profile editing; learner accounts see “My account”. Remaining work: **active time spent** and **topics needing more practice**, using new session/attempt recording shared with #10. Completion counts cannot provide either. Consider a reset-progress control separately: `updateChild` edits profile fields and does not reset progress. Any reset needs an explicit scope, confirmation and a decision about linked rewards, following the `curriculum-progress` skill. | 🟡 Partial |
-| 10 | **Adaptive difficulty** | Use attempt accuracy and active response time to adapt practice within the topic’s statutory scope. Shares the new recording prerequisite with #9. Existing pure generators provide reusable question building, but their `level` commonly selects one of the four fixed challenge designs; it is not an existing adaptive difficulty setting. Define suitable difficulty controls and test them before adapting ranges automatically. | ⚪ Idea |
-| 11 | **Child-account safeguards & consent review** | The under-13 self-signup gate relies on the entered age; it does not verify age or parental consent. The app is already deployed, so replace the old “before publication” assumption with a review of the actual audience, account flows and intended wider rollout. Confirm applicable privacy/consent requirements through qualified review, then define any grown-up confirmation and consent record needed. The live email transport can support a confirmation round trip. Coordinate with #36 before adding analytics. **Reviewer brief written 2026-10-10:** [safeguarding/REVIEW_BRIEF.md](safeguarding/REVIEW_BRIEF.md) — next: send to a qualified reviewer, confirm the Atlas region and DPAs. | 🟡 Partial |
-| 12 | **Phonics & rhyming pack** | Sound-it-out, rhyming match, and syllable splitter. Requires the audio work in #8. Adds early reading practice alongside the Years 3–4 English curriculum. | ⚪ Idea |
-| 13 | **Story Maker & Story Sequencer** | Add standalone creative story-building and picture-card sequencing games. Curriculum English already orders authored plot sentences and chooses fitting story parts in `SettingsCharactersAndPlotGame.jsx`; reuse that material where suitable. Remaining: freely choosing characters/setting/action to generate a story, a picture-card content shape and ungated Skills Mode entry points. `stories.json` feeds `SpeedReader` only. | ⚪ Idea |
-| 14 | **Offline / PWA support** | Service worker plus manifest so the app installs and works without a connection — valuable on shared or low-connectivity school devices. No manifest, service worker, or PWA plugin exists today. Note this interacts with the API store: offline progress would need a queue and a conflict rule. | ⚪ Idea |
-| 15 | **Geography curriculum expansion** | Turn continents, oceans, landforms, habitats, weather and day/night into a structured topic path. Use `docs/curriculum/` as the authority and map topics to the statutory requirements before implementation; source game ideas in [notes_geography.md](notes_geography.md). [Flag Finder](../src/pages/skills/geography/FlagFinder.jsx) could support continent-focused practice, subject to adding and validating the required country metadata. | ⚪ Idea |
-| 16 | **Year 1–2 English curriculum** | Years 3 and 4 are implemented (2026-10-01), with interactive review tracked in [IMPLEMENTATION_TRACKER.md](english-curriculum/IMPLEMENTATION_TRACKER.md). Remaining expansion: Year 1–2 English; programmes of study are already saved in `docs/curriculum/`. | ⚪ Idea |
-| 17 | **Solar System meteor: physical-device benchmark** | The meteor experiment is implemented and locally verified: pure tests T1–T10 pass, desktop browser checks and ten-cycle resource checks are recorded, and the production preview ran at a median 8.3 ms. **Remaining: physical phone/tablet performance evidence**; simulated phone viewports do not close it. Follow the [implementation plan](solar-system-meteor/IMPLEMENTATION_PLAN.md) and [progress tracker](solar-system-meteor/IMPLEMENTATION_TRACKER.md). | 🟡 Partial |
-| 19 | **Constellations in the 3D sky (stage two)** | The constellation card ships as a flat projection. Stage two adds a `constellationSky.js` module shaped like `meteorExperiment.js` (`enter / update / resize / exit / dispose / isActive`): a `THREE.Group` on a celestial sphere at radius ≈2700 from the same RA/Dec via `raDecToUnitVector`, with `Points` for stars, `LineSegments` for the figure and a `createLabel()` sprite. To solve: framing a point outward on the sphere within `controls.minDistance` 1.5 / `maxDistance` 3000 and a far plane of 5000; `depthTest: false` plus a `renderOrder` so planets do not slice through the figure; dimming the random star field at radius 3000 while active. The card gains a "Find it in the real sky →" button. | ⚪ Idea |
-| 20 | **Unbuilt Skills Mode game ideas** | From the original notes; intended routes in brackets. **Maths:** Math Sentence Builder (`/math-sentences`, word problem → equation), Compare the Numbers (`/compare-numbers`), Math Maze (`/math-maze`, solve to move through a maze), Clock Quiz (`/clock-quiz`, match analogue/digital times), Skip Count Jump (`/skip-count`), Estimate It! (`/estimate`, guess how many then reveal), Magic Squares (`/magic-squares`, 3×3 equal sums), Number Line Jump (`/number-line`, animated +2/−3 jumps), Odd or Even Sort (`/odd-even-sort`), Shape Sorter 3D (`/shape-sorter`), Pattern Play (`/pattern-play`, ABAB/AABB), Tally Marks Trainer (`/tally-trainer`), Math Bingo (`/math-bingo`). **English:** Sentence Fixer (`/sentence-fixer`, correct “the dog run fast”), Word Picture Puzzle (`/word-picture-puzzle`, fill a part-hidden word), Riddle Time (`/riddle-time`), Emoji Sentences (`/emoji-sentences`, decode emojis into words), Picture Vocabulary (`/picture-vocabulary`, pick the word for an image), Alphabet Adventure (`/alphabet-adventure`, letter order), Listening & Repeat (`/listening-repeat`, needs #8). **Geography:** Country Puzzle (`/country-puzzle`, assemble a continent). Money, measurement, robot moves, charts and place value shipped as free-play games (2026-10-10); phonics games are #12; stories are #13; other geography is #15. | ⚪ Idea |
-| 24 | **Avatar wardrobe** | **Badges already unlock profile pictures**; XP levels and topic stickers are separate rewards. Add wearables — hats, glasses, capes, a pet on the shoulder — earned from chosen milestones and shown wherever the avatar appears (navbar chip, profile picker, certificates). Earned only, never bought; define unlock rules and store equipped items through a lossless rewards-schema extension. | ⚪ Idea |
-| 25 | **Bix's den** | A room the child decorates for Bix with furniture and toys earned from finished topics: a telescope from the Solar System, a rock shelf from Rocks, a plant pot from Plants. Learning becomes something you can **see and arrange**. Tap an object to replay a one-line fact from the topic it came from, which is also gentle revision. Build it on #24's unlock data. | ⚪ Idea |
-| 26 | **Boss rounds** | At the end of each category, a friendly cartoon "boss" (a grumpy cloud, a number-muncher) who shrinks with every right answer. Questions are **mixed review across the whole category**, which is retrieval practice dressed as a game. Wrong answers make the boss laugh, not the child lose. Never timed, can't be failed — it just takes longer — and it ends with a big victory animation. Reuses existing generators; needs a mixed-question picker and boss art. | ⚪ Idea |
-| 27 | **Real-world missions: confirmation & rewards** | Optional grown-up activities already appear after completed Year 3 Science topics, from `scienceActivities.js` through `PracticalActivityCard.jsx`. Remaining: child tick-off, a grown-up's "We did it!" confirmation and a mission sticker, plus activity cards for the other topics/subjects. Reuse the existing read-only cards and eligibility checks; define mission awards separately from curriculum completions. | 🟡 Partial |
-| 28 | **Teach the grown-up** | The child picks a topic they've finished and **sets a quiz for a parent** (choosing from generated questions, or making up the numbers), then hands over the device and marks the grown-up's answers — with Bix cheering the child on as the teacher. Explaining things to someone else is one of the strongest ways to learn, and catching a grown-up out is hugely motivating at this age. | ⚪ Idea |
-| 29 | **Pass-and-play for two** | Siblings, or a child and a grown-up, take turns on one device: same question style, each with their own avatar and score, and a "pass the tablet" screen between turns. Co-operative mode as well as head-to-head, so a younger sibling isn't always losing. Skills Mode only, so curriculum progress isn't affected. | ⚪ Idea |
-| 31 | **Science field notebook & geography passport** | Collecting is a big draw at this age. **Science:** finishing a topic adds an illustrated specimen card to a notebook — the posed skeletons, rocks, fossils and flowers already drawn for Year 3 Science — each with one tap-to-hear fact. **Geography:** Flag Finder and the Solar System stamp a passport for each country or planet explored. Reuses existing art; mostly a collection view plus unlock rules. | ⚪ Idea |
-| 32 | **Seasonal events** | Short, time-limited packs reskinning existing generators: Halloween counting with pumpkins and bats (October), an Advent calendar of daily puzzles (December), Easter-egg hunting with position and direction. Nothing is lost when an event ends — its stickers stay in the Trophy Room. A reason to come back that isn't a streak. Needs an event config with dates and theme assets. | ⚪ Idea |
-| 33 | **Story adventure across the curriculum** | Give each year a light storyline: "Bix's rocket is broken — finish topics to find the parts." Short animated scenes (a few frames plus speech) play between categories, and the topic map becomes a **world map** the child's avatar walks along. Turns a list of topics into a journey with a goal. Ties into the Solar System scene for the finale. Big on art and writing, small on logic; needs the read-aloud work in #8. | ⚪ Idea |
-| 36 | **Wire privacy-hardened analytics (PostHog)** | The sign-up funnel already calls `track()` in `src/utils/analytics.js`, with event/property allow-lists and tests; it sends nothing. Remaining: install and wire PostHog through that wrapper, consent gating and deployment configuration for an audience of children: **EU Cloud** (Frankfurt) and a signed **DPA**; **IP capture off** at project level; **autocapture off** (explicit events only); **session replay off**; `person_profiles: 'identified_only'` and never `identify()` with an email or a child's name — use a random app-generated id, which is still pseudonymous personal data, not "zero-PII". Track **grown-ups' and learners' actions, not children's**, unless a grown-up has opted in; capture starts opted out on child profiles. Tie the consent wording to #11. | 🟡 Partial |
-| 38 | **Finish English & Science interactive review** | Implementation and automated checks exist, but broad interactive and owner review remains open in the [English tracker](english-curriculum/IMPLEMENTATION_TRACKER.md) and [Science tracker](science-curriculum/y3-science-tracker.md). Use disposable profiles to check wrong answers/hints, keyboard/touch controls, guided enquiries/reset, full completions, celebrations, saved progress/reload/replay, child switching, phone layouts, both themes and real-device speech. Initial React renders are not playthrough evidence. | 🟡 Partial |
-| 41 | **Skills Mode celebrations** | **The kit exists (2026-10-10):** `useAnswerFeedback` + `AnswerFeedbackLine` give the curriculum's answer effects, gentle retry line, combos, sounds, Bix and a five-in-a-row milestone, and `FreePlayShell` uses them for the five free-play games. Remaining: adopt the hook in the older standalone games (Number Bonds, Fraction Fun, Missing Number, Word Builder and the rest), which keep their own feedback today. Keep Skills Mode ungated; decide any persistent rewards separately before extending XP/streak rules. Honour mute, reduced motion, keyboard/touch use and both themes. | 🟡 Partial |
+Each idea says what a child or grown-up would get, then what is already done
+and what is left. File names and engineering detail are in
+[Notes for builders](#-notes-for-builders) at the end.
+
+| # | Idea | What it is | Done so far / what's left | Status |
+|---|---|---|---|---|
+| 6 | **Write new questions as data** | Most challenges today are hand-built screens. A shared format lets us write a question as a few lines of data, for example "a clock showing half past 3, pick the time", and the app draws it. New topics become much quicker to build. | **Done:** the format and the screen for 13 question types (multiple choice, typed numbers, spelling, sorting, ordering, charts, clocks, coins, fractions and more). **Left:** nothing children play uses it yet. Build the next new topics with it, then move the existing English games onto it. | 🟡 Partial |
+| 7 | **Accessibility and keyboard check** | Make sure every game works for a child using a keyboard or a screen reader, or who needs less motion, and that text is readable in both colour themes. | **Left:** nobody has played every interaction with a keyboard only and with a screen reader. Do that, and fix what breaks. | ⚪ Idea |
+| 8 | **Read-aloud everywhere** | A "Read it to me" button, so a child who can't yet read fluently can still play. | **Done:** every curriculum subject (Maths added 2026-10-10), the Solar System, the daily puzzle and the new free-play games. **Left:** the older Skills games; drag-and-build Maths questions that read their tiles out as a list; checking the voice on real phones and tablets. | 🟡 Partial |
+| 9 | **Progress report for grown-ups** | Parents (and later teachers) see how a child is getting on. | **Done:** the Parent area shows each child's progress, badges and profile settings. **Left:** "time spent learning" and "topics to practise more". Both need the app to start recording each attempt (step 5 of the order below). Maybe a "reset progress" button, designed carefully so nothing is lost by accident. | 🟡 Partial |
+| 10 | **Questions that adjust to the child** | If a child keeps getting answers right, the questions get a little harder; if they struggle, a little easier. Always within what their year group should learn. | **Left:** all of it. Needs the same attempt recording as #9. The "levels" that exist today choose between a topic's four fixed challenges; they are not a difficulty dial. | ⚪ Idea |
+| 11 | **Safeguarding and parental consent** | A child under 13 can sign up by typing an age. Nothing checks it or records a parent's permission. A qualified person needs to say what the law requires for a live children's app. | **Done:** a brief for the reviewer ([safeguarding/REVIEW_BRIEF.md](safeguarding/REVIEW_BRIEF.md)). **Left:** send it to a qualified reviewer; confirm where the database is hosted and the data agreements with suppliers; then build whatever consent step they ask for (the app can already send confirmation emails). | 🟡 Partial |
+| 12 | **Phonics and rhyming games** | Sound out words, match rhymes, split words into syllables: early reading practice. | **Left:** all of it. Needs proper letter-sound recordings first; the browser voice reads whole words, not phonics sounds. | ⚪ Idea |
+| 13 | **Story Maker and Story Sequencer** | Pick a character, a place and an action to build a silly story, or put picture cards in the right order. | **Left:** all of it. Some story material in Year 3 English could be reused. | ⚪ Idea |
+| 14 | **Works offline, installs like an app** | Install it on a tablet and keep playing without internet. Useful on shared school devices. | **Left:** all of it. The risk: progress made offline has to merge safely once back online, or a child loses work. Decide how before building anything. | ⚪ Idea |
+| 15 | **Geography curriculum** | A proper topic path, like Maths has, for continents, oceans, landforms, weather, and day and night. | **Left:** all of it. First match the topics to the national curriculum text in `docs/curriculum/`. Game ideas are in [notes_geography.md](notes_geography.md). | ⚪ Idea |
+| 16 | **Year 1 and 2 English** | Years 3 and 4 English exist; add Years 1 and 2. | **Left:** all of it. The national curriculum text is already saved. Build it with #6's data format. | ⚪ Idea |
+| 17 | **Solar System meteor: test on real devices** | The meteor shower in the Solar System is built and runs smoothly on a computer. | **Left:** measure how smoothly it runs on a real phone and a real tablet. No more code needed. | 🟡 Partial |
+| 19 | **Constellations in the 3D sky** | The constellation card is a flat picture today. Add a "Find it in the real sky →" button that flies the 3D view to that constellation among the stars. | **Left:** all of it. | ⚪ Idea |
+| 20 | **More Skills games (from the original notes)** | **Maths:** Math Sentence Builder, Compare the Numbers, Math Maze, Clock Quiz, Skip Count Jump, Estimate It!, Magic Squares, Number Line Jump, Odd or Even Sort, Shape Sorter 3D, Pattern Play, Tally Marks Trainer, Math Bingo. **English:** Sentence Fixer, Word Picture Puzzle, Riddle Time, Emoji Sentences, Picture Vocabulary, Alphabet Adventure, Listening & Repeat. **Geography:** Country Puzzle. | **Left:** pick any and build it on the free-play game frame, so it gets levels, read-aloud and celebrations for free. | ⚪ Idea |
+| 24 | **Avatar wardrobe** | Earn hats, glasses, capes or a pet for your avatar, shown wherever your picture appears. Earned only, never bought. | **Left:** all of it. Decide which achievements unlock what. | ⚪ Idea |
+| 25 | **Bix's den** | A room for Bix that the child decorates with things earned from topics: a telescope from the Solar System, a rock shelf from Rocks. Tapping an object replays a fact from that topic, which doubles as gentle revision. | **Left:** all of it. Comes after #24, which sets up the unlocking. | ⚪ Idea |
+| 26 | **Boss rounds** | At the end of each quest, a friendly cartoon "boss" shrinks with every right answer, using mixed questions from the whole quest. Never timed and can't be failed; it just takes a little longer. | **Left:** all of it. Needs a way to mix questions from several topics, and boss art. | ⚪ Idea |
+| 27 | **Real-world missions** | After a Science topic, the app suggests something to try at home. | **Done:** the suggestions appear after Year 3 Science topics. **Left:** the child ticks the mission off, a grown-up confirms "We did it!", and a mission sticker is awarded. Then missions for other subjects. | 🟡 Partial |
+| 28 | **Teach the grown-up** | The child sets a quiz on a topic they've finished, hands over the device, and marks the grown-up's answers, with Bix cheering them on as the teacher. | **Left:** all of it. | ⚪ Idea |
+| 29 | **Pass-and-play for two** | Two children, or a child and a grown-up, take turns on one device, competing or as a team, so a younger sibling isn't always losing. Skills Mode only, so curriculum progress is never touched. | **Left:** all of it. | ⚪ Idea |
+| 31 | **Science notebook and geography passport** | Finishing a Science topic adds an illustrated card (skeletons, rocks, fossils, flowers) with a tap-to-hear fact. Exploring countries and planets stamps a passport. | **Left:** all of it. The drawings already exist; this is mostly a collection screen. | ⚪ Idea |
+| 32 | **Seasonal events** | Short themed packs: Halloween counting, an Advent calendar of puzzles, an Easter egg hunt. Stickers stay after the event ends. | **Left:** all of it. Plan each pack a term ahead; this October has passed. | ⚪ Idea |
+| 33 | **Story adventure** | Each year gets a light storyline ("Bix's rocket is broken: finish topics to find the parts"), and the topic list becomes a world map the child's avatar walks along. | **Left:** all of it. Mostly art and writing rather than code. | ⚪ Idea |
+| 36 | **Privacy-safe analytics** | Learn how grown-ups use the app, for example where sign-up loses people, without tracking children. | **Done:** the sign-up steps are already labelled, but nothing is sent anywhere. **Left:** connect an analytics service (PostHog) with strict privacy settings, after #11 decides what consent is needed. | 🟡 Partial |
+| 38 | **Play-test English and Science** | Both are built and pass the automated tests, but nobody has played every topic through. | **Left:** play every topic as a child would: wrong answers, hints, keyboard and touch, finishing topics, celebrations, saving, phones, both themes, the read-aloud voice. Then the owner's review. | 🟡 Partial |
+| 41 | **Celebrations in every Skills game** | Sparkles, combos, sounds and Bix cheering after an answer, as in Curriculum Mode. | **Done:** the five new free-play games. **Left:** the older games (Number Bonds, Fraction Fun, Missing Number, Word Builder and the rest). | 🟡 Partial |
 
 ---
 
 ## 🎯 Suggested Order
 
-Ordered by risk to real users first, then by what unblocks the most later work.
-Step 1 can run alongside the others: #11 is mostly outside review, not code.
+Most urgent first: what could affect children using the app today, then what
+makes later work cheaper. Step 1 is mostly emails and waiting, so run it
+alongside everything else.
 
-1. **Start the safeguarding review now:** #11. The app is live for children and
-   the under-13 gate trusts the entered age. Qualified review takes calendar
-   time and its outcome constrains #36 (analytics) and the attempt recording in
-   step 5, so begin it before building either.
-2. **Finish reviewing shipped content:** #38 (English/Science playthroughs and
-   owner review), with #7 (accessibility) fixed in the same interactions rather
-   than as a separate pass. Run #17's physical-device benchmark whenever a
-   phone/tablet is to hand; it needs no more code.
-3. **Finish the welcome:** the rest of #8 (Skills Mode narration).
-4. **Reduce the cost of expansion:** author the next topics with #6's data
-   format, which makes #16 (Year 1–2 English) and #15 (Geography) cheaper. New
-   Skills games from #20 start on `FreePlayShell`; finish #41 by moving the
-   older games onto its feedback hook.
-5. **Add evidence before adapting:** once #11 has settled what may be recorded,
-   build session/attempt recording, separate from the completion store, then #9
-   (time spent, topics needing practice) and #10 (adaptive difficulty). #36
-   (analytics) follows the same consent decision.
-6. **Delight backlog, by dependency:**
-   - **Reuses what exists (cheapest):** #31 (notebook/passport from existing
-     art), #27 (mission tick-off), #26 (boss rounds; needs a mixed-question
-     picker).
-   - **Chains:** #24 (wardrobe) → #25 (Bix's den); #8 → #12 (phonics) and #33
-     (story adventure).
-   - **Standalone:** #13 (stories), #28 (teach the grown-up), #29
-     (pass-and-play), #19 (3D constellations).
-   - **Date-bound:** #32 (seasonal events) — plan a pack a term ahead of its
-     season; this year's October slot has passed.
-   - **Needs a design decision first:** #14 (offline/PWA) — agree the offline
-     progress queue and conflict rule before any service worker, because a
-     bad merge loses learner progress.
+1. **Get the safeguarding review started (#11).** The app is live for children,
+   and the age check just trusts what is typed. The reviewer's answer also
+   decides what we're allowed to record, which the ideas in step 5 depend on.
+2. **Check that what's built really works (#38, #7, #17).** Play through English
+   and Science, and fix keyboard and screen-reader problems in the same pass
+   rather than a separate one. Test the meteor on a real phone whenever one is
+   handy.
+3. **Bring the older Skills games up to standard (#8, #41).** Add read-aloud and
+   the celebrations in one pass, since it's the same games.
+4. **Add new content the quicker way (#16, #15, #20).** Build Year 1–2 English
+   and Geography in the new question format (#6), and new Skills games on the
+   free-play frame.
+5. **Start recording each attempt, once #11 allows it.** That unlocks the
+   grown-ups' report (#9), questions that adjust (#10) and analytics (#36).
+6. **Fun extras, roughly cheapest first:**
+   - **Mostly reuse what exists:** science notebook and passport (#31),
+     ticking off missions (#27), boss rounds (#26).
+   - **Do in order:** avatar wardrobe (#24) before Bix's den (#25); read-aloud
+     (#8) before phonics (#12) and the story adventure (#33).
+   - **Any time:** Story Maker (#13), teach the grown-up (#28), pass-and-play
+     (#29), constellations in 3D (#19).
+   - **Tied to a date:** seasonal events (#32). Plan each a term ahead.
+   - **Decide first, then build:** offline mode (#14). Agree how offline
+     progress merges before writing any code, because a bad merge loses a
+     child's work.
+
+---
+
+## 🔧 Notes for builders
+
+The detail behind the rows above, for whoever picks one up.
+
+- **#6** Kinds and their rules: `src/data/challenges/questionKinds.js` (lint a
+  bank with `lintBuild`); renderer: `src/components/challenge/data/DataChallenge.jsx`;
+  how-to and field table: the `building-curriculum-topics` skill. Move
+  `EnglishPracticeGame` over only once its challenges can be replayed side by
+  side to prove nothing changed. Interactions outside the 13 kinds (scales,
+  robot grids, science enquiries) still need their own JSX.
+- **#7** Existing support: native buttons in `TileBuilder`, `SortBins` and
+  `PlaceValueBlocks`; key handlers in `MeasureDrag` and `LetterInput`; drag
+  handles from `@hello-pangea/dnd` in `DragToOrder`. Counting `onKeyDown`
+  handlers is not an audit; play each interaction end to end.
+- **#8** Speech: `src/utils/speech.js`, `SpeakButton`; Maths readings go through
+  `data/mathSpeech.js` and `components/challenge/readAloud.js` (PROJECT_KNOWLEDGE
+  §5, "Maths read-aloud"). Always keep the visible text and a sound-off path.
+- **#9 / #10** Progress stores completions only: no per-challenge timestamps,
+  attempt counts or wrong answers. Record attempts during the run in
+  `ChallengeShell` (or the game), in a new store kept separate from
+  completions. A reset-progress control needs an explicit scope, a
+  confirmation and a decision about linked rewards: read the
+  `curriculum-progress` skill first. `updateChild` edits profile fields only.
+  For #10, the generators' `level` picks one of four fixed challenge designs;
+  define and test real difficulty controls before adapting automatically.
+- **#13** Reusable material: `SettingsCharactersAndPlotGame.jsx` (ordering plot
+  sentences, choosing story parts). `stories.json` feeds only `SpeedReader`.
+- **#14** Offline progress needs a queue and a conflict rule that works with the
+  API store. No manifest, service worker or PWA plugin exists yet.
+- **#15** [Flag Finder](../src/pages/skills/geography/FlagFinder.jsx) could
+  support continent practice once its country data is extended and checked.
+- **#16** Interactive review of Years 3–4 is tracked in
+  [IMPLEMENTATION_TRACKER.md](english-curriculum/IMPLEMENTATION_TRACKER.md).
+- **#17** Pure tests T1–T10 pass; desktop checks and a production preview
+  (median 8.3 ms per frame) are recorded. Simulated phone viewports don't count.
+  See the [implementation plan](solar-system-meteor/IMPLEMENTATION_PLAN.md) and
+  [tracker](solar-system-meteor/IMPLEMENTATION_TRACKER.md).
+- **#19** Add a `constellationSky.js` module shaped like `meteorExperiment.js`
+  (`enter / update / resize / exit / dispose / isActive`): a `THREE.Group` on a
+  celestial sphere at radius ≈2700 from the same RA/Dec via
+  `raDecToUnitVector`, `Points` for stars, `LineSegments` for the figure and a
+  `createLabel()` sprite. To solve: framing a point outward on the sphere within
+  `controls.minDistance` 1.5 / `maxDistance` 3000 and a far plane of 5000;
+  `depthTest: false` plus a `renderOrder` so planets don't slice through the
+  figure; dimming the random star field at radius 3000 while active.
+- **#20** Intended routes: `/math-sentences` (word problem → equation),
+  `/compare-numbers`, `/math-maze`, `/clock-quiz` (analogue ↔ digital),
+  `/skip-count`, `/estimate`, `/magic-squares` (3×3 equal sums), `/number-line`
+  (animated +2/−3 jumps), `/odd-even-sort`, `/shape-sorter`, `/pattern-play`
+  (ABAB/AABB), `/tally-trainer`, `/math-bingo`; `/sentence-fixer` ("the dog run
+  fast"), `/word-picture-puzzle`, `/riddle-time`, `/emoji-sentences`,
+  `/picture-vocabulary`, `/alphabet-adventure`, `/listening-repeat` (needs #8);
+  `/country-puzzle`. Start from `FreePlayShell` (the `add-skill-game` skill).
+- **#24** Badges already unlock profile pictures; XP levels and stickers are
+  separate rewards. Store what's worn through a rewards-schema change that
+  keeps every existing field (see the `curriculum-progress` skill).
+- **#27** Existing cards: `scienceActivities.js` → `PracticalActivityCard.jsx`.
+  Keep mission awards separate from curriculum completions.
+- **#36** The wrapper is `src/utils/analytics.js` (`track()`, with event and
+  property allow-lists and tests). Settings for a children's audience: PostHog
+  **EU Cloud** (Frankfurt) with a signed **DPA**; **IP capture off** at project
+  level; **autocapture off** (named events only); **session replay off**;
+  `person_profiles: 'identified_only'`; never `identify()` with an email or a
+  child's name: use a random app-made id, which still counts as personal data.
+  Track grown-ups' and learners' actions only; child profiles start opted out
+  unless a grown-up opts in. Consent wording comes from #11.
+- **#38** Trackers: [English](english-curriculum/IMPLEMENTATION_TRACKER.md),
+  [Science](science-curriculum/y3-science-tracker.md). Use disposable profiles;
+  a first React render is not a playthrough.
+- **#41** Feedback kit: `useAnswerFeedback` + `AnswerFeedbackLine` in
+  `src/components/skills/`. Keep Skills Mode ungated; decide any lasting
+  rewards separately before extending XP or streaks. Honour mute, reduced
+  motion, keyboard/touch and both themes.
