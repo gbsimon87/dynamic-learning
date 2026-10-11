@@ -1,8 +1,9 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import DataChallenge, { DataRound } from "../../src/components/challenge/data/DataChallenge";
+import { isNarrationSupported, speakAndWait } from "../../src/utils/speech";
 
-vi.mock("../../src/utils/speech", () => ({ speak: () => {}, stopNarration: () => {}, speakAndWait: async () => {}, isNarrationSupported: () => false }));
+vi.mock("../../src/utils/speech", () => ({ speak: () => {}, stopNarration: () => {}, speakAndWait: vi.fn(async () => {}), isNarrationSupported: vi.fn(() => false) }));
 
 function round(q, { hint = false } = {}) {
   const submit = vi.fn();
@@ -14,6 +15,32 @@ const typeNumber = (value) => fireEvent.change(screen.getByRole("textbox"), { ta
 const tap = (name) => fireEvent.click(screen.getByRole("button", { name }));
 
 describe("every data kind can be answered right in the browser", () => {
+  it("reading assessment hides answer narration but keeps tap-only instructions", () => {
+    isNarrationSupported.mockReturnValue(true);
+    speakAndWait.mockClear();
+    try {
+      round({ kind: "choice", readTextAloud: false, text: "cat",
+        passage: { title: "A cat", blocks: [{ type: "p", text: "A cat sat on a mat." }] },
+        prompt: "Read the word.", speak: "Read the word.", options: ["cat", "dog"], answer: "cat" });
+      expect(screen.queryByRole("button", { name: /Read it to me/ })).toBeNull();
+      expect(speakAndWait).not.toHaveBeenCalled();
+      fireEvent.click(screen.getByRole("button", { name: /Read the question/ }));
+      expect(speakAndWait).toHaveBeenCalledWith("Read the word.");
+    } finally {
+      isNarrationSupported.mockReturnValue(false);
+    }
+  });
+
+  it("text narration remains available by default for existing challenges", () => {
+    isNarrationSupported.mockReturnValue(true);
+    try {
+      round({ kind: "choice", text: "Leo has a cat.", options: ["cat", "dog"], answer: "cat" });
+      expect(screen.getByRole("button", { name: /Read it to me/ })).toBeTruthy();
+    } finally {
+      isNarrationSupported.mockReturnValue(false);
+    }
+  });
+
   it("choice, with the hint striking a wrong option", () => {
     const { submit, check } = round({ kind: "choice", prompt: "Which is **even**?", options: [3, 4, 5], answer: 4, hint: "Look at the last digit." }, { hint: true });
     expect(screen.getAllByRole("button", { pressed: false })).toHaveLength(2);
@@ -101,6 +128,11 @@ describe("every data kind can be answered right in the browser", () => {
     check();
     expect(submit).toHaveBeenCalledWith(true);
   });
+});
+
+it("draws a question's picture with its label for screen readers", () => {
+  round({ kind: "choice", prompt: "Which word matches the picture?", picture: "🐱", pictureLabel: "a cat", options: ["cat", "cot"], answer: "cat" });
+  expect(screen.getByRole("img", { name: "a cat" }).textContent).toBe("🐱");
 });
 
 it("a whole data challenge runs through the shell to completion", () => {

@@ -209,10 +209,61 @@ The grammatical terms that pupils should learn are labelled as 'terminology for 
 
 # Mapping to our curriculum dataset
 
-> **No Year 2 English dataset yet.** Building Years 1 and 2 is #16 in [PROJECT_IDEAS.md](../PROJECT_IDEAS.md). When one is built, map each topic
-> here to the statutory bullet it serves, as
-> [year-3-and-4-english.md](year-3-and-4-english.md) does, and list anything
-> deliberately not covered.
+**Implemented 2026-10-11:** `src/data/year2EnglishCurriculum.js` — 9 categories,
+39 topics, all 156 challenges. This mapping and the category order are our design;
+the statutory text above is unchanged. Categories alternate strands as in Years 3–4.
+Spelling includes every Appendix 1 example; these examples are guidance, not a
+statutory word list. Most challenges have five questions; passage challenges have three or four.
+
+| Category | Topic | Requirement and boundary |
+|---|---|---|
+| Spelling - Sounds and Endings | The ge and dge Spellings | Appendix 1: ge/dge and g/j; explicit word clues, no rule that every g before e/i/y is soft. |
+| Spelling - Sounds and Endings | Soft c and Silent Letters | Appendix 1: c before e/i/y; kn/gn; wr. |
+| Spelling - Sounds and Endings | The le, el, al and il Endings | Appendix 1: every le/el/al/il example; no guessing a spelling from its sound alone. |
+| Spelling - Sounds and Endings | The y and ey Endings | Appendix 1: y as /aɪ/, ey as /i:/, ey plurals add s. |
+| Spelling - Sounds and Endings | Other Ways to Spell Sounds | Appendix 1: a before l/ll, o as /ʌ/, a after w/qu, or/ar after w, s as /ʒ/, tion. These are word-specific, never universal rules. |
+| Reading - Words | Reading Longer Words | Word reading: two or more syllables, blending; written segments remain available without audio. |
+| Reading - Words | Reading Words with Suffixes | Word reading: common suffixes and their meaning; no word must be inferred only by hearing. |
+| Reading - Words | Common Exception Words | Appendix 1 common exception examples, including Mr/Mrs and children; no speed scoring or dependence on voice. |
+| Grammar - Words | Compound Words and Nouns | Appendix 2 Word: compound nouns; noun-forming ness/er. Technical terms have short glosses. |
+| Grammar - Words | Adjectives and Adverbs | Appendix 2: adjective/adverb terminology; ful/less, comparative er/est and ly; not Year 3 ly exceptions. |
+| Reading - Stories | Sequencing Events | Comprehension: discussing the sequence of events, explicit before/after relationships. |
+| Reading - Stories | Understanding Characters | Comprehension: inference from what is said and done; feelings always supported by behaviour. |
+| Reading - Stories | Predicting from a Story | Comprehension: predictions based on what has been read; most-likely wording rather than claiming certainty. |
+| Reading - Stories | Fairy Stories and Traditional Tales | Comprehension: familiar fairy/traditional tales and retelling; original brief retellings, not copyrighted extracts. |
+| Reading - Stories | Word Meanings in Stories | Comprehension: vocabulary in context, cause/effect and clarifying meanings. |
+| Spelling - Suffixes | Changing y to ies | Appendix 1: es after consonant+y; nouns and verbs; never applies to vowel+y. |
+| Spelling - Suffixes | Suffixes after y | Appendix 1: ed/ing/er/est after consonant+y, including all examples. |
+| Spelling - Suffixes | Dropping e before a Suffix | Appendix 1: ing/ed/er/est/y after consonant+e; being exception. |
+| Spelling - Suffixes | Doubling the Last Letter | Appendix 1: one syllable, single short vowel and consonant; x exception; no general rule for all short words. |
+| Spelling - Suffixes | The Suffixes ment, ness, ful, less and ly | Appendix 1: ment/ness/ful/less/ly, all examples and argument/y exceptions. |
+| Grammar - Sentences and Punctuation | Statements, Questions, Exclamations and Commands | Appendix 2 sentence functions; punctuation alone does not make a grammatical exclamation. |
+| Grammar - Sentences and Punctuation | Expanded Noun Phrases | Appendix 2 expanded noun phrases: simple adjective+noun, with unique word order specified. |
+| Grammar - Sentences and Punctuation | Joining Sentences | Appendix 2 coordination and/or/but; subordination when/if/that/because; instructions disambiguate meaning. |
+| Grammar - Sentences and Punctuation | Present and Past Tense | Appendix 2 correct present/past use; past slot contrasted with present in options and sorts. |
+| Grammar - Sentences and Punctuation | Actions in Progress | Appendix 2 present and past progressive; explicit time anchors, singular subjects. |
+| Grammar - Sentences and Punctuation | Capital Letters and End Marks | Appendix 2 sentence demarcation; instructions specify statement/question/exclamation punctuation. |
+| Grammar - Sentences and Punctuation | Commas in Lists | Appendix 2 commas separating list items, three-item lists; no comma before and required. |
+| Spelling - Apostrophes and Homophones | Contractions | Appendix 1 contractions, missing letters; it’s never taught as ownership. |
+| Spelling - Apostrophes and Homophones | Apostrophes for Ownership | Appendix 1 and Appendix 2: singular possession only, always explicit ownership context. |
+| Spelling - Apostrophes and Homophones | Homophones and Near Homophones | Appendix 1: all eleven homophone/near-homophone groups; quiet/quite kept distinct; explicit contexts. |
+| Reading - Information and Poetry | Finding Facts in Non-Fiction | Comprehension: information related by topic; explanatory facts and ordered instructions; headings applied explicitly. |
+| Reading - Information and Poetry | Poems and Repeated Phrases | Comprehension: recurring literary language, rhymes and poem meaning; optional oral practice, no automatic performance assessment. |
+| Reading - Information and Poetry | Asking Questions and Discussing Books | Comprehension and spoken language: relevant questions, explaining views with evidence, favourite phrases and turn-taking; discussion rehearsal, not a substitute for live discussion. |
+| Writing - Planning and Checking | Planning and Building Stories | Composition: planning ideas and encapsulating a story sentence by sentence; choice and building only. |
+| Writing - Planning and Checking | Writing about Real Events | Composition: writing about real events; event records separate true facts from invented details. |
+| Writing - Planning and Checking | Writing for Different Purposes | Composition: different purposes and sentence functions; purpose explicitly given, no open creative answer graded. |
+| Writing - Planning and Checking | Building Poems | Composition: poetry through choosing and building rhyming lines; structured practice, not free writing. |
+| Writing - Planning and Checking | Checking and Improving Writing | Composition: re-reading sense, consistent tense, revisions and proofreading; specified errors and intended meaning. |
+| Writing - Planning and Checking | Dictation | Transcription: simple sentences from memory; tap-to-hear or look-cover-write fallback; Year 2 spelling and punctuation only. |
+
+**Practice beyond these games.** Handwriting (letter size, joining and spacing),
+reading whole books matched to a pupil’s phonics, repeated reading for fluency,
+memorising and performing poems, oral composition, live discussion and reading
+aloud are not assessed by these games. Adults should practise these alongside
+the course. Turn-taking questions rehearse discussion decisions; poem building
+and story building are structured composition, not independent free writing.
+Speech buttons are optional. Dictation has a look-cover-write fallback.
 
 ---
 

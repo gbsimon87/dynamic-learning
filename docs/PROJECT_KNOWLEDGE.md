@@ -17,7 +17,7 @@
 > file reflects it. Also update [PROJECT_IDEAS.md](PROJECT_IDEAS.md) when an idea
 > moves between statuses.
 
-**Last reviewed:** 2026-10-10
+**Last reviewed:** 2026-10-11
 
 ---
 
@@ -25,7 +25,7 @@
 
 **Learn with Bix** (formerly Dynamic Learning) is an interactive web learning platform for primary-school
 children (built first for ~6-year-olds / **UK Year 2**; Curriculum Mode now
-also covers Year 3 Maths and Years 3–4 English). It teaches Maths, English,
+also covers Year 3 Maths and Years 1–4 English). It teaches Maths, English,
 Geometry and Geography through browser-based mini-games.
 
 There are two distinct learning modes, and the distinction matters for every
@@ -58,10 +58,10 @@ decision made in this codebase:
 | Linting | **ESLint 9** flat config | `npm run lint` |
 | External APIs | **REST Countries** (`restcountries.com`) | Country names & flags for Flag Finder skill game |
 
-**No component-test framework.** Pure logic is covered by Node's built-in
-`node:test` (`npm test`); React components have no test environment at all —
-see §6 item 4. External data is fetched from public APIs (currently just REST
-Countries for the Flag Finder geography game).
+Pure logic uses Node’s built-in `node:test`; React components use
+Vitest + jsdom in `tests/components/`. `npm test` runs both suites. External
+data is fetched from public APIs (currently just REST Countries for the
+Flag Finder geography game).
 
 **The backend is optional.** As of 2026-09-15 there are two interchangeable storage
 drivers (§4.7). By default everything still lives in this browser's `localStorage` and
@@ -88,7 +88,7 @@ npm run dev         # local dev server (Vite)
 npm run build       # production build
 npm run lint        # eslint
 npm run preview     # preview production build
-npm test            # node --test — pure logic only, no browser environment
+npm test            # node --test, then Vitest component tests
 npm run server      # the Express API
 npm run dev:server  # the API, watched, reading .env
 npm run seed        # development seed account (see §5, "Development seed")
@@ -136,7 +136,9 @@ src/
 │   ├── ClockPanel.jsx, ReadingNumbersPanel.jsx, DualLabelClock.jsx,
 │   ├── MapGame.jsx, MultiplicationGrid.jsx, ShapeQuiz.jsx
 ├── data/
+│   ├── year1EnglishCurriculum.js # 38 topics / 152 challenges; shared data-question renderer
 │   ├── year2MathCurriculum.js   # Curriculum tree (categories → topics)
+│   ├── year2EnglishCurriculum.js # 39 topics / 156 challenges; shared data-question renderer
 │   ├── year3MathCurriculum.js
 │   ├── year3EnglishCurriculum.js, year4EnglishCurriculum.js
 │   ├── curriculumRegistry.js    # Which curricula exist — the one source (years 1–4)
@@ -244,7 +246,11 @@ IDs are derived from titles via `toKebabCase()`. These IDs are used in URLs *and
 as `localStorage` keys, so **renaming a category or topic title silently breaks
 saved progress**. Treat titles as stable identifiers.
 
+Year 1 English: **8 categories / 38 topics / 152 challenges**, all built
+(2026-10-11; identifiers locked in `curriculumIds.test.js`).
 Year 2 Maths currently defines **8 categories / 39 topics / 156 challenge slots**.
+Year 2 English: **9 / 39 / 156** (2026-10-11; identifiers locked in its own
+`year2EnglishCurriculum.test.js`).
 Year 3 English: **8 / 32 / 128**; Year 4 English: **8 / 33 / 132** (both
 approved 2026-10-01; ids locked in `curriculumIds.test.js`).
 
@@ -991,6 +997,73 @@ Locked topics still list their challenges (each rendered locked and
 unclickable). Hiding them left a locked topic as a bare padlock, with no sign
 of what it held or how much of it there was.
 
+### Curriculum Mode — Year 2 English (2026-10-11)
+
+**Built: 39 topics, all 156 challenges, across nine categories.** English now
+opens from the Year 2 subject picker alongside Maths. The new registry entry
+uses the existing routes, availability lookup, unlock rules and per-child
+progress documents. Existing Maths and Years 3–4 English identifiers are unchanged.
+
+- **Sources:** the saved Year 2 programme of study, Appendix 2 and Appendix 1
+  in `docs/curriculum/`. Every topic has a requirement/boundary row in
+  [year-2-english.md](curriculum/year-2-english.md). Its statutory sections
+  are unchanged. All Appendix 1 example words are offered in the spelling
+  banks, including every common exception example and all eleven homophone
+  groups. Year 2 examples are guidance, not a statutory word list.
+- **Structure:** `year2EnglishCurriculum.js`; one pure, year-prefixed builder
+  and test per topic in `src/data/challenges/english/`; one Game and four
+  computed challenge wrappers under `src/pages/skills/english/challenges/year2/`.
+  The categories alternate spelling, reading, grammar and writing as in Years 3–4.
+- **Interactions:** the shared `DataChallenge` renderer supplies choices,
+  four-card sorting, letter/word tiles, spelling entry, evidence selection
+  and keyboard-operable ordering. `year2Practice.js` assembles questions;
+  five rounds per word/sentence challenge, three or four per passage challenge.
+  Each word/sentence bank has at least 15 items; each reading bank has three
+  original short texts (24 in total), with verbatim evidence for its questions.
+  Hints appear after two misses; grammar terms have glosses in levels 1–3.
+- **Capital letters:** data questions can opt into `caseSensitive: true`,
+  so capital-letter and proofreading questions reject lower-case alternatives.
+  Choice validation, hint filtering and built answers use the same comparison.
+  Other questions retain their existing case-insensitive comparison.
+- **Dictation:** a Year 2 bank injects into the existing dictation Game,
+  with tap-to-hear or look-cover-write when speech is unavailable. Its word
+  and punctuation tiles preserve list commas, contractions, singular
+  possessives, capitals and end marks. There is no dependence on audio alone.
+- **Certificates:** `english/year2CertificateSkills.js` adds a short topic
+  achievement for every new topic. Adding English means a Year 2 year award
+  requires both registered subjects, through the existing registry-based rule.
+- **Beyond the screen:** handwriting, whole books, repeated reading for
+  fluency, live discussion, oral composition and poem performance need adult
+  practice alongside the games. Structured story/poem building does not assess
+  independent free writing. The source mapping records these boundaries.
+- **Verification:** all 46 Year 2 checks pass, including bank validation,
+  Appendix 1 coverage, computed challenge paths, registration, stable ids,
+  fresh locks and topic/category cascades. Lint and production build pass;
+  the component suite passes all 56 tests. An isolated Chrome profile loaded
+  all 156 real challenge routes and completed nine runs covering choices,
+  sorting, word/letter building, apostrophe spelling, capital-letter errors,
+  evidence selection, keyboard ordering and dictation. Wrong answers retry,
+  hints appear after two misses, progress persists on reload, completed
+  challenges remain replayable, and a pre-existing Maths progress document
+  stays unchanged. Settled screenshots of reading, sorting and spelling entry
+  were checked in both themes at 390px and 1280px, with no horizontal overflow
+  or browser runtime errors. This is representative interactive coverage,
+  not a full playthrough of every authored question. The full `npm test` run
+  now passes after Year 1 completion. `node scripts/checkEnglishChallenges.js`
+  renders all 568 Year 1–4 English components through Vite/React with no speech voice.
+
+| Category | Topics | Built challenges |
+|---|---|---|
+| Spelling - Sounds and Endings | The ge and dge Spellings; Soft c and Silent Letters; The le, el, al and il Endings; The y and ey Endings; Other Ways to Spell Sounds | All 20 ✅ |
+| Reading - Words | Reading Longer Words; Reading Words with Suffixes; Common Exception Words | All 12 ✅ |
+| Grammar - Words | Compound Words and Nouns; Adjectives and Adverbs | All 8 ✅ |
+| Reading - Stories | Sequencing Events; Understanding Characters; Predicting from a Story; Fairy Stories and Traditional Tales; Word Meanings in Stories | All 20 ✅ |
+| Spelling - Suffixes | Changing y to ies; Suffixes after y; Dropping e before a Suffix; Doubling the Last Letter; The Suffixes ment, ness, ful, less and ly | All 20 ✅ |
+| Grammar - Sentences and Punctuation | Statements, Questions, Exclamations and Commands; Expanded Noun Phrases; Joining Sentences; Present and Past Tense; Actions in Progress; Capital Letters and End Marks; Commas in Lists | All 28 ✅ |
+| Spelling - Apostrophes and Homophones | Contractions; Apostrophes for Ownership; Homophones and Near Homophones | All 12 ✅ |
+| Reading - Information and Poetry | Finding Facts in Non-Fiction; Poems and Repeated Phrases; Asking Questions and Discussing Books | All 12 ✅ |
+| Writing - Planning and Checking | Planning and Building Stories; Writing about Real Events; Writing for Different Purposes; Building Poems; Checking and Improving Writing; Dictation | All 24 ✅ |
+
 ### Curriculum Mode — Years 3 and 4 English (2026-10-01, implemented)
 
 **The live status and the resume point is
@@ -1049,6 +1122,109 @@ the completion checks and the outstanding interactive browser review.
 - **Curriculum page:** the English strands have their own category icons
   (🔤 📖 🧱 ✍️) and the hero shows letters rather than maths symbols. English
   patterns are matched first, because "Composition" contains "position".
+
+### Curriculum Mode — Year 1 English (2026-10-11)
+
+**Complete: 8 categories, 38 topics, all 152 challenges.** Year 1 offers
+English through the existing picker, routes and progress path. The approved
+category/topic identifiers remain locked in `curriculumIds.test.js`; the
+programme of study and boundaries are in
+[year-1-english.md](curriculum/year-1-english.md). Statutory text is unchanged.
+
+- **Structure:** `year1EnglishCurriculum.js`, registered in
+  `curriculumRegistry.js`; 38 certificate “I can…” statements. Every topic
+  has a pure, year-prefixed bank and test in `src/data/challenges/english/`,
+  plus four computed challenge wrappers under
+  `src/pages/skills/english/challenges/year1/`. The existing Alphabet pilot
+  is preserved. `year1Practice.js` assembles the remaining data questions.
+- **Interactions:** choices, word-to-meaning/sound matching, letter/word
+  tiles, spelling entry, evidence selection and keyboard-operable ordering, drawn by `DataChallenge`.
+  Five distinct questions per word/sentence challenge; three per short-text
+  challenge. Each item bank has at least 15 authored items; each reading
+  bank has three original passages or poems, at most 80 words each.
+- **Early readers:** emoji pictures have accessible labels; every question
+  offers tap-to-hear instructions when speech is available. Reading questions
+  narrate instructions, never answers or passages: `readTextAloud: false`
+  disables the shared text box’s extra narration button while keeping the
+  question button. Older courses retain text narration by default. Spelling
+  questions speak the target and provide a visible picture, context or word-parts clue.
+  Typed words also show their first letters and length, so the visible
+  sentence does not leave two plausible words when sound is unavailable.
+  Hints appear after two misses; reading evidence hints narrow to two lines.
+- **Year 1 boundaries:** added endings keep their roots unchanged; contractions
+  are read and expanded, never typed with apostrophes. The spelling banks
+  cover the mapped Appendix 1 patterns, including the alternative sounds of
+  ea, ie, oo, ow and ear. Capitals are checked with opt-in case sensitivity;
+  weekdays use capital-bearing tiles in the final level because the spelling
+  keyboard only supplies lower-case letters. Ordinary Year 1 spelling hides
+  the apostrophe key. Composition uses prescribed choices and building, with short contexts that establish the intended idea.
+- **Dictation:** `year1Dictation.js` supplies short Year 1 sentences to the
+  existing Year 3 memory game through `year1/DictationGame.jsx`. An optional
+  `titles` prop gives Year 1 short headings while older years retain theirs.
+  Its listen / look-cover-build fallback remains available without sound.
+  The custom bank has its own checks for reconstruction, word boundaries,
+  punctuation and constant random sources rather than `lintBuild`, whose
+  kinds differ from the memory game.
+- **Progress:** no storage keys, saved shapes or unlock rules change.
+  Registration, fresh locks, completed-challenge replay and the first category
+  cascade have integration tests. All 152 computed wrapper paths are checked
+  by `year1ChallengeCoverage.test.js`; all data banks run `checkYear1Build`
+  for short prompts, distinct questions, speech, British spelling and fair
+  controls over seeded and constant random sources.
+- **Verification:** `npm run lint`, `npm test` and `npm run build` pass:
+  1,491 unit tests passed (four existing skips) and 56 component tests passed.
+  All 568 Year 1–4 English challenges render through Vite/React, including
+  without speech. An isolated Chrome profile loaded all 152 Year 1 routes
+  and completed 15 representative runs covering choices, sorting, spelling,
+  letter/word tiles, capitals, evidence, keyboard ordering and dictation.
+  Wrong answers retry, hints appear after two misses, progress persists on
+  reload and completed work remains replayable. A pre-existing Maths document
+  stayed unchanged. Screenshots cover six interaction examples in both themes
+  at 390px and 1280px (24 views), with no overflow or runtime errors. Browser
+  speech checks confirm reading speaks only instructions and never autoplays.
+  The existing large-chunk build warning remains.
+- **Limits:** handwriting, independent oral reading, recitation, discussion
+  and free writing still need an adult and are not assessed by the app; the
+  source mapping records these boundaries. Interactive checking samples the
+  controls and topic families rather than every question in every bank.
+
+| Category | Topics | Built challenges |
+|---|---|---|
+| Spelling - Letters and Sounds | The Alphabet; Double Letters and ck; The Sounds nk and tch; Words Ending in ve and y; The Spellings ph, wh and k | All 20 ✅ |
+| Reading - Phonics | Blending Sounds; Same Letters, Different Sounds; Tricky Words; Longer Words; Contractions | All 20 ✅ |
+| Grammar - Words | Singular and Plural; Adding ing, ed and er; Adding er and est; The Prefix un; Compound Words | All 20 ✅ |
+| Reading - Stories | Traditional Tales; Titles and Events; Thinking About Characters; What Happens Next? | All 16 ✅ |
+| Spelling - Vowel Sounds | The Spellings ai, ay, oi and oy; Split Digraphs; The Spellings ee, ea, ie and igh; The Spellings oo, oa, ow and ew; The Spellings ar, or, er, ir and ur; The Spellings air, ear and are | All 24 ✅ |
+| Grammar - Sentences | Words and Sentences; Joining with And; Capital Letters; Days of the Week; Ending a Sentence | All 20 ✅ |
+| Reading - Poems and Facts | Rhymes and Poems; Repeated Phrases; What Words Mean; Facts and Stories | All 16 ✅ |
+| Writing - Composition | Building Sentences; Ordering a Story; Checking It Makes Sense; Dictation | All 16 ✅ |
+
+### Years 1–2 English — combined uncommitted-change review (2026-10-11)
+
+Reviewed both courses together with the shared renderer, answer comparison,
+registry, certificates, loader paths, tests and documentation. Statutory text
+before the mapping sections in both programme files is byte-for-byte unchanged.
+Saved progress identifiers, storage shapes and unlock rules are unchanged.
+
+Corrections from this pass:
+- Year 1 sound sorting now uses three distinct phoneme groups per round.
+  Different descriptions of the same vowel sound can no longer become competing
+  bins. A seeded regression check verifies each card has exactly one sound bin.
+- Year 2 spelling entry shows starting letters and letter count before an
+  attempt, narrowing definition clues that could otherwise invite synonyms.
+  The apostrophe key is shown only when the target needs it.
+- Year 2 word sorting asks whether a word fits its clue, rather than whether it
+  is spelt correctly: a homophone can be correctly spelt but wrong in context.
+- Tightened the basket meaning clue and corrected bee/buzzer contexts, beach
+  prepositions and the toy-car action. Added a shared comparison regression
+  check for capital-letter answers and the forgiving defaults used by older courses.
+
+Validation: lint, the full test suite (1,491 unit passes, four existing skips,
+56 component passes), production build and all 568 English component renders
+pass. Fresh isolated Chrome checks cover all 156 Year 2 routes, representative
+completion/retry/hint/persistence flows, Year 1 sound sorting, and updated
+spelling/sorting layouts in both themes at phone and desktop widths. Interactive
+coverage samples the controls; it does not exhaust every authored question.
 
 ### Curriculum Mode — Year 3 Science (2026-10-03)
 
@@ -2214,7 +2390,7 @@ not by itself deliver a standalone game or its proposed reward flow.
 | #13 Story games | [SettingsCharactersAndPlotGame](../src/pages/skills/english/challenges/year3/SettingsCharactersAndPlotGame.jsx), [stories.json](../src/data/stories.json), [Skills routes](../src/main.jsx). | Curriculum plot-sentence ordering and guided story planning exist; free-choice generation and standalone picture sequencing do not. |
 | #14 Offline/PWA | [Dependencies](../package.json), [entry HTML](../index.html), `public/`, store drivers. | No web-app manifest/service-worker registration/PWA plugin or offline API write/conflict flow. The Science asset manifest is unrelated. |
 | #15 Geography curriculum | [Curriculum registry](../src/data/curriculumRegistry.js), [FlagFinder](../src/pages/skills/geography/FlagFinder.jsx). | Geography is a selectable subject but has no registered curriculum; existing geography games are standalone. |
-| #16 Year 1–2 English | [Curriculum registry](../src/data/curriculumRegistry.js), English datasets/challenge directories. | Only Years 3 and 4 English are registered and implemented. Saved statutory documents are not implementations. |
+| #16 Year 1–2 English | [Curriculum registry](../src/data/curriculumRegistry.js), English datasets/challenge directories. | Completed 2026-10-11: Year 1 has 38 topics / 152 challenges and Year 2 has 39 / 156. Years 1–4 English are registered and implemented. |
 | #17 Meteor benchmark | [Meteor controller](../src/pages/skills/geography/meteorExperiment.js), [tracker](solar-system-meteor/IMPLEMENTATION_TRACKER.md). | Feature exists; the required physical phone/tablet timing evidence is explicitly outstanding. |
 | #18 Science diagrams | [Follow-up checklist](science-curriculum/DIAGRAM_REVIEW_FOLLOWUPS.md), diagram components and `scripts/science-assets/`. | All 11 checklist items remain open in source: dog skeleton, leaf water, muscle geometry/titles, labels/Plants, renderer sandboxing, checksums, cache path validation, SVG stripping and built licence notices. |
 | #19 3D constellations | [SolarSystem](../src/pages/skills/geography/SolarSystem.jsx), [ConstellationCard](../src/pages/skills/geography/ConstellationCard.jsx), projection modules. | Card explicitly stays outside the scene; no celestial-sphere constellation controller or real-sky action. |
@@ -2300,7 +2476,9 @@ answers Escape and traps Tab.
 5. Update the table in §5.
 
 ### Add a new Year / Subject
-Done for real with Years 3–4 English (2026-10-01); follow that example:
+Years 3–4 English (2026-10-01) are a worked example of this process.
+Year 2 English (2026-10-11) is the worked example for the shared data-question
+renderer, with its own banks, Appendix 1 coverage check and loader-path tests.
 1. Save the programme of study verbatim from the DfE PDF in `docs/curriculum/`, with a mapping
    section, and get the topic titles signed off. Titles are ids.
 2. Create `src/data/year<N><Subject>Curriculum.js` in the same shape, with a
@@ -2310,6 +2488,9 @@ Done for real with Years 3–4 English (2026-10-01); follow that example:
 4. Create `src/pages/skills/<subject>/challenges/year<N>/...` folders.
 5. Progress is namespaced by (child, year, subject), so years never clash. A
    second subject in a year makes the year award wait for both (§4.5).
+6. Add topic certificate statements and update tests that enumerate available
+   subjects in signup or certificates. Use an actually unavailable year for
+   empty-subject tests; Year 2 now offers Maths and English.
 
 ---
 

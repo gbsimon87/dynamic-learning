@@ -206,12 +206,131 @@ The grammatical terms that pupils should learn are labelled as 'terminology for 
 
 # Mapping to our curriculum dataset
 
-> **No Year 1 English dataset yet.** Building Years 1 and 2 is #16 in [PROJECT_IDEAS.md](../PROJECT_IDEAS.md). When one is built, map each topic
-> here to the statutory bullet it serves, as
-> [year-3-and-4-english.md](year-3-and-4-english.md) does, and list anything
-> deliberately not covered.
+> **Status: approved 2026-10-11.** Category and topic titles are ids in URLs
+> and saved progress (`src/data/year1EnglishCurriculum.js`). A rename is a
+> migration, not an edit.
 
----
+Everything below is our design, not statutory: the topic list, the category
+order and the boundaries. Categories alternate between strands, as Years 3 and
+4 do, so a child never works through every reading topic before any spelling.
+
+## Year 1 boundaries that are easy to overshoot
+
+- **Suffixes only where the root does not change**: helping, helped, helper,
+  quicker, quickest, jumps, wishes. Doubling (running), dropping e (hoping) and
+  y to i (babies, happier) are **Year 2**.
+- **Contractions are read, not written.** Spelling them with an apostrophe,
+  and the possessive apostrophe, are Year 2.
+- **Grammar terms for pupils** are only those Appendix 2 lists for Year 1:
+  letter, capital letter, word, singular, plural, sentence, punctuation, full
+  stop, question mark, exclamation mark. Prompts say "the letters un at the
+  start" and "a describing word", not prefix or adjective.
+- **Spelling words** come from Appendix 1's Year 1 patterns and example words,
+  and its Year 1 common exception words. No -ly, -ful, -tion, kn, wr or -dge.
+- **Texts are short**: prompts of at most 14 words, passages of at most 80
+  words, original, using the recurring cast. Traditional tales are retold in
+  our own words.
+- **Year 1 children are early readers.** Every question has a 🔊 button
+  (tap only, never automatic) and a picture or sentence, so it can be answered
+  without sound. When reading is the skill, the button reads the instruction,
+  never the answer.
+
+## Year 1 topics (38 topics)
+
+**Implementation complete, 2026-10-11:** all 38 mapped topics have four
+challenges (152 total). The statutory sections above are unchanged.
+
+### 1. Spelling - Letters and Sounds
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| The Alphabet | name the letters of the alphabet: naming the letters of the alphabet in order · using letter names to distinguish between alternative spellings of the same sound |
+| Double Letters and ck | Appendix 1: The sounds /f/, /l/, /s/, /z/ and /k/ spelt ff, ll, ss, zz and ck |
+| The Sounds nk and tch | Appendix 1: The /ŋ/ sound spelt n before k · -tch |
+| Words Ending in ve and y | Appendix 1: The /v/ sound at the end of words · Words ending –y (/i:/ or /ɪ/) |
+| The Spellings ph, wh and k | Appendix 1: New consonant spellings ph and wh · Using k for the /k/ sound |
+
+### 2. Reading - Phonics
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| Blending Sounds | apply phonic knowledge and skills as the route to decode words · read accurately by blending sounds in unfamiliar words containing GPCs that have been taught (Appendix 1: words with adjacent consonants) |
+| Same Letters, Different Sounds | respond speedily with the correct sound to graphemes (letters or groups of letters) for all 40+ phonemes, including, where applicable, alternative sounds for graphemes |
+| Tricky Words | read common exception words, noting unusual correspondences between spelling and sound and where these occur in the word · spell: common exception words |
+| Longer Words | read other words of more than one syllable that contain taught GPCs (Appendix 1: Division of words into syllables) |
+| Contractions | read words with contractions [for example, I’m, I’ll, we’ll], and understand that the apostrophe represents the omitted letter(s) |
+
+### 3. Grammar - Words
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| Singular and Plural | Appendix 2: Regular plural noun suffixes –s or –es … including the effects of these suffixes on the meaning of the noun · using the spelling rule for adding –s or –es as the plural marker for nouns and the third person singular marker for verbs |
+| Adding ing, ed and er | using –ing, –ed, –er and –est where no change is needed in the spelling of root words · read words containing taught GPCs and –s, –es, –ing, –ed, –er and –est endings (Appendix 2: Suffixes that can be added to verbs where no change is needed in the spelling of root words) |
+| Adding er and est | using –ing, –ed, –er and –est where no change is needed in the spelling of root words (Appendix 1: Adding –er and –est to adjectives where no change is needed to the root word) |
+| The Prefix un | using the prefix un– (Appendix 2: How the prefix un– changes the meaning of verbs and adjectives) |
+| Compound Words | Appendix 1: Compound words |
+
+### 4. Reading - Stories
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| Traditional Tales | becoming very familiar with key stories, fairy stories and traditional tales, retelling them and considering their particular characteristics |
+| Titles and Events | discussing the significance of the title and events |
+| Thinking About Characters | making inferences on the basis of what is being said and done · being encouraged to link what they read or hear read to their own experiences |
+| What Happens Next? | predicting what might happen on the basis of what has been read so far |
+
+### 5. Spelling - Vowel Sounds
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| The Spellings ai, ay, oi and oy | Appendix 1: ai, oi · ay, oy |
+| Split Digraphs | Appendix 1: a–e · e–e · i–e · o–e · u–e |
+| The Spellings ee, ea, ie and igh | Appendix 1: ee · ea (/i:/) · ea (/ɛ/) · ie (/aɪ/) · ie (/i:/) · igh |
+| The Spellings oo, oa, ow and ew | Appendix 1: oo (/u:/) · oo (/ʊ/) · oa · oe · ou · ow (/aʊ/) · ow (/əʊ/) · ue · ew |
+| The Spellings ar, or, er, ir and ur | Appendix 1: ar · er (/ɜ:/) · er (/ə/) · ir · ur · or · ore · aw · au |
+| The Spellings air, ear and are | Appendix 1: air · ear · ear (/ɛə/) · are (/ɛə/) |
+
+### 6. Grammar - Sentences
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| Words and Sentences | leaving spaces between words (Appendix 2: How words can combine to make sentences · Separation of words with spaces) |
+| Joining with And | joining words and joining clauses using and |
+| Capital Letters | using a capital letter for names of people, places, the days of the week, and the personal pronoun ‘I’ (Appendix 2: Capital letters for names and for the personal pronoun I) |
+| Days of the Week | spell: the days of the week |
+| Ending a Sentence | beginning to punctuate sentences using a capital letter and a full stop, question mark or exclamation mark |
+
+### 7. Reading - Poems and Facts
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| Rhymes and Poems | learning to appreciate rhymes and poems, and to recite some by heart |
+| Repeated Phrases | recognising and joining in with predictable phrases |
+| What Words Mean | discussing word meanings, linking new meanings to those already known |
+| Facts and Stories | listening to and discussing a wide range of poems, stories and non-fiction at a level beyond that at which they can read independently |
+
+### 8. Writing - Composition
+
+| Topic | Statutory requirement it serves |
+|---|---|
+| Building Sentences | write sentences by: saying out loud what they are going to write about · composing a sentence orally before writing it |
+| Ordering a Story | sequencing sentences to form short narratives (Appendix 2: Sequencing sentences to form short narratives) |
+| Checking It Makes Sense | re-reading what they have written to check that it makes sense · checking that the text makes sense to them as they read and correcting inaccurate reading |
+| Dictation | write from memory simple sentences dictated by the teacher that include words using the GPCs and common exception words taught so far |
+
+## Deliberately not covered
+
+These need a pencil, a voice or other people, so the app cannot teach or check
+them:
+
+- **Handwriting**, all of it: sitting and holding a pencil, forming lower-case
+  and capital letters and digits, handwriting families.
+- **Reading aloud and re-reading** decodable books for fluency; responding
+  "speedily" is practised but not timed.
+- **Reciting** poems by heart; **retelling** stories aloud.
+- **Discussion**: taking turns, listening to others, explaining understanding
+  aloud, discussing their own writing, reading their writing aloud.
+- **Drawing on background information provided by the teacher.**
 
 ## Differences from the gov.uk web page
 

@@ -14,7 +14,7 @@ const server = await createServer({
 });
 try {
   let count = 0;
-  for (const year of [3, 4]) {
+  for (const year of [1, 2, 3, 4]) {
     const module = await server.ssrLoadModule(`/src/data/year${year}EnglishCurriculum.js`);
     for (const category of module[`year${year}EnglishCurriculum`]) for (const topic of category.topics) {
       const name = topic.id.split("-").map((word) => word[0].toUpperCase() + word.slice(1)).join("");

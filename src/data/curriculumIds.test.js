@@ -5,6 +5,7 @@ import { year2MathCurriculum } from "./year2MathCurriculum.js";
 import { year3MathCurriculum } from "./year3MathCurriculum.js";
 import { year3EnglishCurriculum } from "./year3EnglishCurriculum.js";
 import { year4EnglishCurriculum } from "./year4EnglishCurriculum.js";
+import { year1EnglishCurriculum } from "./year1EnglishCurriculum.js";
 
 /**
  * Category and topic ids are keys inside every learner's saved progress, so a
@@ -175,6 +176,87 @@ const LOCKED_IDS = {
       ]
     ]
   ],
+  // Year 1 English, approved 2026-10-11.
+  "1-english": [
+    [
+      "spelling---letters-and-sounds",
+      [
+        "the-alphabet",
+        "double-letters-and-ck",
+        "the-sounds-nk-and-tch",
+        "words-ending-in-ve-and-y",
+        "the-spellings-ph-wh-and-k"
+      ]
+    ],
+    [
+      "reading---phonics",
+      [
+        "blending-sounds",
+        "same-letters-different-sounds",
+        "tricky-words",
+        "longer-words",
+        "contractions"
+      ]
+    ],
+    [
+      "grammar---words",
+      [
+        "singular-and-plural",
+        "adding-ing-ed-and-er",
+        "adding-er-and-est",
+        "the-prefix-un",
+        "compound-words"
+      ]
+    ],
+    [
+      "reading---stories",
+      [
+        "traditional-tales",
+        "titles-and-events",
+        "thinking-about-characters",
+        "what-happens-next"
+      ]
+    ],
+    [
+      "spelling---vowel-sounds",
+      [
+        "the-spellings-ai-ay-oi-and-oy",
+        "split-digraphs",
+        "the-spellings-ee-ea-ie-and-igh",
+        "the-spellings-oo-oa-ow-and-ew",
+        "the-spellings-ar-or-er-ir-and-ur",
+        "the-spellings-air-ear-and-are"
+      ]
+    ],
+    [
+      "grammar---sentences",
+      [
+        "words-and-sentences",
+        "joining-with-and",
+        "capital-letters",
+        "days-of-the-week",
+        "ending-a-sentence"
+      ]
+    ],
+    [
+      "reading---poems-and-facts",
+      [
+        "rhymes-and-poems",
+        "repeated-phrases",
+        "what-words-mean",
+        "facts-and-stories"
+      ]
+    ],
+    [
+      "writing---composition",
+      [
+        "building-sentences",
+        "ordering-a-story",
+        "checking-it-makes-sense",
+        "dictation"
+      ]
+    ]
+  ],
   // Year 3 English, approved 2026-10-01.
   "3-english": [
     [
@@ -339,6 +421,10 @@ test("Year 3 category and topic ids are unchanged", () => {
   assert.deepEqual(ids(year3MathCurriculum), LOCKED_IDS[3]);
 });
 
+test("Year 1 English category and topic ids are unchanged", () => {
+  assert.deepEqual(ids(year1EnglishCurriculum), LOCKED_IDS["1-english"]);
+});
+
 test("Year 3 English category and topic ids are unchanged", () => {
   assert.deepEqual(ids(year3EnglishCurriculum), LOCKED_IDS["3-english"]);
 });
@@ -348,7 +434,7 @@ test("Year 4 English category and topic ids are unchanged", () => {
 });
 
 test("every topic has a sticker icon", () => {
-  for (const curriculum of [year2MathCurriculum, year3MathCurriculum, year3EnglishCurriculum, year4EnglishCurriculum, year3ScienceCurriculum]) {
+  for (const curriculum of [year1EnglishCurriculum, year2MathCurriculum, year3MathCurriculum, year3EnglishCurriculum, year4EnglishCurriculum, year3ScienceCurriculum]) {
     for (const category of curriculum) {
       for (const topic of category.topics) {
         assert.ok(topic.icon, `${topic.name} has no icon`);

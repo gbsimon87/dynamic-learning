@@ -26,12 +26,12 @@ const MARK_NAMES = { ".": "full stop", "?": "question mark", "!": "exclamation m
 /** The sentence as a teacher dictates it: read once, then its end mark named. */
 const dictated = (text) => `${text} ${MARK_NAMES[text.match(/[.!?][”"]?$/)?.[0]?.[0]] ?? ""}`.trim();
 
-function DictationGame({ level, onComplete, build = buildDictationQuestions }) {
+function DictationGame({ level, onComplete, build = buildDictationQuestions, titles = TITLES }) {
   const questions = useMemo(() => build(level, Math.random), [build, level]);
 
   return (
     <ChallengeShell
-      title={TITLES[level - 1]}
+      title={titles[level - 1]}
       questions={questions}
       onComplete={onComplete}
       render={({ question, submit, locked, index, misses }) => {

@@ -1,0 +1,22 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { BANK, TITLES, buildDaysOfTheWeek } from "./year1DaysOfTheWeek.js";
+import { checkYear1Build } from "./year1Checks.js";
+
+test("Year 1 DaysOfTheWeek: every level is fair, short and accessible", () => {
+  checkYear1Build(buildDaysOfTheWeek, { titles: TITLES });
+  assert.ok(BANK.length >= 15);
+  assert.throws(() => buildDaysOfTheWeek(0, () => 0));
+});
+test("Year 1 DaysOfTheWeek: authored answers follow the topic", () => {
+  for (const row of BANK) {
+    assert.equal(row.sentence.split("___").length, 2);
+    assert.ok(!row.wrong.includes(row.answer));
+    assert.equal(new Set(row.wrong).size, row.wrong.length);
+    assert.ok(row.speak.includes(row.answer), row.answer);
+    assert.ok(row.pattern && row.answer.toLowerCase().includes(row.pattern.toLowerCase()), row.answer);
+  }
+
+  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  for (const row of BANK) assert.equal(row.answer, days[row.index]);
+});

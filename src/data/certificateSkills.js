@@ -16,9 +16,12 @@
  * Pure data, so it runs under `node --test`.
  */
 
+import { YEAR2_ENGLISH_TOPIC_SKILLS } from "./english/year2CertificateSkills.js";
+
 export const SKILL_STATEMENT_MAX = 80;
 
 export const TOPIC_SKILLS = {
+  ...YEAR2_ENGLISH_TOPIC_SKILLS,
   // ---- Year 2 Maths (docs/curriculum/year-2-maths.md) ----
   "2/math/numbers-and-counting": "I can read and write numbers to 100 in numerals and in words.",
   "2/math/counting-forwards-and-backwards": "I can count forwards and backwards in 2s, 3s, 5s and 10s.",
@@ -105,6 +108,46 @@ export const TOPIC_SKILLS = {
   "3/math/scaled-pictograms": "I can read pictograms where one picture stands for more than one.",
   "3/math/tables": "I can read and show data in tables.",
   "3/math/one-step-and-two-step-questions": "I can answer one-step and two-step questions from charts.",
+
+  // ---- Year 1 English (docs/curriculum/year-1-english.md) ----
+  "1/english/the-alphabet": "I can say the letters of the alphabet in order.",
+  "1/english/double-letters-and-ck": "I can spell words ending in ff, ll, ss, zz and ck.",
+  "1/english/the-sounds-nk-and-tch": "I can spell words with nk and tch, like think and catch.",
+  "1/english/words-ending-in-ve-and-y": "I can spell words ending in ve and y, like give and happy.",
+  "1/english/the-spellings-ph-wh-and-k": "I can spell words with ph, wh and k.",
+  "1/english/blending-sounds": "I can blend sounds to read new words.",
+  "1/english/same-letters-different-sounds": "I know some letters can make different sounds.",
+  "1/english/tricky-words": "I can read and spell tricky words like said and friend.",
+  "1/english/longer-words": "I can read longer words by splitting them into beats.",
+  "1/english/contractions": "I can read short forms like I’m and we’ll.",
+  "1/english/singular-and-plural": "I know when to add s or es to mean more than one.",
+  "1/english/adding-ing-ed-and-er": "I can add ing, ed and er to words.",
+  "1/english/adding-er-and-est": "I can add er and est to describing words.",
+  "1/english/the-prefix-un": "I know that un at the start of a word changes its meaning.",
+  "1/english/compound-words": "I can join two words to make one, like football.",
+  "1/english/traditional-tales": "I know lots of fairy stories and traditional tales.",
+  "1/english/titles-and-events": "I can talk about the title and what happens in a story.",
+  "1/english/thinking-about-characters": "I can work out how characters feel from what they say and do.",
+  "1/english/what-happens-next": "I can guess what might happen next in a story.",
+  "1/english/the-spellings-ai-ay-oi-and-oy": "I can spell words with ai, ay, oi and oy.",
+  "1/english/split-digraphs": "I can read and spell words like cake, bike and home.",
+  "1/english/the-spellings-ee-ea-ie-and-igh": "I can spell words with ee, ea, ie and igh.",
+  "1/english/the-spellings-oo-oa-ow-and-ew": "I can spell words with oo, oa, ow and ew.",
+  "1/english/the-spellings-ar-or-er-ir-and-ur": "I can spell words with ar, or, er, ir and ur.",
+  "1/english/the-spellings-air-ear-and-are": "I can spell words with air, ear and are.",
+  "1/english/words-and-sentences": "I know words go together to make sentences.",
+  "1/english/joining-with-and": "I can join words and ideas with and.",
+  "1/english/capital-letters": "I can use capital letters for names and for I.",
+  "1/english/days-of-the-week": "I can spell the days of the week.",
+  "1/english/ending-a-sentence": "I can end a sentence with a full stop, question mark or exclamation mark.",
+  "1/english/rhymes-and-poems": "I can hear and spot rhyming words.",
+  "1/english/repeated-phrases": "I can join in with phrases that repeat in a story.",
+  "1/english/what-words-mean": "I can work out what new words mean.",
+  "1/english/facts-and-stories": "I can tell a fact book from a story.",
+  "1/english/building-sentences": "I can build a sentence that makes sense.",
+  "1/english/ordering-a-story": "I can put sentences in order to tell a story.",
+  "1/english/checking-it-makes-sense": "I can check that my writing makes sense.",
+  "1/english/dictation": "I can write sentences that are read out to me.",
 
   // ---- Year 3 English (docs/curriculum/year-3-and-4-english.md) ----
   "3/english/adding-prefixes": "I can add prefixes like dis, mis, re and sub to words.",

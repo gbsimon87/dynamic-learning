@@ -1,8 +1,10 @@
 import { year2MathCurriculum } from "./year2MathCurriculum.js";
+import { year2EnglishCurriculum } from "./year2EnglishCurriculum.js";
 import { year3MathCurriculum } from "./year3MathCurriculum.js";
 import { year3EnglishCurriculum } from "./year3EnglishCurriculum.js";
 import { year3ScienceCurriculum } from "./year3ScienceCurriculum.js";
 import { year4EnglishCurriculum } from "./year4EnglishCurriculum.js";
+import { year1EnglishCurriculum } from "./year1EnglishCurriculum.js";
 
 /**
  * Single source of truth for which curricula exist.
@@ -31,6 +33,15 @@ export const CURRICULUM_SUBJECTS = [
 ];
 
 const CURRICULA = [
+  { year: 2, subject: "english", available: true, load: () => year2EnglishCurriculum },
+  {
+    // Approved 2026-10-11 (docs/curriculum/year-1-english.md). Year 1 has
+    // English only for now.
+    year: 1,
+    subject: "english",
+    available: true,
+    load: () => year1EnglishCurriculum,
+  },
   { year: 3, subject: "science", available: true, load: () => year3ScienceCurriculum },
   {
     year: 2,

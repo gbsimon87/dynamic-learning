@@ -6,13 +6,13 @@
 > [PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md), which is where history lives.
 > The same goes for bugs: a fixed bug is deleted here and written up there.
 
-**Last reviewed:** 2026-10-10
+**Last reviewed:** 2026-10-11
 
 Item-by-item source evidence: [backlog audit in PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md#backlog-source-audit-2026-10-09).
 
 ## Context for prioritisation
 - Curriculum Mode ships **UK Year 2 Maths** and **Year 3 Maths** (44 topics,
-  176 challenges), **Year 3 and Year 4 English** (2026-10-01) and **Year 3
+  176 challenges), **Years 1–4 English** (Years 1–2 completed 2026-10-11) and **Year 3
   Science** (21 topics, 84 challenges, 2026-10-03), plus standalone Skills Mode
   games. English and Science are still waiting on an owner's interactive review;
   see their trackers in `docs/english-curriculum/` and `docs/science-curriculum/`.
@@ -111,7 +111,7 @@ and what is left. File names and engineering detail are in
 
 | # | Idea | What it is | Done so far / what's left | Status |
 |---|---|---|---|---|
-| 6 | **Write new questions as data** | Most challenges today are hand-built screens. A shared format lets us write a question as a few lines of data, for example "a clock showing half past 3, pick the time", and the app draws it. New topics become much quicker to build. | **Done:** the format and the screen for 13 question types (multiple choice, typed numbers, spelling, sorting, ordering, charts, clocks, coins, fractions and more). **Left:** nothing children play uses it yet. Build the next new topics with it, then move the existing English games onto it. | 🟡 Partial |
+| 6 | **Write new questions as data** | Most challenges today are hand-built screens. A shared format lets us write a question as a few lines of data, for example "a clock showing half past 3, pick the time", and the app draws it. New topics become much quicker to build. | **Done:** the format and the screen for 13 question types (multiple choice, typed numbers, spelling, sorting, ordering, charts, clocks, coins, fractions and more). **Done:** Year 1 and Year 2 English use it for 37 and 38 topics respectively (dictation reuses its existing memory game). **Left:** move the earlier English games onto it. | 🟡 Partial |
 | 7 | **Accessibility and keyboard check** | Make sure every game works for a child using a keyboard or a screen reader, or who needs less motion, and that text is readable in both colour themes. | **Left:** nobody has played every interaction with a keyboard only and with a screen reader. Do that, and fix what breaks. | ⚪ Idea |
 | 8 | **Read-aloud everywhere** | A "Read it to me" button, so a child who can't yet read fluently can still play. | **Done:** every curriculum subject (Maths added 2026-10-10), the Solar System, the daily puzzle and the new free-play games. **Left:** the older Skills games; drag-and-build Maths questions that read their tiles out as a list; checking the voice on real phones and tablets. | 🟡 Partial |
 | 9 | **Progress report for grown-ups** | Parents (and later teachers) see how a child is getting on. | **Done:** the Parent area shows each child's progress, badges and profile settings. **Left:** "time spent learning" and "topics to practise more". Both need the app to start recording each attempt (step 5 of the order below). Maybe a "reset progress" button, designed carefully so nothing is lost by accident. | 🟡 Partial |
@@ -121,7 +121,6 @@ and what is left. File names and engineering detail are in
 | 13 | **Story Maker and Story Sequencer** | Pick a character, a place and an action to build a silly story, or put picture cards in the right order. | **Left:** all of it. Some story material in Year 3 English could be reused. | ⚪ Idea |
 | 14 | **Works offline, installs like an app** | Install it on a tablet and keep playing without internet. Useful on shared school devices. | **Left:** all of it. The risk: progress made offline has to merge safely once back online, or a child loses work. Decide how before building anything. | ⚪ Idea |
 | 15 | **Geography curriculum** | A proper topic path, like Maths has, for continents, oceans, landforms, weather, and day and night. | **Left:** all of it. The national curriculum text is saved (key stages 1 and 2 in `docs/curriculum/`). It is set out per key stage, not per year, so first decide which year teaches which requirement and write that down. Game ideas are in [notes_geography.md](notes_geography.md). | ⚪ Idea |
-| 16 | **Year 1 and 2 English** | Years 3 and 4 English exist; add Years 1 and 2. | **Left:** all of it. The national curriculum text for both years, including the spelling lists and grammar requirements, is saved in `docs/curriculum/`. Build it with #6's data format. | ⚪ Idea |
 | 17 | **Solar System meteor: test on real devices** | The meteor shower in the Solar System is built and runs smoothly on a computer. | **Left:** measure how smoothly it runs on a real phone and a real tablet. No more code needed. | 🟡 Partial |
 | 19 | **Constellations in the 3D sky** | The constellation card is a flat picture today. Add a "Find it in the real sky →" button that flies the 3D view to that constellation among the stars. | **Left:** all of it. | ⚪ Idea |
 | 20 | **More Skills games (from the original notes)** | **Maths:** Math Sentence Builder, Compare the Numbers, Math Maze, Clock Quiz, Skip Count Jump, Estimate It!, Magic Squares, Number Line Jump, Odd or Even Sort, Shape Sorter 3D, Pattern Play, Tally Marks Trainer, Math Bingo. **English:** Sentence Fixer, Word Picture Puzzle, Riddle Time, Emoji Sentences, Picture Vocabulary, Alphabet Adventure, Listening & Repeat. **Geography:** Country Puzzle. | **Left:** pick any and build it on the free-play game frame, so it gets levels, read-aloud and celebrations for free. | ⚪ Idea |
@@ -155,8 +154,8 @@ alongside everything else.
    handy.
 3. **Bring the older Skills games up to standard (#8, #41).** Add read-aloud and
    the celebrations in one pass, since it's the same games.
-4. **Add new content the quicker way (#16, #15, #20).** Build Year 1–2 English
-   and Geography in the new question format (#6), and new Skills games on the
+4. **Add new content the quicker way (#15, #20).** Build Geography
+   in the new question format (#6), and new Skills games on the
    free-play frame.
 5. **Start recording each attempt, once #11 allows it.** That unlocks the
    grown-ups' report (#9), questions that adjust (#10) and analytics (#36).
@@ -207,13 +206,6 @@ The detail behind the rows above, for whoever picks one up.
   and [key-stage-2-geography.md](curriculum/key-stage-2-geography.md); record the
   year split in their mapping sections. [Flag Finder](../src/pages/skills/geography/FlagFinder.jsx) could
   support continent practice once its country data is extended and checked.
-- **#16** Sources: [year-1-english.md](curriculum/year-1-english.md),
-  [year-2-english.md](curriculum/year-2-english.md), their spelling appendices
-  (`english-appendix-1-year-1.md`, `-year-2.md`) and
-  [english-spoken-language-years-1-to-6.md](curriculum/english-spoken-language-years-1-to-6.md).
-  Add a mapping section to each year file as topics are planned, as Years 3–4
-  have. Interactive review of Years 3–4 is tracked in
-  [IMPLEMENTATION_TRACKER.md](english-curriculum/IMPLEMENTATION_TRACKER.md).
 - **#17** Pure tests T1–T10 pass; desktop checks and a production preview
   (median 8.3 ms per frame) are recorded. Simulated phone viewports don't count.
   See the [implementation plan](solar-system-meteor/IMPLEMENTATION_PLAN.md) and

@@ -26,19 +26,20 @@ export function sample(items, count, rng) {
 /**
  * How a typed or built answer is compared: case, spacing and the two
  * apostrophe and quote styles do not matter. "Who’s" and "who's" are one
- * answer; "who s" is not.
+ * answer; "who s" is not. Set options.caseSensitive for a question that
+ * teaches capital letters; spelling entry keeps the forgiving default.
  */
-export function normaliseAnswer(text) {
-  return String(text ?? "")
+export function normaliseAnswer(text, options) {
+  const normalised = String(text ?? "")
     .replace(/[’‘]/g, "'")
     .replace(/[“”]/g, '"')
     .replace(/\s+/g, " ")
-    .trim()
-    .toLowerCase();
+    .trim();
+  return options?.caseSensitive === true ? normalised : normalised.toLowerCase();
 }
 
-export function isSameAnswer(given, expected) {
-  return normaliseAnswer(given) === normaliseAnswer(expected);
+export function isSameAnswer(given, expected, options) {
+  return normaliseAnswer(given, options) === normaliseAnswer(expected, options);
 }
 
 /** Splits a sentence into display tokens, keeping punctuation on its word. */

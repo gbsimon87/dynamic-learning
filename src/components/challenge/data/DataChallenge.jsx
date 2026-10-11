@@ -71,8 +71,9 @@ export function DataRound({ question: q, submit, locked, hint }) {
   return (
     <>
       {q.rule && <p className="challenge-prompt"><Rich text={q.rule} /></p>}
-      {q.passage && <ReadingPassage passage={q.passage} />}
-      {q.text && <ReadingPassage passage={{ blocks: [{ type: "p", text: q.text }] }} />}
+      {q.picture && <span className="english-picture" role="img" aria-label={q.pictureLabel}>{q.picture}</span>}
+      {q.passage && <ReadingPassage passage={q.passage} speak={q.readTextAloud !== false} />}
+      {q.text && <ReadingPassage passage={{ blocks: [{ type: "p", text: q.text }] }} speak={q.readTextAloud !== false} />}
 
       {(q.prompt || q.speak) && (
         <div className="english-prompt-row">

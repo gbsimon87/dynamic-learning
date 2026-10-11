@@ -88,6 +88,8 @@ test("unfair questions are caught", () => {
   assert.match(problems({ kind: "number", prompt: "What **colour", answer: 5 }), /unbalanced/);
   assert.match(problems({ kind: "number", prompt: "Pick a color.", answer: 5 }), /US spelling/);
   assert.match(validateQuestion({ kind: "choice", prompt: "?", options: [-1, 2], answer: 2 }, { year: 2 }).join(), /negative/);
+  assert.match(problems({ kind: "choice", prompt: "?", picture: "🐱", options: ["cat", "cot"], answer: "cat" }), /pictureLabel/);
+  assert.deepEqual(validateQuestion({ kind: "choice", prompt: "?", picture: "🐱", pictureLabel: "a cat", options: ["cat", "cot"], answer: "cat" }), []);
   assert.deepEqual(validateQuestion({ kind: "nope" }), ['unknown kind "nope"']);
 });
 
@@ -139,4 +141,23 @@ test("seededRng is deterministic and in [0, 1)", () => {
     assert.equal(x, b());
     assert.ok(x >= 0 && x < 1);
   }
+});
+
+test("capital-letter questions opt into strict case without changing older answers", () => {
+  const choice = { kind: "choice", prompt: "Fix the capital letter.",
+    caseSensitive: true, answer: "I am here.",
+    options: ["i am here.", "I am here.", "I am here?"], hint: "Check the first letter." };
+  assert.deepEqual(validateQuestion(choice), []);
+  assert.equal(isCorrect(choice, "i am here."), false);
+  assert.equal(isCorrect(choice, "I am here."), true);
+  assert.ok(visibleOptions(choice, true).includes("I am here."));
+  const build = { kind: "build", prompt: "Build the sentence.", caseSensitive: true,
+    answer: "I am.", tiles: [{ id: "lower", label: "i" }, { id: "upper", label: "I" }, { id: "verb", label: "am." }] };
+  assert.equal(isCorrect(build, ["lower", "verb"]), false);
+  assert.equal(isCorrect(build, ["upper", "verb"]), true);
+  assert.equal(isCorrect({ ...build, caseSensitive: undefined }, ["lower", "verb"]), true);
+  assert.equal(isCorrect({ kind: "type", answer: "who's" }, " WHO’S "), true);
+  assert.equal(isCorrect({ kind: "type", answer: "Monday", caseSensitive: true }, "monday"), false);
+  assert.equal(isCorrect({ ...choice, caseSensitive: undefined }, "i am here."), true);
+  assert.ok(validateQuestion({ ...choice, caseSensitive: undefined }).includes("duplicate options"));
 });

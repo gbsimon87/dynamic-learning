@@ -26,6 +26,10 @@ import { findUsSpellings } from "../english/textChecks.js";
  *             one wrong option when more than two remain; on `pick` it
  *             underlines `hinted`. A question with no hint shows none.
  *   speak     what the 🔊 button reads. No `speak`, no button. Never autoplays.
+ *   readTextAloud  set false to hide text/passage narration when reading is tested
+ *   caseSensitive  require capitals to match in choice/build answers (opt-in)
+ *   picture   an emoji drawn large above the question (Year 1 leans on it),
+ *             with `pictureLabel`, what a screen reader says instead
  *
  * Kind-specific fields: see KINDS below, and the table in the
  * building-curriculum-topics skill. "Read" visual kinds (chart, clock read,
@@ -52,14 +56,14 @@ const readAnswer = {
 
 function optionMatches(q, response) {
   if (response === null || response === undefined) return false;
-  return isNumber(q.answer) ? response === q.answer : isSameAnswer(response, q.answer);
+  return isNumber(q.answer) ? response === q.answer : isSameAnswer(response, q.answer, q);
 }
 
 function optionProblems(q, need) {
   need(Array.isArray(q.options) && q.options.length >= 2, "fewer than 2 options");
   if (!Array.isArray(q.options)) return;
   need(q.answer !== undefined && q.answer !== null, "no answer");
-  const keys = q.options.map((option) => normaliseAnswer(option));
+  const keys = q.options.map((option) => normaliseAnswer(option, q));
   need(new Set(keys).size === keys.length, "duplicate options");
   need(q.options.filter((option) => optionMatches(q, option)).length === 1,
     "answer missing from options (or offered twice)");
@@ -151,7 +155,7 @@ export const KINDS = {
   type: {
     initial: () => "",
     ready: (q, r) => r.length > 0,
-    correct: (q, r) => isSameAnswer(r, q.answer),
+    correct: (q, r) => isSameAnswer(r, q.answer, q),
     fill: (q, r) => r,
     validate: (q, need) => {
       need(typeof q.answer === "string" && /^[a-z’']+$/i.test(q.answer), "answer must be letters (and apostrophes) only");
@@ -163,7 +167,7 @@ export const KINDS = {
   build: {
     initial: () => [],
     ready: (q, r) => r.length > 0,
-    correct: (q, r) => isSameAnswer(builtText(q, r), q.answer),
+    correct: (q, r) => isSameAnswer(builtText(q, r), q.answer, q),
     fill: (q, r) => builtText(q, r),
     validate: (q, need) => {
       need(Array.isArray(q.tiles) && q.tiles.length >= 2, "fewer than 2 tiles");
@@ -445,7 +449,7 @@ const plain = (text) => String(text ?? "").replace(/\*\*/g, "");
 export function questionText(q) {
   const passage = q.passage ? [q.passage.title, ...(q.passage.blocks ?? []).map((b) => b.text)] : [];
   return [
-    q.prompt, q.rule, q.text, q.sentence, q.hint, q.speak, q.spoken, q.label,
+    q.prompt, q.rule, q.text, q.sentence, q.hint, q.speak, q.spoken, q.label, q.pictureLabel,
     ...[q.equation].flat(), ...passage,
     ...(q.options ?? []).map(String),
     ...(q.tiles ?? []).map((t) => t.label),
@@ -489,6 +493,7 @@ export function validateQuestion(q, context = {}) {
     if (field in q && q[field] !== undefined) need(isText(q[field]), `empty ${field}`);
   }
   if (q.equation !== undefined) need([q.equation].flat().every(isText), "empty equation");
+  if (q.picture !== undefined) need(isText(q.picture) && isText(q.pictureLabel), "a picture needs a pictureLabel");
   need(isText(q.prompt) || isText(context.title) || q.equation || isText(q.sentence),
     "nothing tells the learner what to do (no prompt, title, equation or sentence)");
   if (typeof q.sentence === "string") need(q.sentence.split("___").length === 2, "sentence needs exactly one ___");
