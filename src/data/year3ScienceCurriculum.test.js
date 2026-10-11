@@ -14,7 +14,7 @@ const IMPLEMENTED_FORCE_TOPICS = 5;
 const built = (topic, challenge) => topic === first.id && [1, 2, 3, 4].includes(Number(challenge));
 test("Year 3 Science has five source-ordered categories, 21 topics and 84 independent slots", () => {
   assert.equal(isCurriculumAvailable(3, "science"), true);
-  for (const year of [2, 5, 6]) assert.equal(isCurriculumAvailable(year, "science"), false);
+  for (const year of [5, 6]) assert.equal(isCurriculumAvailable(year, "science"), false);
   assert.equal(loadCurriculum("3", "science"), curriculum);
   assert.deepEqual(curriculum.map((category) => category.title), ["Plants", "Animals, including humans", "Rocks", "Light", "Forces and magnets"]);
   assert.deepEqual(curriculum.map((category) => category.topics.length), [5, 3, 3, 5, 5]);

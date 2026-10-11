@@ -1,0 +1,64 @@
+/* Year 2 Science diagrams. Plant colours are the Year 1 --y1s-* tokens
+   (Year1ScienceVisual.css); the extra natural colours below have a deeper
+   dark-theme twin, and everything else follows the App.css tokens. */
+:root, body.light {
+  --y2s-pale: #e8dc8a; --y2s-pale-edge: #8a7a2a; --y2s-pot: #c8673f; --y2s-dry: #d9c29a; --y2s-seed: #b98a4e;
+}
+body.dark {
+  --y2s-pale: #c9bb62; --y2s-pale-edge: #6a5c18; --y2s-pot: #a4512f; --y2s-dry: #a8916a; --y2s-seed: #93683a;
+}
+.y2-sci-visual {
+  --y2s-ink: var(--light-text);
+  --y2s-panel: var(--light-panel);
+  --y2s-accent: var(--light-accent);
+  margin: 1rem auto;
+  max-width: 460px;
+  container-type: inline-size;
+}
+body.dark .y2-sci-visual {
+  --y2s-ink: var(--dark-text);
+  --y2s-panel: var(--dark-panel);
+  --y2s-accent: var(--dark-accent);
+}
+.y2-sci-visual svg { display: block; width: 100%; max-width: 320px; height: auto; margin: 0 auto; }
+.y2-sci-visual text { fill: var(--y2s-ink); font-size: 18px; font-weight: 700; }
+
+/* Shared plant parts, as drawn in Year 1. */
+.y2-sci-visual .y1-sci-soil { fill: var(--y1s-soil); }
+.y2-sci-visual .y1-sci-roots path { stroke: var(--y2s-ink); stroke-width: 3; fill: none; stroke-linecap: round; }
+.y2-sci-visual .y1-sci-stem { stroke: var(--y1s-leaf); stroke-width: 8; stroke-linecap: round; fill: none; }
+.y2-sci-visual .y1-sci-leaf { fill: var(--y1s-leaf); stroke: var(--y1s-leaf-edge); stroke-width: 2; }
+.y2-sci-visual .y1-sci-petal { fill: var(--y1s-petal); stroke: var(--y2s-ink); stroke-width: 1.5; }
+.y2-sci-visual .y1-sci-centre { fill: var(--y1s-centre); stroke: var(--y2s-ink); stroke-width: 1.5; }
+
+.y2-sci-visual .y2-sci-seed { fill: var(--y2s-seed); stroke: var(--y2s-ink); stroke-width: 2; }
+.y2-sci-visual .y2-sci-pale { fill: var(--y2s-pale); stroke: var(--y2s-pale-edge); stroke-width: 2; }
+/* The pale stem sits on a darker edge so it stays visible on a white panel. */
+.y2-sci-visual .y2-sci-pale-stem-edge { stroke: var(--y2s-pale-edge); stroke-width: 6; stroke-linecap: round; }
+.y2-sci-visual .y2-sci-pale-stem { stroke: var(--y2s-pale); stroke-width: 3; stroke-linecap: round; }
+.y2-sci-visual .y2-sci-pot { fill: var(--y2s-pot); stroke: var(--y2s-ink); stroke-width: 2; }
+.y2-sci-visual .y2-sci-dry { fill: var(--y2s-dry); }
+.y2-sci-visual .y2-sci-crack { stroke: var(--y2s-ink); stroke-width: 1.5; fill: none; }
+
+/* Food chain: boxes joined by "is eaten by" arrows; wraps on a phone. */
+.y2-sci-visual .y2-sci-chain {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px;
+}
+.y2-sci-visual .y2-sci-chain li { display: flex; align-items: center; gap: 6px; }
+.y2-sci-visual .y2-sci-link {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-width: 76px; min-height: 76px; padding: 6px 8px;
+  border: 2px solid var(--y2s-ink); border-radius: 14px;
+  background: var(--y2s-panel); color: var(--y2s-ink);
+}
+.y2-sci-visual .is-missing .y2-sci-link { border-style: dashed; border-color: var(--y2s-accent); }
+.y2-sci-visual .y2-sci-icon { font-size: 1.9rem; line-height: 1.1; font-weight: 800; }
+.y2-sci-visual .y2-sci-name { font-weight: 700; font-size: 0.95rem; }
+.y2-sci-visual .y2-sci-arrow { font-size: 1.6rem; font-weight: 800; color: var(--y2s-ink); }
+
+/* Too narrow for one row: stack the chain top to bottom so an arrow never ends a line. */
+@container (max-width: 300px) {
+  .y2-sci-visual .y2-sci-chain, .y2-sci-visual .y2-sci-chain li { flex-direction: column; }
+  .y2-sci-visual .y2-sci-arrow { transform: rotate(90deg); }
+}

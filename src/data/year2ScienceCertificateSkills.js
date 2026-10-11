@@ -1,0 +1,22 @@
+// Year 2 Science "I can…" lines (docs/curriculum/year-2-science.md).
+export const YEAR2_SCIENCE_TOPIC_SKILLS = {
+  "2/science/living-dead-and-never-alive": "I can sort things into living, dead and never alive.",
+  "2/science/habitats": "I can match animals to the habitats that suit them.",
+  "2/science/micro-habitats": "I can find minibeasts in micro-habitats like under a log.",
+  "2/science/simple-food-chains": "I can build a simple food chain that starts with a plant.",
+  "2/science/where-food-comes-from": "I know which foods come from plants and which from animals.",
+  "2/science/seeds-and-bulbs": "I know that seeds and bulbs can grow into new plants.",
+  "2/science/from-seed-to-plant": "I can describe how a seed grows into a mature plant.",
+  "2/science/what-plants-need-to-grow": "I know plants need water, light and warmth to stay healthy.",
+  "2/science/plant-experiments": "I can set up a simple test to find out what plants need.",
+  "2/science/animals-and-their-offspring": "I can name baby animals and the adults they grow into.",
+  "2/science/growing-into-adults": "I can put the stages of an animal's life in order.",
+  "2/science/what-animals-need-to-survive": "I know animals need water, food and air to survive.",
+  "2/science/exercise": "I know why exercise is good for my body.",
+  "2/science/healthy-eating": "I can choose the right amounts of different foods.",
+  "2/science/hygiene": "I know how to keep clean and stop germs spreading.",
+  "2/science/materials-and-their-uses": "I can say what everyday things are made of.",
+  "2/science/choosing-the-right-material": "I can choose the best material for a job and say why.",
+  "2/science/squashing-bending-twisting-and-stretching": "I can change shapes by squashing, bending, twisting and stretching.",
+  "2/science/inventors-of-new-materials": "I can tell you about Dunlop, Macintosh and McAdam.",
+};

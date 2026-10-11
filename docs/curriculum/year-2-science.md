@@ -115,7 +115,43 @@ Pupils might work scientifically by: comparing the uses of everyday materials in
 
 # Mapping to our curriculum dataset
 
-> **No Year 2 Science dataset yet.** The app's registered Science curriculum is Year 3. When one is built, map each topic
-> here to the statutory bullet it serves, as
-> [year-3-science.md](year-3-science.md) does, and list anything
-> deliberately not covered.
+Implemented 2026-10-11: **4 categories, 19 topics, 76 challenges**, five
+questions per challenge. Category titles are the statutory headings; topic
+titles were approved on 2026-10-11 and are permanent URL and progress
+identifiers. The programme of study above is unchanged. Working
+scientifically is built into the activities: identifying and classifying
+(sorting), observing closely (growth stages and test plants), simple tests
+(Plant Experiments) and gathering and recording data (Bix's bar charts). It is
+not a separate category.
+
+| Category | App topic | Topic ID | Statutory requirement served | Activity boundary |
+|---|---|---|---|---|
+| Living things and their habitats | Living Dead and Never Alive | `living-dead-and-never-alive` | explore and compare the differences between things that are living, dead, and things that have never been alive | "Dead" includes things that were once part of something alive (wood, paper, bone, a fallen feather). The guidance's questions are asked: a flame is never alive; a deciduous tree in winter is living. |
+| Living things and their habitats | Habitats | `habitats` | identify that most living things live in habitats to which they are suited and describe how different habitats provide for the basic needs of different kinds of animals and plants, and how they depend on each other | The guidance's seashore, woodland, ocean and rainforest, plus pond, desert and Arctic; how a feature suits a habitat; food, water and shelter; nests in trees and bees helping flowers make seeds. |
+| Living things and their habitats | Micro-habitats | `micro-habitats` | identify and name a variety of plants and animals in their habitats, including micro-habitats | The guidance's under a log, stony path and under bushes; minibeasts named from a stated clue; damp and shady against dry and sunny; Bix's minibeast counts as a bar chart; put the stone back. |
+| Living things and their habitats | Simple Food Chains | `simple-food-chains` | describe how animals obtain their food from plants and other animals, using the idea of a simple food chain | The arrow means "is eaten by" and every chain starts with a plant. Three-link chains, including the guidance's grass, cow, human; two four-link chains in ordering only. One gap question per chain, so a run never gives away its own answer. No producer or consumer vocabulary (Year 4). |
+| Living things and their habitats | Where Food Comes From | `where-food-comes-from` | … and identify and name different sources of food | Plant or animal sources of single foods (no mixed dishes, no pork); short "field to plate" orders for bread, cheese, chips and honey. |
+| Plants | Seeds and Bulbs | `seeds-and-bulbs` | observe and describe how seeds and bulbs grow into mature plants | Seed or bulb (onion is a bulb); the guidance note: seeds and bulbs need water but most do not need light, because they have a store of food. "Germinates" is glossed as "starts to grow". |
+| Plants | From Seed to Plant | `from-seed-to-plant` | observe and describe how seeds and bulbs grow into mature plants | Drawn stages: seed, sprouting seed, seedling, mature plant. Root before shoot; the flowers make new seeds. Growth read from Bix's weekly bar chart and simple subtraction in cm. |
+| Plants | What Plants Need to Grow | `what-plants-need-to-grow` | find out and describe how plants need water, light and a suitable temperature to grow and stay healthy | No light turns leaves pale and yellow, no water makes a plant droop, frost can damage it, and too much water can harm it. Shown on a drawn pair of pot plants. |
+| Plants | Plant Experiments | `plant-experiments` | find out and describe how plants need water, light and a suitable temperature … (guidance: setting up a comparative test) | Change one thing and keep the rest the same; read Bix's results (green leaves, seeds sprouted in a warm, dark cupboard against a fridge, so only warmth changes); say what was found. "Fair test" is introduced informally. |
+| Animals, including humans | Animals and Their Offspring | `animals-and-their-offspring` | notice that animals, including humans, have offspring which grow into adults | Names of the young (kitten, lamb, calf, foal, joey and others) and the adults they become. How reproduction occurs is not covered, as the guidance says. |
+| Animals, including humans | Growing into Adults | `growing-into-adults` | notice that animals, including humans, have offspring which grow into adults | The guidance's examples in order: egg, chick, chicken; egg, caterpillar, pupa, butterfly; spawn, tadpole, frog; lamb, sheep; baby, toddler, child, teenager, adult. |
+| Animals, including humans | What Animals Need to Survive | `what-animals-need-to-survive` | find out about and describe the basic needs of animals, including humans, for survival (water, food and air) | Needs against wants; fish take in the air in water with their gills; whales breathe at the surface; caring for pets. Shelter is never offered as a wrong answer. |
+| Animals, including humans | Exercise | `exercise` | describe the importance for humans of exercise … | Heart and breathing speed up; stronger heart, muscles and bones; an hour or more of activity a day (NHS); Bix's breaths-per-minute chart. |
+| Animals, including humans | Healthy Eating | `healthy-eating` | … eating the right amounts of different types of food … | Eat lots of fruit and vegetables (five a day); bread, rice and pasta for energy; beans, eggs and fish; milk and cheese for bones and teeth; sugary foods in small amounts now and then. No food is called "bad". |
+| Animals, including humans | Hygiene | `hygiene` | … and hygiene | Germs; when and how to wash hands (20 seconds, NHS); brushing teeth twice a day for two minutes; catch a sneeze, bin it, wash hands. |
+| Uses of everyday materials | Materials and Their Uses | `materials-and-their-uses` | identify and compare the suitability of a variety of everyday materials, including wood, metal, plastic, glass, brick, rock, paper and cardboard for particular uses | The statutory eight materials; the guidance's examples (metal for coins, cans, cars and table legs; wood for matches, floors and telegraph poles; spoons of plastic, wood or metal but not glass). |
+| Uses of everyday materials | Choosing the Right Material | `choosing-the-right-material` | identify and compare the suitability of a variety of everyday materials … for particular uses | Strong, waterproof, see-through and light, with the reason a material suits or does not suit a job; the three little pigs and a chocolate teapot as creative uses. |
+| Uses of everyday materials | Squashing Bending Twisting and Stretching | `squashing-bending-twisting-and-stretching` | find out how the shapes of solid objects made from some materials can be changed by squashing, bending, twisting and stretching | Name the action; easy or hard to squash; goes back to its shape or stays changed. |
+| Uses of everyday materials | Inventors of New Materials | `inventors-of-new-materials` | identify and compare the suitability of a variety of everyday materials … (guidance: people who have developed useful new materials) | The guidance's John Dunlop (air-filled tyres), Charles Macintosh (rubber between two layers of cloth) and John McAdam (roads of layers of small stones); designing a material for a job. No dates beyond "long ago". |
+
+**Coverage limits:** every statutory bullet maps to at least one topic, but
+screen practice does not replace growing real plants from seeds and bulbs over
+weeks, hunting minibeasts outside, or squashing and stretching real
+materials. Test results and counts are Bix's own and are not claims about
+every plant or log. Health advice follows the NHS guidance for children.
+Emoji pictures vary by device, so no question depends on recognising a species
+from its emoji alone. Year 2 now has Maths, English and Science, and all three
+contribute to the Year 2 award; the existing progression and storage rules are
+unchanged.
