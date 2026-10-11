@@ -34,12 +34,12 @@ cover.
 
 | File | Covers |
 |---|---|
-| [year-1-science.md](year-1-science.md) | Year 1, with the key stage 1 introduction and *Working scientifically* (from the PDF) |
-| [year-2-science.md](year-2-science.md) | Year 2, with the key stage 1 introduction and *Working scientifically* (from the PDF) |
+| [year-1-science.md](year-1-science.md) | Year 1, with the key stage 1 introduction and *Working scientifically* |
+| [year-2-science.md](year-2-science.md) | Year 2, with the key stage 1 introduction and *Working scientifically* |
 | [year-3-science.md](year-3-science.md) | Year 3, the shared lower Key Stage 2 enquiry requirements, and the dataset mapping |
 | [year-4-science.md](year-4-science.md) | Year 4, with the lower key stage 2 introduction and *Working scientifically* |
 | [year-5-science.md](year-5-science.md) | Year 5, with the upper key stage 2 introduction and *Working scientifically* |
-| [year-6-science.md](year-6-science.md) | Year 6, with the upper key stage 2 introduction and *Working scientifically* (from the PDF) |
+| [year-6-science.md](year-6-science.md) | Year 6, with the upper key stage 2 introduction and *Working scientifically* |
 
 ### Geography
 
@@ -90,3 +90,11 @@ dataset has no topic for — that gap is the useful part.
 
 Do not paraphrase the statutory text when saving it. Paraphrase drifts, and the
 wording is the specification.
+
+**Use the official DfE PDF as the source**, not the gov.uk web page. Each
+subject has a primary PDF ("… programmes of study: key stages 1 and 2"), and
+English Appendix 1 and 2 are separate PDFs. The 2015 web page carries the same
+programmes with editorial changes (numbers as digits, a few reworded phrases,
+some sentences dropped), so text copied from it will not match. Each file
+lists how the web page differs at the end. The web page is still the easiest
+place to see the headings and list nesting.

@@ -868,9 +868,14 @@ headings and lists for Year 4 and Year 5 Science and key stage 2 History, whose
 text was already verbatim. Every History and Geography file records its own
 year split, since the curriculum sets these out per key stage. Year 1 Maths and
 Year 1, 2 and 6 Science were added the same day, so every primary year of
-English, Maths and Science is saved. Years 1, 2 and 6 Science follow the 2013
-PDF, which differs editorially from the 2015 web page used for Years 3 to 5;
-each file lists the differences.
+English, Maths and Science is saved.
+
+**Every curriculum file follows the official DfE PDF** (decided 2026-10-11), not
+the gov.uk web page. The 2015 web page differs editorially (numbers as
+digits, some reworded or dropped phrases); each file lists those differences at
+the end. Each file's text was rebuilt with the web page's headings and lists
+and the PDF's wording, then checked word and punctuation for word against the
+PDF, with stacked fractions and superscripts (cm², 360°) restored.
 
 ### Curriculum Mode — built challenges
 **Year 2 Mathematics** has all thirty-nine topics built — the year is complete:
@@ -2296,7 +2301,7 @@ answers Escape and traps Tab.
 
 ### Add a new Year / Subject
 Done for real with Years 3–4 English (2026-10-01); follow that example:
-1. Save the programme of study verbatim in `docs/curriculum/`, with a mapping
+1. Save the programme of study verbatim from the DfE PDF in `docs/curriculum/`, with a mapping
    section, and get the topic titles signed off. Titles are ids.
 2. Create `src/data/year<N><Subject>Curriculum.js` in the same shape, with a
    dataset test, and lock its ids in `curriculumIds.test.js`.
