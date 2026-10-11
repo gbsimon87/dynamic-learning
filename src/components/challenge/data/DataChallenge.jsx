@@ -47,14 +47,16 @@ import {
  *
  * `renderVisual(question)` optionally supplies a read-only diagram before the
  * answer control. Response validation remains in questionKinds.
+ * `readAloud` forces ChallengeShell's "Read it to me" button on or off.
  */
-export default function DataChallenge({ level, build, titles, onComplete, renderVisual }) {
+export default function DataChallenge({ level, build, titles, onComplete, renderVisual, readAloud }) {
   const questions = useMemo(() => build(level, Math.random), [build, level]);
   const title = Array.isArray(titles) ? titles[level - 1] : titles?.[level];
 
   return (
     <ChallengeShell
       title={title}
+      readAloud={readAloud}
       questions={questions}
       onComplete={onComplete}
       render={({ question, index, submit, locked, misses }) => (

@@ -3,6 +3,7 @@ import { year2EnglishCurriculum } from "./year2EnglishCurriculum.js";
 import { year3MathCurriculum } from "./year3MathCurriculum.js";
 import { year3EnglishCurriculum } from "./year3EnglishCurriculum.js";
 import { year3ScienceCurriculum } from "./year3ScienceCurriculum.js";
+import { year1ScienceCurriculum } from "./year1ScienceCurriculum.js";
 import { year4MathCurriculum } from "./year4MathCurriculum.js";
 import { year4EnglishCurriculum } from "./year4EnglishCurriculum.js";
 import { year1EnglishCurriculum } from "./year1EnglishCurriculum.js";
@@ -47,6 +48,8 @@ const CURRICULA = [
     load: () => year1EnglishCurriculum,
   },
   { year: 3, subject: "science", available: true, load: () => year3ScienceCurriculum },
+  // Approved 2026-10-11 (docs/curriculum/year-1-science.md).
+  { year: 1, subject: "science", available: true, load: () => year1ScienceCurriculum },
   {
     year: 2,
     subject: "math",

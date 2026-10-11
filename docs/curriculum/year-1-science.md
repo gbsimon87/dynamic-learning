@@ -116,7 +116,37 @@ Pupils might work scientifically by: making tables and charts about the weather;
 
 # Mapping to our curriculum dataset
 
-> **No Year 1 Science dataset yet.** The app's registered Science curriculum is Year 3. When one is built, map each topic
-> here to the statutory bullet it serves, as
-> [year-3-science.md](year-3-science.md) does, and list anything
-> deliberately not covered.
+Implemented 2026-10-11: **4 categories, 16 topics, 64 challenges**, five
+questions per challenge. Category and topic titles were approved on 2026-10-11
+and are permanent URL and progress identifiers. The programme of study above
+is unchanged. Working scientifically is built into the activities: identifying
+and classifying (sorting), observing closely (diagrams), simple tests and
+recorded data (Bix's results and weather charts), and using observations to
+answer questions (slot 4). It is not a separate category.
+
+| Category | App topic | Topic ID | Statutory requirement served | Activity boundary |
+|---|---|---|---|---|
+| Plants | Wild and Garden Plants | `wild-and-garden-plants` | identify and name a variety of common wild and garden plants | Names from visible clues (petals, leaves, stings, seed heads); wild/garden sort uses "usually planted by people". |
+| Plants | Deciduous and Evergreen Trees | `deciduous-and-evergreen-trees` | identify and name a variety of common wild and garden plants, including deciduous and evergreen trees | Common UK trees named from acorns, conkers, needles and similar; leaf loss across a year, ordered from spring or autumn. |
+| Plants | Parts of a Flowering Plant | `parts-of-a-flowering-plant` | identify and describe the basic structure of a variety of common flowering plants | Flower, petal, leaf, stem, roots, bulb, seed and fruit on a labelled-by-arrow diagram; simple descriptions, not Year 3 functions. |
+| Plants | Parts of a Tree | `parts-of-a-tree` | identify and describe the basic structure of a variety of common flowering plants, including trees | Trunk, branches, leaves, roots, blossom, fruit and bark; above or below the ground. |
+| Animals, including humans | Fish Amphibians Reptiles Birds and Mammals | `fish-amphibians-reptiles-birds-and-mammals` | identify and name a variety of common animals including fish, amphibians, reptiles, birds and mammals | Group from stated features (fins and gills, damp skin, dry scales, feathers, fur and milk); includes shark, whale, bat and penguin traps. |
+| Animals, including humans | Carnivores Herbivores and Omnivores | `carnivores-herbivores-and-omnivores` | identify and name a variety of common animals that are carnivores, herbivores and omnivores | Clear-cut examples only (no dogs or hedgehogs); classify from a pictured menu. |
+| Animals, including humans | Comparing Animal Bodies | `comparing-animal-bodies` | describe and compare the structure of a variety of common animals (fish, amphibians, reptiles, birds and mammals, including pets) | Body coverings, wings, fins, beaks, shells and leg counts; what two animals share or one has that another lacks. |
+| Animals, including humans | Parts of the Human Body | `parts-of-the-human-body` | identify, name, draw and label the basic parts of the human body | The guidance's body-part list on an arrow diagram; top-to-bottom ordering. Drawing is replaced by naming and spelling the labels. |
+| Animals, including humans | Our Five Senses | `our-five-senses` | … and say which part of the body is associated with each sense | Eyes, ears, nose, tongue and skin; senses in everyday scenarios; never taste unknown berries. |
+| Everyday materials | Objects and Materials | `objects-and-materials` | distinguish between an object and the material from which it is made | Object or material words; same object in different materials, and different objects in one material. |
+| Everyday materials | Naming Everyday Materials | `naming-everyday-materials` | identify and name a variety of everyday materials, including wood, plastic, glass, metal, water, and rock | Objects whose usual material is not in doubt, plus paper, fabric and rubber from the guidance. |
+| Everyday materials | Properties of Materials | `properties-of-materials` | describe the simple physical properties of a variety of everyday materials | The guidance's property pairs (hard/soft … opaque/transparent); opposites and simple described tests. |
+| Everyday materials | Grouping Materials | `grouping-materials` | compare and group together a variety of everyday materials on the basis of their simple physical properties | Group by shared property, odd one out, best material for the guidance's jobs (umbrella, dog basket, curtains, bookshelf, leotard), and Bix's absorbency results. |
+| Seasonal changes | The Four Seasons | `the-four-seasons` | observe changes across the four seasons | Names, cyclic order from any start, and seasonal signs in nature (UK). |
+| Seasonal changes | Weather and the Seasons | `weather-and-the-seasons` | observe and describe weather associated with the seasons | Weather words; "most likely" season, never "only"; two-week weather pictograms; dressing for the weather and the Sun warning from the guidance. |
+| Seasonal changes | Day Length Through the Year | `day-length-through-the-year` | observe and describe … how day length varies | Hour-box pictures with rounded London daylight: about 8 hours in December, 12 in March and September, 16 in June. |
+
+**Coverage limits:** every statutory bullet maps to at least one topic, but
+screen practice does not replace going outside: observing real plants, trees
+and animals, handling materials, testing them and keeping a weather diary
+across the year. Emoji pictures vary by device, so no question depends on
+recognising a species from its emoji alone. Seasons and day lengths describe
+the UK. Year 1 now has Maths, English and Science, and all three contribute to
+the Year 1 award; the existing progression and storage rules are unchanged.

@@ -1,0 +1,56 @@
+/* Year 1 Science diagrams. Natural colours are tokens with a deeper dark-theme
+   twin, as in science-kit.css; everything else follows the App.css tokens. */
+:root, body.light {
+  --y1s-soil: #c99a6b; --y1s-leaf: #5fa840; --y1s-leaf-edge: #2f4a22; --y1s-bark: #8a5a3b;
+  --y1s-petal: #f28fb3; --y1s-centre: #f6c445; --y1s-blossom: #f7b6cf; --y1s-fruit: #d9443a;
+  --y1s-bulb: #e9d7b0; --y1s-sun: #ffd84d; --y1s-sun-ink: #4a3600; --y1s-night: #2f3b66; --y1s-snow: #eef4fa;
+}
+body.dark {
+  --y1s-soil: #74543a; --y1s-leaf: #4f9a36; --y1s-leaf-edge: #1d3015; --y1s-bark: #6e4630;
+  --y1s-petal: #d9739b; --y1s-centre: #e0ae2f; --y1s-blossom: #e79bbb; --y1s-fruit: #c23a31;
+  --y1s-bulb: #cdb98e; --y1s-sun: #f2c935; --y1s-sun-ink: #3a2a00; --y1s-night: #1b2346; --y1s-snow: #c9d6e3;
+}
+.y1-sci-visual {
+  --y1s-ink: var(--light-text);
+  --y1s-panel: var(--light-panel);
+  --y1s-accent: var(--light-accent);
+  margin: 1rem auto;
+  max-width: 420px;
+}
+body.dark .y1-sci-visual {
+  --y1s-ink: var(--dark-text);
+  --y1s-panel: var(--dark-panel);
+  --y1s-accent: var(--dark-accent);
+}
+.y1-sci-visual svg { display: block; width: 100%; max-width: 320px; height: auto; margin: 0 auto; }
+.y1-sci-visual .y1-sci-soil { fill: var(--y1s-soil); }
+.y1-sci-visual .y1-sci-roots path { stroke: var(--y1s-ink); stroke-width: 3; fill: none; stroke-linecap: round; }
+.y1-sci-visual .y1-sci-stem { stroke: var(--y1s-leaf); stroke-width: 8; stroke-linecap: round; }
+.y1-sci-visual .y1-sci-leaf, .y1-sci-visual .y1-sci-canopy, .y1-sci-visual .y1-sci-conifer { fill: var(--y1s-leaf); stroke: var(--y1s-leaf-edge); stroke-width: 2; }
+.y1-sci-visual .y1-sci-petal { fill: var(--y1s-petal); stroke: var(--y1s-ink); stroke-width: 1.5; }
+.y1-sci-visual .y1-sci-petal.is-pointed { stroke-width: 4; }
+.y1-sci-visual .y1-sci-centre { fill: var(--y1s-centre); stroke: var(--y1s-ink); stroke-width: 1.5; }
+.y1-sci-visual .y1-sci-bulb { fill: var(--y1s-bulb); stroke: var(--y1s-ink); stroke-width: 2; }
+.y1-sci-visual .y1-sci-trunk { fill: var(--y1s-bark); stroke: var(--y1s-ink); stroke-width: 2; }
+.y1-sci-visual .y1-sci-branch { stroke: var(--y1s-bark); stroke-width: 9; stroke-linecap: round; fill: none; }
+.y1-sci-visual .y1-sci-blossom { fill: var(--y1s-blossom); stroke: var(--y1s-ink); stroke-width: 1; }
+.y1-sci-visual .y1-sci-fruit { fill: var(--y1s-fruit); stroke: var(--y1s-ink); stroke-width: 1.5; }
+.y1-sci-visual .y1-sci-snow { fill: var(--y1s-snow); }
+.y1-sci-visual .y1-sci-ring { fill: none; stroke: var(--y1s-ink); stroke-width: 3; stroke-dasharray: 7 6; }
+.y1-sci-visual .y1-sci-pointer line, .y1-sci-visual .y1-sci-pointer path { stroke: var(--y1s-ink); stroke-width: 4; fill: none; stroke-linecap: round; }
+.y1-sci-visual .y1-sci-pointer circle { fill: var(--y1s-accent); stroke: var(--y1s-ink); stroke-width: 2; }
+.y1-sci-visual text { fill: var(--y1s-ink); font-size: 18px; font-weight: 700; }
+.y1-sci-visual .y1-sci-figure { fill: var(--y1s-panel); stroke: var(--y1s-ink); stroke-width: 3; }
+.y1-sci-visual .y1-sci-figure .y1-sci-limb, .y1-sci-visual .y1-sci-figure .y1-sci-limb-fill { fill: none; stroke-width: 16; stroke-linecap: round; stroke-linejoin: round; }
+.y1-sci-visual .y1-sci-figure .y1-sci-limb-fill { stroke: var(--y1s-panel); stroke-width: 10; }
+.y1-sci-visual .y1-sci-hair { fill: var(--y1s-bark); stroke: var(--y1s-ink); stroke-width: 2; }
+.y1-sci-visual .y1-sci-ink { fill: var(--y1s-ink); }
+.y1-sci-visual .y1-sci-line { stroke: var(--y1s-ink); stroke-width: 2.5; fill: none; stroke-linecap: round; }
+
+.y1-sci-visual .y1-sci-days { display: flex; flex-direction: column; gap: 14px; }
+.y1-sci-visual .y1-sci-day { margin: 0; border: 2px solid var(--y1s-ink); border-radius: 14px; padding: 10px; }
+.y1-sci-visual .y1-sci-day figcaption { color: var(--y1s-ink); font-weight: 700; margin-bottom: 6px; }
+.y1-sci-visual .y1-sci-hours { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; }
+.y1-sci-visual .y1-sci-hours span { aspect-ratio: 1; border-radius: 6px; display: grid; place-items: center; font-size: 0.95rem; line-height: 1; }
+.y1-sci-visual .y1-sci-hours .is-light { background: var(--y1s-sun); color: var(--y1s-sun-ink); }
+.y1-sci-visual .y1-sci-hours .is-dark { background: var(--y1s-night); }
