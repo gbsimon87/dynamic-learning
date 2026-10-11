@@ -880,14 +880,18 @@ single-page sign-up wizard and its `POST /api/auth/signup` route were removed
 account over HTTP.
 
 ### Curriculum Mode — dev unlock switch
-`VITE_UNLOCK_ALL=true` opens every built challenge in the picker, bypassing the
-sequential unlock rules (`src/data/devUnlock.js`). It is a BUILD-time switch
-like `VITE_USE_API`, but requires `import.meta.env.DEV === true`; production
-builds ignore it even if it is set. Both the picker and the challenge route
-use the same lock state: `useProgress`, the completion rules and the
-stored data are untouched, and unbuilt challenges stay unavailable. A banner
-shows while it is active, so a genuine gating bug is never mistaken for the
-flag working.
+The hosted dev site (`dynamic-learning-dev-zkww.onrender.com`) automatically
+opens every built curriculum challenge and all profile avatar choices for
+review, including in production-mode Vite builds. `src/data/devUnlock.js`
+checks that exact hostname; `learnwithbix.com`, the production Render hostname
+and other hosts retain normal restrictions. Local Vite development can still
+opt in with `VITE_UNLOCK_ALL=true`. That flag alone cannot unlock a hosted
+production build, and no Render environment-variable change is required.
+
+Both the picker and direct challenge routes use the same bypass. Completion,
+earned badges, certificates, saved progress and account protections retain
+their normal behaviour. Unbuilt content stays unavailable. A curriculum banner
+marks review access so it is visible while testing.
 
 ### Curriculum Mode — the source material
 `docs/curriculum/` holds the National Curriculum programmes of study verbatim,

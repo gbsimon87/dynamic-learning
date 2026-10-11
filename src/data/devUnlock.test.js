@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { shouldBypassLocks } from "./devUnlock.js";
+import { HOSTED_DEV_HOSTNAME, shouldBypassLocks } from "./devUnlock.js";
 
 test("the bypass is on only for the exact string \"true\"", () => {
   assert.equal(shouldBypassLocks({ DEV: true, VITE_UNLOCK_ALL: "true" }), true);
@@ -25,8 +25,22 @@ test("a missing or undefined env never throws", () => {
   assert.equal(shouldBypassLocks(null), false);
 });
 
-test("production builds never bypass locks, even with the flag set", () => {
+test("production builds on other hosts never bypass locks, even with the flag set", () => {
   for (const DEV of [false, undefined, "true"]) {
     assert.equal(shouldBypassLocks({ DEV, VITE_UNLOCK_ALL: "true" }), false);
+  }
+});
+
+test("hosted dev opens review access in a production bundle without local flags", () => {
+  for (const env of [undefined, {}, { DEV: false }, { DEV: false, VITE_UNLOCK_ALL: "false" }]) {
+    assert.equal(shouldBypassLocks(env, HOSTED_DEV_HOSTNAME), true);
+  }
+});
+
+test("production and lookalike hostnames retain locks even with the flag set", () => {
+  for (const hostname of ["learnwithbix.com", "www.learnwithbix.com",
+    "dynamic-learning-zkww.onrender.com", "dynamic-learning-n72m.onrender.com",
+    `${HOSTED_DEV_HOSTNAME}.example.com`, `other-${HOSTED_DEV_HOSTNAME}`, "localhost", ""]) {
+    assert.equal(shouldBypassLocks({ DEV: false, VITE_UNLOCK_ALL: "true" }, hostname), false, hostname);
   }
 });

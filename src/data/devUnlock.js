@@ -1,25 +1,18 @@
 /**
- * Development-only bypass of the curriculum unlock rules.
+ * Review access for the hosted dev site and opt-in local development.
  *
- * Set `VITE_UNLOCK_ALL=true` in `.env` and restart the dev server to make every
- * BUILT challenge playable from the picker, regardless of what has been
- * completed. It exists so the whole curriculum can be reached for review
- * without grinding through it in order.
+ * The exact hosted dev hostname always opens built challenges and avatar
+ * choices, including in a production-mode Vite bundle. Other hosted sites
+ * retain normal locks. Local Vite development can opt in with
+ * VITE_UNLOCK_ALL=true; that flag alone cannot unlock a production build.
  *
- * This is a BUILD-time switch, exactly like `VITE_USE_API` — Vite inlines
- * `import.meta.env` at build time, so flipping it needs a restart, not a
- * reload. A production build always disables the bypass, even with the
- * variable set. A URL parameter cannot turn it on.
- *
- * It changes access in the picker and the challenge route. The completion
- * rules and stored data are untouched. Unbuilt challenges stay unavailable — this unlocks
- * what exists, it does not invent pages.
+ * Access only: completion rules, earned rewards and stored progress are
+ * untouched. Unbuilt challenges stay unavailable.
  */
+export const HOSTED_DEV_HOSTNAME = "dynamic-learning-dev-zkww.onrender.com";
 
-/**
- * `env` is normally `import.meta.env`, passed in rather than read directly so
- * this stays a pure function testable outside Vite.
- */
-export function shouldBypassLocks(env) {
-  return env?.DEV === true && env?.VITE_UNLOCK_ALL === "true";
+/** Explicit inputs keep environment and hostname checks testable outside Vite. */
+export function shouldBypassLocks(env, hostname = globalThis.location?.hostname) {
+  return hostname === HOSTED_DEV_HOSTNAME ||
+    (env?.DEV === true && env?.VITE_UNLOCK_ALL === "true");
 }

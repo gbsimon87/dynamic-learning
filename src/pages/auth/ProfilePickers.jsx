@@ -1,5 +1,6 @@
 import { AVATARS, PROFILE_COLOURS } from "../../data/avatars";
 import { AVATARS_UNLOCKABLE, badgeForAvatar } from "../../data/badges";
+import { shouldBypassLocks } from "../../data/devUnlock";
 
 /**
  * The picture grid, shared by ProfileBuilder and sign-up. Classes stay pb-* so
@@ -7,6 +8,7 @@ import { AVATARS_UNLOCKABLE, badgeForAvatar } from "../../data/badges";
  * outside ProfileBuilder (ProfileBuilder's own `.profile-builder` already scopes them).
  */
 export function AvatarPicker({ value, onChange, unlocked = [] }) {
+  const available = shouldBypassLocks(import.meta.env) ? AVATARS_UNLOCKABLE : unlocked;
   const option = (emoji) => (
     <button
       key={emoji}
@@ -23,7 +25,7 @@ export function AvatarPicker({ value, onChange, unlocked = [] }) {
     <div className="pb-avatar-grid">
       {AVATARS.map(option)}
       {/* Locked pictures are SHOWN, not hidden: "there is more here" motivates. */}
-      {AVATARS_UNLOCKABLE.filter((emoji) => !unlocked.includes(emoji)).map((emoji) => {
+      {AVATARS_UNLOCKABLE.filter((emoji) => !available.includes(emoji)).map((emoji) => {
         const badge = badgeForAvatar(emoji);
         return (
           <span
@@ -37,7 +39,7 @@ export function AvatarPicker({ value, onChange, unlocked = [] }) {
           </span>
         );
       })}
-      {AVATARS_UNLOCKABLE.filter((emoji) => unlocked.includes(emoji)).map(option)}
+      {AVATARS_UNLOCKABLE.filter((emoji) => available.includes(emoji)).map(option)}
     </div>
   );
 }

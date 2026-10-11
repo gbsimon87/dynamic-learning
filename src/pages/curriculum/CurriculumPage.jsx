@@ -292,7 +292,7 @@ function CurriculumPage() {
 
   const yearStats = getYearStats(progress, curriculum, isBuilt);
 
-  // Dev-only: VITE_UNLOCK_ALL opens every built challenge. See devUnlock.js.
+  // Review access opens every built challenge on hosted dev or opted-in local dev.
   // `import.meta.env` is undefined outside Vite, hence the optional chain.
   const bypassLocks = shouldBypassLocks(import.meta.env);
 
@@ -404,7 +404,7 @@ function CurriculumPage() {
             the flag working. */}
         {bypassLocks && (
           <p className="dev-unlock-banner">
-            🔓 Dev mode — every built challenge is unlocked (VITE_UNLOCK_ALL)
+            🔓 Dev review — every built challenge is unlocked
           </p>
         )}
       </section>
