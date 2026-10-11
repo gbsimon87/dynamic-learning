@@ -12,8 +12,8 @@ Item-by-item source evidence: [backlog audit in PROJECT_KNOWLEDGE.md](PROJECT_KN
 
 ## Context for prioritisation
 - Curriculum Mode ships **UK Years 1–4 Maths** (Year 1: 32 topics, 128 challenges; Year 3: 44 topics,
-  176 challenges; Year 4: 42 topics, 168 challenges), **Years 1–4 English** (Years 1–2 completed 2026-10-11) and **Years 1 and 3
-  Science** (Year 1: 16 topics, 64 challenges, 2026-10-11; Year 3: 21 topics, 84 challenges, 2026-10-03), plus standalone Skills Mode
+  176 challenges; Year 4: 42 topics, 168 challenges), **Years 1–4 English** (Years 1–2 completed 2026-10-11) and **Years 1, 3 and 4
+  Science** (Year 1: 16 topics, 64 challenges, 2026-10-11; Year 3: 21 topics, 84 challenges, 2026-10-03; Year 4: 20 topics, 80 challenges, 2026-10-11), plus standalone Skills Mode
   games. English and Science are still waiting on an owner's interactive review;
   see their trackers in `docs/english-curriculum/` and `docs/science-curriculum/`.
   Year 1 Maths is implemented (2026-10-11), with visual browser review still
@@ -139,7 +139,7 @@ and what is left. File names and engineering detail are in
 | 32 | **Seasonal events** | Short themed packs: Halloween counting, an Advent calendar of puzzles, an Easter egg hunt. Stickers stay after the event ends. | **Left:** all of it. Plan each pack a term ahead; this October has passed. | ⚪ Idea |
 | 33 | **Story adventure** | Each year gets a light storyline ("Bix's rocket is broken: finish topics to find the parts"), and the topic list becomes a world map the child's avatar walks along. | **Left:** all of it. Mostly art and writing rather than code. | ⚪ Idea |
 | 36 | **Privacy-safe analytics** | Learn how grown-ups use the app, for example where sign-up loses people, without tracking children. | **Done:** the sign-up steps are already labelled, but nothing is sent anywhere. **Left:** connect an analytics service (PostHog) with strict privacy settings, after #11 decides what consent is needed. | 🟡 Partial |
-| 38 | **Play-test English and Science** | Both are built and pass the automated tests, but nobody has played every topic through. | **Done:** Year 1 Science, all 64 challenges played by a headless browser through the real controls (2026-10-11). **Left:** play every topic as a child would: wrong answers, hints, keyboard and touch, finishing topics, celebrations, saving, phones, both themes, the read-aloud voice. Then the owner's review. | 🟡 Partial |
+| 38 | **Play-test English and Science** | Both are built and pass the automated tests, but nobody has played every topic through. | **Done:** Year 1 Science, all 64 challenges played by a headless browser through the real controls (2026-10-11). Year 4 Science also passed a full content/interaction review and all 80 challenges sequentially from fresh progress, including retries, hints, awards and both themes at desktop/phone widths; see `science-curriculum/y4-science-tracker.md`. **Left:** play every topic as a child would: wrong answers, hints, keyboard and touch, finishing topics, celebrations, saving, phones, both themes, the read-aloud voice. Then the owner's review. | 🟡 Partial |
 | 41 | **Celebrations in every Skills game** | Sparkles, combos, sounds and Bix cheering after an answer, as in Curriculum Mode. | **Done:** the five new free-play games. **Left:** the older games (Number Bonds, Fraction Fun, Missing Number, Word Builder and the rest). | 🟡 Partial |
 
 ---

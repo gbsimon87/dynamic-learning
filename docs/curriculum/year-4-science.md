@@ -136,10 +136,56 @@ Pupils might work scientifically by: observing patterns, for example, that bulbs
 
 # Mapping to our curriculum dataset
 
-> **No Year 4 Science dataset yet.** The app's registered Science curriculum is Year 3. When one is built, map each topic
-> here to the statutory bullet it serves, as
-> [year-3-science.md](year-3-science.md) does, and list anything
-> deliberately not covered.
+The dataset is `src/data/year4ScienceCurriculum.js`: five categories, 20 topics
+and 80 implemented challenges. Categories follow the programme's source order.
+These stable topic IDs map to the statutory bullets below; statutory text above
+has not been changed.
+
+| Category | Topic (stable ID) | Statutory requirement served |
+|---|---|---|
+| Living things and their habitats | Grouping Living Things (`grouping-living-things`) | recognise that living things can be grouped in a variety of ways |
+| Living things and their habitats | Classification Keys (`classification-keys`) | explore and use classification keys to help group, identify and name a variety of living things in their local and wider environment |
+| Living things and their habitats | Changing Environments (`changing-environments`) | recognise that environments can change and that this can sometimes pose dangers to living things. |
+| Animals, including humans | The Human Digestive System (`the-human-digestive-system`) | describe the simple functions of the basic parts of the digestive system in humans |
+| Animals, including humans | Teeth and Their Functions (`teeth-and-their-functions`) | identify the different types of teeth in humans and their simple functions |
+| Animals, including humans | Food Chains (`food-chains`) | construct and interpret a variety of food chains, identifying producers, predators and prey. |
+| States of matter | Solids, Liquids and Gases (`solids-liquids-and-gases`) | compare and group materials together, according to whether they are solids, liquids or gases |
+| States of matter | Heating and Cooling (`heating-and-cooling`) | observe that some materials change state when they are heated or cooled, and measure or research the temperature at which this happens in degrees Celsius (°C) |
+| States of matter | Evaporation and Condensation (`evaporation-and-condensation`) | identify the part played by evaporation and condensation in the water cycle and associate the rate of evaporation with temperature. |
+| States of matter | The Water Cycle (`the-water-cycle`) | identify the part played by evaporation and condensation in the water cycle and associate the rate of evaporation with temperature. |
+| Sound | Sounds and Vibrations (`sounds-and-vibrations`) | identify how sounds are made, associating some of them with something vibrating |
+| Sound | How Sound Travels (`how-sound-travels`) | recognise that vibrations from sounds travel through a medium to the ear |
+| Sound | Changing Pitch (`changing-pitch`) | find patterns between the pitch of a sound and features of the object that produced it |
+| Sound | Volume and Vibrations (`volume-and-vibrations`) | find patterns between the volume of a sound and the strength of the vibrations that produced it |
+| Sound | Sound and Distance (`sound-and-distance`) | recognise that sounds get fainter as the distance from the sound source increases. |
+| Electricity | Electrical Appliances and Safety (`electrical-appliances-and-safety`) | identify common appliances that run on electricity |
+| Electricity | Simple Series Circuits (`simple-series-circuits`) | construct a simple series electrical circuit, identifying and naming its basic parts, including cells, wires, bulbs, switches and buzzers |
+| Electricity | Complete and Incomplete Circuits (`complete-and-incomplete-circuits`) | identify whether or not a lamp will light in a simple series circuit, based on whether or not the lamp is part of a complete loop with a battery |
+| Electricity | Switches (`switches`) | recognise that a switch opens and closes a circuit and associate this with whether or not a lamp lights in a simple series circuit |
+| Electricity | Conductors and Insulators (`conductors-and-insulators`) | recognise some common conductors and insulators, and associate metals with being good conductors. |
+
+**Four slots per topic:** supported recognition; comparison and classification;
+whole-structure sorting, ordering and sentence building; applied evidence with
+three scenario or measurement questions and two constructed responses. Five
+questions per challenge, sampled without replacement from authored banks.
+
+**Working scientifically:** embedded choices about observable key features,
+classification, enquiry planning, fair-test controls, repeated observations,
+labelled model diagrams, supplied results tables, units and evidence-based
+conclusions. Tables are labelled as supplied examples; the app does not claim
+that a child has performed a live experiment. Food-chain arrows run from food
+to eater; water vapour is an invisible gas and visible mist contains droplets;
+pitch and volume remain separate; circuit models use pictures rather than
+Year 6 symbols or formal current/voltage definitions.
+
+**Practical boundary:** the on-screen work teaches and rehearses the programme,
+but does not replace observing real local habitats over a year, making careful
+measurements with thermometers/data loggers, physically constructing circuits,
+or performing and reporting practical enquiries. Circuit construction plans are
+supervised low-voltage-cell activities; children must never experiment with
+mains sockets or wiring. Heating examples use supplied observations/research,
+not instructions for children to heat hot materials independently. Real sound
+listening and hands-on model work still need classroom or grown-up support.
 
 ---
 

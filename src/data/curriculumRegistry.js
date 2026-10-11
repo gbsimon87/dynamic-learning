@@ -6,6 +6,7 @@ import { year3ScienceCurriculum } from "./year3ScienceCurriculum.js";
 import { year1ScienceCurriculum } from "./year1ScienceCurriculum.js";
 import { year4MathCurriculum } from "./year4MathCurriculum.js";
 import { year4EnglishCurriculum } from "./year4EnglishCurriculum.js";
+import { year4ScienceCurriculum } from "./year4ScienceCurriculum.js";
 import { year1EnglishCurriculum } from "./year1EnglishCurriculum.js";
 import { year1MathCurriculum } from "./year1MathCurriculum.js";
 
@@ -36,6 +37,7 @@ export const CURRICULUM_SUBJECTS = [
 ];
 
 const CURRICULA = [
+  { year: 4, subject: "science", available: true, load: () => year4ScienceCurriculum },
   { year: 4, subject: "math", available: true, load: () => year4MathCurriculum },
   { year: 1, subject: "math", available: true, load: () => year1MathCurriculum },
   { year: 2, subject: "english", available: true, load: () => year2EnglishCurriculum },

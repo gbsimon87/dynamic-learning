@@ -1,0 +1,30 @@
+.y4-sci-visual {
+  --y4-sci-ink: var(--light-text);
+  --y4-sci-surface: var(--light-panel);
+  --y4-sci-colour: var(--light-accent);
+  --y4-sci-on-accent: var(--on-light-accent);
+  color: var(--y4-sci-ink);
+  width: 100%;
+}
+body.dark .y4-sci-visual {
+  --y4-sci-ink: var(--dark-text);
+  --y4-sci-surface: var(--dark-panel);
+  --y4-sci-colour: var(--dark-accent);
+  --y4-sci-on-accent: var(--on-dark-accent);
+}
+.y4-sci-figure { margin: .5rem auto 1rem; max-width: 440px; }
+.y4-sci-figure svg { display: block; width: 100%; height: auto; }
+.y4-sci-figure text { fill: var(--y4-sci-ink); font-family: inherit; font-size: 16px; }
+.y4-sci-figure figcaption { font-size: .88rem; line-height: 1.5; }
+.y4-sci-wire, .y4-sci-filament, .y4-sci-organ, .y4-sci-intestine, .y4-sci-large, .y4-sci-rain, .y4-sci-guide {
+  fill: none; stroke: var(--y4-sci-ink); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round;
+}
+.y4-sci-guide { stroke-width: 1.5; }
+.y4-sci-organ, .y4-sci-large { stroke-width: 7; }
+.y4-sci-cell rect, .y4-sci-base, .y4-sci-contact { fill: var(--y4-sci-colour); stroke: var(--y4-sci-ink); stroke-width: 2; }
+.y4-sci-cell text { fill: var(--y4-sci-on-accent); font-weight: bold; }
+.y4-sci-glass, .y4-sci-cloud { fill: var(--y4-sci-surface); stroke: var(--y4-sci-ink); stroke-width: 2; }
+.y4-sci-sun, .y4-sci-water, .y4-sci-body { fill: var(--y4-sci-colour); fill-opacity: .3; stroke: var(--y4-sci-ink); stroke-width: 2; }
+.y4-sci-chain { font-size: 1.5rem; overflow-wrap: anywhere; text-align: center; }
+.y4-sci-visual .data-table { width: 100%; font-size: clamp(.8rem, 2.5vw, 1rem); }
+.y4-sci-visual .data-table th, .y4-sci-visual .data-table td { overflow-wrap: anywhere; padding: .5rem; }

@@ -99,7 +99,7 @@ test("a year certificate needs every registered subject of that year", () => {
   const english = candidate({}, { year: 3, subject: "english", subjectName: "English" });
   assert.equal(yearCertificate([maths, english], 3), null);
   assert.equal(yearCertificate([maths, { ...english, progress: finished }], 3)?.label, "Year 3 certificate");
-  assert.equal(yearCertificate([maths], 4), null, "a year with no curricula is never finished");
+  assert.equal(yearCertificate([maths], 5), null, "a year with no curricula is never finished");
 });
 
 test("a year's subjects come from the registry", () => {

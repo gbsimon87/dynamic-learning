@@ -18,9 +18,10 @@ inventory for each pathway.
 | 3 | [Science](../src/data/year3ScienceCurriculum.js) | 21 | 84 | Complete |
 | 4 | [Maths](../src/data/year4MathCurriculum.js) | 42 | 168 | Complete |
 | 4 | [English](../src/data/year4EnglishCurriculum.js) | 33 | 132 | Complete |
+| 4 | [Science](../src/data/year4ScienceCurriculum.js) | 20 | 80 | Complete |
 | 5 | All subjects | 0 | 0 | Not implemented |
 | 6 | All subjects | 0 | 0 | Not implemented |
-| **Total** | **10 complete pathways** | **336** | **1,344** | |
+| **Total** | **11 complete pathways** | **356** | **1,424** | |
 
 Other year/subject combinations have no implemented Curriculum Mode pathway.
 Geography's standalone Skills Mode games and saved programmes in
@@ -53,7 +54,7 @@ Geography's standalone Skills Mode games and saved programmes in
 
 **Learn with Bix** (formerly Dynamic Learning) is an interactive web learning platform for primary-school
 children (built first for ~6-year-olds / **UK Year 2**; Curriculum Mode now
-also covers Years 1–4 Maths, Years 1–4 English and Years 1 and 3 Science). It teaches Maths, English,
+also covers Years 1–4 Maths, Years 1–4 English and Years 1, 3 and 4 Science). It teaches Maths, English,
 Geometry and Geography through browser-based mini-games.
 
 There are two distinct learning modes, and the distinction matters for every
@@ -167,6 +168,7 @@ src/
 │   ├── year1MathCurriculum.js    # 32 topics / 128 challenges; data questions + practical pictures
 │   ├── year1EnglishCurriculum.js # 38 topics / 152 challenges; shared data-question renderer
 │   ├── year1ScienceCurriculum.js # 16 topics / 64 challenges; authored banks + drawn diagrams
+│   ├── year4ScienceCurriculum.js # 20 topics / 80 challenges; authored evidence tasks + picture models
 │   ├── year2MathCurriculum.js   # Curriculum tree (categories → topics)
 │   ├── year2EnglishCurriculum.js # 39 topics / 156 challenges; shared data-question renderer
 │   ├── year3MathCurriculum.js
@@ -288,6 +290,8 @@ Year 2 English: **9 / 39 / 156** (2026-10-11; identifiers locked in its own
 `year2EnglishCurriculum.test.js`).
 Year 4 Maths: **8 categories / 42 topics / 168 challenges**, all implemented
 (2026-10-11; identifiers locked in `year4MathCurriculum.test.js`).
+Year 4 Science: **5 categories / 20 topics / 80 challenges**, all implemented
+(2026-10-11; stable category/topic identifiers locked in `year4ScienceCurriculum.test.js`).
 Year 3 English: **8 / 32 / 128**; Year 4 English: **8 / 33 / 132** (both
 approved 2026-10-01; ids locked in `curriculumIds.test.js`).
 
@@ -1461,6 +1465,47 @@ prompts ("pine cones", "bluebell"), UK-ambiguous words ("rubber", "a glass") and
 arrows that missed their part. **Still pending:**
 the owner's review, touch on a real phone and the read-aloud voice on a device.
 
+### Curriculum Mode — Year 4 Science (2026-10-11)
+
+The complete five-strand pathway has 20 topics and 80 challenges, mapped to the
+statutory bullets in [year-4-science.md](curriculum/year-4-science.md). It appears
+through the existing year/subject picker, signup subjects, progress tree,
+completion flow and certificates. Year 4's year award now requires Maths,
+English **and Science**. No storage, migration or unlock-rule change.
+
+`src/data/challenges/year4Science/` contains authored banks for habitats,
+animals, matter, sound and electricity, with a pure seeded recipe engine. Five
+questions per challenge: supported recognition; comparison with sorting;
+whole-structure sorting/building/ordering; evidence-based application with
+three scenario or measurement questions and two constructed responses.
+`Year4ScienceGame` renders through the shared `DataChallenge` kit and passes
+completion/combo data through unchanged. All 80 wrappers use the loader's
+computed paths. Certificate statements have their own Year 4 Science module.
+The optional `DataChallenge.checkAnswer` hook forwards to `DataRound`;
+Year 4 uses `isScienceAnswerCorrect` for reviewed equivalent sentence orders.
+Every tile must be used once, and incorrect scientific relationships still fail.
+
+`Year4ScienceVisual` draws theme-aware pictorial circuits, the digestive route
+and a simplified water cycle, and renders labelled supplied-results tables.
+Bulbs in circuit questions are drawn unlit so the learner predicts from the
+connections. Sound tasks use observable/written evidence without depending on
+audio playback. Optional read-aloud is available across the year.
+
+The mapping records practical limits: digital questions rehearse science but
+do not claim to replace local habitat observation, hands-on circuit construction,
+temperature measurements or actual sound enquiries. Only supervised suitable
+low-voltage-cell activities are suggested; no mains experiments or formal
+Year 6 circuit symbols/current/voltage teaching.
+
+Data tests validate all four levels over 50 seeds per topic, response correctness,
+source immutability, depicted circuit continuity, classification routes,
+food-chain directions and supplied numeric evidence. Dataset tests cover all
+80 files, initial locks, each completion/cascade, replay, numeric persistence,
+strict subject/year awards and separation from earlier Science years. Component
+tests render all 80 challenges in both themes and play retry, hint, full-run,
+sorting and sentence-building flows. Browser evidence and review limits are
+recorded in [the Year 4 tracker](science-curriculum/y4-science-tracker.md).
+
 ### Curriculum Mode — Year 3 Science (2026-10-03)
 
 **Illustrated diagrams (2026-10-03):** Skeletons, Muscles and Movement, and
@@ -2124,7 +2169,7 @@ renders them inside `ChallengeShell` with the shared kit.
   shade), placeValue (read / build). The field table is in the
   `building-curriculum-topics` skill.
 - Generalises `EnglishPracticeGame` (choice / sort / build / type), which is
-  unchanged for now. Year 1 Maths, Years 1–2 English and Year 1 Science are
+  unchanged for now. Year 1 Maths, Years 1–2 English and Years 1 and 4 Science are
   built on `DataChallenge`. `renderVisual(question)` adds a read-only diagram;
   `readAloud` forces the "Read it to me" button on (Year 1 Science) or off.
 - Tested in `questionKinds.test.js` (a sound sample per kind, right and wrong
@@ -2722,6 +2767,8 @@ Year 2 English (2026-10-11) is the worked example for the shared data-question
 renderer, with its own banks, Appendix 1 coverage check and loader-path tests.
 Year 1 Science (2026-10-11) is the worked example of a third subject in a year
 and of hand-authored banks through a recipe engine (`year1Science/engine.js`).
+Year 4 Science (2026-10-11) adds a complete five-strand year with independent
+authored banks, evidence tables and picture circuit models (`year4Science/`).
 1. Save the programme of study verbatim from the DfE PDF in `docs/curriculum/`, with a mapping
    section, and get the topic titles signed off. Titles are ids.
 2. Create `src/data/year<N><Subject>Curriculum.js` in the same shape, with a
