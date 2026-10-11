@@ -51,6 +51,34 @@ body.dark .skills-page {
   --sk-focus: #84dccf;
 }
 
+/* Practice is distinct from tracked curriculum challenges. */
+.sk-practice-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 1.4rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--sk-edge);
+  border-radius: 16px;
+  background: var(--sk-card);
+  color: var(--sk-ink);
+  line-height: 1.6;
+}
+
+.sk-practice-note p { flex: 1 1 34ch; margin: 0; }
+.sk-practice-note a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 48px;
+  color: inherit;
+  font-weight: 700;
+  text-underline-offset: 4px;
+}
+.sk-practice-note a:focus-visible { outline: 3px solid var(--sk-focus); outline-offset: 3px; }
+
 /* ===== SCROLL REVEAL =====
    `reveal-armed` is added by useReveal, never by CSS, so a card can't be
    left permanently invisible if the observer never runs. */

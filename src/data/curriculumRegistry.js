@@ -23,10 +23,9 @@ import { year1MathCurriculum } from "./year1MathCurriculum.js";
 /**
  * The one curriculum icon for the whole app — navbar, homepage, 404.
  * It lives here because three copies of an emoji drifted apart once already.
- * A compass, not a book: Curriculum Mode is a path through a year group, and
- * it renders cleanly at navbar size on every platform.
+ * A school backpack is a familiar cue for a child's learning adventure.
  */
-export const CURRICULUM_ICON = "🧭";
+export const CURRICULUM_ICON = "🎒";
 
 export const CURRICULUM_YEARS = [1, 2, 3, 4];
 

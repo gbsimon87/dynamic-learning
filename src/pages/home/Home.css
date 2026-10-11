@@ -1,40 +1,41 @@
-/* ===== HOMEPAGE =====
-   Every colour here is a token with a body.dark pair (App.css §"Both themes,
-   every time"). Each subject carries two: a vivid hue for borders and icon
-   tiles, and a deep fill for buttons, dark enough that white ink clears WCAG
-   AA 4.5:1 on it in both themes. */
-
+/* Home colours come from the paired light/dark tokens in App.css. */
 .home-page {
   --home-ink: var(--light-text);
-  --home-muted: #645057;
   --home-card: var(--light-panel);
-  --home-card-edge: #f0dde0;
-  --home-sky-top: #ffe3e7;
-  --home-sky-bottom: #f8ecee;
-  --home-glyph: rgba(239, 98, 108, 0.28);
   --home-accent: var(--light-accent);
-  --home-on-accent: var(--on-light-accent);
-  --home-focus: #22181C;
-
-  /* Filled buttons carry white ink, so every fill below is dark enough for
-     white to clear WCAG AA 4.5:1 on it. The vivid --home-hue-* values stay for
-     borders and icon tiles, where nothing sits on top of them. */
-  --home-cta: #c33d47;
-  --home-on-cta: #ffffff;
-  /* The "thickness" under a pressed button. */
-  --home-accent-shade: #92262f;
-
-
-  /* Subject hues: vivid for edges and icon tiles, deep for filled buttons. */
-  --home-hue-math: #ef626c;
-  --home-hue-english: #9f91e8;
-  --home-hue-geography: #2fa898;
-  --home-hue-science: #e39a24;
-  --home-deep-math: #c33d47;
-  --home-deep-english: #5e4eb8;
-  --home-deep-geography: #1f7d70;
-  --home-deep-science: #8f5900;
-  --home-on-deep: #ffffff;
+  --home-focus: var(--light-text);
+  --home-muted: var(--light-home-muted);
+  --home-cta-edge: var(--light-home-cta-edge);
+  --home-curriculum-label: var(--light-home-curriculum-label);
+  --home-curriculum-ink: var(--light-home-curriculum-ink);
+  --home-practice-label: var(--light-home-practice-label);
+  --home-practice-ink: var(--light-home-practice-ink);
+  --home-achievements-ink: var(--light-home-achievements-ink);
+  --home-space-ink: var(--light-home-space-ink);
+  --home-reading-ink: var(--light-home-reading-ink);
+  --home-arithmetic-ink: var(--light-home-arithmetic-ink);
+  --home-bonds-ink: var(--light-home-bonds-ink);
+  --home-card-edge: var(--light-home-card-edge);
+  --home-sky-top: var(--light-home-sky-top);
+  --home-sky-bottom: var(--light-home-sky-bottom);
+  --home-glyph: var(--light-home-glyph);
+  --home-cta: var(--light-home-cta);
+  --home-on-cta: var(--light-home-on-cta);
+  --home-accent-shade: var(--light-home-cta-shade);
+  --home-curriculum: var(--light-home-curriculum);
+  --home-curriculum-edge: var(--light-home-curriculum-edge);
+  --home-practice: var(--light-home-practice);
+  --home-practice-edge: var(--light-home-practice-edge);
+  --home-achievements: var(--light-home-achievements);
+  --home-achievements-edge: var(--light-home-achievements-edge);
+  --home-space: var(--light-home-space);
+  --home-space-edge: var(--light-home-space-edge);
+  --home-reading: var(--light-home-reading);
+  --home-reading-edge: var(--light-home-reading-edge);
+  --home-arithmetic: var(--light-home-arithmetic);
+  --home-arithmetic-edge: var(--light-home-arithmetic-edge);
+  --home-bonds: var(--light-home-bonds);
+  --home-bonds-edge: var(--light-home-bonds-edge);
 
   padding: 0 1rem 4rem;
   color: var(--home-ink);
@@ -44,20 +45,41 @@
 
 body.dark .home-page {
   --home-ink: var(--dark-text);
-  --home-muted: #c8b9bd;
   --home-card: var(--dark-panel);
-  --home-card-edge: #46403f;
-  --home-sky-top: #33262c;
-  --home-sky-bottom: #241a1e;
-  --home-glyph: rgba(132, 220, 207, 0.24);
   --home-accent: var(--dark-accent);
-  --home-on-accent: var(--on-dark-accent);
-  --home-focus: #84DCCF;
-  --home-cta: #1f7d70;
-  --home-on-cta: #ffffff;
-  --home-accent-shade: #13544b;
-
-
+  --home-focus: var(--dark-accent);
+  --home-muted: var(--dark-home-muted);
+  --home-cta-edge: var(--dark-home-cta-edge);
+  --home-curriculum-label: var(--dark-home-curriculum-label);
+  --home-curriculum-ink: var(--dark-home-curriculum-ink);
+  --home-practice-label: var(--dark-home-practice-label);
+  --home-practice-ink: var(--dark-home-practice-ink);
+  --home-achievements-ink: var(--dark-home-achievements-ink);
+  --home-space-ink: var(--dark-home-space-ink);
+  --home-reading-ink: var(--dark-home-reading-ink);
+  --home-arithmetic-ink: var(--dark-home-arithmetic-ink);
+  --home-bonds-ink: var(--dark-home-bonds-ink);
+  --home-card-edge: var(--dark-home-card-edge);
+  --home-sky-top: var(--dark-home-sky-top);
+  --home-sky-bottom: var(--dark-home-sky-bottom);
+  --home-glyph: var(--dark-home-glyph);
+  --home-cta: var(--dark-home-cta);
+  --home-on-cta: var(--dark-home-on-cta);
+  --home-accent-shade: var(--dark-home-cta-shade);
+  --home-curriculum: var(--dark-home-curriculum);
+  --home-curriculum-edge: var(--dark-home-curriculum-edge);
+  --home-practice: var(--dark-home-practice);
+  --home-practice-edge: var(--dark-home-practice-edge);
+  --home-achievements: var(--dark-home-achievements);
+  --home-achievements-edge: var(--dark-home-achievements-edge);
+  --home-space: var(--dark-home-space);
+  --home-space-edge: var(--dark-home-space-edge);
+  --home-reading: var(--dark-home-reading);
+  --home-reading-edge: var(--dark-home-reading-edge);
+  --home-arithmetic: var(--dark-home-arithmetic);
+  --home-arithmetic-edge: var(--dark-home-arithmetic-edge);
+  --home-bonds: var(--dark-home-bonds);
+  --home-bonds-edge: var(--dark-home-bonds-edge);
   background-color: var(--dark-bg);
 }
 
@@ -109,6 +131,7 @@ body.dark .home-page {
 .home-glyph {
   position: absolute;
   color: var(--home-glyph);
+  opacity: 0.45;
   font-weight: 700;
   line-height: 1;
   animation-name: home-drift;
@@ -214,6 +237,7 @@ body.dark .home-page {
     width: clamp(88px, 24vw, 130px);
   }
 
+  .home-hero-inner.is-signed-in .home-subtitle,
   .home-hero-inner.is-signed-in .home-progress,
   .home-hero-inner.is-signed-in .home-hero-actions {
     grid-column: 1 / -1;
@@ -258,7 +282,8 @@ body.dark .home-page {
 
 .home-subtitle {
   margin: 0 0 1.4rem;
-  max-width: 34ch;
+  max-width: 42ch;
+  line-height: 1.6;
   color: var(--home-muted);
   font-size: clamp(1rem, 2.4vw, 1.2rem);
 }
@@ -328,6 +353,7 @@ body.dark .home-page {
 .home-btn-primary {
   background: var(--home-cta);
   color: var(--home-on-cta);
+  border: 2px solid var(--home-cta-edge);
   box-shadow: 0 6px 0 var(--home-accent-shade);
 }
 
@@ -368,9 +394,7 @@ body.dark .home-page {
 .home-btn-quiet:active { transform: translateY(2px); }
 
 .home-btn:focus-visible,
-.home-chip:focus-visible,
-.home-mode:focus-visible,
-.home-subject:focus-visible {
+.home-skill:focus-visible {
   outline: 3px solid var(--home-focus);
   outline-offset: 3px;
 }
@@ -430,7 +454,7 @@ body.dark .home-page {
 
 .home-ring-fill {
   fill: none;
-  stroke: var(--home-accent);
+  stroke: var(--home-cta);
   stroke-width: 11;
   stroke-linecap: round;
   transform: rotate(-90deg);
@@ -448,6 +472,7 @@ body.dark .home-page {
 
 /* ===== SECTIONS ===== */
 .home-section {
+  box-sizing: border-box;
   max-width: 1150px;
   margin: clamp(2.5rem, 7vw, 4.5rem) auto 0;
 }
@@ -458,233 +483,213 @@ body.dark .home-page {
   text-align: center;
 }
 
-/* ===== SUBJECT CARDS ===== */
-.home-subjects {
-  display: grid;
-  gap: 1.2rem;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+/* ===== CURRICULUM & PRACTICE ===== */
+.home-curriculum,
+.home-practice {
+  padding: clamp(1.3rem, 4vw, 2.5rem);
+  border: 2px solid;
+  border-radius: 32px;
 }
 
-.home-subject {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  padding: 1.5rem 1.3rem 1.3rem;
-  border: 3px solid var(--subject-hue);
-  border-radius: 26px;
-  background: var(--home-card);
-  box-shadow: 0 10px 0 -2px var(--subject-hue), 0 16px 30px var(--panel-shadow);
-  transition: transform 220ms cubic-bezier(0.22, 1.2, 0.36, 1),
-    box-shadow 220ms ease-out;
+.home-curriculum {
+  --section-label: var(--home-curriculum-label);
+  --section-ink: var(--home-curriculum-ink);
+  background: var(--home-curriculum);
+  border-color: var(--home-curriculum-edge);
+  box-shadow: 0 3px 0 var(--home-curriculum-edge);
 }
 
-.home-subject:hover {
-  transform: translateY(-8px) rotate(-1.2deg);
-  box-shadow: 0 16px 0 -2px var(--subject-hue), 0 24px 40px var(--panel-shadow);
+.home-practice {
+  --section-label: var(--home-practice-label);
+  --section-ink: var(--home-practice-ink);
+  background: var(--home-practice);
+  border-color: var(--home-practice-edge);
 }
 
-.home-subject:active { transform: translateY(-2px); }
+.home-section-heading { text-align: center; }
+.home-section-heading .home-section-title { color: var(--section-ink); }
+.home-section-heading .home-section-title { margin-bottom: 0.65rem; }
 
-.home-subject h3 {
-  margin: 0.6rem 0 0.35rem;
-  font-size: 1.5rem;
-}
-
-.home-subject p {
-  margin: 0 0 1rem;
-  color: var(--home-muted);
-}
-
-.home-subject-icon {
-  display: grid;
-  place-items: center;
-  width: 68px;
-  height: 68px;
-  border-radius: 22px;
-  background: var(--subject-hue);
-  font-size: 2.2rem;
-  /* No hover on a touch screen, so the icon keeps a life of its own. */
-  animation: home-icon-idle 4.5s ease-in-out infinite;
-}
-
-.home-subject:hover .home-subject-icon {
-  animation: home-icon-wiggle 700ms ease-in-out infinite;
-}
-
-.home-subject-quick {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.home-chip {
-  padding: 0.5rem 0.85rem;
-  border: 2px solid var(--subject-hue);
-  border-radius: 999px;
-  color: var(--home-ink);
-  font-size: 0.9rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
-}
-
-.home-chip:hover {
-  background: var(--subject-deep);
-  border-color: var(--subject-deep);
-  color: var(--home-on-deep);
-  transform: translateY(-2px);
-}
-
-.home-subject-go {
+.home-section-label {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  min-height: 56px;
-  margin-top: auto;
-  padding: 0.85rem 1.2rem;
-  border-radius: 16px;
-  background: var(--subject-deep);
-  color: var(--home-on-deep);
-  font-size: 1.05rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition: transform 160ms ease-out;
-}
-
-.home-subject-go:hover { transform: scale(1.03); }
-.home-subject-go:active { transform: scale(0.97); }
-
-/* ===== LOCKED CARD =====
-   Tapping it shakes and says why, rather than doing nothing at all. */
-.home-subject.is-locked {
-  cursor: default;
-  opacity: 0.92;
-  border-style: dashed;
-  box-shadow: 0 10px 30px var(--panel-shadow);
-}
-
-.home-subject.is-locked:hover {
-  transform: none;
-  box-shadow: 0 10px 30px var(--panel-shadow);
-}
-
-.home-subject.is-nudged { animation: home-shake 460ms ease-in-out; }
-
-/* Keeps the locked card the same shape as its siblings instead of leaving a
-   hole where their button sits. */
-.home-subject-locked {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 56px;
-  margin-top: auto;
-  border: 2px dashed var(--subject-hue);
-  border-radius: 16px;
-  color: var(--home-muted);
-  font-weight: 700;
-}
-
-.home-subject-badge {
-  position: absolute;
-  top: -14px;
-  right: 16px;
-  padding: 0.3rem 0.8rem;
+  gap: 0.5rem;
+  margin: 0 0 0.9rem;
+  padding: 0.55rem 0.9rem;
   border-radius: 999px;
-  background: var(--subject-deep);
-  color: var(--home-on-deep);
-  font-size: 0.8rem;
+  background: var(--section-label);
+  color: var(--section-ink);
+  font-size: 0.95rem;
   font-weight: 700;
-  background-image: linear-gradient(100deg,
-    transparent 30%, rgba(255, 255, 255, 0.75) 50%, transparent 70%);
-  background-size: 250% 100%;
-  animation: home-shimmer 2.8s linear infinite;
 }
 
-/* ===== TWO MODES ===== */
-.home-modes {
-  display: grid;
-  gap: 1.3rem;
-  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+.home-section-intro {
+  max-width: 48ch;
+  margin: 0 auto;
+  color: var(--home-muted);
+  line-height: 1.6;
+  font-size: 1.05rem;
 }
 
-.home-mode {
-  display: block;
-  padding: 1.6rem;
-  border-radius: 28px;
-  background: var(--home-card);
-  box-shadow: 0 10px 0 -2px var(--mode-hue), 0 16px 30px var(--panel-shadow);
-  color: var(--home-ink);
-  text-decoration: none;
-  transition: transform 220ms cubic-bezier(0.22, 1.2, 0.36, 1);
-}
-
-.home-mode-curriculum { --mode-hue: var(--home-accent); }
-.home-mode-skills { --mode-hue: var(--home-hue-geography); }
-
-.home-mode:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 0 -2px var(--mode-hue), 0 24px 40px var(--panel-shadow);
-}
-.home-mode:active { transform: translateY(0); }
-
-.home-mode h3 {
+.home-practice-note {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  margin: 0.9rem 0 0.4rem;
-  font-size: 1.6rem;
+  gap: 0.8rem;
+  max-width: 48ch;
+  margin: 1.3rem auto 0;
+  padding: 0.9rem 1rem;
+  border-left: 4px solid var(--home-space-edge);
+  border-radius: 0 14px 14px 0;
+  background: var(--home-card);
+  color: var(--home-ink);
+  line-height: 1.6;
 }
 
-/* The mode's icon, in a tile to the left of its name. */
-.home-mode-badge {
+.home-practice-note > span:first-child { font-size: 1.5rem; }
+.home-practice-note strong { display: block; color: var(--home-practice-ink); }
+
+.home-curriculum-subjects {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem;
+  padding: 0;
+  margin: 1.3rem 0 1.6rem;
+  list-style: none;
+}
+
+.home-curriculum-subjects li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 14px;
+  background: var(--home-card);
+  font-weight: 700;
+}
+
+.home-journey {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.home-journey li {
+  position: relative;
+  padding: 1.3rem;
+  border: 1px solid var(--home-card-edge);
+  border-radius: 24px;
+  background: var(--home-card);
+  text-align: center;
+}
+
+.home-journey-number {
+  position: absolute;
+  top: 0.8rem;
+  left: 0.8rem;
   display: grid;
   place-items: center;
-  flex: none;
-  width: 2.6rem;
-  height: 2.6rem;
-  border-radius: 14px;
-  background: var(--mode-hue);
-  font-size: 1.4rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--home-curriculum-label);
+  color: var(--home-curriculum-ink);
+  font-weight: 700;
 }
 
-.home-mode p {
-  margin: 0 0 1rem;
+.home-journey-icon {
+  display: block;
+  margin-block: 0.4rem 0.8rem;
+  font-size: 2.5rem;
+}
+
+.home-journey h3 { margin: 0 0 0.5rem; font-size: 1.2rem; }
+.home-journey p { margin: 0; line-height: 1.6; color: var(--home-muted); }
+
+.home-curriculum-actions,
+.home-practice-actions { margin-top: 1.7rem; text-align: center; }
+
+.home-curriculum-actions p {
+  margin: 1rem 0 0;
+  font-size: 0.9rem;
   color: var(--home-muted);
 }
 
-.home-mode-go {
-  font-size: 1.05rem;
-  font-weight: 700;
+.home-skills {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.7rem;
+}
+
+.home-skill {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 1.3rem 1.1rem;
+  border: 2px solid var(--skill-edge);
+  border-radius: 24px;
+  background: var(--home-card);
   color: var(--home-ink);
+  text-decoration: none;
+  box-shadow: 0 3px 0 var(--skill-edge);
+  transition: transform 180ms ease-out;
+}
+
+.home-skill-space { --skill-bg: var(--home-space); --skill-edge: var(--home-space-edge); --skill-ink: var(--home-space-ink); }
+.home-skill-reading { --skill-bg: var(--home-reading); --skill-edge: var(--home-reading-edge); --skill-ink: var(--home-reading-ink); }
+.home-skill-arithmetic { --skill-bg: var(--home-arithmetic); --skill-edge: var(--home-arithmetic-edge); --skill-ink: var(--home-arithmetic-ink); }
+.home-skill-bonds { --skill-bg: var(--home-bonds); --skill-edge: var(--home-bonds-edge); --skill-ink: var(--home-bonds-ink); }
+.home-skill:hover { transform: translateY(-5px); }
+.home-skill:active { transform: translateY(2px); }
+.home-skill-icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: var(--skill-bg);
+  font-size: 2.2rem;
+  margin-bottom: 0.8rem;
+}
+.home-skill-subject { font-size: 0.85rem; font-weight: 700; color: var(--home-muted); }
+.home-skill h3 { margin: 0.4rem 0 0.6rem; font-size: 1.3rem; line-height: 1.3; }
+.home-skill p { margin: 0 0 1rem; color: var(--home-muted); line-height: 1.6; }
+.home-skill-go {
+  color: var(--skill-ink);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 48px;
+  margin-top: auto;
+  font-weight: 700;
   text-decoration: underline;
   text-underline-offset: 4px;
 }
 
-/* Curriculum art: stepping stones that light up in sequence. */
-.home-mode-art {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  height: 60px;
+.home-practice-actions .home-btn-quiet {
+  border-color: var(--home-practice-edge);
+  background: var(--home-card);
 }
 
-.home-mode-curriculum .home-mode-art i {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: var(--home-card-edge);
-  animation: home-step 3.2s ease-in-out infinite;
-  animation-delay: calc(var(--step-index) * 320ms);
+@media (max-width: 1000px) {
+  .home-skills { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-/* Skills art: game pips bouncing out of sync. */
-.home-mode-skills .home-mode-art i {
-  font-size: 1.9rem;
-  font-style: normal;
-  animation: home-pip 2.4s ease-in-out infinite;
-  animation-delay: calc(var(--pip-index) * 160ms);
+@media (max-width: 700px) {
+  .home-journey { grid-template-columns: 1fr; gap: 0.8rem; }
+  .home-journey li { padding: 1rem 1rem 1rem 3.3rem; text-align: left; }
+  .home-journey-icon { font-size: 2rem; }
+  .home-journey-number { top: 1.3rem; }
+}
+
+@media (max-width: 480px) {
+  .home-skills { grid-template-columns: 1fr; }
+  .home-curriculum-actions .home-btn { width: 100%; justify-content: center; box-sizing: border-box; padding-inline: 0.7rem; }
 }
 
 /* ===== KEYFRAMES ===== */
@@ -699,80 +704,19 @@ body.dark .home-page {
   to { opacity: 1; transform: none; }
 }
 
-@keyframes home-rocket {
-  0%, 100% { transform: translateY(0) rotate(-8deg); }
-  50% { transform: translateY(-12px) rotate(4deg); }
-}
-
-@keyframes home-icon-idle {
-  0%, 88%, 100% { transform: translateY(0) rotate(0deg); }
-  92% { transform: translateY(-6px) rotate(-7deg); }
-  96% { transform: translateY(-3px) rotate(5deg); }
-}
-
-@keyframes home-icon-wiggle {
-  0%, 100% { transform: rotate(-8deg) scale(1.06); }
-  50% { transform: rotate(8deg) scale(1.06); }
-}
-
-@keyframes home-shake {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-9px) rotate(-1.5deg); }
-  40% { transform: translateX(8px) rotate(1.5deg); }
-  60% { transform: translateX(-5px) rotate(-1deg); }
-  80% { transform: translateX(4px); }
-}
-
-@keyframes home-shimmer {
-  from { background-position: 180% 0; }
-  to { background-position: -80% 0; }
-}
-
-@keyframes home-step {
-  0%, 60%, 100% { background: var(--home-card-edge); transform: scale(1); }
-  25% { background: var(--home-accent); transform: scale(1.22); }
-}
-
-@keyframes home-pip {
-  0%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-12px) rotate(-10deg); }
-}
-
-/* ===== REDUCED MOTION =====
-   Everything decorative stops. Reveals are handled in JS (useReveal marks each
-   item revealed immediately), so nothing here can hide content. */
+/* Decorative motion respects the device preference. */
 @media (prefers-reduced-motion: reduce) {
   .home-glyph,
-  .home-subject-icon,
-  .home-subject:hover .home-subject-icon,
-  .home-subject-badge,
-  .home-hello-name span,
-  .home-mode-curriculum .home-mode-art i,
-  .home-mode-skills .home-mode-art i {
-    animation: none;
-  }
-
-  .home-subject.is-nudged { animation: none; }
+  .home-hello-name span { animation: none; }
 
   .home-btn,
-  .home-subject,
-  .home-mode,
-  .home-chip,
-  .home-subject-go,
+  .home-skill,
   .home-ring-fill,
-  .reveal-armed {
-    transition: none;
-  }
+  .reveal-armed { transition: none; }
 
   .home-btn:hover,
-  .home-subject:hover,
-  .home-mode:hover,
-  .home-chip:hover,
-  .home-subject-go:hover {
-    transform: none;
-  }
+  .home-skill:hover { transform: none; }
 }
-
 
 /* ===== FOOTER =====
    Homepage only (see HomeFooter.jsx). */
@@ -805,8 +749,8 @@ body.dark .home-page {
   width: 46px;
   height: 46px;
   border-radius: 14px;
-  background: var(--home-cta);
-  color: var(--home-on-cta);
+  background: var(--home-curriculum-label);
+  color: var(--home-curriculum-ink);
   font-weight: 700;
 }
 

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Link } from "react-router";
 import { AuthContext } from "../../context/auth-context";
 import Mascot from "../../components/mascot/Mascot";
@@ -29,55 +29,43 @@ const GLYPHS = [
   { char: "★", left: 78, top: 88, size: 1.9, duration: 17, delay: 4 },
 ];
 
-/* ===== SUBJECT LAUNCHPAD =====
-   `hue` and `deep` are token names, never literals, so both repaint with the
-   theme (PROJECT_KNOWLEDGE §9). The vivid hue edges the card; the deep one
-   fills its button, where white ink needs 4.5:1. */
-const SUBJECTS = [
+/* Featured practice stays secondary to the curriculum journey. */
+const FEATURED_SKILLS = [
   {
-    id: "math",
+    id: "space",
+    subject: "Geography",
+    icon: "🪐",
+    title: "Solar System",
+    blurb: "Blast off and meet the planets!",
+    to: "/solar-system",
+    action: "Explore space",
+  },
+  {
+    id: "reading",
+    subject: "English",
+    icon: "⚡",
+    title: "Speed Reader",
+    blurb: "Read a story, one flash at a time.",
+    to: "/speed-reader",
+    action: "Read a story",
+  },
+  {
+    id: "arithmetic",
+    subject: "Maths",
     icon: "🧮",
-    title: "Maths",
-    blurb: "Counting, times tables, shapes and number bonds.",
-    hue: "--home-hue-math",
-    deep: "--home-deep-math",
-    quick: [
-      { to: "/multiplication-table", label: "Times tables" },
-      { to: "/number-bonds", label: "Number bonds" },
-    ],
+    title: "Arithmetic Practice",
+    blurb: "Try adding, taking away, times and dividing.",
+    to: "/arithmetic-practice",
+    action: "Try some sums",
   },
   {
-    id: "english",
-    icon: "📚",
-    title: "English",
-    blurb: "Build words, match opposites and spot sight words.",
-    hue: "--home-hue-english",
-    deep: "--home-deep-english",
-    quick: [
-      { to: "/word-builder", label: "Word builder" },
-      { to: "/sight-word-pop", label: "Sight word pop" },
-    ],
-  },
-  {
-    id: "geography",
-    icon: "🌍",
-    title: "Geography",
-    blurb: "Spot cities, flags, countries and planets.",
-    hue: "--home-hue-geography",
-    deep: "--home-deep-geography",
-    quick: [
-      { to: "/flag-finder", label: "Flag finder" },
-      { to: "/world-map", label: "World map" },
-    ],
-  },
-  {
-    id: "science",
-    icon: "🔬",
-    title: "Science",
-    blurb: "Weather, forces and habitats are on their way!",
-    hue: "--home-hue-science",
-    deep: "--home-deep-science",
-    comingSoon: true,
+    id: "bonds",
+    subject: "Maths",
+    icon: "🔗",
+    title: "Number Bonds",
+    blurb: "Find the numbers that belong together.",
+    to: "/number-bonds",
+    action: "Make a match",
   },
 ];
 
@@ -107,76 +95,72 @@ function heroState({ child, resume }) {
     return {
       title: "Ready to play and learn?",
       subtitle: "Your journey starts with one challenge. Finish it to unlock the next.",
-      cta: { label: "Start learning", href: "/curriculum" },
+      cta: { label: "Start my adventure", href: "/curriculum" },
     };
   }
 
   return {
     title: "Learn with Bix",
-    subtitle: "Skills, challenges and a whole curriculum to explore, one step at a time.",
-    cta: { label: "Start learning", href: "/curriculum" },
+    subtitle: "Come on a learning adventure! Explore Maths, English and Science, one little challenge at a time.",
+    cta: { label: "Start my adventure", href: "/curriculum" },
   };
 }
 
-/* ===== SUBJECT CARD ===== */
-function SubjectCard({ subject }) {
-  const [nudged, setNudged] = useState(false);
-
-  if (subject.comingSoon) {
-    return (
-      <div
-        className={`home-subject is-locked ${nudged ? "is-nudged" : ""}`}
-        style={{
-          "--subject-hue": `var(${subject.hue})`,
-          "--subject-deep": `var(${subject.deep})`,
-        }}
-        data-reveal
-        role="button"
-        tabIndex={0}
-        aria-disabled="true"
-        onAnimationEnd={() => setNudged(false)}
-        onClick={() => setNudged(true)}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            setNudged(true);
-          }
-        }}
-      >
-        <span className="home-subject-badge">Coming soon</span>
-        <span className="home-subject-icon" aria-hidden="true">{subject.icon}</span>
-        <h3>{subject.title}</h3>
-        <p>{subject.blurb}</p>
-        <span className="home-subject-locked">🔒 Almost ready</span>
-      </div>
-    );
-  }
-
+function FeaturedSkill({ skill }) {
   return (
-    <div
-      className="home-subject"
-      style={{
-        "--subject-hue": `var(${subject.hue})`,
-        "--subject-deep": `var(${subject.deep})`,
-      }}
-      data-reveal
-    >
-      <span className="home-subject-icon" aria-hidden="true">{subject.icon}</span>
-      <h3>{subject.title}</h3>
-      <p>{subject.blurb}</p>
+    <Link className={`home-skill home-skill-${skill.id}`} to={skill.to} data-reveal>
+      <span className="home-skill-icon" aria-hidden="true">{skill.icon}</span>
+      <span className="home-skill-subject">{skill.subject}</span>
+      <h3>{skill.title}</h3>
+      <p>{skill.blurb}</p>
+      <span className="home-skill-go">{skill.action} <span aria-hidden="true">→</span></span>
+    </Link>
+  );
+}
 
-      <div className="home-subject-quick">
-        {subject.quick.map((game) => (
-          <Link key={game.to} className="home-chip" to={game.to}>
-            {game.label}
-          </Link>
-        ))}
+function CurriculumAdventure() {
+  return (
+    <section className="home-section home-curriculum" aria-labelledby="home-curriculum-title">
+      <div className="home-section-heading" data-reveal>
+        <p className="home-section-label"><span aria-hidden="true">{CURRICULUM_ICON}</span> Curriculum adventure</p>
+        <h2 className="home-section-title" id="home-curriculum-title">Little steps. Big discoveries!</h2>
+        <p className="home-section-intro">Follow a path for your year. Finish curriculum challenges to save your progress and unlock the next step.</p>
       </div>
 
-      <Link className="home-subject-go" to="/skills">
-        Practise {subject.title} <span aria-hidden="true">→</span>
-      </Link>
-    </div>
+      <ul className="home-curriculum-subjects" aria-label="Curriculum subjects">
+        <li><span aria-hidden="true">🧮</span> Maths</li>
+        <li><span aria-hidden="true">📚</span> English</li>
+        <li><span aria-hidden="true">🔬</span> Science</li>
+      </ul>
+
+      <ol className="home-journey">
+        <li data-reveal>
+          <span className="home-journey-number" aria-hidden="true">1</span>
+          <span className="home-journey-icon" aria-hidden="true">🎒</span>
+          <h3>Pick your adventure</h3>
+          <p>Choose your year and a subject you want to explore.</p>
+        </li>
+        <li data-reveal>
+          <span className="home-journey-number" aria-hidden="true">2</span>
+          <span className="home-journey-icon" aria-hidden="true">🔓</span>
+          <h3>Learn and unlock</h3>
+          <p>Finish a challenge to open the next step on your path.</p>
+        </li>
+        <li data-reveal>
+          <span className="home-journey-number" aria-hidden="true">3</span>
+          <span className="home-journey-icon" aria-hidden="true">🏆</span>
+          <h3>Watch yourself grow</h3>
+          <p>Collect stickers and badges. Your profile saves your progress!</p>
+        </li>
+      </ol>
+
+      <div className="home-curriculum-actions">
+        <Link className="home-btn home-btn-primary" to="/curriculum">
+          Explore the curriculum <span aria-hidden="true">→</span>
+        </Link>
+        <p>Built around the UK National Curriculum.</p>
+      </div>
+    </section>
   );
 }
 
@@ -239,16 +223,15 @@ function Home() {
               </h1>
             )}
 
-            {/* Signed out, these introduce the app. Signed in, they are two
-                lines of copy between a child and the button they came for —
-                the greeting above and the CTA below already say who this is
-                and what happens next. */}
+            {/* Introduce the curriculum to visitors and children starting out. */}
             {!child && (
               <>
                 <h1 className="home-title">{hero.title}</h1>
                 <p className="home-subtitle">{hero.subtitle}</p>
               </>
             )}
+
+            {child && !topic && <p className="home-subtitle">{hero.subtitle}</p>}
 
             {/* Progress through the CURRENT TOPIC, not the year: a year figure
                 reads as 1% after two challenges. Text, never a link, so the
@@ -278,7 +261,7 @@ function Home() {
                   the primary button, and "Practise a skill" wrapped to two
                   lines there. */}
               <Link className="home-btn home-btn-quiet" to="/skills">
-                🎯 Skills
+                <span aria-hidden="true">🎯</span> Skills
               </Link>
 
               {/* Signed in, the primary button is one challenge deep in the
@@ -287,7 +270,7 @@ function Home() {
                   never shows the same destination twice. */}
               {child && hero.cta.href !== "/curriculum" && (
                 <Link className="home-btn home-btn-quiet" to="/curriculum">
-                  {CURRICULUM_ICON} View curriculum
+                  <span aria-hidden="true">{CURRICULUM_ICON}</span> View curriculum
                 </Link>
               )}
             </div>
@@ -301,64 +284,32 @@ function Home() {
         </div>
       </section>
 
+      <CurriculumAdventure />
+
       <HomeAchievements candidates={candidates} />
 
-      {/* === SUBJECT LAUNCHPAD === */}
-      <section className="home-section" aria-labelledby="home-subjects-title">
-        <h2 className="home-section-title" id="home-subjects-title" data-reveal>
-          Pick a playground
-        </h2>
-
-        <div className="home-subjects">
-          {SUBJECTS.map((subject) => (
-            <SubjectCard key={subject.id} subject={subject} />
-          ))}
+      <section className="home-section home-practice" aria-labelledby="home-skills-title">
+        <div className="home-section-heading" data-reveal>
+          <p className="home-section-label"><span aria-hidden="true">🎯</span> Skills practice</p>
+          <h2 className="home-section-title" id="home-skills-title">Fancy a quick play?</h2>
+          <p className="home-section-intro">Try a favourite, any time. Pick a game and jump right in!</p>
         </div>
-      </section>
 
-      {/* === TWO MODES === */}
-      <section className="home-section" aria-labelledby="home-modes-title">
-        <h2 className="home-section-title" id="home-modes-title" data-reveal>
-          Two ways to learn
-        </h2>
+        <p className="home-practice-note">
+          <span aria-hidden="true">🎯</span>
+          <span>
+            <strong>Play for practice</strong>
+            Skill games don’t count towards your curriculum progress.
+          </span>
+        </p>
 
-        <div className="home-modes">
-          <Link className="home-mode home-mode-curriculum" to="/curriculum" data-reveal>
-            <span className="home-mode-art" aria-hidden="true">
-              {[0, 1, 2, 3, 4].map((step) => (
-                <i key={step} style={{ "--step-index": step }} />
-              ))}
-            </span>
-            <h3>
-              <span className="home-mode-badge" aria-hidden="true">
-                {CURRICULUM_ICON}
-              </span>
-              Curriculum
-            </h3>
-            <p>
-              A path through your year group. Each challenge you finish unlocks the
-              next, and your progress is saved.
-            </p>
-            <span className="home-mode-go">Follow the path →</span>
-          </Link>
+        <div className="home-skills">
+          {FEATURED_SKILLS.map((skill) => <FeaturedSkill key={skill.id} skill={skill} />)}
+        </div>
 
-          <Link className="home-mode home-mode-skills" to="/skills" data-reveal>
-            <span className="home-mode-art" aria-hidden="true">
-              {["🧮", "📚", "🌍", "🔺", "⏰", "🚀"].map((pip, index) => (
-                <i key={pip} style={{ "--pip-index": index }}>{pip}</i>
-              ))}
-            </span>
-            <h3>
-              <span className="home-mode-badge" aria-hidden="true">
-                🎯
-              </span>
-              Skills
-            </h3>
-            <p>
-              Jump into any activity, any time. Nothing is locked and nothing
-              is scored, so you can practise whatever you like.
-            </p>
-            <span className="home-mode-go">Pick an activity →</span>
+        <div className="home-practice-actions">
+          <Link className="home-btn home-btn-quiet" to="/skills">
+            See all skill games <span aria-hidden="true">→</span>
           </Link>
         </div>
       </section>

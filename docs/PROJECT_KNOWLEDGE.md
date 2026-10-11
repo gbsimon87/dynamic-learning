@@ -2321,20 +2321,37 @@ the celebration and the Trophy Room always agree.
 ### Curriculum-first home page (2026-10-11)
 
 `/` leads with the existing curriculum start/resume action, followed by a
-purple Curriculum adventure section explaining the year/subject choice,
+coral Curriculum adventure section explaining the year/subject choice,
 challenge unlocks and saved progress. Maths, English and Science are shown as
 curriculum subjects; the old Skills subject launchpad and equal-weight mode
 cards are replaced. Signed-in children starting out also see the hero's
 journey introduction.
 
-The mint Skills practice section highlights Solar System, Speed Reader,
+Curriculum uses the shared school-backpack icon (`CURRICULUM_ICON` in
+`curriculumRegistry.js`) in the navbar, homepage section label and curriculum
+links, including the 404 page. Keep these references shared so they agree.
+
+The sage Skills practice section highlights Solar System, Speed Reader,
 Arithmetic Practice and Number Bonds with direct game links, plus a link to
 all Skills games. Child achievements sit between curriculum and practice in
-a gold section. The blue hero, purple curriculum, gold achievements and mint
+a honey section. The rose hero, warm curriculum, honey achievements and sage
 practice use paired `--light-home-*` / `--dark-home-*` tokens in `App.css`.
 Layouts stack on phones, links have large touch targets, and decorative motion
 respects reduced-motion preferences. Existing resume, account gates, storage
 and unlock rules are unchanged.
+
+The colour refinement keeps reading surfaces white in light mode and warm
+charcoal in dark mode, with gentle section tints. Coral, sage, lavender and
+honey are concentrated in section labels, skill-card borders and icon tiles.
+Curriculum buttons use the original deep coral / teal pair, with a distinct
+control border in dark mode. Headings and game links use darker matching inks;
+secondary text is stronger. The decorative glyphs and card shadows are subdued.
+
+The curriculum introduction explicitly connects finished curriculum challenges
+with saved progress and unlocks. A visible "Play for practice" note above the
+featured games explains that Skill games do not count towards curriculum
+progress. The Skills hub repeats this explanation and links back to the
+curriculum, including for visitors who enter directly through navigation.
 
 Browser checks covered both themes at 1280, 768, 375 and 320px, for visitors,
 new child profiles and a child with saved progress. The home sections fit at

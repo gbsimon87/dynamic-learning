@@ -1,4 +1,38 @@
 :root {
+
+  /* Home: warm rose welcome; coral, sage and honey section signposts. */
+  --light-home-muted: #58474f;
+  --light-home-card-edge: #eadce0;
+  --light-home-sky-top: #ffe3e7;
+  --light-home-sky-bottom: #f8ecee;
+  --light-home-glyph: #d69099;
+  --light-home-cta: #c33d47;
+  --light-home-on-cta: #ffffff;
+  --light-home-cta-edge: #c33d47;
+  --light-home-cta-shade: #92262f;
+  --light-home-curriculum: #fff7f5;
+  --light-home-curriculum-edge: #e8b8bc;
+  --light-home-curriculum-label: #fbe1e4;
+  --light-home-curriculum-ink: #8f3442;
+  --light-home-practice: #f3f8f5;
+  --light-home-practice-edge: #b8d2c5;
+  --light-home-practice-label: #dceee5;
+  --light-home-practice-ink: #246957;
+  --light-home-achievements: #fff9ed;
+  --light-home-achievements-edge: #e5d2a2;
+  --light-home-achievements-ink: #795714;
+  --light-home-space: #e0f0e9;
+  --light-home-space-edge: #368978;
+  --light-home-space-ink: #246957;
+  --light-home-reading: #eee7f8;
+  --light-home-reading-edge: #9680c4;
+  --light-home-reading-ink: #655096;
+  --light-home-arithmetic: #fce4e7;
+  --light-home-arithmetic-edge: #cd626f;
+  --light-home-arithmetic-ink: #a23848;
+  --light-home-bonds: #fbefcf;
+  --light-home-bonds-edge: #ad812a;
+  --light-home-bonds-ink: #795714;
   --light-bg: #F6E8EA;
   --light-text: #22181C;
   --light-accent: #EF626C;
@@ -54,6 +88,40 @@
 }
 
 body.dark {
+
+  /* Home: warm rose welcome; coral, sage and honey section signposts. */
+  --dark-home-muted: #d3c3c9;
+  --dark-home-card-edge: #51454a;
+  --dark-home-sky-top: #33262c;
+  --dark-home-sky-bottom: #241a1e;
+  --dark-home-glyph: #547b74;
+  --dark-home-cta: #1f7d70;
+  --dark-home-on-cta: #ffffff;
+  --dark-home-cta-edge: #72c4b6;
+  --dark-home-cta-shade: #13544b;
+  --dark-home-curriculum: #32262b;
+  --dark-home-curriculum-edge: #76555e;
+  --dark-home-curriculum-label: #4b3039;
+  --dark-home-curriculum-ink: #f2c3ca;
+  --dark-home-practice: #26312d;
+  --dark-home-practice-edge: #536f61;
+  --dark-home-practice-label: #30493e;
+  --dark-home-practice-ink: #b7e2d0;
+  --dark-home-achievements: #332e25;
+  --dark-home-achievements-edge: #756347;
+  --dark-home-achievements-ink: #ead5a7;
+  --dark-home-space: #29443b;
+  --dark-home-space-edge: #75bba6;
+  --dark-home-space-ink: #b7e2d0;
+  --dark-home-reading: #40344f;
+  --dark-home-reading-edge: #b4a0d6;
+  --dark-home-reading-ink: #d7c7ed;
+  --dark-home-arithmetic: #4b3039;
+  --dark-home-arithmetic-edge: #d998a4;
+  --dark-home-arithmetic-ink: #f2c3ca;
+  --dark-home-bonds: #493c27;
+  --dark-home-bonds-edge: #d0b26e;
+  --dark-home-bonds-ink: #ead5a7;
   --danger-text: #ffb4ab;
   --panel-shadow: rgba(0, 0, 0, 0.4);
 

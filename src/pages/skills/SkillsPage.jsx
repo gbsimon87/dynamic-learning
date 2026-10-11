@@ -118,8 +118,7 @@ function SkillsPage() {
           ))}
         </div>
 
-        {/* Two short lines, no instructions: nothing here is locked or
-            scored, so there is nothing a child needs explained first. */}
+        {/* Free-play games; the progress distinction sits below the band. */}
         <div className="sk-bar">
           <span className="sk-bar-icon" aria-hidden="true">
             🎯
@@ -130,6 +129,11 @@ function SkillsPage() {
           </div>
         </div>
       </section>
+
+      <div className="sk-practice-note">
+        <p><strong>Play for practice.</strong> Skill games don’t count towards your curriculum progress.</p>
+        <Link to="/curriculum">Follow the curriculum <span aria-hidden="true">→</span></Link>
+      </div>
 
       {/* ===== FILTER ===== */}
       <div className="sk-filters" role="group" aria-label="Filter games by subject">

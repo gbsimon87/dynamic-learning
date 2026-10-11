@@ -39,7 +39,7 @@ export default function HomeAchievements({ candidates = [] }) {
 
   return (
     <section className="home-section home-achievements" aria-labelledby="home-achievements-title">
-      <h2 className="home-section-title" id="home-achievements-title">Your adventure</h2>
+      <h2 className="home-section-title" id="home-achievements-title"><span aria-hidden="true">⭐</span> Look how you’re growing!</h2>
 
       {hasNews(rewards) && (
         <Link className="home-ach-card home-ach-news" to="/trophies">
