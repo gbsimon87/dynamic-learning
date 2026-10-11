@@ -177,9 +177,54 @@ Pupils begin to relate the graphical representation of data to recording change 
 
 # Mapping to our curriculum dataset
 
-> **No Year 4 Maths dataset yet.** The app's Maths covers Years 2 and 3. When one
-> is built, map each topic here to the statutory bullet it serves, as
-> [year-3-maths.md](year-3-maths.md) does, and list anything deliberately not covered.
+Implemented 2026-10-11: **8 categories / 42 topics / 168 challenges**. Each topic has four escalating, replayable challenges. The statutory text above is unchanged.
+
+| Category | Topic | Statutory requirement served |
+|---|---|---|
+| Number - Number and Place Value | Counting in Multiples of 6, 7, 9, 25 and 1000 | count in multiples of 6, 7, 9, 25 and 1000 |
+| Number - Number and Place Value | Finding 1000 More or Less | find 1000 more or less than a given number |
+| Number - Number and Place Value | Counting Backwards Through Zero | count backwards through zero to include negative numbers |
+| Number - Number and Place Value | Place Value in 4-Digit Numbers | recognise the place value of each digit in a four-digit number (thousands, hundreds, tens, and ones) |
+| Number - Number and Place Value | Ordering and Comparing Numbers Beyond 1000 | order and compare numbers beyond 1000 |
+| Number - Number and Place Value | Representing and Estimating Numbers | identify, represent and estimate numbers using different representations |
+| Number - Number and Place Value | Rounding to 10, 100 and 1000 | round any number to the nearest 10, 100 or 1000 |
+| Number - Number and Place Value | Place Value Problems | solve number and practical problems that involve all of the above and with increasingly large positive numbers |
+| Number - Number and Place Value | Roman Numerals to 100 | read Roman numerals to 100 (I to C) and know that over time, the numeral system changed to include the concept of zero and place value. |
+| Number - Addition and Subtraction | Column Addition and Subtraction | add and subtract numbers with up to 4 digits using the formal written methods of columnar addition and subtraction where appropriate |
+| Number - Addition and Subtraction | Estimating and Checking Calculations | estimate and use inverse operations to check answers to a calculation |
+| Number - Addition and Subtraction | Two-Step Addition and Subtraction Problems | solve addition and subtraction two-step problems in contexts, deciding which operations and methods to use and why. |
+| Number - Multiplication and Division | Multiplication and Division Facts to 12 | recall multiplication and division facts for multiplication tables up to 12 × 12 |
+| Number - Multiplication and Division | Mental Multiplication and Division | use place value, known and derived facts to multiply and divide mentally, including: multiplying by 0 and 1; dividing by 1; multiplying together three numbers |
+| Number - Multiplication and Division | Factor Pairs and Commutativity | recognise and use factor pairs and commutativity in mental calculations |
+| Number - Multiplication and Division | Written Multiplication | multiply two-digit and three-digit numbers by a one-digit number using formal written layout |
+| Number - Multiplication and Division | Scaling and Correspondence Problems | solve problems involving multiplying and adding, including using the distributive law to multiply two digit numbers by one digit, integer scaling problems and harder correspondence problems such as n objects are connected to m objects. |
+| Number - Fractions including Decimals | Equivalent Fraction Families | recognise and show, using diagrams, families of common equivalent fractions |
+| Number - Fractions including Decimals | Counting in Hundredths | count up and down in hundredths; recognise that hundredths arise when dividing an object by one hundred and dividing tenths by ten. |
+| Number - Fractions including Decimals | Fractions of Quantities | solve problems involving increasingly harder fractions to calculate quantities, and fractions to divide quantities, including non-unit fractions where the answer is a whole number |
+| Number - Fractions including Decimals | Adding and Subtracting Fractions | add and subtract fractions with the same denominator |
+| Number - Fractions including Decimals | Tenths and Hundredths as Decimals | recognise and write decimal equivalents of any number of tenths or hundredths |
+| Number - Fractions including Decimals | Decimal Equivalents of Quarters and Halves | recognise and write decimal equivalents to 1/4, 1/2, 3/4 |
+| Number - Fractions including Decimals | Dividing by 10 and 100 | find the effect of dividing a one- or two-digit number by 10 and 100, identifying the value of the digits in the answer as ones, tenths and hundredths |
+| Number - Fractions including Decimals | Rounding Decimals | round decimals with one decimal place to the nearest whole number |
+| Number - Fractions including Decimals | Comparing and Ordering Decimals | compare numbers with the same number of decimal places up to two decimal places |
+| Number - Fractions including Decimals | Fraction and Decimal Problems | solve simple measure and money problems involving fractions and decimals to two decimal places. |
+| Measurement | Converting Units of Measure | Convert between different units of measure [for example, kilometre to metre; hour to minute] |
+| Measurement | Perimeter of Rectilinear Shapes | measure and calculate the perimeter of a rectilinear figure (including squares) in centimetres and metres |
+| Measurement | Area by Counting Squares | find the area of rectilinear shapes by counting squares |
+| Measurement | Measures and Money | estimate, compare and calculate different measures, including money in pounds and pence |
+| Measurement | Analogue and Digital Time | read, write and convert time between analogue and digital 12- and 24-hour clocks |
+| Measurement | Time Conversion Problems | solve problems involving converting from hours to minutes; minutes to seconds; years to months; weeks to days. |
+| Geometry – Properties of Shapes | Classifying Triangles and Quadrilaterals | compare and classify geometric shapes, including quadrilaterals and triangles, based on their properties and sizes |
+| Geometry – Properties of Shapes | Acute and Obtuse Angles | identify acute and obtuse angles and compare and order angles up to two right angles by size |
+| Geometry – Properties of Shapes | Lines of Symmetry | identify lines of symmetry in 2-D shapes presented in different orientations |
+| Geometry – Properties of Shapes | Completing Symmetric Figures | complete a simple symmetric figure with respect to a specific line of symmetry. |
+| Geometry – Position and Direction | Coordinates in the First Quadrant | describe positions on a 2-D grid as coordinates in the first quadrant |
+| Geometry – Position and Direction | Translations on a Grid | describe movements between positions as translations of a given unit to the left/right and up/down |
+| Geometry – Position and Direction | Plotting Points and Completing Polygons | plot specified points and draw sides to complete a given polygon. |
+| Statistics | Bar Charts and Time Graphs | interpret and present discrete and continuous data using appropriate graphical methods, including bar charts and time graphs. |
+| Statistics | Comparing and Calculating with Data | solve comparison, sum and difference problems using information presented in bar charts, pictograms, tables and other graphs. |
+
+These screen activities practise the programme of study; they do not certify mastery or replace drawing with physical instruments, practical measuring, or classroom discussion. Roman numeral history is introduced alongside place value and zero. Formal calculations use aligned columns; learners also select intermediate steps. Area uses square grids, perimeter includes L-shaped figures, symmetry uses editable reflected grids, coordinates use equal integer axes, and statistics includes continuous line graphs.
 
 ---
 

@@ -6,19 +6,18 @@ import "./challenge-kit.css";
  * Minutes move in curriculum-appropriate steps: five by default for Year 2,
  * or one for Year 3's nearest-minute work. Both sets of controls wrap, so a
  * learner can always reach any valid time.
+ * onChange receives a state updater so rapid taps preserve both changes.
  *
  * Deliberately not draggable hands: dragging a hand to a five-minute position
  * is fussy for small hands and impossible to check without a browser.
  */
 function TimeSetter({ hour, minute, onChange, disabled, minuteStep = 5 }) {
   const setHour = (delta) => {
-    const next = ((hour - 1 + delta + 12) % 12) + 1;
-    onChange({ hour: next, minute });
+    onChange(prev => ({ ...prev, hour: ((prev.hour - 1 + delta + 12) % 12) + 1 }));
   };
 
   const setMinute = (delta) => {
-    const next = (minute + delta * minuteStep + 60) % 60;
-    onChange({ hour, minute: next });
+    onChange(prev => ({ ...prev, minute: (prev.minute + delta * minuteStep + 60) % 60 }));
   };
 
   return (

@@ -1,5 +1,36 @@
 # 📖 Project Knowledge — Learn with Bix
 
+## Implemented Curriculum Mode pathways
+
+**Complete** means every planned topic has all four challenge files implemented;
+it does not certify full statutory coverage. Topic links list the complete topic
+inventory for each pathway.
+
+| Year | Subject / topic inventory | Topics | Challenges | Status |
+|---|---|---:|---:|---|
+| 1 | [Maths](../src/data/year1MathCurriculum.js) | 32 | 128 | Complete |
+| 1 | [English](../src/data/year1EnglishCurriculum.js) | 38 | 152 | Complete |
+| 2 | [Maths](../src/data/year2MathCurriculum.js) | 39 | 156 | Complete |
+| 2 | [English](../src/data/year2EnglishCurriculum.js) | 39 | 156 | Complete |
+| 3 | [Maths](../src/data/year3MathCurriculum.js) | 44 | 176 | Complete |
+| 3 | [English](../src/data/year3EnglishCurriculum.js) | 32 | 128 | Complete |
+| 3 | [Science](../src/data/year3ScienceCurriculum.js) | 21 | 84 | Complete |
+| 4 | [Maths](../src/data/year4MathCurriculum.js) | 42 | 168 | Complete |
+| 4 | [English](../src/data/year4EnglishCurriculum.js) | 33 | 132 | Complete |
+| 5 | All subjects | 0 | 0 | Not implemented |
+| 6 | All subjects | 0 | 0 | Not implemented |
+| **Total** | **9 complete pathways** | **320** | **1,280** | |
+
+Other year/subject combinations have no implemented Curriculum Mode pathway.
+Geography's standalone Skills Mode games and saved programmes in
+`docs/curriculum/` do not count as curriculum implementations.
+
+**Separate local work:** Year 1 Science has 16 topics / 64 implemented challenges
+in the working checkout, pending its own commit. It is excluded from the totals
+above and from the Year 4 Maths commit.
+
+---
+
 > **⚠️ THIS DOCUMENT IS AI-MAINTAINED.**
 >
 > This project is maintained by an AI assistant (Claude Code). This file is the
@@ -25,7 +56,7 @@
 
 **Learn with Bix** (formerly Dynamic Learning) is an interactive web learning platform for primary-school
 children (built first for ~6-year-olds / **UK Year 2**; Curriculum Mode now
-also covers Years 1–3 Maths, Years 1–4 English and Year 3 Science). It teaches Maths, English,
+also covers Years 1–4 Maths, Years 1–4 English and Year 3 Science). It teaches Maths, English,
 Geometry and Geography through browser-based mini-games.
 
 There are two distinct learning modes, and the distinction matters for every
@@ -254,6 +285,8 @@ Year 1 English: **8 categories / 38 topics / 152 challenges**, all built
 Year 2 Maths currently defines **8 categories / 39 topics / 156 challenge slots**.
 Year 2 English: **9 / 39 / 156** (2026-10-11; identifiers locked in its own
 `year2EnglishCurriculum.test.js`).
+Year 4 Maths: **8 categories / 42 topics / 168 challenges**, all implemented
+(2026-10-11; identifiers locked in `year4MathCurriculum.test.js`).
 Year 3 English: **8 / 32 / 128**; Year 4 English: **8 / 33 / 132** (both
 approved 2026-10-01; ids locked in `curriculumIds.test.js`).
 
@@ -955,6 +988,69 @@ The component test checks both ruler orientations against their pointer and
 common track. No saved identifiers, storage shapes or unlock predicates changed.
 Lint, all tests and build pass; visual browser review remains unavailable.
 
+### Curriculum Mode — Year 4 Maths (2026-10-11)
+
+Year 4 Maths is registered and implements **8 categories / 42 topics / 168
+challenges**. The topic-to-statutory mapping is in
+[year-4-maths.md](curriculum/year-4-maths.md); the saved programme text is unchanged.
+
+| Category | Topics | Challenges built |
+|---|---:|---:|
+| Number - Number and Place Value | 9 | 36 |
+| Number - Addition and Subtraction | 3 | 12 |
+| Number - Multiplication and Division | 5 | 20 |
+| Number - Fractions including Decimals | 10 | 40 |
+| Measurement | 6 | 24 |
+| Geometry – Properties of Shapes | 4 | 16 |
+| Geometry – Position and Direction | 3 | 12 |
+| Statistics | 2 | 8 |
+
+The learner chooses **Year 4 → Maths** through the existing year/subject picker
+and signup choices. No new routes are needed. Each topic has four levels and
+five questions per run, with rules and diagrams in the first level, independent
+practice, arranging/building/plotting, and applied problems. Questions live in
+`src/data/challenges/year4Math/questions.js`; `Year4MathGame` uses the shared
+`ChallengeShell` and `DataRound`, with themed SVG diagrams and keyboard/touch
+controls for coordinate plotting and mirrored square patterns. Learners build
+scaled bar charts from tables using the shared `BarChart` step controls. Coordinate grids
+scroll horizontally on narrow screens to preserve 44px targets. The shared
+sequence renderer now honours `maxDigits`, so multiples of 1000 can be entered.
+All 42 topics have certificate skill statements.
+
+Storage, existing identifiers and unlock predicates are unchanged. Adding Maths
+makes the existing Year 4 award rule wait for both registered subjects; saved
+English completion and earned rewards remain intact. Screen activities do not
+replace physical measurement, instrument drawing or classroom reasoning, and
+completion does not certify full statutory mastery.
+
+**Full review (2026-10-11):** all 42 topic banks and 168 challenge files were
+checked against their statutory mappings. Mathematical tile validation now
+accepts equivalent equations, sums and perimeter traversals; expanded numbers
+include addition symbols and whole-calculation builds explicitly request all
+tiles. Applied unit stories use meaningful contexts, comparisons include all
+three relations, and chart differences and derived division facts vary.
+Later clock levels cover every minute and all twelve hours; functional clock
+updates preserve rapid taps. Decimal division explicitly checks digit values
+and keeps all ordering inputs within two digits. Selected polygon vertices
+close the diagram, shape captions wrap, column headings align with digits,
+and narrow negative-number lines and reflection grids preserve readable labels
+and touch targets by scrolling.
+
+Validation: `npm run lint`, `npm test` and `npm run build` pass: **1,563 unit
+passes, four existing skips, and 113 component passes**. Controller playthroughs
+complete all **168 five-question challenges (840 questions)**, preserving the
+single completion callback and combo data. Regression checks cover equivalent
+and invalid tile responses, random-source boundaries, arithmetic and diagram
+answers, SVG-derived geometry/symmetry, clock wrapping and rapid taps, four-digit
+keypad entry, polygon sides, round reset and lock/replay cascades. The staged Year 4
+changes were verified in isolation from the separate local Year 1 Science work.
+
+Browser controls were unavailable, so physical dragging, pixel layout in both
+themes and real-browser persistence remain unverified. The controller tests
+explicitly use a reorder adapter because jsdom has no drag-collision layout.
+The complete inventory and findings are in
+[year-4-maths-review.md](curriculum/year-4-maths-review.md).
+
 ### Curriculum Mode — built challenges
 **Year 2 Mathematics** has all thirty-nine topics built — the year is complete:
 
@@ -1190,7 +1286,7 @@ the completion checks and the outstanding interactive browser review.
   the navbar mute; tapping while muted unmutes. With no voice available the
   button is not shown, so every question must be answerable without sound.
 - **Year 4 in the app.** `CURRICULUM_YEARS` and `CHILD_YEAR_GROUPS` are now
-  `[1, 2, 3, 4]`. Year 4 offers English only (Maths "Coming soon").
+  `[1, 2, 3, 4]`. Year 4 offers English and Maths (Maths implemented 2026-10-11).
 - **Curriculum page:** the English strands have their own category icons
   (🔤 📖 🧱 ✍️) and the hero shows letters rather than maths symbols. English
   patterns are matched first, because "Composition" contains "position".
@@ -2549,6 +2645,8 @@ answers Escape and traps Tab.
 
 ### Add a new Year / Subject
 Years 3–4 English (2026-10-01) are a worked example of this process.
+Year 4 Maths (2026-10-11) demonstrates a complete eight-strand year with
+coordinate plotting, editable reflections and pure seeded question banks.
 Year 1 Maths (2026-10-11) demonstrates adding a second subject to an existing
 year with practical diagrams through `DataChallenge.renderVisual`.
 Year 2 English (2026-10-11) is the worked example for the shared data-question

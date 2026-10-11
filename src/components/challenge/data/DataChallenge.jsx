@@ -64,8 +64,8 @@ export default function DataChallenge({ level, build, titles, onComplete, render
   );
 }
 
-/** One question; exported for tests. */
-export function DataRound({ question: q, submit, locked, hint, renderVisual }) {
+/** One question. checkAnswer optionally supplies subject-specific response validation. */
+export function DataRound({ question: q, submit, locked, hint, renderVisual, checkAnswer = isCorrect }) {
   const [response, setResponse] = useState(() => initialResponse(q));
   const ready = isReady(q, response);
   const [before, after] = (q.sentence ?? "").split("___");
@@ -107,7 +107,7 @@ export function DataRound({ question: q, submit, locked, hint, renderVisual }) {
         type="button"
         className="submit-btn"
         disabled={locked || !ready}
-        onClick={() => submit(isCorrect(q, response))}
+        onClick={() => submit(checkAnswer(q, response))}
       >
         Check my answer
       </button>
@@ -160,6 +160,7 @@ function KindControl({ q, response, setResponse, locked, hint }) {
           value={response}
           onChange={setResponse}
           disabled={locked}
+          label={q.label ?? "Your spelling"}
           maxLength={q.maxLength ?? 32}
           apostrophe={q.apostrophe ?? true}
           hideLine={Boolean(q.sentence)}
@@ -230,6 +231,7 @@ function KindControl({ q, response, setResponse, locked, hint }) {
           />
           <NumberInput
             hideField
+            maxDigits={q.maxDigits}
             value={response.values[active] ?? ""}
             // NumberInput hands back an updater (prev => next) for keypad taps.
             onChange={(next) =>

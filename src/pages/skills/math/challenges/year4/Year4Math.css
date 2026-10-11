@@ -1,0 +1,54 @@
+.year4-diagram, .year4-coordinate-wrap, .year4-reflection, .year4-table, .year4-column, .year4-figure {
+  --y4-ink: var(--light-text);
+  --y4-panel: var(--light-panel);
+  --y4-accent: var(--light-accent);
+  color: var(--y4-ink);
+}
+.dark .year4-diagram, .dark .year4-coordinate-wrap, .dark .year4-reflection, .dark .year4-table, .dark .year4-column, .dark .year4-figure {
+  --y4-ink: var(--dark-text);
+  --y4-panel: var(--dark-panel);
+  --y4-accent: var(--dark-accent);
+}
+.year4-diagram { display: block; width: 100%; max-width: 420px; max-height: 380px; margin: 1rem auto; overflow: visible; }
+.year4-diagram text { fill: var(--y4-ink); font-size: 18px; text-anchor: middle; }
+.year4-diagram .year4-small-label { font-size: 14px; }
+.year4-stroke { fill: none; stroke: var(--y4-ink); stroke-width: 3; }
+.year4-gridline { fill: none; stroke: var(--y4-ink); opacity: .25; stroke-width: 1; }
+.year4-fill { fill: var(--y4-ink); }
+.year4-filled-square { fill: var(--y4-accent); stroke: var(--y4-ink); stroke-width: 1; }
+.year4-empty-square { fill: var(--y4-panel); stroke: var(--y4-ink); stroke-width: 1.5; }
+.year4-column { width: min(100%, 280px); box-sizing: border-box; padding-left: 2rem; margin: 1rem auto; font-family: monospace; font-size: 2rem; text-align: center; }
+.year4-column-labels, .year4-column-row { display: grid; grid-template-columns: repeat(4, 1fr); }
+.year4-column-labels { font-size: 1rem; }
+.year4-column-second { position: relative; border-bottom: 3px solid currentColor; }
+.year4-column-second .year4-column-operation { position: absolute; left: -1.4rem; }
+.year4-column-answer { min-height: 1.5em; text-align: right; padding-right: .5rem; }
+.year4-table { border-collapse: collapse; margin: 1rem auto; width: 100%; max-width: 460px; }
+.year4-table th, .year4-table td { border: 1px solid currentColor; padding: .65rem .3rem; text-align: center; overflow-wrap: anywhere; }
+.year4-coordinate-wrap { position: relative; width: 100%; max-width: 420px; margin: 1rem auto; }
+.year4-coordinate-wrap .year4-diagram { margin: 0; }
+.year4-point-buttons { position: absolute; left: 8.33%; top: 4.17%; width: 83.34%; height: 83.34%; display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(6, 1fr); }
+.year4-point-buttons button { color: var(--y4-ink); background: transparent; border: 0; padding: 0; margin: 0; min-width: 44px; min-height: 44px; font-size: 1.4rem; cursor: pointer; border-radius: 50%; }
+.year4-point-buttons button[aria-pressed='true'] { background: var(--y4-accent); outline: 2px solid var(--y4-ink); }
+.year4-point-buttons button:focus-visible, .year4-cell:focus-visible { outline: 3px solid var(--y4-ink); outline-offset: -3px; }
+.year4-reflection { display: grid; max-width: 420px; width: 100%; margin: 1rem auto; border: 1px solid var(--y4-ink); }
+.year4-cell { aspect-ratio: 1; min-height: 44px; min-width: 44px; padding: 0; margin: 0; border: 1px solid var(--y4-ink); border-radius: 0; background: var(--y4-panel); }
+button.year4-cell { cursor: pointer; }
+.year4-cell.is-filled { background: var(--y4-accent); }
+.year4-cell.mirror-edge { border-right: 3px dashed var(--y4-ink); }
+.year4-reflection.is-horizontal .mirror-edge { border-right: 1px solid var(--y4-ink); border-bottom: 3px dashed var(--y4-ink); }
+.year4-hint { margin: .7rem 0; }
+@media (max-width: 380px) { .year4-table { font-size: .8rem; } }
+.year4-coordinate-scroll { max-width: 100%; overflow-x: auto; }
+.year4-coordinate-wrap { min-width: 320px; }
+.year4-coordinate-wrap .year4-diagram { max-height: none; }
+
+.year4-figure { margin: 1rem 0; }
+.year4-figure figcaption { text-align: center; overflow-wrap: anywhere; max-width: 420px; margin: 0 auto; }
+.year4-reflection-scroll { max-width: 100%; overflow-x: auto; }
+.year4-reflection { min-width: 264px; }
+.year4-reflection.is-horizontal { min-width: 132px; }
+
+.year4-number-line-scroll { max-width: 100%; overflow-x: auto; }
+.year4-number-line-scroll .year4-diagram { min-width: 420px; }
+.year4-number-line-scroll .year4-diagram text { font-size: 24px; }

@@ -35,7 +35,7 @@ test("subjects come from the registry for the year", () => {
   assert.deepEqual(subjectsForYear(2), ["math", "english"]);
   assert.deepEqual(subjectsForYear(5), []);
   assert.deepEqual([...subjectsForYear(3)].sort(), ["english", "math", "science"]);
-  assert.deepEqual(subjectsForYear(4), ["english"]);
+  assert.deepEqual(subjectsForYear(4), ["math", "english"]);
 });
 
 test("under 18 is always 'me' with one learner; under 13 goes to the gate", () => {
