@@ -1,6 +1,6 @@
 # English — Year 1 programme of study (England)
 
-**Source:** [National curriculum in England: English programmes of study](https://www.gov.uk/government/publications/national-curriculum-in-england-english-programmes-of-study/national-curriculum-in-england-english-programmes-of-study#key-stage-1---year-1) — Department for Education
+**Source:** [English programmes of study: key stages 1 and 2](https://assets.publishing.service.gov.uk/media/5a7de93840f0b62305b7f8ee/PRIMARY_national_curriculum_-_English_220714.pdf) (PDF) — Department for Education
 **Retrieved:** 2026-10-11
 **Status:** statutory, except sections marked *non-statutory*
 **Licence:** Open Government Licence v3.0
@@ -12,11 +12,13 @@ first, then the Year 1 parts of English Appendix 2. English Appendix 1
 requirements, which are the same for years 1 to 6, in [english-spoken-language-years-1-to-6.md](english-spoken-language-years-1-to-6.md). The mapping to
 our dataset is at the end.
 
+The text follows the PDF; how the gov.uk web page differs is listed at the end.
+
 ---
 
-## Key stage 1 - year 1
+## Key stage 1 – year 1
 
-During year 1, teachers should build on work from the early years foundation stage, making sure that pupils can sound and blend unfamiliar printed words quickly and accurately using the phonic knowledge and skills that they have already learnt. Teachers should also ensure that pupils continue to learn new grapheme-phoneme correspondences (GPCs) and revise and consolidate those learnt earlier. The understanding that the letter(s) on the page represent the sounds in spoken words should underpin pupils’ reading and spelling of all words. This includes common words containing unusual GPCs. The term ‘common exception words’ is used throughout the programmes of study for such words.
+During year 1, teachers should build on work from the Early Years Foundation Stage, making sure that pupils can sound and blend unfamiliar printed words quickly and accurately using the phonic knowledge and skills that they have already learnt. Teachers should also ensure that pupils continue to learn new grapheme-phoneme correspondences (GPCs) and revise and consolidate those learnt earlier. The understanding that the letter(s) on the page represent the sounds in spoken words should underpin pupils’ reading and spelling of all words. This includes common words containing unusual GPCs. The term ‘common exception words’ is used throughout the programmes of study for such words.
 
 Alongside this knowledge of GPCs, pupils need to develop the skill of blending the sounds into words for reading and establish the habit of applying this skill whenever they encounter new words. This will be supported by practice in reading books consistent with their developing phonic knowledge and skill and their knowledge of common exception words. At the same time they will need to hear, share and discuss a wide range of high-quality books to develop a love of reading and broaden their vocabulary.
 
@@ -30,7 +32,7 @@ Teachers should ensure that their teaching develops pupils’ oral vocabulary as
 
 ## Year 1 programme of study
 
-### Reading - word reading
+### Reading – word reading
 
 Pupils should be taught to:
 
@@ -41,38 +43,38 @@ Pupils should be taught to:
 - read words containing taught GPCs and –s, –es, –ing, –ed, –er and –est endings
 - read other words of more than one syllable that contain taught GPCs
 - read words with contractions [for example, I’m, I’ll, we’ll], and understand that the apostrophe represents the omitted letter(s)
-- read books aloud, accurately, that are consistent with their developing phonic knowledge and that do not require them to use other strategies to work out words
-- reread these books to build up their fluency and confidence in word reading
+- read aloud accurately books that are consistent with their developing phonic knowledge and that do not require them to use other strategies to work out words
+- re-read these books to build up their fluency and confidence in word reading.
 
 #### Notes and guidance (non-statutory)
 
-Pupils should revise and consolidate the GPCs and the common exception words taught in reception year. As soon as they can read words comprising the year 1 GPCs accurately and speedily, they should move on to the year 2 programme of study for word reading.
+Pupils should revise and consolidate the GPCs and the common exception words taught in Reception. As soon as they can read words comprising the year 1 GPCs accurately and speedily, they should move on to the year 2 programme of study for word reading.
 
 The number, order and choice of exception words taught will vary according to the phonics programme being used. Ensuring that pupils are aware of the GPCs they contain, however unusual these are, supports spelling later.
 
 Young readers encounter words that they have not seen before much more frequently than experienced readers do, and they may not know the meaning of some of these. Practice at reading such words by sounding and blending can provide opportunities not only for pupils to develop confidence in their decoding skills, but also for teachers to explain the meaning and thus develop pupils’ vocabulary.
 
-Pupils should be taught how to read words with suffixes by being helped to build on the root words that they can read already. Pupils’ reading and rereading of books that are closely matched to their developing phonic knowledge and knowledge of common exception words supports their fluency, as well as increasing their confidence in their reading skills. Fluent word reading greatly assists comprehension, especially when pupils come to read longer books.
+Pupils should be taught how to read words with suffixes by being helped to build on the root words that they can read already. Pupils’ reading and re-reading of books that are closely matched to their developing phonic knowledge and knowledge of common exception words supports their fluency, as well as increasing their confidence in their reading skills. Fluent word reading greatly assists comprehension, especially when pupils come to read longer books.
 
-### Reading - comprehension
+### Reading – comprehension
 
 Pupils should be taught to:
 
 - develop pleasure in reading, motivation to read, vocabulary and understanding by:
   - listening to and discussing a wide range of poems, stories and non-fiction at a level beyond that at which they can read independently
-  - being encouraged to link what they read or hear to their own experiences
+  - being encouraged to link what they read or hear read to their own experiences
   - becoming very familiar with key stories, fairy stories and traditional tales, retelling them and considering their particular characteristics
   - recognising and joining in with predictable phrases
   - learning to appreciate rhymes and poems, and to recite some by heart
   - discussing word meanings, linking new meanings to those already known
 - understand both the books they can already read accurately and fluently and those they listen to by:
   - drawing on what they already know or on background information and vocabulary provided by the teacher
-  - checking that the text makes sense to them as they read, and correcting inaccurate reading
+  - checking that the text makes sense to them as they read and correcting inaccurate reading
   - discussing the significance of the title and events
   - making inferences on the basis of what is being said and done
   - predicting what might happen on the basis of what has been read so far
 - participate in discussion about what is read to them, taking turns and listening to what others say
-- explain clearly their understanding of what is read to them
+- explain clearly their understanding of what is read to them.
 
 #### Notes and guidance (non-statutory)
 
@@ -80,17 +82,17 @@ Pupils should have extensive experience of listening to, sharing and discussing 
 
 Pupils’ vocabulary should be developed when they listen to books read aloud and when they discuss what they have heard. Such vocabulary can also feed into their writing. Knowing the meaning of more words increases pupils’ chances of understanding when they read by themselves. The meaning of some new words should be introduced to pupils before they start to read on their own, so that these unknown words do not hold up their comprehension.
 
-However, once pupils have already decoded words successfully, the meaning of those that are new to them can be discussed with them, thus contributing to developing their early skills of inference. By listening frequently to stories, poems and non-fiction that they cannot yet read for themselves, pupils begin to understand how written language can be structured in order, for example, to build surprise in narratives or to present facts in non-fiction. Listening to and discussing information books and other non-fiction establishes the foundations for their learning in other subjects. Pupils should be shown some of the processes for finding out information.
+However, once pupils have already decoded words successfully, the meaning of those that are new to them can be discussed with them, so contributing to developing their early skills of inference. By listening frequently to stories, poems and non-fiction that they cannot yet read for themselves, pupils begin to understand how written language can be structured in order, for example, to build surprise in narratives or to present facts in non-fiction. Listening to and discussing information books and other non-fiction establishes the foundations for their learning in other subjects. Pupils should be shown some of the processes for finding out information.
 
 Through listening, pupils also start to learn how language sounds and increase their vocabulary and awareness of grammatical structures. In due course, they will be able to draw on such grammar in their own writing.
 
 Rules for effective discussions should be agreed with and demonstrated for pupils. They should help to develop and evaluate them, with the expectation that everyone takes part. Pupils should be helped to consider the opinions of others.
 
-Role play can help pupils to identify with and explore characters and to try out the language they have listened to.
+Role-play can help pupils to identify with and explore characters and to try out the language they have listened to.
 
-### Writing - transcription
+### Writing – transcription
 
-#### Spelling - see English appendix 1
+#### Spelling (see English Appendix 1)
 
 Pupils should be taught to:
 
@@ -106,9 +108,9 @@ Pupils should be taught to:
   - using the prefix un–
   - using –ing, –ed, –er and –est where no change is needed in the spelling of root words [for example, helping, helped, helper, eating, quicker, quickest]
 
-apply simple spelling rules and guidance, as listed in English appendix 1
+apply simple spelling rules and guidance, as listed in English Appendix 1
 
-- write from memory simple sentences dictated by the teacher that include words using the GPCs and common exception words taught so far
+- write from memory simple sentences dictated by the teacher that include words using the GPCs and common exception words taught so far.
 
 #### Notes and guidance (non-statutory)
 
@@ -128,7 +130,7 @@ Pupils should be taught to:
 - begin to form lower-case letters in the correct direction, starting and finishing in the right place
 - form capital letters
 - form digits 0-9
-- understand which letters belong to which handwriting ‘families’ (ie letters that are formed in similar ways) and to practise these
+- understand which letters belong to which handwriting ‘families’ (i.e. letters that are formed in similar ways) and to practise these.
 
 #### Notes and guidance (non-statutory)
 
@@ -136,7 +138,7 @@ Handwriting requires frequent and discrete, direct teaching. Pupils should be ab
 
 Left-handed pupils should receive specific teaching to meet their needs.
 
-### Writing - composition
+### Writing – composition
 
 Pupils should be taught to:
 
@@ -146,31 +148,31 @@ Pupils should be taught to:
   - sequencing sentences to form short narratives
   - re-reading what they have written to check that it makes sense
 - discuss what they have written with the teacher or other pupils
-- read their writing aloud, clearly enough to be heard by their peers and the teacher
+- read aloud their writing clearly enough to be heard by their peers and the teacher.
 
 #### Notes and guidance (non-statutory)
 
 At the beginning of year 1, not all pupils will have the spelling and handwriting skills they need to write down everything that they can compose out loud.
 
-Pupils should understand, through demonstration, the skills and processes essential to writing: that is, thinking aloud as they collect ideas, drafting, and rereading to check their meaning is clear.
+Pupils should understand, through demonstration, the skills and processes essential to writing: that is, thinking aloud as they collect ideas, drafting, and re-reading to check their meaning is clear.
 
-### Writing - vocabulary, grammar and punctuation
+### Writing – vocabulary, grammar and punctuation
 
 Pupils should be taught to:
 
-- develop their understanding of the concepts set out in English appendix 2 by:
+- develop their understanding of the concepts set out in English Appendix 2 by:
   - leaving spaces between words
-  - joining words and joining clauses using ‘and’
+  - joining words and joining clauses using and
   - beginning to punctuate sentences using a capital letter and a full stop, question mark or exclamation mark
   - using a capital letter for names of people, places, the days of the week, and the personal pronoun ‘I’
-  - learning the grammar for year 1 in English appendix 2
-- use the grammatical terminology in English English appendix 2 in discussing their writing
+  - learning the grammar for year 1 in English Appendix 2
+- use the grammatical terminology in English Appendix 2 in discussing their writing.
 
 #### Notes and guidance (non-statutory)
 
-Pupils should be taught to recognise sentence boundaries in spoken sentences and to use the vocabulary listed in English appendix 2 (‘Terminology for pupils’) when their writing is discussed.
+Pupils should be taught to recognise sentence boundaries in spoken sentences and to use the vocabulary listed in English Appendix 2 (‘Terminology for pupils’) when their writing is discussed.
 
-Pupils should begin to use some of the distinctive features of Standard English in their writing. ‘Standard English’ is defined in the glossary.
+Pupils should begin to use some of the distinctive features of Standard English in their writing. ‘Standard English’ is defined in the Glossary.
 
 ---
 
@@ -208,3 +210,20 @@ The grammatical terms that pupils should learn are labelled as 'terminology for 
 > here to the statutory bullet it serves, as
 > [year-3-and-4-english.md](year-3-and-4-english.md) does, and list anything
 > deliberately not covered.
+
+---
+
+## Differences from the gov.uk web page
+
+The [gov.uk web page](https://www.gov.uk/government/publications/national-curriculum-in-england-english-programmes-of-study/national-curriculum-in-england-english-programmes-of-study) carries the same programme of study, revised
+in 2015. This file follows the PDF. Of the differences, 27 are only punctuation, capitals, spacing or numbers written as words
+(the web page writes “4” where the PDF writes “four”). The others:
+
+- …omitted letter(s) read — PDF: “aloud accurately”; web page: *(nothing)*
+- …aloud accurately books — PDF: *(nothing)*; web page: “aloud, accurately,”
+- …words taught in — PDF: “Reception.”; web page: “reception year.”
+- …read or hear — PDF: “read”; web page: *(nothing)*
+- …discussed with them, — PDF: “so”; web page: “thus”
+- …other pupils read — PDF: “aloud”; web page: *(nothing)*
+- …aloud their writing — PDF: *(nothing)*; web page: “aloud,”
+- …terminology in English — PDF: “Appendix”; web page: “English appendix”

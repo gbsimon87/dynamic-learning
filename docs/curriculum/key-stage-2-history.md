@@ -1,6 +1,6 @@
 # History — Key stage 2 programme of study (England)
 
-**Source:** [National curriculum in England: history programmes of study](https://www.gov.uk/government/publications/national-curriculum-in-england-history-programmes-of-study/national-curriculum-in-england-history-programmes-of-study#key-stage-2) — Department for Education
+**Source:** [History programmes of study: key stages 1 and 2](https://assets.publishing.service.gov.uk/media/5a7c2917e5274a1f5cc762cf/PRIMARY_national_curriculum_-_History.pdf) (PDF, DFE-00173-2013) — Department for Education
 **Retrieved:** 2026-10-11
 **Status:** statutory, except sections marked *non-statutory*
 **Licence:** Open Government Licence v3.0
@@ -10,6 +10,8 @@ the specification. History is set out per key stage, not per year: key stage 2 c
 3 to 6. The purpose of study and aims, which apply to every key stage, come
 first. Key stage 1 is in [key-stage-1-history.md](key-stage-1-history.md).
 The mapping to our dataset is at the end.
+
+The text follows the PDF; how the gov.uk web page differs is listed at the end.
 
 ---
 
@@ -24,9 +26,9 @@ The national curriculum for history aims to ensure that all pupils:
 - know and understand the history of these islands as a coherent, chronological narrative, from the earliest times to the present day: how people’s lives have shaped this nation and how Britain has influenced and been influenced by the wider world
 - know and understand significant aspects of the history of the wider world: the nature of ancient civilisations; the expansion and dissolution of empires; characteristic features of past non-European societies; achievements and follies of mankind
 - gain and deploy a historically grounded understanding of abstract terms such as ‘empire’, ‘civilisation’, ‘parliament’ and ‘peasantry’
-- understand historical concepts such as continuity and change, cause and consequence, similarity, difference and significance, and use them to make connections, draw contrasts, analyse trends, frame historically valid questions and create their own structured accounts, including written narratives and analyses
+- understand historical concepts such as continuity and change, cause and consequence, similarity, difference and significance, and use them to make connections, draw contrasts, analyse trends, frame historically-valid questions and create their own structured accounts, including written narratives and analyses
 - understand the methods of historical enquiry, including how evidence is used rigorously to make historical claims, and discern how and why contrasting arguments and interpretations of the past have been constructed
-- gain historical perspective by placing their growing knowledge into different contexts: understanding the connections between local, regional, national and international history; between cultural, economic, military, political, religious and social history; and between short- and long-term timescales
+- gain historical perspective by placing their growing knowledge into different contexts, understanding the connections between local, regional, national and international history; between cultural, economic, military, political, religious and social history; and between short- and long-term timescales.
 
 ### Attainment targets
 
@@ -92,7 +94,7 @@ This could include:
 
 - a depth study linked to one of the British areas of study listed above
 - a study over time tracing how several aspects of national history are reflected in the locality (this can go beyond 1066)
-- a study of an aspect of history or a site dating from a period beyond 1066 that is significant in the locality
+- a study of an aspect of history or a site dating from a period beyond 1066 that is significant in the locality.
 - a study of an aspect or theme in British history that extends pupils’ chronological knowledge beyond 1066
 
 ### Examples (non-statutory)
@@ -102,11 +104,11 @@ This could include:
 - the legacy of Greek or Roman culture (art, architecture or literature) on later periods in British history, including the present day
 - a significant turning point in British history, for example, the first railways or the Battle of Britain
 
-the achievements of the earliest civilizations – an overview of where and when the first civilizations appeared and a depth study of one of the following: Ancient Sumer, The Indus Valley, Ancient Egypt, The Shang Dynasty of Ancient China
+the achievements of the earliest civilizations – an overview of where and when the first civilizations appeared and a depth study of one of the following: Ancient Sumer; The Indus Valley; Ancient Egypt; The Shang Dynasty of Ancient China
 
 Ancient Greece – a study of Greek life and achievements and their influence on the western world
 
-a non-European society that provides contrasts with British history – one study chosen from: early Islamic civilization, including a study of Baghdad c. AD 900; Mayan civilization c. AD 900; Benin (West Africa) c. AD 900-1300
+a non-European society that provides contrasts with British history – one study chosen from: early Islamic civilization, including a study of Baghdad c. AD 900; Mayan civilization c. AD 900; Benin (West Africa) c. AD 900-1300.
 
 ---
 
@@ -119,3 +121,12 @@ a non-European society that provides contrasts with British history – one stud
 >
 > Key stage 2 is not split into years by the curriculum; any split we
 > choose must be written down here, as the Years 3 and 4 English split is.
+
+---
+
+## Differences from the gov.uk web page
+
+The [gov.uk web page](https://www.gov.uk/government/publications/national-curriculum-in-england-history-programmes-of-study/national-curriculum-in-england-history-programmes-of-study) carries the same programme of study, revised
+in 2015. This file follows the PDF. Of the differences, 8 are only punctuation, capitals, spacing or numbers written as words
+(the web page writes “4” where the PDF writes “four”).
+

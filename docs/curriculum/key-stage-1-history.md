@@ -1,6 +1,6 @@
 # History — Key stage 1 programme of study (England)
 
-**Source:** [National curriculum in England: history programmes of study](https://www.gov.uk/government/publications/national-curriculum-in-england-history-programmes-of-study/national-curriculum-in-england-history-programmes-of-study#key-stage-1) — Department for Education
+**Source:** [History programmes of study: key stages 1 and 2](https://assets.publishing.service.gov.uk/media/5a7c2917e5274a1f5cc762cf/PRIMARY_national_curriculum_-_History.pdf) (PDF, DFE-00173-2013) — Department for Education
 **Retrieved:** 2026-10-11
 **Status:** statutory, except sections marked *non-statutory*
 **Licence:** Open Government Licence v3.0
@@ -10,6 +10,8 @@ the specification. History is set out per key stage, not per year: key stage 1
 covers years 1 and 2. The purpose of study and aims, which apply to every key
 stage, come first. Key stage 2 is in [key-stage-2-history.md](key-stage-2-history.md).
 The mapping to our dataset is at the end.
+
+The text follows the PDF; how the gov.uk web page differs is listed at the end.
 
 ---
 
@@ -24,9 +26,9 @@ The national curriculum for history aims to ensure that all pupils:
 - know and understand the history of these islands as a coherent, chronological narrative, from the earliest times to the present day: how people’s lives have shaped this nation and how Britain has influenced and been influenced by the wider world
 - know and understand significant aspects of the history of the wider world: the nature of ancient civilisations; the expansion and dissolution of empires; characteristic features of past non-European societies; achievements and follies of mankind
 - gain and deploy a historically grounded understanding of abstract terms such as ‘empire’, ‘civilisation’, ‘parliament’ and ‘peasantry’
-- understand historical concepts such as continuity and change, cause and consequence, similarity, difference and significance, and use them to make connections, draw contrasts, analyse trends, frame historically valid questions and create their own structured accounts, including written narratives and analyses
+- understand historical concepts such as continuity and change, cause and consequence, similarity, difference and significance, and use them to make connections, draw contrasts, analyse trends, frame historically-valid questions and create their own structured accounts, including written narratives and analyses
 - understand the methods of historical enquiry, including how evidence is used rigorously to make historical claims, and discern how and why contrasting arguments and interpretations of the past have been constructed
-- gain historical perspective by placing their growing knowledge into different contexts: understanding the connections between local, regional, national and international history; between cultural, economic, military, political, religious and social history; and between short- and long-term timescales
+- gain historical perspective by placing their growing knowledge into different contexts, understanding the connections between local, regional, national and international history; between cultural, economic, military, political, religious and social history; and between short- and long-term timescales.
 
 ### Attainment targets
 
@@ -44,10 +46,10 @@ In planning to ensure the progression described above through teaching about the
 
 Pupils should be taught about:
 
-- changes within living memory – where appropriate, these should be used to reveal aspects of change in national life
+- changes within living memory. Where appropriate, these should be used to reveal aspects of change in national life
 - events beyond living memory that are significant nationally or globally [for example, the Great Fire of London, the first aeroplane flight or events commemorated through festivals or anniversaries]
-- the lives of significant individuals in the past who have contributed to national and international achievements, some should be used to compare aspects of life in different periods [for example, Elizabeth I and Queen Victoria, Christopher Columbus and Neil Armstrong, William Caxton and Tim Berners-Lee, Pieter Bruegel the Elder and LS Lowry, Rosa Parks and Emily Davison, Mary Seacole and/or Florence Nightingale and Edith Cavell]
-- significant historical events, people and places in their own locality
+- the lives of significant individuals in the past who have contributed to national and international achievements. Some should be used to compare aspects of life in different periods [for example, Elizabeth I and Queen Victoria, Christopher Columbus and Neil Armstrong, William Caxton and Tim Berners-Lee, Pieter Bruegel the Elder and LS Lowry, Rosa Parks and Emily Davison, Mary Seacole and/or Florence Nightingale and Edith Cavell]
+- significant historical events, people and places in their own locality.
 
 ---
 
@@ -61,3 +63,12 @@ Pupils should be taught about:
 > The curriculum does not split key stage 1 into years. Which requirement each
 > of our years teaches is our choice and must be written down here, as the
 > Years 3 and 4 English split is.
+
+---
+
+## Differences from the gov.uk web page
+
+The [gov.uk web page](https://www.gov.uk/government/publications/national-curriculum-in-england-history-programmes-of-study/national-curriculum-in-england-history-programmes-of-study) carries the same programme of study, revised
+in 2015. This file follows the PDF. Of the differences, 6 are only punctuation, capitals, spacing or numbers written as words
+(the web page writes “4” where the PDF writes “four”).
+

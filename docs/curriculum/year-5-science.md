@@ -1,6 +1,6 @@
 # Science — Year 5 programme of study (England)
 
-**Source:** [National curriculum in England: science programmes of study](https://www.gov.uk/government/publications/national-curriculum-in-england-science-programmes-of-study/national-curriculum-in-england-science-programmes-of-study#year-5-programme-of-study) — Department for Education
+**Source:** [Science programmes of study: key stages 1 and 2](https://assets.publishing.service.gov.uk/media/5a806ebd40f0b62305b8b1fa/PRIMARY_national_curriculum_-_Science.pdf) (PDF, DFE-00182-2013) — Department for Education
 **Retrieved:** 2026-10-11
 **Status:** statutory, except sections marked *non-statutory*
 **Licence:** Open Government Licence v3.0
@@ -8,6 +8,8 @@
 Statutory text is reproduced verbatim. Do not paraphrase it — the wording is
 the specification. The upper key stage 2 introduction and *Working scientifically*, shared
 with Year 6, come first. The mapping to our dataset is at the end.
+
+The text follows the PDF; how the gov.uk web page differs is listed at the end.
 
 ---
 
@@ -29,8 +31,8 @@ During years 5 and 6, pupils should be taught to use the following practical sci
 - taking measurements, using a range of scientific equipment, with increasing accuracy and precision, taking repeat readings when appropriate
 - recording data and results of increasing complexity using scientific diagrams and labels, classification keys, tables, scatter graphs, bar and line graphs
 - using test results to make predictions to set up further comparative and fair tests
-- reporting and presenting findings from enquiries, including conclusions, causal relationships and explanations of and a degree of trust in results, in oral and written forms such as displays and other presentations
-- identifying scientific evidence that has been used to support or refute ideas or arguments
+- reporting and presenting findings from enquiries, including conclusions, causal relationships and explanations of and degree of trust in results, in oral and written forms such as displays and other presentations
+- identifying scientific evidence that has been used to support or refute ideas or arguments.
 
 #### Notes and guidance (non-statutory)
 
@@ -49,7 +51,7 @@ These opportunities for working scientifically should be provided across years 5
 Pupils should be taught to:
 
 - describe the differences in the life cycles of a mammal, an amphibian, an insect and a bird
-- describe the life process of reproduction in some plants and animals
+- describe the life process of reproduction in some plants and animals.
 
 #### Notes and guidance (non-statutory)
 
@@ -63,7 +65,7 @@ Pupils might work scientifically by: observing and comparing the life cycles of 
 
 Pupils should be taught to:
 
-- describe the changes as humans develop to old age
+- describe the changes as humans develop to old age.
 
 #### Notes and guidance (non-statutory)
 
@@ -80,13 +82,13 @@ Pupils should be taught to:
 - use knowledge of solids, liquids and gases to decide how mixtures might be separated, including through filtering, sieving and evaporating
 - give reasons, based on evidence from comparative and fair tests, for the particular uses of everyday materials, including metals, wood and plastic
 - demonstrate that dissolving, mixing and changes of state are reversible changes
-- explain that some changes result in the formation of new materials, and that this kind of change is not usually reversible, including changes associated with burning and the action of acid on bicarbonate of soda
+- explain that some changes result in the formation of new materials, and that this kind of change is not usually reversible, including changes associated with burning and the action of acid on bicarbonate of soda.
 
 #### Notes and guidance (non-statutory)
 
-Pupils should build a more systematic understanding of materials by exploring and comparing the properties of a broad range of materials, including relating these to what they learnt about magnetism in year 3 and about electricity in year 4. They should explore reversible changes, including evaporating, filtering, sieving, melting and dissolving, recognising that melting and dissolving are different processes. Pupils should explore changes that are difficult to reverse, for example, burning, rusting and other reactions, for example, vinegar with bicarbonate of soda. They should find out about how chemists create new materials, for example, Spencer Silver, who invented the glue for sticky notes or Ruth Benerito, who invented wrinkle-free cotton.
+Pupils should build a more systematic understanding of materials by exploring and comparing the properties of a broad range of materials, including relating these to what they learnt about magnetism in year 3 and about electricity in year 4. They should explore reversible changes, including, evaporating, filtering, sieving, melting and dissolving, recognising that melting and dissolving are different processes. Pupils should explore changes that are difficult to reverse, for example, burning, rusting and other reactions, for example, vinegar with bicarbonate of soda. They should find out about how chemists create new materials, for example, Spencer Silver, who invented the glue for sticky notes or Ruth Benerito, who invented wrinkle-free cotton.
 
-Note: pupils are not required to make quantitative measurements about conductivity and insulation at this stage. It is sufficient for them to observe that some conductors will produce a brighter bulb in a circuit than others and that some materials will feel hotter than others when a heat source is placed against them. Safety guidelines should be followed when burning materials.
+Note: Pupils are not required to make quantitative measurements about conductivity and insulation at this stage. It is sufficient for them to observe that some conductors will produce a brighter bulb in a circuit than others and that some materials will feel hotter than others when a heat source is placed against them. Safety guidelines should be followed when burning materials.
 
 Pupils might work scientifically by: carrying out tests to answer questions, for example, ‘Which materials would be the most effective for making a warm jacket, for wrapping ice cream to stop it melting, or for making blackout curtains?’ They might compare materials in order to make a switch in a circuit. They could observe and compare the changes that take place, for example, when burning different materials or baking bread or cakes. They might research and discuss how chemical changes have an impact on our lives, for example, cooking, and discuss the creative use of new materials such as polymers, super-sticky and super-thin materials.
 
@@ -94,16 +96,16 @@ Pupils might work scientifically by: carrying out tests to answer questions, for
 
 Pupils should be taught to:
 
-- describe the movement of the Earth and other planets relative to the sun in the solar system
-- describe the movement of the moon relative to the Earth
-- describe the sun, Earth and moon as approximately spherical bodies
-- use the idea of the Earth’s rotation to explain day and night and the apparent movement of the sun across the sky
+- describe the movement of the Earth, and other planets, relative to the Sun in the solar system
+- describe the movement of the Moon relative to the Earth
+- describe the Sun, Earth and Moon as approximately spherical bodies
+- use the idea of the Earth’s rotation to explain day and night and the apparent movement of the sun across the sky.
 
 #### Notes and guidance (non-statutory)
 
-Pupils should be introduced to a model of the sun and Earth that enables them to explain day and night. Pupils should learn that the sun is a star at the centre of our solar system and that it has 8 planets: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus and Neptune (Pluto was reclassified as a ‘dwarf planet’ in 2006). They should understand that a moon is a celestial body that orbits a planet (Earth has 1 moon; Jupiter has 4 large moons and numerous smaller ones).
+Pupils should be introduced to a model of the Sun and Earth that enables them to explain day and night. Pupils should learn that the Sun is a star at the centre of our solar system and that it has eight planets: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus and Neptune (Pluto was reclassified as a ‘dwarf planet’ in 2006). They should understand that a moon is a celestial body that orbits a planet (Earth has one moon; Jupiter has four large moons and numerous smaller ones).
 
-Note: pupils should be warned that it is not safe to look directly at the sun, even when wearing dark glasses.
+Note: Pupils should be warned that it is not safe to look directly at the Sun, even when wearing dark glasses.
 
 Pupils should find out about the way that ideas about the solar system have developed, understanding how the geocentric model of the solar system gave way to the heliocentric model by considering the work of scientists such as Ptolemy, Alhazen and Copernicus.
 
@@ -115,7 +117,7 @@ Pupils should be taught to:
 
 - explain that unsupported objects fall towards the Earth because of the force of gravity acting between the Earth and the falling object
 - identify the effects of air resistance, water resistance and friction, that act between moving surfaces
-- recognise that some mechanisms including levers, pulleys and gears allow a smaller force to have a greater effect
+- recognise that some mechanisms, including levers, pulleys and gears, allow a smaller force to have a greater effect.
 
 #### Notes and guidance (non-statutory)
 
@@ -123,7 +125,7 @@ Pupils should explore falling objects and raise questions about the effects of a
 
 Pupils might find out how scientists, for example, Galileo Galilei and Isaac Newton helped to develop the theory of gravitation.
 
-Pupils might work scientifically by: exploring falling paper cones or cupcake cases, and designing and making a variety of parachutes and carrying out fair tests to determine which designs are the most effective. They might explore resistance in water by making and testing boats of different shapes. They might design and make products that use levers, pulleys, gears and/or springs and explore their effects.
+Pupils might work scientifically by: exploring falling paper cones or cup-cake cases, and designing and making a variety of parachutes and carrying out fair tests to determine which designs are the most effective. They might explore resistance in water by making and testing boats of different shapes. They might design and make products that use levers, pulleys, gears and/or springs and explore their effects.
 
 ---
 
@@ -133,3 +135,13 @@ Pupils might work scientifically by: exploring falling paper cones or cupcake ca
 > here to the statutory bullet it serves, as
 > [year-3-science.md](year-3-science.md) does, and list anything
 > deliberately not covered.
+
+---
+
+## Differences from the gov.uk web page
+
+The [gov.uk web page](https://www.gov.uk/government/publications/national-curriculum-in-england-science-programmes-of-study/national-curriculum-in-england-science-programmes-of-study) carries the same programme of study, revised
+in 2015. This file follows the PDF. Of the differences, 24 are only punctuation, capitals, spacing or numbers written as words
+(the web page writes “4” where the PDF writes “four”). The others:
+
+- …explanations of and — PDF: *(nothing)*; web page: “a”

@@ -1,6 +1,6 @@
 # Science — Year 4 programme of study (England)
 
-**Source:** [National curriculum in England: science programmes of study](https://www.gov.uk/government/publications/national-curriculum-in-england-science-programmes-of-study/national-curriculum-in-england-science-programmes-of-study#year-4-programme-of-study) — Department for Education
+**Source:** [Science programmes of study: key stages 1 and 2](https://assets.publishing.service.gov.uk/media/5a806ebd40f0b62305b8b1fa/PRIMARY_national_curriculum_-_Science.pdf) (PDF, DFE-00182-2013) — Department for Education
 **Retrieved:** 2026-10-11
 **Status:** statutory, except sections marked *non-statutory*
 **Licence:** Open Government Licence v3.0
@@ -10,6 +10,8 @@ the specification. The lower key stage 2 introduction and *Working scientificall
 they are shared with Year 3 (see [year-3-science.md](year-3-science.md)). The
 mapping to our dataset is at the end.
 
+The text follows the PDF; how the gov.uk web page differs is listed at the end.
+
 ---
 
 ## Lower key stage 2 – years 3 and 4
@@ -18,7 +20,7 @@ The principal focus of science teaching in lower key stage 2 is to enable pupils
 
 ‘Working scientifically’ is described separately at the beginning of the programme of study, but must always be taught through and clearly related to substantive science content in the programme of study. Throughout the notes and guidance, examples show how scientific methods and skills might be linked to specific elements of the content.
 
-Pupils should read and spell scientific vocabulary correctly and with confidence, using their growing word-reading and spelling knowledge.
+Pupils should read and spell scientific vocabulary correctly and with confidence, using their growing word reading and spelling knowledge.
 
 ## Lower key stage 2 programme of study
 
@@ -40,7 +42,7 @@ During years 3 and 4, pupils should be taught to use the following practical sci
 
 Pupils in years 3 and 4 should be given a range of scientific experiences to enable them to raise their own questions about the world around them. They should start to make their own decisions about the most appropriate type of scientific enquiry they might use to answer questions; recognise when a simple fair test is necessary and help to decide how to set it up; talk about criteria for grouping, sorting and classifying; and use simple keys. They should begin to look for naturally occurring patterns and relationships and decide what data to collect to identify them. They should help to make decisions about what observations to make, how long to make them for and the type of simple equipment that might be used. They should learn how to use new equipment, such as data loggers, appropriately. They should collect data from their own observations and measurements, using notes, simple tables and standard units, and help to make decisions about how to record and analyse this data.
 
-With help, pupils should look for changes, patterns, similarities and differences in their data in order to draw simple conclusions and answer questions. With support, they should identify new questions arising from the data, making predictions for new values within or beyond the data they have collected, and finding ways of improving what they have already done. They should also recognise when and how secondary sources might help them to answer questions that cannot be answered through practical investigations.
+With help, pupils should look for changes, patterns, similarities and differences in their data in order to draw simple conclusions and answer questions. With support, they should identify new questions arising from the data, making predictions for new values within or beyond the data they have collected and finding ways of improving what they have already done. They should also recognise when and how secondary sources might help them to answer questions that cannot be answered through practical investigations.
 
 Pupils should use relevant scientific language to discuss their ideas and communicate their findings in ways that are appropriate for different audiences.
 
@@ -54,13 +56,13 @@ Pupils should be taught to:
 
 - recognise that living things can be grouped in a variety of ways
 - explore and use classification keys to help group, identify and name a variety of living things in their local and wider environment
-- recognise that environments can change and that this can sometimes pose dangers to living things
+- recognise that environments can change and that this can sometimes pose dangers to living things.
 
 #### Notes and guidance (non-statutory)
 
-Pupils should use the local environment throughout the year to raise and answer questions that help them to identify and study plants and animals in their habitat. They should identify how the habitat changes throughout the year. Pupils should explore possible ways of grouping a wide selection of living things that include animals, flowering plants and non-flowering plants. Pupils could begin to put vertebrate animals into groups, for example: fish, amphibians, reptiles, birds, and mammals; and invertebrates into snails and slugs, worms, spiders, and insects.
+Pupils should use the local environment throughout the year to raise and answer questions that help them to identify and study plants and animals in their habitat. They should identify how the habitat changes throughout the year. Pupils should explore possible ways of grouping a wide selection of living things that include animals and flowering plants and non-flowering plants. Pupils could begin to put vertebrate animals into groups such as fish, amphibians, reptiles, birds, and mammals; and invertebrates into snails and slugs, worms, spiders, and insects.
 
-Note: plants can be grouped into categories such as flowering plants (including grasses) and non-flowering plants, for example ferns and mosses.
+Note: Plants can be grouped into categories such as flowering plants (including grasses) and non-flowering plants, such as ferns and mosses.
 
 Pupils should explore examples of human impact (both positive and negative) on environments, for example, the positive effects of nature reserves, ecologically planned parks, or garden ponds, and the negative effects of population and development, litter or deforestation.
 
@@ -72,13 +74,13 @@ Pupils should be taught to:
 
 - describe the simple functions of the basic parts of the digestive system in humans
 - identify the different types of teeth in humans and their simple functions
-- construct and interpret a variety of food chains, identifying producers, predators and prey
+- construct and interpret a variety of food chains, identifying producers, predators and prey.
 
 #### Notes and guidance (non-statutory)
 
-Pupils should be introduced to the main body parts associated with the digestive system, for example: mouth, tongue, teeth, oesophagus, stomach, and small and large intestine, and explore questions that help them to understand their special functions.
+Pupils should be introduced to the main body parts associated with the digestive system, for example, mouth, tongue, teeth, oesophagus, stomach and small and large intestine and explore questions that help them to understand their special functions.
 
-Pupils might work scientifically by: comparing the teeth of carnivores and herbivores and suggesting reasons for differences; finding out what damages teeth and how to look after them. They might draw and discuss their ideas about the digestive system and compare them with models or images.
+Pupils might work scientifically by: comparing the teeth of carnivores and herbivores, and suggesting reasons for differences; finding out what damages teeth and how to look after them. They might draw and discuss their ideas about the digestive system and compare them with models or images.
 
 ### States of matter
 
@@ -86,13 +88,13 @@ Pupils should be taught to:
 
 - compare and group materials together, according to whether they are solids, liquids or gases
 - observe that some materials change state when they are heated or cooled, and measure or research the temperature at which this happens in degrees Celsius (°C)
-- identify the part played by evaporation and condensation in the water cycle and associate the rate of evaporation with temperature
+- identify the part played by evaporation and condensation in the water cycle and associate the rate of evaporation with temperature.
 
 #### Notes and guidance (non-statutory)
 
 Pupils should explore a variety of everyday materials and develop simple descriptions of the states of matter (solids hold their shape; liquids form a pool not a pile; gases escape from an unsealed container). Pupils should observe water as a solid, a liquid and a gas and should note the changes to water when it is heated or cooled.
 
-Note: teachers should avoid using materials where heating is associated with chemical change, for example, through baking or burning.
+Note: Teachers should avoid using materials where heating is associated with chemical change, for example, through baking or burning.
 
 Pupils might work scientifically by: grouping and classifying a variety of different materials; exploring the effect of temperature on substances such as chocolate, butter, cream (for example, to make food such as chocolate crispy cakes and ice-cream for a party). They could research the temperature at which materials change state, for example, when iron melts or when oxygen condenses into a liquid. They might observe and record evaporation over a period of time, for example, a puddle in the playground or washing on a line, and investigate the effect of temperature on washing drying or snowmen melting.
 
@@ -104,7 +106,7 @@ Pupils should be taught to:
 - recognise that vibrations from sounds travel through a medium to the ear
 - find patterns between the pitch of a sound and features of the object that produced it
 - find patterns between the volume of a sound and the strength of the vibrations that produced it
-- recognise that sounds get fainter as the distance from the sound source increases
+- recognise that sounds get fainter as the distance from the sound source increases.
 
 #### Notes and guidance (non-statutory)
 
@@ -120,13 +122,13 @@ Pupils should be taught to:
 - construct a simple series electrical circuit, identifying and naming its basic parts, including cells, wires, bulbs, switches and buzzers
 - identify whether or not a lamp will light in a simple series circuit, based on whether or not the lamp is part of a complete loop with a battery
 - recognise that a switch opens and closes a circuit and associate this with whether or not a lamp lights in a simple series circuit
-- recognise some common conductors and insulators, and associate metals with being good conductors
+- recognise some common conductors and insulators, and associate metals with being good conductors.
 
 #### Notes and guidance (non-statutory)
 
 Pupils should construct simple series circuits, trying different components, for example, bulbs, buzzers and motors, and including switches, and use their circuits to create simple devices. Pupils should draw the circuit as a pictorial representation, not necessarily using conventional circuit symbols at this stage; these will be introduced in year 6.
 
-Note: pupils might use the terms current and voltage, but these should not be introduced or defined formally at this stage. Pupils should be taught about precautions for working safely with electricity.
+Note: Pupils might use the terms current and voltage, but these should not be introduced or defined formally at this stage. Pupils should be taught about precautions for working safely with electricity.
 
 Pupils might work scientifically by: observing patterns, for example, that bulbs get brighter if more cells are added, that metals tend to be conductors of electricity, and that some materials can and some cannot be used to connect across a gap in a circuit.
 
@@ -138,3 +140,15 @@ Pupils might work scientifically by: observing patterns, for example, that bulbs
 > here to the statutory bullet it serves, as
 > [year-3-science.md](year-3-science.md) does, and list anything
 > deliberately not covered.
+
+---
+
+## Differences from the gov.uk web page
+
+The [gov.uk web page](https://www.gov.uk/government/publications/national-curriculum-in-england-science-programmes-of-study/national-curriculum-in-england-science-programmes-of-study) carries the same programme of study, revised
+in 2015. This file follows the PDF. Of the differences, 14 are only punctuation, capitals, spacing or numbers written as words
+(the web page writes “4” where the PDF writes “four”). The others:
+
+- …things that include — PDF: “animals and”; web page: “animals,”
+- …vertebrate animals into — PDF: “groups such as”; web page: “groups, for example:”
+- …and non-flowering plants, — PDF: “such as”; web page: “for example”

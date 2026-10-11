@@ -1,6 +1,6 @@
 # Mathematics — Year 1 programme of study (England)
 
-**Source:** [National curriculum in England: mathematics programmes of study](https://www.gov.uk/government/publications/national-curriculum-in-england-mathematics-programmes-of-study/national-curriculum-in-england-mathematics-programmes-of-study#year-1-programme-of-study) — Department for Education
+**Source:** [Mathematics programmes of study: key stages 1 and 2](https://assets.publishing.service.gov.uk/media/5a7da548ed915d2ac884cb07/PRIMARY_national_curriculum_-_Mathematics_220714.pdf) (PDF, DFE-00180-2013) — Department for Education
 **Retrieved:** 2026-10-11
 **Status:** statutory, except sections marked *non-statutory*
 **Licence:** Open Government Licence v3.0
@@ -15,11 +15,13 @@ and "sequence events in chronological order…" inside "measure and begin to
 record the following". In the [DfE PDF](https://assets.publishing.service.gov.uk/media/5a7da548ed915d2ac884cb07/PRIMARY_national_curriculum_-_Mathematics_220714.pdf) (page 9) they are separate
 top-level requirements, as here. The wording is identical in both.
 
+The text follows the PDF; how the gov.uk web page differs is listed at the end.
+
 ---
 
-## Key stage 1 - years 1 and 2
+## Key stage 1 – years 1 and 2
 
-The principal focus of mathematics teaching in key stage 1 is to ensure that pupils develop confidence and mental fluency with whole numbers, counting and place value. This should involve working with numerals, words and the 4 operations, including with practical resources [for example, concrete objects and measuring tools].
+The principal focus of mathematics teaching in key stage 1 is to ensure that pupils develop confidence and mental fluency with whole numbers, counting and place value. This should involve working with numerals, words and the four operations, including with practical resources [for example, concrete objects and measuring tools].
 
 At this stage, pupils should develop their ability to recognise, describe, draw, compare and sort different shapes and use the related vocabulary. Teaching should also involve using a range of measures to describe and compare different quantities such as length, mass, capacity/volume, time and money.
 
@@ -29,15 +31,15 @@ Pupils should read and spell mathematical vocabulary, at a level consistent with
 
 ## Year 1 programme of study
 
-### Number - number and place value
+### Number – number and place value
 
 Pupils should be taught to:
 
 - count to and across 100, forwards and backwards, beginning with 0 or 1, or from any given number
-- count, read and write numbers to 100 in numerals; count in multiples of 2s, 5s and 10s
-- given a number, identify 1 more and 1 less
+- count, read and write numbers to 100 in numerals; count in multiples of twos, fives and tens
+- given a number, identify one more and one less
 - identify and represent numbers using objects and pictorial representations including the number line, and use the language of: equal to, more than, less than (fewer), most, least
-- read and write numbers from 1 to 20 in numerals and words
+- read and write numbers from 1 to 20 in numerals and words.
 
 #### Notes and guidance (non-statutory)
 
@@ -45,49 +47,49 @@ Pupils practise counting (1, 2, 3…), ordering (for example, first, second, thi
 
 Pupils begin to recognise place value in numbers beyond 20 by reading, writing, counting and comparing numbers up to 100, supported by objects and pictorial representations.
 
-They practise counting as reciting numbers and counting as enumerating objects, and counting in 2s, 5s and 10s from different multiples to develop their recognition of patterns in the number system (for example, odd and even numbers), including varied and frequent practice through increasingly complex questions.
+They practise counting as reciting numbers and counting as enumerating objects, and counting in twos, fives and tens from different multiples to develop their recognition of patterns in the number system (for example, odd and even numbers), including varied and frequent practice through increasingly complex questions.
 
 They recognise and create repeating patterns with objects and with shapes.
 
-### Number - addition and subtraction
+### Number – addition and subtraction
 
 Pupils should be taught to:
 
-- read, write and interpret mathematical statements involving addition (+), subtraction (−) and equals (=) signs
+- read, write and interpret mathematical statements involving addition (+), subtraction (–) and equals (=) signs
 - represent and use number bonds and related subtraction facts within 20
-- add and subtract one-digit and two-digit numbers to 20, including 0
-- solve one-step problems that involve addition and subtraction, using concrete objects and pictorial representations, and missing number problems such as 7 = ? − 9
+- add and subtract one-digit and two-digit numbers to 20, including zero
+- solve one-step problems that involve addition and subtraction, using concrete objects and pictorial representations, and missing number problems such as 7 = – 9.
 
 #### Notes and guidance (non-statutory)
 
-Pupils memorise and reason with number bonds to 10 and 20 in several forms (for example, 9 + 7 = 16; 16 − 7 = 9; 7 = 16 − 9). They should realise the effect of adding or subtracting 0. This establishes addition and subtraction as related operations.
+Pupils memorise and reason with number bonds to 10 and 20 in several forms (for example, 9 + 7 = 16; 16 – 7 = 9; 7 = 16 – 9). They should realise the effect of adding or subtracting zero. This establishes addition and subtraction as related operations.
 
 Pupils combine and increase numbers, counting forwards and backwards.
 
 They discuss and solve problems in familiar practical contexts, including using quantities. Problems should include the terms: put together, add, altogether, total, take away, distance between, difference between, more than and less than, so that pupils develop the concept of addition and subtraction and are enabled to use these operations flexibly.
 
-### Number - multiplication and division
+### Number – multiplication and division
 
 Pupils should be taught to:
 
-- solve one-step problems involving multiplication and division, by calculating the answer using concrete objects, pictorial representations and arrays with the support of the teacher
+- solve one-step problems involving multiplication and division, by calculating the answer using concrete objects, pictorial representations and arrays with the support of the teacher.
 
 #### Notes and guidance (non-statutory)
 
 Through grouping and sharing small quantities, pupils begin to understand:
 
-- multiplication and division
-- doubling numbers and quantities
-- finding simple fractions of objects, numbers and quantities
+- multiplication and division;
+- doubling numbers and quantities; and
+- finding simple fractions of objects, numbers and quantities.
 
-They make connections between arrays, number patterns, and counting in 2s, 5s and 10s.
+They make connections between arrays, number patterns, and counting in twos, fives and tens.
 
-### Number - fractions
+### Number – fractions
 
 Pupils should be taught to:
 
-- recognise, find and name a half as 1 of 2 equal parts of an object, shape or quantity
-- recognise, find and name a quarter as 1 of 4 equal parts of an object, shape or quantity
+- recognise, find and name a half as one of two equal parts of an object, shape or quantity
+- recognise, find and name a quarter as one of four equal parts of an object, shape or quantity.
 
 #### Notes and guidance (non-statutory)
 
@@ -110,7 +112,7 @@ Pupils should be taught to:
 - recognise and know the value of different denominations of coins and notes
 - sequence events in chronological order using language [for example, before and after, next, first, today, yesterday, tomorrow, morning, afternoon and evening]
 - recognise and use language relating to dates, including days of the week, weeks, months and years
-- tell the time to the hour and half past the hour and draw the hands on a clock face to show these times
+- tell the time to the hour and half past the hour and draw the hands on a clock face to show these times.
 
 #### Notes and guidance (non-statutory)
 
@@ -122,23 +124,23 @@ In order to become familiar with standard measures, pupils begin to use measurin
 
 Pupils use the language of time, including telling the time throughout the day, first using o’clock and then half past.
 
-### Geometry - properties of shapes
+### Geometry – properties of shapes
 
 Pupils should be taught to:
 
 - recognise and name common 2-D and 3-D shapes, including:
   - 2-D shapes [for example, rectangles (including squares), circles and triangles]
-  - 3-D shapes [for example, cuboids (including cubes), pyramids and spheres]
+  - 3-D shapes [for example, cuboids (including cubes), pyramids and spheres].
 
 #### Notes and guidance (non-statutory)
 
 Pupils handle common 2-D and 3-D shapes, naming these and related everyday objects fluently. They recognise these shapes in different orientations and sizes, and know that rectangles, triangles, cuboids and pyramids are not always similar to each other.
 
-### Geometry - position and direction
+### Geometry – position and direction
 
 Pupils should be taught to:
 
-- describe position, direction and movement, including whole, half, quarter and three-quarter turns
+- describe position, direction and movement, including whole, half, quarter and three-quarter turns.
 
 #### Notes and guidance (non-statutory)
 
@@ -154,3 +156,13 @@ Pupils make whole, half, quarter and three-quarter turns in both directions and 
 > Year 1 dataset is built, map each topic here to the statutory bullet it
 > serves, as [year-2-maths.md](year-2-maths.md) does, and list anything
 > deliberately not covered.
+
+---
+
+## Differences from the gov.uk web page
+
+The [gov.uk web page](https://www.gov.uk/government/publications/national-curriculum-in-england-mathematics-programmes-of-study/national-curriculum-in-england-mathematics-programmes-of-study) carries the same programme of study, revised
+in 2015. This file follows the PDF. Of the differences, 34 are only punctuation, capitals, spacing or numbers written as words
+(the web page writes “4” where the PDF writes “four”). The others:
+
+- …doubling numbers and — PDF: “quantities; and”; web page: “quantities”

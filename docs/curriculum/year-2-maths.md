@@ -1,48 +1,49 @@
 # Mathematics — Year 2 programme of study (England)
 
-**Source:** [National curriculum in England: mathematics programmes of study](https://www.gov.uk/government/publications/national-curriculum-in-england-mathematics-programmes-of-study/national-curriculum-in-england-mathematics-programmes-of-study#year-2-programme-of-study) — Department for Education
-**Retrieved:** 2026-09-18
+**Source:** [Mathematics programmes of study: key stages 1 and 2](https://assets.publishing.service.gov.uk/media/5a7da548ed915d2ac884cb07/PRIMARY_national_curriculum_-_Mathematics_220714.pdf) (PDF, DFE-00180-2013) — Department for Education
+**Retrieved:** 2026-10-11
 **Status:** statutory, except sections marked *non-statutory*
 **Licence:** Open Government Licence v3.0
 
 Statutory text is reproduced verbatim. Do not paraphrase it — the wording is
-the specification. The `[Fraction:1/2]` placeholders in the source page are
-written here as ordinary fractions.
+the specification.
+
+The text follows the PDF; how the gov.uk web page differs is listed at the end.
 
 ---
 
-## Number — number and place value
+## Key stage 1 – years 1 and 2
+
+The principal focus of mathematics teaching in key stage 1 is to ensure that pupils develop confidence and mental fluency with whole numbers, counting and place value. This should involve working with numerals, words and the four operations, including with practical resources [for example, concrete objects and measuring tools].
+
+At this stage, pupils should develop their ability to recognise, describe, draw, compare and sort different shapes and use the related vocabulary. Teaching should also involve using a range of measures to describe and compare different quantities such as length, mass, capacity/volume, time and money.
+
+By the end of year 2, pupils should know the number bonds to 20 and be precise in using and understanding place value. An emphasis on practice at this early stage will aid fluency.
+
+Pupils should read and spell mathematical vocabulary, at a level consistent with their increasing word reading and spelling knowledge at key stage 1.
+
+## Year 2 programme of study
+
+### Number – number and place value
 
 Pupils should be taught to:
 
-- count in steps of 2, 3, and 5 from 0, and in 10s from any number, forward and backward
-- recognise the place value of each digit in a two-digit number (10s, 1s)
+- count in steps of 2, 3, and 5 from 0, and in tens from any number, forward and backward
+- recognise the place value of each digit in a two-digit number (tens, ones)
 - identify, represent and estimate numbers using different representations, including the number line
 - compare and order numbers from 0 up to 100; use <, > and = signs
 - read and write numbers to at least 100 in numerals and in words
-- use place value and number facts to solve problems
+- use place value and number facts to solve problems.
 
-### Notes and guidance (non-statutory)
+#### Notes and guidance (non-statutory)
 
-Using materials and a range of representations, pupils practise counting,
-reading, writing and comparing numbers to at least 100 and solving a variety of
-related problems to develop fluency. They count in multiples of 3 to support
-their later understanding of a third.
+Using materials and a range of representations, pupils practise counting, reading, writing and comparing numbers to at least 100 and solving a variety of related problems to develop fluency. They count in multiples of three to support their later understanding of a third.
 
-As they become more confident with numbers up to 100, pupils are introduced to
-larger numbers to develop further their recognition of patterns within the
-number system and represent them in different ways, including spatial
-representations.
+As they become more confident with numbers up to 100, pupils are introduced to larger numbers to develop further their recognition of patterns within the number system and represent them in different ways, including spatial representations.
 
-Pupils should partition numbers in different ways (for example, 23 = 20 + 3 and
-23 = 10 + 13) to support subtraction. They become fluent and apply their
-knowledge of numbers to reason with, discuss and solve problems that emphasise
-the value of each digit in two-digit numbers. They begin to understand 0 as a
-place holder.
+Pupils should partition numbers in different ways (for example, 23 = 20 + 3 and 23 = 10 + 13) to support subtraction. They become fluent and apply their knowledge of numbers to reason with, discuss and solve problems that emphasise the value of each digit in two-digit numbers. They begin to understand zero as a place holder.
 
----
-
-## Number — addition and subtraction
+### Number – addition and subtraction
 
 Pupils should be taught to:
 
@@ -51,82 +52,52 @@ Pupils should be taught to:
   - applying their increasing knowledge of mental and written methods
 - recall and use addition and subtraction facts to 20 fluently, and derive and use related facts up to 100
 - add and subtract numbers using concrete objects, pictorial representations, and mentally, including:
-  - a two-digit number and 1s
-  - a two-digit number and 10s
-  - 2 two-digit numbers
-  - adding 3 one-digit numbers
-- show that addition of 2 numbers can be done in any order (commutative) and subtraction of 1 number from another cannot
-- recognise and use the inverse relationship between addition and subtraction and use this to check calculations and solve missing number problems
+  - a two-digit number and ones
+  - a two-digit number and tens
+  - two two-digit numbers
+  - adding three one-digit numbers
+- show that addition of two numbers can be done in any order (commutative) and subtraction of one number from another cannot
+- recognise and use the inverse relationship between addition and subtraction and use this to check calculations and solve missing number problems.
 
-### Notes and guidance (non-statutory)
+#### Notes and guidance (non-statutory)
 
-Pupils extend their understanding of the language of addition and subtraction to
-include sum and difference.
+Pupils extend their understanding of the language of addition and subtraction to include sum and difference.
 
-Pupils practise addition and subtraction to 20 to become increasingly fluent in
-deriving facts such as using 3 + 7 = 10; 10 − 7 = 3 and 7 = 10 − 3 to calculate
-30 + 70 = 100; 100 − 70 = 30 and 70 = 100 − 30. They check their calculations,
-including by adding to check subtraction and adding numbers in a different order
-to check addition (for example, 5 + 2 + 1 = 1 + 5 + 2 = 1 + 2 + 5). This
-establishes commutativity and associativity of addition.
+Pupils practise addition and subtraction to 20 to become increasingly fluent in deriving facts such as using 3 + 7 = 10; 10 – 7 = 3 and 7 = 10 – 3 to calculate 30 + 70 = 100; 100 – 70 = 30 and 70 = 100 – 30. They check their calculations, including by adding to check subtraction and adding numbers in a different order to check addition (for example, 5 + 2 + 1 = 1 + 5 + 2 = 1 + 2 + 5). This establishes commutativity and associativity of addition.
 
-Recording addition and subtraction in columns supports place value and prepares
-for formal written methods with larger numbers.
+Recording addition and subtraction in columns supports place value and prepares for formal written methods with larger numbers.
 
----
-
-## Number — multiplication and division
+### Number – multiplication and division
 
 Pupils should be taught to:
 
 - recall and use multiplication and division facts for the 2, 5 and 10 multiplication tables, including recognising odd and even numbers
 - calculate mathematical statements for multiplication and division within the multiplication tables and write them using the multiplication (×), division (÷) and equals (=) signs
-- show that multiplication of 2 numbers can be done in any order (commutative) and division of 1 number by another cannot
-- solve problems involving multiplication and division, using materials, arrays, repeated addition, mental methods, and multiplication and division facts, including problems in contexts
+- show that multiplication of two numbers can be done in any order (commutative) and division of one number by another cannot
+- solve problems involving multiplication and division, using materials, arrays, repeated addition, mental methods, and multiplication and division facts, including problems in contexts.
 
-### Notes and guidance (non-statutory)
+#### Notes and guidance (non-statutory)
 
 Pupils use a variety of language to describe multiplication and division.
 
-Pupils are introduced to the multiplication tables. They practise to become
-fluent in the 2, 5 and 10 multiplication tables and connect them to each other.
-They connect the 10 multiplication table to place value, and the 5
-multiplication table to the divisions on the clock face. They begin to use other
-multiplication tables and recall multiplication facts, including using related
-division facts to perform written and mental calculations.
+Pupils are introduced to the multiplication tables. They practise to become fluent in the 2, 5 and 10 multiplication tables and connect them to each other. They connect the 10 multiplication table to place value, and the 5 multiplication table to the divisions on the clock face. They begin to use other multiplication tables and recall multiplication facts, including using related division facts to perform written and mental calculations.
 
-Pupils work with a range of materials and contexts in which multiplication and
-division relate to grouping and sharing discrete and continuous quantities, to
-arrays and to repeated addition. They begin to relate these to fractions and
-measures (for example, 40 ÷ 2 = 20, 20 is a half of 40). They use commutativity
-and inverse relations to develop multiplicative reasoning (for example,
-4 × 5 = 20 and 20 ÷ 5 = 4).
+Pupils work with a range of materials and contexts in which multiplication and division relate to grouping and sharing discrete and continuous quantities, to arrays and to repeated addition. They begin to relate these to fractions and measures (for example, 40 ÷ 2 = 20, 20 is a half of 40). They use commutativity and inverse relations to develop multiplicative reasoning (for example, 4 × 5 = 20 and 20 ÷ 5 = 4).
 
----
-
-## Number — fractions
+### Number – fractions
 
 Pupils should be taught to:
 
 - recognise, find, name and write fractions 1/3, 1/4, 2/4 and 3/4 of a length, shape, set of objects or quantity
-- write simple fractions, for example 1/2 of 6 = 3, and recognise the equivalence of 2/4 and 1/2
+- write simple fractions for example, 1/2 of 6 = 3 and recognise the equivalence of 2/4 and 1/2.
 
-### Notes and guidance (non-statutory)
+#### Notes and guidance (non-statutory)
 
-Pupils use fractions as 'fractions of' discrete and continuous quantities by
-solving problems using shapes, objects and quantities. They connect unit
-fractions to equal sharing and grouping, to numbers when they can be calculated,
-and to measures, finding fractions of lengths, quantities, sets of objects or
-shapes. They meet 3/4 as the first example of a non-unit fraction.
+Pupils use fractions as ‘fractions of’ discrete and continuous quantities by solving problems using shapes, objects and quantities. They connect unit fractions to equal sharing and grouping, to numbers when they can be calculated, and to measures, finding fractions of lengths, quantities, sets of objects or shapes. They meet 3/4 as the first example of a non-unit fraction.
 
-Pupils should count in fractions up to 10, starting from any number and using
-the 1/2 and 2/4 equivalence on the number line (for example, 1 1/4, 1 2/4 (or
-1 1/2), 1 3/4, 2). This reinforces the concept of fractions as numbers and that
-they can add up to more than 1.
+Pupils should count in fractions up to 10, starting from any number and using the 1/2 and 2/4 equivalence on the number line (for example, 1 1/4, 1 2/4 (or 1 1/2), 1 3/4, 2). This reinforces the concept of fractions as numbers and that they can add up to more than one.
 
----
-
-## Measurement
+### Measurement
 
 Pupils should be taught to:
 
@@ -137,79 +108,55 @@ Pupils should be taught to:
 - solve simple problems in a practical context involving addition and subtraction of money of the same unit, including giving change
 - compare and sequence intervals of time
 - tell and write the time to five minutes, including quarter past/to the hour and draw the hands on a clock face to show these times
-- know the number of minutes in an hour and the number of hours in a day
+- know the number of minutes in an hour and the number of hours in a day.
 
-### Notes and guidance (non-statutory)
+#### Notes and guidance (non-statutory)
 
-Pupils use standard units of measurement with increasing accuracy, using their
-knowledge of the number system. They use the appropriate language and record
-using standard abbreviations.
+Pupils use standard units of measurement with increasing accuracy, using their knowledge of the number system. They use the appropriate language and record using standard abbreviations.
 
-Comparing measures includes simple multiples such as 'half as high'; 'twice as
-wide'.
+Comparing measures includes simple multiples such as ‘half as high’; ‘twice as wide’.
 
-Pupils become fluent in telling the time on analogue clocks and recording it.
+They become fluent in telling the time on analogue clocks and recording it. Pupils become fluent in counting and recognising coins. They read and say amounts of money confidently and use the symbols £ and p accurately, recording pounds and pence separately.
 
-They become fluent in counting and recognising coins. They read and say amounts
-of money confidently and use the symbols £ and p accurately, recording pounds
-and pence separately.
-
----
-
-## Geometry — properties of shapes
+### Geometry – properties of shapes
 
 Pupils should be taught to:
 
-- identify and describe the properties of 2-D shapes, including the number of sides, and line symmetry in a vertical line
+- identify and describe the properties of 2-D shapes, including the number of sides and line symmetry in a vertical line
 - identify and describe the properties of 3-D shapes, including the number of edges, vertices and faces
 - identify 2-D shapes on the surface of 3-D shapes, [for example, a circle on a cylinder and a triangle on a pyramid]
-- compare and sort common 2-D and 3-D shapes and everyday objects
+- compare and sort common 2-D and 3-D shapes and everyday objects.
 
-### Notes and guidance (non-statutory)
+#### Notes and guidance (non-statutory)
 
-Pupils handle and name a wide variety of common 2-D and 3-D shapes including:
-quadrilaterals and polygons, and cuboids, prisms and cones, and identify the
-properties of each shape (for example, number of sides, number of faces). Pupils
-identify, compare and sort shapes on the basis of their properties and use
-vocabulary precisely, such as sides, edges, vertices and faces.
+Pupils handle and name a wide variety of common 2-D and 3-D shapes including: quadrilaterals and polygons, and cuboids, prisms and cones, and identify the properties of each shape (for example, number of sides, number of faces). Pupils identify, compare and sort shapes on the basis of their properties and use vocabulary precisely, such as sides, edges, vertices and faces.
 
-Pupils read and write names for shapes that are appropriate for their word
-reading and spelling. Pupils draw lines and shapes using a straight edge.
+Pupils read and write names for shapes that are appropriate for their word reading and spelling. Pupils draw lines and shapes using a straight edge.
 
----
-
-## Geometry — position and direction
+### Geometry – position and direction
 
 Pupils should be taught to:
 
 - order and arrange combinations of mathematical objects in patterns and sequences
-- use mathematical vocabulary to describe position, direction and movement, including movement in a straight line and distinguishing between rotation as a turn and in terms of right angles for quarter, half and three-quarter turns (clockwise and anti-clockwise)
+- use mathematical vocabulary to describe position, direction and movement, including movement in a straight line and distinguishing between rotation as a turn and in terms of right angles for quarter, half and three-quarter turns (clockwise and anti-clockwise).
 
-### Notes and guidance (non-statutory)
+#### Notes and guidance (non-statutory)
 
-Pupils should work with patterns of shapes, including those in different
-orientations.
+Pupils should work with patterns of shapes, including those in different orientations.
 
-Pupils use the concept and language of angles to describe 'turn' by applying
-rotations, including in practical contexts (for example, pupils themselves
-moving in turns, giving instructions to other pupils to do so, and programming
-robots using instructions given in right angles).
+Pupils use the concept and language of angles to describe ‘turn’ by applying rotations, including in practical contexts (for example, pupils themselves moving in turns, giving instructions to other pupils to do so, and programming robots using instructions given in right angles).
 
----
-
-## Statistics
+### Statistics
 
 Pupils should be taught to:
 
-- interpret and construct simple pictograms, tally charts, block diagrams and tables
+- interpret and construct simple pictograms, tally charts, block diagrams and simple tables
 - ask and answer simple questions by counting the number of objects in each category and sorting the categories by quantity
-- ask and answer questions about totalling and comparing categorical data
+- ask and answer questions about totalling and comparing categorical data.
 
-### Notes and guidance (non-statutory)
+#### Notes and guidance (non-statutory)
 
-Pupils record, interpret, collate, organise and compare information (for
-example, using many-to-one correspondence in pictograms with simple ratios 2, 5,
-10).
+Pupils record, interpret, collate, organise and compare information (for example, using many-to-one correspondence in pictograms with simple ratios 2, 5, 10).
 
 ---
 
@@ -346,3 +293,15 @@ a child should not be marked wrong for holding the other one. All four still
 appear for naming, sorting and "which 2-D shape is on its surface".
 | partition numbers in different ways, e.g. 23 = 20 + 3 and 23 = 10 + 13 (non-statutory guidance, but it underpins subtraction) | Place Value | ⚪ open — Place Value challenge 4 does 73 → 70 + 3 but not 73 → 60 + 13 |
 | count in fractions up to 10 on a number line (non-statutory guidance) | Fractions of Numbers | ⚪ open |
+
+---
+
+## Differences from the gov.uk web page
+
+The [gov.uk web page](https://www.gov.uk/government/publications/national-curriculum-in-england-mathematics-programmes-of-study/national-curriculum-in-england-mathematics-programmes-of-study) carries the same programme of study, revised
+in 2015. This file follows the PDF. Of the differences, 40 are only punctuation, capitals, spacing or numbers written as words
+(the web page writes “4” where the PDF writes “four”). The others:
+
+- …‘twice as wide’. — PDF: “They”; web page: “Pupils”
+- …and recording it. — PDF: “Pupils”; web page: “They”
+- …block diagrams and — PDF: “simple”; web page: *(nothing)*

@@ -11,7 +11,7 @@ and 2, come first. The mapping to our dataset is at the end.
 
 **PDF and web page differ slightly.** The [gov.uk web page](https://www.gov.uk/government/publications/national-curriculum-in-england-science-programmes-of-study/national-curriculum-in-england-science-programmes-of-study) (revised
 2015) carries the same requirements with editorial changes. This file follows
-the PDF; Years 3 to 5 were saved from the web page. Differences in this year:
+the PDF, as every curriculum file does. Differences in this year:
 - Key stage 1: “humanly-constructed” (web: “humanly constructed”), “word reading” (web: “word-reading”).
 - “four seasons” (web: “4 seasons”); “Note: Pupils … the Sun” (web: “Note: pupils … the sun”); final full stops on the last bullet of each list, which the web page drops.
 

@@ -1,6 +1,6 @@
 # Geography — Key stage 2 programme of study (England)
 
-**Source:** [National curriculum in England: geography programmes of study](https://www.gov.uk/government/publications/national-curriculum-in-england-geography-programmes-of-study/national-curriculum-in-england-geography-programmes-of-study#key-stage-2) — Department for Education
+**Source:** [Geography programmes of study: key stages 1 and 2](https://assets.publishing.service.gov.uk/media/5a7c1ecae5274a1f5cc75e97/PRIMARY_national_curriculum_-_Geography.pdf) (PDF, DFE-00186-2013) — Department for Education
 **Retrieved:** 2026-10-11
 **Status:** statutory, except sections marked *non-statutory*
 **Licence:** Open Government Licence v3.0
@@ -11,11 +11,13 @@ the specification. Geography is set out per key stage, not per year: key stage 2
 first. Key stage 1 is in [key-stage-1-geography.md](key-stage-1-geography.md).
 The mapping to our dataset is at the end.
 
+The text follows the PDF; how the gov.uk web page differs is listed at the end.
+
 ---
 
 ## Purpose of study
 
-A high-quality geography education should inspire in pupils a curiosity and fascination about the world and its people that will remain with them for the rest of their lives. Teaching should equip pupils with knowledge about diverse places, people, resources and natural and human environments, together with a deep understanding of the Earth’s key physical and human processes. As pupils progress, their growing knowledge about the world should help them to deepen their understanding of the interaction between physical and human processes, and of the formation and use of landscapes and environments. Geographical knowledge, understanding and skills provide the framework and approaches that explain how the Earth’s features at different scales are shaped, interconnected and change over time.
+A high-quality geography education should inspire in pupils a curiosity and fascination about the world and its people that will remain with them for the rest of their lives. Teaching should equip pupils with knowledge about diverse places, people, resources and natural and human environments, together with a deep understanding of the Earth’s key physical and human processes. As pupils progress, their growing knowledge about the world should help them to deepen their understanding of the interaction between physical and human processes, and of the formation and use of landscapes and environments. Geographical knowledge, understanding and skills provide the frameworks and approaches that explain how the Earth’s features at different scales are shaped, interconnected and change over time.
 
 ## Aims
 
@@ -26,7 +28,7 @@ The national curriculum for geography aims to ensure that all pupils:
 - are competent in the geographical skills needed to:
   - collect, analyse and communicate with a range of data gathered through experiences of fieldwork that deepen their understanding of geographical processes
   - interpret a range of sources of geographical information, including maps, diagrams, globes, aerial photographs and Geographical Information Systems (GIS)
-  - communicate geographical information in a variety of ways, including through maps, numerical and quantitative skills and writing at length
+  - communicate geographical information in a variety of ways, including through maps, numerical and quantitative skills and writing at length.
 
 ### Attainment targets
 
@@ -50,7 +52,7 @@ Pupils should be taught to:
 
 ### Place knowledge
 
-- understand geographical similarities and differences through the study of human and physical geography of a region of the United Kingdom, a region in a European country, and a region in North or South America
+- understand geographical similarities and differences through the study of human and physical geography of a region of the United Kingdom, a region in a European country, and a region within North or South America
 
 ### Human and physical geography
 
@@ -61,8 +63,8 @@ Pupils should be taught to:
 ### Geographical skills and fieldwork
 
 - use maps, atlases, globes and digital/computer mapping to locate countries and describe features studied
-- use the 8 points of a compass, 4- and 6-figure grid references, symbols and key (including the use of Ordnance Survey maps) to build their knowledge of the United Kingdom and the wider world
-- use fieldwork to observe, measure record and present the human and physical features in the local area using a range of methods, including sketch maps, plans and graphs, and digital technologies
+- use the eight points of a compass, four and six-figure grid references, symbols and key (including the use of Ordnance Survey maps) to build their knowledge of the United Kingdom and the wider world
+- use fieldwork to observe, measure, record and present the human and physical features in the local area using a range of methods, including sketch maps, plans and graphs, and digital technologies.
 
 ---
 
@@ -76,3 +78,14 @@ Pupils should be taught to:
 > The curriculum does not split key stage 2 into years. Which requirement
 > each of our years teaches is our choice and must be written down here, as
 > the Years 3 and 4 English split is.
+
+---
+
+## Differences from the gov.uk web page
+
+The [gov.uk web page](https://www.gov.uk/government/publications/national-curriculum-in-england-geography-programmes-of-study/national-curriculum-in-england-geography-programmes-of-study) carries the same programme of study, revised
+in 2015. This file follows the PDF. Of the differences, 6 are only punctuation, capitals, spacing or numbers written as words
+(the web page writes “4” where the PDF writes “four”). The others:
+
+- …skills provide the — PDF: “frameworks”; web page: “framework”
+- …and a region — PDF: “within”; web page: “in”
