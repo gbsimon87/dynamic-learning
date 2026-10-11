@@ -10,7 +10,8 @@ import "./challenge-kit.css";
  * maths to get wrong.
  *
  * Read-only. MeasureDrag is the same scale with the pointer under the
- * learner's control.
+ * learner's control. Optional children live inside the scale track so an
+ * object alongside a ruler can share its percentage coordinates and baseline.
  */
 function ScaleReader({
   min,
@@ -22,6 +23,7 @@ function ScaleReader({
   orientation = "horizontal",
   variant = "",
   label,
+  children,
 }) {
   const ticks = tickValues(min, max, minorStep);
   // Position as a percentage of the span, so the same maths serves both
@@ -36,6 +38,7 @@ function ScaleReader({
     >
       <div className="scale-track">
         <div className="scale-fill" style={sizeFor(orientation, percent)} />
+        {children}
 
         {ticks.map((tick) => {
           const isMajor = (tick - min) % majorStep === 0;

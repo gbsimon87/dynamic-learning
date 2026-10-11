@@ -152,10 +152,52 @@ Pupils make whole, half, quarter and three-quarter turns in both directions and 
 
 # Mapping to our curriculum dataset
 
-> **No Year 1 Maths dataset yet.** The app's Maths starts at Year 2. When a
-> Year 1 dataset is built, map each topic here to the statutory bullet it
-> serves, as [year-2-maths.md](year-2-maths.md) does, and list anything
-> deliberately not covered.
+Implemented 2026-10-11: **7 categories, 32 topics, 128 challenges**, with five
+questions per challenge. Topic titles below are permanent URL and progress
+identifiers. The programme of study above is unchanged.
+
+| Topic | Statutory requirement served | Activity boundary |
+|---|---|---|
+| Counting Objects | Count, read and write numbers to 100 in numerals; identify and represent numbers using objects and pictorial representations | Count groups to 20, then order quantities; abstract counters support concrete counting. |
+| Counting Forwards and Backwards to 100 | Count to and across 100, forwards and backwards, beginning with 0 or 1, or from any given number | Steps of one; no value below zero or above 100; arbitrary starts and tens boundaries. |
+| Reading and Writing Numerals to 100 | Count, read and write numbers to 100 in numerals; identify and represent numbers using objects and pictorial representations | Read and type numerals from countable base-ten pictures to 100; order numerals. |
+| Counting in Twos Fives and Tens | Count in multiples of twos, fives and tens | Begin at zero or another multiple; sequences and pictured equal groups to 100. |
+| One More and One Less | Given a number, identify one more and one less | One-step neighbours within 0–100; fill both neighbours and solve bus stories. |
+| Comparing and Ordering Quantities | Use the language of: equal to, more than, less than (fewer), most, least | Match, compare and order countable groups; no inequality symbols required. |
+| Number Words to 20 | Read and write numbers from 1 to 20 in numerals and words | Read numeral/word pairs, build and spell words; no words above twenty. |
+| Addition Subtraction and Equals Signs | Read, write and interpret mathematical statements involving addition (+), subtraction (–) and equals (=) signs | Name meanings, build statements and complete equalities; numbers within 20. |
+| Number Bonds Within 20 | Represent and use number bonds and related subtraction facts within 20 | Bonds to 10 and 20, then other totals within 20; linked addition and subtraction. |
+| Adding Within 20 | Add and subtract one-digit and two-digit numbers to 20, including zero | Pictured addition and commutative linked facts; totals never exceed 20. |
+| Subtracting Within 20 | Add and subtract one-digit and two-digit numbers to 20, including zero | Crossed-out counters, related adding checks and stories; no negative results. |
+| Missing Numbers Within 20 | Solve one-step problems that involve addition and subtraction, using concrete objects and pictorial representations, and missing number problems | Missing operands, totals and reversed equalities within 20. |
+| One-Step Addition and Subtraction Problems | Solve one-step problems that involve addition and subtraction, using concrete objects and pictorial representations | Joining, leaving and difference stories; one operation and totals within 20. |
+| Equal Groups and Arrays | Solve one-step problems involving multiplication and division, by calculating the answer using concrete objects, pictorial representations and arrays with the support of the teacher | Count equal rows of objects, with totals to 20; no formal times-table recall. |
+| Sharing and Grouping | Solve one-step problems involving multiplication and division, by calculating the answer using concrete objects, pictorial representations and arrays with the support of the teacher | Equal sharing and grouping within 20; whole-number answers, pictures and running totals. |
+| Doubling Small Quantities | Solve one-step problems involving multiplication and division; guidance: doubling numbers and quantities | Two equal pictured groups; starting quantity to 10 and double to 20. |
+| Finding a Half | Recognise, find and name a half as one of two equal parts of an object, shape or quantity | Equal versus unequal divisions, named/shaded strips and equal sharing of quantities to 20. |
+| Finding a Quarter | Recognise, find and name a quarter as one of four equal parts of an object, shape or quantity | Four equal parts, named/shaded strips and quarter quantities to 20; no thirds. |
+| Comparing and Measuring Lengths and Heights | Compare, describe and solve practical problems for lengths and heights; measure and begin to record lengths and heights | Compare ribbons, count equal blocks, order lengths, record simple centimetre rulers horizontally and vertically. |
+| Comparing and Measuring Mass | Compare, describe and solve practical problems for mass/weight; measure and begin to record mass/weight | Balanced equal-cube pictures, heavier/lighter comparisons, ordering and simple gram-scale recording. |
+| Comparing and Measuring Capacity | Compare, describe and solve practical problems for capacity and volume; measure and begin to record capacity and volume | Equal cup measures, identical-container full/empty/half/quarter pictures and simple litre scales. |
+| Measuring and Comparing Time | Compare, describe and solve practical problems for time; measure and begin to record time (hours, minutes, seconds) | Choose appropriate units, compare same-unit durations, order and record a timer; no unit conversions. |
+| Recognising Coins | Recognise and know the value of different denominations of coins and notes | UK 1p, 2p, 5p, 10p, 20p, 50p, £1 and £2 coins; recognise their printed denominations and sort pence/pounds. |
+| Recognising Notes | Recognise and know the value of different denominations of coins and notes | Simplified Bank of England £5, £10, £20 and £50 note diagrams; recognise and compare values. |
+| Sequencing Events | Sequence events in chronological order using language including before and after, next, first, today, yesterday, tomorrow, morning, afternoon and evening | Order everyday events; day-relative and earlier/later questions. |
+| Days Months and Years | Recognise and use language relating to dates, including days of the week, weeks, months and years | Weekday and month sequences, ordinal calendar positions, seven days in a week and twelve months in a year. |
+| O'clock and Half Past | Tell the time to the hour and half past the hour and draw the hands on a clock face to show these times | Read and set both hands; hours 1–12 and minutes 0/30 only. |
+| Recognising 2-D Shapes | Recognise and name common 2-D shapes including rectangles (including squares), circles and triangles | Different orientations, sizes and triangle outlines; squares correctly included in the rectangle family. |
+| Recognising 3-D Shapes | Recognise and name common 3-D shapes including cuboids (including cubes), pyramids and spheres | Solid diagrams and everyday objects; cubes correctly included in the cuboid family; no edge/vertex counting. |
+| Describing Position | Describe position, direction and movement | Relative left/right, above/below, inside/outside, between/middle, on top, in front and behind. |
+| Describing Movement | Describe position, direction and movement | Up/down/left/right arrows, forwards/backwards number paths and closer/further-away movement. |
+| Whole Half Quarter and Three-Quarter Turns | Describe position, direction and movement, including whole, half, quarter and three-quarter turns | Both directions; curved-arrow diagrams, size ordering and starting/final directions; no degrees or right-angle terminology. |
+
+**Coverage limits:** these activities support every statutory bullet, but screen
+practice does not replace handling real shapes, measuring real objects, drawing
+clock hands on paper or discussion with an adult. Money pictures are simplified
+denomination diagrams, not photographic recognition of every coin or note design.
+Repeating object/shape patterns in the non-statutory guidance are not a separate
+topic. There is no Year 1 statistics strand. The existing progression and storage
+rules are reused; Maths and English now both contribute to the Year 1 award.
 
 ---
 

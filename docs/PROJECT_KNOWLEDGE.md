@@ -25,7 +25,7 @@
 
 **Learn with Bix** (formerly Dynamic Learning) is an interactive web learning platform for primary-school
 children (built first for ~6-year-olds / **UK Year 2**; Curriculum Mode now
-also covers Year 3 Maths and Years 1–4 English). It teaches Maths, English,
+also covers Years 1–3 Maths, Years 1–4 English and Year 3 Science). It teaches Maths, English,
 Geometry and Geography through browser-based mini-games.
 
 There are two distinct learning modes, and the distinction matters for every
@@ -136,6 +136,7 @@ src/
 │   ├── ClockPanel.jsx, ReadingNumbersPanel.jsx, DualLabelClock.jsx,
 │   ├── MapGame.jsx, MultiplicationGrid.jsx, ShapeQuiz.jsx
 ├── data/
+│   ├── year1MathCurriculum.js    # 32 topics / 128 challenges; data questions + practical pictures
 │   ├── year1EnglishCurriculum.js # 38 topics / 152 challenges; shared data-question renderer
 │   ├── year2MathCurriculum.js   # Curriculum tree (categories → topics)
 │   ├── year2EnglishCurriculum.js # 39 topics / 156 challenges; shared data-question renderer
@@ -246,6 +247,8 @@ IDs are derived from titles via `toKebabCase()`. These IDs are used in URLs *and
 as `localStorage` keys, so **renaming a category or topic title silently breaks
 saved progress**. Treat titles as stable identifiers.
 
+Year 1 Maths: **7 categories / 32 topics / 128 challenges**, all built
+(2026-10-11; identifiers locked in `year1MathCurriculum.test.js`).
 Year 1 English: **8 categories / 38 topics / 152 challenges**, all built
 (2026-10-11; identifiers locked in `curriculumIds.test.js`).
 Year 2 Maths currently defines **8 categories / 39 topics / 156 challenge slots**.
@@ -872,7 +875,7 @@ Also saved 2026-10-11: Geography and History for key stages 1 and 2 (per key sta
 curriculum sets it out; the year split is ours to record), and proper headers,
 headings and lists for Year 4 and Year 5 Science and key stage 2 History, whose
 text was already verbatim. Every History and Geography file records its own
-year split, since the curriculum sets these out per key stage. Year 1 Maths and
+year split, since the curriculum sets these out per key stage. Year 1 Maths (implemented below) and
 Year 1, 2 and 6 Science were added the same day, so every primary year of
 English, Maths and Science is saved.
 
@@ -882,6 +885,75 @@ digits, some reworded or dropped phrases); each file lists those differences at
 the end. Each file's text was rebuilt with the web page's headings and lists
 and the PDF's wording, then checked word and punctuation for word against the
 PDF, with stacked fractions and superscripts (cm², 360°) restored.
+
+### Curriculum Mode — Year 1 Maths (2026-10-11)
+
+Year 1 now offers **Maths and English**. Maths has **7 categories / 32 topics /
+128 implemented challenges**, with five questions per challenge. The statutory
+programme in [year-1-maths.md](curriculum/year-1-maths.md) is unchanged; its new
+mapping table traces every topic to a requirement and records coverage limits.
+There is no Year 1 statistics strand.
+
+| Category | Topics | Challenges built |
+|---|---:|---:|
+| Number - Number and Place Value | 7 | 28/28 |
+| Number - Addition and Subtraction | 6 | 24/24 |
+| Number - Multiplication and Division | 3 | 12/12 |
+| Number - Fractions | 2 | 8/8 |
+| Measurement | 9 | 36/36 |
+| Geometry – Properties of Shapes | 2 | 8/8 |
+| Geometry – Position and Direction | 3 | 12/12 |
+
+The dataset is `src/data/year1MathCurriculum.js`, registered through the existing
+registry. Pure seeded generators live in `src/data/challenges/year1Math/`, grouped
+by strand; 128 convention-named wrappers use `Year1MathGame.jsx`. `DataChallenge`
+now accepts an optional `renderVisual(question)` for diagrams alongside any
+existing answer kind. It is absent for existing data challenges. The Year 1
+renderer reuses ArrayGrid, PlaceValueBlocks, ScaleReader, ShapeFigure,
+SolidFigure and PositionBoard, adding countable/crossed-out counters, equal and
+unequal strips, non-standard measures, denomination diagrams and movement/turn
+pictures. Its CSS is scoped and uses the light/dark App.css tokens.
+
+Activities progress from supported reading/choice to independently filled
+numbers, sorting, ordering, building, fraction shading, clock setting and short
+applied problems. Counting stays within 0–100, arithmetic within 20 (including
+zero), fraction names are halves/quarters, and clocks only use 0/30 minutes.
+Squares are included in the rectangle family and cubes in the cuboid family;
+name questions avoid offering both valid answers. Money images are simplified
+diagrams, not photographs of every denomination design. Real-object measuring,
+shape handling and discussion still need an adult.
+
+Registration also exposes Maths in Year 1 signup and gives every new topic its
+own certificate statement. Existing progress storage and unlock predicates are
+reused. The existing year-award rule now waits for Maths **and** English; saved
+English and Year 2 Maths identifiers and documents are not rewritten.
+
+Validation: bank linting over 100 seeds per level, independently recomputed
+arithmetic/drawing answers, all computed loader paths, fresh/reloaded/replay
+locks, topic/category cascade and two-subject year milestones. React component
+tests load all 128 real wrappers under light and dark body classes, count the
+rendered counters/array dots, exercise sorting, clock setting and shading, and
+complete a full run after wrong answers and a hint. Vite served the local
+curriculum route. Browser controls/Node REPL are unavailable in this session, so
+visual browser review, live colour/layout measurement and a real browser
+persistence playthrough could not be completed; these checks remain for the
+owner's interactive review. Lint, the full test suite and production build pass.
+
+**Dirty-change review (2026-10-11):** reviewed the dataset, all 128 wrappers,
+shared rendering, generators, certificates, signup expectations, tests and docs.
+Removed the denomination from the applied coin prompt, which previously gave
+away its answer. Lunch comparisons now specify noon and afternoon. Ruler objects
+now render inside ScaleReader's optional child slot, sharing the track's
+percentage coordinates and zero baseline rather than a separate fixed-pixel
+height/offset; the drawings and prompts consistently call them ribbons/towers.
+The one-more/one-less instruction identifies the labelled Start number rather
+than referring to the middle of a four-number row. Loader tests now check the
+wrapper's topic id and use decoded filesystem URLs for paths containing spaces.
+Regressions independently check measurement answers/units, note comparisons,
+coin prompts and time context; arithmetic checks also cover reversed equalities.
+The component test checks both ruler orientations against their pointer and
+common track. No saved identifiers, storage shapes or unlock predicates changed.
+Lint, all tests and build pass; visual browser review remains unavailable.
 
 ### Curriculum Mode — built challenges
 **Year 2 Mathematics** has all thirty-nine topics built — the year is complete:
@@ -2477,6 +2549,8 @@ answers Escape and traps Tab.
 
 ### Add a new Year / Subject
 Years 3–4 English (2026-10-01) are a worked example of this process.
+Year 1 Maths (2026-10-11) demonstrates adding a second subject to an existing
+year with practical diagrams through `DataChallenge.renderVisual`.
 Year 2 English (2026-10-11) is the worked example for the shared data-question
 renderer, with its own banks, Appendix 1 coverage check and loader-path tests.
 1. Save the programme of study verbatim from the DfE PDF in `docs/curriculum/`, with a mapping

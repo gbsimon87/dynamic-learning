@@ -11,11 +11,13 @@
 Item-by-item source evidence: [backlog audit in PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md#backlog-source-audit-2026-10-09).
 
 ## Context for prioritisation
-- Curriculum Mode ships **UK Year 2 Maths** and **Year 3 Maths** (44 topics,
+- Curriculum Mode ships **UK Years 1–3 Maths** (Year 1: 32 topics, 128 challenges; Year 3: 44 topics,
   176 challenges), **Years 1–4 English** (Years 1–2 completed 2026-10-11) and **Year 3
   Science** (21 topics, 84 challenges, 2026-10-03), plus standalone Skills Mode
   games. English and Science are still waiting on an owner's interactive review;
   see their trackers in `docs/english-curriculum/` and `docs/science-curriculum/`.
+  Year 1 Maths is implemented (2026-10-11), with visual browser review still
+  pending because browser controls were unavailable in the implementation session.
 - Production accounts and progress use the live API + MongoDB backend. Local
   development still defaults to browser storage unless `VITE_USE_API=true`; new
   persistence features must account for both store drivers.

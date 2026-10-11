@@ -16,12 +16,14 @@
  * Pure data, so it runs under `node --test`.
  */
 
+import { YEAR1_MATH_TOPIC_SKILLS } from "./year1MathCertificateSkills.js";
 import { YEAR2_ENGLISH_TOPIC_SKILLS } from "./english/year2CertificateSkills.js";
 
 export const SKILL_STATEMENT_MAX = 80;
 
 export const TOPIC_SKILLS = {
   ...YEAR2_ENGLISH_TOPIC_SKILLS,
+  ...YEAR1_MATH_TOPIC_SKILLS,
   // ---- Year 2 Maths (docs/curriculum/year-2-maths.md) ----
   "2/math/numbers-and-counting": "I can read and write numbers to 100 in numerals and in words.",
   "2/math/counting-forwards-and-backwards": "I can count forwards and backwards in 2s, 3s, 5s and 10s.",

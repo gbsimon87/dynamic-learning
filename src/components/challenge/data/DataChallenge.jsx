@@ -44,8 +44,11 @@ import {
  *   export default function MyTopicChallenge2({ onComplete }) {
  *     return <DataChallenge level={2} build={buildMyTopic} titles={TITLES} onComplete={onComplete} />;
  *   }
+ *
+ * `renderVisual(question)` optionally supplies a read-only diagram before the
+ * answer control. Response validation remains in questionKinds.
  */
-export default function DataChallenge({ level, build, titles, onComplete }) {
+export default function DataChallenge({ level, build, titles, onComplete, renderVisual }) {
   const questions = useMemo(() => build(level, Math.random), [build, level]);
   const title = Array.isArray(titles) ? titles[level - 1] : titles?.[level];
 
@@ -55,14 +58,14 @@ export default function DataChallenge({ level, build, titles, onComplete }) {
       questions={questions}
       onComplete={onComplete}
       render={({ question, index, submit, locked, misses }) => (
-        <DataRound key={index} question={question} submit={submit} locked={locked} hint={showHint(misses)} />
+        <DataRound key={index} question={question} submit={submit} locked={locked} hint={showHint(misses)} renderVisual={renderVisual} />
       )}
     />
   );
 }
 
 /** One question; exported for tests. */
-export function DataRound({ question: q, submit, locked, hint }) {
+export function DataRound({ question: q, submit, locked, hint, renderVisual }) {
   const [response, setResponse] = useState(() => initialResponse(q));
   const ready = isReady(q, response);
   const [before, after] = (q.sentence ?? "").split("___");
@@ -95,6 +98,8 @@ export function DataRound({ question: q, submit, locked, hint }) {
       )}
 
       {hint && q.hint && <HintNote><Rich text={q.hint} /></HintNote>}
+
+      {renderVisual?.(q)}
 
       <KindControl q={q} response={response} setResponse={setResponse} locked={locked} hint={hint} />
 
