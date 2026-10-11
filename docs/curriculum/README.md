@@ -34,9 +34,12 @@ cover.
 
 | File | Covers |
 |---|---|
+| [year-1-science.md](year-1-science.md) | Year 1, with the key stage 1 introduction and *Working scientifically* (from the PDF) |
+| [year-2-science.md](year-2-science.md) | Year 2, with the key stage 1 introduction and *Working scientifically* (from the PDF) |
 | [year-3-science.md](year-3-science.md) | Year 3, the shared lower Key Stage 2 enquiry requirements, and the dataset mapping |
 | [year-4-science.md](year-4-science.md) | Year 4, with the lower key stage 2 introduction and *Working scientifically* |
 | [year-5-science.md](year-5-science.md) | Year 5, with the upper key stage 2 introduction and *Working scientifically* |
+| [year-6-science.md](year-6-science.md) | Year 6, with the upper key stage 2 introduction and *Working scientifically* (from the PDF) |
 
 ### Geography
 
