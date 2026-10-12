@@ -55,14 +55,36 @@ Pupils should be taught about:
 
 # Mapping to our curriculum dataset
 
-> **No History dataset yet.** There is no History backlog item yet. When one is
-> built, map each topic here to the statutory bullet it serves, as
-> [year-3-science.md](year-3-science.md) does, and list anything deliberately
-> not covered.
->
-> The curriculum does not split key stage 1 into years. Which requirement each
-> of our years teaches is our choice and must be written down here, as the
-> Years 3 and 4 English split is.
+Years 1 and 2 split key stage 1 between them (approved 2026-10-12): both years teach
+all four statutory strands, Year 2 further back in time and deeper. The app cannot
+know where a child lives, so the locality strand is taught as how to find history near
+you, with UK examples. Of the bracketed examples, Pieter Bruegel the Elder and LS Lowry
+are not used: Lowry's paintings are still in copyright, which breaks the app's
+open-licence image rule. Design: `docs/history-curriculum/year-1-design-spec.md` and
+`year-2-design-spec.md`. Titles are permanent URL and progress identifiers.
+
+### Year 1
+
+| Category | App topic | Topic ID | Statutory requirement served | Activity boundary |
+|---|---|---|---|---|
+| Then and Now | Toys Then and Now | `toys-then-and-now` | changes within living memory | Grandparents' toys (wood, tin, marbles, tops) and toys today (plastic, batteries); old photos as a source. |
+| Then and Now | Homes Then and Now | `homes-then-and-now` | changes within living memory | Coal fires, washing by hand, one TV; central heating, machines, screens. |
+| Then and Now | School Then and Now | `school-then-and-now` | changes within living memory | Chalk and blackboards, rows of desks; whiteboards and tablets today. |
+| Then and Now | Seaside Holidays Then and Now | `seaside-holidays-then-and-now` | changes within living memory. Where appropriate, these should be used to reveal aspects of change in national life | Piers, Punch and Judy, donkeys, bathing huts; holidays today. |
+| The First Flight | The Wright Brothers' First Flight | `the-wright-brothers-first-flight` | events beyond living memory that are significant nationally or globally | Orville and Wilbur Wright, 1903, 12 seconds, the Wright Flyer. No years shown in Year 1. |
+| The First Flight | Flying Then and Now | `flying-then-and-now` | events beyond living memory that are significant nationally or globally | The first aeroplane compared with planes today. |
+| Explorers | Christopher Columbus | `christopher-columbus` | the lives of significant individuals in the past who have contributed to national and international achievements | Sailed west with three ships; people already lived there and were treated very unfairly. |
+| Explorers | Neil Armstrong | `neil-armstrong` | the lives of significant individuals in the past who have contributed to national and international achievements | Apollo 11, the first person to walk on the Moon. |
+| Explorers | Explorers Then and Now | `explorers-then-and-now` | Some should be used to compare aspects of life in different periods | Ships and rockets, maps and computers, how long journeys took. |
+| Kings and Queens | Queen Elizabeth I | `queen-elizabeth-i` | the lives of significant individuals in the past who have contributed to national and international achievements | Long reign, the Armada (no fighting described), clothes and portraits. |
+| Kings and Queens | Queen Victoria | `queen-victoria` | the lives of significant individuals in the past who have contributed to national and international achievements | Very long reign, big family, life in her time. |
+| Kings and Queens | Two Queens Long Ago | `two-queens-long-ago` | Some should be used to compare aspects of life in different periods | Clothes, homes, travel; how we know about them. Not Elizabeth II. |
+| Clues Around You | Old and New Buildings | `old-and-new-buildings` | significant historical events, people and places in their own locality | Clues that a building is old: materials, windows, dates on walls. |
+| Clues Around You | Clues in Street Names | `clues-in-street-names` | significant historical events, people and places in their own locality | Mill Lane, Station Road, Church Street and what they tell us. |
+
+### Year 2
+
+Added with the Year 2 dataset.
 
 ---
 

@@ -10,6 +10,7 @@ import { year4EnglishCurriculum } from "./year4EnglishCurriculum.js";
 import { year4ScienceCurriculum } from "./year4ScienceCurriculum.js";
 import { year1EnglishCurriculum } from "./year1EnglishCurriculum.js";
 import { year1MathCurriculum } from "./year1MathCurriculum.js";
+import { year1HistoryCurriculum } from "./year1HistoryCurriculum.js";
 
 /**
  * Single source of truth for which curricula exist.
@@ -38,6 +39,9 @@ export const CURRICULUM_SUBJECTS = [
 ];
 
 const CURRICULA = [
+  // Approved 2026-10-12 (docs/history-curriculum/year-1-design-spec.md). Topics
+  // show as "Coming soon" until their challenge files exist.
+  { year: 1, subject: "history", available: true, load: () => year1HistoryCurriculum },
   { year: 4, subject: "science", available: true, load: () => year4ScienceCurriculum },
   { year: 4, subject: "math", available: true, load: () => year4MathCurriculum },
   { year: 1, subject: "math", available: true, load: () => year1MathCurriculum },
