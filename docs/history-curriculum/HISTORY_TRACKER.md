@@ -44,7 +44,8 @@ Things a successor must not miss:
 | [Project knowledge](../PROJECT_KNOWLEDGE.md) | Shared architecture and current implemented state. |
 | [Year 3 Science tracker](../science-curriculum/y3-science-tracker.md) | Reference pattern for a full subject build. |
 
-| [Plan 1](plans/2026-10-12-plan-1-foundation-and-year-1-pilot.md) | Register History, engine, image pipeline, Year 1 dataset, pilot topic Toys Then and Now. Stops for owner review. |
+| [Plan 1](plans/2026-10-12-plan-1-foundation-and-year-1-pilot.md) | Register History, engine, image pipeline, Year 1 dataset, pilot topic Toys Then and Now. |
+| [Plan 2](plans/2026-10-12-plan-2-year-1-topics-2-to-14.md) | Year 1 topics 2–14, with the [authoring brief](plans/year-1-topic-authoring-brief.md). |
 
 Later plans: Plan 2 (Year 1 topics 2–14), then one per year, each after the previous pilot review.
 
