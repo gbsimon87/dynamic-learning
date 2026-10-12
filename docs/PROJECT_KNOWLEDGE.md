@@ -114,7 +114,8 @@ fetches live country data from [REST Countries API](https://restcountries.com/):
 
 ### Scripts
 ```bash
-npm run dev         # local dev server (Vite)
+npm run dev         # Vite and the watched API together (without .env the API stops at FATAL; Vite keeps running)
+npm run dev:web     # Vite only
 npm run build       # production build
 npm run lint        # eslint
 npm run preview     # preview production build
