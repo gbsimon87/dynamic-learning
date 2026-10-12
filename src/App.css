@@ -69,6 +69,10 @@
   --map-accent: var(--light-accent);
   --map-on-accent: var(--on-light-accent);
   --map-hud: rgba(255, 255, 255, 0.95);
+  /* Continent Finder has no tile layer: plain sea and land, so no labels give
+     the answer away. The sea is OpenStreetMap's colour in both themes. */
+  --map-ocean: #aad3df;
+  --map-land: #f2efe9;
 
   /* Error/validation ink and panel shadow, used by the account screens.
      Defined here (light) with a body.dark pair below so no page has to inline a
@@ -135,6 +139,8 @@ body.dark {
   --map-accent: var(--dark-accent);
   --map-on-accent: var(--on-dark-accent);
   --map-hud: rgba(34, 24, 28, 0.95);
+  --map-ocean: #aad3df;
+  --map-land: #4a4043;
   --solar-panel: rgba(20, 24, 39, 0.96);
   --solar-text: #f6e8ea;
   --solar-muted: #d4c9cf;

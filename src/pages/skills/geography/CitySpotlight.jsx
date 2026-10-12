@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import cities from '../../../data/cities.json';
+import { OSM_TILES } from '../../../data/osmTiles';
 import './CitySpotlight.css';
 
 function shuffle(array) {
@@ -166,7 +167,7 @@ export default function CitySpotlight() {
               zoom={2}
               style={{ height: 400, width: '100%' }}
             >
-              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              <TileLayer {...OSM_TILES} />
               {selected && (
                 <Marker position={current.coordinates}>
                   <Popup>{current.name}</Popup>

@@ -59,7 +59,7 @@ export default function Privacy() {
         <p>
           The app is hosted by Render (Frankfurt, Germany) and its information is stored by MongoDB
           Atlas (Ireland). Emails are sent by Resend. Some geography games load map pictures from
-          OpenStreetMap and CARTO, and Flag Finder loads country facts from REST Countries, so
+          OpenStreetMap, and Flag Finder loads country facts from REST Countries, so
           those services see your device&rsquo;s internet address. Read-aloud uses your
           device&rsquo;s own voice.
         </p>

@@ -14,3 +14,17 @@
     padding: 8px 10px !important;
   }
 }
+
+/* Fractional zoom scales tiles by a non-integer factor, leaving hairline seams
+   between them. Overlapping each tile by half a pixel hides them; Leaflet's
+   own plus-lighter blend would turn the overlap white, so it is reset. */
+.worldmap-shell .leaflet-container img.leaflet-tile {
+  mix-blend-mode: normal;
+  width: 256.5px !important;
+  height: 256.5px !important;
+}
+
+/* Continent Finder has no tiles; the container itself is the sea. */
+.mapgame--plain .leaflet-container {
+  background: var(--map-ocean);
+}

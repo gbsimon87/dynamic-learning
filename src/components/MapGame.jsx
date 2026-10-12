@@ -1,6 +1,7 @@
-import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
+import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import * as turf from '@turf/turf';
+import { OSM_TILES } from '../data/osmTiles';
 
 /**
  * `CONTINENT` values in countries.geojson that must never be asked as a
@@ -10,6 +11,26 @@ import * as turf from '@turf/turf';
  * feature with no countries to name.
  */
 const EXCLUDED_CONTINENTS = new Set(['Seven seas (open ocean)', 'Antarctica']);
+
+const WORLD_CENTER = [20, 0];
+const WORLD_ZOOM = 2;
+
+/**
+ * Hand-framed [[south, west], [north, east]] views for the continent filter.
+ * Not derived from the GeoJSON: Russia (CONTINENT "Europe") and Fiji cross the
+ * antimeridian and France includes French Guiana, so a computed bbox for
+ * Europe or Oceania spans the whole world.
+ */
+const CONTINENT_VIEWS = {
+  Africa: [[-36, -19], [38, 52]],
+  Asia: [[-11, 25], [56, 147]],
+  Europe: [[34, -25], [71, 45]],
+  'North America': [[7, -168], [72, -20]],
+  Oceania: [[-48, 112], [0, 180]],
+  'South America': [[-56, -82], [13, -34]],
+};
+
+const sameContinent = (a, b) => a.trim().toLowerCase() === b.trim().toLowerCase();
 
 const normalizeName = str =>
   str
@@ -108,13 +129,24 @@ export default function MapGame({ geoJson, mode }) {
       let available = countries.filter(c => !revealedSet.has(c.name));
       if (filter !== 'All') {
         available = available.filter(
-          c => c.continent.toLowerCase() === filter.toLowerCase()
+          c => sameContinent(c.continent, filter)
         );
       }
       if (!available.length) return null;
       return available[Math.floor(Math.random() * available.length)].name;
     }
   }, [countries, mode, possibleTargets]);
+
+  // --- Only the chosen continent's countries, so taps elsewhere can't count ---
+  const countryGeoJson = useMemo(() => {
+    if (!geoJson?.features || continentFilter === 'All') return geoJson;
+    return {
+      ...geoJson,
+      features: geoJson.features.filter(f =>
+        sameContinent(f?.properties?.CONTINENT || '', continentFilter)
+      ),
+    };
+  }, [geoJson, continentFilter]);
 
   // --- Combined continent polygons for continent mode ---
 const continentGeoJson = useMemo(() => {
@@ -235,7 +267,7 @@ const continentGeoJson = useMemo(() => {
         return {
           weight: 1,
           color: 'var(--map-text)',
-          fillColor: isRevealed ? '#22c55e' : '#bde0fe',
+          fillColor: isRevealed ? '#22c55e' : 'var(--map-land)',
           fillOpacity: isRevealed ? 0.85 : 0.8,
         };
       } else {
@@ -409,7 +441,11 @@ const continentGeoJson = useMemo(() => {
   };
 
   return (
-    <div style={{ position: 'relative', height: '100%', width: '100%' }}>
+    <div
+      // MapContainer reads its own style only on mount, so the sea colour is a class.
+      className={mode === 'continents' ? 'mapgame mapgame--plain' : 'mapgame'}
+      style={{ position: 'relative', height: '100%', width: '100%' }}
+    >
       <TopBar
         target={target}
         score={score}
@@ -423,34 +459,63 @@ const continentGeoJson = useMemo(() => {
       />
 
       <MapContainer
-        center={[20, 0]}
-        zoom={2}
+        center={WORLD_CENTER}
+        zoom={WORLD_ZOOM}
         minZoom={1.5}
+        // Whole zoom levels left Africa tiny on a 720px-tall screen: the next
+        // level in is just too big. WorldMap.css hides the tile seams this causes.
+        zoomSnap={0.25}
         maxZoom={6}
         style={{ height: '100%', width: '100%' }}
         worldCopyJump={true}
         zoomControl={false}
       >
-        <TileLayer
-          key={`tiles-${mode}`}
-          attribution="&copy; OpenStreetMap contributors"
-          url={
-            mode === 'continents'
-              ? 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png'
-              : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-          }
-        />
+        {/* Continents draw on plain sea: labelled tiles would name the answer. */}
+        {mode === 'countries' && <TileLayer {...OSM_TILES} />}
 
+        {/* react-leaflet ignores `data` changes, so the key remounts it. */}
         <GeoJSON
-          key={mode}
-          data={mode === 'continents' ? continentGeoJson : geoJson}
+          key={mode === 'continents' ? mode : `${mode}-${continentFilter}`}
+          data={mode === 'continents' ? continentGeoJson : countryGeoJson}
           style={styleFeature}
           onEachFeature={onEachFeature}
         />
 
+        <FitToContinent continent={mode === 'continents' ? 'All' : continentFilter} />
+
       </MapContainer>
     </div>
   );
+}
+
+// --- Zoom to the filtered continent, or back out to the world ---
+function FitToContinent({ continent }) {
+  const map = useMap();
+  const isFirstRun = useRef(true);
+
+  useEffect(() => {
+    const firstRun = isFirstRun.current;
+    isFirstRun.current = false;
+    const bounds = CONTINENT_VIEWS[continent];
+    // The map already opens on the world view.
+    if (!bounds && firstRun) return;
+
+    const animate = !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (!bounds) {
+      map.flyTo(WORLD_CENTER, WORLD_ZOOM, { animate });
+      return;
+    }
+    // Keep the continent clear of the HUD floating over the top of the map.
+    const hud = map.getContainer().parentElement?.querySelector('.mapgame-hud');
+    const top = (hud?.offsetHeight ?? 0) + 24;
+    map.flyToBounds(bounds, {
+      animate,
+      paddingTopLeft: [16, top],
+      paddingBottomRight: [16, 16],
+    });
+  }, [map, continent]);
+
+  return null;
 }
 
 // --- Top Bar ---
@@ -487,7 +552,7 @@ function TopBar({ target, score, round, message, onReset, continents, continentF
       <strong>Score:</strong> {score}
       <span style={{ width: 10 }} />
       <strong>Find:</strong>{' '}
-      <span style={{ fontWeight: 700, color: target ? '#111' : '#999' }}>
+      <span style={{ fontWeight: 700, color: target ? 'var(--map-text)' : 'var(--map-muted)' }}>
         {target ? target : 'Loading...'}
       </span>
 
@@ -496,7 +561,7 @@ function TopBar({ target, score, round, message, onReset, continents, continentF
         value={continentFilter}
         onChange={(e) => setContinentFilter(e.target.value)}
         style={{
-          border: '1px solid #ccc',
+          border: '1px solid var(--map-border)',
           borderRadius: 8,
           padding: '6px 8px',
           cursor: mode === 'continents' ? 'not-allowed' : 'pointer',
@@ -512,8 +577,9 @@ function TopBar({ target, score, round, message, onReset, continents, continentF
       <button
         onClick={onReset}
         style={{
-          border: '1px solid #ddd',
-          background: '#fff',
+          border: '1px solid var(--map-border)',
+          background: 'var(--map-chip)',
+          color: 'var(--map-text)',
           padding: '6px 10px',
           borderRadius: 8,
           cursor: 'pointer'
