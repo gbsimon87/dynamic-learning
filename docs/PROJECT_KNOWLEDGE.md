@@ -11,7 +11,7 @@ inventory for each pathway.
 | 1 | [Maths](../src/data/year1MathCurriculum.js) | 32 | 128 | Complete |
 | 1 | [English](../src/data/year1EnglishCurriculum.js) | 38 | 152 | Complete |
 | 1 | [Science](../src/data/year1ScienceCurriculum.js) | 16 | 64 | Complete |
-| 1 | [History](../src/data/year1HistoryCurriculum.js) | 1 of 14 | 4 of 56 | In progress |
+| 1 | [History](../src/data/year1HistoryCurriculum.js) | 14 | 56 | Complete (not yet in the year award) |
 | 2 | [Maths](../src/data/year2MathCurriculum.js) | 39 | 156 | Complete |
 | 2 | [English](../src/data/year2EnglishCurriculum.js) | 39 | 156 | Complete |
 | 2 | [Science](../src/data/year2ScienceCurriculum.js) | 19 | 76 | Complete |
@@ -291,8 +291,8 @@ Year 1 English: **8 categories / 38 topics / 152 challenges**, all built
 (2026-10-11; identifiers locked in `curriculumIds.test.js`).
 Year 1 Science: **4 categories / 16 topics / 64 challenges**, all built
 (2026-10-11; identifiers locked in `year1ScienceCurriculum.test.js`).
-Year 1 History: **5 categories / 14 topics / 56 challenge slots**, 1 topic built
-(2026-10-12; identifiers locked in `year1HistoryCurriculum.test.js`). History
+Year 1 History: **5 categories / 14 topics / 56 challenges**, all built
+(2026-10-12; registered with `countsTowardYear: false` until the owner decides; identifiers locked in `year1HistoryCurriculum.test.js`). History
 topics are authored as data: four "Bix explains" story cards plus question banks
 per topic (`src/data/challenges/history/`), built by `buildHistoryTopic` into
 `DataChallenge` questions and checked by `lintHistoryTopic`, which proves every

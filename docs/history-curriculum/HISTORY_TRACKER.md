@@ -2,8 +2,8 @@
 
 **Start here to resume.** Branch: not created yet (all work so far is docs on `dev`, uncommitted).
 **Last updated:** 2026-10-12.
-**Current milestone:** Plan 1 built: History registered, engine and image pipeline in place, Year 1 pilot topic (Toys Then and Now) playable. **Awaiting owner review of the pilot** before Plan 2.
-**Built:** Year 1 registered (14 topics "Coming soon"); 1 topic, 4 challenges. Branch `feat/history-curriculum`.
+**Current milestone:** Year 1 History complete (Plan 2): 14 topics, 56 challenges. **Owner decision pending:** whether Year 1 History joins the Year 1 award now (see Plan 2). Next: Year 2 plan.
+**Built:** Year 1: 14 of 14 topics, 56 of 56 challenges. Years 2–4: specs only. Branch `feat/history-curriculum`.
 
 ## Resume point
 
@@ -27,7 +27,7 @@ Things a successor must not miss:
 
 | Year | Ages | Source | Units | Topics | Spec | Status |
 |---|---|---|---|---|---|---|
-| 1 | 5–6 | KS1 | Then and now, the first flight, explorers, kings and queens, clues around you | 14 | [year-1-design-spec.md](year-1-design-spec.md) | Spec approved |
+| 1 ✅ | 5–6 | KS1 | Then and now, the first flight, explorers, kings and queens, clues around you | 14 | [year-1-design-spec.md](year-1-design-spec.md) | Spec approved |
 | 2 | 6–7 | KS1 | Living memory, Great Fire of London, nurses, people who changed things, days we remember, history near you | 17 | [year-2-design-spec.md](year-2-design-spec.md) | Spec approved |
 | 3 | 7–8 | KS2 | Stone Age to Iron Age, Roman Britain, first civilisations and Ancient Egypt | 22 | [year-3-design-spec.md](year-3-design-spec.md) | Spec approved |
 | 4 | 8–9 | KS2 | Anglo-Saxons and Scots, Vikings and Anglo-Saxons | 18 | [year-4-design-spec.md](year-4-design-spec.md) | Spec approved |
@@ -89,13 +89,22 @@ Nothing open. All specs approved 2026-10-12.
 | Year 4 spec | Approved 2026-10-12 | |
 | Implementation plans | In progress | Plan 1 approved and built 2026-10-12. Plan 2 after the pilot review. |
 | History registration and engine | Implemented | Subject, profile allowlist, looks, story-card engine with answerability lint, image pipeline, credits. Unit + component tests. |
-| Year 1 build | Pilot implemented; owner review pending | Dataset (14 topics), KS1 mapping, certificate lines; Toys Then and Now 4/4 challenges. Browser: all four played in headless Chrome through the real controls (2026-10-12): story reopen, hint after two misses, completion, saved progress, both themes, 320 px; no console errors. |
+| Year 1 build | Complete; owner review pending | Plan 2 (2026-10-12): 13 more topics written to the [authoring brief](plans/year-1-topic-authoring-brief.md), 8 more public-domain pictures. Headless Chrome played all 56 in order from fresh progress, both themes, 320 px, no console errors, 56 numeric completions saved. Earlier pilot evidence: | Dataset (14 topics), KS1 mapping, certificate lines; Toys Then and Now 4/4 challenges. Browser: all four played in headless Chrome through the real controls (2026-10-12): story reopen, hint after two misses, completion, saved progress, both themes, 320 px; no console errors. |
 | Year 2 build | Not started | |
 | Year 3 build | Not started | |
 | Year 4 build | Not started | |
 | Full regression and browser verification | Not started | `npm run lint`, `npm test`, `npm run build`, both themes, phone width, saved progress. |
 
 ## Log
+
+- **2026-10-12** Plan 2: Year 1 finished on the owner's instruction (no separate pilot
+  review). Topics 2–14 written by four parallel agents to the authoring brief, each
+  passing `scripts/check-history-topic.mjs`; reviewed for truth and tone. Time bands
+  aligned to the spec (Victorian = "long ago"; Elizabeth I and Columbus = "long, long
+  ago"), including the toys pilot's level 4. All tests, lint and build green; all 56
+  challenges played in headless Chrome. `countsTowardYear: false` kept until the owner
+  decides (see Plan 2). Photo credits under pictures show dates (e.g. "about 1588"),
+  although Year 1 teaching text has none; flagged for the owner.
 
 - **2026-10-12** Final review fixes: (1) Year 1 History is registered with
   `countsTowardYear: false`, so children who finished Year 1 Maths, English and Science
