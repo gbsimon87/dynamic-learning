@@ -11,11 +11,6 @@
   width: 100%;
 }
 
-/* Map mode gets a much wider stage so cities are easy to find and tap. */
-.city-spotlight.city-spotlight--map {
-  max-width: 1200px;
-}
-
 /* === Score & Prompt === */
 .city-spotlight .score {
   font-size: 1.25rem;
@@ -62,7 +57,7 @@ body.dark .city-spotlight .cityImage {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
 }
 
-/* === Options (Image Mode) === */
+/* === Options === */
 .city-spotlight .options {
   display: flex;
   flex-wrap: wrap;
@@ -128,110 +123,6 @@ body.dark .city-spotlight .optionBtn.wrong {
   background-color: #555;
 }
 
-/* === Map Mode === */
-.city-spotlight .mapContainer {
-  width: 100%;
-  height: clamp(340px, 60vh, 720px);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-}
-
-.city-spotlight .leaflet-container {
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-  border-radius: 12px;
-}
-
-.city-spotlight .mapContainer.answered .leaflet-container {
-  cursor: grab;
-}
-
-/* Result, hint and "Next city" sit in one row between the prompt and the map. */
-.city-spotlight .mapStatus {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem 1.25rem;
-  min-height: 3.25rem;
-}
-
-.city-spotlight .mapStatus .info {
-  margin-top: 0;
-}
-
-.city-spotlight .hintBtn {
-  min-height: 3rem;
-  padding: 0.6rem 1.25rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  border-radius: 10px;
-  border: 2px solid var(--light-accent);
-  background-color: var(--light-panel);
-  color: var(--light-text);
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.city-spotlight .hintBtn:hover {
-  background-color: var(--light-accent);
-  color: white;
-}
-
-body.dark .city-spotlight .hintBtn {
-  border-color: var(--dark-accent);
-  background-color: var(--dark-panel);
-  color: var(--dark-text);
-}
-
-body.dark .city-spotlight .hintBtn:hover {
-  background-color: var(--dark-accent);
-  color: var(--dark-bg);
-}
-
-.city-spotlight .hintText {
-  font-size: 1.2rem;
-  font-weight: 600;
-  padding: 0.6rem 1.1rem;
-  border-radius: 10px;
-  background-color: var(--light-panel);
-  color: var(--light-text);
-}
-
-body.dark .city-spotlight .hintText {
-  background-color: var(--dark-panel);
-  color: var(--dark-text);
-}
-
-/* Map overlays. The OSM tiles are light in both themes, so the overlays use
-   the light tokens in both themes too - the dark ones vanish on the tiles. */
-.city-spotlight .guessLine {
-  stroke: var(--light-text);
-  stroke-width: 3;
-}
-
-.city-spotlight .guessDot {
-  stroke: var(--light-text);
-  stroke-width: 3;
-  fill: var(--light-panel);
-  fill-opacity: 1;
-}
-
-.city-spotlight .cityDot {
-  stroke: var(--light-panel);
-  stroke-width: 3;
-  fill: var(--light-accent);
-  fill-opacity: 1;
-}
-
-.city-spotlight .leaflet-tooltip.cityLabel,
-.city-spotlight .leaflet-tooltip.distanceLabel {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--light-text);
-}
 
 /* === Info/Feedback === */
 .city-spotlight .info {
@@ -245,28 +136,19 @@ body.dark .city-spotlight .info {
   color: var(--dark-accent);
 }
 
-/* === Settings Panel (Start Screen) === */
-.city-spotlight .settingsGroup {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  width: 100%;
-}
-
-.city-spotlight .settingsGroup label {
-  font-weight: 600;
+/* === Start Screen === */
+.city-spotlight .intro {
+  font-size: 1.2rem;
   color: var(--light-text);
 }
 
-body.dark .city-spotlight .settingsGroup label {
+body.dark .city-spotlight .intro {
   color: var(--dark-text);
 }
 
 /* === Buttons === */
 .city-spotlight .startBtn,
-.city-spotlight .restartBtn,
-.city-spotlight .nextBtn {
+.city-spotlight .restartBtn {
   padding: 0.9rem 2rem;
   font-size: 1.2rem;
   font-weight: 600;
@@ -279,49 +161,15 @@ body.dark .city-spotlight .settingsGroup label {
 }
 
 .city-spotlight .startBtn:hover,
-.city-spotlight .restartBtn:hover,
-.city-spotlight .nextBtn:hover {
+.city-spotlight .restartBtn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(239, 98, 108, 0.3);
 }
 
 body.dark .city-spotlight .startBtn,
-body.dark .city-spotlight .restartBtn,
-body.dark .city-spotlight .nextBtn {
+body.dark .city-spotlight .restartBtn {
   background-color: var(--dark-accent);
   color: var(--dark-bg);
-}
-
-/* === Dropdown === */
-.city-spotlight select {
-  width: 80%;
-  max-width: 250px;
-  padding: 0.6rem 1rem;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 2px solid var(--light-accent);
-  background-color: var(--light-panel);
-  color: var(--light-text);
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.city-spotlight select:hover,
-.city-spotlight select:focus {
-  border-color: var(--light-accent);
-  box-shadow: 0 0 8px rgba(239, 98, 108, 0.3);
-  outline: none;
-}
-
-body.dark .city-spotlight select {
-  background-color: var(--dark-panel);
-  color: var(--dark-text);
-  border-color: var(--dark-accent);
-}
-
-body.dark .city-spotlight select:hover,
-body.dark .city-spotlight select:focus {
-  box-shadow: 0 0 8px rgba(132, 220, 207, 0.3);
 }
 
 /* === Responsive Layout === */
@@ -333,14 +181,6 @@ body.dark .city-spotlight select:focus {
   .city-spotlight .optionBtn {
     font-size: 1.1rem;
     padding: 0.6rem 1.2rem;
-  }
-
-  .city-spotlight.city-spotlight--map {
-    padding: 1rem;
-  }
-
-  .city-spotlight .mapContainer {
-    height: clamp(300px, 55vh, 500px);
   }
 }
 

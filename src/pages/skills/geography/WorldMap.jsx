@@ -62,42 +62,23 @@ function Header({ mode, onModeChange }) {
         </h1>
         <span style={{ color: 'var(--map-muted)' }}>
           {mode === 'countries'
-            ? 'Click the correct country on the map'
+            ? 'Click the correct country'
             : 'Tap the correct continent!'}
         </span>
       </div>
 
-      <div style={{ display: 'flex', gap: 8 }}>
-        <button
-          onClick={() => onModeChange('countries')}
-          style={{
-            padding: '6px 10px',
-            background:
-              mode === 'countries' ? 'var(--map-accent)' : 'var(--map-chip)',
-            color:
-              mode === 'countries' ? 'var(--map-on-accent)' : 'var(--map-text)',
-            border: 'none',
-            borderRadius: 6,
-            cursor: 'pointer',
-          }}
-        >
-          Countries
-        </button>
-        <button
-          onClick={() => onModeChange('continents')}
-          style={{
-            padding: '6px 10px',
-            background:
-              mode === 'continents' ? 'var(--map-accent)' : 'var(--map-chip)',
-            color:
-              mode === 'continents' ? 'var(--map-on-accent)' : 'var(--map-text)',
-            border: 'none',
-            borderRadius: 6,
-            cursor: 'pointer',
-          }}
-        >
-          Continents
-        </button>
+      <div className="worldmap-modes" role="group" aria-label="Map game mode">
+        {['countries', 'continents'].map((choice) => (
+          <button
+            key={choice}
+            type="button"
+            className="worldmap-mode"
+            aria-pressed={mode === choice}
+            onClick={() => onModeChange(choice)}
+          >
+            {choice === 'countries' ? 'Countries' : 'Continents'}
+          </button>
+        ))}
       </div>
     </header>
   );

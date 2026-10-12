@@ -177,3 +177,18 @@ body.dark .flag-continentPicker select {
 body.dark .flag-continentPicker select:focus {
   outline-color: var(--dark-accent);
 }
+
+.flag-loadStatus,
+.flag-error {
+  color: var(--light-text);
+  text-align: center;
+  margin: 0;
+}
+body.dark .flag-loadStatus,
+body.dark .flag-error {
+  color: var(--dark-text);
+}
+.flag-loadStatus .flag-optionBtn {
+  display: block;
+  margin: 0.75rem auto 0;
+}

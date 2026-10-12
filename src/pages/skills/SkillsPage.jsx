@@ -82,6 +82,7 @@ const GROUPS = [
       { to: "/world-map", icon: "🗺️", label: "World Map" },
       { to: "/flag-finder", icon: "🚩", label: "Flag Finder" },
       { to: "/city-spotlight", icon: "🏙️", label: "City Spotlight" },
+      { to: "/find-the-city", icon: "📍", label: "Find the City" },
     ],
   },
 ];

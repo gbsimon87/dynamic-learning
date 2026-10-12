@@ -1,6 +1,7 @@
-import { useState, useEffect, useMemo, useContext } from 'react';
+import { useState, useEffect, useMemo, useContext, useRef, useSyncExternalStore } from 'react';
 import { ThemeContext } from '../../../context/theme-context';
 import './FlagFinder.css';
+import { flagCountriesStore } from '../../../data/flagCountries';
 
 const ALL_CONTINENTS = 'all';
 
@@ -14,14 +15,6 @@ const PLAYABLE_CONTINENTS = [
   'Oceania',
   'South America',
 ];
-
-// The API pages at 25 records and reports the real total in `data.meta`. Fetching
-// once returns only the first 25 countries (alphabetically Abkhazia..Bermuda),
-// which is why the game used to ask about A-B countries exclusively.
-const PAGE_SIZE = 25;
-const MAX_PAGES = 20; // hard stop: 500 records, well past the ~254 that exist
-// The API rate-limits bursts of sequential page requests; a small gap avoids it.
-const PAGE_DELAY_MS = 120;
 
 function shuffleArray(array) {
   const newArray = [...array];
@@ -57,98 +50,18 @@ function generateQuestion(list) {
   };
 }
 
-export default function FlagFinder() {
+export default function FlagFinder({ countryStore = flagCountriesStore }) {
   const { theme } = useContext(ThemeContext);
 
-  const [countries, setCountries] = useState([]);
+  const { countries, loading, error } = useSyncExternalStore(
+    countryStore.subscribe, countryStore.getSnapshot
+  );
   const [continent, setContinent] = useState(ALL_CONTINENTS);
   const [question, setQuestion] = useState(null);
   const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  // --- Fetch flag data once, following the API's pagination ---
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadCountries() {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const apiKey = import.meta.env.VITE_REST_COUNTRIES_API_KEY;
-        const collected = [];
-
-        for (let pageIndex = 0; pageIndex < MAX_PAGES; pageIndex += 1) {
-          const offset = pageIndex * PAGE_SIZE;
-
-          let payload;
-          try {
-            const response = await fetch(
-              `https://api.restcountries.com/countries/v5?api-key=${apiKey}` +
-                `&response_fields=names.common,flag.url_png,continents&offset=${offset}`
-            );
-            if (!response.ok) {
-              throw new Error(`REST Countries API returned ${response.status}`);
-            }
-            payload = await response.json();
-          } catch (pageError) {
-            // Rate-limited responses carry no CORS headers, so this surfaces as an
-            // opaque "Failed to fetch". Keep the pages already loaded.
-            console.warn(`Flag Finder: stopped paging at offset ${offset}`, pageError);
-            break;
-          }
-
-          if (cancelled) return;
-
-          const data = payload?.data?.objects ?? [];
-          collected.push(...data);
-
-          // `more` tells us whether another page exists; stop as soon as it doesn't.
-          if (!payload?.data?.meta?.more || data.length === 0) break;
-
-          // Be gentle: a short pause between pages keeps us under the rate limit.
-          await new Promise((resolve) => setTimeout(resolve, PAGE_DELAY_MS));
-        }
-
-        if (cancelled) return;
-
-        const formatted = collected
-          .filter(
-            (country) =>
-              country?.names?.common?.trim() && country?.flag?.url_png
-          )
-          .map((country) => ({
-            name: country.names.common.trim(),
-            flag: country.flag.url_png,
-            alt: `Flag of ${country.names.common}`,
-            continents: Array.isArray(country.continents)
-              ? country.continents
-              : [],
-          }));
-
-        if (formatted.length < 4) {
-          throw new Error('Not enough countries returned by the API.');
-        }
-
-        setCountries(formatted);
-      } catch (err) {
-        if (cancelled) return;
-        console.error('Error loading flags:', err);
-        setError('Unable to load flags.');
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-
-    loadCountries();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  useEffect(() => { countryStore.start(); }, [countryStore]);
 
   // Countries available for the chosen continent.
   const pool = useMemo(() => {
@@ -164,26 +77,24 @@ export default function FlagFinder() {
     );
   }, [countries]);
 
-  // Start (or restart) whenever the pool changes - e.g. a new continent choice.
+  const poolRef = useRef(pool);
   useEffect(() => {
-    setQuestion(generateQuestion(pool));
-    setSelected(null);
+    poolRef.current = pool;
+    // Background pages expand the pool without replacing an active question.
+    setQuestion((current) => current ?? generateQuestion(pool));
   }, [pool]);
 
-  // --- Auto-advance after selection ---
   useEffect(() => {
-    if (selected !== null && pool.length >= 4) {
-      const timer = setTimeout(() => {
-        const next = generateQuestion(pool);
-        if (next) {
-          setQuestion(next);
-          setSelected(null);
-        }
-      }, 1500);
-
-      return () => clearTimeout(timer);
-    }
-  }, [selected, pool]);
+    if (selected === null) return;
+    const timer = setTimeout(() => {
+      const next = generateQuestion(poolRef.current);
+      if (next) {
+        setQuestion(next);
+        setSelected(null);
+      }
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [selected]);
 
   const handleSelect = (option) => {
     if (selected !== null) return;
@@ -198,15 +109,18 @@ export default function FlagFinder() {
 
   const handleContinentChange = (next) => {
     setContinent(next);
+    setQuestion(generateQuestion(next === ALL_CONTINENTS ? countries
+      : countries.filter((country) => country.continents.includes(next))));
+    setSelected(null);
     setScore(0);
     setTotal(0);
   };
 
   // --- Loading state ---
-  if (loading) {
+  if (countries.length < 4 && !error) {
     return (
       <div className={`flag-wrapper ${theme}`}>
-        <div className="flag-loading">
+        <div className="flag-loading" role="status">
           Loading flags...
         </div>
       </div>
@@ -214,12 +128,13 @@ export default function FlagFinder() {
   }
 
   // --- Error state ---
-  if (error) {
+  if (countries.length < 4 && error) {
     return (
       <div className={`flag-wrapper ${theme}`}>
         <div className="flag-error">
           {error}
         </div>
+        <button className="flag-optionBtn" type="button" onClick={countryStore.retry}>Try again</button>
       </div>
     );
   }
@@ -264,6 +179,11 @@ export default function FlagFinder() {
       </div>
 
       {continentPicker}
+      {loading && <p className="flag-loadStatus" role="status">Finding more flags… You can play now!</p>}
+      {error && <div className="flag-loadStatus" role="status">
+        Some flags couldn’t load. You can keep playing.
+        <button className="flag-optionBtn" type="button" onClick={countryStore.retry}>Try again</button>
+      </div>}
 
       <h2 className="flag-prompt">
         Which country’s flag is this?

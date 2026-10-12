@@ -108,9 +108,9 @@ backend.
 The [Flag Finder](../src/pages/skills/geography/FlagFinder.jsx) geography skill game
 fetches live country data from [REST Countries API](https://restcountries.com/):
 - **Endpoint:** `https://api.restcountries.com/countries/v5`
-- **Fields used:** `names.common` (country name), `flag.url_png` (flag image URL)
-- **Authentication:** Optional API key via `VITE_REST_COUNTRIES_API_KEY` env var
-- **Usage:** Generates unique country name + flag questions with 4-option multiple choice
+- **Fields used:** `names.common` (country name), `flag.url_png` (flag image URL), `continents` (question-pool filters)
+- **Authentication:** API key via `VITE_REST_COUNTRIES_API_KEY` env var. The provider requires a key for full access; browser origins must be allowed on that key.
+- **Usage:** Generates unique country name + flag questions with 4-option multiple choice. Requests `limit=100`, follows `data.meta.more`, and begins play after the first usable page; see “Geography loading and game controls” below.
 
 ### Scripts
 ```bash
@@ -713,6 +713,60 @@ Practice, Find the Missing Number, Number Bonds, Fraction Fun
 **English:** Word Builder, Word Sorter, Sentence Builder, Opposite Match,
 Synonym Safari, Sight Word Pop, Speed Reader
 **Geography:** Solar System (3D), World Map, Flag Finder, City Spotlight
+(match a landmark picture to its city), Find the City (tap the city on a map;
+shows the distance and a line from the tap to the city, plus a country hint)
+
+### Geography loading and game controls (2026-10-12)
+
+**Flag Finder (`/flag-finder`).** Previously the game waited for all roughly
+254 country records across eleven sequential default-size requests before
+showing a question, with no timeout. `src/data/flagCountries.js` now requests
+100 records per page (the free-plan maximum, normally three requests), publishes
+each page immediately, and starts play when at least four distinct flag-bearing
+countries are ready. Remaining pages load in the background and expand the
+continent choices without replacing the current question or resetting score,
+selection, or the 1.5-second answer-feedback timer.
+
+A shared in-memory store deduplicates StrictMode/overlapping loads and reuses
+loaded data across route visits until the browser reloads. The bounded load
+continues when leaving the route to populate that cache; it writes no learner
+storage. Each request has an eight-second abort timeout, including response-body
+reading. Failure preserves playable partial data and offers “Try again”. Retry
+merges countries by name; offsets advance by actual response length so a server
+page cap cannot skip records. The 120ms inter-page pause and 20-page safety cap
+remain. First-page data and flag images still require the external service;
+there is no offline fallback. Implementation and verification limits are in
+[Flag Finder loading](FLAG_FINDER_LOADING.md).
+
+**World Map (`/world-map`).** Countries/Continents are a neutral segmented
+control instead of accent-filled buttons matching the navbar logo and Sign in.
+The selected mode uses a panel background, bold label and contrasting underline;
+`aria-pressed`, a named button group, visible keyboard focus and 44px minimum
+button height expose selection and keep touch targets usable. Both themes use
+existing tokens. The country instruction reads “Click the correct country”.
+
+**City games.** City Spotlight (`/city-spotlight`) now focuses on matching a
+landmark picture to one of four city names, with a 1.5-second answer transition.
+The former map interaction lives in Find the City (`/find-the-city`), registered
+in both the router and Skills hub. A country hint is available before a guess.
+After one tap, markers show the guess and the nearest visible world-copy of the
+city, a dashed line connects them, and the result reports great-circle distance
+in whole kilometres. A tap within 750km counts as found (existing `cityGuess.js`
+rule). “Next city” advances manually so the learner can inspect the result;
+hints/guesses clear for each new city. Both games use `cities.json`, have finite
+shuffled rounds and replay, and write no progress. CSS is scoped to each game.
+See [geography notes](notes_geography.md) for the revised game list.
+
+**Validation.** `npm run lint`, `npm test` and `npm run build` passed after the
+geography changes (1,612 Node tests and 140 component tests passed; four database
+integration tests skipped). Four Flag Finder component regressions cover early
+play, background-page stability/cache reuse, initial and partial failures/retry,
+and request timeouts. Local browser checks verified mobile Flag Finder,
+continent switching, cached revisits, and World Map mode selection in both
+themes, plus City Spotlight answer selection and Find the City hint, guess/line/
+distance, and next-city reset. Country API responses were intercepted: live timing with the configured
+API key was blocked by automatic approval review, so no live latency reduction
+is claimed. Build still reports the existing large-chunk warning.
 
 **Solar System constellation explorer (built and expanded 2026-09-21):**
 `/solar-system` includes an idle-only Constellations entry point. It presents
@@ -3048,8 +3102,9 @@ must scope every rule under a unique root class. ⚠️ Retro-fitting this is **
 outstanding** (§6 item 15) — and do it file by file with visual checks: an automated regex pass emptied
 `MathPractice.css`.
 
-### The REST Countries v5 API paginates at 25
-Flag Finder was quizzing 25 of 254 countries. Follow `data.meta.more` using `offset`, pause
+### The REST Countries v5 API defaults to 25 records per page
+Flag Finder was quizzing 25 of 254 countries. Request `limit=100` (supported on
+the free plan), render usable pages progressively, and follow `data.meta.more` using `offset`, pause
 ~120ms between pages (bursts get rate-limited, and the throttled response carries **no CORS
 headers**, surfacing as an opaque `TypeError: Failed to fetch`), and keep partial results rather
 than failing the whole load.

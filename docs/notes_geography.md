@@ -11,9 +11,17 @@ Idea: Show a simplified world map — “Tap Africa!” → highlights correct r
 ## City Spotlight
 Route: /city-spotlight
 Skills: Recognize famous cities
-Idea: “Find London on the map” or “Match picture to city name.”
+Idea: “Match picture to city name.”
 🎯 Introduces global awareness.
 ✅ *Already built*
+
+## Find the City
+Route: /find-the-city
+Skills: Locate famous cities on a world map
+Idea: “Find London on the map” — tap the map, then see a line to the real city
+and how many km away the tap was. A hint names the country.
+🎯 Builds map-reading and a sense of distance.
+✅ *Already built* (split out of City Spotlight)
 
 2. Find the Ocean
 Route: /find-the-ocean

@@ -1,0 +1,198 @@
+/* === Wrapper ===
+   A wide stage so the map is big enough for small fingers to find a city. */
+.find-the-city {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+}
+
+/* === Score & Prompt === */
+.find-the-city .score {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--light-text);
+}
+
+.find-the-city .prompt {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--light-text);
+}
+
+body.dark .find-the-city .score,
+body.dark .find-the-city .prompt {
+  color: var(--dark-text);
+}
+
+/* === Map === */
+.find-the-city .mapContainer {
+  width: 100%;
+  height: clamp(340px, 60vh, 720px);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.find-the-city .leaflet-container {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  border-radius: 12px;
+}
+
+.find-the-city .mapContainer.answered .leaflet-container {
+  cursor: grab;
+}
+
+/* Result, hint and "Next city" sit in one row between the prompt and the map. */
+.find-the-city .mapStatus {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem 1.25rem;
+  min-height: 3.25rem;
+}
+
+.find-the-city .mapStatus .info {
+  margin-top: 0;
+}
+
+.find-the-city .hintBtn {
+  min-height: 3rem;
+  padding: 0.6rem 1.25rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: 2px solid var(--light-accent);
+  background-color: var(--light-panel);
+  color: var(--light-text);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.find-the-city .hintBtn:hover {
+  background-color: var(--light-accent);
+  color: white;
+}
+
+body.dark .find-the-city .hintBtn {
+  border-color: var(--dark-accent);
+  background-color: var(--dark-panel);
+  color: var(--dark-text);
+}
+
+body.dark .find-the-city .hintBtn:hover {
+  background-color: var(--dark-accent);
+  color: var(--dark-bg);
+}
+
+.find-the-city .hintText {
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 0.6rem 1.1rem;
+  border-radius: 10px;
+  background-color: var(--light-panel);
+  color: var(--light-text);
+}
+
+body.dark .find-the-city .hintText {
+  background-color: var(--dark-panel);
+  color: var(--dark-text);
+}
+
+/* Map overlays. The OSM tiles are light in both themes, so the overlays use
+   the light tokens in both themes too - the dark ones vanish on the tiles. */
+.find-the-city .guessLine {
+  stroke: var(--light-text);
+  stroke-width: 3;
+}
+
+.find-the-city .guessDot {
+  stroke: var(--light-text);
+  stroke-width: 3;
+  fill: var(--light-panel);
+  fill-opacity: 1;
+}
+
+.find-the-city .cityDot {
+  stroke: var(--light-panel);
+  stroke-width: 3;
+  fill: var(--light-accent);
+  fill-opacity: 1;
+}
+
+.find-the-city .leaflet-tooltip.cityLabel,
+.find-the-city .leaflet-tooltip.distanceLabel {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--light-text);
+}
+
+/* === Info/Feedback === */
+.find-the-city .info {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--light-accent);
+  margin-top: 0.5rem;
+}
+
+body.dark .find-the-city .info {
+  color: var(--dark-accent);
+}
+
+/* === Start Screen === */
+.find-the-city .intro {
+  font-size: 1.2rem;
+  color: var(--light-text);
+}
+
+body.dark .find-the-city .intro {
+  color: var(--dark-text);
+}
+
+/* === Buttons === */
+.find-the-city .startBtn,
+.find-the-city .restartBtn,
+.find-the-city .nextBtn {
+  padding: 0.9rem 2rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: var(--light-accent);
+  color: white;
+  border: none;
+  transition: all 0.25s ease;
+}
+
+.find-the-city .startBtn:hover,
+.find-the-city .restartBtn:hover,
+.find-the-city .nextBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(239, 98, 108, 0.3);
+}
+
+body.dark .find-the-city .startBtn,
+body.dark .find-the-city .restartBtn,
+body.dark .find-the-city .nextBtn {
+  background-color: var(--dark-accent);
+  color: var(--dark-bg);
+}
+
+/* === Responsive Layout === */
+@media (max-width: 600px) {
+  .find-the-city {
+    padding: 1rem;
+  }
+
+  .find-the-city .mapContainer {
+    height: clamp(300px, 55vh, 500px);
+  }
+}

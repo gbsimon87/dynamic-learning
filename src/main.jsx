@@ -36,6 +36,7 @@ import SpeedReader from "./pages/skills/english/SpeedReader";
 import WorldMap from "./pages/skills/geography/WorldMap";
 import FlagFinder from "./pages/skills/geography/FlagFinder";
 import CitySpotlight from "./pages/skills/geography/CitySpotlight";
+import FindTheCity from "./pages/skills/geography/FindTheCity";
 import SolarSystem from "./pages/skills/geography/SolarSystem";
 
 // === CURRICULUM ===
@@ -139,6 +140,7 @@ const router = createBrowserRouter([
       { path: "world-map", element: <WorldMap /> },
       { path: "flag-finder", element: <FlagFinder /> },
       { path: "city-spotlight", element: <CitySpotlight /> },
+      { path: "find-the-city", element: <FindTheCity /> },
       { path: "solar-system", element: <SolarSystem /> },
 
       // === Daily Bix puzzle: ungated; a signed-in child collects one star a day ===
