@@ -164,6 +164,193 @@
       "licence": "PDM-1.0",
       "alt": "An old black-and-white portrait photo of Florence Nightingale in a dark dress.",
       "credit": "Florence Nightingale, about 1860. Henry Hering. Public domain."
+    },
+    "cma-flint-handaxe": {
+      "file": "cma-flint-handaxe.webp",
+      "title": "Hand Axe",
+      "creator": "Unknown maker",
+      "date": "about 120,000–30,000 BC",
+      "institution": "Cleveland Museum of Art",
+      "objectUrl": "https://www.clevelandart.org/art/1915.42",
+      "licence": "CC0-1.0",
+      "alt": "A photo of a dark flint hand axe from Egypt. Its uneven surface has chipped patches and worked edges. It has no handle or writing.",
+      "credit": "Flint hand axe from Egypt, about 120,000–30,000 BC. Cleveland Museum of Art, CC0."
+    },
+    "cma-bronze-axe": {
+      "file": "cma-bronze-axe.webp",
+      "title": "Axe Head",
+      "creator": "Unknown maker",
+      "date": "900–600 BC",
+      "institution": "Cleveland Museum of Art",
+      "objectUrl": "https://clevelandart.org/art/1988.2",
+      "licence": "CC0-1.0",
+      "alt": "A photo of a bronze axe head from the Caucasus. Fine lines and an animal design decorate its surface. Its handle is missing.",
+      "credit": "Axe Head, 900–600 BC. Cleveland Museum of Art, CC0."
+    },
+    "cma-claudius-coin": {
+      "file": "cma-claudius-coin.webp",
+      "title": "Aureus: Bust of Claudius I (obverse)",
+      "creator": "Unknown maker",
+      "date": "47–48 AD",
+      "institution": "Cleveland Museum of Art",
+      "objectUrl": "https://clevelandart.org/art/1969.158.a",
+      "licence": "CC0-1.0",
+      "alt": "A gold Roman coin showing Claudius from the side. Letters run around his head.",
+      "credit": "Aureus: Bust of Claudius I (obverse), 47–48 AD. Cleveland Museum of Art, CC0."
+    },
+    "cma-verica-coin": {
+      "file": "cma-verica-coin.webp",
+      "title": "Verica Stater: Sunken Tablet (obverse); Horse and Rider (reverse)",
+      "creator": "Unknown maker",
+      "date": "about 10–40 AD",
+      "institution": "Cleveland Museum of Art",
+      "objectUrl": "https://clevelandart.org/art/1969.146",
+      "licence": "CC0-1.0",
+      "alt": "Two sides of a British gold coin of King Verica. One side shows a horse and rider. The other has letters in a sunken rectangle.",
+      "credit": "Verica Stater: Sunken Tablet (obverse); Horse and Rider (reverse), about 10–40 AD. Cleveland Museum of Art, CC0."
+    },
+    "cma-roman-mosaic": {
+      "file": "cma-roman-mosaic.webp",
+      "title": "Mosaic Pavement",
+      "creator": "Unknown maker",
+      "date": "1–100 AD",
+      "institution": "Cleveland Museum of Art",
+      "objectUrl": "https://clevelandart.org/art/1918.403",
+      "licence": "CC0-1.0",
+      "alt": "A Roman floor mosaic from Italy. Small light and dark stone pieces form repeating patterns, borders and shapes.",
+      "credit": "Mosaic Pavement, 1–100 AD. Cleveland Museum of Art, CC0."
+    },
+    "cma-egypt-boat-jar": {
+      "file": "cma-egypt-boat-jar.webp",
+      "title": "Decorated Jar with Boat Scenes",
+      "creator": "Unknown maker",
+      "date": "about 3300–3100 BC",
+      "institution": "Cleveland Museum of Art",
+      "objectUrl": "https://clevelandart.org/art/1914.639",
+      "licence": "CC0-1.0",
+      "alt": "An ancient Egyptian pottery jar with a round body and an opening. Painted boat shapes and rows of short lines decorate its surface.",
+      "credit": "Decorated Jar with Boat Scenes, about 3300–3100 BC. Cleveland Museum of Art, CC0."
+    },
+    "cma-egypt-coffin-lid": {
+      "file": "cma-egypt-coffin-lid.webp",
+      "title": "Coffin of Bakenmut (lid)",
+      "creator": "Unknown maker",
+      "date": "about 1000–900 BC",
+      "institution": "Cleveland Museum of Art",
+      "objectUrl": "https://clevelandart.org/art/1914.561.b",
+      "licence": "CC0-1.0",
+      "alt": "A painted wooden Egyptian coffin lid for Bakenmut, not an uncovered body. A face, striped head covering, writing and many figures decorate it.",
+      "credit": "Coffin of Bakenmut (lid), about 1000–900 BC. Cleveland Museum of Art, CC0."
+    },
+    "cma-egypt-scribe": {
+      "file": "cma-egypt-scribe.webp",
+      "title": "Seated Scribe of Medthu",
+      "creator": "Unknown maker",
+      "date": "about 1479–1425 BC",
+      "institution": "Cleveland Museum of Art",
+      "objectUrl": "https://clevelandart.org/art/1920.2004",
+      "licence": "CC0-1.0",
+      "alt": "An Egyptian stone statue of a seated scribe. A writing surface rests across his lap.",
+      "credit": "Seated Scribe of Medthu, about 1479–1425 BC. Cleveland Museum of Art, CC0."
+    },
+    "cma-egypt-papyrus": {
+      "file": "cma-egypt-papyrus.webp",
+      "title": "Book of the Dead of Hori",
+      "creator": "Unknown maker",
+      "date": "about 1069–945 BC",
+      "institution": "Cleveland Museum of Art",
+      "objectUrl": "https://clevelandart.org/art/1921.1032",
+      "licence": "CC0-1.0",
+      "alt": "An Egyptian papyrus, the Book of the Dead of Hori. Rows of small writing signs and drawn figures fill the long sheet.",
+      "credit": "Book of the Dead of Hori, about 1069–945 BC. Cleveland Museum of Art, CC0."
+    },
+    "cma-egypt-fishing": {
+      "file": "cma-egypt-fishing.webp",
+      "title": "Spearing Fish",
+      "creator": "Unknown maker",
+      "date": "about 667–647 BC",
+      "institution": "Cleveland Museum of Art",
+      "objectUrl": "https://clevelandart.org/art/1949.499",
+      "licence": "CC0-1.0",
+      "alt": "An Egyptian stone carving of fish among tall plants, with a spear passing across them. Traces of colour remain.",
+      "credit": "Spearing Fish, about 667–647 BC. Cleveland Museum of Art, CC0."
+    },
+    "cma-roman-altar": {
+      "file": "cma-roman-altar.webp",
+      "title": "Circular Altar with Hermes and Pallas Athena",
+      "creator": "Unknown maker",
+      "date": "100 BC–100 AD",
+      "institution": "Cleveland Museum of Art",
+      "objectUrl": "https://clevelandart.org/art/1915.559",
+      "licence": "CC0-1.0",
+      "alt": "A Roman marble altar with carved figures of Hermes and Athena. One figure wears a helmet and holds a long spear.",
+      "credit": "Circular Altar with Hermes and Pallas Athena, 100 BC–100 AD. Cleveland Museum of Art, CC0."
+    },
+    "cma-egypt-king": {
+      "file": "cma-egypt-king.webp",
+      "title": "Head of a King",
+      "creator": "Unknown maker",
+      "date": "about 1069–715 BC",
+      "institution": "Cleveland Museum of Art",
+      "objectUrl": "https://clevelandart.org/art/1914.663",
+      "licence": "CC0-1.0",
+      "alt": "An Egyptian stone sculpture of a king wearing a striped headcloth with a snake shape at the forehead. The king is not securely identified.",
+      "credit": "Head of a King, about 1069–715 BC. Cleveland Museum of Art, CC0."
+    },
+    "burton-tutankhamun-tomb": {
+      "file": "burton-tutankhamun-tomb.webp",
+      "title": "Objects in Tutankhamun's tomb",
+      "creator": "Harry Burton",
+      "date": "1922",
+      "institution": "Heidelberg University Library, via Wikimedia Commons",
+      "objectUrl": "https://commons.wikimedia.org/wiki/File:Tutankhamun_tomb_photographs_2_011.jpg",
+      "licence": "PDM-1.0",
+      "alt": "Harry Burton's black-and-white 1922 photograph of furniture and disassembled chariot parts in Tutankhamun's tomb.",
+      "credit": "Objects in Tutankhamun's tomb, 1922. Photo by Harry Burton. Public domain."
+    },
+    "skara-brae-houses": {
+      "file": "skara-brae-houses.webp",
+      "title": "Stone house at Skara Brae",
+      "creator": "Libasstref",
+      "date": "2000 (digitised 2021)",
+      "institution": "Wikimedia Commons",
+      "objectUrl": "https://commons.wikimedia.org/wiki/File:Skara_Brae_2000-7.jpg",
+      "licence": "CC0-1.0",
+      "alt": "A modern photo of a ruined stone house at Skara Brae. Low stone walls, stone furniture and a square central hearth survive. The original roof is missing.",
+      "credit": "Stone house at Skara Brae. Photo by Libasstref, CC0."
+    },
+    "stonehenge-stones": {
+      "file": "stonehenge-stones.webp",
+      "title": "Stonehenge",
+      "creator": "Erwin Bosman",
+      "date": "2016",
+      "institution": "Wikimedia Commons",
+      "objectUrl": "https://commons.wikimedia.org/wiki/File:Stonehenge_(213671879).jpeg",
+      "licence": "CC0-1.0",
+      "alt": "A modern photo of Stonehenge. Some stones stand upright with others across their tops. Some have fallen or are missing.",
+      "credit": "Stonehenge. Photo by Erwin Bosman, CC0."
+    },
+    "hadrian-walltown": {
+      "file": "hadrian-walltown.webp",
+      "title": "Hadrian's Wall at Walltown Crags",
+      "creator": "Marco Prins",
+      "date": "Modern photo; wall begun AD 122",
+      "institution": "Livius.org",
+      "objectUrl": "https://www.livius.org/pictures/england/walltown-crags/hadrian-s-wall-at-walltown-crags/",
+      "licence": "CC0-1.0",
+      "alt": "A modern photo of Hadrian's Wall at Walltown Crags. Rows of stone blocks follow uneven ground.",
+      "credit": "Hadrian's Wall at Walltown Crags. Photo by Marco Prins, CC0."
+    },
+    "maiden-castle-banks": {
+      "file": "maiden-castle-banks.webp",
+      "title": "Maiden Castle from above",
+      "creator": "Jo and Sue Crane",
+      "date": "Modern photo; published 2025",
+      "institution": "Bournemouth University, via EurekAlert!",
+      "objectUrl": "https://www.eurekalert.org/multimedia/1074809",
+      "licence": "CC0-1.0",
+      "alt": "An aerial photo of Maiden Castle in Dorset. Curving earth banks and ditches surround a large enclosure, with modern fields outside it.",
+      "credit": "Maiden Castle from above. Photo by Jo and Sue Crane, CC0."
     }
   }
 }

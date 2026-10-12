@@ -19,15 +19,17 @@ inventory for each pathway.
 | 3 | [Maths](../src/data/year3MathCurriculum.js) | 44 | 176 | Complete |
 | 3 | [English](../src/data/year3EnglishCurriculum.js) | 32 | 128 | Complete |
 | 3 | [Science](../src/data/year3ScienceCurriculum.js) | 21 | 84 | Complete |
+| 3 | [History](../src/data/year3HistoryCurriculum.js) | 22 | 88 | Complete |
 | 4 | [Maths](../src/data/year4MathCurriculum.js) | 42 | 168 | Complete |
 | 4 | [English](../src/data/year4EnglishCurriculum.js) | 33 | 132 | Complete |
 | 4 | [Science](../src/data/year4ScienceCurriculum.js) | 20 | 80 | Complete |
 | 5 | All subjects | 0 | 0 | Not implemented |
 | 6 | All subjects | 0 | 0 | Not implemented |
-| **Total** | **14 complete pathways** | **406** | **1,624** | |
+| **Total** | **15 complete pathways** | **428 built** | **1,712 built** | |
 
 Other year/subject combinations have no implemented Curriculum Mode pathway.
-History: Years 1–2 are complete; Years 3–4 have approved specs only (see
+History: Years 1–3 are complete;
+Year 4 has an approved spec only (see
 `docs/history-curriculum/HISTORY_TRACKER.md`).
 Geography's standalone Skills Mode games and saved programmes in
 `docs/curriculum/` do not count as curriculum implementations.
@@ -310,6 +312,9 @@ Year 2 History: **6 categories / 17 topics / 68 challenges**, all built
 (2026-10-12; identifiers locked in `year2HistoryCurriculum.test.js`); five rounds
 per challenge and optional local-history activities. Registered outside the year
 award until owner review.
+Year 3 History: **3 categories / 22 topics / 88 challenges**, all built
+(2026-10-12). Counts toward the Year 3 award on explicit owner approval;
+identifiers and four-subject award requirements locked in `year3HistoryCurriculum.test.js`.
 Year 4 Maths: **8 categories / 42 topics / 168 challenges**, all implemented
 (2026-10-11; identifiers locked in `year4MathCurriculum.test.js`).
 Year 4 Science: **5 categories / 20 topics / 80 challenges**, all implemented
@@ -472,7 +477,8 @@ Milestone detection requires **every planned challenge to be built and done**
 before calling a topic, section, subject, or year finished. This is deliberately
 stricter than the unlock rules, which skip unbuilt challenges to keep the path
 playable. A year award applies when the subject just finished was the last unfinished
-subject registered for that year (2026-10-01). `ProblemView` reads the child's
+subject registered for that year (2026-10-01). Year 3 requires Maths, English,
+Science and History after owner approval on 2026-10-12. `ProblemView` reads the child's
 other subjects for the year through the read-only `useOtherSubjectsProgress`
 hook and checks them with `allSubjectsComplete` (completionMilestones.js). A
 subject still loading, or one whose read failed, counts as NOT finished, so the
@@ -1091,6 +1097,55 @@ replay and a byte-for-byte unchanged pre-existing Maths document. Story/start-bu
 contrast measured above 4.5:1 in both themes. The existing 320 px navbar overflow
 was fixed by wrapping controls at full touch size and hiding the bar using its
 measured height. Remaining device checks: `history-curriculum/HISTORY_TRACKER.md`.
+
+### Curriculum Mode — Year 3 History (2026-10-12)
+
+All **22 topics / 88 challenges** are implemented across **Stone Age to Iron Age**
+(6 topics), **Roman Britain** (8) and **The First Civilisations** (8, overview plus
+Ancient Egypt). The owner authorised completion after the first pilot. The KS2
+crosswalk records these three units and the remaining Years 4–6 allocation; this
+pathway does not claim full KS2 coverage.
+
+The shared History engine renders four independently authored cards per topic:
+Meet it, When was it?, History detective and Think like a historian. Each level
+has five rounds drawn without replacement from at least seven templates, three
+choice options, a ≤60-word card and ≤16-word sentences. Every topic uses choice,
+sorting and vertical ordering. Read-aloud, retries, hints and free story reopening
+reuse the existing components. Questions carry their answering evidence.
+
+Chronology uses optional named, scrolling timeline bands, retaining KS1 defaults.
+British periods run Stone → Bronze → Iron → Roman Britain → today. Roman events
+include Caesar's 55/54 BC visits, Claudius AD 43, Boudica about AD 60–61, Hadrian's
+Wall AD 122 and the end of rule about AD 410. Early-civilisation beginnings are
+explicitly not whole civilisations in succession: their developments overlap.
+Some topics sequence processes, such as the Nile farming year or bread making.
+No date arithmetic is assessed; bands show order, not equal durations.
+
+The source lessons use inspected, pinned CC0/public-domain images: a flint tool,
+bronze axe, British and Roman coins, mosaic, altar, Egyptian jar, scribe, papyrus,
+royal sculpture, coffin lid and fishing relief; CC0 site photos show Skara Brae,
+Stonehenge, Maiden Castle and Hadrian's Wall. Harry Burton's public-domain 1922
+photo records furniture and chariot parts in Tutankhamun's tomb. Modern photos,
+find origins and repaired ruins are identified honestly. Objects cannot prove
+every person's experience; royal art and Roman accounts have particular viewpoints.
+Coffin imagery shows no uncovered bodies. All credits appear through the existing
+manifest; pinned sources record URLs, licences, retrieval dates and hashes. WebPs
+are ≤800 px and ≤120 KB. The targeted image pipeline preserves other assets.
+
+All topics have certificate statements. History topic/subject rewards use the
+normal completion flow. On 2026-10-12 the owner explicitly approved History
+counting toward the overall Year 3 award. Its `countsTowardYear: false` flag is
+removed: Year 3 now requires Maths, English, Science and History. Existing saved
+progress and reward records remain intact; Year 2 keeps its separate exclusion.
+No progress shapes, keys or unlock rules changed. See
+`history-curriculum/plans/2026-10-12-plan-5-complete-year-3-history.md` and
+`history-curriculum/HISTORY_TRACKER.md` for checks and remaining device review.
+Full verification passed: lint, production build, 1,659 unit tests and 197
+component tests (four database-dependent skips). Chrome completed all 88 routes
+through real controls with normal locks, retries/hints, replay and reload; all 22
+source cards loaded in both actual themes at 320/390 px. No horizontal overflow
+or uncaught page errors; the pre-existing Maths progress document stayed unchanged.
+The Trophy Room exposes all 22 topic, three quest and History subject certificates.
 
 ### Curriculum Mode — Year 1 Maths (2026-10-11)
 
@@ -3090,6 +3145,8 @@ Year 2 History (2026-10-12) reuses the story-card engine, adds five pinned sourc
 images and original SVG practice sources, and keeps the year-award requirement
 unchanged pending owner review. `historyActivities.js` provides read-only activity
 cards after local topic completion through the existing celebration panel.
+Year 3 History (2026-10-12) implements all 22 approved topics and 88 challenges,
+with optional KS2 timeline bands and pinned CC0/public-domain historical sources.
 1. Save the programme of study verbatim from the DfE PDF in `docs/curriculum/`, with a mapping
    section, and get the topic titles signed off. Titles are ids.
 2. Create `src/data/year<N><Subject>Curriculum.js` in the same shape, with a

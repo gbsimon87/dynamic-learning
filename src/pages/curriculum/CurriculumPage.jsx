@@ -64,6 +64,10 @@ const GLYPHS_BY_SUBJECT = { english: ENGLISH_GLYPHS, science: SCIENCE_GLYPHS, hi
    anything carrying white ink — both are token names so the theme repaints
    them (PROJECT_KNOWLEDGE §9). */
 const CATEGORY_ICONS = [
+  // History, Year 3
+  { match: /^stone age to iron age$/i, icon: "🪨" },
+  { match: /^roman britain$/i, icon: "🏛️" },
+  { match: /^the first civilisations$/i, icon: "🌊" },
   // History, Year 2
   { match: /^changes within living memory$/i, icon: "🕰️" },
   { match: /^the great fire of london$/i, icon: "🔥" },

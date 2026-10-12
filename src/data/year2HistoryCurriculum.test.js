@@ -109,7 +109,7 @@ test("Year 2 History: existing year awards keep their subject requirement pendin
   assert.equal(countsTowardYear(2, "history"), false);
   assert.deepEqual(yearAwardSubjectIds(2), ["math", "english", "science"]);
   assert.equal(countsTowardYear(1, "history"), true);
-  assert.equal(isCurriculumAvailable(3, "history"), false);
+  assert.equal(isCurriculumAvailable(3, "history"), true);
   assert.equal(isCurriculumAvailable(4, "history"), false);
 });
 

@@ -117,13 +117,50 @@ Pupils should be taught about:
 
 # Mapping to our curriculum dataset
 
-> **No History dataset yet.** There is no History backlog item yet. When one is built, map each topic
-> here to the statutory bullet it serves, as
-> [year-3-science.md](year-3-science.md) does, and list anything
-> deliberately not covered.
->
-> Key stage 2 is not split into years by the curriculum; any split we
-> choose must be written down here, as the Years 3 and 4 English split is.
+Key stage 2 is not split into years by the statutory curriculum. Our approved
+Years 3–6 allocation is recorded here; it is a project choice, not a DfE year split.
+
+| Year | Allocation | Implementation |
+|---|---|---|
+| 3 | Stone Age to Iron Age; Roman Empire and its impact on Britain; earliest civilisations overview with Ancient Egypt depth study | All 22 topics / 88 challenges built |
+| 4 | Anglo-Saxons and Scots; Viking and Anglo-Saxon struggle to Edward the Confessor | Approved spec; not built |
+| 5–6 | Local study; a British theme beyond 1066; Ancient Greece; a contrasting non-European society | Reserved; no specs or implementations |
+
+Year 3 therefore does **not** cover the whole KS2 programme. The local study,
+beyond-1066 theme, Greece and non-European comparison remain for later years.
+No statutory text above has been altered. The two British units are chronological;
+the world-history unit introduces a separate, partly overlapping timeline.
+
+## Year 3 topic crosswalk
+
+Dataset: `src/data/year3HistoryCurriculum.js`. Titles approved 2026-10-12;
+IDs are permanent URL and progress keys. A mapping row records intended alignment. Year 3 is implemented; later-year
+allocations remain planned and do not claim taught coverage.
+
+| Topic | ID | Statutory requirement | Focus / non-statutory example |
+|---|---|---|---|
+| How We Know About Prehistory | `how-we-know-about-prehistory` | changes in Britain from the Stone Age to the Iron Age | Sources, artefacts, archaeology and chronology |
+| Stone Age Hunter-Gatherers | `stone-age-hunter-gatherers` | changes in Britain from the Stone Age to the Iron Age | Hunting, gathering, flint tools, fire and seasons |
+| The First Farmers and Skara Brae | `the-first-farmers-and-skara-brae` | changes in Britain from the Stone Age to the Iron Age | Late Neolithic farming and Skara Brae |
+| Stonehenge and the Bronze Age | `stonehenge-and-the-bronze-age` | changes in Britain from the Stone Age to the Iron Age | Stonehenge, technology, religion and travel |
+| Iron Age Hill Forts | `iron-age-hill-forts` | changes in Britain from the Stone Age to the Iron Age | Hill forts, farming, art and culture |
+| From Stone to Iron | `from-stone-to-iron` | changes in Britain from the Stone Age to the Iron Age | Change and continuity across the period |
+| The Roman Empire and Its Army | `the-roman-empire-and-its-army` | the Roman Empire and its impact on Britain | Empire and army by AD 42 |
+| Julius Caesar Tries to Invade | `julius-caesar-tries-to-invade` | the Roman Empire and its impact on Britain | Attempted invasions, 55 and 54 BC |
+| Claudius Conquers Britain | `claudius-conquers-britain` | the Roman Empire and its impact on Britain | Invasion and conquest, AD 43 |
+| Boudica Fights Back | `boudica-fights-back` | the Roman Empire and its impact on Britain | British resistance |
+| Hadrian's Wall | `hadrians-wall` | the Roman Empire and its impact on Britain | The Roman frontier |
+| Roman Towns, Roads and Baths | `roman-towns-roads-and-baths` | the Roman Empire and its impact on Britain | Romanisation and technology, including Caerwent |
+| Roman Gods and Early Christianity | `roman-gods-and-early-christianity` | the Roman Empire and its impact on Britain | Culture, beliefs and early Christianity |
+| How the Romans Changed Britain | `how-the-romans-changed-britain` | the Roman Empire and its impact on Britain | Impact and lasting changes |
+| Where the First Civilisations Began | `where-the-first-civilisations-began` | the achievements of the earliest civilizations (overview and Ancient Egypt depth study) | Where and when: Sumer, Indus Valley, Egypt and Shang China |
+| What the First Civilisations Gave Us | `what-the-first-civilisations-gave-us` | the achievements of the earliest civilizations (overview and Ancient Egypt depth study) | Overview of early achievements |
+| The River Nile | `the-river-nile` | the achievements of the earliest civilizations (overview and Ancient Egypt depth study) | Egypt depth study: river, flood and farming |
+| Pharaohs and Pyramids | `pharaohs-and-pyramids` | the achievements of the earliest civilizations (overview and Ancient Egypt depth study) | Egypt depth study: rulers and pyramids |
+| Hieroglyphs | `hieroglyphs` | the achievements of the earliest civilizations (overview and Ancient Egypt depth study) | Egypt depth study: writing and the Rosetta Stone |
+| Egyptian Gods and Mummies | `egyptian-gods-and-mummies` | the achievements of the earliest civilizations (overview and Ancient Egypt depth study) | Egypt depth study: beliefs and afterlife |
+| Everyday Life in Ancient Egypt | `everyday-life-in-ancient-egypt` | the achievements of the earliest civilizations (overview and Ancient Egypt depth study) | Egypt depth study: homes, work, food and play |
+| Tutankhamun's Tomb | `tutankhamuns-tomb` | the achievements of the earliest civilizations (overview and Ancient Egypt depth study) | Egypt depth study: 1922 discovery and evidence |
 
 ---
 

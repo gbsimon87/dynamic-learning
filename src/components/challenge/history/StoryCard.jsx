@@ -9,7 +9,7 @@ import "./history.css";
  * Bix explains: the few sentences every question in this challenge is answered from.
  * `hideImage` leaves out the story's photo when the round already shows it.
  */
-export default function StoryCard({ story, hideImage = false }) {
+export default function StoryCard({ story, hideImage = false, hideTimeline = false }) {
   return (
     <section className="history-story" aria-label="Bix's story">
       <div className="history-story-head">
@@ -18,7 +18,7 @@ export default function StoryCard({ story, hideImage = false }) {
         <SpeakButton text={story.lines.join(" ")} compact label="Read Bix's story" />
       </div>
       {story.scene && !hideImage && <HistoryIllustration scene={story.scene} />}
-      {story.timeline && <TimelineVisual timeline={story.timeline} />}
+      {story.timeline && !hideTimeline && <TimelineVisual timeline={story.timeline} />}
       {story.image
         ? (!hideImage && <SourceVisual image={story.image} />)
         : !story.scene && <span className="history-story-picture" role="img" aria-label={story.pictureLabel}>{story.picture}</span>}

@@ -104,7 +104,7 @@ test("a year certificate needs every registered subject of that year", () => {
 
 test("a year's subjects come from the registry", () => {
   assert.deepEqual(registeredSubjectNames(2), ["Maths", "English", "Science"]);
-  assert.deepEqual(registeredSubjectNames("3"), ["Maths", "English", "Science"]);
+  assert.deepEqual(registeredSubjectNames("3"), ["Maths", "English", "Science", "History"]);
 });
 
 test("the date reads the British way", () => {

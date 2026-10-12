@@ -2,6 +2,7 @@
  * Builds the History pictures from scripts/history-assets/sources.json.
  *
  *   node scripts/history-assets/fetch.mjs
+ *   node scripts/history-assets/fetch.mjs --only cma-flint-handaxe
  *
  * Downloads each pinned file, checks its sha256, scales it to at most 800 px on
  * the long edge, encodes WebP (≤ 120 KB) in headless Chrome, writes
@@ -18,6 +19,11 @@ import { launchIsolatedPage } from "../science-assets/isolatedPage.mjs";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const SOURCES = JSON.parse(fs.readFileSync(path.join(ROOT, "scripts/history-assets/sources.json"), "utf8"));
 const OUT = path.join(ROOT, "src/assets/history");
+const args = process.argv.slice(2);
+if (args.length && (args.length !== 2 || args[0] !== "--only" || !Object.hasOwn(SOURCES, args[1]))) {
+  throw new Error("usage: node scripts/history-assets/fetch.mjs [--only <known image id>]");
+}
+const selected = args.length ? { [args[1]]: SOURCES[args[1]] } : SOURCES;
 const CHROME = process.env.CHROME_PATH ?? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const ALLOWED = new Set(["CC0-1.0", "PDM-1.0"]);
 const MAX_EDGE = 800;
@@ -59,10 +65,11 @@ async function toWebp(page, buffer, mime) {
 const mimeOf = (url) => (/\.png$/i.test(url) ? "image/png" : "image/jpeg");
 
 fs.mkdirSync(path.join(OUT, "images"), { recursive: true });
+// A targeted rebuild preserves every other pinned image and manifest entry.
+const images = args.length ? JSON.parse(fs.readFileSync(path.join(OUT, "manifest.json"), "utf8")).images : {};
 const { browser, page } = await launchIsolatedPage(CHROME);
-const images = {};
 try {
-  for (const [id, source] of Object.entries(SOURCES).sort(([a], [b]) => a.localeCompare(b))) {
+  for (const [id, source] of Object.entries(selected).sort(([a], [b]) => a.localeCompare(b))) {
     const webp = await toWebp(page, await fetchVerified(id, source), mimeOf(source.fileUrl));
     const file = `${id}.webp`;
     fs.writeFileSync(path.join(OUT, "images", file), webp);
