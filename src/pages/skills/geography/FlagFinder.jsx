@@ -284,7 +284,7 @@ export default function FlagFinder() {
         >
           {isCorrect
             ? '✓ Correct!'
-            : `✗ Wrong! It was ${question.correct.name}`}
+            : `✗ Not quite! It was ${question.correct.name}`}
         </div>
       )}
 
