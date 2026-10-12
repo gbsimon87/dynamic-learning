@@ -11,6 +11,11 @@
   width: 100%;
 }
 
+/* Map mode gets a much wider stage so cities are easy to find and tap. */
+.city-spotlight.city-spotlight--map {
+  max-width: 1200px;
+}
+
 /* === Score & Prompt === */
 .city-spotlight .score {
   font-size: 1.25rem;
@@ -126,12 +131,10 @@ body.dark .city-spotlight .optionBtn.wrong {
 /* === Map Mode === */
 .city-spotlight .mapContainer {
   width: 100%;
-  max-width: 700px;
-  height: 400px;
+  height: clamp(340px, 60vh, 720px);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  margin-top: 0.5rem;
 }
 
 .city-spotlight .leaflet-container {
@@ -139,6 +142,95 @@ body.dark .city-spotlight .optionBtn.wrong {
   height: 100%;
   cursor: pointer;
   border-radius: 12px;
+}
+
+.city-spotlight .mapContainer.answered .leaflet-container {
+  cursor: grab;
+}
+
+/* Result, hint and "Next city" sit in one row between the prompt and the map. */
+.city-spotlight .mapStatus {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem 1.25rem;
+  min-height: 3.25rem;
+}
+
+.city-spotlight .mapStatus .info {
+  margin-top: 0;
+}
+
+.city-spotlight .hintBtn {
+  min-height: 3rem;
+  padding: 0.6rem 1.25rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 10px;
+  border: 2px solid var(--light-accent);
+  background-color: var(--light-panel);
+  color: var(--light-text);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.city-spotlight .hintBtn:hover {
+  background-color: var(--light-accent);
+  color: white;
+}
+
+body.dark .city-spotlight .hintBtn {
+  border-color: var(--dark-accent);
+  background-color: var(--dark-panel);
+  color: var(--dark-text);
+}
+
+body.dark .city-spotlight .hintBtn:hover {
+  background-color: var(--dark-accent);
+  color: var(--dark-bg);
+}
+
+.city-spotlight .hintText {
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 0.6rem 1.1rem;
+  border-radius: 10px;
+  background-color: var(--light-panel);
+  color: var(--light-text);
+}
+
+body.dark .city-spotlight .hintText {
+  background-color: var(--dark-panel);
+  color: var(--dark-text);
+}
+
+/* Map overlays. The OSM tiles are light in both themes, so the overlays use
+   the light tokens in both themes too - the dark ones vanish on the tiles. */
+.city-spotlight .guessLine {
+  stroke: var(--light-text);
+  stroke-width: 3;
+}
+
+.city-spotlight .guessDot {
+  stroke: var(--light-text);
+  stroke-width: 3;
+  fill: var(--light-panel);
+  fill-opacity: 1;
+}
+
+.city-spotlight .cityDot {
+  stroke: var(--light-panel);
+  stroke-width: 3;
+  fill: var(--light-accent);
+  fill-opacity: 1;
+}
+
+.city-spotlight .leaflet-tooltip.cityLabel,
+.city-spotlight .leaflet-tooltip.distanceLabel {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--light-text);
 }
 
 /* === Info/Feedback === */
@@ -173,7 +265,8 @@ body.dark .city-spotlight .settingsGroup label {
 
 /* === Buttons === */
 .city-spotlight .startBtn,
-.city-spotlight .restartBtn {
+.city-spotlight .restartBtn,
+.city-spotlight .nextBtn {
   padding: 0.9rem 2rem;
   font-size: 1.2rem;
   font-weight: 600;
@@ -186,13 +279,15 @@ body.dark .city-spotlight .settingsGroup label {
 }
 
 .city-spotlight .startBtn:hover,
-.city-spotlight .restartBtn:hover {
+.city-spotlight .restartBtn:hover,
+.city-spotlight .nextBtn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(239, 98, 108, 0.3);
 }
 
 body.dark .city-spotlight .startBtn,
-body.dark .city-spotlight .restartBtn {
+body.dark .city-spotlight .restartBtn,
+body.dark .city-spotlight .nextBtn {
   background-color: var(--dark-accent);
   color: var(--dark-bg);
 }
@@ -240,8 +335,12 @@ body.dark .city-spotlight select:focus {
     padding: 0.6rem 1.2rem;
   }
 
+  .city-spotlight.city-spotlight--map {
+    padding: 1rem;
+  }
+
   .city-spotlight .mapContainer {
-    height: 300px;
+    height: clamp(300px, 55vh, 500px);
   }
 }
 
