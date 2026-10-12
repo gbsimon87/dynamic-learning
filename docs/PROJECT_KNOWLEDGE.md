@@ -1000,6 +1000,13 @@ year split, since the curriculum sets these out per key stage. Year 1 Maths (imp
 Year 1, 2 and 6 Science were added the same day, so every primary year of
 English, Maths and Science is saved.
 
+History checked 2026-10-12 before the first History dataset: key stage 1 was
+correct; key stage 2 had the right words but five statutory bullets sat inside
+the non-statutory example lists and the last three had lost their bullets, so
+its subject content was rebuilt with each requirement on its own and its
+examples nested under it. Key stage 3 History (years 7 to 9) was added for
+reference only, so primary topics can be written with the next stage in view.
+
 **Every curriculum file follows the official DfE PDF** (decided 2026-10-11), not
 the gov.uk web page. The 2015 web page differs editorially (numbers as
 digits, some reworded or dropped phrases); each file lists those differences at

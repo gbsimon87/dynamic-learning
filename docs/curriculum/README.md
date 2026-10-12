@@ -59,6 +59,7 @@ Set out per key stage, not per year, like Geography.
 |---|---|
 | [key-stage-1-history.md](key-stage-1-history.md) | Key stage 1 (years 1 and 2), with the purpose of study and aims |
 | [key-stage-2-history.md](key-stage-2-history.md) | Key stage 2 (years 3 to 6), with the purpose of study and aims |
+| [key-stage-3-history.md](key-stage-3-history.md) | Key stage 3 (years 7 to 9), kept for reference only: beyond the app's years, it shows where key stage 2 periods lead |
 
 ## How to use these
 
