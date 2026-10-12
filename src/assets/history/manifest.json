@@ -1,0 +1,26 @@
+{
+  "images": {
+    "cma-child-with-drum": {
+      "file": "cma-child-with-drum.webp",
+      "title": "Child with Drum",
+      "creator": "Unidentified photographer",
+      "date": "1850s",
+      "institution": "Cleveland Museum of Art",
+      "objectUrl": "https://clevelandart.org/art/2002.33",
+      "licence": "CC0-1.0",
+      "alt": "A very old photo of a child holding a drum and two drumsticks.",
+      "credit": "Child with Drum, 1850s. Cleveland Museum of Art, CC0."
+    },
+    "cma-two-children-with-toys": {
+      "file": "cma-two-children-with-toys.webp",
+      "title": "Two Children with Toys",
+      "creator": "Unidentified photographer",
+      "date": "about 1855",
+      "institution": "Cleveland Museum of Art",
+      "objectUrl": "https://clevelandart.org/art/2002.32",
+      "licence": "CC0-1.0",
+      "alt": "A very old photo of two children. A doll sits in a wooden cart with wheels. There is a basket on the floor.",
+      "credit": "Two Children with Toys, about 1855. Cleveland Museum of Art, CC0."
+    }
+  }
+}
