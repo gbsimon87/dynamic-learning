@@ -123,7 +123,7 @@ Years 3–6 allocation is recorded here; it is a project choice, not a DfE year 
 | Year | Allocation | Implementation |
 |---|---|---|
 | 3 | Stone Age to Iron Age; Roman Empire and its impact on Britain; earliest civilisations overview with Ancient Egypt depth study | All 22 topics / 88 challenges built |
-| 4 | Anglo-Saxons and Scots; Viking and Anglo-Saxon struggle to Edward the Confessor | Approved spec; not built |
+| 4 | Anglo-Saxons and Scots; Viking and Anglo-Saxon struggle to Edward the Confessor | All 18 topics / 72 challenges built |
 | 5–6 | Local study; a British theme beyond 1066; Ancient Greece; a contrasting non-European society | Reserved; no specs or implementations |
 
 Year 3 therefore does **not** cover the whole KS2 programme. The local study,
@@ -134,7 +134,7 @@ the world-history unit introduces a separate, partly overlapping timeline.
 ## Year 3 topic crosswalk
 
 Dataset: `src/data/year3HistoryCurriculum.js`. Titles approved 2026-10-12;
-IDs are permanent URL and progress keys. A mapping row records intended alignment. Year 3 is implemented; later-year
+IDs are permanent URL and progress keys. A mapping row records intended alignment. Years 3–4 are implemented; Years 5–6
 allocations remain planned and do not claim taught coverage.
 
 | Topic | ID | Statutory requirement | Focus / non-statutory example |
@@ -161,6 +161,32 @@ allocations remain planned and do not claim taught coverage.
 | Egyptian Gods and Mummies | `egyptian-gods-and-mummies` | the achievements of the earliest civilizations (overview and Ancient Egypt depth study) | Egypt depth study: beliefs and afterlife |
 | Everyday Life in Ancient Egypt | `everyday-life-in-ancient-egypt` | the achievements of the earliest civilizations (overview and Ancient Egypt depth study) | Egypt depth study: homes, work, food and play |
 | Tutankhamun's Tomb | `tutankhamuns-tomb` | the achievements of the earliest civilizations (overview and Ancient Egypt depth study) | Egypt depth study: 1922 discovery and evidence |
+
+## Year 4 topic crosswalk
+
+Dataset: `src/data/year4HistoryCurriculum.js`. All approved titles are implemented;
+IDs are permanent URL and progress keys. Years 5–6 allocations remain unbuilt.
+
+| Topic | ID | Statutory requirement | Focus / non-statutory example |
+|---|---|---|---|
+| When the Romans Left Britain | `when-the-romans-left-britain` | Britain’s settlement by Anglo-Saxons and Scots | Roman withdrawal about AD 410 and western empire falling |
+| The Scots Come from Ireland | `the-scots-come-from-ireland` | Britain’s settlement by Anglo-Saxons and Scots | Scots, Ireland, Dál Riata and Dunadd |
+| Anglo-Saxon Settlers | `anglo-saxon-settlers` | Britain’s settlement by Anglo-Saxons and Scots | Angles, Saxons, Jutes and migration |
+| Anglo-Saxon Kingdoms | `anglo-saxon-kingdoms` | Britain’s settlement by Anglo-Saxons and Scots | Kingdoms, boundaries and power |
+| Anglo-Saxon Village Life | `anglo-saxon-village-life` | Britain’s settlement by Anglo-Saxons and Scots | Farming, homes and craftwork |
+| Clues in Place Names | `clues-in-place-names` | Britain’s settlement by Anglo-Saxons and Scots | Old English elements and careful name research |
+| Sutton Hoo and Anglo-Saxon Art | `sutton-hoo-and-anglo-saxon-art` | Britain’s settlement by Anglo-Saxons and Scots | Ship burial, metalwork, stories and source limits |
+| Saints and Monasteries | `saints-and-monasteries` | Britain’s settlement by Anglo-Saxons and Scots | Canterbury, Iona, Lindisfarne and Christian conversion |
+| Who Were the Vikings | `who-were-the-vikings` | the Viking and Anglo-Saxon struggle for the Kingdom of England to the time of Edward the Confessor | Scandinavia, longships, travel and everyday roles |
+| The Raid on Lindisfarne | `the-raid-on-lindisfarne` | the Viking and Anglo-Saxon struggle for the Kingdom of England to the time of Edward the Confessor | AD 793 raid; Alcuin, purpose and viewpoint |
+| The Great Viking Invasion | `the-great-viking-invasion` | the Viking and Anglo-Saxon struggle for the Kingdom of England to the time of Edward the Confessor | AD 865 invasion and Danelaw |
+| Viking Life in Jorvik | `viking-life-in-jorvik` | the Viking and Anglo-Saxon struggle for the Kingdom of England to the time of Edward the Confessor | York, Coppergate, trade and archaeology |
+| Alfred the Great | `alfred-the-great` | the Viking and Anglo-Saxon struggle for the Kingdom of England to the time of Edward the Confessor | Edington, burhs, learning and cakes legend |
+| Athelstan First King of England | `athelstan-first-king-of-england` | the Viking and Anglo-Saxon struggle for the Kingdom of England to the time of Edward the Confessor | AD 927, unification and royal authority |
+| Danegeld and King Cnut | `danegeld-and-king-cnut` | the Viking and Anglo-Saxon struggle for the Kingdom of England to the time of Edward the Confessor | Renewed invasions, payments and Cnut in AD 1016 |
+| Anglo-Saxon Laws and Justice | `anglo-saxon-laws-and-justice` | the Viking and Anglo-Saxon struggle for the Kingdom of England to the time of Edward the Confessor | Laws, wergild, oaths, moots and gentle ordeal explanation |
+| Edward the Confessor | `edward-the-confessor` | the Viking and Anglo-Saxon struggle for the Kingdom of England to the time of Edward the Confessor | Westminster, succession and death in AD 1066 |
+| From Romans to 1066 | `from-romans-to-1066` | the Viking and Anglo-Saxon struggle for the Kingdom of England to the time of Edward the Confessor | Chronology, change, continuity and source comparison |
 
 ---
 

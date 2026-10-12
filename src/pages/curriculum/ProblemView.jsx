@@ -7,7 +7,7 @@ import { ChallengeContext } from "../../components/challenge/challenge-context";
 import CompletionCelebration from "../../components/celebration/CompletionCelebration";
 import { useProgress } from "../../hooks/useProgress";
 import { useOtherSubjectsProgress } from "../../hooks/useOtherSubjectsProgress";
-import { getSubjectName, loadCurriculum } from "../../data/curriculumRegistry";
+import { countsTowardYear, getSubjectName, loadCurriculum } from "../../data/curriculumRegistry";
 import { isChallengeImplemented } from "../../data/challengeAvailability";
 import { buildLockState } from "../../data/curriculumLocks";
 import { findNextChallenge } from "../../data/curriculumNavigation";
@@ -94,7 +94,7 @@ function ProblemView() {
       topicId,
       challengeId,
       isBuilt,
-      otherSubjectsComplete: otherSubjects !== null && allSubjectsComplete(otherSubjects),
+      otherSubjectsComplete: countsTowardYear(year, subject) && otherSubjects !== null && allSubjectsComplete(otherSubjects),
     });
     // Idempotent: the reducer ignores a repeat, so a double-submit can't
     // duplicate the entry.

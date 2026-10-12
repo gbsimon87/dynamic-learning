@@ -110,7 +110,7 @@ test("Year 2 History: existing year awards keep their subject requirement pendin
   assert.deepEqual(yearAwardSubjectIds(2), ["math", "english", "science"]);
   assert.equal(countsTowardYear(1, "history"), true);
   assert.equal(isCurriculumAvailable(3, "history"), true);
-  assert.equal(isCurriculumAvailable(4, "history"), false);
+  assert.equal(isCurriculumAvailable(4, "history"), true);
 });
 
 test("Year 2 History: local activities are read-only and appear only for a finished local topic", async () => {

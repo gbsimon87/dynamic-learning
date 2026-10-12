@@ -1,3 +1,4 @@
+import { YEAR4_HISTORY_TOPIC_SKILLS } from "./year4HistoryCertificateSkills.js";
 /**
  * The "I can…" line on a certificate: one short, first-person statement per
  * curriculum topic, in words a 6–8 year old can read to a grown-up.
@@ -38,6 +39,7 @@ export const TOPIC_SKILLS = {
   ...YEAR1_HISTORY_TOPIC_SKILLS,
   ...YEAR2_HISTORY_TOPIC_SKILLS,
   ...YEAR3_HISTORY_TOPIC_SKILLS,
+  ...YEAR4_HISTORY_TOPIC_SKILLS,
   // ---- Year 2 Maths (docs/curriculum/year-2-maths.md) ----
   "2/math/numbers-and-counting": "I can read and write numbers to 100 in numerals and in words.",
   "2/math/counting-forwards-and-backwards": "I can count forwards and backwards in 2s, 3s, 5s and 10s.",

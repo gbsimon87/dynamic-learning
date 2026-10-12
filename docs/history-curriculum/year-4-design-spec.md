@@ -1,6 +1,6 @@
 # Year 4 History: design spec
 
-**Status:** Approved by the owner, 2026-10-12.
+**Status:** Approved by the owner, 2026-10-12; implemented and verified the same day.
 **Tracker:** [HISTORY_TRACKER.md](HISTORY_TRACKER.md). Read it first when resuming.
 **Shared spec:** [shared-design-spec.md](shared-design-spec.md): engine, images, tone,
 registration and testing for all years. This file holds only what is specific to Year 4.

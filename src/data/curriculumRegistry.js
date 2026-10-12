@@ -1,3 +1,4 @@
+import { year4HistoryCurriculum } from "./year4HistoryCurriculum.js";
 import { year2MathCurriculum } from "./year2MathCurriculum.js";
 import { year2EnglishCurriculum } from "./year2EnglishCurriculum.js";
 import { year3MathCurriculum } from "./year3MathCurriculum.js";
@@ -41,6 +42,8 @@ export const CURRICULUM_SUBJECTS = [
 ];
 
 const CURRICULA = [
+  // All 18 topics built; preserve existing Year 4 awards.
+  { year: 4, subject: "history", available: true, countsTowardYear: false, load: () => year4HistoryCurriculum },
   // All 22 topics built; owner approved inclusion in the Year 3 award, 2026-10-12.
   { year: 3, subject: "history", available: true, load: () => year3HistoryCurriculum },
   // All 17 topics built; preserve existing Year 2 awards until owner review.

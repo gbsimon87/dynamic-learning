@@ -2,32 +2,21 @@
 
 **Start here to resume.** Branch: `feat/history-curriculum`.
 **Last updated:** 2026-10-12.
-**Current milestone:** Year 3 finalised, verified and included in its year award.
-Year 4 is the next unbuilt year.
+**Current milestone:** Years 1–4 complete; Year 4 verified.
 **Built:** Year 1: 14/14 topics, 56/56 challenges. Year 2: 17/17 topics, 68/68
-challenges. Year 3: 22/22 topics, 88/88 challenges. Year 4: approved spec only.
+challenges. Year 3: 22/22 topics, 88/88 challenges. Year 4: 18/18 topics, 72/72 challenges.
 
 ## Resume point
 
-**Year 3 finalised on 2026-10-12 at the owner’s request to finish it off.** All
-Year 3 work and verification are complete, including the approved year-award
-change. Saved in the local commit `feat(history): complete Year 3 History` on
-`feat/history-curriculum`. No deployment was made. Year 4 remains unbuilt; start
-it only on the owner’s next instruction.
-
-The owner authorised **"let's complete all of year 3"** after the pilot.
-[Plan 5](plans/2026-10-12-plan-5-complete-year-3-history.md) completes all remaining
-21 topics in permanent dataset order, with four real wrappers per topic. All
-22 topics / 88 challenges are implemented, with source images and certificate
-statements. Next implementation: the approved Year 4 spec when requested.
-Physical-device touch/read-aloud review remains useful; no further pilot gate
-blocks Year 3 delivery.
-
-The owner approved Year 3 History counting toward the overall Year 3 award on
-2026-10-12. Year 3 now requires **Maths, English, Science and History**; the
-`countsTowardYear: false` flag has been removed for Year 3. Year 1 already counts;
-Year 2 remains outside its year award pending its own approval. Saved progress,
-reward records and challenge unlocking are unchanged.
+The owner requested the complete Year 4 build on 2026-10-12 with no questions.
+[Plan 6](plans/2026-10-12-plan-6-year-4-history.md) implements all 18 approved
+topics in permanent dataset order. This instruction supersedes the shared
+spec's staged pilot and category review pauses. All 72 wrappers, authored
+story cards, certificate statements and the KS2 crosswalk are implemented.
+Year 4 History preserves existing year awards with `countsTowardYear: false`.
+No storage shape, keys or challenge unlock rules changed. Year 1 and Year 3
+award inclusion decisions remain intact; Year 2 retains its exclusion.
+Physical-device touch/read-aloud review remains useful. No deployment made.
 
 Things a successor must not miss:
 
@@ -45,7 +34,7 @@ Things a successor must not miss:
 | 1 ✅ | 5–6 | KS1 | Then and now, the first flight, explorers, kings and queens, clues around you | 14 | [year-1-design-spec.md](year-1-design-spec.md) | Complete; counts toward Year 1 award |
 | 2 ✅ | 6–7 | KS1 | Living memory, Great Fire of London, nurses, people who changed things, days we remember, history near you | 17 | [year-2-design-spec.md](year-2-design-spec.md) | Complete; owner review pending |
 | 3 | 7–8 | KS2 | Stone Age to Iron Age, Roman Britain, first civilisations and Ancient Egypt | 22 | [year-3-design-spec.md](year-3-design-spec.md) | Complete; counts toward Year 3 award |
-| 4 | 8–9 | KS2 | Anglo-Saxons and Scots, Vikings and Anglo-Saxons | 18 | [year-4-design-spec.md](year-4-design-spec.md) | Spec approved |
+| 4 | 8–9 | KS2 | Anglo-Saxons and Scots, Vikings and Anglo-Saxons | 18 | [year-4-design-spec.md](year-4-design-spec.md) | Complete; existing year awards preserved |
 
 ## Documents
 
@@ -67,7 +56,7 @@ Things a successor must not miss:
 | [Plan 4](plans/2026-10-12-plan-4-year-3-foundation-and-pilot.md) | Year 3 foundation and How We Know About Prehistory pilot. |
 | [Plan 5](plans/2026-10-12-plan-5-complete-year-3-history.md) | Complete the remaining 21 Year 3 topics and all 88 challenges. |
 
-Later plans: Year 4.
+| [Plan 6](plans/2026-10-12-plan-6-year-4-history.md) | Complete Year 4: 18 topics, 72 challenges, source purpose and connected chronology. |
 
 ## Decisions locked on 2026-10-12
 
@@ -108,13 +97,13 @@ Nothing open. All specs approved 2026-10-12.
 | Year 2 spec | Approved 2026-10-12 | |
 | Year 3 spec | Approved 2026-10-12 | |
 | Year 4 spec | Approved 2026-10-12 | |
-| Implementation plans | Plans 1–5 implemented | Years 1–3 complete. Year 4 remains. |
+| Implementation plans | Plans 1–6 implemented | Years 1–4 complete. |
 | History registration and engine | Implemented | Subject, profile allowlist, looks, story-card engine with answerability lint, image pipeline, credits. Unit + component tests. |
 | Year 1 build | Complete; owner review pending | Plan 2 (2026-10-12): 13 more topics written to the [authoring brief](plans/year-1-topic-authoring-brief.md), 8 more public-domain pictures. Headless Chrome played all 56 in order from fresh progress, both themes, 320 px, no console errors, 56 numeric completions saved. Earlier pilot evidence: | Dataset (14 topics), KS1 mapping, certificate lines; Toys Then and Now 4/4 challenges. Browser: all four played in headless Chrome through the real controls (2026-10-12): story reopen, hint after two misses, completion, saved progress, both themes, 320 px; no console errors. |
 | Year 2 build | Complete; owner/device review pending | All 17 topic banks, 68 wrappers, certificate lines and KS1 mapping. Five public-domain source images, three original SVG practice visuals, timeline bands and untracked local activities. |
 | Year 3 build | Complete; device review pending | 22 authored topic banks, 88 wrappers, KS2 crosswalk, certificate statements and licensed sources. See verification below. |
-| Year 4 build | Not started | |
-| Full regression and browser verification | Passed for Years 1–3 | Year 3: lint, full tests and build; all 88 challenges completed through actual controls, both themes and phone widths, reload/replay and unchanged pre-existing Maths progress. Year 2: lint, tests and build; all 68 challenges played through the real controls in Chrome, light/dark and 320/390 px, reload, idempotent replay and an unchanged pre-existing Maths progress document. Physical-device touch/voice review pending. |
+| Year 4 build | Complete; verified | 18 banks, 72 wrappers, three open images, ten original SVG teaching drawings. |
+| Full regression and browser verification | Passed for Years 1–4 | Year 4: all 72 challenges played through real controls, 18 source cards in both themes, 15 pre-existing progress documents unchanged, reload/replay and certificates checked. Year 3: lint, full tests and build; all 88 challenges completed through actual controls, both themes and phone widths, reload/replay and unchanged pre-existing Maths progress. Year 2: lint, tests and build; all 68 challenges played through the real controls in Chrome, light/dark and 320/390 px, reload, idempotent replay and an unchanged pre-existing Maths progress document. Physical-device touch/voice review pending. |
 
 ## Year 2 topic delivery
 
@@ -153,6 +142,80 @@ all 68 runs including retries, hints, story reopening and the completion payload
   start-button text 5.46:1 light / 10.79:1 dark. Timeline has no page overflow at 320 px.
 - Pending: physical-device touch and read-aloud voices, owner content review,
   and a decision on including History in the Year 2 year award.
+
+## Year 4 delivery
+
+| Category | Topics | Challenges | State |
+|---|---:|---:|---|
+| Anglo-Saxons and Scots | 8 | 32 | Built |
+| Vikings and Anglo-Saxons | 10 | 40 | Built |
+
+All topics use choice, sorting and chronological ordering through the existing
+History engine. Each of 72 story cards stays within 70 words and 18 words per
+sentence. Every level has five rounds and at least seven authored templates.
+Detective levels explicitly ask who made a source, why and what it cannot prove.
+The final topic connects Roman withdrawal with Edward's death; one final-card
+sentence previews the Norman Conquest. Brooch, coin and Gospels images are
+inspected and pinned with permitted licences. Teaching drawings identify their
+modern authorship and approximate map positions. Earlier subjects and awards
+retain their storage and requirements.
+
+## Year 4 verification (2026-10-12)
+
+- `npm run lint`, `npm test` and `npm run build` pass: **1,669 unit tests** and
+  **217 component tests**, zero failures. Four MongoDB-dependent tests skipped
+  because `MONGODB_URI` is unset. The existing large-chunk build warning remains.
+- **72 story cards / 505 authored templates** pass story/evidence and question-kind
+  checks across 100 seeds per level. All computed wrappers load; all 72 complete
+  component runs pass with retries, hints, reopening and exactly-once completion
+  payloads. Permanent IDs, mapping, certificates, fresh locks, both category
+  cascades, numeric completions and idempotent replay are tested.
+- Isolated Chrome completed all **72 real challenge routes** in dataset order
+  using choice buttons, sort bins and keyboard ordering with normal locks.
+  The run started with fresh History progress; the final seven challenges were
+  resumed after an editorial update changed a cached question in the driver.
+  No application workaround was needed. `VITE_USE_API=false`,
+  `VITE_UNLOCK_ALL=false` and localhost-only requests protected live accounts.
+- Both actual app themes and 320/390 px widths were checked. Two misses reveal
+  hints without advancing; reopening retains answers. All 18 source cards loaded
+  in both themes at 320 px; images decoded, drawing labels/captions were reviewed,
+  and the connected timeline's muted earlier-period text remained readable.
+  No horizontal page overflow or uncaught page errors.
+- Measured story contrast: **17.28:1 light / 11.18:1 dark**; start-button text:
+  **5.46:1 light / 10.79:1 dark**. Final SVG label spacing was screenshot-reviewed.
+- Reload retained exactly **72 numeric completions**, `[1, 2, 3, 4]` for every
+  topic. A full Challenge 1 replay added no duplicate; the prior Maths document
+  stayed unchanged. A separate fresh-History regression loaded all **15 other
+  implemented curriculum progress documents**, completed all four pilot slots,
+  reloaded and replayed; every pre-existing document remained unchanged.
+- Trophy Room exposes **18 topic certificates, two quest certificates and the
+  Year 4 History subject certificate**. Every topic and subject dialog opened
+  with populated achievement statements, no page errors or progress mutation.
+- Year 4's overall year award still requires Maths, English and Science; History
+  is playable and earns its own rewards/certificates without changing that award.
+  Physical-device touch and read-aloud voice review remain pending.
+- No deployment or commit was made in this session.
+
+## Year 4 bug/security review (2026-10-12)
+
+The [full review](YEAR4_BUG_SECURITY_REVIEW.md) fixes five findings: excluded
+History subjects could re-award the year; one Lindisfarne question had three
+chronologically valid options; one answer was malformed; a timeline prompt
+described the wrong UI; and failed source images had no recovery control.
+No confirmed exploitable Year 4 vulnerability was found. Dependency audit:
+zero known vulnerabilities. Existing progress IDs, shape, keys and unlock rules
+are unchanged, as is Year 4's Maths/English/Science year-award requirement.
+
+Final lint, test and build pass: **1,670 unit / 225 component tests**, four
+database-dependent skips, existing large-chunk warning. Chrome played all 72
+routes with normal locks and both themes; reload/replay retained 72 numeric
+completions without duplicates or page errors. Additional browser checks cover
+eight rejected URLs, failed-image recovery, profile isolation, corrupt progress,
+the excluded subject's final award and preservation of all 15 other curriculum
+documents. New regressions cover all 505 templates, duplicate taps, completion
+timer cleanup, wrong structural answers, escaped text, source errors and year
+awards for excluded/included subjects. No live database/account was used.
+Physical-device touch/voice review remains pending; no deployment or commit.
 
 ## Year 3 delivery
 
@@ -246,6 +309,14 @@ inclusion was approved and applied on 2026-10-12.
   now approved and applied.
 
 ## Log
+
+- **2026-10-12** Owner requested the complete Year 4 History curriculum, with
+  decisions made autonomously and no questions. Plan 6 delivered all 18 topics /
+  72 challenges, 505 authored templates, KS2 mapping, certificate statements,
+  three pinned open images and ten original teaching drawings. Full automated,
+  Chrome, source-card, certificate and persistence verification passed. Existing
+  awards and progress remain intact; physical-device voice/touch review remains.
+  No deployment or commit made.
 
 - **2026-10-12** Owner requested “finish it off” after the pause. Finalised the
   Year 3 handoff and saved the completed curriculum, sources, tests, approved

@@ -414,5 +414,44 @@
     "sha256": "958abee982956c2cfb23f3f4796ac64ba3bae6e57a44147376ef96021d17bdf3",
     "alt": "An aerial photo of Maiden Castle in Dorset. Curving earth banks and ditches surround a large enclosure, with modern fields outside it.",
     "credit": "Maiden Castle from above. Photo by Jo and Sue Crane, CC0."
+  },
+  "cma-anglo-saxon-brooch": {
+    "title": "Fibula",
+    "creator": "Unknown maker",
+    "date": "500s",
+    "institution": "Cleveland Museum of Art",
+    "objectUrl": "https://clevelandart.org/art/1980.3",
+    "fileUrl": "https://openaccess-cdn.clevelandart.org/1980.3/1980.3_web.jpg",
+    "licence": "CC0-1.0",
+    "sha256": "e160ecab714abc1b7b8a570f2c9d85ca4f0b666f898757d3fe217e4f807dacd6",
+    "retrieved": "2026-10-12",
+    "alt": "An Anglo-Saxon metal brooch with a broad decorated top, a narrow central section and a broad lower plate.",
+    "credit": "Fibula, 500s. Cleveland Museum of Art, CC0."
+  },
+  "cma-anglo-saxon-coin": {
+    "title": "Witmen Tremissis: Bust and Trident (obverse)",
+    "creator": "Unknown maker",
+    "date": "early 600s",
+    "institution": "Cleveland Museum of Art",
+    "objectUrl": "https://clevelandart.org/art/1969.159.a",
+    "fileUrl": "https://openaccess-cdn.clevelandart.org/1969.159.a/1969.159.a_web.jpg",
+    "licence": "CC0-1.0",
+    "sha256": "1e37b608d65dcc749e4721e14a09be18a15fa7373fd9833a8e7a086fd9a0ec00",
+    "retrieved": "2026-10-12",
+    "alt": "An early Anglo-Saxon gold coin with a small head and markings on its surface.",
+    "credit": "Witmen Tremissis: Bust and Trident (obverse), early 600s. Cleveland Museum of Art, CC0."
+  },
+  "lindisfarne-gospels": {
+    "title": "Lindisfarne Gospels, folio 27r",
+    "creator": "Attributed to Eadfrith",
+    "date": "about AD 700–720",
+    "institution": "British Library / Wikimedia Commons",
+    "objectUrl": "https://commons.wikimedia.org/wiki/File:LindisfarneFol27rIncipitMatt.jpg",
+    "fileUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d2/LindisfarneFol27rIncipitMatt.jpg",
+    "licence": "PDM-1.0",
+    "sha256": "f0d67f9645737994c947ee6b4d70401592379e0614fd6986cab55fe446217ec4",
+    "retrieved": "2026-10-12",
+    "alt": "A page from the Lindisfarne Gospels with large decorated letters, smaller writing and intricate patterned lines.",
+    "credit": "Lindisfarne Gospels, folio 27r, about AD 700–720. British Library / Wikimedia Commons, public domain."
   }
 }

@@ -90,6 +90,23 @@ describe("quick-pass fixes", () => {
 });
 
 describe("SourceVisual", () => {
+  it("a failed source exposes its description and can retry without losing credits", () => {
+    const { rerender } = show(<SourceVisual image="cma-anglo-saxon-brooch" />);
+    const image = screen.getByRole("img");
+    const description = image.getAttribute("alt");
+    const src = image.getAttribute("src");
+    fireEvent.error(image);
+    expect(screen.getByRole("note").textContent).toContain(description);
+    expect(screen.queryByRole("img")).toBeNull();
+    expect(screen.getByRole("link", { name: "All credits" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Try loading the picture again" }));
+    expect(screen.getByRole("img").getAttribute("src")).toBe(src);
+    fireEvent.error(screen.getByRole("img"));
+    rerender(<MemoryRouter><SourceVisual image="lindisfarne-gospels" /></MemoryRouter>);
+    expect(screen.getByRole("img").getAttribute("src")).not.toBe(src);
+    expect(screen.queryByRole("note")).toBeNull();
+  });
+
   it("an unknown picture shows a note instead of crashing", () => {
     show(<SourceVisual image="no-such-picture" />);
     expect(screen.getByRole("note").textContent).toMatch(/picture could not load/i);

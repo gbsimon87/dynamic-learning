@@ -124,3 +124,5 @@
   .history-map-pair { flex-direction: column; }
   .history-map-pair .history-practice-map { width: 100%; }
 }
+
+.history-earlier-periods { color: var(--ck-text); opacity: 0.75; font-size: 0.9rem; }

@@ -1,3 +1,4 @@
+import Year4Illustration from "./Year4Illustration";
 import "./history.css";
 
 function MapPanel({ modern }) {
@@ -43,5 +44,5 @@ export default function HistoryIllustration({ scene }) {
     </svg>
     <figcaption>Our illustration of two ways to share words.</figcaption>
   </figure>;
-  return null;
+  return <Year4Illustration scene={scene} />;
 }

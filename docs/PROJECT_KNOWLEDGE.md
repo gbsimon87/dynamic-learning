@@ -23,13 +23,13 @@ inventory for each pathway.
 | 4 | [Maths](../src/data/year4MathCurriculum.js) | 42 | 168 | Complete |
 | 4 | [English](../src/data/year4EnglishCurriculum.js) | 33 | 132 | Complete |
 | 4 | [Science](../src/data/year4ScienceCurriculum.js) | 20 | 80 | Complete |
+| 4 | [History](../src/data/year4HistoryCurriculum.js) | 18 | 72 | Complete |
 | 5 | All subjects | 0 | 0 | Not implemented |
 | 6 | All subjects | 0 | 0 | Not implemented |
-| **Total** | **15 complete pathways** | **428 built** | **1,712 built** | |
+| **Total** | **16 complete pathways** | **446 built** | **1,784 built** | |
 
 Other year/subject combinations have no implemented Curriculum Mode pathway.
-History: Years 1–3 are complete;
-Year 4 has an approved spec only (see
+History: Years 1–4 are complete (see
 `docs/history-curriculum/HISTORY_TRACKER.md`).
 Geography's standalone Skills Mode games and saved programmes in
 `docs/curriculum/` do not count as curriculum implementations.
@@ -61,7 +61,7 @@ Geography's standalone Skills Mode games and saved programmes in
 
 **Learn with Bix** (formerly Dynamic Learning) is an interactive web learning platform for primary-school
 children (built first for ~6-year-olds / **UK Year 2**; Curriculum Mode now
-also covers Years 1–4 Maths, Years 1–4 English and Years 1–4 Science). It teaches Maths, English,
+also covers Years 1–4 Maths, English, Science and History). It teaches Maths, English,
 Geometry and Geography through browser-based mini-games.
 
 There are two distinct learning modes, and the distinction matters for every
@@ -182,6 +182,7 @@ src/
 │   ├── year2EnglishCurriculum.js # 39 topics / 156 challenges; shared data-question renderer
 │   ├── year3MathCurriculum.js
 │   ├── year3EnglishCurriculum.js, year4EnglishCurriculum.js
+│   ├── year4HistoryCurriculum.js # 18 topics / 72 challenges; Anglo-Saxons, Scots and Vikings
 │   ├── curriculumRegistry.js    # Which curricula exist — the one source (years 1–4)
 │   ├── english/                 # English content shared across topics: appendix1.js (statutory word lists,
 │   │                            #   our Y3/Y4 split), cast.js, passages*.js, textChecks.js (British spelling)
@@ -315,6 +316,10 @@ award until owner review.
 Year 3 History: **3 categories / 22 topics / 88 challenges**, all built
 (2026-10-12). Counts toward the Year 3 award on explicit owner approval;
 identifiers and four-subject award requirements locked in `year3HistoryCurriculum.test.js`.
+Year 4 History: **2 categories / 18 topics / 72 challenges**, all built
+(2026-10-12; identifiers locked in `year4HistoryCurriculum.test.js`). Five rounds,
+source-maker/purpose questions and connected KS2 timeline; registered outside
+the overall year award to preserve existing certificates.
 Year 4 Maths: **8 categories / 42 topics / 168 challenges**, all implemented
 (2026-10-11; identifiers locked in `year4MathCurriculum.test.js`).
 Year 4 Science: **5 categories / 20 topics / 80 challenges**, all implemented
@@ -1146,6 +1151,68 @@ through real controls with normal locks, retries/hints, replay and reload; all 2
 source cards loaded in both actual themes at 320/390 px. No horizontal overflow
 or uncaught page errors; the pre-existing Maths progress document stayed unchanged.
 The Trophy Room exposes all 22 topic, three quest and History subject certificates.
+
+### Curriculum Mode — Year 4 History (2026-10-12)
+
+All **18 topics / 72 challenges** are implemented across **Anglo-Saxons and
+Scots** (8 topics) and **Vikings and Anglo-Saxons** (10). The approved scope
+continues Roman withdrawal through Edward the Confessor's death in 1066.
+The final card gives one sentence about the Norman Conquest. Greece, a
+non-European comparison, the local study and beyond-1066 theme remain
+allocated to unbuilt Years 5–6; this does not claim full KS2 coverage.
+
+Each topic has four authored story cards, five rounds per level from at least
+seven templates, three choice options, sorting and vertical ordering. Cards
+are ≤70 words; sentences are ≤18 words. Detective questions examine maker,
+purpose, viewpoint and limits: Alcuin was abroad when Lindisfarne was raided;
+royal praise does not supply rivals' views; a written law does not prove
+obedience; Alfred's cakes and Cnut's tide are later stories, not eyewitness
+records. Every question identifies answering words on its card or source.
+Read-aloud, hints, retries, story reopening and completion reuse the shared kit.
+
+Year 4's scrolling timeline runs about AD 410 → Anglo-Saxon kingdoms → 793 →
+865 → Alfred → Athelstan → Cnut → Edward. The earlier Stone, Bronze, Iron and
+Roman periods appear as muted context. Dates label chronology without sums.
+Three inspected CC0/public-domain source images are pinned through the existing
+pipeline: Cleveland's Anglo-Saxon brooch and early coin, and the Lindisfarne
+Gospels page. The earlier coin is explicitly not Athelstan's. A Roman coin is
+reused from Year 3. Original SVG drawings explain Dunadd, kingdom positions,
+village evidence, name elements, Sutton Hoo, longships, the Danelaw, Coppergate
+finds and legends. Drawings and approximate maps are clearly labelled.
+
+The registry, child year selection and loader discover all 72 wrappers.
+All topics have certificate statements. History topic, quest and subject rewards
+use normal completion. `countsTowardYear: false` preserves the existing Year 4
+Maths/English/Science award, following the existing History policy. No saved
+progress shape, key or unlock rule changed. The owner's instruction authorises
+the full build without pilot/category review pauses. See
+`history-curriculum/plans/2026-10-12-plan-6-year-4-history.md` and the tracker for
+verification evidence and physical-device touch/voice review.
+
+Verified: lint and production build; **1,669 unit / 217 component tests** pass,
+with four database-dependent skips and the existing large-chunk warning. Chrome
+played all 72 routes through real controls with normal locks, retries, hints and
+reopening, both themes and phone widths. All 18 source cards were inspected in
+both themes at 320 px. Reload/replay preserved exactly 72 numeric completions;
+a separate new-History run preserved all 15 prior curriculum progress documents.
+All 18 topic certificate dialogs and the subject certificate opened; both quest
+certificates are available. No page errors or horizontal overflow. Physical-device
+voice/touch review remains; no deployment was made.
+
+**Bug/security pass (2026-10-12):** the completion screen now respects the
+current subject's existing `countsTowardYear` eligibility, preventing excluded
+Years 2/4 History from re-awarding the year when other subjects are complete.
+Year 4 content fixes remove an ambiguous Lindisfarne chronology question, a
+malformed answer and a stale timeline description. The shared History source
+renderer offers descriptions and retry when a known image fails. Review scope,
+regressions and verification limits are recorded in
+[the Year 4 review](history-curriculum/YEAR4_BUG_SECURITY_REVIEW.md).
+Final checks pass: **1,670 unit / 225 component tests**, lint and build; four
+database-dependent skips and the existing large-chunk warning remain. Chrome
+replayed all 72 routes and separately verified the excluded subject's final
+award, failed images, rejected URLs, corrupt progress and profile isolation.
+All 15 other curriculum progress documents stayed unchanged. Dependency audit
+reported zero known vulnerabilities; no confirmed Year 4 exploit was found.
 
 ### Curriculum Mode — Year 1 Maths (2026-10-11)
 
@@ -3147,6 +3214,9 @@ unchanged pending owner review. `historyActivities.js` provides read-only activi
 cards after local topic completion through the existing celebration panel.
 Year 3 History (2026-10-12) implements all 22 approved topics and 88 challenges,
 with optional KS2 timeline bands and pinned CC0/public-domain historical sources.
+Year 4 History (2026-10-12) adds all 18 approved topics / 72 challenges with
+source-purpose questions, original SVG teaching aids and a timeline connecting
+Year 3 to 1066. Its year-award exclusion preserves existing certificates.
 1. Save the programme of study verbatim from the DfE PDF in `docs/curriculum/`, with a mapping
    section, and get the topic titles signed off. Titles are ids.
 2. Create `src/data/year<N><Subject>Curriculum.js` in the same shape, with a
