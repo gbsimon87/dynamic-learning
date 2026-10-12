@@ -487,7 +487,9 @@ Science and History after owner approval on 2026-10-12. `ProblemView` reads the 
 other subjects for the year through the read-only `useOtherSubjectsProgress`
 hook and checks them with `allSubjectsComplete` (completionMilestones.js). A
 subject still loading, or one whose read failed, counts as NOT finished, so the
-award is never given on a guess. A year with one subject reads nothing and
+award is never given on a guess. The final run of an eligible subject waits for
+these reads and offers retry on failure; entering each challenge refreshes the
+snapshot (Year 3 History review, 2026-10-12). A year with one subject reads nothing and
 behaves as before. Two badges sit on these milestones (`badges.js`):
 **Subject star** (stored id `year-hero`, kept from when it was called Year hero
 and every year had one subject) on `subject`, and **Year hero** (id
@@ -1151,6 +1153,19 @@ through real controls with normal locks, retries/hints, replay and reload; all 2
 source cards loaded in both actual themes at 320/390 px. No horizontal overflow
 or uncaught page errors; the pre-existing Maths progress document stayed unchanged.
 The Trophy Room exposes all 22 topic, three quest and History subject certificates.
+
+**Bug/security pass (2026-10-12):** the final run of an eligible subject now waits
+for the other subjects’ progress, with retry for failed or invalid reads. New
+challenge routes refresh those reads, preventing stale snapshots from losing
+the Year 3 award. Ordinary runs, practice and excluded History years remain
+playable; progress shapes, IDs, storage and unlock rules are unchanged. Review
+scope, fixes and verification limits are recorded in
+[the Year 3 review](history-curriculum/YEAR3_BUG_SECURITY_REVIEW.md). Checks pass:
+1,670 unit / 235 component tests, lint and build; four database-dependent skips
+and the existing large-chunk warning remain. Chrome checks all 88 route/story
+flows, failed images, invalid routes, corrupt storage and the final award/replay.
+The dependency audit reports zero known vulnerabilities. No confirmed Year 3
+exploit was found.
 
 ### Curriculum Mode — Year 4 History (2026-10-12)
 

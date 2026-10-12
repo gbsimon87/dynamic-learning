@@ -2,11 +2,19 @@
 
 **Start here to resume.** Branch: `feat/history-curriculum`.
 **Last updated:** 2026-10-12.
-**Current milestone:** Years 1–4 complete; Year 4 verified.
+**Current milestone:** Years 1–4 complete; Year 3 bug/security review applied.
 **Built:** Year 1: 14/14 topics, 56/56 challenges. Year 2: 17/17 topics, 68/68
 challenges. Year 3: 22/22 topics, 88/88 challenges. Year 4: 18/18 topics, 72/72 challenges.
 
 ## Resume point
+
+Year 3 History’s [bug/security review](YEAR3_BUG_SECURITY_REVIEW.md) is complete.
+Fixed missed year awards caused by pending/failed or stale other-subject reads.
+The final eligible subject run now waits/retries; every new challenge refreshes
+its read-only snapshot. IDs, stored progress and unlock rules are unchanged.
+All 88 routes were browser-checked; lint, build, 1,670 unit and 235 component
+tests pass (four database-dependent skips). No confirmed Year 3 exploit found.
+
 
 The owner requested the complete Year 4 build on 2026-10-12 with no questions.
 [Plan 6](plans/2026-10-12-plan-6-year-4-history.md) implements all 18 approved
@@ -309,6 +317,16 @@ inclusion was approved and applied on 2026-10-12.
   now approved and applied.
 
 ## Log
+
+- **2026-10-12** Full Year 3 History bug/security pass: reviewed all 22 topics,
+  88 story cards, 617 templates and wrappers, source metadata, loader guards,
+  profile/progress boundaries and awards. Fixed missed year awards from slow,
+  failed/invalid and stale other-subject reads; added ten integration regressions.
+  Checks pass: 1,670 unit / 235 component tests, lint, build and dependency audit
+  (zero known vulnerabilities). Chrome checks all 88 route/story flows, image
+  failure/retry, rejected routes, corrupt storage and final award/reload/replay.
+  Saved progress, IDs and unlock rules remain unchanged. See the Year 3 review
+  for scope and live-database/device verification limits. No deployment made.
 
 - **2026-10-12** Owner requested the complete Year 4 History curriculum, with
   decisions made autonomously and no questions. Plan 6 delivered all 18 topics /

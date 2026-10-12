@@ -3,6 +3,7 @@ import { AuthContext } from "../context/auth-context";
 import { store } from "../data/store";
 import { loadCurriculum, yearAwardSubjectIds } from "../data/curriculumRegistry";
 import { isChallengeImplemented } from "../data/challengeAvailability";
+import { isProgressData } from "../../shared/progressData.js";
 
 /**
  * The active child's progress in every OTHER subject registered for `year`,
@@ -18,9 +19,10 @@ import { isChallengeImplemented } from "../data/challengeAvailability";
  * learner who has not started, not an error, and reads as `{}`.
  *
  * A year with only one subject has nothing to read and returns [] straight
- * away. Year 2's year award therefore behaves exactly as it did before.
+ * away. `refreshKey` identifies a new challenge or explicit retry, so a final
+ * run cannot rely on a snapshot from the beginning of a long subject session.
  */
-export function useOtherSubjectsProgress(year, subject) {
+export function useOtherSubjectsProgress(year, subject, refreshKey = "") {
   const childId = useContext(AuthContext)?.child?._id ?? null;
   // Only subjects that count toward the year award (countsTowardYear).
   const others = yearAwardSubjectIds(year, subject);
@@ -28,7 +30,7 @@ export function useOtherSubjectsProgress(year, subject) {
 
   // Which `childId|year|subject` the loaded result belongs to, so a result for
   // the previous challenge's year or child is never reused.
-  const requestKey = `${childId ?? "none"}|${year}|${subject}`;
+  const requestKey = `${childId ?? "none"}|${year}|${subject}|${refreshKey}`;
   const [loaded, setLoaded] = useState({ key: null, value: null });
 
   useEffect(() => {
@@ -40,7 +42,10 @@ export function useOtherSubjectsProgress(year, subject) {
         let progress = null;
         try {
           const doc = await store.getProgress(childId, year, otherSubject);
-          progress = doc?.data && typeof doc.data === "object" ? doc.data : {};
+          // Only an explicit missing document means the learner has not started.
+          // Invalid responses stay unknown and can be retried, never guessed empty.
+          if (doc === null) progress = {};
+          else if (doc && isProgressData(doc.data)) progress = doc.data;
         } catch {
           progress = null;
         }

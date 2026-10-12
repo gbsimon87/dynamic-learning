@@ -13,6 +13,7 @@ import { buildLockState } from "../../data/curriculumLocks";
 import { findNextChallenge } from "../../data/curriculumNavigation";
 import {
   allSubjectsComplete,
+  fullSubjectComplete,
   getCompletionMilestones,
 } from "../../data/completionMilestones";
 import { useRewards } from "../../hooks/useRewards";
@@ -42,7 +43,9 @@ function ProblemView() {
   // The year's other subjects, read-only: finishing this subject finishes the
   // year only when they are finished too. Null while loading counts as "not
   // finished", so a year award is never given on a guess.
-  const otherSubjects = useOtherSubjectsProgress(year, subject);
+  const [otherSubjectsAttempt, setOtherSubjectsAttempt] = useState(0);
+  const otherSubjects = useOtherSubjectsProgress(year, subject,
+    `${categoryId}/${topicId}/${challengeId}/${otherSubjectsAttempt}`);
 
   // Which challenge the completion panel belongs to. "Next challenge" keeps
   // this component mounted and only changes the route params, so a plain
@@ -200,6 +203,18 @@ function ProblemView() {
   }
   if (!curriculum) return <Navigate to="/curriculum" replace />;
   if (!currentChallenge || currentChallenge.locked) return <Navigate to={topicsHref} replace />;
+
+  // Once the final run saves, replay cannot earn its year milestone again.
+  // Resolve other subjects before that run starts so a slow/failed read cannot
+  // silently lose the year award. Other runs and practice remain playable.
+  if (!alreadyCompleted && countsTowardYear(year, subject) && fullSubjectComplete(
+    withChallengeComplete(progress, categoryId, topicId, challengeId), curriculum, isBuilt
+  )) {
+    if (otherSubjects === null) return <div className="problem-page" role="status">Checking your year progress…</div>;
+    if (otherSubjects.some((entry) => entry.progress === null)) {
+      return <ProgressError loading retry={() => setOtherSubjectsAttempt((attempt) => attempt + 1)} />;
+    }
+  }
 
   return (
     <div className="problem-page">
