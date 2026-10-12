@@ -33,6 +33,7 @@ const SUBJECT_LOOKS = {
   english: { hue: "--cs-hue-english", deep: "--cs-deep-english" },
   geography: { hue: "--cs-hue-geography", deep: "--cs-deep-geography" },
   science: { hue: "--cs-hue-science", deep: "--cs-deep-science" },
+  history: { hue: "--cs-hue-history", deep: "--cs-deep-history" },
 };
 
 const FALLBACK_LOOK = { hue: "--cs-hue-math", deep: "--cs-deep-math" };

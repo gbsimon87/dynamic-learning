@@ -113,11 +113,16 @@ test("subjects: the list is the curriculum's subject ids, and is editable", () =
   assert.ok(EDITABLE_CHILD_FIELDS.includes("subjects"));
 });
 
+test("subjects: History can be chosen", () => {
+  assert.deepEqual(normaliseChildPatch({ subjects: ["history"] }), { subjects: ["history"] });
+  assert.deepEqual(readSubjects({ subjects: ["history"] }), ["history"]);
+});
+
 test("subjects: de-duplicated, null clears, absent untouched, unknown refused", () => {
   assert.deepEqual(normaliseChildPatch({ subjects: ["math", "science", "math"] }), { subjects: ["math", "science"] });
   assert.deepEqual(normaliseChildPatch({ subjects: null }), { subjects: [] });
   assert.deepEqual(normaliseChildPatch({ name: "Ada" }), { name: "Ada" });
-  assert.throws(() => normaliseChildPatch({ subjects: ["history"] }), /INVALID_SUBJECTS/);
+  assert.throws(() => normaliseChildPatch({ subjects: ["astrology"] }), /INVALID_SUBJECTS/);
   assert.throws(() => normaliseChildPatch({ subjects: "math" }), /INVALID_SUBJECTS/);
 });
 
@@ -125,7 +130,7 @@ test("readSubjects tolerates old and corrupt profiles", () => {
   assert.deepEqual(readSubjects({}), []);
   assert.deepEqual(readSubjects(null), []);
   assert.deepEqual(readSubjects({ subjects: "math" }), []);
-  assert.deepEqual(readSubjects({ subjects: ["math", "history"] }), ["math"]);
+  assert.deepEqual(readSubjects({ subjects: ["math", "astrology"] }), ["math"]);
 });
 
 test("normaliseNewChildren whitelists, trims and bounds a sign-up's profiles", () => {
@@ -146,5 +151,5 @@ test("normaliseNewChildren whitelists, trims and bounds a sign-up's profiles", (
   // Counted in characters, not UTF-16 units: twenty emoji is twenty.
   assert.equal([...normaliseNewChildren([{ name: "🦊".repeat(20) }], { max: 6 })[0].name].length, 20);
   assert.throws(() => normaliseNewChildren([{ name: "A", yearGroup: 9 }], { max: 6 }), /INVALID_YEAR_GROUP/);
-  assert.throws(() => normaliseNewChildren([{ name: "A", subjects: ["history"] }], { max: 6 }), /INVALID_SUBJECTS/);
+  assert.throws(() => normaliseNewChildren([{ name: "A", subjects: ["astrology"] }], { max: 6 }), /INVALID_SUBJECTS/);
 });

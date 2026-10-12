@@ -25,10 +25,12 @@
   --cs-hue-english: #9f91e8;
   --cs-hue-geography: #2fa898;
   --cs-hue-science: #e39a24;
+  --cs-hue-history: #b5794f;
   --cs-deep-math: #c33d47;
   --cs-deep-english: #5e4eb8;
   --cs-deep-geography: #1f7d70;
   --cs-deep-science: #8f5900;
+  --cs-deep-history: #7a4a2c;
 
   max-width: 1100px;
   margin: 0 auto;

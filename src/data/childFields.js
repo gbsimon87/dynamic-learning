@@ -20,7 +20,7 @@ export const EDITABLE_CHILD_FIELDS = ["name", "avatar", "colour", "yearGroup", "
  * holds the two together) without importing the registry, which would drag the
  * curriculum datasets into the server.
  */
-export const CHILD_SUBJECTS = ["math", "english", "geography", "science"];
+export const CHILD_SUBJECTS = ["math", "english", "geography", "science", "history"];
 
 /** Longest nickname a NEW profile may have, in characters. Existing names are left alone. */
 export const CHILD_NAME_MAX = 20;

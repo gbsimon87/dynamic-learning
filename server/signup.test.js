@@ -350,7 +350,7 @@ test("sign-up with a code", { skip: URI ? false : "MONGODB_URI not set" }, async
       [[], "INVALID_CHILDREN"],
       [[{ name: "" }], "NAME_REQUIRED"],
       [[{ name: "A", yearGroup: 9 }], "INVALID_YEAR_GROUP"],
-      [[{ name: "A", subjects: ["history"] }], "INVALID_SUBJECTS"],
+      [[{ name: "A", subjects: ["astrology"] }], "INVALID_SUBJECTS"],
       [Array.from({ length: 7 }, () => ({ name: "A" })), "INVALID_CHILDREN"],
     ];
     for (const [children, error] of cases) {

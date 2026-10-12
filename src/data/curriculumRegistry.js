@@ -34,6 +34,7 @@ export const CURRICULUM_SUBJECTS = [
   { id: "english", name: "English", icon: "📚" },
   { id: "geography", name: "Geography", icon: "🌍" },
   { id: "science", name: "Science", icon: "🔬" },
+  { id: "history", name: "History", icon: "🏛️" },
 ];
 
 const CURRICULA = [
