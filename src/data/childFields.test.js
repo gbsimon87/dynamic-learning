@@ -12,6 +12,24 @@ import {
   readYearGroup,
 } from "./childFields.js";
 import { CURRICULUM_SUBJECTS } from "./curriculumRegistry.js";
+import { PROFILE_COLOURS, profileColour } from "./avatars.js";
+
+test("profile fields reject wrong types, unbounded names and CSS injection without stripping normal text", () => {
+  for (const value of [{ $ne: null }, ["Maya"], 42]) {
+    assert.throws(() => normaliseChildPatch({ name: value }), /INVALID_NAME/);
+  }
+  assert.throws(() => normaliseChildPatch({ name: "x".repeat(21) }), /NAME_TOO_LONG/);
+  assert.throws(() => normaliseChildPatch({ name: "Ma\u0000ya" }), /INVALID_NAME/);
+  assert.throws(() => normaliseChildPatch({ avatar: { image: "x" } }), /INVALID_AVATAR/);
+  assert.throws(() => normaliseChildPatch({ avatar: "<img onerror=x>" }), /INVALID_AVATAR/);
+  assert.throws(() => normaliseChildPatch({ colour: "--x), url(https://attacker.example)" }), /INVALID_COLOUR/);
+  assert.throws(() => normaliseChildPatch({ yearGroup: [2] }), /INVALID_YEAR_GROUP/);
+  assert.deepEqual(normaliseChildPatch(Object.create({ name: "inherited" })), {});
+  for (const name of ["O'Brien", "Anne-Marie", "李明", "<b>Mia</b>"]) assert.equal(normaliseChildPatch({ name }).name, name);
+  for (const colour of PROFILE_COLOURS) assert.equal(profileColour(colour), `var(${colour})`);
+  assert.equal(profileColour("--x), url(https://attacker.example)"), "var(--profile-colour-coral)");
+  assert.deepEqual(normaliseChildPatch({ yearGroup: 3 }), { yearGroup: 3 }, "unrelated patches leave legacy names and colours alone");
+});
 
 test("a profile with no yearGroup reads as null, not as a guess", () => {
   assert.equal(readYearGroup({ name: "Mia" }), null);

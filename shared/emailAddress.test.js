@@ -18,6 +18,17 @@ test("maskEmail keeps the first letter and the domain", () => {
   assert.equal(maskEmail("x"), "x");
 });
 
+test("email rejects coerced objects, arrays, markup and control characters", () => {
+  for (const value of [{ $ne: null }, ["a@b.co"], { toString: () => "a@b.co" }, 123]) {
+    assert.equal(normaliseEmail(value), "");
+    assert.equal(isEmailShaped(value), false);
+  }
+  for (const value of ['<script>@example.com', 'a@<img>.com', 'a"b@example.com', 'a\u0000@example.com']) {
+    assert.equal(isEmailShaped(value), false);
+  }
+  assert.equal(isEmailShaped("o'brien+family@example.com"), true);
+});
+
 test("email validation bounds hostile input and rejects empty domain labels", () => {
   const hostile = "a@" + ".".repeat(50_000) + "@";
   const start = performance.now();

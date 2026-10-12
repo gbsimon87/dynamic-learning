@@ -44,3 +44,9 @@ export const PROFILE_COLOURS = [
   "--profile-colour-lilac",
   "--profile-colour-peach",
 ];
+
+/** Only known tokens may enter a CSS value, including older browser/database records. */
+export function profileColour(value) {
+  const token = PROFILE_COLOURS.includes(value) ? value : PROFILE_COLOURS[0];
+  return `var(${token})`;
+}

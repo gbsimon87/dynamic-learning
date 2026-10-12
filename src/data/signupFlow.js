@@ -264,6 +264,7 @@ export function accountErrors({ email, password, confirm }) {
   const errors = {};
   if (!isEmailShaped(email)) errors.email = "EMAIL_INVALID";
   if (typeof password !== "string" || password.length < MIN_PASSWORD_LENGTH) errors.password = "PASSWORD_TOO_SHORT";
+  else if (password.length > 1024) errors.password = "PASSWORD_TOO_LONG";
   else if (password !== confirm) errors.confirm = "PASSWORD_MISMATCH";
   return errors;
 }

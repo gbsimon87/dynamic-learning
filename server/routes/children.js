@@ -23,30 +23,25 @@ router.get("/", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
-    const name = String(req.body?.name ?? "").trim();
-    if (!name) return res.status(400).json({ error: "NAME_REQUIRED" });
-
     // Shared with both store drivers, so the client and the server agree on
     // which years exist. Re-validated here because a request is not a trust
     // boundary.
-    let year = null;
-    let subjects = [];
+    let fields;
     try {
-      ({ yearGroup: year = null, subjects = [] } = normaliseChildPatch({
+      fields = normaliseChildPatch({
+        name: req.body?.name ?? "",
+        avatar: req.body?.avatar ?? null,
+        colour: req.body?.colour ?? null,
         yearGroup: req.body?.yearGroup ?? null,
-        subjects: req.body?.subjects,
-      }));
+        subjects: req.body?.subjects ?? [],
+      });
     } catch (err) {
       return res.status(400).json({ error: err.message });
     }
 
     const child = {
       parentId: req.parent._id,
-      name,
-      avatar: req.body?.avatar ?? null,
-      colour: req.body?.colour ?? null,
-      yearGroup: year,
-      subjects,
+      ...fields,
       createdAt: new Date().toISOString(),
     };
     const { insertedId } = await db.children().insertOne(child);

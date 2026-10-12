@@ -10,6 +10,7 @@
  *
  * Plain ESM with no dependencies, so Vite and Node both read it untransformed.
  */
+import { PROFILE_COLOURS } from "./avatars.js";
 
 /** Everything a caller may set on a child profile. Nothing else is writable. */
 export const EDITABLE_CHILD_FIELDS = ["name", "avatar", "colour", "yearGroup", "subjects"];
@@ -36,7 +37,7 @@ export function readSubjects(child) {
 
 function normaliseSubjects(value) {
   if (value === null) return [];
-  if (!Array.isArray(value) || value.some((id) => !CHILD_SUBJECTS.includes(id))) {
+  if (!Array.isArray(value) || value.length > 20 || value.some((id) => !CHILD_SUBJECTS.includes(id))) {
     throw new Error("INVALID_SUBJECTS");
   }
   return [...new Set(value)];
@@ -72,30 +73,42 @@ export function readYearGroup(child) {
 export function normaliseChildPatch(patch) {
   const out = {};
   if (!patch || typeof patch !== "object") return out;
+  if (Array.isArray(patch)) throw new Error("INVALID_CHILD");
 
   // `undefined` means "not supplied", NOT "set to nothing". Callers build these
   // objects by destructuring — `{ name, avatar, colour, yearGroup }` from an
   // argument that never mentioned a year still HAS a `yearGroup` key, holding
   // undefined. Keying off `in` alone read that as an explicit value and
   // rejected it. `null` remains meaningful and distinct: "clear this".
-  const supplied = (field) => field in patch && patch[field] !== undefined;
+  const supplied = (field) => Object.hasOwn(patch, field) && patch[field] !== undefined;
 
   if (supplied("name")) {
-    const trimmed = String(patch.name ?? "").trim();
+    if (patch.name !== null && typeof patch.name !== "string") throw new Error("INVALID_NAME");
+    const trimmed = (patch.name ?? "").trim();
     // A patch may leave the name alone, but it may never blank it — an unnamed
     // profile is unpickable on a screen whose cards ARE the names.
     if (!trimmed) throw new Error("NAME_REQUIRED");
+    if ([...trimmed].length > CHILD_NAME_MAX) throw new Error("NAME_TOO_LONG");
+    if (/\p{Cc}/u.test(trimmed)) throw new Error("INVALID_NAME");
     out.name = trimmed;
   }
 
-  if (supplied("avatar")) out.avatar = patch.avatar ?? null;
-  if (supplied("colour")) out.colour = patch.colour ?? null;
+  if (supplied("avatar")) {
+    if (patch.avatar !== null && (typeof patch.avatar !== "string" || patch.avatar.length > 64
+      || /[<>]|\p{Cc}/u.test(patch.avatar))) throw new Error("INVALID_AVATAR");
+    out.avatar = patch.avatar;
+  }
+  if (supplied("colour")) {
+    if (patch.colour !== null && !PROFILE_COLOURS.includes(patch.colour)) throw new Error("INVALID_COLOUR");
+    out.colour = patch.colour;
+  }
 
   if (supplied("yearGroup")) {
     // null is a legitimate value: "actually, I don't know their year".
     if (patch.yearGroup === null || patch.yearGroup === "") {
       out.yearGroup = null;
     } else {
+      if (!["number", "string"].includes(typeof patch.yearGroup)) throw new Error("INVALID_YEAR_GROUP");
       const year = Number(patch.yearGroup);
       if (!CHILD_YEAR_GROUPS.includes(year)) throw new Error("INVALID_YEAR_GROUP");
       out.yearGroup = year;
@@ -122,16 +135,17 @@ export function normaliseNewChildren(list, { max }) {
   }
   return list.map((child) => {
     const input = child && typeof child === "object" ? child : {};
-    const { name, yearGroup = null, subjects = [] } = normaliseChildPatch({
+    const { name, avatar = null, colour = null, yearGroup = null, subjects = [] } = normaliseChildPatch({
       name: input.name ?? "",
+      avatar: input.avatar,
+      colour: input.colour,
       yearGroup: input.yearGroup ?? null,
       subjects: input.subjects ?? [],
     });
-    if ([...name].length > CHILD_NAME_MAX) throw new Error("NAME_TOO_LONG");
     return {
       name,
-      avatar: typeof input.avatar === "string" ? input.avatar : null,
-      colour: typeof input.colour === "string" ? input.colour : null,
+      avatar,
+      colour,
       yearGroup,
       subjects,
     };

@@ -1,6 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../context/auth-context";
+import { profileColour } from "../../data/avatars";
 import ProfileBuilder from "./ProfileBuilder";
 import ProgressRing from "../../components/ProgressRing";
 import { useChildrenProgress } from "../../hooks/useChildrenProgress";
@@ -165,7 +166,7 @@ function Profiles() {
             <button
               type="button"
               className={`profiles-card ${chosenId === kid._id ? "chosen" : ""}`}
-              style={{ "--profile-card-colour": `var(${kid.colour})` }}
+              style={{ "--profile-card-colour": profileColour(kid.colour) }}
               onClick={() => handlePick(kid._id)}
               disabled={Boolean(chosenId)}
             >

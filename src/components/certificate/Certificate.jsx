@@ -1,4 +1,5 @@
 import { createPortal } from "react-dom";
+import { profileColour } from "../../data/avatars";
 import { certificateDate } from "../../data/certificates";
 import BixSignature from "./BixSignature";
 import "./Certificate.css";
@@ -48,7 +49,7 @@ function CertificateBody({ certificate, child, date, reprint, headingId }) {
   const name = child?.name?.trim() || "a brilliant learner";
   const day = certificateDate(date);
   // The profile stores a colour TOKEN name, never a literal (avatars.js).
-  const style = child?.colour ? { "--certificate-avatar": `var(${child.colour})` } : undefined;
+  const style = child?.colour ? { "--certificate-avatar": profileColour(child.colour) } : undefined;
   const showContext = (kind === "topic" || kind === "category") && context;
 
   return (

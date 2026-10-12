@@ -68,6 +68,7 @@ export async function hashPassword(password, saltB64) {
   if (typeof password !== "string" || password.length === 0) {
     throw new Error("PASSWORD_REQUIRED");
   }
+  if (password.length > 1024) throw new Error("PASSWORD_TOO_LONG");
 
   const saltBytes = saltB64
     ? base64ToBytes(saltB64)
@@ -90,7 +91,7 @@ export async function hashPassword(password, saltB64) {
  * @returns {Promise<boolean>}
  */
 export async function verifyPassword(password, record) {
-  if (typeof password !== "string" || !record) return false;
+  if (typeof password !== "string" || password.length > 1024 || !record) return false;
   const { hash, salt, iterations } = record;
   if (typeof hash !== "string" || typeof salt !== "string") return false;
 

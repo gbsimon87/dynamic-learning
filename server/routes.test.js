@@ -92,8 +92,8 @@ test("route authorization", { skip: URI ? false : "MONGODB_URI not set" }, async
   assert.equal((await makeParent(b, "parent.b@example.com", "password-b")).status, 200);
 
   // --- children -----------------------------------------------------------
-  const childA = (await a("POST", "/api/children", { name: "Ada", avatar: "🦊", colour: "pink" })).body.child;
-  const childB = (await b("POST", "/api/children", { name: "Bruno", avatar: "🐼", colour: "blue" })).body.child;
+  const childA = (await a("POST", "/api/children", { name: "Ada", avatar: "🦊", colour: "--profile-colour-coral" })).body.child;
+  const childB = (await b("POST", "/api/children", { name: "Bruno", avatar: "🐼", colour: "--profile-colour-sky" })).body.child;
   await t.test("malformed progress updates cannot overwrite a child's document", async () => {
     const path = `/api/progress/${childA._id}/4/english`;
     const data = { spelling: { topics: { words: { completedChallenges: [1, 2] } } } };

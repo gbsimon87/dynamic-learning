@@ -11,6 +11,12 @@ import {
 
 const SECRET = "test-secret-not-a-real-one";
 
+test("oversized passwords and unexpected signing algorithms are rejected", async () => {
+  await assert.rejects(hashPassword("x".repeat(1025)), /PASSWORD_TOO_LONG/);
+  assert.equal(await verifyPassword("x".repeat(1025), { hash: "x", salt: "x" }), false);
+  assert.equal(verifySession(jwt.sign({ sub: "abc" }, SECRET, { algorithm: "HS512" }), SECRET), null);
+});
+
 test("hash/verify round-trip", async () => {
   const record = await hashPassword("correct horse battery staple");
   assert.equal(record.iterations, ITERATIONS);

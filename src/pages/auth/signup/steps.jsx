@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { profileColour } from "../../../data/avatars";
 import { CHILD_NAME_MAX } from "../../../data/childFields";
 import { CURRICULUM_SUBJECTS, getSubjectName } from "../../../data/curriculumRegistry";
 import { EXPLORING, birthYearOptions, subjectsForYear } from "../../../data/signupFlow";
@@ -124,7 +125,7 @@ export function SummaryBody({ draft, onEdit, onAdd, canAdd }) {
       <ul className="sf-summary">
         {draft.learners.map((learner, index) => (
           <li key={index} className="sf-summary-card">
-            <span className="sf-family-face" style={learner.colour ? { "--sf-face": `var(${learner.colour})` } : undefined} aria-hidden="true">
+            <span className="sf-family-face" style={learner.colour ? { "--sf-face": profileColour(learner.colour) } : undefined} aria-hidden="true">
               {learner.avatar}
             </span>
             <span>
@@ -156,6 +157,7 @@ export function AccountBody({ email, secret, errors, busy, onEmail, onSecret, on
         <label className="auth-label" htmlFor="sf-email">Email address</label>
         <input
           id="sf-email"
+          maxLength={254}
           className={`auth-input ${errors.email ? "invalid" : ""}`}
           type="email"
           autoComplete="email"

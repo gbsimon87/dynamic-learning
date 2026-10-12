@@ -10,6 +10,7 @@ import {
 import { requireAuth } from "../middleware.js";
 import { publicParent } from "../serialize.js";
 import { createAuthThrottle } from "../authThrottle.js";
+import { isEmailShaped, normaliseEmail } from "../../shared/emailAddress.js";
 
 const router = Router();
 const throttle = createAuthThrottle();
@@ -17,14 +18,13 @@ const throttle = createAuthThrottle();
 // confirmation are limited exactly like guesses at /login.
 const deleteThrottle = createAuthThrottle({ accountKey: (req) => String(req.parent._id) });
 
-const normaliseEmail = (email) => String(email ?? "").trim().toLowerCase();
-
 router.post("/login", throttle, async (req, res, next) => {
   try {
     const email = normaliseEmail(req.body?.email);
     const password = req.body?.password;
 
-    const parent = email ? await db.parents().findOne({ email }) : null;
+    const parent = isEmailShaped(email) && typeof password === "string" && password.length <= 1024
+      ? await db.parents().findOne({ email }) : null;
     const ok =
       parent &&
       (await verifyPassword(password, {

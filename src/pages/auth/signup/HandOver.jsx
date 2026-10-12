@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { profileColour } from "../../../data/avatars";
 import { errorMessage } from "../../../data/signupCopy";
 
 /**
@@ -30,7 +31,7 @@ export default function HandOver({ result, onStart }) {
     const [child] = kids;
     return (
       <div className="sf-handover">
-        <span className="sf-handover-face" style={child.colour ? { "--sf-face": `var(${child.colour})` } : undefined} aria-hidden="true">
+        <span className="sf-handover-face" style={child.colour ? { "--sf-face": profileColour(child.colour) } : undefined} aria-hidden="true">
           {child.avatar}
         </span>
         <h1 className="auth-title">{learner ? "You're all set!" : `Hand the device to ${child.name}!`}</h1>

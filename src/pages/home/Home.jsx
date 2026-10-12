@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { Link } from "react-router";
 import { AuthContext } from "../../context/auth-context";
+import { profileColour } from "../../data/avatars";
 import Mascot from "../../components/mascot/Mascot";
 import HomeFooter from "./HomeFooter";
 import HomeAchievements from "./HomeAchievements";
@@ -208,7 +209,7 @@ function Home() {
               <h1 className="home-hello">
                 <span
                   className="home-hello-avatar"
-                  style={{ background: `var(${child.colour})` }}
+                  style={{ background: profileColour(child.colour) }}
                   aria-hidden="true"
                 >
                   {child.avatar}

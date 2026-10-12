@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { AuthContext } from "../../context/auth-context";
+import { profileColour } from "../../data/avatars";
 import { clearLastAccount, readLastAccount } from "../../data/lastAccount";
 import AuthShell from "./AuthShell";
 import "./Login.css";
@@ -110,7 +111,7 @@ function Login() {
                   style={{
                     // A token NAME, never a literal, so it repaints in dark
                     // mode (§9). `--face-index` only staggers the entrance.
-                    "--face-colour": `var(${profile.colour})`,
+                    "--face-colour": profileColour(profile.colour),
                     "--face-index": index,
                   }}
                 >
@@ -148,6 +149,7 @@ function Login() {
             id="login-email"
             className={`auth-input ${error ? "invalid" : ""}`}
             type="email"
+            maxLength={254}
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -165,6 +167,7 @@ function Login() {
               className={`auth-input ${error ? "invalid" : ""}`}
               type={showPassword ? "text" : "password"}
               autoComplete="current-password"
+              maxLength={1024}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />

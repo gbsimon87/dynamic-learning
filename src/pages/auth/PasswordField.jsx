@@ -19,6 +19,7 @@ function PasswordField({ id, label, value, onChange, error, describedBy, hint, a
           className={`auth-input ${error ? "invalid" : ""}`}
           type={shown ? "text" : "password"}
           autoComplete={autoComplete}
+          maxLength={1024}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           aria-invalid={error ? "true" : "false"}

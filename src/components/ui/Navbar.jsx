@@ -1,5 +1,6 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { ThemeContext } from '../../context/theme-context';
+import { profileColour } from '../../data/avatars';
 import { AuthContext } from '../../context/auth-context';
 import { Link, useLocation } from 'react-router';
 import { CURRICULUM_ICON } from '../../data/curriculumRegistry';
@@ -139,7 +140,7 @@ function Navbar() {
             to="/profiles"
             className={`navbar-avatar-chip ${child ? 'has-child' : ''}`}
             style={
-              child ? { '--navbar-chip-colour': `var(${child.colour})` } : undefined
+              child ? { '--navbar-chip-colour': profileColour(child.colour) } : undefined
             }
             title={child ? `Playing as ${child.name} - tap to switch` : 'Pick a profile'}
           >

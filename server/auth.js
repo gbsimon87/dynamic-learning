@@ -32,6 +32,7 @@ export async function hashPassword(password, saltB64) {
   if (typeof password !== "string" || password.length === 0) {
     throw new Error("PASSWORD_REQUIRED");
   }
+  if (password.length > 1024) throw new Error("PASSWORD_TOO_LONG");
   const saltBytes = saltB64
     ? Buffer.from(saltB64, "base64")
     : crypto.randomBytes(SALT_BYTES);
@@ -49,7 +50,7 @@ export async function hashPassword(password, saltB64) {
  * @returns {Promise<boolean>}
  */
 export async function verifyPassword(password, record) {
-  if (typeof password !== "string" || !record) return false;
+  if (typeof password !== "string" || password.length > 1024 || !record) return false;
   const { hash, salt, iterations } = record;
   if (typeof hash !== "string" || typeof salt !== "string") return false;
   try {
@@ -87,7 +88,7 @@ export function verifySession(token, secret = process.env.SESSION_SECRET) {
 export function sessionPayload(token, secret = process.env.SESSION_SECRET) {
   if (!token || !secret) return null;
   try {
-    const payload = jwt.verify(token, secret);
+    const payload = jwt.verify(token, secret, { algorithms: ["HS256"] });
     return typeof payload?.sub === "string" && payload.sub ? payload : null;
   } catch {
     return null;

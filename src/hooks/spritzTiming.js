@@ -23,6 +23,7 @@ export const SPEED_PRESETS = [
 export const WPM_MIN = 60;
 export const WPM_MAX = 300;
 export const MAX_WORDS = 500;
+export const MAX_TEXT_CHARS = 20_000;
 export const COUNTDOWN_MS = 700;
 
 // Trailing quotation marks and brackets must not hide sentence punctuation.
@@ -54,6 +55,7 @@ function wordChars(word) {
  */
 export function tokenize(text, chunkSize = 1) {
   const words = String(text ?? "")
+    .slice(0, MAX_TEXT_CHARS)
     .trim()
     .split(/\s+/u)
     .filter(Boolean)

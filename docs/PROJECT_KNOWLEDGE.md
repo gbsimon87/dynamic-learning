@@ -47,7 +47,7 @@ Geography's standalone Skills Mode games and saved programmes in
 > file reflects it. Also update [PROJECT_IDEAS.md](PROJECT_IDEAS.md) when an idea
 > moves between statuses.
 
-**Last reviewed:** 2026-10-11
+**Last reviewed:** 2026-10-12
 
 ---
 
@@ -686,6 +686,20 @@ none, §4.7), but because it needs no native build step on Render's free tier.
 ⚠️ Passwords are hashed **client-side in local mode and server-side in API mode**. Local
 mode's hashing protects nothing against someone holding the device; it is data-shape
 correctness, not security.
+
+**Input and browser hardening (2026-10-12).** `server/security.js` adds a CSP
+when serving the built app, security headers, non-cacheable API responses,
+cross-site write guards and recursive JSON operator/prototype-key rejection.
+Malformed and oversized bodies return safe JSON errors. Email is normalized
+only from strings; profile creation and patches share typed, bounded
+validation in both store drivers. Profile colours are whitelisted on writes
+and at every CSS rendering location, including old cached records. Passwords
+are capped at 1,024 characters, signup codes are strictly six-digit strings,
+and JWT verification is restricted to HS256. Speed Reader bounds pasted text
+without interpreting markup. ESLint prevents raw HTML/script sinks in app
+code. Progress/reward shapes, storage keys and unlock rules are unchanged.
+See [the security review](SECURITY_REVIEW.md) for input coverage, policy
+compatibility, browser checks and the optional database-test permission limits.
 
 ---
 

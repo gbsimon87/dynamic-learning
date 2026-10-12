@@ -19,7 +19,7 @@ test("codeMatches is strict about shape and value", () => {
   const h = hashCode("a@b.co", "123456", "s");
   assert.equal(codeMatches(h, "a@b.co", "123456", "s"), true);
   assert.equal(codeMatches(h, "a@b.co", "654321", "s"), false);
-  for (const junk of ["", "12345", "1234567", "12345a", null, undefined]) assert.equal(codeMatches(h, "a@b.co", junk, "s"), false);
+  for (const junk of ["", "12345", "1234567", "12345a", null, undefined, 123456, ["123456"], { code: "123456" }]) assert.equal(codeMatches(h, "a@b.co", junk, "s"), false);
   assert.equal(codeMatches(null, "a@b.co", "123456", "s"), false);
 });
 

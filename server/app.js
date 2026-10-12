@@ -14,16 +14,22 @@ import { createSignupRouter } from "./routes/signup.js";
 import { createRecoveryRouter } from "./routes/recovery.js";
 import { createMailerFromEnv } from "./email.js";
 import { errorSummary } from "./logError.js";
+import { protectApiWrites, securityHeaders, validateApiBody } from "./security.js";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.resolve(here, "..", "dist");
 
 export function createApp({ serveStatic = process.env.NODE_ENV === "production", signup = {}, recovery = {}, trustProxy = process.env.RENDER === "true" ? 1 : false } = {}) {
   const app = express();
+  app.disable("x-powered-by");
   // Render is the single ingress proxy. Direct/local servers trust no headers.
   // Never use `true`: a client-supplied leftmost X-Forwarded-For is untrusted.
   app.set("trust proxy", trustProxy);
+  const production = process.env.NODE_ENV === "production";
+  app.use(securityHeaders({ csp: serveStatic, production }));
+  app.use("/api", protectApiWrites({ production, publicAppUrl: process.env.PUBLIC_APP_URL }));
   app.use(express.json({ limit: "1mb" }));
+  app.use("/api", validateApiBody);
   app.use(cookieParser());
 
   app.get("/api/health", (req, res) => res.json({ ok: true }));
@@ -54,8 +60,11 @@ export function createApp({ serveStatic = process.env.NODE_ENV === "production",
 
   // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
-    console.error("[api]", errorSummary(err));
     if (res.headersSent) return;
+    if (err.type === "entity.parse.failed") return res.status(400).json({ error: "INVALID_JSON" });
+    if (err.type === "entity.too.large") return res.status(413).json({ error: "REQUEST_TOO_LARGE" });
+    if (["charset.unsupported", "encoding.unsupported"].includes(err.type)) return res.status(415).json({ error: "UNSUPPORTED_ENCODING" });
+    console.error("[api]", errorSummary(err));
     res.status(500).json({ error: "SERVER_ERROR" });
   });
 

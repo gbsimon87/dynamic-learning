@@ -36,7 +36,7 @@ export function ForgotPassword() {
     {accepted ? <p role="status">If an account uses that email, a reset link will arrive shortly. Check your spam folder too. The link works once, for 30 minutes. It also works for accounts whose email was never verified.</p> :
       <form className="auth-form" onSubmit={submit} noValidate>
         <div className="auth-field"><label className="auth-label" htmlFor="recovery-email">Email address</label>
-          <input className="auth-input" id="recovery-email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} /></div>
+          <input className="auth-input" id="recovery-email" type="email" maxLength={254} autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} /></div>
         {error && <p className="auth-error" role="alert">{error}</p>}
         <button className="auth-btn" disabled={busy}>{busy ? "Requesting…" : "Send reset link"}</button>
       </form>}

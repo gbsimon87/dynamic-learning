@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import stories from "../../../data/stories.json";
 import {
+  MAX_TEXT_CHARS,
   MAX_WORDS,
   SPEED_PRESETS,
   WPM_MAX,
@@ -108,9 +109,10 @@ function SpeedReader() {
             id="sr-custom-text"
             className="sr-textarea"
             rows="5"
+            maxLength={MAX_TEXT_CHARS}
             value={customText}
             placeholder="Paste or type a story here…"
-            onChange={(event) => setCustomText(event.target.value)}
+            onChange={(event) => setCustomText(event.target.value.slice(0, MAX_TEXT_CHARS))}
           />
           {capped && (
             <p className="sr-note">

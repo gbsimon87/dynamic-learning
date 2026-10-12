@@ -273,21 +273,15 @@ export const store = {
   /** @returns {Promise<object>} the new child doc. */
   async createChild(parentId, { name, avatar, colour, yearGroup, subjects }) {
     if (!parentId) throw new Error("PARENT_REQUIRED");
-    const trimmedName = String(name ?? "").trim();
-    if (!trimmedName) throw new Error("NAME_REQUIRED");
-
     // Throws INVALID_YEAR_GROUP for a year the app cannot serve, and
     // INVALID_SUBJECTS for a subject it does not teach.
-    const { yearGroup: year = null, subjects: picked = [] } = normaliseChildPatch({ yearGroup, subjects });
+    const fields = normaliseChildPatch({ name: name ?? "", avatar: avatar ?? null,
+      colour: colour ?? null, yearGroup: yearGroup ?? null, subjects: subjects ?? [] });
 
     const child = {
       _id: newId(),
       parentId,
-      name: trimmedName,
-      avatar: avatar ?? null,
-      colour: colour ?? null,
-      yearGroup: year,
-      subjects: picked,
+      ...fields,
       createdAt: now(),
     };
 

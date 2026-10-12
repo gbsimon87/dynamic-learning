@@ -26,6 +26,21 @@ export default defineConfig([
     },
     rules: {
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      'no-eval': 'error',
+      'no-implied-eval': 'error',
+      'no-new-func': 'error',
+      'no-script-url': 'error',
+    },
+  },
+  {
+    files: ['src/**/*.{js,jsx}', 'shared/**/*.js'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        { selector: "JSXAttribute[name.name='dangerouslySetInnerHTML']", message: 'Render untrusted text as React children; do not inject HTML.' },
+        { selector: "AssignmentExpression[left.type='MemberExpression'][left.property.name=/^(innerHTML|outerHTML)$/]", message: 'Use textContent or React text rendering instead of an HTML sink.' },
+        { selector: "CallExpression[callee.type='MemberExpression'][callee.property.name=/^(insertAdjacentHTML|write|writeln)$/]", message: 'Use safe text rendering; do not build HTML from strings.' },
+      ],
     },
   },
   // The Express API and the dev scripts. Node globals, no React — so none of

@@ -2,9 +2,9 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../context/auth-context";
 import { useChildrenProgress } from "../../hooks/useChildrenProgress";
-import { CHILD_YEAR_GROUPS, readYearGroup } from "../../data/childFields";
+import { CHILD_NAME_MAX, CHILD_YEAR_GROUPS, readYearGroup } from "../../data/childFields";
 import { useChildrenRewards } from "../../hooks/useChildrenRewards";
-import { AVATARS } from "../../data/avatars";
+import { AVATARS, profileColour } from "../../data/avatars";
 import {
   BADGES,
   heldBadgeIds,
@@ -215,6 +215,10 @@ function NameEditor({ child, onChange }) {
       setError("Enter a name before saving.");
       return;
     }
+    if ([...trimmed].length > CHILD_NAME_MAX) {
+      setError(`Use ${CHILD_NAME_MAX} characters or fewer.`);
+      return;
+    }
     if (saving || trimmed === child.name) return;
 
     setSaving(true);
@@ -235,6 +239,7 @@ function NameEditor({ child, onChange }) {
       <div className="parent-area-name-row">
         <input
           id={`name-${child._id}`}
+          maxLength={CHILD_NAME_MAX * 2}
           type="text"
           value={name}
           disabled={saving}
@@ -412,6 +417,7 @@ function DeleteAccount({ isLearner, onDelete }) {
         <input
           type="password"
           autoComplete="current-password"
+          maxLength={1024}
           value={password}
           onChange={(event) => setPassword(event.target.value)}
         />
@@ -587,7 +593,7 @@ function ParentArea() {
                 <li key={kid._id} className="parent-area-row">
                   <span
                     className="parent-area-chip"
-                    style={{ "--parent-chip-colour": `var(${kid.colour})` }}
+                    style={{ "--parent-chip-colour": profileColour(kid.colour) }}
                   >
                     <span aria-hidden="true">{kid.avatar}</span>
                     <span className="parent-area-chip-name">{kid.name}</span>

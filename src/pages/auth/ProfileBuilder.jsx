@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { AVATARS, PROFILE_COLOURS } from "../../data/avatars";
-import { CHILD_YEAR_GROUPS } from "../../data/childFields";
+import { AVATARS, PROFILE_COLOURS, profileColour } from "../../data/avatars";
+import { CHILD_NAME_MAX, CHILD_YEAR_GROUPS } from "../../data/childFields";
 import { isYearAvailable } from "../../data/curriculumRegistry";
 import { AvatarPicker, ColourPicker } from "./ProfilePickers";
 import "./ProfileBuilder.css";
@@ -67,6 +67,10 @@ function ProfileBuilder({
       setLocalError("Please type a name first! ✏️");
       return;
     }
+    if ([...trimmed].length > CHILD_NAME_MAX) {
+      setLocalError(`Use ${CHILD_NAME_MAX} characters or fewer.`);
+      return;
+    }
 
     setLocalError("");
     onSave({ name: trimmed, avatar, colour, yearGroup });
@@ -88,7 +92,7 @@ function ProfileBuilder({
         id="pb-name"
         className={`pb-name-input ${localError ? "invalid" : ""}`}
         type="text"
-        maxLength={20}
+        maxLength={CHILD_NAME_MAX * 2}
         autoComplete="off"
         value={name}
         onChange={(e) => {
@@ -142,7 +146,7 @@ function ProfileBuilder({
         <span className="pb-preview-label">Your profile:</span>
         <span
           className="pb-preview-chip"
-          style={{ "--pb-chip-colour": `var(${colour})` }}
+          style={{ "--pb-chip-colour": profileColour(colour) }}
         >
           <span aria-hidden="true">{avatar}</span>
           {name.trim() || "…"}

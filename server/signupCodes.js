@@ -20,9 +20,9 @@ export function hashCode(email, code, secret) {
 }
 
 export function codeMatches(storedHash, email, code, secret) {
-  if (typeof storedHash !== "string" || !/^\d{6}$/.test(String(code ?? ""))) return false;
+  if (typeof storedHash !== "string" || typeof code !== "string" || !/^\d{6}$/.test(code)) return false;
   const stored = Buffer.from(storedHash, "hex");
-  const given = Buffer.from(hashCode(email, String(code), secret), "hex");
+  const given = Buffer.from(hashCode(email, code, secret), "hex");
   return stored.length === given.length && crypto.timingSafeEqual(stored, given);
 }
 

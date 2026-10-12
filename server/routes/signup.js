@@ -163,6 +163,9 @@ export function createSignupRouter({
       if (typeof password !== "string" || password.length === 0) {
         return res.status(400).json({ error: "PASSWORD_REQUIRED" });
       }
+      if (password.length < 8 || password.length > 1024) {
+        return res.status(400).json({ error: "PASSWORD_INVALID" });
+      }
       let account;
       let children;
       try {
