@@ -2,13 +2,14 @@
 
 **Start here to resume.** Branch: not created yet (all work so far is docs on `dev`, uncommitted).
 **Last updated:** 2026-10-12.
-**Current milestone:** Plan 1 written (foundation + Year 1 pilot); awaiting owner review of the plan. All five specs approved 2026-10-12.
-**Built:** 0 years, 0 topics, 0 challenges. History is not registered as a subject yet.
+**Current milestone:** Plan 1 built: History registered, engine and image pipeline in place, Year 1 pilot topic (Toys Then and Now) playable. **Awaiting owner review of the pilot** before Plan 2.
+**Built:** Year 1 registered (14 topics "Coming soon"); 1 topic, 4 challenges. Branch `feat/history-curriculum`.
 
 ## Resume point
 
-Next: write the implementation plan(s), get owner approval, then build. No product code
-before a plan is approved.
+Next: owner plays Year 1 → History → Then and Now → Toys Then and Now (all four
+challenges) and reviews it. Then write Plan 2 (Year 1 topics 2–14) from what the review
+changes. No product code before a plan is approved.
 
 Things a successor must not miss:
 
@@ -84,15 +85,22 @@ Nothing open. All specs approved 2026-10-12.
 | Year 2 spec | Approved 2026-10-12 | |
 | Year 3 spec | Approved 2026-10-12 | |
 | Year 4 spec | Approved 2026-10-12 | |
-| Implementation plans | In progress | Plan 1 written 2026-10-12; awaiting owner review. |
-| History registration and engine | Not started | Done with whichever year is built first. |
-| Year 1 build | Not started | |
+| Implementation plans | In progress | Plan 1 approved and built 2026-10-12. Plan 2 after the pilot review. |
+| History registration and engine | Implemented | Subject, profile allowlist, looks, story-card engine with answerability lint, image pipeline, credits. Unit + component tests. |
+| Year 1 build | Pilot implemented; owner review pending | Dataset (14 topics), KS1 mapping, certificate lines; Toys Then and Now 4/4 challenges. Browser: all four played in headless Chrome through the real controls (2026-10-12): story reopen, hint after two misses, completion, saved progress, both themes, 320 px; no console errors. |
 | Year 2 build | Not started | |
 | Year 3 build | Not started | |
 | Year 4 build | Not started | |
 | Full regression and browser verification | Not started | `npm run lint`, `npm test`, `npm run build`, both themes, phone width, saved progress. |
 
 ## Log
+
+- **2026-10-12** Plan 1 built on `feat/history-curriculum` (7 tasks, tests green). Browser
+  check in headless Chrome with the local store and locks on (the `.env` points at the real
+  MongoDB, so neither the API nor the seed was used): all four pilot challenges played,
+  progress saved across reload, photos and credits shown, dark theme and 320 px checked, no
+  console errors. At 320 px the page scrolls sideways by 13 px, caused by the navbar on
+  every page (same on Science and /curriculum), not by History; left for a separate fix.
 
 - **2026-10-12** Plan 1 written. Findings while planning: Year 1 Science's `makeQuestion` is
   reused for rounds; `sips` cannot write WebP, so images are encoded in headless Chrome

@@ -11,6 +11,7 @@ inventory for each pathway.
 | 1 | [Maths](../src/data/year1MathCurriculum.js) | 32 | 128 | Complete |
 | 1 | [English](../src/data/year1EnglishCurriculum.js) | 38 | 152 | Complete |
 | 1 | [Science](../src/data/year1ScienceCurriculum.js) | 16 | 64 | Complete |
+| 1 | [History](../src/data/year1HistoryCurriculum.js) | 1 of 14 | 4 of 56 | In progress |
 | 2 | [Maths](../src/data/year2MathCurriculum.js) | 39 | 156 | Complete |
 | 2 | [English](../src/data/year2EnglishCurriculum.js) | 39 | 156 | Complete |
 | 2 | [Science](../src/data/year2ScienceCurriculum.js) | 19 | 76 | Complete |
@@ -25,6 +26,7 @@ inventory for each pathway.
 | **Total** | **12 complete pathways** | **375** | **1,500** | |
 
 Other year/subject combinations have no implemented Curriculum Mode pathway.
+History (Years 1–4) is in progress; see `docs/history-curriculum/HISTORY_TRACKER.md`.
 Geography's standalone Skills Mode games and saved programmes in
 `docs/curriculum/` do not count as curriculum implementations.
 
@@ -289,6 +291,13 @@ Year 1 English: **8 categories / 38 topics / 152 challenges**, all built
 (2026-10-11; identifiers locked in `curriculumIds.test.js`).
 Year 1 Science: **4 categories / 16 topics / 64 challenges**, all built
 (2026-10-11; identifiers locked in `year1ScienceCurriculum.test.js`).
+Year 1 History: **5 categories / 14 topics / 56 challenge slots**, 1 topic built
+(2026-10-12; identifiers locked in `year1HistoryCurriculum.test.js`). History
+topics are authored as data: four "Bix explains" story cards plus question banks
+per topic (`src/data/challenges/history/`), built by `buildHistoryTopic` into
+`DataChallenge` questions and checked by `lintHistoryTopic`, which proves every
+answer appears on its story card or in its photo's alt text. Progress is the
+usual `historyProgress_year<N>` record; nothing about progress changed.
 Year 2 Maths currently defines **8 categories / 39 topics / 156 challenge slots**.
 Year 2 English: **9 / 39 / 156** (2026-10-11; identifiers locked in its own
 `year2EnglishCurriculum.test.js`).
@@ -2944,6 +2953,20 @@ changed; no browser or physical-device verification was performed.
 ---
 
 ## 7. How To Add Things (playbooks)
+
+### Add a subject (learned from History, 2026-10-12)
+
+Beyond the registry entry: add the id to `CHILD_SUBJECTS` in
+`src/data/childFields.js` (sign-up and profile edits reject unknown subjects;
+`childFields.test.js` keeps the two lists in step), give it a look in
+`CurriculumSelectPage` (`SUBJECT_LOOKS` plus `--cs-hue-*` / `--cs-deep-*`), hero
+glyphs in `CurriculumPage` (`GLYPHS_BY_SUBJECT`) and anchored `CATEGORY_ICONS`.
+Tests that use the new id as an example of an *invalid* subject must change.
+Registering a subject for a year makes that year's award wait for it too.
+History pictures are CC0 / public domain only, pinned in
+`scripts/history-assets/sources.json` and rebuilt with
+`node scripts/history-assets/fetch.mjs` (headless Chrome encodes the WebP, since
+macOS `sips` cannot write it); `/credits` lists them from the manifest.
 
 ### Pure-logic tests
 
