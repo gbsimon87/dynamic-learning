@@ -1,6 +1,7 @@
 import { useState } from "react";
 import StoryCard from "./StoryCard";
 import SourceVisual from "./SourceVisual";
+import HistoryIllustration from "./HistoryIllustration";
 
 /**
  * DataChallenge's renderVisual for History. The story button lives here so it
@@ -15,9 +16,10 @@ export default function HistoryVisual({ story, visual }) {
         <button type="button" className="history-story-button" aria-expanded={open} onClick={() => setOpen((was) => !was)}>
           📖 Bix's story
         </button>
-        {open && <StoryCard story={story} hideImage={visual?.type === "source" && visual.image === story.image} />}
+        {open && <StoryCard story={story} hideImage={(visual?.type === "source" && visual.image === story.image) || (visual?.type === "scene" && visual.scene === story.scene)} />}
       </div>
       {visual?.type === "source" && <SourceVisual image={visual.image} />}
+      {visual?.type === "scene" && <HistoryIllustration scene={visual.scene} />}
     </>
   );
 }

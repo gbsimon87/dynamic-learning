@@ -10,6 +10,7 @@ import { year4EnglishCurriculum } from "./year4EnglishCurriculum.js";
 import { year4ScienceCurriculum } from "./year4ScienceCurriculum.js";
 import { year1EnglishCurriculum } from "./year1EnglishCurriculum.js";
 import { year1MathCurriculum } from "./year1MathCurriculum.js";
+import { year2HistoryCurriculum } from "./year2HistoryCurriculum.js";
 import { year1HistoryCurriculum } from "./year1HistoryCurriculum.js";
 
 /**
@@ -39,6 +40,8 @@ export const CURRICULUM_SUBJECTS = [
 ];
 
 const CURRICULA = [
+  // All 17 topics built; preserve existing Year 2 awards until owner review.
+  { year: 2, subject: "history", available: true, countsTowardYear: false, load: () => year2HistoryCurriculum },
   // Approved 2026-10-12 (docs/history-curriculum/year-1-design-spec.md); all 14
   // topics built. Counts toward the Year 1 award (owner decision 2026-10-12).
   { year: 1, subject: "history", available: true, load: () => year1HistoryCurriculum },

@@ -1,24 +1,25 @@
 # History, Years 1–4: project tracker
 
-**Start here to resume.** Branch: not created yet (all work so far is docs on `dev`, uncommitted).
+**Start here to resume.** Branch: `feat/history-curriculum`.
 **Last updated:** 2026-10-12.
-**Current milestone:** Year 1 History complete (Plan 2) and counted toward the Year 1 certificate. Next: the Year 2 plan.
-**Built:** Year 1: 14 of 14 topics, 56 of 56 challenges. Years 2–4: specs only. Branch `feat/history-curriculum`.
+**Current milestone:** Year 2 complete and verified; owner/device review pending.
+**Built:** Year 1: 14/14 topics, 56/56 challenges. Year 2: 17/17 topics, 68/68
+challenges. Years 3–4: approved specs only.
 
 ## Resume point
 
-Next: owner plays Year 1 → History → Then and Now → Toys Then and Now (all four
-challenges) and reviews it. Then write Plan 2 (Year 1 topics 2–14) from what the review
-changes. No product code before a plan is approved.
+Year 2 was built on the owner's instruction following completion of Year 1, using
+[Plan 3](plans/2026-10-12-plan-3-year-2-history.md) and the approved spec.
+All 68 real routes have been played through in Chrome. Owner review covers touch, read-aloud voices
+and whether History should count toward the Year 2 award. It currently remains
+`countsTowardYear: false`, preserving existing Year 2 awards. Year 1 already counts.
+Next implementation work after review: Year 3 History.
 
 Things a successor must not miss:
 
 - Topic titles become permanent progress keys once a year ships.
-- `history` must be added to `CHILD_SUBJECTS` (`src/data/childFields.js`) as well as
-  `CURRICULUM_SUBJECTS`, and `server/signup.test.js` uses `"history"` as its
-  invalid-subject example, which has to change.
-- Each year is registered with `countsTowardYear: false` until all its topics ship;
-  remove the flag in the plan that finishes the year.
+- Subject registration, profile allowlist and invalid-subject test updates are already done.
+- Keep a new year's History outside its year award until fully built and the owner approves inclusion.
 - Build topics strictly in dataset order and release a topic's four challenges together;
   an earlier slot added late can re-lock later progress.
 - The engine reuses `DataChallenge` and `questionKinds.js`; don't build a parallel one.
@@ -27,8 +28,8 @@ Things a successor must not miss:
 
 | Year | Ages | Source | Units | Topics | Spec | Status |
 |---|---|---|---|---|---|---|
-| 1 ✅ | 5–6 | KS1 | Then and now, the first flight, explorers, kings and queens, clues around you | 14 | [year-1-design-spec.md](year-1-design-spec.md) | Spec approved |
-| 2 | 6–7 | KS1 | Living memory, Great Fire of London, nurses, people who changed things, days we remember, history near you | 17 | [year-2-design-spec.md](year-2-design-spec.md) | Spec approved |
+| 1 ✅ | 5–6 | KS1 | Then and now, the first flight, explorers, kings and queens, clues around you | 14 | [year-1-design-spec.md](year-1-design-spec.md) | Complete; counts toward Year 1 award |
+| 2 ✅ | 6–7 | KS1 | Living memory, Great Fire of London, nurses, people who changed things, days we remember, history near you | 17 | [year-2-design-spec.md](year-2-design-spec.md) | Complete; owner review pending |
 | 3 | 7–8 | KS2 | Stone Age to Iron Age, Roman Britain, first civilisations and Ancient Egypt | 22 | [year-3-design-spec.md](year-3-design-spec.md) | Spec approved |
 | 4 | 8–9 | KS2 | Anglo-Saxons and Scots, Vikings and Anglo-Saxons | 18 | [year-4-design-spec.md](year-4-design-spec.md) | Spec approved |
 
@@ -47,7 +48,9 @@ Things a successor must not miss:
 | [Plan 1](plans/2026-10-12-plan-1-foundation-and-year-1-pilot.md) | Register History, engine, image pipeline, Year 1 dataset, pilot topic Toys Then and Now. |
 | [Plan 2](plans/2026-10-12-plan-2-year-1-topics-2-to-14.md) | Year 1 topics 2–14, with the [authoring brief](plans/year-1-topic-authoring-brief.md). |
 
-Later plans: Plan 2 (Year 1 topics 2–14), then one per year, each after the previous pilot review.
+| [Plan 3](plans/2026-10-12-plan-3-year-2-history.md) | Complete Year 2: 17 topics, 68 challenges, sources, chronology and local activities. |
+
+Later plans: Years 3 and 4.
 
 ## Decisions locked on 2026-10-12
 
@@ -88,15 +91,63 @@ Nothing open. All specs approved 2026-10-12.
 | Year 2 spec | Approved 2026-10-12 | |
 | Year 3 spec | Approved 2026-10-12 | |
 | Year 4 spec | Approved 2026-10-12 | |
-| Implementation plans | In progress | Plan 1 approved and built 2026-10-12. Plan 2 after the pilot review. |
+| Implementation plans | Plans 1–3 implemented | Years 1 and 2 built on owner instructions. Years 3–4 remain. |
 | History registration and engine | Implemented | Subject, profile allowlist, looks, story-card engine with answerability lint, image pipeline, credits. Unit + component tests. |
 | Year 1 build | Complete; owner review pending | Plan 2 (2026-10-12): 13 more topics written to the [authoring brief](plans/year-1-topic-authoring-brief.md), 8 more public-domain pictures. Headless Chrome played all 56 in order from fresh progress, both themes, 320 px, no console errors, 56 numeric completions saved. Earlier pilot evidence: | Dataset (14 topics), KS1 mapping, certificate lines; Toys Then and Now 4/4 challenges. Browser: all four played in headless Chrome through the real controls (2026-10-12): story reopen, hint after two misses, completion, saved progress, both themes, 320 px; no console errors. |
-| Year 2 build | Not started | |
+| Year 2 build | Complete; owner/device review pending | All 17 topic banks, 68 wrappers, certificate lines and KS1 mapping. Five public-domain source images, three original SVG practice visuals, timeline bands and untracked local activities. |
 | Year 3 build | Not started | |
 | Year 4 build | Not started | |
-| Full regression and browser verification | Not started | `npm run lint`, `npm test`, `npm run build`, both themes, phone width, saved progress. |
+| Full regression and browser verification | Passed for Years 1–2 implementations | Year 2: lint, tests and build; all 68 challenges played through the real controls in Chrome, light/dark and 320/390 px, reload, idempotent replay and an unchanged pre-existing Maths progress document. Physical-device touch/voice review pending. |
+
+## Year 2 topic delivery
+
+All four challenges are implemented for every topic, in dataset order. Each level
+has five questions, at least seven templates, three choice options and story/source
+answerability checks. Unit validation uses 100 seeds per level; component tests play
+all 68 runs including retries, hints, story reopening and the completion payload.
+
+| Category | Topics | Challenges | State |
+|---|---:|---:|---|
+| Changes Within Living Memory | 2 | 8 | Built |
+| The Great Fire of London | 4 | 16 | Built |
+| Nurses Who Made a Difference | 4 | 16 | Built |
+| People Who Changed Things | 3 | 12 | Built |
+| Days We Remember | 2 | 8 | Built |
+| History Near You | 2 | 8 | Built |
+
+## Year 2 verification (2026-10-12)
+
+- `npm run lint` and `npm run build` passed. Build retains the existing large-chunk warning.
+- `npm test`: 1,648 unit tests and 173 component tests passed, zero failed.
+  Four MongoDB-dependent suites skipped because `MONGODB_URI` was unset.
+- Every topic passes the History story/evidence lint and the question-kind lint
+  over 100 seeds per level. Dataset IDs, all 68 loader paths, three choices,
+  retry hints, completion payload, locks and protected year-award membership tested.
+- Isolated headless Chrome, browser-only local store, no live backend or seed:
+  all 68 real challenge routes completed using answer buttons, sorting and keyboard
+  reordering; wrong answers stay on the question, two misses reveal hints, story
+  reopening retains answers. Themes alternate, with 320/390 px checks and source
+  screenshots reviewed. All 68 numeric completions saved; reload preserved them;
+  replay did not duplicate progress; the existing Maths document stayed byte-for-byte
+  unchanged. No uncaught page errors.
+- Practice maps and plaque inspected in both themes. Their figures render once
+  when the story reopens. New images inspected against their captions and alt text.
+- Live contrast measured in Chrome: story text 17.28:1 light / 11.18:1 dark;
+  start-button text 5.46:1 light / 10.79:1 dark. Timeline has no page overflow at 320 px.
+- Pending: physical-device touch and read-aloud voices, owner content review,
+  and a decision on including History in the Year 2 year award.
 
 ## Log
+
+- **2026-10-12** Plan 3: all Year 2 topics built using the existing History engine.
+  Keeping in Touch Then and Now is the pilot; all 68 wrappers load and all 68
+  component runs complete. Added five pinned public-domain sources; checked their
+  actual visible details (Edith's portrait has a lace collar, not a nurse cap).
+  Original maps and plaque are explicitly practice drawings. Local activities also
+  appear after topic completion and never gate progress. Year 2 remains outside its
+  year award pending owner review. The 320 px Chrome check reproduced the existing
+  navbar overflow; controls now wrap at the narrowest width at their full touch size,
+  and the hidden offset uses the measured navbar height.
 
 - **2026-10-12** Owner decisions: Year 1 History counts toward the Year 1 certificate
   (`countsTowardYear: false` removed; the mechanism stays for Years 2–4 while each is

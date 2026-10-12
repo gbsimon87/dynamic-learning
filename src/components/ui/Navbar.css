@@ -274,3 +274,11 @@ body.dark .navbar-streak-badge { background: var(--dark-accent); color: var(--on
   .navbar-links { gap: 0.15rem; }
   .navbar-auth-link { padding: 0.4rem 0.5rem; }
 }
+
+/* With a signed-in profile and its streak badge, 320px cannot fit every
+   control on one row at full touch size. The measured navbar height already
+   lets full-viewport pages account for a second row. */
+@media (max-width: 360px) {
+  .navbar-links { min-width: 0; flex-wrap: wrap; justify-content: flex-end; }
+  .navbar.hidden { top: calc(-1 * var(--navbar-height, 80px)); }
+}

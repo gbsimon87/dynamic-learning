@@ -64,6 +64,13 @@ const GLYPHS_BY_SUBJECT = { english: ENGLISH_GLYPHS, science: SCIENCE_GLYPHS, hi
    anything carrying white ink — both are token names so the theme repaints
    them (PROJECT_KNOWLEDGE §9). */
 const CATEGORY_ICONS = [
+  // History, Year 2
+  { match: /^changes within living memory$/i, icon: "🕰️" },
+  { match: /^the great fire of london$/i, icon: "🔥" },
+  { match: /^nurses who made a difference$/i, icon: "🩺" },
+  { match: /^people who changed things$/i, icon: "🤝" },
+  { match: /^days we remember$/i, icon: "🌺" },
+  { match: /^history near you$/i, icon: "🔎" },
   // History, Year 1
   { match: /^then and now$/i, icon: "🕰️" },
   { match: /^the first flight$/i, icon: "✈️" },

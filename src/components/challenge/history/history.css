@@ -83,3 +83,37 @@
   color: var(--ck-text);
   text-align: center;
 }
+.history-illustration {
+  max-width: 500px;
+  margin: 0.75rem auto;
+  color: var(--ck-text);
+  text-align: center;
+}
+.history-illustration svg { display: block; width: 100%; max-height: 280px; }
+.history-illustration figcaption { font-size: 0.9rem; margin-top: 0.5rem; }
+.history-map-pair { display: flex; gap: 0.75rem; }
+.history-map-pair .history-practice-map { width: calc(50% - 0.375rem); }
+.history-timeline { margin: 1rem 0; color: var(--ck-text); }
+.history-timeline figcaption { font-weight: 700; }
+.history-timeline ol {
+  display: flex;
+  overflow-x: auto;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0.5rem 0;
+  margin: 0;
+}
+.history-timeline li {
+  flex: 1 0 110px;
+  min-height: 70px;
+  padding: 0.5rem;
+  border: 2px solid var(--ck-border);
+  border-radius: 10px;
+  background: var(--ck-panel);
+}
+.history-timeline li.history-time-active { border-color: var(--ck-text); background: var(--ck-muted); }
+.history-timeline strong { display: block; font-size: 0.95rem; margin-top: 0.5rem; }
+@media (max-width: 420px) {
+  .history-map-pair { flex-direction: column; }
+  .history-map-pair .history-practice-map { width: 100%; }
+}

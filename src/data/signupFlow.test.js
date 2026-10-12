@@ -32,7 +32,7 @@ test("birth years run newest first and are not pre-selected", () => {
 test("subjects come from the registry for the year", () => {
   assert.deepEqual(subjectsForYear(null), []);
   assert.deepEqual([...subjectsForYear(1)].sort(), ["english", "history", "math", "science"]);
-  assert.deepEqual([...subjectsForYear(2)].sort(), ["english", "math", "science"]);
+  assert.deepEqual([...subjectsForYear(2)].sort(), ["english", "history", "math", "science"]);
   assert.deepEqual(subjectsForYear(5), []);
   assert.deepEqual([...subjectsForYear(3)].sort(), ["english", "math", "science"]);
   assert.deepEqual(subjectsForYear(4), ["math", "english", "science"]);

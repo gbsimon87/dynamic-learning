@@ -15,6 +15,7 @@ inventory for each pathway.
 | 2 | [Maths](../src/data/year2MathCurriculum.js) | 39 | 156 | Complete |
 | 2 | [English](../src/data/year2EnglishCurriculum.js) | 39 | 156 | Complete |
 | 2 | [Science](../src/data/year2ScienceCurriculum.js) | 19 | 76 | Complete |
+| 2 | [History](../src/data/year2HistoryCurriculum.js) | 17 | 68 | Complete |
 | 3 | [Maths](../src/data/year3MathCurriculum.js) | 44 | 176 | Complete |
 | 3 | [English](../src/data/year3EnglishCurriculum.js) | 32 | 128 | Complete |
 | 3 | [Science](../src/data/year3ScienceCurriculum.js) | 21 | 84 | Complete |
@@ -23,10 +24,10 @@ inventory for each pathway.
 | 4 | [Science](../src/data/year4ScienceCurriculum.js) | 20 | 80 | Complete |
 | 5 | All subjects | 0 | 0 | Not implemented |
 | 6 | All subjects | 0 | 0 | Not implemented |
-| **Total** | **13 complete pathways** | **389** | **1,556** | |
+| **Total** | **14 complete pathways** | **406** | **1,624** | |
 
 Other year/subject combinations have no implemented Curriculum Mode pathway.
-History: Year 1 is complete; Years 2–4 have approved specs only (see
+History: Years 1–2 are complete; Years 3–4 have approved specs only (see
 `docs/history-curriculum/HISTORY_TRACKER.md`).
 Geography's standalone Skills Mode games and saved programmes in
 `docs/curriculum/` do not count as curriculum implementations.
@@ -305,6 +306,10 @@ Year 2 English: **9 / 39 / 156** (2026-10-11; identifiers locked in its own
 `year2EnglishCurriculum.test.js`).
 Year 2 Science: **4 categories / 19 topics / 76 challenges**, all built
 (2026-10-11; identifiers locked in `year2ScienceCurriculum.test.js`).
+Year 2 History: **6 categories / 17 topics / 68 challenges**, all built
+(2026-10-12; identifiers locked in `year2HistoryCurriculum.test.js`); five rounds
+per challenge and optional local-history activities. Registered outside the year
+award until owner review.
 Year 4 Maths: **8 categories / 42 topics / 168 challenges**, all implemented
 (2026-10-11; identifiers locked in `year4MathCurriculum.test.js`).
 Year 4 Science: **5 categories / 20 topics / 80 challenges**, all implemented
@@ -1049,6 +1054,43 @@ misses and the hint), and a headless Chrome run that played all 56 challenges in
 from fresh progress through the real controls, alternating themes, with 320 px checks
 and no console errors. Pending: the owner's review, touch and the read-aloud voice on
 real devices. Statutory crosswalk: `docs/curriculum/key-stage-1-history.md`.
+
+### Curriculum Mode — Year 2 History (2026-10-12)
+
+Year 2 History has **6 categories / 17 topics / 68 challenges**: Changes Within
+Living Memory, The Great Fire of London, Nurses Who Made a Difference, People Who
+Changed Things, Days We Remember and History Near You. The approved topic list is
+in `history-curriculum/year-2-design-spec.md`; the statutory crosswalk is in
+`curriculum/key-stage-1-history.md`. Every topic has a certificate achievement.
+
+Topic banks in `src/data/challenges/history/year2/` reuse the History engine and
+`DataChallenge`. Every level starts with a story of at most 45 words, with
+sentences of at most 12 words; five rounds draw from at least seven templates.
+Choices have three options. Meet it uses choice/sort, Long ago or now? adds
+ordering, History detective reads sources and their limits, and Compare and
+remember studies change, similarity and significance. Ordering cards stack
+vertically for readable phone layouts. All rounds offer read-aloud and the
+reopenable story, and retain the completion payload including combos.
+
+Five new public-domain images are pinned in `scripts/history-assets/sources.json`
+and listed in `/credits`: the Great Fire painting and portraits of Florence
+Nightingale, Mary Seacole, Edith Cavell and Emily Davison. Their displayed details
+were checked against the downloaded images. Practice maps, a practice plaque and
+a book/web illustration are original SVGs, labelled as drawings; chronology bands
+label the main events without date arithmetic. The two local-history topics offer
+optional collapsed grown-up activities, without tracking or gating.
+
+Year 2 History is playable but registered with `countsTowardYear: false` pending
+owner review. Existing Year 2 certificates keep their three-subject requirement;
+History topic/subject awards work normally. No progress shape, key or unlock rule
+changes were made. Only remove this flag after the owner approves inclusion.
+
+Verified: lint, full tests and build; all 68 challenges completed through the real
+controls in isolated Chrome, both themes and 320/390 px, with reload, idempotent
+replay and a byte-for-byte unchanged pre-existing Maths document. Story/start-button
+contrast measured above 4.5:1 in both themes. The existing 320 px navbar overflow
+was fixed by wrapping controls at full touch size and hiding the bar using its
+measured height. Remaining device checks: `history-curriculum/HISTORY_TRACKER.md`.
 
 ### Curriculum Mode — Year 1 Maths (2026-10-11)
 
@@ -3044,6 +3086,10 @@ Year 2 Science (2026-10-11) shows a second year reusing that engine unchanged,
 with its own banks and drawing component.
 Year 4 Science (2026-10-11) adds a complete five-strand year with independent
 authored banks, evidence tables and picture circuit models (`year4Science/`).
+Year 2 History (2026-10-12) reuses the story-card engine, adds five pinned source
+images and original SVG practice sources, and keeps the year-award requirement
+unchanged pending owner review. `historyActivities.js` provides read-only activity
+cards after local topic completion through the existing celebration panel.
 1. Save the programme of study verbatim from the DfE PDF in `docs/curriculum/`, with a mapping
    section, and get the topic titles signed off. Titles are ids.
 2. Create `src/data/year<N><Subject>Curriculum.js` in the same shape, with a

@@ -128,5 +128,70 @@
     "retrieved": "2026-10-12",
     "alt": "A black-and-white photo of Queen Victoria. She wears a small crown, a long white veil and a necklace.",
     "credit": "Queen Victoria, 1882. Photo by Alexander Bassano. Public domain."
+  },
+  "mary-seacole-photo": {
+    "title": "Mary Seacole",
+    "creator": "Maull & Company",
+    "date": "about 1873",
+    "institution": "Wikimedia Commons",
+    "objectUrl": "https://commons.wikimedia.org/wiki/File:Seacole_photo.jpg",
+    "fileUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3b/Seacole_photo.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "licence": "PDM-1.0",
+    "sha256": "2fc86099a3751c39ace459c77d61ccc163f869d83fef9e9dbf60b047fe2d1f08",
+    "retrieved": "2026-10-12",
+    "alt": "A black-and-white photo of Mary Seacole wearing a hat, a dark dress and medals.",
+    "credit": "Mary Seacole, about 1873. Maull & Company. Public domain."
+  },
+  "edith-cavell-portrait": {
+    "title": "Edith Cavell",
+    "creator": "Bain News Service",
+    "date": "before 1915",
+    "institution": "Wikimedia Commons",
+    "objectUrl": "https://commons.wikimedia.org/wiki/File:Edith_Cavell_portrait.jpg",
+    "fileUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Edith_Cavell_portrait.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "licence": "PDM-1.0",
+    "sha256": "b2c228a853698a081f768f48335bdec043054a73ba7213273269a446d864169d",
+    "retrieved": "2026-10-12",
+    "alt": "A black-and-white portrait photo of Edith Cavell wearing a white blouse and a high lace collar. Her name is written above the oval portrait.",
+    "credit": "Edith Cavell, before 1915. Bain News Service. Public domain."
+  },
+  "emily-davison-portrait": {
+    "title": "Emily Wilding Davison",
+    "creator": "Andrew William Dron",
+    "date": "before 1913",
+    "institution": "Wikimedia Commons",
+    "objectUrl": "https://commons.wikimedia.org/wiki/File:Emily_Wilding_Davison.jpg",
+    "fileUrl": "https://upload.wikimedia.org/wikipedia/commons/4/4e/Emily_Wilding_Davison.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "licence": "PDM-1.0",
+    "sha256": "5613afd5c4f5b6dc6a49eb9f90d5250f727100ebdb76aa27db3cdf45498068b9",
+    "retrieved": "2026-10-12",
+    "alt": "A black-and-white portrait photo of Emily Davison wearing a dark jacket.",
+    "credit": "Emily Wilding Davison, before 1913. Andrew William Dron. Public domain."
+  },
+  "great-fire-london-painting": {
+    "title": "The Great Fire of London",
+    "creator": "Unknown artist",
+    "date": "about 1675",
+    "institution": "Wikimedia Commons",
+    "objectUrl": "https://commons.wikimedia.org/wiki/File:Great_Fire_London.jpg",
+    "fileUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Great_Fire_London.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "licence": "PDM-1.0",
+    "sha256": "1ee80a337e2cee4c4a69139b85d12d76fdcff717465ff92e19bab70c2375860e",
+    "retrieved": "2026-10-12",
+    "alt": "An old painting of the Great Fire of London. Flames rise above buildings beside the river. Boats are on the water.",
+    "credit": "The Great Fire of London, about 1675. Unknown artist. Public domain."
+  },
+  "florence-nightingale-portrait": {
+    "title": "Florence Nightingale",
+    "creator": "Henry Hering",
+    "date": "about 1860",
+    "institution": "Wikimedia Commons",
+    "objectUrl": "https://commons.wikimedia.org/wiki/File:Florence_Nightingale_(H_Hering_NPG_x82368).jpg",
+    "fileUrl": "https://upload.wikimedia.org/wikipedia/commons/a/ab/Florence_Nightingale_%28H_Hering_NPG_x82368%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "licence": "PDM-1.0",
+    "sha256": "8641093be23ca4b8c1da18c8304b96c75f2f23342ae2f9d43c7737ea46354003",
+    "retrieved": "2026-10-12",
+    "alt": "An old black-and-white portrait photo of Florence Nightingale in a dark dress.",
+    "credit": "Florence Nightingale, about 1860. Henry Hering. Public domain."
   }
 }

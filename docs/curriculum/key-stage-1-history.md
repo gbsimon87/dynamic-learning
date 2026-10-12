@@ -84,7 +84,25 @@ open-licence image rule. Design: `docs/history-curriculum/year-1-design-spec.md`
 
 ### Year 2
 
-Added with the Year 2 dataset.
+| Category | App topic | Topic ID | Statutory requirement served | Activity boundary |
+|---|---|---|---|---|
+| Changes Within Living Memory | Keeping in Touch Then and Now | `keeping-in-touch-then-and-now` | changes within living memory | compare ways people keep in touch, then and now. See approved Year 2 design boundary. |
+| Changes Within Living Memory | Getting About Then and Now | `getting-about-then-and-now` | changes within living memory | compare journeys in grandparents' time and today. See approved Year 2 design boundary. |
+| The Great Fire of London | London in 1666 | `london-in-1666` | events beyond living memory that are significant nationally or globally | describe London before the Great Fire. See approved Year 2 design boundary. |
+| The Great Fire of London | How the Great Fire Started and Spread | `how-the-great-fire-started-and-spread` | events beyond living memory that are significant nationally or globally | explain how the Great Fire began and spread. See approved Year 2 design boundary. |
+| The Great Fire of London | How We Know About the Great Fire | `how-we-know-about-the-great-fire` | events beyond living memory that are significant nationally or globally | use different clues to learn about the Great Fire. See approved Year 2 design boundary. |
+| The Great Fire of London | London After the Fire | `london-after-the-fire` | events beyond living memory that are significant nationally or globally | describe how London changed after the Great Fire. See approved Year 2 design boundary. |
+| Nurses Who Made a Difference | Florence Nightingale | `florence-nightingale` | the lives of significant individuals in the past who have contributed to national and international achievements. Some should be used to compare aspects of life in different periods | how Florence Nightingale helped improve nursing. See approved Year 2 design boundary. |
+| Nurses Who Made a Difference | Mary Seacole | `mary-seacole` | the lives of significant individuals in the past who have contributed to national and international achievements. Some should be used to compare aspects of life in different periods | how Mary Seacole cared for soldiers. See approved Year 2 design boundary. |
+| Nurses Who Made a Difference | Edith Cavell | `edith-cavell` | the lives of significant individuals in the past who have contributed to national and international achievements. Some should be used to compare aspects of life in different periods | how Edith Cavell cared for people from both sides. See approved Year 2 design boundary. |
+| Nurses Who Made a Difference | Nursing Then and Now | `nursing-then-and-now` | the lives of significant individuals in the past who have contributed to national and international achievements. Some should be used to compare aspects of life in different periods | compare nursing in the past and today. See approved Year 2 design boundary. |
+| People Who Changed Things | Rosa Parks | `rosa-parks` | the lives of significant individuals in the past who have contributed to national and international achievements. Some should be used to compare aspects of life in different periods | how Rosa Parks and others challenged unfair bus rules. See approved Year 2 design boundary. |
+| People Who Changed Things | Emily Davison and Votes for Women | `emily-davison-and-votes-for-women` | the lives of significant individuals in the past who have contributed to national and international achievements. Some should be used to compare aspects of life in different periods | how campaigners helped women win the vote. See approved Year 2 design boundary. |
+| People Who Changed Things | William Caxton and Tim Berners-Lee | `william-caxton-and-tim-berners-lee` | the lives of significant individuals in the past who have contributed to national and international achievements. Some should be used to compare aspects of life in different periods | compare printing and the World Wide Web. See approved Year 2 design boundary. |
+| Days We Remember | Bonfire Night | `bonfire-night` | events beyond living memory that are significant nationally or globally | why Bonfire Night remembers the Gunpowder Plot. See approved Year 2 design boundary. |
+| Days We Remember | Remembrance Day | `remembrance-day` | events beyond living memory that are significant nationally or globally | how poppies and silence help people remember. See approved Year 2 design boundary. |
+| History Near You | Memorials and Blue Plaques | `memorials-and-blue-plaques` | significant historical events, people and places in their own locality | read memorials and plaques for clues about local history. See approved Year 2 design boundary. |
+| History Near You | Old Maps and Photos | `old-maps-and-photos` | significant historical events, people and places in their own locality | compare old and new views to find what changed and stayed. See approved Year 2 design boundary. |
 
 ---
 
