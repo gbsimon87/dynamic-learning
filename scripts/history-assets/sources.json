@@ -1,4 +1,17 @@
 {
+  "cma-child-with-drum": {
+    "title": "Child with Drum",
+    "creator": "Unidentified photographer",
+    "date": "1850s",
+    "institution": "Cleveland Museum of Art",
+    "objectUrl": "https://clevelandart.org/art/2002.33",
+    "fileUrl": "https://openaccess-cdn.clevelandart.org/2002.33/2002.33_web.jpg",
+    "licence": "CC0-1.0",
+    "sha256": "bada6e371991ced75a1069ee27ae84b54aece49275b8d7dd58b68e3d200c7d41",
+    "retrieved": "2026-10-12",
+    "alt": "A very old photo of a child holding a drum and two drumsticks.",
+    "credit": "Child with Drum, 1850s. Cleveland Museum of Art, CC0."
+  },
   "cma-two-children-with-toys": {
     "title": "Two Children with Toys",
     "creator": "Unidentified photographer",
@@ -12,17 +25,108 @@
     "alt": "A very old photo of two children. A doll sits in a wooden cart with wheels. There is a basket on the floor.",
     "credit": "Two Children with Toys, about 1855. Cleveland Museum of Art, CC0."
   },
-  "cma-child-with-drum": {
-    "title": "Child with Drum",
-    "creator": "Unidentified photographer",
-    "date": "1850s",
-    "institution": "Cleveland Museum of Art",
-    "objectUrl": "https://clevelandart.org/art/2002.33",
-    "fileUrl": "https://openaccess-cdn.clevelandart.org/2002.33/2002.33_web.jpg",
-    "licence": "CC0-1.0",
-    "sha256": "bada6e371991ced75a1069ee27ae84b54aece49275b8d7dd58b68e3d200c7d41",
+  "elizabeth-i-armada-portrait": {
+    "title": "The Armada Portrait of Elizabeth I",
+    "creator": "Unknown English artist",
+    "date": "about 1588",
+    "institution": "Wikimedia Commons",
+    "objectUrl": "https://commons.wikimedia.org/wiki/File:Elizabeth_I_(Armada_Portrait).jpg",
+    "fileUrl": "https://upload.wikimedia.org/wikipedia/commons/7/7b/Elizabeth_I_%28Armada_Portrait%29.jpg",
+    "licence": "PDM-1.0",
+    "sha256": "947fd8c2db204bf25df06e8a23b4b9e23f1af2bbc05dfbde54ec5d954e4bbb40",
     "retrieved": "2026-10-12",
-    "alt": "A very old photo of a child holding a drum and two drumsticks.",
-    "credit": "Child with Drum, 1850s. Cleveland Museum of Art, CC0."
+    "alt": "A painting of Queen Elizabeth I. She wears a huge lace ruff, pearls and a big jewelled dress. Her hand rests on a globe. Ships are painted behind her.",
+    "credit": "The Armada Portrait of Elizabeth I, about 1588. Public domain."
+  },
+  "loc-blackpool-beach": {
+    "title": "The tower with beach, Blackpool",
+    "creator": "Photochrom Print Collection",
+    "date": "1890s",
+    "institution": "Library of Congress, via Wikimedia Commons",
+    "objectUrl": "https://commons.wikimedia.org/wiki/File:The_tower_with_beach,_Blackpool,_England-LCCN2002696389.tif",
+    "fileUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/The_tower_with_beach%2C_Blackpool%2C_England-LCCN2002696389.tif/lossy-page1-1280px-The_tower_with_beach%2C_Blackpool%2C_England-LCCN2002696389.tif.jpg",
+    "licence": "PDM-1.0",
+    "sha256": "368b034449c9fad62c1c5b47e30a20c7551ef8e6c0356e956a4efc476e097b43",
+    "retrieved": "2026-10-12",
+    "alt": "An old coloured photo of a crowded beach at Blackpool. A tall tower and a long pier stand by the sea. People wear long coats and hats.",
+    "credit": "Blackpool beach, 1890s. Photochrom print, Library of Congress, public domain."
+  },
+  "loc-shakespeares-birthplace": {
+    "title": "Shakespeare's birthplace, Stratford-on-Avon",
+    "creator": "Photochrom Print Collection",
+    "date": "1890s",
+    "institution": "Library of Congress, via Wikimedia Commons",
+    "objectUrl": "https://commons.wikimedia.org/wiki/File:Shakespeare%27s_birthplace,_Stratford-on-Avon,_England-LCCN2002708133.jpg",
+    "fileUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7f/Shakespeare%27s_birthplace%2C_Stratford-on-Avon%2C_England-LCCN2002708133.jpg/1280px-Shakespeare%27s_birthplace%2C_Stratford-on-Avon%2C_England-LCCN2002708133.jpg",
+    "licence": "PDM-1.0",
+    "sha256": "c11bd0b96fbe0d51361c4c624cb2a116b19a432b5554ae4fe8c5466de776e16c",
+    "retrieved": "2026-10-12",
+    "alt": "An old coloured photo of a very old house. It has a wooden frame, white walls, small windows and a steep roof.",
+    "credit": "Shakespeare's birthplace, Stratford-upon-Avon, 1890s. Library of Congress, public domain."
+  },
+  "loc-wright-first-flight": {
+    "title": "First flight",
+    "creator": "John T. Daniels",
+    "date": "1903",
+    "institution": "Library of Congress, via Wikimedia Commons",
+    "objectUrl": "https://commons.wikimedia.org/wiki/File:First_flight2.jpg",
+    "fileUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/86/First_flight2.jpg/1280px-First_flight2.jpg",
+    "licence": "PDM-1.0",
+    "sha256": "f44d9d80815d21ae94284dc72e0f97273a2b0aa268ef51af253080a24c17e381",
+    "retrieved": "2026-10-12",
+    "alt": "A very old black-and-white photo. A plane with long flat wings flies just above the sand. A man runs beside it.",
+    "credit": "The first flight, 1903. Photo by John T. Daniels. Library of Congress, public domain."
+  },
+  "nasa-apollo-11-bootprint": {
+    "title": "A bootprint on the Moon",
+    "creator": "NASA / Buzz Aldrin",
+    "date": "1969",
+    "institution": "NASA, via Wikimedia Commons",
+    "objectUrl": "https://commons.wikimedia.org/wiki/File:Apollo_11_bootprint.jpg",
+    "fileUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/89/Apollo_11_bootprint.jpg/1280px-Apollo_11_bootprint.jpg",
+    "licence": "PDM-1.0",
+    "sha256": "783c7951df855235aa2074ec92308febb9f8553a3fc3850d9c834daf705ab244",
+    "retrieved": "2026-10-12",
+    "alt": "A photo of a bootprint in grey dust on the Moon.",
+    "credit": "A bootprint on the Moon, Apollo 11, 1969. NASA, public domain."
+  },
+  "nasa-apollo-11-launch": {
+    "title": "Apollo 11 launch",
+    "creator": "NASA",
+    "date": "1969",
+    "institution": "NASA, via Wikimedia Commons",
+    "objectUrl": "https://commons.wikimedia.org/wiki/File:Apollo_11_Launch_-_GPN-2000-000630.jpg",
+    "fileUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/Apollo_11_Launch_-_GPN-2000-000630.jpg/1280px-Apollo_11_Launch_-_GPN-2000-000630.jpg",
+    "licence": "PDM-1.0",
+    "sha256": "da7b9afbb4dcb9036824883fc00522f2581d622c6da5eda0263d335464d53eaf",
+    "retrieved": "2026-10-12",
+    "alt": "A photo of a tall white rocket taking off. Fire and smoke pour out at the bottom.",
+    "credit": "Apollo 11 launch, 1969. NASA, public domain."
+  },
+  "nasa-neil-armstrong": {
+    "title": "Neil Armstrong",
+    "creator": "NASA",
+    "date": "1969",
+    "institution": "NASA, via Wikimedia Commons",
+    "objectUrl": "https://commons.wikimedia.org/wiki/File:Neil_Armstrong_official.jpg",
+    "fileUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Neil_Armstrong_official.jpg",
+    "licence": "PDM-1.0",
+    "sha256": "56ed20367c64374c516ad10b419d151ae597f47246652daf7888fedfbcc150b5",
+    "retrieved": "2026-10-12",
+    "alt": "A photo of Neil Armstrong in a white space suit. He holds his helmet. A picture of the Moon is behind him.",
+    "credit": "Neil Armstrong, 1969. NASA, public domain."
+  },
+  "queen-victoria-bassano-1882": {
+    "title": "Queen Victoria",
+    "creator": "Alexander Bassano",
+    "date": "1882",
+    "institution": "Wikimedia Commons",
+    "objectUrl": "https://commons.wikimedia.org/wiki/File:Queen_Victoria_by_Bassano.jpg",
+    "fileUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/Queen_Victoria_by_Bassano.jpg/1280px-Queen_Victoria_by_Bassano.jpg",
+    "licence": "PDM-1.0",
+    "sha256": "af2dae9840c8b4571cef58f3a1deb342018bcd42c88be63ef0b426a7fa2bbd20",
+    "retrieved": "2026-10-12",
+    "alt": "A black-and-white photo of Queen Victoria. She wears a small crown, a long white veil and a necklace.",
+    "credit": "Queen Victoria, 1882. Photo by Alexander Bassano. Public domain."
   }
 }
