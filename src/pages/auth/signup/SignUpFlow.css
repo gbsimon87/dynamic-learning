@@ -76,16 +76,56 @@
 
 /* Year wheel */
 .auth-page .sf-wheel {
-  position: relative; height: 16rem; overflow-y: auto; scroll-snap-type: y mandatory; margin: 0; padding: 6rem 0; list-style: none;
-  border: 2px solid var(--au-border); border-radius: 1rem; background: var(--au-panel);
-  mask-image: linear-gradient(transparent, black 30%, black 70%, transparent);
+  position: relative;
+  box-sizing: border-box;
+  height: 15rem;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scroll-snap-type: y mandatory;
+  scroll-padding-block: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--au-muted) var(--au-bg);
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  list-style: none;
+  border: 2px solid var(--au-border);
+  border-radius: 1.25rem;
+  background: var(--au-bg);
 }
-.auth-page .sf-wheel:focus-visible { border-color: var(--au-accent); box-shadow: inset 0 0 0 2px var(--au-accent); outline: none; }
+.auth-page .sf-wheel:focus-visible { outline: 3px solid var(--au-cta); outline-offset: 3px; }
 .auth-page .sf-wheel-item {
-  scroll-snap-align: center; min-height: 4rem; display: grid; place-items: center;
-  font-size: 1.4rem; color: var(--au-muted); cursor: pointer;
+  position: relative;
+  box-sizing: border-box;
+  scroll-snap-align: center;
+  min-height: 4rem;
+  display: grid;
+  place-items: center;
+  padding: 0.5rem 2.5rem;
+  margin-block: 0.25rem;
+  border: 2px solid transparent;
+  border-radius: 0.85rem;
+  font-size: 1.35rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--au-text);
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease;
 }
-.auth-page .sf-wheel-item.is-chosen { color: var(--au-text); font-size: 1.9rem; font-weight: 800; }
+@media (hover: hover) {
+  .auth-page .sf-wheel-item:hover { background: var(--au-panel); border-color: var(--au-border); }
+}
+.auth-page .sf-wheel-item.is-chosen {
+  border-color: var(--au-accent);
+  background: var(--au-accent);
+  color: var(--au-on-accent);
+  font-weight: 800;
+}
+.auth-page .sf-wheel-item.is-chosen::after {
+  content: "✓";
+  position: absolute;
+  right: 1rem;
+  font-size: 1.2rem;
+}
 
 /* Code boxes */
 .auth-page .sf-code { display: flex; justify-content: center; gap: 0.3rem; }
@@ -150,6 +190,7 @@
   .auth-page .su-strength,
   .auth-page .sf-card,
   .auth-page .sf-card-check,
+  .auth-page .sf-wheel-item,
   .auth-page .sf-star { transition: none; }
 }
 @keyframes sf-fade { from { opacity: 0; } to { opacity: 1; } }

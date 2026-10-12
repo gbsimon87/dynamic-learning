@@ -871,6 +871,11 @@ anything else → off. See §6 item 17.
 (`[]` = Just exploring / not asked; absent reads as `[]`). Used twice: the
 hand-over destination, and a "⭐ Your pick" tag on `CurriculumSelectPage`.
 
+The birth-year wheel uses a compact, bordered scrolling list with 64px rows,
+a filled selection and checkmark, a visible keyboard focus ring and theme
+tokens (2026-10-12). Its frame is no longer faded by a mask, and selecting a
+year keeps row heights stable.
+
 **The draft.** `dl.signupDraft` in `sessionStorage` holds every answer except
 the password and the code, plus the current step, so a refresh resumes. It never
 holds the birth year (after a refresh the wheel shows no selection), and
