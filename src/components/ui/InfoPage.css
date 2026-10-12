@@ -1,0 +1,170 @@
+/* ===========================================================
+   INFO PAGE — shared shell for /privacy and /credits (InfoPage.jsx)
+
+   Borrows the homepage's world: the rose sky, soft card edges, coral-ink
+   headings and the pushable ghost button. Colours come from the paired
+   --light-home-* / --dark-home-* tokens in App.css; everything is scoped
+   under `.info-page` because CSS is global in this project.
+=========================================================== */
+.info-page {
+  --info-ink: var(--light-text);
+  --info-muted: var(--light-home-muted);
+  --info-heading: var(--light-home-curriculum-ink);
+  --info-card: var(--light-panel);
+  --info-edge: var(--light-home-card-edge);
+  --info-sky-top: var(--light-home-sky-top);
+  --info-sky-bottom: var(--light-home-sky-bottom);
+  --info-label: var(--light-home-curriculum-label);
+  --info-well: var(--light-bg);
+  --info-note: var(--light-home-achievements);
+  --info-note-edge: var(--light-home-achievements-edge);
+  --info-note-ink: var(--light-home-achievements-ink);
+  --info-focus: var(--light-text);
+
+  box-sizing: border-box;
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: clamp(0.75rem, 3vw, 1.5rem) 1rem 4rem;
+  color: var(--info-ink);
+  line-height: 1.65;
+}
+
+body.dark .info-page {
+  --info-ink: var(--dark-text);
+  --info-muted: var(--dark-home-muted);
+  --info-heading: var(--dark-home-curriculum-ink);
+  --info-card: var(--dark-panel);
+  --info-edge: var(--dark-home-card-edge);
+  --info-sky-top: var(--dark-home-sky-top);
+  --info-sky-bottom: var(--dark-home-sky-bottom);
+  --info-label: var(--dark-home-curriculum-label);
+  --info-well: var(--dark-bg);
+  --info-note: var(--dark-home-achievements);
+  --info-note-edge: var(--dark-home-achievements-edge);
+  --info-note-ink: var(--dark-home-achievements-ink);
+  --info-focus: var(--dark-accent);
+}
+
+.info-page ::selection {
+  background: var(--info-label);
+  color: var(--info-ink);
+}
+
+.info-page a:focus-visible,
+.info-page summary:focus-visible {
+  outline: 3px solid var(--info-focus);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+/* ---------- header ---------- */
+.info-hero {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 4vw, 2rem);
+  padding: clamp(1.5rem, 5vw, 2.5rem) clamp(1.25rem, 5vw, 2.5rem);
+  border-radius: 32px;
+  background: linear-gradient(180deg, var(--info-sky-top), var(--info-sky-bottom));
+}
+
+.info-hero-copy {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.info-title {
+  margin: 0;
+  color: var(--info-ink);
+  font-size: clamp(1.9rem, 5.5vw, 2.7rem);
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.info-intro {
+  margin: 0.75rem 0 0;
+  max-width: 46ch;
+  color: var(--info-muted);
+  font-size: clamp(1.02rem, 2.4vw, 1.15rem);
+}
+
+.info-hero-bix { flex: none; }
+
+/* Phones: Bix sits beside the title only, so the intro gets the full width. */
+@media (max-width: 600px) {
+  .info-hero {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    column-gap: 0.75rem;
+  }
+
+  .info-hero-copy { display: contents; }
+  .info-title { grid-column: 1; grid-row: 1; }
+  .info-hero-bix { grid-column: 2; grid-row: 1; }
+  .info-hero-copy > :not(.info-title) { grid-column: 1 / -1; }
+  .info-page .mascot.info-hero-bix { zoom: 0.42; }
+}
+
+/* ---------- reading sheet ---------- */
+.info-sheet {
+  margin-top: clamp(1.25rem, 4vw, 2rem);
+  border: 2px solid var(--info-edge);
+  border-radius: 28px;
+  background: var(--info-card);
+  box-shadow: 0 3px 0 var(--info-edge);
+  overflow-wrap: anywhere;
+}
+
+/* Each page's sections share this rhythm; a rule separates them. */
+.info-section {
+  padding: clamp(1.4rem, 4.5vw, 2.25rem);
+  scroll-margin-top: calc(var(--navbar-height) + 1rem);
+}
+
+.info-section + .info-section { border-top: 2px solid var(--info-edge); }
+
+.info-section h2 {
+  margin: 0 0 0.6rem;
+  color: var(--info-heading);
+  font-size: clamp(1.25rem, 3.5vw, 1.45rem);
+  line-height: 1.25;
+}
+
+.info-section p {
+  margin: 0;
+  max-width: 68ch;
+  font-size: 1.05rem;
+}
+
+.info-section p + p { margin-top: 0.8rem; }
+
+/* ---------- way home: the homepage's pushable ghost button ---------- */
+.info-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 56px;
+  margin-top: clamp(1.75rem, 5vw, 2.5rem);
+  padding: 0.9rem 1.5rem;
+  border-radius: 16px;
+  background: var(--info-card);
+  color: var(--info-ink);
+  box-shadow: 0 6px 0 var(--info-edge);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 140ms ease-out, box-shadow 140ms ease-out;
+}
+
+.info-home:hover { transform: translateY(-2px); }
+
+.info-home:active {
+  transform: translateY(5px);
+  box-shadow: 0 1px 0 var(--info-edge);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .info-home { transition: none; }
+  .info-home:hover,
+  .info-home:active { transform: none; }
+}

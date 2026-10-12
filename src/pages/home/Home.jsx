@@ -137,7 +137,7 @@ function CurriculumAdventure() {
       <ol className="home-journey">
         <li data-reveal>
           <span className="home-journey-number" aria-hidden="true">1</span>
-          <span className="home-journey-icon" aria-hidden="true">🎒</span>
+          <span className="home-journey-icon" aria-hidden="true">🧭</span>
           <h3>Pick your adventure</h3>
           <p>Choose your year and a subject you want to explore.</p>
         </li>

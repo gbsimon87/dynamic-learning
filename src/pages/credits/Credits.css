@@ -1,16 +1,117 @@
-.credits-page { max-width: 48rem; margin: 0 auto; padding: 2rem 1rem 3rem; color: var(--light-text); line-height: 1.5; }
-body.dark .credits-page { color: var(--dark-text); }
-.credits-title { color: var(--light-text); }
-body.dark .credits-title { color: var(--dark-accent); }
-.credits-list { list-style: none; padding: 0; display: grid; gap: 1rem; }
-.credits-card { background: var(--light-panel); border: 2px solid var(--light-accent); border-radius: 18px; padding: 1rem 1.25rem; }
-body.dark .credits-card { background: var(--dark-panel); border-color: var(--dark-accent); }
-.credits-card h2 { margin: 0 0 .5rem; font-size: 1.3rem; }
-.credits-link {
-  display: inline-flex; align-items: center; min-height: 48px; padding: 0 .25rem;
-  color: inherit; font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px;
+/* Credits page: layout and colours come from the InfoPage shell
+   (components/ui/InfoPage.css); these are only the parts unique to it. */
+.info-page .credits-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
-.credits-card summary { min-height: 48px; display: flex; align-items: center; cursor: pointer; font-weight: 700; }
-.credits-card pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .85rem; max-height: 24rem; overflow: auto; padding: .75rem; border-radius: 12px; background: var(--light-bg); color: var(--light-text); }
-body.dark .credits-card pre { background: var(--dark-bg); color: var(--dark-text); }
-.credits-home { margin-top: 1rem; }
+
+.info-page .credits-adapted { color: var(--info-muted); }
+.info-page .credits-adapted strong { color: var(--info-ink); }
+
+/* Licence chip and source link on one line; wraps on a phone. */
+.info-page .credits-item .credits-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.75rem;
+  margin-top: 1rem;
+}
+
+.info-page .credits-links-label {
+  color: var(--info-muted);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+/* Phones: the label captions the row instead of being stranded by a long chip. */
+@media (max-width: 600px) {
+  .info-page .credits-links-label { flex-basis: 100%; }
+}
+
+.info-page .credits-chip,
+.info-page .credits-source {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  font-weight: 700;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.info-page .credits-chip {
+  min-height: 44px;
+  padding: 0.35rem 0.95rem;
+  border-radius: 999px;
+  background: var(--info-label);
+  color: var(--info-heading);
+  text-decoration: none;
+}
+
+.info-page .credits-chip:hover,
+.info-page .credits-chip:focus-visible { text-decoration: underline; }
+
+.info-page .credits-source {
+  padding: 0 0.25rem;
+  color: var(--info-ink);
+  text-decoration: underline;
+}
+
+.info-page .credits-source:hover,
+.info-page .credits-source:focus-visible { color: var(--info-heading); }
+
+/* ---------- full licence and NOTICE texts ---------- */
+.info-page .credits-text { margin-top: 0.75rem; }
+.info-page .credits-text + .credits-text { margin-top: 0; }
+
+.info-page .credits-text summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 52px;
+  padding: 0 0.25rem;
+  border-top: 2px dashed var(--info-edge);
+  color: var(--info-ink);
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.info-page .credits-text summary::-webkit-details-marker { display: none; }
+
+/* A drawn chevron: points down when closed, up when open. */
+.info-page .credits-text summary::after {
+  content: "";
+  flex: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  margin-right: 0.35rem;
+  border-right: 3px solid var(--info-heading);
+  border-bottom: 3px solid var(--info-heading);
+  transform: translateY(-25%) rotate(45deg);
+  transition: transform 180ms ease-out;
+}
+
+.info-page .credits-text[open] summary::after { transform: translateY(25%) rotate(-135deg); }
+
+.info-page .credits-text summary:hover,
+.info-page .credits-text summary:focus-visible { color: var(--info-heading); }
+
+.info-page .credits-text pre {
+  max-height: 24rem;
+  margin: 0 0 0.75rem;
+  padding: 1rem 1.1rem;
+  overflow: auto;
+  border-radius: 16px;
+  background: var(--info-well);
+  color: var(--info-ink);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .info-page .credits-text summary::after { transition: none; }
+}

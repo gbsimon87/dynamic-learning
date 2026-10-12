@@ -682,9 +682,18 @@ body.dark .home-page {
 
 @media (max-width: 700px) {
   .home-journey { grid-template-columns: 1fr; gap: 0.8rem; }
-  .home-journey li { padding: 1rem 1rem 1rem 3.3rem; text-align: left; }
-  .home-journey-icon { font-size: 2rem; }
-  .home-journey-number { top: 1.3rem; }
+  .home-journey li {
+    display: grid;
+    grid-template-columns: 2rem 2rem minmax(0, 1fr);
+    align-items: center;
+    gap: 0.65rem 0.5rem;
+    padding: 1rem;
+    text-align: left;
+  }
+  .home-journey-number { position: static; }
+  .home-journey-icon { margin: 0; font-size: 2rem; line-height: 1; }
+  .home-journey h3 { margin: 0; font-size: clamp(1rem, 3vw, 1.2rem); }
+  .home-journey p { grid-column: 1 / -1; }
 }
 
 @media (max-width: 480px) {

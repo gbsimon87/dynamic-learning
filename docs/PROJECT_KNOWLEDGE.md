@@ -2359,6 +2359,15 @@ Layouts stack on phones, links have large touch targets, and decorative motion
 respects reduced-motion preferences. Existing resume, account gates, storage
 and unlock rules are unchanged.
 
+On mobile (up to 700px), each journey card places its step number, icon and
+heading in one aligned grid row, with the description below at full width
+(2026-10-12). Headings can wrap within their column on narrow phones.
+“Pick your adventure” uses a compass icon; the backpack is reserved for
+Curriculum Mode.
+
+The homepage footer includes an About group linking to `/privacy` and
+`/credits` (2026-10-12), alongside Learn and Account.
+
 The colour refinement keeps reading surfaces white in light mode and warm
 charcoal in dark mode, with gentle section tints. Coral, sage, lavender and
 honey are concentrated in section labels, skill-card borders and icon tiles.

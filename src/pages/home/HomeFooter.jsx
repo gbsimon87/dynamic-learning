@@ -22,7 +22,7 @@ export default function HomeFooter() {
           <div>
             <p className="home-footer-name">Learn with Bix</p>
             <p className="home-footer-tagline">
-              Practice and challenges for 6 to 8 year olds, built around the UK
+              Practice and challenges built around the UK
               National Curriculum.
             </p>
           </div>
@@ -48,6 +48,12 @@ export default function HomeFooter() {
                 <Link to="/parent">Parent area</Link>
               </>
             )}
+          </div>
+
+          <div className="home-footer-group">
+            <h2>About</h2>
+            <Link to="/privacy">Privacy</Link>
+            <Link to="/credits">Credits</Link>
           </div>
         </nav>
       </div>
