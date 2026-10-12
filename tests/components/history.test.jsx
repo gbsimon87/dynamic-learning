@@ -6,6 +6,7 @@ import { HISTORY_TEST_TOPIC } from "../../src/data/challenges/history/testTopic"
 import { seededRng } from "../../src/data/challenges/questionKinds";
 import HistoryChallenge from "../../src/components/challenge/history/HistoryChallenge";
 import SourceVisual from "../../src/components/challenge/history/SourceVisual";
+import { readAloudText } from "../../src/components/challenge/readAloud";
 import { YEAR1_HISTORY_BUILDERS } from "../../src/data/challenges/history/year1/index";
 
 vi.mock("../../src/utils/speech", () => ({ speak: () => {}, stopNarration: () => {}, speakAndWait: vi.fn(async () => {}), isNarrationSupported: () => false }));
@@ -65,6 +66,13 @@ describe("SourceVisual", () => {
   it("an unknown picture shows a note instead of crashing", () => {
     show(<SourceVisual image="no-such-picture" />);
     expect(screen.getByRole("note").textContent).toMatch(/picture could not load/i);
+  });
+
+  it("Read it to me skips the museum credit", () => {
+    const { container } = show(<div><p className="challenge-prompt">What toy is it?</p><SourceVisual image="cma-child-with-drum" /></div>);
+    const spoken = readAloudText(container.firstChild, "Picture detective");
+    expect(spoken).toContain("What toy is it?");
+    expect(spoken).not.toMatch(/Cleveland|CC0|credits/);
   });
 
   it("links the credits page", () => {

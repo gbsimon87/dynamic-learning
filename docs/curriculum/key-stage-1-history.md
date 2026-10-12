@@ -67,7 +67,7 @@ open-licence image rule. Design: `docs/history-curriculum/year-1-design-spec.md`
 
 | Category | App topic | Topic ID | Statutory requirement served | Activity boundary |
 |---|---|---|---|---|
-| Then and Now | Toys Then and Now | `toys-then-and-now` | changes within living memory | Grandparents' toys (wood, tin, marbles, tops) and toys today (plastic, batteries); old photos as a source. |
+| Then and Now | Toys Then and Now | `toys-then-and-now` | changes within living memory | What grandparents' toys included (wood, tin, marbles, tops) and what is new today (apps, screens); kinds of toy train in the order they appeared (wind-up, battery, app); 1850s photos as a source. Never claims grandparents lacked plastic or battery toys. |
 | Then and Now | Homes Then and Now | `homes-then-and-now` | changes within living memory | Coal fires, washing by hand, one TV; central heating, machines, screens. |
 | Then and Now | School Then and Now | `school-then-and-now` | changes within living memory | Chalk and blackboards, rows of desks; whiteboards and tablets today. |
 | Then and Now | Seaside Holidays Then and Now | `seaside-holidays-then-and-now` | changes within living memory. Where appropriate, these should be used to reveal aspects of change in national life | Piers, Punch and Judy, donkeys, bathing huts; holidays today. |

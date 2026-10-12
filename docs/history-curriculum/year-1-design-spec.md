@@ -42,7 +42,7 @@ reveal aspects of change in national life*
 
 | # | Icon | Topic | Content boundary |
 |---|---|---|---|
-| 1 | 🧸 | Toys Then and Now | Toys grandparents played with (wooden, tin, dolls, marbles) and toys today; what they are made of; how they work |
+| 1 | 🧸 | Toys Then and Now | Toys grandparents played with (wooden, tin, dolls, marbles) and what is new today (apps, screens). Today's grandparents also had plastic and battery toys, so never present those as "today only" |
 | 2 | 🏠 | Homes Then and Now | Coal fires, washing by hand, no TV or one channel; central heating, washing machines, screens |
 | 3 | 🏫 | School Then and Now | Chalk and blackboards, rows of desks, school milk; whiteboards and tablets today |
 | 4 | 🏖️ | Seaside Holidays Then and Now | Piers, Punch and Judy, donkeys, bathing huts long ago; holidays today |

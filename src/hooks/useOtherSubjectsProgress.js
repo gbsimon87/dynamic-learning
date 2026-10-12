@@ -1,11 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/auth-context";
 import { store } from "../data/store";
-import {
-  CURRICULUM_SUBJECTS,
-  isCurriculumAvailable,
-  loadCurriculum,
-} from "../data/curriculumRegistry";
+import { loadCurriculum, yearAwardSubjectIds } from "../data/curriculumRegistry";
 import { isChallengeImplemented } from "../data/challengeAvailability";
 
 /**
@@ -26,9 +22,8 @@ import { isChallengeImplemented } from "../data/challengeAvailability";
  */
 export function useOtherSubjectsProgress(year, subject) {
   const childId = useContext(AuthContext)?.child?._id ?? null;
-  const others = CURRICULUM_SUBJECTS.filter(
-    (item) => item.id !== subject && isCurriculumAvailable(year, item.id)
-  ).map((item) => item.id);
+  // Only subjects that count toward the year award (countsTowardYear).
+  const others = yearAwardSubjectIds(year, subject);
   const othersKey = others.join(",");
 
   // Which `childId|year|subject` the loaded result belongs to, so a result for

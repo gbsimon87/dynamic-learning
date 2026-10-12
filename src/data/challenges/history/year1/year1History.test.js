@@ -58,3 +58,20 @@ test("Year 1 History: every built topic has four wrappers that forward completio
     assert.ok(source.includes(`level={${level}}`) && source.includes(`topicId="${id}"`) && source.includes("onComplete={onComplete}"), file.pathname);
   }
 });
+
+// Review finding (2026-10-12): today's grandparents (born about 1955–1975) had
+// plastic toys, battery toys and early video games, so the grandparents' levels
+// must never mark those as "today only" or offer them as wrong answers.
+test("Toys Then and Now: nothing grandparents also had is marked 'today only'", async () => {
+  const { toysThenAndNow: topic } = await import("./toysThenAndNow.js");
+  const hadIt = /plastic|batter|video game|games console/i;
+  for (const level of [1, 2, 3, 4]) {
+    const { story, rounds } = topic.levels[level];
+    const aboutGrandparents = /grandparent/i.test(story.lines.join(" "));
+    if (aboutGrandparents) assert.ok(!/plastic/i.test(story.lines.join(" ")), `level ${level} story contrasts plastic with grandparents' toys`);
+    for (const name of new Set(rounds)) for (const t of topic.banks[name]) {
+      if (t.type === "sort" && aboutGrandparents) for (const [label, bin] of t.cards) assert.ok(!(bin === "now" && hadIt.test(label)), `${name}: "${label}" sorted as today only`);
+      if (t.type === "choice" && /grandparent/i.test(t.prompt)) for (const wrong of t.wrong) assert.ok(!hadIt.test(wrong), `${name}: "${wrong}" offered as wrong in "${t.prompt}"`);
+    }
+  }
+});

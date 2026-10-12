@@ -6,52 +6,56 @@ const photo1 = { type: "source", image: "cma-two-children-with-toys" };
 const photo2 = { type: "source", image: "cma-child-with-drum" };
 
 /* ---------- Level 1: Meet it ---------- */
+// Grandparents (born about 1955–1975) also had plastic and battery toys, so
+// this level only says what they DID have, and contrasts it with apps and
+// screens, which are new.
 const meetStory = {
   lines: [
     "Grandparents were children a long time ago.",
-    "Many of their toys were wood or tin.",
+    "Some of their toys were wood or tin.",
     "They played marbles and spun tops.",
-    "Today many toys are plastic or use batteries.",
+    "Today some toys use apps and screens.",
   ],
   picture: "🧸", pictureLabel: "a teddy bear",
 };
 const facts = [
-  { type: "choice", prompt: "What were many old toys made of?", answer: "wood", wrong: ["glass", "paper"], answeredBy: "wood or tin", hint: "Bix said old toys were **wood** or tin." },
-  { type: "choice", prompt: "Which game did grandparents play?", answer: "marbles", wrong: ["video games", "tablet games"], answeredBy: "played marbles", hint: "Look for the word **marbles**." },
-  { type: "choice", prompt: "What did grandparents spin?", answer: "tops", wrong: ["phones", "screens"], answeredBy: "spun tops", hint: "They **spun tops**." },
-  { type: "choice", prompt: "What are many toys made of today?", answer: "plastic", wrong: ["stone", "bone"], answeredBy: "plastic", hint: "Today many toys are **plastic**." },
-  { type: "choice", prompt: "What do many toys use today?", answer: "batteries", wrong: ["coal", "candles"], answeredBy: "use batteries", hint: "They use **batteries**." },
+  { type: "choice", prompt: "What were some old toys made of?", answer: "wood", wrong: ["glass", "paper"], answeredBy: "wood or tin", hint: "Bix said some were **wood** or tin." },
+  { type: "choice", prompt: "Which game did grandparents play?", answer: "marbles", wrong: ["tablet games", "phone apps"], answeredBy: "played marbles", hint: "Look for the word **marbles**." },
+  { type: "choice", prompt: "What did grandparents spin?", answer: "tops", wrong: ["phones", "tablets"], answeredBy: "spun tops", hint: "They **spun tops**." },
+  { type: "choice", prompt: "What do some toys use today?", answer: "apps and screens", wrong: ["coal", "candles"], answeredBy: "use apps and screens", hint: "Today some toys use **apps and screens**." },
+  { type: "choice", prompt: "Were some old toys made of tin?", answer: "yes", wrong: ["no"], answeredBy: "wood or tin", hint: "Bix said **wood or tin**." },
   { type: "choice", prompt: "When were grandparents children?", answer: "a long time ago", wrong: ["last week", "today"], answeredBy: "a long time ago", hint: "It was **a long time ago**." },
 ];
 const thenOrNow = [{
-  type: "sort", prompt: "Was it a toy from long ago, or today?",
+  type: "sort", prompt: "Did Bix say long ago, or today?",
   bins: [{ id: "then", label: "Long ago" }, { id: "now", label: "Today" }],
-  cards: [["wooden toy", "then"], ["tin toy", "then"], ["spinning top", "then"], ["plastic toy", "now"], ["toy with batteries", "now"]],
-  answeredBy: ["wood or tin", "spun tops", "plastic or use batteries"],
-  hint: "Long ago: wood and tin. Today: plastic and batteries.",
+  cards: [["wooden toy", "then"], ["tin toy", "then"], ["marbles", "then"], ["toy with an app", "now"], ["game on a screen", "now"]],
+  answeredBy: ["wood or tin", "played marbles", "use apps and screens"],
+  hint: "Long ago: wood, tin and marbles. Today: apps and screens.",
 }];
 
 /* ---------- Level 2: Old or new? ---------- */
+// Ordered by when each KIND of toy train first appeared, so nothing claims
+// grandparents lacked battery trains.
 const trainStory = {
   lines: [
     "Toys change over time.",
-    "Grandparents had wooden trains.",
-    "Your grown-ups had plastic trains.",
+    "Long ago, trains were wound up with a key.",
+    "Later, trains ran on batteries.",
     "Today some trains flash, beep and use an app.",
-    "Teddy bears were loved then and now!",
   ],
   picture: "🚂", pictureLabel: "a toy train",
 };
 const oldNew = [
-  { type: "choice", prompt: "Which train is the oldest?", answer: "wooden train", wrong: ["plastic train", "train with an app"], answeredBy: "Grandparents had wooden trains", hint: "Grandparents had the **oldest** one." },
-  { type: "choice", prompt: "Which train is the newest?", answer: "train with an app", wrong: ["wooden train", "plastic train"], answeredBy: "use an app", hint: "Which one is from **today**?" },
-  { type: "choice", prompt: "Which toy was loved then and now?", answer: "teddy bear", wrong: ["tablet", "games console"], answeredBy: "Teddy bears were loved then and now", hint: "Bix said **then and now**." },
-  { type: "choice", prompt: "Who had plastic trains?", answer: "your grown-ups", wrong: ["grandparents", "children long, long ago"], answeredBy: "Your grown-ups had plastic trains", hint: "Look for **plastic trains**." },
+  { type: "choice", prompt: "Which kind of train is the oldest?", answer: "wind-up train", wrong: ["battery train", "train with an app"], answeredBy: "wound up with a key", hint: "The oldest one needs a **key**." },
+  { type: "choice", prompt: "Which kind of train is the newest?", answer: "train with an app", wrong: ["wind-up train", "battery train"], answeredBy: "use an app", hint: "Which one is from **today**?" },
+  { type: "choice", prompt: "What did trains long ago need?", answer: "a key", wrong: ["batteries", "an app"], answeredBy: "wound up with a key", hint: "They were **wound up**." },
+  { type: "choice", prompt: "What did trains run on later?", answer: "batteries", wrong: ["a key", "an app"], answeredBy: "ran on batteries", hint: "Look for the word **later**." },
   { type: "choice", prompt: "Do toys change over time?", answer: "yes", wrong: ["no"], answeredBy: "Toys change over time", hint: "Bix's first sentence tells you." },
 ];
 const trainOrder = [
-  { type: "order", prompt: "Put the trains in order. Oldest first.", labels: ["wooden train", "plastic train", "train with an app"], answeredBy: ["wooden trains", "plastic trains", "use an app"], hint: "Grandparents, then grown-ups, then today." },
-  { type: "order", prompt: "Who played first? Put them in order.", labels: ["grandparents", "your grown-ups", "children today"], answeredBy: ["Grandparents had", "Your grown-ups had", "Today"], hint: "Grandparents are the oldest." },
+  { type: "order", prompt: "Put the trains in order. Oldest first.", labels: ["wind-up train", "battery train", "train with an app"], answeredBy: ["wound up with a key", "ran on batteries", "use an app"], hint: "Key, then batteries, then an app." },
+  { type: "order", prompt: "What made the trains go? Oldest first.", labels: ["a key", "batteries", "an app"], answeredBy: ["wound up with a key", "ran on batteries", "use an app"], hint: "Long ago, later, today." },
 ];
 
 /* ---------- Level 3: Picture detective ---------- */
@@ -75,35 +79,37 @@ const photos = [
 ];
 
 /* ---------- Level 4: Same or different? ---------- */
+// Compares the 1850s photos (level 3) with today: those toys truly had no
+// batteries or screens.
 const compareStory = {
   lines: [
-    "Toys today are different from long ago.",
-    "Many are plastic, and some need batteries.",
-    "But some things are the same.",
-    "Children still love dolls, drums and teddy bears.",
+    "The old photos show toys from long, long ago.",
+    "Those toys had no batteries or screens.",
+    "Today some toys need batteries or screens.",
+    "Children still love dolls, drums and carts!",
   ],
   picture: "🥁", pictureLabel: "a drum",
 };
 const sameDifferent = [{
   type: "sort", prompt: "Is it the same as long ago, or different now?",
   bins: [{ id: "same", label: "Same as long ago" }, { id: "different", label: "Different now" }],
-  cards: [["children love dolls", "same"], ["children love drums", "same"], ["children love teddy bears", "same"], ["many toys are plastic", "different"], ["some toys need batteries", "different"]],
-  answeredBy: ["still love dolls, drums and teddy bears", "Many are plastic", "need batteries"],
+  cards: [["children love dolls", "same"], ["children love drums", "same"], ["children love toy carts", "same"], ["some toys need batteries", "different"], ["some toys have screens", "different"]],
+  answeredBy: ["still love dolls, drums and carts", "need batteries or screens"],
   hint: "Children **still** love some toys. That is the same.",
 }];
 const compare = [
-  { type: "choice", prompt: "What is the same then and now?", answer: "children love dolls", wrong: ["toys need batteries", "toys are plastic"], answeredBy: "still love dolls", hint: "Look for the word **still**." },
-  { type: "choice", prompt: "What is different about many toys today?", answer: "they are plastic", wrong: ["children love them", "they are drums"], answeredBy: "Many are plastic", hint: "What are many toys made of today?" },
-  { type: "choice", prompt: "Which toys need batteries?", answer: "some toys today", wrong: ["a wooden top", "a drum long ago"], answeredBy: "some need batteries", hint: "Batteries are new." },
-  { type: "choice", prompt: "Do children still love teddy bears?", answer: "yes", wrong: ["no"], answeredBy: "teddy bears", hint: "Bix's last sentence tells you." },
-  { type: "choice", prompt: "Are toys today just like long ago?", answer: "some things are the same", wrong: ["everything is the same", "nothing is the same"], answeredBy: "some things are the same", hint: "Some are the same. Some are different." },
-  { type: "choice", prompt: "Which toy did children love long ago and today?", answer: "a drum", wrong: ["a games console", "a tablet"], answeredBy: "drums", hint: "Remember the old photo!" },
+  { type: "choice", prompt: "What is the same, long ago and today?", answer: "children love dolls", wrong: ["toys need batteries", "toys have screens"], answeredBy: "still love dolls", hint: "Look for the word **still**." },
+  { type: "choice", prompt: "What did toys long, long ago not have?", answer: "batteries", wrong: ["wheels", "drumsticks"], answeredBy: "had no batteries or screens", hint: "Bix said they had no batteries or screens." },
+  { type: "choice", prompt: "Which toys need batteries?", answer: "some toys today", wrong: ["the old cart", "the old drum"], answeredBy: "Today some toys need batteries", hint: "Batteries are newer." },
+  { type: "choice", prompt: "Do children still love drums?", answer: "yes", wrong: ["no"], answeredBy: "drums", hint: "Bix's last sentence tells you." },
+  { type: "choice", prompt: "Do some toys today have screens?", answer: "yes, some do", wrong: ["no, none do", "every toy does"], answeredBy: "some toys need batteries or screens", hint: "Bix said **some** toys." },
+  { type: "choice", prompt: "Which toy did children love long ago and today?", answer: "a drum", wrong: ["a tablet", "a phone"], answeredBy: "drums", hint: "Remember the old photo!" },
 ];
 
 export const toysThenAndNow = {
   year: 1,
   references: [
-    "V&A Young V&A (Museum of Childhood) collection: toys from the 1950s–1970s (wooden, tin, plastic).",
+    "V&A Young V&A (Museum of Childhood) collection: toys from the 1950s–1970s (wooden, tin, plastic); clockwork and battery toy trains.",
     "Cleveland Museum of Art 2002.32 and 2002.33: daguerreotypes of children with toys, 1850s.",
     "BBC Bitesize KS1 History: toys in the past.",
   ],

@@ -21,7 +21,7 @@ import {
   fullTopicComplete,
 } from "./completionMilestones.js";
 import { categorySkill, subjectSkill, topicSkill, yearSkill } from "./certificateSkills.js";
-import { CURRICULUM_SUBJECTS, isCurriculumAvailable } from "./curriculumRegistry.js";
+import { CURRICULUM_SUBJECTS, countsTowardYear } from "./curriculumRegistry.js";
 
 export const CERTIFICATE_KINDS = ["topic", "category", "subject", "year"];
 
@@ -152,7 +152,8 @@ export function curriculumCertificates(candidate) {
  * never treated as finished.
  */
 export function yearCertificate(candidates, year) {
-  const ofYear = (candidates ?? []).filter((entry) => Number(entry.year) === Number(year));
+  const ofYear = (candidates ?? []).filter((entry) =>
+    Number(entry.year) === Number(year) && countsTowardYear(entry.year, entry.subject));
   if (ofYear.length === 0 || !allSubjectsComplete(ofYear)) return null;
   return describeCertificate({
     kind: "year",
@@ -161,10 +162,10 @@ export function yearCertificate(candidates, year) {
   });
 }
 
-/** The names of every subject registered for a year — what its milestone needs. */
+/** The names of every subject a year's milestone needs (see `countsTowardYear`). */
 export function registeredSubjectNames(year) {
   return CURRICULUM_SUBJECTS
-    .filter((subject) => isCurriculumAvailable(year, subject.id))
+    .filter((subject) => countsTowardYear(year, subject.id))
     .map((subject) => subject.name);
 }
 

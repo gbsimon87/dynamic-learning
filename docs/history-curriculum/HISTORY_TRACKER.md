@@ -17,6 +17,8 @@ Things a successor must not miss:
 - `history` must be added to `CHILD_SUBJECTS` (`src/data/childFields.js`) as well as
   `CURRICULUM_SUBJECTS`, and `server/signup.test.js` uses `"history"` as its
   invalid-subject example, which has to change.
+- Each year is registered with `countsTowardYear: false` until all its topics ship;
+  remove the flag in the plan that finishes the year.
 - Build topics strictly in dataset order and release a topic's four challenges together;
   an earlier slot added late can re-lock later progress.
 - The engine reuses `DataChallenge` and `questionKinds.js`; don't build a parallel one.
@@ -94,6 +96,14 @@ Nothing open. All specs approved 2026-10-12.
 | Full regression and browser verification | Not started | `npm run lint`, `npm test`, `npm run build`, both themes, phone width, saved progress. |
 
 ## Log
+
+- **2026-10-12** Final review fixes: (1) Year 1 History is registered with
+  `countsTowardYear: false`, so children who finished Year 1 Maths, English and Science
+  keep their year certificate and award; **remove the flag when all 14 Year 1 topics
+  ship** (same for each later year). (2) Toys Then and Now rewritten: today's
+  grandparents had plastic and battery toys, so levels 1–2 now contrast wood, tin and
+  marbles with apps and screens, and order toy trains by kind (wind-up, battery, app);
+  level 4 compares with the 1850s photos. (3) "Read it to me" no longer reads photo credits.
 
 - **2026-10-12** Plan 1 built on `feat/history-curriculum` (7 tasks, tests green). Browser
   check in headless Chrome with the local store and locks on (the `.env` points at the real

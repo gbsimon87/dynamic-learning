@@ -40,8 +40,11 @@ export const CURRICULUM_SUBJECTS = [
 
 const CURRICULA = [
   // Approved 2026-10-12 (docs/history-curriculum/year-1-design-spec.md). Topics
-  // show as "Coming soon" until their challenge files exist.
-  { year: 1, subject: "history", available: true, load: () => year1HistoryCurriculum },
+  // show as "Coming soon" until their challenge files exist. `countsTowardYear:
+  // false` while it is being built, so children who already finished Year 1's
+  // other subjects keep their year certificate. Remove the flag when all 14
+  // topics ship.
+  { year: 1, subject: "history", available: true, countsTowardYear: false, load: () => year1HistoryCurriculum },
   { year: 4, subject: "science", available: true, load: () => year4ScienceCurriculum },
   { year: 4, subject: "math", available: true, load: () => year4MathCurriculum },
   { year: 1, subject: "math", available: true, load: () => year1MathCurriculum },
@@ -99,6 +102,22 @@ export function findCurriculum(year, subject) {
 /** True when a curriculum exists for this year/subject pair. */
 export function isCurriculumAvailable(year, subject) {
   return Boolean(findCurriculum(year, subject));
+}
+
+/**
+ * True when this curriculum is part of its year's award (the year certificate
+ * and the "finished the year" milestone). A curriculum still being built is
+ * registered with `countsTowardYear: false`: children can play it, but a year
+ * they had already finished is not taken away from them.
+ */
+export function countsTowardYear(year, subject) {
+  const entry = findCurriculum(year, subject);
+  return Boolean(entry) && entry.countsTowardYear !== false;
+}
+
+/** The subject ids a year's award needs, optionally leaving one out. */
+export function yearAwardSubjectIds(year, except) {
+  return CURRICULUM_SUBJECTS.map((s) => s.id).filter((id) => id !== except && countsTowardYear(year, id));
 }
 
 /** True when at least one subject is available for this year. */

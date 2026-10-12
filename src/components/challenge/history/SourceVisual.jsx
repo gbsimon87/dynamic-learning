@@ -11,7 +11,8 @@ export default function SourceVisual({ image }) {
   return (
     <figure className="history-source">
       <img className="history-source-img" src={picture.src} alt={picture.alt} />
-      <figcaption className="history-source-credit">
+      {/* Credits are for grown-ups; "Read it to me" skips them. */}
+      <figcaption className="history-source-credit" data-read-aloud="skip">
         {picture.credit} · <Link to="/credits">All credits</Link>
       </figcaption>
     </figure>

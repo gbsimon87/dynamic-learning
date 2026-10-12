@@ -2962,7 +2962,7 @@ Beyond the registry entry: add the id to `CHILD_SUBJECTS` in
 `CurriculumSelectPage` (`SUBJECT_LOOKS` plus `--cs-hue-*` / `--cs-deep-*`), hero
 glyphs in `CurriculumPage` (`GLYPHS_BY_SUBJECT`) and anchored `CATEGORY_ICONS`.
 Tests that use the new id as an example of an *invalid* subject must change.
-Registering a subject for a year makes that year's award wait for it too.
+Registering a subject for a year normally makes that year's award wait for it too; while a subject is only partly built, register it with `countsTowardYear: false` (`curriculumRegistry.js`) so a year children already finished is not taken away (the year certificate is computed live). Remove the flag when the subject is complete.
 History pictures are CC0 / public domain only, pinned in
 `scripts/history-assets/sources.json` and rebuilt with
 `node scripts/history-assets/fetch.mjs` (headless Chrome encodes the WebP, since

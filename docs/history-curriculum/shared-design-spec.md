@@ -181,7 +181,7 @@ Done once, with whichever year is built first.
 
 | Where | Change |
 |---|---|
-| `src/data/curriculumRegistry.js` | Add `{ id: "history", name: "History", icon: "🏛️" }` to `CURRICULUM_SUBJECTS`; add one `CURRICULA` entry per year as each is built |
+| `src/data/curriculumRegistry.js` | Add `{ id: "history", name: "History", icon: "🏛️" }` to `CURRICULUM_SUBJECTS`; add one `CURRICULA` entry per year with `countsTowardYear: false` until all its topics ship, so finished years keep their certificate |
 | `src/data/childFields.js` | Add `"history"` to `CHILD_SUBJECTS`, or sign-up and profile edits reject it with `INVALID_SUBJECTS`. `childFields.test.js` holds this in step with `CURRICULUM_SUBJECTS` |
 | `server/signup.test.js` | Its invalid-subject case uses `"history"`; change it to a subject that will never exist (for example `"astrology"`) |
 | `src/data/certificateSkills.js` | Import each year's topic skills; `certificateSkills.test.js` requires a line for every registered topic |
