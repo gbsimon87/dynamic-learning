@@ -6,6 +6,7 @@ import { HISTORY_TEST_TOPIC } from "../../src/data/challenges/history/testTopic"
 import { seededRng } from "../../src/data/challenges/questionKinds";
 import HistoryChallenge from "../../src/components/challenge/history/HistoryChallenge";
 import SourceVisual from "../../src/components/challenge/history/SourceVisual";
+import { YEAR1_HISTORY_BUILDERS } from "../../src/data/challenges/history/year1/index";
 
 vi.mock("../../src/utils/speech", () => ({ speak: () => {}, stopNarration: () => {}, speakAndWait: vi.fn(async () => {}), isNarrationSupported: () => false }));
 vi.mock("../../src/components/celebration/sound/player", () => ({ playCue: () => () => {}, isMuted: () => true, setMuted: () => {}, subscribe: () => () => {} }));
@@ -70,5 +71,54 @@ describe("SourceVisual", () => {
     show(<SourceVisual image="cma-two-children-with-toys" />);
     const figure = screen.getByRole("figure");
     expect(within(figure).getByRole("link", { name: "All credits" }).getAttribute("href")).toBe("/credits");
+  });
+});
+
+const challengeModules = import.meta.glob("../../src/pages/skills/history/challenges/year1/*/*Challenge*.jsx", { eager: true });
+
+describe("Year 1 History pilot", () => {
+  it("loads all four Toys Then and Now challenges", () => {
+    const toys = Object.entries(challengeModules).filter(([path]) => path.includes("/toys-then-and-now/"));
+    expect(toys).toHaveLength(4);
+    for (const [, { default: Challenge }] of toys) {
+      const { unmount } = show(<Challenge onComplete={vi.fn()} />);
+      fireEvent.click(screen.getByRole("button", { name: "Let's go!" }));
+      expect(screen.getByText("Question 1 of 4")).toBeTruthy();
+      unmount();
+    }
+  });
+
+  it("plays challenge 1 through: two misses show the hint, completion fires once", () => {
+    vi.useFakeTimers();
+    vi.spyOn(Math, "random").mockImplementation(seededRng(5));
+    const expected = YEAR1_HISTORY_BUILDERS["toys-then-and-now"](1, seededRng(5)).questions;
+    const done = vi.fn();
+    const { default: Challenge } = challengeModules["../../src/pages/skills/history/challenges/year1/toys-then-and-now/ToysThenAndNowChallenge1.jsx"];
+    show(<Challenge onComplete={done} />);
+    fireEvent.click(screen.getByRole("button", { name: "Let's go!" }));
+    const check = () => fireEvent.click(screen.getByRole("button", { name: "Check my answer" }));
+    expected.forEach((q, i) => {
+      expect(screen.getByText(`Question ${i + 1} of 4`)).toBeTruthy();
+      if (q.kind === "choice") {
+        if (i === 0) {
+          const wrong = q.options.find((o) => o !== q.answer);
+          for (let miss = 0; miss < 2; miss++) {
+            fireEvent.click(screen.getByRole("button", { name: wrong, exact: true }));
+            check();
+          }
+          expect(document.querySelector(".challenge-hint")).toBeTruthy();
+        }
+        fireEvent.click(screen.getByRole("button", { name: q.answer, exact: true }));
+      } else {
+        for (const card of q.cards) {
+          fireEvent.click(screen.getByRole("button", { name: card.label, exact: true }));
+          fireEvent.click(screen.getByRole("button", { name: q.bins.find((b) => b.id === card.bin).label, exact: true }));
+        }
+      }
+      expect(done).not.toHaveBeenCalled();
+      check();
+      settle();
+    });
+    expect(done).toHaveBeenCalledTimes(1);
   });
 });
