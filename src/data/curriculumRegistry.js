@@ -39,12 +39,9 @@ export const CURRICULUM_SUBJECTS = [
 ];
 
 const CURRICULA = [
-  // Approved 2026-10-12 (docs/history-curriculum/year-1-design-spec.md). Topics
-  // show as "Coming soon" until their challenge files exist. `countsTowardYear:
-  // false` while it is being built, so children who already finished Year 1's
-  // other subjects keep their year certificate. Remove the flag when all 14
-  // topics ship.
-  { year: 1, subject: "history", available: true, countsTowardYear: false, load: () => year1HistoryCurriculum },
+  // Approved 2026-10-12 (docs/history-curriculum/year-1-design-spec.md); all 14
+  // topics built. Counts toward the Year 1 award (owner decision 2026-10-12).
+  { year: 1, subject: "history", available: true, load: () => year1HistoryCurriculum },
   { year: 4, subject: "science", available: true, load: () => year4ScienceCurriculum },
   { year: 4, subject: "math", available: true, load: () => year4MathCurriculum },
   { year: 1, subject: "math", available: true, load: () => year1MathCurriculum },
@@ -111,7 +108,11 @@ export function isCurriculumAvailable(year, subject) {
  * they had already finished is not taken away from them.
  */
 export function countsTowardYear(year, subject) {
-  const entry = findCurriculum(year, subject);
+  return entryCountsTowardYear(findCurriculum(year, subject));
+}
+
+/** The rule itself, for one registry entry (exported for tests). */
+export function entryCountsTowardYear(entry) {
   return Boolean(entry) && entry.countsTowardYear !== false;
 }
 

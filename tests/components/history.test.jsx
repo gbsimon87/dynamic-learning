@@ -6,6 +6,7 @@ import { HISTORY_TEST_TOPIC } from "../../src/data/challenges/history/testTopic"
 import { seededRng } from "../../src/data/challenges/questionKinds";
 import HistoryChallenge from "../../src/components/challenge/history/HistoryChallenge";
 import SourceVisual from "../../src/components/challenge/history/SourceVisual";
+import StoryCard from "../../src/components/challenge/history/StoryCard";
 import { readAloudText } from "../../src/components/challenge/readAloud";
 import { YEAR1_HISTORY_BUILDERS } from "../../src/data/challenges/history/year1/index";
 
@@ -59,6 +60,32 @@ describe("HistoryChallenge", () => {
       expect(screen.getAllByText(/Cleveland Museum of Art, CC0/).length).toBeGreaterThan(0);
       unmount();
     }
+  });
+});
+
+describe("quick-pass fixes", () => {
+  it("reopening the story on a photo round shows that photo once", () => {
+    vi.spyOn(Math, "random").mockImplementation(seededRng(2));
+    show(<HistoryChallenge build={build} year={1} level={3} onComplete={vi.fn()} />);
+    fireEvent.click(screen.getByRole("button", { name: "Let's go!" }));
+    const before = screen.queryAllByRole("img", { name: /holding a drum/ }).length;
+    fireEvent.click(screen.getByRole("button", { name: "📖 Bix's story" }));
+    const after = screen.queryAllByRole("img", { name: /holding a drum/ }).length;
+    expect(before).toBe(1);
+    expect(after).toBe(1);
+  });
+
+  it("moves keyboard focus to the challenge after Let's go!", () => {
+    show(<HistoryChallenge build={build} year={1} level={1} onComplete={vi.fn()} />);
+    fireEvent.click(screen.getByRole("button", { name: "Let's go!" }));
+    expect(document.activeElement?.textContent).toBe("Meet it");
+  });
+
+  it("a story may repeat a line", () => {
+    const errors = vi.spyOn(console, "error").mockImplementation(() => {});
+    show(<StoryCard story={{ lines: ["Look closely!", "Look closely!"], picture: "🔍", pictureLabel: "a magnifying glass" }} />);
+    expect(screen.getAllByText("Look closely!")).toHaveLength(2);
+    expect(errors).not.toHaveBeenCalled();
   });
 });
 

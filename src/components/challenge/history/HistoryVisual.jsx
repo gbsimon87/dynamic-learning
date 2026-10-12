@@ -15,7 +15,7 @@ export default function HistoryVisual({ story, visual }) {
         <button type="button" className="history-story-button" aria-expanded={open} onClick={() => setOpen((was) => !was)}>
           📖 Bix's story
         </button>
-        {open && <StoryCard story={story} />}
+        {open && <StoryCard story={story} hideImage={visual?.type === "source" && visual.image === story.image} />}
       </div>
       {visual?.type === "source" && <SourceVisual image={visual.image} />}
     </>

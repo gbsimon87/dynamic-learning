@@ -190,7 +190,7 @@ Done once, with whichever year is built first.
 | `src/pages/credits/Credits.jsx` | History image credits from the manifest |
 
 The progress API and store already accept any subject, so History progress lives in its
-own `historyProgress_year<N>` records and cannot touch other subjects. **No progress
+own `(childId, year, "history")` progress documents and cannot touch other subjects. **No progress
 shape, storage key or unlock rule changes.**
 
 Adding History to `CURRICULUM_SUBJECTS` shows it for every year, including years not

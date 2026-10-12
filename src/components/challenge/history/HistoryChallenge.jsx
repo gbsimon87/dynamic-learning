@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import DataChallenge from "../data/DataChallenge";
 import { HISTORY_TITLES } from "../../../data/challenges/history/engine";
 import StoryCard from "./StoryCard";
@@ -17,6 +17,16 @@ export default function HistoryChallenge({ build, year, level, onComplete }) {
   const renderVisual = useCallback((q) => <HistoryVisual story={run.story} visual={q.visual} />, [run]);
   const [started, setStarted] = useState(false);
   const titles = HISTORY_TITLES[year];
+  const roundsRef = useRef(null);
+
+  // "Let's go!" unmounts itself; send keyboard focus to the challenge title
+  // rather than letting it fall back to the top of the page.
+  useEffect(() => {
+    const title = started ? roundsRef.current?.querySelector(".challenge-title") : null;
+    if (!title) return;
+    title.setAttribute("tabindex", "-1");
+    title.focus();
+  }, [started]);
 
   if (!started) {
     return (
@@ -27,5 +37,9 @@ export default function HistoryChallenge({ build, year, level, onComplete }) {
       </div>
     );
   }
-  return <DataChallenge level={level} build={questions} titles={titles} renderVisual={renderVisual} readAloud onComplete={onComplete} />;
+  return (
+    <div ref={roundsRef}>
+      <DataChallenge level={level} build={questions} titles={titles} renderVisual={renderVisual} readAloud onComplete={onComplete} />
+    </div>
+  );
 }

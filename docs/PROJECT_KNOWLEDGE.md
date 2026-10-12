@@ -11,7 +11,7 @@ inventory for each pathway.
 | 1 | [Maths](../src/data/year1MathCurriculum.js) | 32 | 128 | Complete |
 | 1 | [English](../src/data/year1EnglishCurriculum.js) | 38 | 152 | Complete |
 | 1 | [Science](../src/data/year1ScienceCurriculum.js) | 16 | 64 | Complete |
-| 1 | [History](../src/data/year1HistoryCurriculum.js) | 14 | 56 | Complete (not yet in the year award) |
+| 1 | [History](../src/data/year1HistoryCurriculum.js) | 14 | 56 | Complete |
 | 2 | [Maths](../src/data/year2MathCurriculum.js) | 39 | 156 | Complete |
 | 2 | [English](../src/data/year2EnglishCurriculum.js) | 39 | 156 | Complete |
 | 2 | [Science](../src/data/year2ScienceCurriculum.js) | 19 | 76 | Complete |
@@ -23,10 +23,11 @@ inventory for each pathway.
 | 4 | [Science](../src/data/year4ScienceCurriculum.js) | 20 | 80 | Complete |
 | 5 | All subjects | 0 | 0 | Not implemented |
 | 6 | All subjects | 0 | 0 | Not implemented |
-| **Total** | **12 complete pathways** | **375** | **1,500** | |
+| **Total** | **13 complete pathways** | **389** | **1,556** | |
 
 Other year/subject combinations have no implemented Curriculum Mode pathway.
-History (Years 1–4) is in progress; see `docs/history-curriculum/HISTORY_TRACKER.md`.
+History: Year 1 is complete; Years 2–4 have approved specs only (see
+`docs/history-curriculum/HISTORY_TRACKER.md`).
 Geography's standalone Skills Mode games and saved programmes in
 `docs/curriculum/` do not count as curriculum implementations.
 
@@ -292,12 +293,13 @@ Year 1 English: **8 categories / 38 topics / 152 challenges**, all built
 Year 1 Science: **4 categories / 16 topics / 64 challenges**, all built
 (2026-10-11; identifiers locked in `year1ScienceCurriculum.test.js`).
 Year 1 History: **5 categories / 14 topics / 56 challenges**, all built
-(2026-10-12; registered with `countsTowardYear: false` until the owner decides; identifiers locked in `year1HistoryCurriculum.test.js`). History
+(2026-10-12; identifiers locked in `year1HistoryCurriculum.test.js`). History
 topics are authored as data: four "Bix explains" story cards plus question banks
 per topic (`src/data/challenges/history/`), built by `buildHistoryTopic` into
 `DataChallenge` questions and checked by `lintHistoryTopic`, which proves every
 answer appears on its story card or in its photo's alt text. Progress is the
-usual `historyProgress_year<N>` record; nothing about progress changed.
+usual per-child `(childId, year, subject)` progress document with subject
+`history`; nothing about the progress shape, keys or unlock rules changed.
 Year 2 Maths currently defines **8 categories / 39 topics / 156 challenge slots**.
 Year 2 English: **9 / 39 / 156** (2026-10-11; identifiers locked in its own
 `year2EnglishCurriculum.test.js`).
@@ -1022,6 +1024,31 @@ digits, some reworded or dropped phrases); each file lists those differences at
 the end. Each file's text was rebuilt with the web page's headings and lists
 and the PDF's wording, then checked word and punctuation for word against the
 PDF, with stacked fractions and superscripts (cm², 360°) restored.
+
+### Curriculum Mode — Year 1 History (2026-10-12)
+
+Year 1 now offers **Maths, English, Science and History**, and History counts toward
+the Year 1 certificate. History has **5 categories / 14 topics / 56 challenges**, four
+rounds each: Then and Now (toys, homes, school, seaside), The First Flight, Explorers
+(Columbus, Neil Armstrong), Kings and Queens (Elizabeth I, Victoria) and Clues Around
+You. Every challenge opens with a "Bix explains" story card, read aloud on request and
+reopenable mid-round ("📖 Bix's story"); every question names the words on the card or
+in the photo's alt text that answer it, and `lintHistoryTopic` checks they are there.
+Slots: Meet it, Old or new?, Picture detective, Same or different?. No dates appear in
+Year 1 teaching text; photo credits keep their dates (owner decision).
+
+Ten public-domain / CC0 pictures (Cleveland Museum of Art, Library of Congress
+Photochrom prints, NASA, portraits of Elizabeth I and Victoria) are pinned by sha256 in
+`scripts/history-assets/sources.json`; Homes, School, Street Names and Columbus use
+emoji pictures. Topic files are checked one at a time with
+`node scripts/check-history-topic.mjs <file>`; the content rules are in
+`docs/history-curriculum/plans/year-1-topic-authoring-brief.md`.
+
+Verified: unit and component tests (all 56 wrappers load; a full challenge played with
+misses and the hint), and a headless Chrome run that played all 56 challenges in order
+from fresh progress through the real controls, alternating themes, with 320 px checks
+and no console errors. Pending: the owner's review, touch and the read-aloud voice on
+real devices. Statutory crosswalk: `docs/curriculum/key-stage-1-history.md`.
 
 ### Curriculum Mode — Year 1 Maths (2026-10-11)
 
@@ -2962,7 +2989,11 @@ Beyond the registry entry: add the id to `CHILD_SUBJECTS` in
 `CurriculumSelectPage` (`SUBJECT_LOOKS` plus `--cs-hue-*` / `--cs-deep-*`), hero
 glyphs in `CurriculumPage` (`GLYPHS_BY_SUBJECT`) and anchored `CATEGORY_ICONS`.
 Tests that use the new id as an example of an *invalid* subject must change.
-Registering a subject for a year normally makes that year's award wait for it too; while a subject is only partly built, register it with `countsTowardYear: false` (`curriculumRegistry.js`) so a year children already finished is not taken away (the year certificate is computed live). Remove the flag when the subject is complete.
+Registering a subject for a year makes that year's award (the live-computed year
+certificate and the year milestone) wait for it too. While a subject is only
+partly built, register it with `countsTowardYear: false` (`curriculumRegistry.js`)
+so a year children already finished is not taken away; remove the flag once the
+subject is complete and the owner agrees (Year 1 History: removed 2026-10-12).
 History pictures are CC0 / public domain only, pinned in
 `scripts/history-assets/sources.json` and rebuilt with
 `node scripts/history-assets/fetch.mjs` (headless Chrome encodes the WebP, since

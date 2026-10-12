@@ -38,4 +38,4 @@ pipeline and pilot. Owner instruction (2026-10-12): finish Year 1 on the current
 `countsTowardYear: false` on Year 1 History was to be removed when all 14 topics ship
 (Plan 1 review fix). Removing it makes the Year 1 certificate need History, so a child
 who already finished Maths, English and Science would see that certificate disappear
-until they finish History. The flag stays until the owner chooses.
+until they finish History. **Decided 2026-10-12:** History counts; the flag is removed.

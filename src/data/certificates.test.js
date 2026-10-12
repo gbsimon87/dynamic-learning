@@ -111,15 +111,14 @@ test("the date reads the British way", () => {
   assert.equal(certificateDate(new Date(2026, 9, 10)), "10 October 2026");
 });
 
-test("a subject still being built does not take away a finished year (Year 1 History)", () => {
+test("the Year 1 certificate needs Year 1 History too", () => {
   const finished = {
     number: { topics: { counting: done([1, 2]), "place-value": done([1]) } },
     shapes: { topics: { "2-d-shapes": done([1]) } },
   };
   const maths = candidate(finished, { year: 1 });
   const history = candidate({}, { year: 1, subject: "history", subjectName: "History" });
-  const cert = yearCertificate([maths, history], 1);
-  assert.equal(cert?.label, "Year 1 certificate");
-  assert.ok(!cert.achievement.includes("History"), cert.achievement);
-  assert.ok(!registeredSubjectNames(1).includes("History"));
+  assert.equal(yearCertificate([maths, history], 1), null);
+  assert.ok(yearCertificate([maths, { ...history, progress: finished }], 1).achievement.includes("History"));
+  assert.ok(registeredSubjectNames(1).includes("History"));
 });

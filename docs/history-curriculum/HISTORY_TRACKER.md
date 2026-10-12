@@ -2,7 +2,7 @@
 
 **Start here to resume.** Branch: not created yet (all work so far is docs on `dev`, uncommitted).
 **Last updated:** 2026-10-12.
-**Current milestone:** Year 1 History complete (Plan 2): 14 topics, 56 challenges. **Owner decision pending:** whether Year 1 History joins the Year 1 award now (see Plan 2). Next: Year 2 plan.
+**Current milestone:** Year 1 History complete (Plan 2) and counted toward the Year 1 certificate. Next: the Year 2 plan.
 **Built:** Year 1: 14 of 14 topics, 56 of 56 challenges. Years 2–4: specs only. Branch `feat/history-curriculum`.
 
 ## Resume point
@@ -97,6 +97,13 @@ Nothing open. All specs approved 2026-10-12.
 | Full regression and browser verification | Not started | `npm run lint`, `npm test`, `npm run build`, both themes, phone width, saved progress. |
 
 ## Log
+
+- **2026-10-12** Owner decisions: Year 1 History counts toward the Year 1 certificate
+  (`countsTowardYear: false` removed; the mechanism stays for Years 2–4 while each is
+  partly built); photo credits keep their dates. Quick pass: no years or false
+  absolutes in Year 1 content; fixed the photo showing twice when the story is reopened
+  on a photo round, focus falling to the top of the page after "Let's go!", and story
+  lines keyed by text.
 
 - **2026-10-12** Plan 2: Year 1 finished on the owner's instruction (no separate pilot
   review). Topics 2–14 written by four parallel agents to the authoring brief, each
