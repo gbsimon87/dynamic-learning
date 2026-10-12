@@ -85,6 +85,16 @@ describe("SourceVisual", () => {
 const challengeModules = import.meta.glob("../../src/pages/skills/history/challenges/year1/*/*Challenge*.jsx", { eager: true });
 
 describe("Year 1 History pilot", () => {
+  it("loads all 56 Year 1 History challenges, story first, then question 1", () => {
+    expect(Object.keys(challengeModules)).toHaveLength(56);
+    for (const { default: Challenge } of Object.values(challengeModules)) {
+      const { unmount } = show(<Challenge onComplete={vi.fn()} />);
+      fireEvent.click(screen.getByRole("button", { name: "Let's go!" }));
+      expect(screen.getByText("Question 1 of 4")).toBeTruthy();
+      unmount();
+    }
+  }, 30000);
+
   it("loads all four Toys Then and Now challenges", () => {
     const toys = Object.entries(challengeModules).filter(([path]) => path.includes("/toys-then-and-now/"));
     expect(toys).toHaveLength(4);

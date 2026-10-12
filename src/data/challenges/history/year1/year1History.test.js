@@ -75,3 +75,7 @@ test("Toys Then and Now: nothing grandparents also had is marked 'today only'", 
     }
   }
 });
+
+test("Year 1 History: every dataset topic is built, in dataset order", () => {
+  assert.deepEqual(Object.keys(builders), [...knownIds]);
+});

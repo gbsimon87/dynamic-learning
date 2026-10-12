@@ -83,7 +83,7 @@ const photos = [
 // batteries or screens.
 const compareStory = {
   lines: [
-    "The old photos show toys from long, long ago.",
+    "The old photos show toys from long ago.",
     "Those toys had no batteries or screens.",
     "Today some toys need batteries or screens.",
     "Children still love dolls, drums and carts!",
@@ -99,7 +99,7 @@ const sameDifferent = [{
 }];
 const compare = [
   { type: "choice", prompt: "What is the same, long ago and today?", answer: "children love dolls", wrong: ["toys need batteries", "toys have screens"], answeredBy: "still love dolls", hint: "Look for the word **still**." },
-  { type: "choice", prompt: "What did toys long, long ago not have?", answer: "batteries", wrong: ["wheels", "drumsticks"], answeredBy: "had no batteries or screens", hint: "Bix said they had no batteries or screens." },
+  { type: "choice", prompt: "What did toys long ago not have?", answer: "batteries", wrong: ["wheels", "drumsticks"], answeredBy: "had no batteries or screens", hint: "Bix said they had no batteries or screens." },
   { type: "choice", prompt: "Which toys need batteries?", answer: "some toys today", wrong: ["the old cart", "the old drum"], answeredBy: "Today some toys need batteries", hint: "Batteries are newer." },
   { type: "choice", prompt: "Do children still love drums?", answer: "yes", wrong: ["no"], answeredBy: "drums", hint: "Bix's last sentence tells you." },
   { type: "choice", prompt: "Do some toys today have screens?", answer: "yes, some do", wrong: ["no, none do", "every toy does"], answeredBy: "some toys need batteries or screens", hint: "Bix said **some** toys." },
