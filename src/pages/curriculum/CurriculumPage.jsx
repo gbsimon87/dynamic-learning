@@ -1,5 +1,6 @@
 import PracticalActivityCard from "../../components/challenge/PracticalActivityCard";
 import { completedScienceActivity } from "../../data/scienceActivities.js";
+import { completedGeographyActivity } from "../../data/geographyActivities.js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import CoachMark from "../../components/coach/CoachMark";
 import { TIPS } from "../../data/intro";
@@ -54,7 +55,11 @@ const HISTORY_GLYPHS = MATHS_GLYPHS.map((glyph, index) => ({
   ...glyph,
   char: ["🏺", "✦", "👑", "📜", "🏰", "●", "🛡️", "★", "🕰️"][index],
 }));
-const GLYPHS_BY_SUBJECT = { english: ENGLISH_GLYPHS, science: SCIENCE_GLYPHS, history: HISTORY_GLYPHS };
+const GEOGRAPHY_GLYPHS = MATHS_GLYPHS.map((glyph, index) => ({
+  ...glyph,
+  char: ["🌍", "✦", "🧭", "⛰️", "💧", "●", "🗺️", "★", "🌋"][index],
+}));
+const GLYPHS_BY_SUBJECT = { english: ENGLISH_GLYPHS, science: SCIENCE_GLYPHS, history: HISTORY_GLYPHS, geography: GEOGRAPHY_GLYPHS };
 
 /* ===== CATEGORY LOOKS =====
    An icon and a colour per category so a child can tell the sections apart at
@@ -64,6 +69,11 @@ const GLYPHS_BY_SUBJECT = { english: ENGLISH_GLYPHS, science: SCIENCE_GLYPHS, hi
    anything carrying white ink — both are token names so the theme repaints
    them (PROJECT_KNOWLEDGE §9). */
 const CATEGORY_ICONS = [
+  { match: /^the uk and europe$/i, icon: "🗺️" },
+  { match: /^lines on the globe$/i, icon: "🌍" },
+  { match: /^physical processes$/i, icon: "🌋" },
+  { match: /^two european regions$/i, icon: "🏞️" },
+  { match: /^maps and local surveys$/i, icon: "🧭" },
   // History, Year 3
   { match: /^stone age to iron age$/i, icon: "🪨" },
   { match: /^roman britain$/i, icon: "🏛️" },
@@ -632,7 +642,7 @@ function CurriculumPage() {
                           );
                         })}
                       </div>
-                      {sticker?.earned && <PracticalActivityCard activity={completedScienceActivity({ year, subject, categoryId: category.id, topicId: topic.id, progress, isBuilt })} />}
+                      {sticker?.earned && <PracticalActivityCard activity={completedScienceActivity({ year, subject, categoryId: category.id, topicId: topic.id, progress, isBuilt }) ?? completedGeographyActivity({ year, subject, categoryId: category.id, topicId: topic.id, progress, isBuilt })} />}
                     </article>
                   );
                 })}

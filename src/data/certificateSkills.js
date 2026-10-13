@@ -1,3 +1,4 @@
+import { YEAR3_GEOGRAPHY_TOPIC_SKILLS } from "./year3GeographyCertificateSkills.js";
 import { YEAR4_HISTORY_TOPIC_SKILLS } from "./year4HistoryCertificateSkills.js";
 /**
  * The "I can…" line on a certificate: one short, first-person statement per
@@ -30,6 +31,7 @@ import { YEAR3_HISTORY_TOPIC_SKILLS } from "./year3HistoryCertificateSkills.js";
 export const SKILL_STATEMENT_MAX = 80;
 
 export const TOPIC_SKILLS = {
+  ...YEAR3_GEOGRAPHY_TOPIC_SKILLS,
   ...YEAR4_SCIENCE_TOPIC_SKILLS,
   ...YEAR4_MATH_TOPIC_SKILLS,
   ...YEAR2_ENGLISH_TOPIC_SKILLS,

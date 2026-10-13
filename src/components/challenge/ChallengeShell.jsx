@@ -140,7 +140,7 @@ function ChallengeShell({ title, questions, render, onComplete, readAloud, speak
   const spokenQuestion = () => {
     const titleText = titleRef.current?.textContent ?? "";
     if (speak) {
-      const own = speak(questions[index]);
+      const own = speak(questions[index], { misses });
       if (own) return [mathToSpeech(titleText), mathToSpeech(own)].filter(Boolean).join(". ");
     }
     return readAloudText(answerRef.current, titleText);

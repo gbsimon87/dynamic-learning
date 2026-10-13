@@ -132,7 +132,7 @@ and what is left. File names and engineering detail are in
 | 12 | **Phonics and rhyming games** | Sound out words, match rhymes, split words into syllables: early reading practice. | **Left:** all of it. Needs proper letter-sound recordings first; the browser voice reads whole words, not phonics sounds. | ⚪ Idea |
 | 13 | **Story Maker and Story Sequencer** | Pick a character, a place and an action to build a silly story, or put picture cards in the right order. | **Left:** all of it. Some story material in Year 3 English could be reused. | ⚪ Idea |
 | 14 | **Works offline, installs like an app** | Install it on a tablet and keep playing without internet. Useful on shared school devices. | **Left:** all of it. The risk: progress made offline has to merge safely once back online, or a child loses work. Decide how before building anything. | ⚪ Idea |
-| 15 | **Geography curriculum** | A proper topic path, like Maths has, for continents, oceans, landforms, weather, and day and night. | **Left:** all of it. The national curriculum text is saved (key stages 1 and 2 in `docs/curriculum/`). It is set out per key stage, not per year, so first decide which year teaches which requirement and write that down. Game ideas are in [notes_geography.md](notes_geography.md). | ⚪ Idea |
+| 15 | **Geography curriculum, Years 1–4** | A topic path for local places, the UK/world, regions, weather, processes, resources and map/fieldwork skills. | **Left:** implement Years 1, 2 and 4 from the [specs](geography-curriculum/README.md); review Year 3 on physical phones/tablets; deepen Years 5–6 and practical coverage later. Year 3 is implemented: 16 topics / 64 verified slots; see its tracker/source pack. | 🟡 Partial |
 | 17 | **Solar System meteor: test on real devices** | The meteor shower in the Solar System is built and runs smoothly on a computer. | **Left:** measure how smoothly it runs on a real phone and a real tablet. No more code needed. | 🟡 Partial |
 | 19 | **Constellations in the 3D sky** | The constellation card is a flat picture today. Add a "Find it in the real sky →" button that flies the 3D view to that constellation among the stars. | **Left:** all of it. | ⚪ Idea |
 | 20 | **More Skills games (from the original notes)** | **Maths:** Math Sentence Builder, Compare the Numbers, Math Maze, Clock Quiz, Skip Count Jump, Estimate It!, Magic Squares, Number Line Jump, Odd or Even Sort, Shape Sorter 3D, Pattern Play, Tally Marks Trainer, Math Bingo. **English:** Sentence Fixer, Word Picture Puzzle, Riddle Time, Emoji Sentences, Picture Vocabulary, Alphabet Adventure, Listening & Repeat. **Geography:** Country Puzzle. | **Left:** pick any and build it on the free-play game frame, so it gets levels, read-aloud and celebrations for free. | ⚪ Idea |
@@ -216,9 +216,13 @@ The detail behind the rows above, for whoever picks one up.
 - **#14** Offline progress needs a queue and a conflict rule that works with the
   API store. No manifest, service worker or PWA plugin exists yet.
 - **#15** Sources: [key-stage-1-geography.md](curriculum/key-stage-1-geography.md)
-  and [key-stage-2-geography.md](curriculum/key-stage-2-geography.md); record the
-  year split in their mapping sections. [Flag Finder](../src/pages/skills/geography/FlagFinder.jsx) could
-  support continent practice once its country data is extended and checked.
+  and [key-stage-2-geography.md](curriculum/key-stage-2-geography.md); proposed
+  year split and all 58 topics are mapped there. Read the
+  [Geography specs](geography-curriculum/README.md) and the relevant year's
+  embedded implementation tracker before building. Year 3 now has a registered
+  curriculum, 16 banks and 64 verified slots; its IDs are permanent. Years 1, 2
+  and 4 remain unimplemented. Geography stays outside current overall year awards. [Flag Finder](../src/pages/skills/geography/FlagFinder.jsx)
+  remains standalone; flags cannot replace locational/place/fieldwork requirements.
 - **#17** Pure tests T1–T10 pass; desktop checks and a production preview
   (median 8.3 ms per frame) are recorded. Simulated phone viewports don't count.
   See the [implementation plan](solar-system-meteor/IMPLEMENTATION_PLAN.md) and

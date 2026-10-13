@@ -1,0 +1,110 @@
+{
+  "images": {
+    "lake-sheep": {
+      "file": "images/lake-sheep.webp",
+      "title": "Sheep at Gatesgarth Farm",
+      "place": "Lake District, England",
+      "creator": "Chrisdougpitt",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Sheep_herding,_Lake_District.jpg",
+      "licence": "CC BY-SA 4.0",
+      "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "date": "2025-07-18",
+      "retrieved": "2026-10-13",
+      "sha256": "41939be08151bb5dd938977dfcc35d41412d4e49b66863ade4f18ffc232439e0",
+      "alt": "Sheep stand in a grassy field. Stone farm buildings sit below a steep mountain slope.",
+      "adapted": "Resized and converted to WebP; photographic content unchanged.",
+      "attribution": "Sheep at Gatesgarth Farm \u2014 Chrisdougpitt, CC BY-SA 4.0."
+    },
+    "naples-port": {
+      "file": "images/naples-port.webp",
+      "title": "Boats and homes beside Naples harbour",
+      "place": "Naples, Campania, Italy",
+      "creator": "Lance Mountain",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Napoli-porto01.jpg",
+      "licence": "CC BY 2.0",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0/",
+      "date": "2006-05-01",
+      "retrieved": "2026-10-13",
+      "sha256": "44bb98a3d4ff24dede1f099b41da85f9f36942e86c2592d404a0b2a54730e7a4",
+      "alt": "Boats sit on harbour water. Buildings cover the shore and a hillside behind them.",
+      "adapted": "Resized and converted to WebP; photographic content unchanged.",
+      "attribution": "Boats and homes beside Naples harbour \u2014 Lance Mountain, CC BY 2.0."
+    },
+    "os-derwentwater": {
+      "file": "images/os-derwentwater.webp",
+      "title": "OS extract: Keswick and Derwentwater",
+      "place": "E322000\u2013330000, N519000\u2013527000, British National Grid",
+      "creator": "Ordnance Survey",
+      "sourceUrl": "https://api.os.uk/downloads/v1/products/250kScaleColourRaster",
+      "licence": "OGL v3",
+      "licenceUrl": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+      "date": "2026-06",
+      "retrieved": "2026-10-13",
+      "sha256": "1b3b42a244627cd0b6f6ee8fb2700e89da1f08de05b16fc9260147384f2a01ea",
+      "alt": "Keswick is north of Derwentwater. Pale blue outlined areas show lake water. Green patches show woodland.",
+      "adapted": "Cropped from the original OS product and converted to WebP.",
+      "attribution": "Contains OS data \u00a9 Crown copyright and database right 2026."
+    },
+    "os-land-key": {
+      "file": "images/os-land-key.webp",
+      "title": "OS actual key: buildings and woods",
+      "place": "Great Britain",
+      "creator": "Ordnance Survey",
+      "sourceUrl": "https://docs.os.uk/os-downloads/products/maps-and-imagery-portfolio/1-250-000-scale-colour-raster",
+      "licence": "OGL v3",
+      "licenceUrl": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+      "date": "2026",
+      "retrieved": "2026-10-13",
+      "sha256": "553a5c7412d693803ec7cf49a2dcc3e192f3b53d20cdf8f341f8dc0af5da2849",
+      "alt": "The OS key shows grey building areas and green woodland patches.",
+      "adapted": "Cropped from the original OS product and converted to WebP.",
+      "attribution": "Contains OS data \u00a9 Crown copyright and database right 2026."
+    },
+    "os-water-key": {
+      "file": "images/os-water-key.webp",
+      "title": "OS actual key: lake, river and canal",
+      "place": "Great Britain",
+      "creator": "Ordnance Survey",
+      "sourceUrl": "https://docs.os.uk/os-downloads/products/maps-and-imagery-portfolio/1-250-000-scale-colour-raster",
+      "licence": "OGL v3",
+      "licenceUrl": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+      "date": "2026",
+      "retrieved": "2026-10-13",
+      "sha256": "28918199a039740e26f60931ff62cebbf6ffcbb8dd4f2ead620758c826fdbee2",
+      "alt": "The OS key shows a pale blue lake with a blue outline. A blue line shows a canal.",
+      "adapted": "Cropped from the original OS product and converted to WebP.",
+      "attribution": "Contains OS data \u00a9 Crown copyright and database right 2026."
+    }
+  },
+  "maps": {
+    "file": "maps.json",
+    "sourceUrl": "https://github.com/nvkelso/natural-earth-vector/tree/v5.1.2/geojson",
+    "licenceUrl": "https://www.naturalearthdata.com/about/terms-of-use/",
+    "licence": "Public domain; Lake District boundary OGL v3",
+    "retrieved": "2026-10-13",
+    "sha256": "e9582d0c70e055ab664bdba8c6739fe5ac0ea6c7af2ee55c4a207c13e4e1cc37",
+    "adapted": "110m overview and 10m regional country geometry simplified; Campania provinces unioned; ONS park boundary simplified."
+  },
+  "records": {
+    "lake": {
+      "file": "records/lake-power-1991-2020.json",
+      "sourceUrl": "https://power.larc.nasa.gov/api/temporal/monthly/point?parameters=T2M,PRECTOTCORR&community=AG&longitude=-2.96&latitude=54.43&start=1991&end=2020&format=JSON",
+      "licence": "Public domain NASA POWER data",
+      "licenceUrl": "https://forum.earthdata.nasa.gov/viewtopic.php?t=82",
+      "creator": "NASA POWER / MERRA-2",
+      "retrieved": "2026-10-13",
+      "sha256": "04d5014c7ab86155d5634c6d8c171603cc6e0017246a02e920aaa8137399260e",
+      "summary": "Thirty January and July monthly records averaged; mm/day multiplied by days per month; rounded to nearest whole degree and mm. Model cells, not region-wide means."
+    },
+    "naples": {
+      "file": "records/naples-power-1991-2020.json",
+      "sourceUrl": "https://power.larc.nasa.gov/api/temporal/monthly/point?parameters=T2M,PRECTOTCORR&community=AG&longitude=14.27&latitude=40.85&start=1991&end=2020&format=JSON",
+      "licence": "Public domain NASA POWER data",
+      "licenceUrl": "https://forum.earthdata.nasa.gov/viewtopic.php?t=82",
+      "creator": "NASA POWER / MERRA-2",
+      "retrieved": "2026-10-13",
+      "sha256": "861100370ac3338abd64bd7895e84adaf605e3927db60d195709fb671f782339",
+      "summary": "Thirty January and July monthly records averaged; mm/day multiplied by days per month; rounded to nearest whole degree and mm. Model cells, not region-wide means."
+    }
+  }
+}

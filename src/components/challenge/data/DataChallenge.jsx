@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import ChallengeShell from "../ChallengeShell";
 import ChoiceGrid from "../ChoiceGrid";
 import HintNote from "../HintNote";
@@ -48,27 +48,37 @@ import {
  * `renderVisual(question)` optionally supplies a read-only diagram before the
  * answer control. `checkAnswer` optionally adds subject-specific validation.
  * `readAloud` forces ChallengeShell's "Read it to me" button on or off.
+ * `speak(question, { response })` supplies narration of the visible options and current response.
  */
-export default function DataChallenge({ level, build, titles, onComplete, renderVisual, readAloud, checkAnswer }) {
+export default function DataChallenge({ level, build, titles, onComplete, renderVisual, readAloud, checkAnswer, speak }) {
   const questions = useMemo(() => build(level, Math.random), [build, level]);
   const title = Array.isArray(titles) ? titles[level - 1] : titles?.[level];
+  const currentResponse = useRef(null);
+  const reportResponse = useCallback((question, response) => {
+    currentResponse.current = { question, response };
+  }, []);
 
   return (
     <ChallengeShell
       title={title}
       readAloud={readAloud}
+      speak={speak ? (q, { misses }) => speak(
+        q.options ? { ...q, options: visibleOptions(q, showHint(misses)) } : q,
+        { response: currentResponse.current?.question === q ? currentResponse.current.response : undefined },
+      ) : undefined}
       questions={questions}
       onComplete={onComplete}
       render={({ question, index, submit, locked, misses }) => (
-        <DataRound key={index} question={question} submit={submit} locked={locked} hint={showHint(misses)} renderVisual={renderVisual} checkAnswer={checkAnswer} />
+        <DataRound key={index} question={question} submit={submit} locked={locked} hint={showHint(misses)} renderVisual={renderVisual} checkAnswer={checkAnswer} onResponseChange={reportResponse} />
       )}
     />
   );
 }
 
 /** One question. checkAnswer optionally supplies subject-specific response validation. */
-export function DataRound({ question: q, submit, locked, hint, renderVisual, checkAnswer = isCorrect }) {
+export function DataRound({ question: q, submit, locked, hint, renderVisual, checkAnswer = isCorrect, onResponseChange }) {
   const [response, setResponse] = useState(() => initialResponse(q));
+  useLayoutEffect(() => { onResponseChange?.(q, response); }, [q, response, onResponseChange]);
   const ready = isReady(q, response);
   const [before, after] = (q.sentence ?? "").split("___");
   const fill = blankFill(q, response);

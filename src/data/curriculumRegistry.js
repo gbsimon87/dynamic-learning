@@ -1,3 +1,4 @@
+import { year3GeographyCurriculum } from "./year3GeographyCurriculum.js";
 import { year4HistoryCurriculum } from "./year4HistoryCurriculum.js";
 import { year2MathCurriculum } from "./year2MathCurriculum.js";
 import { year2EnglishCurriculum } from "./year2EnglishCurriculum.js";
@@ -42,6 +43,8 @@ export const CURRICULUM_SUBJECTS = [
 ];
 
 const CURRICULA = [
+  // Geography is excluded from existing overall year awards.
+  { year: 3, subject: "geography", available: true, countsTowardYear: false, load: () => year3GeographyCurriculum },
   // All 18 topics built; preserve existing Year 4 awards.
   { year: 4, subject: "history", available: true, countsTowardYear: false, load: () => year4HistoryCurriculum },
   // All 22 topics built; owner approved inclusion in the Year 3 award, 2026-10-12.

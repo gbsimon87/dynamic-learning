@@ -1,4 +1,5 @@
 import { completedHistoryActivity } from "../../data/historyActivities.js";
+import { completedGeographyActivity } from "../../data/geographyActivities.js";
 import { completedScienceActivity } from "../../data/scienceActivities.js";
 import { Navigate, useParams } from "react-router";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
@@ -117,7 +118,8 @@ function ProblemView() {
         yearAfter: getYearStats(after, curriculum, isBuilt),
         sticker: topic ? topicSticker(after, categoryId, topic, isBuilt) : null,
         practicalActivity: completedScienceActivity({ year, subject, categoryId, topicId, progress: after, isBuilt }) ??
-          completedHistoryActivity({ year, subject, categoryId, topicId, progress: after, isBuilt }),
+          completedHistoryActivity({ year, subject, categoryId, topicId, progress: after, isBuilt }) ??
+          completedGeographyActivity({ year, subject, categoryId, topicId, progress: after, isBuilt }),
       };
     }
 
