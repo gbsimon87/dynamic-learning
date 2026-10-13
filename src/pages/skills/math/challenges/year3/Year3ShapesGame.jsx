@@ -7,6 +7,7 @@ import RotationDial from "../../../../../components/challenge/RotationDial";
 import ShapeFigure from "../../../../../components/challenge/ShapeFigure";
 import SolidFigure from "../../../../../components/challenge/SolidFigure";
 import { YEAR3_SHAPE_BUILDERS } from "../../../../../data/challenges/year3Shapes";
+import "./year3-shapes.css";
 
 const TITLES = {
   drawing2d: ["Trace a 2-D shape.", "Finish a 2-D shape.", "Order shapes by their sides.", "Draw a shape from clues."],
@@ -90,6 +91,10 @@ function ShapeRound({ question, submit, locked }) {
       </button>
       <CheckButton disabled={locked || traced !== question.answer} onClick={() => submit(traced === question.answer)} />
     </>
+  );
+
+  if (question.type === "clue-shape") return (
+    <ClueShapeRound question={question} submit={submit} locked={locked} />
   );
 
   if (question.type === "order-shapes") return (
@@ -244,6 +249,62 @@ function ShapeRound({ question, submit, locked }) {
   );
 
   return null;
+}
+
+// Slot 4: the clue lists properties only, so the child must read it to pick
+// the right picture, then draws the shape they picked side by side.
+function ClueShapeRound({ question, submit, locked }) {
+  const [choice, setChoice] = useState(null);
+  const [traced, setTraced] = useState(0);
+  const chosen = question.shapes.find((shape) => shape.id === choice);
+  const choose = (id) => {
+    setChoice(id);
+    setTraced(0);
+  };
+  return (
+    <>
+      <p className="challenge-prompt">{question.prompt}</p>
+      <p className="clue-shape-clue">{question.clue}</p>
+      <div className="clue-shape-options">
+        {question.shapes.map((shape, index) => (
+          <button
+            type="button"
+            key={shape.id}
+            className={`clue-shape-option${choice === shape.id ? " selected" : ""}`}
+            aria-pressed={choice === shape.id}
+            disabled={locked}
+            onClick={() => choose(shape.id)}
+          >
+            <span>Shape {"ABCD"[index]}</span>
+            <ShapeFigure shape={shape} label={`Shape ${"ABCD"[index]}`} />
+          </button>
+        ))}
+      </div>
+      {chosen && (
+        <>
+          <ShapeFigure
+            shape={chosen}
+            showVertices
+            drawnSides={traced}
+            label={`Your drawing with ${traced} of ${chosen.sides} sides complete`}
+          />
+          <p className="shape-trace-count">{traced} of {chosen.sides} sides drawn</p>
+          <button
+            type="button"
+            className="trace-side-btn"
+            disabled={locked || traced === chosen.sides}
+            onClick={() => setTraced((previous) => Math.min(chosen.sides, previous + 1))}
+          >
+            Draw the next side
+          </button>
+        </>
+      )}
+      <CheckButton
+        disabled={locked || !chosen || traced !== chosen.sides}
+        onClick={() => submit(choice === question.answer)}
+      />
+    </>
+  );
 }
 
 export default Year3ShapesGame;

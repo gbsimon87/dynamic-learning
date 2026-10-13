@@ -56,7 +56,7 @@ export const MUL_DIV_LESSONS = {
     },
     {
       title: "Build a friendly partition",
-      lines: ["To multiply, split into tens and ones, then multiply each part.", "To divide, take 10 groups first, like 10 × 4 = 40.", "Divide what is left, then add the 2 answers."],
+      lines: ["To multiply, split into tens and ones, then multiply each part.", "To divide, split off a tens number in the table, like 40 for the 4s.", "Divide what is left, then add the 2 answers."],
       example: { type: "steps", title: "52 ÷ 4", steps: ["Split 52 into 40 and 12.", "40 ÷ 4 = 10", "12 ÷ 4 = 3", "10 + 3 = 13"], note: "So 52 ÷ 4 = 13." },
     },
     {

@@ -241,39 +241,67 @@ export function valueOfDigits(digits) {
   return Number(digits.join(""));
 }
 
+function randomInt(rng, low, high) {
+  return low + Math.floor(rng() * (high - low + 1));
+}
+
+const pick = (rng, values) => values[Math.floor(rng() * values.length)];
+
 /** Multi-step problems that reach across the category: hundreds and tens more
- * or less, counting on in 50s, reading a number out of its packaging, and
- * picking the largest of three. Each carries its own working. */
-const PROBLEMS = [
-  {
-    prompt:
-      "A shop has 348 badges. 100 more arrive, then 10 are sold. How many badges are there now?",
-    working: "348 + 100 - 10",
+ * or less, counting on in 50s, building a number from hundreds and ones, and
+ * picking the largest of three. Each is a generator, so the numbers change per
+ * mount, and each carries its own working so the answer is recomputed. */
+const PROBLEM_MAKERS = [
+  (rng) => {
+    const start = randomInt(rng, 120, 780);
+    const item = pick(rng, ["badges", "stickers", "cards"]);
+    return {
+      prompt: `A shop has ${start} ${item}. 100 more arrive, then 10 are sold. How many ${item} are there now?`,
+      working: `${start} + 100 - 10`,
+    };
   },
-  {
-    prompt:
-      "A hall is set out with 4 rows of 100 chairs and 7 extra chairs. Then 10 chairs are taken away. How many chairs are left?",
-    working: "4 * 100 + 7 - 10",
+  (rng) => {
+    const rows = randomInt(rng, 2, 8);
+    const extra = randomInt(rng, 11, 19);
+    return {
+      prompt: `A hall is set out with ${rows} rows of 100 chairs and ${extra} extra chairs. Then 10 chairs are taken away. How many chairs are left?`,
+      working: `${rows} * 100 + ${extra} - 10`,
+    };
   },
-  {
-    prompt:
-      "Amy starts at 0 and counts on in 50s. What number does she say straight after 400?",
-    working: "400 + 50",
+  (rng) => {
+    const from = randomInt(rng, 2, 18) * 50;
+    return {
+      prompt: `Amy starts at 0 and counts on in 50s. What number does she say straight after ${from}?`,
+      working: `${from} + 50`,
+    };
   },
-  {
-    prompt:
-      "A box holds 100 crayons. A school has 6 full boxes and 3 loose crayons. How many crayons does the school have?",
-    working: "6 * 100 + 3",
+  (rng) => {
+    const boxes = randomInt(rng, 2, 9);
+    const loose = randomInt(rng, 1, 9);
+    return {
+      prompt: `A box holds 100 crayons. A school has ${boxes} full boxes and ${loose} loose crayons. How many crayons does the school have?`,
+      working: `${boxes} * 100 + ${loose}`,
+    };
   },
-  {
-    prompt:
-      "A ferry carried 605 people on Monday and 10 fewer on Tuesday. How many people did it carry on Tuesday?",
-    working: "605 - 10",
+  (rng) => {
+    const monday = randomInt(rng, 2, 9) * 100 + randomInt(rng, 1, 9);
+    const fewer = pick(rng, [10, 100]);
+    const day = pick(rng, ["Tuesday", "Wednesday"]);
+    return {
+      prompt: `A ferry carried ${monday} people on Monday and ${fewer} fewer on ${day}. How many people did it carry on ${day}?`,
+      working: `${monday} - ${fewer}`,
+    };
   },
-  {
-    prompt:
-      "Three bags hold 205, 250 and 25 marbles. How many marbles are in the bag with the most?",
-    working: "250",
+  (rng) => {
+    // 205, 250 and 25 style: the same digits, so only place value decides.
+    const a = randomInt(rng, 1, 9);
+    const b = randomInt(rng, 1, 9);
+    const bags = shuffleValues([a * 100 + b, a * 100 + b * 10, a * 10 + b], rng);
+    const most = Math.max(...bags);
+    return {
+      prompt: `Three bags hold ${bags[0]}, ${bags[1]} and ${bags[2]} marbles. How many marbles are in the bag with the most?`,
+      working: `${most}`,
+    };
   },
 ];
 
@@ -317,7 +345,7 @@ export function buildProblemQuestions(level, rng) {
   }
 
   if (level === 4) {
-    return shuffleValues(PROBLEMS, rng).map((problem) => ({
+    return shuffleValues(PROBLEM_MAKERS, rng).map((make) => make(rng)).map((problem) => ({
       ...problem,
       answer: evaluateWorking(problem.working),
     }));

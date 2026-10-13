@@ -107,6 +107,22 @@ test("every word problem reads its number in words and lands where it says", () 
   assert.ok(questions.some((q) => q.change !== 0), "nothing to do but copy it out");
 });
 
+// Slot 4 used to include "write that number in numerals" — slot 2 again — and
+// was the same six numbers every run.
+test("every applied problem needs a jump, and runs differ", () => {
+  for (let seed = 1; seed <= 50; seed++) {
+    const questions = buildWordQuestions(4, seeded(seed));
+    for (const q of questions) {
+      assert.ok([10, -10, 100, -100].includes(q.change), `"${q.prompt}" is only a copy-out`);
+      assert.ok(q.answer >= 100 && q.answer <= 999);
+      assert.ok(!/numerals/.test(q.prompt));
+    }
+    assert.ok(questions.some((q) => hasEmptyColumn(q.start)), "no empty column this run");
+  }
+  const starts = (seed) => buildWordQuestions(4, seeded(seed)).map((q) => q.start).join();
+  assert.notEqual(starts(3), starts(4));
+});
+
 test("an unknown level is refused rather than silently empty", () => {
   assert.throws(() => buildWordQuestions(0, Math.random), RangeError);
 });

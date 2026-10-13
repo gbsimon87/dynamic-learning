@@ -9,6 +9,8 @@ import {
   buildDrawing2DQuestions,
   buildLineQuestions,
   buildRightAngleQuestions,
+  LINE_CONTEXTS,
+  shapeFitsClue,
   compareWithRightAngle,
   headingAfterRightTurns,
 } from "./year3Shapes.js";
@@ -51,7 +53,7 @@ test("every choice round contains its answer exactly once", () => {
 });
 
 test("2-D drawing rounds trace every real side and ordering sets have no ties", () => {
-  for (const level of [1, 2, 4]) {
+  for (const level of [1, 2]) {
     for (const round of buildDrawing2DQuestions(level, seeded(level))) {
       assert.equal(round.answer, round.shape.vertices.length);
       assert.ok(round.startingSides >= 0 && round.startingSides < round.answer);
@@ -153,6 +155,27 @@ test("highlighted lines really have the direction or relationship claimed", () =
       const perpendicular = almostZero(first[0] * second[0] + first[1] * second[1]);
       const expected = parallel ? "parallel" : perpendicular ? "perpendicular" : "neither";
       assert.equal(round.answer, expected, `${round.shape.id}: ${round.highlightSides.join(",")}`);
+    }
+  }
+});
+
+test("draw-from-clue rounds need the clue: exactly one picture fits and the name is never given", () => {
+  for (let seed = 1; seed <= 30; seed += 1) {
+    for (const round of buildDrawing2DQuestions(4, seeded(seed))) {
+      assert.equal(round.type, "clue-shape");
+      assert.equal(round.options.length, 4);
+      assert.deepEqual(round.options.filter((id) => shapeFitsClue(id, round.fact)), [round.answer]);
+      for (const shape of round.shapes) assert.ok(!round.clue.toLowerCase().includes(shape.name), round.clue);
+    }
+  }
+});
+
+test("design-context lines name a real object of that shape", () => {
+  for (let seed = 1; seed <= 20; seed += 1) {
+    for (const round of buildLineQuestions(4, seeded(seed))) {
+      assert.ok(LINE_CONTEXTS[round.shape.id], round.shape.id);
+      assert.ok(round.prompt.includes(LINE_CONTEXTS[round.shape.id]), round.prompt);
+      if (round.shape.id !== "square") assert.ok(!round.prompt.includes("window"), round.prompt);
     }
   }
 });

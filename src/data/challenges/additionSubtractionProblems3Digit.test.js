@@ -43,6 +43,35 @@ test("each two-step story has valid intermediate and final quantities", () => {
   }
 });
 
+// Slots 2 and 3 drew from the same fixed list, so both could ask "428
+// pencils, buys 267, uses 149". Every slot now has its own stories and fresh
+// numbers each run, all recomputed here.
+test("two-step slots never share a story and numbers vary per run", () => {
+  const opening = (prompt) => prompt.split(/ \d/)[0];
+  for (let seed = 1; seed <= 100; seed++) {
+    let n = seed;
+    const seeded = () => { n = (n * 1103515245 + 12345) % 2147483648; return n / 2147483648; };
+    const openings = {};
+    for (const level of [2, 3, 4]) {
+      const questions = buildAdditionSubtractionProblems(level, seeded);
+      openings[level] = new Set(questions.map((q) => opening(q.prompt)));
+      assert.equal(openings[level].size, 6);
+      for (const q of questions) {
+        for (const value of [q.start, q.start + q.first, q.answer, Math.abs(q.first), Math.abs(q.second)]) {
+          assert.ok(value >= 0 && value <= 999, `${q.prompt} has ${value}`);
+        }
+        assert.equal(q.answer, q.start + q.first + q.second);
+        assert.ok(Math.sign(q.first) !== Math.sign(q.second), "one gain and one loss");
+      }
+    }
+    for (const [a, b] of [[2, 3], [2, 4], [3, 4]]) {
+      assert.ok([...openings[a]].every((o) => !openings[b].has(o)), `slots ${a} and ${b} share a story`);
+    }
+  }
+  const run = () => buildAdditionSubtractionProblems(2, Math.random).map((q) => q.start).join();
+  assert.notEqual(run(), run());
+});
+
 test("one and only one number sentence matches the story's action order", () => {
   for (const question of buildAdditionSubtractionProblems(3, rng)) {
     const options = expressionOptions(question.start, question.first, question.second, rng);

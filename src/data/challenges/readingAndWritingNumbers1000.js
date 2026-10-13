@@ -73,17 +73,50 @@ const ORDER_SETS = [
 
 /**
  * Applied problems. The number arrives in words inside a sentence, so it has
- * to be read before anything can be done with it, and most of them then ask
- * for a jump of 10 or 100 — the number is never simply copied out.
+ * to be read before anything can be done with it, and every one then asks for
+ * a jump of 10 or 100 — the number is never simply copied out (that is
+ * challenge 2). Numbers are generated per mount, half of them with an empty
+ * column, so runs differ and the hard case keeps turning up.
  */
-const PROBLEMS = [
-  { start: 307, change: 0, prompt: "A farm collected three hundred and seven eggs. Write that number in numerals." },
-  { start: 420, change: 10, prompt: "A school has four hundred and twenty pupils. Ten more join. How many pupils are there now?" },
-  { start: 650, change: -100, prompt: "A shop had six hundred and fifty pens and sold one hundred of them. How many pens are left?" },
-  { start: 209, change: 0, prompt: "A train carried two hundred and nine passengers. Write that number in numerals." },
-  { start: 816, change: 100, prompt: "A library has eight hundred and sixteen books. One hundred more arrive. How many books are there now?" },
-  { start: 904, change: -10, prompt: "A hall had nine hundred and four seats. Ten were broken and taken away. How many seats are left?" },
+const STORIES = [
+  { open: "A farm collected", item: "eggs", more: "more are laid", fewer: "are sold", ask: "How many eggs are there now?" },
+  { open: "A school has", item: "pupils", more: "more join", fewer: "leave", ask: "How many pupils are there now?" },
+  { open: "A shop had", item: "pens", more: "more arrive", fewer: "are sold", ask: "How many pens does it have now?" },
+  { open: "A train carried", item: "passengers", more: "more get on", fewer: "get off", ask: "How many passengers are on the train now?" },
+  { open: "A library has", item: "books", more: "more arrive", fewer: "are borrowed", ask: "How many books are there now?" },
+  { open: "A hall had", item: "seats", more: "more are added", fewer: "are taken away", ask: "How many seats are there now?" },
 ];
+
+const CHANGES = [10, -10, 100, -100];
+const CHANGE_WORDS = { 10: "Ten", 100: "One hundred" };
+
+function randomInt(rng, low, high) {
+  return low + Math.floor(rng() * (high - low + 1));
+}
+
+/** A start number from 200 to 899, so any jump of 10 or 100 stays 3-digit. */
+function storyStart(rng, wantEmptyColumn) {
+  for (let guard = 0; guard < 100; guard++) {
+    const value = randomInt(rng, 200, 899);
+    if (hasEmptyColumn(value) === wantEmptyColumn) return value;
+  }
+  return wantEmptyColumn ? 506 : 347;
+}
+
+export function buildAppliedWordProblems(rng) {
+  return shuffleValues(STORIES, rng).map((story, index) => {
+    const start = storyStart(rng, index % 2 === 0);
+    const change = CHANGES[Math.floor(rng() * CHANGES.length)];
+    const words = numberInWords(start);
+    const verb = change > 0 ? story.more : story.fewer;
+    return {
+      start,
+      change,
+      words,
+      prompt: `${story.open} ${words} ${story.item}. ${CHANGE_WORDS[Math.abs(change)]} ${verb}. ${story.ask}`,
+    };
+  });
+}
 
 /**
  * Questions for one of the four challenges.
@@ -130,9 +163,8 @@ export function buildWordQuestions(level, rng) {
   }
 
   if (level === 4) {
-    return shuffleValues(PROBLEMS, rng).map((problem) => ({
+    return buildAppliedWordProblems(rng).map((problem) => ({
       ...problem,
-      words: numberInWords(problem.start),
       answer: problem.start + problem.change,
     }));
   }

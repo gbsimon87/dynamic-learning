@@ -9,23 +9,74 @@ const ONE_STEP = [
   { a: 691, b: 245, operation: "subtract", prompt: "A box held 691 beads. 245 were used. How many are left?" },
 ];
 
-const TWO_STEP = [
-  { start: 360, first: 125, second: -84, prompt: "A box has 360 cards. It gets 125 more, then gives away 84. How many cards now?" },
-  { start: 745, first: -218, second: 136, prompt: "A library has 745 books. 218 are borrowed, then 136 are returned. How many books now?" },
-  { start: 428, first: 267, second: -149, prompt: "A school has 428 pencils. It buys 267 more, then uses 149. How many pencils remain?" },
-  { start: 832, first: -356, second: 208, prompt: "A shop has 832 stickers. It sells 356, then gets 208 more. How many stickers now?" },
-  { start: 517, first: 184, second: -275, prompt: "A museum has 517 tickets. It prints 184 more, then sells 275. How many tickets remain?" },
-  { start: 690, first: -235, second: 172, prompt: "A team has 690 points. It spends 235, then earns 172. How many points now?" },
+/**
+ * Two-step story templates, one bank per challenge so slots 2, 3 and 4 never
+ * show the same story. `gain`/`loss` are the verb phrases for each change;
+ * the numbers are generated per mount by twoStepPlan.
+ */
+const TWO_STEP_STORIES = [
+  { open: "A box has", item: "cards", gain: "gets {n} more", loss: "gives away {n}", ask: "How many cards now?" },
+  { open: "A library has", item: "books", gain: "{n} are returned", loss: "{n} are borrowed", ask: "How many books now?" },
+  { open: "A school has", item: "pencils", gain: "buys {n} more", loss: "uses {n}", ask: "How many pencils remain?" },
+  { open: "A shop has", item: "stickers", gain: "gets {n} more", loss: "sells {n}", ask: "How many stickers now?" },
+  { open: "A museum has", item: "tickets", gain: "prints {n} more", loss: "sells {n}", ask: "How many tickets remain?" },
+  { open: "A team has", item: "points", gain: "earns {n}", loss: "spends {n}", ask: "How many points now?" },
+];
+
+const SENTENCE_STORIES = [
+  { open: "A baker has", item: "buns", gain: "bakes {n} more", loss: "sells {n}", ask: "How many buns now?" },
+  { open: "A zoo has", item: "visitors", gain: "{n} more arrive", loss: "{n} go home", ask: "How many visitors now?" },
+  { open: "A pond has", item: "frogspawn eggs", gain: "{n} more are laid", loss: "{n} hatch", ask: "How many eggs are there now?" },
+  { open: "A toy shop has", item: "marbles", gain: "orders {n} more", loss: "sells {n}", ask: "How many marbles now?" },
+  { open: "A car park has", item: "cars", gain: "{n} more drive in", loss: "{n} drive out", ask: "How many cars now?" },
+  { open: "A farm has", item: "apples", gain: "picks {n} more", loss: "sells {n}", ask: "How many apples now?" },
 ];
 
 const FINAL_STORIES = [
-  { start: 536, first: 178, second: -249, prompt: "A gardener has 536 seeds. She gets 178 more and plants 249. How many seeds are left?" },
-  { start: 804, first: -367, second: 145, prompt: "A hall has 804 chairs. 367 are moved out and 145 return. How many chairs are there now?" },
-  { start: 273, first: 346, second: -185, prompt: "A class makes 273 paper stars on Monday and 346 on Tuesday. It gives away 185. How many stars remain?" },
-  { start: 921, first: -485, second: 263, prompt: "A club has 921 badges. It gives away 485, then makes 263 more. How many badges now?" },
-  { start: 447, first: 286, second: -158, prompt: "A shop has 447 cards. It receives 286, then sells 158. How many cards remain?" },
-  { start: 752, first: -329, second: 216, prompt: "A library has 752 books. 329 are borrowed and 216 are returned. How many books now?" },
+  { open: "A garden centre has", item: "seeds", gain: "gets {n} more", loss: "plants {n}", ask: "How many seeds are left?" },
+  { open: "A hall has", item: "chairs", gain: "{n} are brought in", loss: "{n} are moved out", ask: "How many chairs are there now?" },
+  { open: "A class has", item: "paper stars", gain: "makes {n} more", loss: "gives away {n}", ask: "How many stars remain?" },
+  { open: "A club has", item: "badges", gain: "makes {n} more", loss: "gives away {n}", ask: "How many badges now?" },
+  { open: "A cinema has", item: "popcorn bags", gain: "fills {n} more", loss: "sells {n}", ask: "How many bags are left?" },
+  { open: "A lake has", item: "geese", gain: "{n} more land", loss: "{n} fly away", ask: "How many geese are there now?" },
 ];
+
+const BANKS = { 2: TWO_STEP_STORIES, 3: SENTENCE_STORIES, 4: FINAL_STORIES };
+
+function randomInt(rng, low, high) {
+  return low + Math.floor(rng() * (high - low + 1));
+}
+
+/**
+ * Numbers for one two-step story. Every quantity a child meets — start, each
+ * change, the middle total and the answer — stays between 100 and 999, and the
+ * changes are never multiples of 10 so the story needs real column work.
+ */
+export function twoStepPlan(rng, gainFirst) {
+  for (let guard = 0; guard < 200; guard++) {
+    const start = randomInt(rng, 200, 800);
+    const up = randomInt(rng, 110, 390);
+    const down = randomInt(rng, 110, 390);
+    if (up % 10 === 0 || down % 10 === 0 || up === down) continue;
+    const first = gainFirst ? up : -down;
+    const second = gainFirst ? -down : up;
+    const middle = start + first;
+    const answer = middle + second;
+    if (middle >= 100 && middle <= 999 && answer >= 100 && answer <= 999) {
+      return { start, first, second };
+    }
+  }
+  return gainFirst ? { start: 428, first: 267, second: -149 } : { start: 745, first: -218, second: 136 };
+}
+
+function storyPrompt(story, { start, first, second }) {
+  const phrase = (change) => {
+    const words = (change > 0 ? story.gain : story.loss).replace("{n}", Math.abs(change));
+    // "gets 125 more" needs a subject; "125 are returned" already has one.
+    return /^\d/.test(words) ? words : `it ${words}`;
+  };
+  return `${story.open} ${start} ${story.item}. First, ${phrase(first)}. Then ${phrase(second)}. ${story.ask}`;
+}
 
 export function applySteps(start, first, second) {
   return { afterFirst: start + first, answer: start + first + second };
@@ -58,11 +109,13 @@ export function buildAdditionSubtractionProblems(level, rng) {
       return { ...question, answer, options: answerOptions(answer, rng) };
     });
   }
-  const plans = level === 4 ? FINAL_STORIES : TWO_STEP;
   if (level !== 2 && level !== 3 && level !== 4) {
     throw new RangeError(`Unknown challenge level: ${level}`);
   }
-  return shuffleValues(plans, rng).map((plan) => ({
+  return shuffleValues(BANKS[level], rng).map((story, index) => {
+    const plan = twoStepPlan(rng, index % 2 === 0);
+    return { ...plan, prompt: storyPrompt(story, plan) };
+  }).map((plan) => ({
     ...plan,
     ...applySteps(plan.start, plan.first, plan.second),
     expression: numberSentence(plan.start, plan.first, plan.second),

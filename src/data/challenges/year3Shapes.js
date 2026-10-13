@@ -36,14 +36,40 @@ function optionsAround(answer, rng, minimum = 0) {
 }
 
 const DRAWABLE_IDS = ["triangle", "square", "rectangle", "pentagon", "hexagon", "octagon"];
-const DRAW_CLUES = {
-  triangle: "a road sign with 3 straight sides",
-  square: "a tile with 4 equal straight sides and 4 right angles",
-  rectangle: "a door with 4 straight sides and 4 right angles",
-  pentagon: "a badge with 5 straight sides",
-  hexagon: "a tile with 6 straight sides",
-  octagon: "a sign with 8 straight sides",
+// Slot 4 clues name PROPERTIES only, never the shape. `fact` is what the
+// clue states, so a test can prove exactly one picture fits it.
+const SHAPE_FACTS = {
+  triangle: { sides: 3, rightAngles: 0, allSidesEqual: true },
+  square: { sides: 4, rightAngles: 4, allSidesEqual: true },
+  rectangle: { sides: 4, rightAngles: 4, allSidesEqual: false },
+  rhombus: { sides: 4, rightAngles: 0, allSidesEqual: true },
+  parallelogram: { sides: 4, rightAngles: 0, allSidesEqual: false },
+  pentagon: { sides: 5, rightAngles: 0, allSidesEqual: true },
+  hexagon: { sides: 6, rightAngles: 0, allSidesEqual: true },
+  octagon: { sides: 8, rightAngles: 0, allSidesEqual: true },
 };
+export const DRAW_CLUES = {
+  triangle: { text: "I have 3 straight sides and 3 corners.", fact: { sides: 3 } },
+  square: { text: "I have 4 straight sides, all the same length, and 4 right angles.", fact: { sides: 4, rightAngles: 4, allSidesEqual: true } },
+  rectangle: { text: "I have 4 straight sides and 4 right angles. Two of my sides are longer than the other two.", fact: { sides: 4, rightAngles: 4, allSidesEqual: false } },
+  pentagon: { text: "I have 5 straight sides and 5 corners.", fact: { sides: 5 } },
+  hexagon: { text: "I have 6 straight sides and 6 corners.", fact: { sides: 6 } },
+  octagon: { text: "I have 8 straight sides and 8 corners.", fact: { sides: 8 } },
+};
+// Near misses first, so the child has to read the whole clue.
+const CLUE_DISTRACTORS = {
+  triangle: ["square", "pentagon"],
+  square: ["rectangle", "rhombus"],
+  rectangle: ["square", "parallelogram"],
+  pentagon: ["hexagon", "square"],
+  hexagon: ["pentagon", "octagon"],
+  octagon: ["hexagon", "pentagon"],
+};
+
+export function shapeFitsClue(shapeId, fact) {
+  const facts = SHAPE_FACTS[shapeId];
+  return Boolean(facts) && Object.entries(fact).every(([key, value]) => facts[key] === value);
+}
 
 export function buildDrawing2DQuestions(level, rng = Math.random) {
   assertLevel(level);
@@ -86,13 +112,20 @@ export function buildDrawing2DQuestions(level, rng = Math.random) {
     });
   }
 
-  return six(shapes, rng).map((shape) => ({
-    type: "trace-shape",
-    shape,
-    startingSides: 0,
-    answer: shape.sides,
-    prompt: `Draw ${DRAW_CLUES[shape.id]}.`,
-  }));
+  return six(shapes, rng).map((shape) => {
+    const others = shuffleValues(Object.keys(SHAPE_FACTS)
+      .filter((id) => id !== shape.id && !CLUE_DISTRACTORS[shape.id].includes(id)), rng);
+    const options = shuffleValues([shape.id, ...CLUE_DISTRACTORS[shape.id], others[0]], rng);
+    return {
+      type: "clue-shape",
+      clue: DRAW_CLUES[shape.id].text,
+      fact: DRAW_CLUES[shape.id].fact,
+      options,
+      shapes: options.map(findShape),
+      answer: shape.id,
+      prompt: "Which shape matches the clue? Pick it, then draw it.",
+    };
+  });
 }
 
 const BUILDABLE_SOLIDS = ["cube", "cuboid", "square-pyramid", "triangular-prism"];
@@ -338,6 +371,14 @@ const LINE_QUESTIONS = {
   ],
 };
 
+// The design must be one that really has this shape.
+export const LINE_CONTEXTS = {
+  rectangle: "a door",
+  square: "a square window",
+  parallelogram: "a parallelogram-shaped sign",
+  triangle: "a triangle road sign",
+};
+
 export function buildLineQuestions(level, rng = Math.random) {
   assertLevel(level);
   if (level === 1) return six(LINE_QUESTIONS.direction, rng).map(([id, highlightSides, answer]) => ({
@@ -346,13 +387,13 @@ export function buildLineQuestions(level, rng = Math.random) {
   }));
 
   const pool = level === 2 ? LINE_QUESTIONS.relation : LINE_QUESTIONS.mixed;
-  return six(pool, rng).map(([id, highlightSides, answer], index) => ({
+  return six(pool, rng).map(([id, highlightSides, answer]) => ({
     type: "line-relation",
     shape: findShape(id),
     highlightSides,
     answer,
     prompt: level === 4
-      ? `A designer marked two lines on ${index % 2 === 0 ? "a window" : "a sign"}. How are they related?`
+      ? `A designer marked two lines on ${LINE_CONTEXTS[id]}. How are they related?`
       : "How are the two highlighted lines related?",
     options: level === 2 ? ["parallel", "perpendicular"] : ["parallel", "perpendicular", "neither"],
   }));

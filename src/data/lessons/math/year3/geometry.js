@@ -22,8 +22,8 @@ export const GEOMETRY_LESSONS = {
     },
     {
       title: "Draw a shape from clues",
-      lines: ["Read the clue and find the number of sides.", "Match that number to a shape name.", "Look for right angles too: squares and rectangles have 4."],
-      example: { type: "table", title: "Shape names and sides", headers: ["Shape", "Sides"], rows: [["triangle", "3"], ["square", "4"], ["pentagon", "5"], ["hexagon", "6"], ["octagon", "8"]], note: "A rectangle also has 4 sides, but 2 are longer." },
+      lines: ["Read the clue. Count the sides it tells you.", "Check for right angles and equal sides too.", "Tap the one shape that fits every part, then draw it."],
+      example: { type: "steps", title: "Clue: 4 sides and 4 right angles. Two sides are longer.", steps: ["4 sides: it could be a square or a rectangle.", "4 right angles: both still fit.", "Two sides are longer: a square's sides are all equal.", "So it is the rectangle."], note: "Check every part of the clue before you tap." },
     },
   ],
   "making-and-recognising-3-d-shapes": [
@@ -132,7 +132,7 @@ export const GEOMETRY_LESSONS = {
     },
     {
       title: "Use line properties in a design",
-      lines: ["Designers use lines on windows, signs and tiles.", "Look at the 2 marked lines on the design.", "Ask the parallel and perpendicular questions to decide."],
+      lines: ["Designers use lines on doors, windows and signs.", "Look at the 2 marked lines on the design.", "Ask the parallel and perpendicular questions to decide."],
       example: { type: "steps", title: "Lines on a window frame", steps: ["The top and bottom of the frame never meet.", "They stay the same distance apart.", "So they are parallel."], note: "Ask: do they meet, and is it a square corner?" },
     },
   ],

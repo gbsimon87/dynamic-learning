@@ -229,21 +229,47 @@ export function multiplyPartition(a, b) {
   };
 }
 
-/** 52 ÷ 4 as (40 ÷ 4) + (12 ÷ 4) — the same partition, run backwards. */
+/**
+ * The smallest number that is both a multiple of 10 and of `b`: 30 for the
+ * 3 table, 20 for the 4 table, 40 for the 8 table.
+ */
+function tensStep(b) {
+  let step = 10;
+  while (step % b !== 0) step += 10;
+  return step;
+}
+
+/**
+ * 52 ÷ 4 as (40 ÷ 4) + (12 ÷ 4) — the same partition, run backwards.
+ *
+ * The first part is the biggest tens number (a multiple of 10) that `b`
+ * divides exactly, so 99 ÷ 3 splits as 90 ÷ 3 + 9 ÷ 3, not 30 ÷ 3 + 69 ÷ 3.
+ * What is left is always below that step, so the second part is a times-table
+ * fact no bigger than 12 × b. Callers keep `a` off exact multiples of the
+ * step, or the second part would be 0 ÷ b.
+ */
 export function dividePartition(b, quotient) {
   const a = b * quotient;
-  const friendly = b * 10;
+  const step = tensStep(b);
+  const tensPart = Math.floor(a / step) * step;
+  const rest = a - tensPart;
   return {
     operation: "divide",
     a,
     b,
     heading: `${a} ÷ ${b}`,
     cells: [
-      { key: "tens", label: `${friendly} ÷ ${b}`, value: 10 },
-      { key: "ones", label: `${a - friendly} ÷ ${b}`, value: quotient - 10 },
+      { key: "tens", label: `${tensPart} ÷ ${b}`, value: tensPart / b },
+      { key: "ones", label: `${rest} ÷ ${b}`, value: rest / b },
     ],
     answer: quotient,
   };
+}
+
+/** Quotients 11..(99/b) whose dividend splits into two non-zero friendly parts. */
+export function partitionableQuotients(b) {
+  const step = tensStep(b);
+  return range(11, Math.floor(99 / b)).filter((q) => (b * q) % step !== 0 && b * q >= step);
 }
 
 /** Two-digit numbers whose ones digit is not 0 — 40 × 3 has nothing to split. */
@@ -271,8 +297,7 @@ export function buildTwoDigitQuestions(level, rng) {
     return pickCycling(YEAR3_TABLES, ROUNDS, rng).map((b, index) => {
       if (index < divisionCount) {
         // quotient 11..(99/b) keeps the dividend a two-digit number.
-        const quotients = range(11, Math.floor(99 / b));
-        const quotient = pick(quotients, 1, rng)[0];
+        const quotient = pick(partitionableQuotients(b), 1, rng)[0];
         const question = dividePartition(b, quotient);
         return { ...question, type: "partition", mode: "build" };
       }
@@ -415,13 +440,18 @@ const OPERATION_STORIES = [
   { kind: "divide", text: (a, b) => `${a * b} cm of string is cut into ${b} equal pieces. How long is each piece, in cm?` },
 ];
 
+/** "1 cake", "3 cakes" — so a story never says "1 more pages". */
+export function countOf(n, singular, plural = `${singular}s`) {
+  return `${n} ${n === 1 ? singular : plural}`;
+}
+
 const TWO_STEP_STORIES = [
-  (a, b, c) => ({ prompt: `A tray holds ${a} cakes. Mum buys ${b} trays, then eats ${c} cakes. How many cakes are left?`, answer: a * b - c }),
-  (a, b, c) => ({ prompt: `There are ${b} tables with ${a} chairs at each. ${c} more chairs are carried in. How many chairs are there now?`, answer: a * b + c }),
-  (a, b, c) => ({ prompt: `A book has ${a} pages in each chapter. Ali reads ${b} chapters and then ${c} more pages. How many pages has he read?`, answer: a * b + c }),
+  (a, b, c) => ({ prompt: `A tray holds ${a} cakes. Mum buys ${b} trays, then eats ${countOf(c, "cake")}. How many cakes are left?`, answer: a * b - c }),
+  (a, b, c) => ({ prompt: `There are ${b} tables with ${a} chairs at each. ${c} more ${c === 1 ? "chair is" : "chairs are"} carried in. How many chairs are there now?`, answer: a * b + c }),
+  (a, b, c) => ({ prompt: `A book has ${a} pages in each chapter. Ali reads ${b} chapters and then ${c} more ${c === 1 ? "page" : "pages"}. How many pages has he read?`, answer: a * b + c }),
   (a, b, c) => ({ prompt: `${a * b} sweets are shared equally between ${b} children. Each child then eats ${c}. How many sweets does each child have left?`, answer: a - c }),
-  (a, b, c) => ({ prompt: `${a * b} pencils are put into ${b} pots. ${c} pots are taken away. How many pencils are taken away?`, answer: a * c }),
-  (a, b, c) => ({ prompt: `A pack holds ${a} stickers. Zoe has ${b} packs and gives ${c} whole packs away. How many stickers does she keep?`, answer: a * (b - c) }),
+  (a, b, c) => ({ prompt: `${a * b} pencils are put into ${b} pots. ${countOf(c, "pot")} ${c === 1 ? "is" : "are"} taken away. How many pencils are taken away?`, answer: a * c }),
+  (a, b, c) => ({ prompt: `A pack holds ${a} stickers. Zoe has ${b} packs and gives ${c} whole ${c === 1 ? "pack" : "packs"} away. How many stickers does she keep?`, answer: a * (b - c) }),
 ];
 
 export function buildMulDivProblemQuestions(level, rng) {

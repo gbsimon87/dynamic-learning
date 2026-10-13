@@ -11,10 +11,14 @@ test("checkEquation checks plain arithmetic and skips units", () => {
   assert.equal(checkEquation(["£2", "+", "50p"]), null);
 });
 
-test("Year 3 Maths: every topic has four lessons that pass the lint", () => {
-  const topicIds = loadCurriculum(3, "math").flatMap((category) => category.topics.map((topic) => topic.id));
-  assert.deepEqual(lintLessons(LESSONS.math[3], { year: 3, topicIds }), []);
-});
+for (const [subject, years] of Object.entries(LESSONS)) {
+  for (const year of Object.keys(years).map(Number)) {
+    test(`${subject} Year ${year}: every topic has four lessons that pass the lint`, () => {
+      const topicIds = loadCurriculum(year, subject).flatMap((category) => category.topics.map((topic) => topic.id));
+      assert.deepEqual(lintLessons(LESSONS[subject][year], { year, topicIds }), []);
+    });
+  }
+}
 
 test("getLesson finds a slot and misses quietly", () => {
   assert.equal(getLesson("math", "3", "tenths", "1").title, "Read tenths on a bar");

@@ -82,8 +82,8 @@ export const STATISTICS_LESSONS = {
     },
     {
       title: "Solve a two-step table question",
-      lines: ["Two-step questions need two sums.", "First add the boxes you need.", "Then subtract to find how many more."],
-      example: { type: "table", title: "Cakes baked", headers: ["", "Monday", "Tuesday"], rows: [["Small", "8", "5"], ["Large", "9", "4"]], note: "Small both days is 13. 13 − 9 = 4 more than Large on Monday." },
+      lines: ["Two-step questions need two sums.", "Find every box the question talks about.", "Add the boxes first, then subtract if it asks how many more."],
+      example: { type: "table", title: "Cakes baked", headers: ["", "Monday", "Tuesday"], rows: [["Small", "8", "5"], ["Large", "9", "4"], ["Iced", "3", "2"]], note: "Monday 20, Tuesday 11. 20 − 11 = 9 more on Monday." },
     },
     {
       title: "Solve a two-step data question",

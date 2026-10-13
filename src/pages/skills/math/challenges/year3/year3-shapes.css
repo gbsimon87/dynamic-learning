@@ -1,0 +1,50 @@
+/* Draw-a-shape-from-clues (Drawing 2-D Shapes, slot 4). */
+.clue-shape-clue {
+  max-width: 34rem;
+  margin: 0 auto 1rem;
+  padding: 0.75rem 1rem;
+  border: 2px dashed var(--ck-border);
+  border-radius: 14px;
+  background: var(--ck-muted);
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.clue-shape-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  max-width: 26rem;
+  margin: 0 auto 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .clue-shape-options {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    max-width: 40rem;
+  }
+}
+
+.clue-shape-option {
+  min-height: 64px;
+  padding: 0.5rem;
+  border: 3px solid var(--ck-border);
+  border-radius: 14px;
+  background: var(--ck-muted);
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.clue-shape-option.selected {
+  border-color: var(--ck-accent, currentColor);
+  box-shadow: 0 0 0 3px var(--ck-accent, currentColor);
+}
+
+.clue-shape-option .shape-figure {
+  width: 100%;
+  max-width: 110px;
+  margin: 0.25rem auto 0;
+}

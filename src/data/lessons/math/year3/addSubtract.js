@@ -87,9 +87,9 @@ export const ADD_SUBTRACT_LESSONS = {
       example: { type: "equation", title: "Is 352 + 216 = 568 right?", parts: ["568", "−", "216", "=", "352"], note: "We got back to 352, so yes, it is right." },
     },
     {
-      title: "Show how you checked it",
-      lines: ["Write the opposite sum and work it out.", "Compare your check with the first number.", "Same number means right. Different means wrong."],
-      example: { type: "steps", title: "Someone says 615 − 238 = 387", steps: ["Check: 387 + 238 = 625.", "625 is not 615.", "So 387 is wrong."], note: "The check shows the answer was wrong." },
+      title: "Estimate, then check",
+      lines: ["Round both numbers to the nearest 100 for an estimate.", "An answer far from the estimate is not sensible.", "Then do the inverse to be sure."],
+      example: { type: "steps", title: "Someone says 412 + 279 = 891", steps: ["Estimate: 400 + 300 = 700.", "891 is far from 700, so it is not sensible.", "Check: 891 − 279 = 612.", "612 is not 412, so 891 is wrong."], note: "The right answer is 691, close to 700." },
     },
   ],
   "missing-number-problems": [

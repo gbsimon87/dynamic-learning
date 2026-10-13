@@ -8,6 +8,8 @@ import {
   buildStatisticsProblemQuestions,
 } from "./year3Statistics.js";
 import { symbolCount } from "./statistics.js";
+import { YEAR3_STATISTICS_DATASETS } from "./year3Statistics.js";
+const YEAR3_STATISTICS_DATASETS_KEYS = () => YEAR3_STATISTICS_DATASETS.TABLES.map((table) => table.caption);
 
 function seeded(seed = 12345) {
   let state = seed >>> 0;
@@ -101,11 +103,45 @@ test("one- and two-step problem answers recompute from the visible chart data", 
       let expected;
       if (level === 1) expected = round.rows[2].value - round.rows[0].value;
       if (level === 2) expected = round.rows[0].value + round.rows[1].value;
-      if (level === 3) expected = round.rows[0].cells.column0 + round.rows[0].cells.column1 - round.rows[1].cells.column0;
+      if (level === 3) continue;
       if (level === 4) expected = round.rows[1].value + round.rows[2].value - round.rows[0].value;
       assert.equal(round.answer, expected);
       assert.ok(round.answer > 0);
     }
     if (level === 4) assert.deepEqual(new Set(rounds.map((round) => round.representation)), new Set(["bar", "pictogram", "table"]));
   }
+});
+
+function problemTableExpected(round) {
+  const cell = (label, key) => round.rows.find((row) => row.label === label).cells[key];
+  const colKey = (name) => round.columns.find((column) => column.label === name).key;
+  const total = (key) => round.rows.reduce((sum, row) => sum + row.cells[key], 0);
+  let m;
+  if ((m = round.prompt.match(/in (.+) than in (.+) altogether\?$/))) return total(colKey(m[1])) - total(colKey(m[2]));
+  if ((m = round.prompt.match(/did (.+) and (.+) have altogether/))) return ["column0", "column1"].reduce((s, k) => s + cell(m[1], k) + cell(m[2], k), 0);
+  m = round.prompt.match(/^In (.+), how many more \S+ did (.+) have than (.+) and (.+) put together\?$/);
+  const k = colKey(m[1]);
+  return cell(m[2], k) - cell(m[3], k) - cell(m[4], k);
+}
+
+test("problem-table rounds are their own varied, randomised questions, not the Tables topic's", () => {
+  const tableKeys = new Set(YEAR3_STATISTICS_DATASETS_KEYS());
+  const shapes = new Set();
+  const rowCounts = new Set();
+  const runs = [];
+  for (let seed = 1; seed <= 20; seed += 1) {
+    const rounds = buildStatisticsProblemQuestions(3, seeded(seed));
+    runs.push(JSON.stringify(rounds.map((round) => [round.caption, round.prompt, round.rows])));
+    for (const round of rounds) {
+      assert.equal(round.type, "problem-table");
+      assert.ok(!tableKeys.has(round.caption), `${round.caption} reuses a Tables-topic table`);
+      assert.equal(round.answer, problemTableExpected(round), round.prompt);
+      assert.ok(round.answer > 0, round.prompt);
+      shapes.add(round.shape);
+      rowCounts.add(round.rows.length);
+    }
+  }
+  assert.deepEqual(shapes, new Set(["column-difference", "two-rows-total", "more-than-two"]));
+  assert.deepEqual(rowCounts, new Set([3, 4]));
+  assert.ok(new Set(runs).size > 1, "problem-table rounds must change between runs");
 });

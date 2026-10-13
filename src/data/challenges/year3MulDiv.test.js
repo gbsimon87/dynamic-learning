@@ -9,6 +9,7 @@ import {
   buildMulDivProblemQuestions,
   multiplyPartition,
   dividePartition,
+  partitionableQuotients,
   arrayRows,
 } from "./year3MulDiv.js";
 
@@ -251,4 +252,42 @@ test("arrayRows draws the rectangle it is asked for", () => {
   assert.equal(grid.length, 4);
   assert.ok(grid.every((row) => row.length === 7));
   assert.equal(new Set(grid.flat()).size, 28, "cell keys must be unique");
+});
+
+/** Many seeds, for bugs that only show on a rare draw such as c = 1. */
+const MANY_SEEDS = Array.from({ length: 400 }, (_, i) => (i + 1) / 401);
+
+test("no story says '1 cakes' or '1 more pages'", () => {
+  const plurals = "cakes|chairs|pages|pots|packs|sweets|pencils|stickers|eggs|boxes|piles|bowls|cherries|cards|buses|bags|tickets|books|shelves|crates|oranges|classes|pieces|trays|tables|chapters|children";
+  const bad = new RegExp(`(^|[^0-9])1 (more |whole )?(${plurals})\\b|(^|[^0-9])1 (more |whole )?\\w+s (are|were)\\b`);
+  for (const build of builders) {
+    for (let level = 1; level <= 4; level++) {
+      for (const seed of MANY_SEEDS) {
+        for (const round of build(level, seeded(seed))) {
+          if (typeof round.prompt !== "string") continue;
+          assert.ok(!bad.test(round.prompt), round.prompt);
+        }
+      }
+    }
+  }
+});
+
+test("a division partition uses a tens number and a times-table fact", () => {
+  for (const b of YEAR3_TABLES) {
+    const quotients = partitionableQuotients(b);
+    assert.ok(quotients.length > 0, `no quotients for ${b}`);
+    for (const quotient of quotients) {
+      const split = dividePartition(b, quotient);
+      const [tensLabel, onesLabel] = split.cells.map((cell) => Number(cell.label.split(" ÷ ")[0]));
+      assert.equal(tensLabel % 10, 0, `${split.heading}: ${tensLabel} is not a tens number`);
+      assert.equal(tensLabel % b, 0, split.heading);
+      assert.equal(onesLabel % b, 0, split.heading);
+      assert.ok(onesLabel > 0 && onesLabel <= 12 * b, `${split.heading}: ${onesLabel} ÷ ${b} is not a known fact`);
+      assert.equal(tensLabel + onesLabel, split.a);
+    }
+  }
+  const ninetyNine = dividePartition(3, 33);
+  assert.deepEqual(ninetyNine.cells.map((cell) => cell.label), ["90 ÷ 3", "9 ÷ 3"]);
+  const fiftyTwo = dividePartition(4, 13);
+  assert.deepEqual(fiftyTwo.cells.map((cell) => cell.label), ["40 ÷ 4", "12 ÷ 4"]);
 });

@@ -164,6 +164,60 @@ export function buildTableQuestions(level, rng = Math.random) {
   });
 }
 
+/**
+ * Problem-table rounds are generated fresh each run (3 or 4 rows, random
+ * values) so they never repeat the fixed TABLES used by the Tables topic, and
+ * each uses one of three different two-step question shapes.
+ */
+const PROBLEM_TABLE_CONTEXTS = [
+  { caption: "Shells collected", unit: "shells", columns: ["Saturday", "Sunday"], labels: ["Kai", "Lena", "Omar", "Zara"] },
+  { caption: "Laps run", unit: "laps", columns: ["Week 1", "Week 2"], labels: ["Ruby", "Sam", "Theo", "Uma"] },
+  { caption: "Pancakes made", unit: "pancakes", columns: ["Breakfast", "Lunch"], labels: ["Plain", "Lemon", "Jam", "Honey"] },
+  { caption: "Seeds planted", unit: "seeds", columns: ["Tuesday", "Thursday"], labels: ["Beans", "Peas", "Carrots", "Leeks"] },
+  { caption: "Cards swapped", unit: "cards", columns: ["Break", "Lunchtime"], labels: ["Finn", "Gina", "Hari", "Isla"] },
+  { caption: "Ducks counted", unit: "ducks", columns: ["Morning", "Evening"], labels: ["Pond", "River", "Lake", "Canal"] },
+];
+
+const PROBLEM_TABLE_SHAPES = ["column-difference", "two-rows-total", "more-than-two"];
+
+function randInt(min, max, rng) {
+  return min + Math.floor(rng() * (max - min + 1));
+}
+
+function problemTableRound(context, shape, rng) {
+  const rowCount = rng() < 0.5 ? 3 : 4;
+  const labels = shuffle(context.labels, rng).slice(0, rowCount);
+  const values = labels.map(() => [randInt(3, 15, rng), randInt(3, 15, rng)]);
+  const pick = shuffle(labels.map((_, i) => i), rng);
+  const col = randInt(0, 1, rng);
+  let prompt;
+  let answer;
+  const unit = context.unit;
+  const cols = context.columns;
+
+  if (shape === "column-difference") {
+    let totals = [0, 1].map((c) => values.reduce((sum, row) => sum + row[c], 0));
+    if (totals[0] === totals[1]) { values[0][0] += 2; totals = [0, 1].map((c) => values.reduce((sum, row) => sum + row[c], 0)); }
+    const [big, small] = totals[0] > totals[1] ? [0, 1] : [1, 0];
+    answer = totals[big] - totals[small];
+    prompt = `How many more ${unit} were there in ${cols[big]} than in ${cols[small]} altogether?`;
+  } else if (shape === "two-rows-total") {
+    const [a, b] = pick;
+    answer = values[a][0] + values[a][1] + values[b][0] + values[b][1];
+    prompt = `How many ${unit} did ${labels[a]} and ${labels[b]} have altogether, across both columns?`;
+  } else {
+    const [top, y, z] = pick;
+    values[y][col] = randInt(2, 6, rng);
+    values[z][col] = randInt(2, 6, rng);
+    values[top][col] = values[y][col] + values[z][col] + randInt(2, 8, rng);
+    answer = values[top][col] - (values[y][col] + values[z][col]);
+    prompt = `In ${cols[col]}, how many more ${unit} did ${labels[top]} have than ${labels[y]} and ${labels[z]} put together?`;
+  }
+
+  const view = tableView({ ...context, labels, values });
+  return { ...view, type: "problem-table", shape, prompt, answer };
+}
+
 export function buildStatisticsProblemQuestions(level, rng = Math.random) {
   assertLevel(level);
   return six(rng).map((dataset, index) => {
@@ -180,16 +234,7 @@ export function buildStatisticsProblemQuestions(level, rng = Math.random) {
       prompt: `How many ${dataset.unit} are shown for ${rows[0].label} and ${rows[1].label} altogether?`,
       answer: rows[0].value + rows[1].value,
     };
-    if (level === 3) {
-      const source = tableView(TABLES[index]);
-      const first = source.rows[0];
-      const second = source.rows[1];
-      return {
-        ...source, type: "problem-table",
-        prompt: `How many more ${source.unit} did ${first.label} have across both columns than ${second.label} had in ${source.columns[0].label}?`,
-        answer: first.cells.column0 + first.cells.column1 - second.cells.column0,
-      };
-    }
+    if (level === 3) return problemTableRound(PROBLEM_TABLE_CONTEXTS[index], PROBLEM_TABLE_SHAPES[index % PROBLEM_TABLE_SHAPES.length], rng);
     const representation = ["bar", "pictogram", "table"][index % 3];
     return {
       ...common, type: "problem-mixed", representation,
@@ -207,4 +252,4 @@ export const YEAR3_STATISTICS_BUILDERS = {
   problems: buildStatisticsProblemQuestions,
 };
 
-export const YEAR3_STATISTICS_DATASETS = { DATASETS, TABLES };
+export const YEAR3_STATISTICS_DATASETS = { DATASETS, TABLES, PROBLEM_TABLE_CONTEXTS };

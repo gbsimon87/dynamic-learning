@@ -32,6 +32,40 @@ function estimateOptions(answer, place, rng) {
   return shuffleValues(candidates, rng);
 }
 
+function randomInt(rng, low, high) {
+  return low + Math.floor(rng() * (high - low + 1));
+}
+
+/**
+ * Slot 4: "estimate the answer to a calculation and use inverse operations to
+ * check answers" — both halves of the statutory sentence on one claim. Wrong
+ * claims are out by 200, which rounding to the nearest 100 always exposes
+ * (an estimate is never more than 100 from the exact answer), so the estimate
+ * really is enough to spot them before the inverse confirms it.
+ */
+export function sensibleClaim(rng, operation, isCorrect) {
+  for (let guard = 0; guard < 200; guard++) {
+    const a = randomInt(rng, operation === "add" ? 120 : 420, operation === "add" ? 560 : 960);
+    const b = randomInt(rng, 110, operation === "add" ? 380 : a - 120);
+    if (a % 10 === 0 || b % 10 === 0) continue;
+    const exact = operation === "add" ? a + b : a - b;
+    const error = isCorrect ? 0 : (rng() < 0.5 ? -200 : 200);
+    const reported = exact + error;
+    const estimate = operation === "add"
+      ? roundTo(a, 100) + roundTo(b, 100)
+      : roundTo(a, 100) - roundTo(b, 100);
+    const inverse = inverseResult(reported, b, operation);
+    const values = [exact, reported, estimate, inverse];
+    if (values.some((value) => value < 0 || value > 999)) continue;
+    // Keep every estimate choice (estimate − 100 … estimate + 200) inside
+    // 0–1000, and keep the exact answer strictly nearer the estimate than a
+    // wrong claim can ever be.
+    if (estimate < 100 || estimate > 700 || Math.abs(exact - estimate) >= 100) continue;
+    return { a, b, operation, reported, estimate, inverse, isCorrect };
+  }
+  throw new Error("no claim found");
+}
+
 export function buildEstimatingQuestions(level, rng) {
   if (level === 1 || level === 2) {
     const place = level === 1 ? 10 : 100;
@@ -47,7 +81,17 @@ export function buildEstimatingQuestions(level, rng) {
       };
     });
   }
-  if (level === 3 || level === 4) {
+  if (level === 4) {
+    const plans = shuffleValues([
+      ["add", true], ["add", false], ["add", true],
+      ["subtract", false], ["subtract", true], ["subtract", false],
+    ], rng);
+    return plans.map(([operation, isCorrect]) => {
+      const claim = sensibleClaim(rng, operation, isCorrect);
+      return { ...claim, estimateOptions: estimateOptions(claim.estimate, 100, rng) };
+    });
+  }
+  if (level === 3) {
     return shuffleValues(CLAIMS, rng).map(({ a, b, operation, error }) => {
       const exact = operation === "add" ? a + b : a - b;
       const reported = exact + error;

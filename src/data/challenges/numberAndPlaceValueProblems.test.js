@@ -151,6 +151,19 @@ test("every word problem's answer comes from working its prompt states", () => {
   }
 });
 
+// Slot 4 was a fixed list of six problems, so every run was identical.
+test("word problems are regenerated per run and stay within 3 digits", () => {
+  for (let seed = 1; seed <= 60; seed++) {
+    for (const q of buildProblemQuestions(4, seeded(seed))) {
+      assert.equal(q.answer, evaluateWorking(q.working));
+      assert.ok(q.answer >= 100 && q.answer <= 999, `"${q.prompt}" gives ${q.answer}`);
+      for (const number of q.working.match(/\d+/g)) assert.ok(q.prompt.includes(number));
+    }
+  }
+  const prompts = (seed) => buildProblemQuestions(4, seeded(seed)).map((q) => q.prompt).sort().join("|");
+  assert.notEqual(prompts(5), prompts(6));
+});
+
 test("an unknown level is refused rather than silently empty", () => {
   assert.throws(() => buildProblemQuestions(6, Math.random), RangeError);
 });
