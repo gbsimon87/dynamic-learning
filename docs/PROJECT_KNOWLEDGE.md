@@ -1638,6 +1638,30 @@ explicitly use a reorder adapter because jsdom has no drag-collision layout.
 The complete inventory and findings are in
 [year-4-maths-review.md](curriculum/year-4-maths-review.md).
 
+### Bix's lesson screens for every subject (2026-10-13)
+
+Geography's start screen (banner, Bix's numbered notes in a speech bubble, a
+picture, a big start button, notes reopenable mid-run) is now a shared layer
+for the other subjects. `Challenge.jsx` looks up
+`getLesson(subject, year, topicId, slot)` in `src/data/lessons/` and, when one
+exists, wraps the loaded challenge in
+`src/components/challenge/lesson/LessonFrame.jsx`. The challenge itself, its
+questions and its `onComplete` are untouched; no lesson means it starts
+straight away as before. Geography keeps its own `GeographyChallenge`.
+
+- Data: `src/data/lessons/<subject>/year<n>/<category>.js`, one file per
+  category, merged by that year's `index.js`. Each slot is
+  `{ title, lines: [3], example }`; example types are `equation`, `column`,
+  `steps`, `jumps`, `bar`, `groups` and `table` (`LessonExample.jsx`).
+- `lintLessons.js` (run by `lessons.test.js`) demands 4 lessons for every topic,
+  3 lines each, Geography's per-year word limits, British spelling, and
+  re-computes every numeric equation, column sum and counting sequence.
+  `node scripts/lintLessonFile.mjs <file> <EXPORT> <category id>` lints one file.
+- Slot colours are `--light-lesson-slot-1..4` / `--dark-lesson-slot-1..4` in
+  App.css (aliases of Geography's slot colours).
+- Rollout order (owner, 2026-10-13): Maths, English, Science, History; within
+  each, Years 3, 4, 2, 1. Done: Maths Year 3.
+
 ### Curriculum Mode — built challenges
 **Year 2 Mathematics** has all thirty-nine topics built — the year is complete:
 

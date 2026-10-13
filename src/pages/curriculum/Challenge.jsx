@@ -1,5 +1,8 @@
 import { Link, useParams, useNavigate } from "react-router";
 import { useCallback, useEffect, useState, Suspense } from "react";
+import LessonFrame from "../../components/challenge/lesson/LessonFrame";
+import { getLesson } from "../../data/lessons/index.js";
+import { getSubjectName } from "../../data/curriculumRegistry";
 import "./Challenge.css";
 
 /**
@@ -138,11 +141,16 @@ function Challenge({ onComplete }) {
     );
   }
 
-  return (
+  // Bix's lesson screen comes first wherever one is written for this slot.
+  const lesson = getLesson(subject, year, topicId, challengeId);
+  const challenge = (
     <Suspense fallback={<p>Loading challenge...</p>}>
       <ChallengeComponent onComplete={onComplete} />
     </Suspense>
   );
+  return lesson
+    ? <LessonFrame subjectName={getSubjectName(subject)} level={challengeId} lesson={lesson}>{challenge}</LessonFrame>
+    : challenge;
 }
 
 export default Challenge;

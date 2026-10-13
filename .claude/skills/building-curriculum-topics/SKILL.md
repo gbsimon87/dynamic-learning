@@ -273,6 +273,17 @@ full run redirects to the curriculum page and increments the topic counter;
 `npm run lint`, `npm test` and `npm run build` pass; and the topic is legible in
 **both** themes.
 
+## Write Bix's four lessons
+
+Every Maths topic (and, as the rollout reaches them, English, Science and
+History) opens each challenge on Bix's lesson screen. Add the topic's four
+`{ title, lines, example }` entries to
+`src/data/lessons/<subject>/year<n>/<category>.js`; each must teach exactly
+what its own challenge asks, in the representation that challenge shows.
+`src/data/lessons/math/year3/fractions.js` is the model, and
+`lessons.test.js` fails a year with a topic missing. See
+`docs/PROJECT_KNOWLEDGE.md` "Bix's lesson screens".
+
 ## Finally
 
 Update the table in `docs/PROJECT_KNOWLEDGE.md` §5. If an idea in

@@ -102,6 +102,11 @@
   --light-geo-evidence: #2f8a4a;
   --light-geo-connect: #8b5cc4;
   --light-geo-night: #2c3566;
+  /* Lesson screens (any subject): one colour per challenge slot, always paired with words. */
+  --light-lesson-slot-1: var(--light-geo-explore);
+  --light-lesson-slot-2: var(--light-geo-locate);
+  --light-lesson-slot-3: var(--light-geo-evidence);
+  --light-lesson-slot-4: var(--light-geo-connect);
 
   --dark-geo-sky: #27445e;
   --dark-geo-sky-sunny: #4a4130;
@@ -158,6 +163,10 @@
   --dark-geo-evidence: #84dc9a;
   --dark-geo-connect: #c6a6f0;
   --dark-geo-night: #161b38;
+  --dark-lesson-slot-1: var(--dark-geo-explore);
+  --dark-lesson-slot-2: var(--dark-geo-locate);
+  --dark-lesson-slot-3: var(--dark-geo-evidence);
+  --dark-lesson-slot-4: var(--dark-geo-connect);
 
   /* Readable text ON an accent-filled surface.
      White on --light-accent measures only 3.17:1 and --light-bg on it 2.66:1,
