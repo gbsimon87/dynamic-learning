@@ -12,6 +12,7 @@ inventory for each pathway.
 | 1 | [English](../src/data/year1EnglishCurriculum.js) | 38 | 152 | Complete |
 | 1 | [Science](../src/data/year1ScienceCurriculum.js) | 16 | 64 | Complete |
 | 1 | [History](../src/data/year1HistoryCurriculum.js) | 14 | 56 | Complete |
+| 1 | [Geography](../src/data/year1GeographyCurriculum.js) | 12 | 48 | Complete |
 | 2 | [Maths](../src/data/year2MathCurriculum.js) | 39 | 156 | Complete |
 | 2 | [English](../src/data/year2EnglishCurriculum.js) | 39 | 156 | Complete |
 | 2 | [Science](../src/data/year2ScienceCurriculum.js) | 19 | 76 | Complete |
@@ -24,6 +25,7 @@ inventory for each pathway.
 | 4 | [Maths](../src/data/year4MathCurriculum.js) | 42 | 168 | Complete |
 | 4 | [English](../src/data/year4EnglishCurriculum.js) | 33 | 132 | Complete |
 | 4 | [Science](../src/data/year4ScienceCurriculum.js) | 20 | 80 | Complete |
+| 4 | [Geography](../src/data/year4GeographyCurriculum.js) | 16 | 64 | Complete |
 | 4 | [History](../src/data/year4HistoryCurriculum.js) | 18 | 72 | Complete |
 | 5 | All subjects | 0 | 0 | Not implemented |
 | 6 | All subjects | 0 | 0 | Not implemented |
@@ -37,10 +39,11 @@ Geography's standalone Skills Mode games and saved programmes in
 Specifications for Years 1–4 Geography were drafted on 2026-10-13: 58 proposed
 topics / 232 challenge briefs, with an embedded implementation tracker in each
 year spec and the shared spec. See [Geography specs](geography-curriculum/README.md).
-A subsequent owner request implemented Year 3: 16 topics / 64 challenges,
-included in the totals above. Years 1, 2 and 4 remain draft specifications.
+Subsequent owner requests implemented Year 3 and Year 4: 16 topics / 64 challenges
+each, included in the totals above. Year 1 (12 topics / 48 challenges) followed
+on 2026-10-13; see "Curriculum Mode — Year 1 Geography" below.
 Geography uses the existing per-child progress tree and stays outside the
-overall Year 3 award. Physical-device voice/touch review remains pending.
+overall year awards. Physical-device voice/touch review remains pending.
 
 The homepage curriculum section highlights this inventory in
 `HomeCurriculumOverview.jsx`: Years 1–6 and every registry subject, topic counts,
@@ -361,6 +364,8 @@ Year 3 Geography: **5 categories / 16 topics / 64 challenges**, all built
 (2026-10-13; IDs and availability locked in `year3GeographyCurriculum.test.js`).
 Four notes cards and banks per topic, five rounds per run. Registered outside
 the year award; no progress schema, document-key or unlock-rule changes.
+Year 4 Geography: **5 categories / 16 topics / 64 challenges**, all built
+(2026-10-13; IDs and wrapper paths locked in `year4GeographyCurriculum.test.js`).
 Year 4 History: **2 categories / 18 topics / 72 challenges**, all built
 (2026-10-12; identifiers locked in `year4HistoryCurriculum.test.js`). Five rounds,
 source-maker/purpose questions and connected KS2 timeline; registered outside
@@ -1179,6 +1184,104 @@ contrast measured above 4.5:1 in both themes. The existing 320 px navbar overflo
 was fixed by wrapping controls at full touch size and hiding the bar using its
 measured height. Remaining device checks: `history-curriculum/HISTORY_TRACKER.md`.
 
+### Curriculum Mode — Year 1 Geography (2026-10-13)
+
+All **12 topics / 48 challenges** are built across Our Place, The United Kingdom,
+The Wider World, and Weather and Exploring, following the
+[Year 1 spec](geography-curriculum/year-1-design-spec.md) exactly (IDs locked in
+`year1GeographyCurriculum.test.js`). Registry `countsTowardYear: false` keeps the
+Year 1 award at Maths/English/Science/History; progress shape, keys and unlock
+rules are unchanged. Signup now offers Geography for Year 1.
+
+- **Banks:** `src/data/challenges/geography/year1/` — 352 templates, ≥6 per slot,
+  4 rounds per run, 3 choices, 2–3 cards per sort/order, notes ≤30 words and
+  sentences ≤10 words. `GEOGRAPHY_AGES[1]` drives both the builder's round count
+  and the lint; the engine now reads rounds/minimum bank from the topic's year.
+- **Pictures:** a new `y1` visual type rendered by
+  `components/challenge/geography/Year1Drawing.jsx` (+ `Year1Sprites.jsx`,
+  `year1.css`): original flat illustrations (feature/weather/season sprites,
+  school/coast/countryside/town scenes, ground/aerial/plan views, compass grids,
+  a viewpoint scene for left/right, weather records, window views, a season
+  cycle), a four-nations UK map and a colour-by-continent world map/orthographic
+  globe. Map data: `src/assets/geography/year1-maps.json`, built by
+  `scripts/geography-assets/build-year1-assets.mjs` from public-domain Natural
+  Earth (Russia split at 60°E; French Guiana not drawn as Europe). Every colour
+  is a `--light-geo-*` / `--dark-geo-*` token in `App.css`.
+- **Grown-up activities** (after all four slots): Around Our School, Daily
+  Weather, Seasons in the UK, Routes and Simple Maps.
+- **Field-notes redesign (all Geography years):** the start screen is now a
+  sky banner with a slot stamp (🔍/🗺️/🕵️/💡, colour per slot), Bix "saying" the
+  numbered notes in a speech bubble, soft picture cards with highlighted
+  evidence lines and pill buttons, a chunky "Let's explore!" button and a
+  leafy grown-up activity card. Older maps use sea-blue water, green land and
+  blue rivers. Accessible names used by tests are unchanged.
+- **Verified:** lint, unit and component tests (all 48 runs played through
+  with hints and notes reopening) and build; every Year 1 challenge screenshot
+  in light (900 px) and dark (390 px) with no horizontal overflow. Physical
+  device voice/touch review is still pending.
+
+### Curriculum Mode — Year 2 Geography (2026-10-13)
+
+All **14 topics / 56 challenges** are built across World and UK Knowledge,
+Weather and World Patterns, Two Small Places, Making and Reading Maps, and
+Local Fieldwork. The owner requested implementation using the Year 2 spec.
+`year2GeographyCurriculum.js` and 14 certificate outcomes follow its exact
+names. Registry `countsTowardYear: false` preserves Year 2's Maths/English/
+Science year-award requirements; progress keys, shape and unlock rules remain
+unchanged. Signup now offers Geography for Year 2.
+
+`src/data/challenges/geography/year2/` holds 403 authored templates, at least
+seven per slot. Runs sample five without replacement. Year 2 notes stay within
+45 words and sentences/prompts/choices within 12 words. The shared notes-first
+wrapper preserves responses when notes reopen, offers requested narration,
+and uses ordinary choices, sorts and ordering with existing retries/hints.
+`KS1Drawing.jsx` supplies four-direction and rotated compass views, simple
+landmark plans and shape/letter keys without KS2 grid-reference labels. World
+and UK atlas geometry is reused. Visible evidence and text equivalents remain
+available throughout answering.
+
+Small-place studies stay within Whitby's harbour/adjoining streets and Kampong
+Peramu's neighbourhood/nearby river in Kampong Ayer, Brunei. Four bundled,
+inspected photographs have source/licence/date/checksum records and credits:
+CC0 Whitby low-tide ground view and Peramu home/prayer hall; CC BY-SA 2.0 true
+oblique aerial of Whitby's nearby church/abbey/sea. Captions describe actual
+visible features. Example weather logs, paired day records, school observations
+and local-route counts are explicitly invented teaching data. One view or day
+is not used to claim a whole country's homes, journeys or climate.
+
+Optional grown-up weather, original-map, grounds and local-walk cards provide
+materials, steps, paper prompts and home/window alternatives. They appear on
+replay and after topic completion using the existing read-only activity path.
+No address, school name, GPS, upload or fieldwork completion is collected.
+
+**Verification:** `npm run lint`, `npm test`, `npm run build` pass: **1,772 unit
+and 323 component tests passed**, four database-dependent tests skipped. All
+56 five-round component runs complete once with combos; retries/hints, notes
+state, focus, requested narration, image failure/retry, per-photo credits,
+source/asset validation, compass/route vectors and weather counts are checked.
+The localhost API security test required sandbox escalation. Store tests
+preserve other child/year/subject documents; prior year awards remain available.
+Browser controls were unavailable, so desktop/phone layouts, visual theme checks,
+real drag/keyboard ordering and switching UI remain pending. Ordering state uses
+a mock control in jsdom. Physical phone/tablet voice/touch review is also pending.
+Vite's existing large-chunk warning remains. No deployment was made.
+**Year 2 bug/security review (2026-10-13):** all 403 templates were exercised
+through their controls and all 56 runs replayed. Fixed positional ambiguity,
+missing shape descriptions, tally narration, an unverified photo-sketch north
+arrow and overbroad country/continent notes. The Year 2 wrapper safely rejects
+inherited/invalid IDs and slots, and resets/cancels old runs on prop changes.
+Regression tests cover real route gates and once-only saves, profile hydration
+and acknowledgement races, remount/replay, HTML escaping and asset fallbacks.
+No progress/ID/unlock/reward changes. Latest checks: repository-wide lint,
+1,785 unit + 349 component tests (four DB tests skipped), build and production
+npm audit pass; zero known production vulnerabilities. Year 2-specific tests
+are 29 unit + 32 component. Browser/device review remains pending. Details:
+[Year 2 bug/security review](geography-curriculum/YEAR2_BUG_SECURITY_REVIEW.md).
+
+See [Year 2 spec/tracker](geography-curriculum/year-2-design-spec.md) and
+[source pack](geography-curriculum/YEAR2_SOURCE_PACK.md). Digital completion
+prepares for, and does not certify, original map drawing or real fieldwork.
+
 ### Curriculum Mode — Year 3 Geography (2026-10-13)
 
 All **16 topics / 64 challenges** are implemented across The UK and Europe,
@@ -1243,8 +1346,41 @@ new data collection or change to progress storage or award requirements.
 See [Year 3 spec/tracker](geography-curriculum/year-3-design-spec.md) and
 [source pack](geography-curriculum/YEAR3_SOURCE_PACK.md) for sources and exact
 verification scope. This introductory digital path does not certify full KS2
-coverage, independent fieldwork or extended explanations. Years 1, 2 and 4
-Geography are still unimplemented.
+coverage, independent fieldwork or extended explanations. Year 1 Geography
+remains unimplemented; Year 2 is documented below.
+
+### Curriculum Mode — Year 4 Geography (2026-10-13)
+
+All **16 topics / 64 challenges** are implemented across North and South America,
+Climate and the Globe, Rivers and Changing Landscapes, Settlements and Resources,
+and Mapping and Fieldwork Enquiries, from the Year 4 design spec at the owner's request.
+The registry entry uses `countsTowardYear: false`, so Year 4 awards (Maths,
+English, Science) are unchanged; no stored progress shape, document key or unlock
+rule changed. Subjects offered for Year 4 now include Geography.
+
+The Year 3 engine is generalised: `GEOGRAPHY_AGES` gives Year 4 limits (notes ≤70
+words, sentences ≤18), `topic(lessons, activity, year)` stamps the year, and
+`lintGeographyTopic` reads it. 582 authored templates (≥7 per slot) live in
+`src/data/challenges/geography/year4/` (one file per topic, `group1–5.js`
+registries, `sources1–5.js`). `GeographyVisual` gained `river`, `daynight`,
+`landuse`, `table`, paired-source rendering, an interactive `explorer` (overview/
+detail views plus a thematic layer; buttons named "Map view: …"/"Map layer: …")
+and `tenths`/`window` on grids; tenths grids describe each marker's tenths for
+screen readers and narration. New Natural Earth views (`northAmerica`,
+`southAmerica`, `washington`) and river lines, and NASA POWER 2001–2025 climate
+records for 12 places, come from `scripts/geography-assets/build-year4-assets.mjs`.
+Six-figure rounds reuse the Year 3 OS extract and key. The fieldwork topic's grown-up
+card shows during a run and after completion (`geographyActivities.js`).
+
+**Verification:** lint clean; 1,748 unit tests (4 database-dependent skipped) and
+303 component tests pass; build passes. Every topic is checked with 60-seed runs,
+marker/geometry tests (cities inside their country, Washington places inside the
+state, rivers present) and derived-answer tests; all 64 wrapper runs are played
+through the real controls in jsdom. Maps, rivers, day/night, tenths grids and the
+explorer were inspected in a desktop browser. **Not done:** a full in-app playthrough
+of every slot, both themes at phone width, and physical-device voice/touch. Several
+sources are secondary (see [source pack](geography-curriculum/YEAR4_SOURCE_PACK.md)).
+Two older tests that hard-coded Year 4's subject list were updated to include Geography.
 
 ### Curriculum Mode — Year 3 History (2026-10-12)
 
@@ -3246,7 +3382,7 @@ not by itself deliver a standalone game or its proposed reward flow.
 | #12 Phonics/rhyming | [Skills routes](../src/main.jsx), English banks, [speech utility](../src/utils/speech.js). | No standalone sound-it-out, rhyming-match or syllable-splitter pack or dedicated phoneme audio. Syllables in suffix questions are different content. |
 | #13 Story games | [SettingsCharactersAndPlotGame](../src/pages/skills/english/challenges/year3/SettingsCharactersAndPlotGame.jsx), [stories.json](../src/data/stories.json), [Skills routes](../src/main.jsx). | Curriculum plot-sentence ordering and guided story planning exist; free-choice generation and standalone picture sequencing do not. |
 | #14 Offline/PWA | [Dependencies](../package.json), [entry HTML](../index.html), `public/`, store drivers. | No web-app manifest/service-worker registration/PWA plugin or offline API write/conflict flow. The Science asset manifest is unrelated. |
-| #15 Geography curriculum | [Specs and embedded trackers](geography-curriculum/README.md), [curriculum registry](../src/data/curriculumRegistry.js). | Years 1–4 specs drafted 2026-10-13: 58 proposed topics / 232 briefs and KS1/KS2 crosswalks. Year 3 implemented: 16 topics / 64 verified slots; Years 1, 2 and 4 and physical-device review remain. Skills games remain standalone; Geography is excluded from overall year awards. |
+| #15 Geography curriculum | [Specs and embedded trackers](geography-curriculum/README.md), [curriculum registry](../src/data/curriculumRegistry.js). | Years 1–4 specs drafted 2026-10-13: 58 proposed topics / 232 briefs and KS1/KS2 crosswalks. Years 2–4 implemented: Year 2 has 14 topics / 56 slots; Years 3–4 have 16 / 64 each. Year 1 and browser/device review remain. Skills games remain standalone; Geography is excluded from overall year awards. |
 | #16 Year 1–2 English | [Curriculum registry](../src/data/curriculumRegistry.js), English datasets/challenge directories. | Completed 2026-10-11: Year 1 has 38 topics / 152 challenges and Year 2 has 39 / 156. Years 1–4 English are registered and implemented. |
 | #17 Meteor benchmark | [Meteor controller](../src/pages/skills/geography/meteorExperiment.js), [tracker](solar-system-meteor/IMPLEMENTATION_TRACKER.md). | Feature exists; the required physical phone/tablet timing evidence is explicitly outstanding. |
 | #18 Science diagrams | [Follow-up checklist](science-curriculum/DIAGRAM_REVIEW_FOLLOWUPS.md), diagram components and `scripts/science-assets/`. | All 11 checklist items remain open in source: dog skeleton, leaf water, muscle geometry/titles, labels/Plants, renderer sandboxing, checksums, cache path validation, SVG stripping and built licence notices. |
@@ -3376,6 +3512,9 @@ Year 3 to 1066. Its year-award exclusion preserves existing certificates.
 Year 3 Geography (2026-10-13) adds a notes/evidence wrapper on `DataChallenge`,
 licensed offline maps/photos and matched climate records. Its new registry entry
 uses `countsTowardYear: false`; existing Year 3 certificates remain available.
+Year 2 Geography (2026-10-13) reuses that engine with KS1 compass/landmark
+visuals, shorter age limits, bounded place studies and read-only grown-up cards.
+Its 56 wrappers, exact outcomes and registry entry preserve existing year awards.
 
 1. Save the programme of study verbatim from the DfE PDF in `docs/curriculum/`, with a mapping
    section, and get the topic titles signed off. Titles are ids.

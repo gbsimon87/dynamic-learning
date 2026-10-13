@@ -13,7 +13,7 @@
       "sha256": "41939be08151bb5dd938977dfcc35d41412d4e49b66863ade4f18ffc232439e0",
       "alt": "Sheep stand in a grassy field. Stone farm buildings sit below a steep mountain slope.",
       "adapted": "Resized and converted to WebP; photographic content unchanged.",
-      "attribution": "Sheep at Gatesgarth Farm \u2014 Chrisdougpitt, CC BY-SA 4.0."
+      "attribution": "Sheep at Gatesgarth Farm — Chrisdougpitt, CC BY-SA 4.0."
     },
     "naples-port": {
       "file": "images/naples-port.webp",
@@ -28,12 +28,12 @@
       "sha256": "44bb98a3d4ff24dede1f099b41da85f9f36942e86c2592d404a0b2a54730e7a4",
       "alt": "Boats sit on harbour water. Buildings cover the shore and a hillside behind them.",
       "adapted": "Resized and converted to WebP; photographic content unchanged.",
-      "attribution": "Boats and homes beside Naples harbour \u2014 Lance Mountain, CC BY 2.0."
+      "attribution": "Boats and homes beside Naples harbour — Lance Mountain, CC BY 2.0."
     },
     "os-derwentwater": {
       "file": "images/os-derwentwater.webp",
       "title": "OS extract: Keswick and Derwentwater",
-      "place": "E322000\u2013330000, N519000\u2013527000, British National Grid",
+      "place": "E322000–330000, N519000–527000, British National Grid",
       "creator": "Ordnance Survey",
       "sourceUrl": "https://api.os.uk/downloads/v1/products/250kScaleColourRaster",
       "licence": "OGL v3",
@@ -43,7 +43,7 @@
       "sha256": "1b3b42a244627cd0b6f6ee8fb2700e89da1f08de05b16fc9260147384f2a01ea",
       "alt": "Keswick is north of Derwentwater. Pale blue outlined areas show lake water. Green patches show woodland.",
       "adapted": "Cropped from the original OS product and converted to WebP.",
-      "attribution": "Contains OS data \u00a9 Crown copyright and database right 2026."
+      "attribution": "Contains OS data © Crown copyright and database right 2026."
     },
     "os-land-key": {
       "file": "images/os-land-key.webp",
@@ -58,7 +58,7 @@
       "sha256": "553a5c7412d693803ec7cf49a2dcc3e192f3b53d20cdf8f341f8dc0af5da2849",
       "alt": "The OS key shows grey building areas and green woodland patches.",
       "adapted": "Cropped from the original OS product and converted to WebP.",
-      "attribution": "Contains OS data \u00a9 Crown copyright and database right 2026."
+      "attribution": "Contains OS data © Crown copyright and database right 2026."
     },
     "os-water-key": {
       "file": "images/os-water-key.webp",
@@ -73,7 +73,67 @@
       "sha256": "28918199a039740e26f60931ff62cebbf6ffcbb8dd4f2ead620758c826fdbee2",
       "alt": "The OS key shows a pale blue lake with a blue outline. A blue line shows a canal.",
       "adapted": "Cropped from the original OS product and converted to WebP.",
-      "attribution": "Contains OS data \u00a9 Crown copyright and database right 2026."
+      "attribution": "Contains OS data © Crown copyright and database right 2026."
+    },
+    "whitby-harbour": {
+      "file": "images/whitby-harbour.webp",
+      "title": "Whitby harbour with St Mary's Church",
+      "place": "Whitby harbour, England",
+      "creator": "Poliphilo",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Whitby_harbour_with_St_Mary%27s_church_behind.JPG",
+      "licence": "CC0 1.0",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "date": "2013-01-29 (uploader date)",
+      "retrieved": "2026-10-13",
+      "sha256": "4cc5c177c0a58704d55e3875071e378dd3bc06381b2b753a3f8645806402437f",
+      "alt": "A row of buildings lines the harbour edge. Mud and a little water are visible at low tide. St Mary's Church stands on the hill behind.",
+      "adapted": "Resized and converted to WebP; photographic content unchanged.",
+      "attribution": "Whitby harbour with St Mary's Church — Poliphilo, CC0 1.0."
+    },
+    "whitby-aerial": {
+      "file": "images/whitby-aerial.webp",
+      "title": "Whitby Abbey: aerial 2018",
+      "place": "Landmarks beside Whitby harbour study area, England",
+      "creator": "Chris",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Whitby_Abbey,_aerial_2018_-_geograph.org.uk_-_5913593.jpg",
+      "licence": "CC BY-SA 2.0",
+      "licenceUrl": "https://creativecommons.org/licenses/by-sa/2.0/",
+      "date": "2018-07-04",
+      "retrieved": "2026-10-13",
+      "sha256": "976715b0ae2123b2eed7f02ab692ee1d152bf19074e4a939acf80cca433402c4",
+      "alt": "An oblique aerial photograph shows sea beyond St Mary's Church on the left, abbey ruins in the middle, and nearby buildings.",
+      "adapted": "Resized and converted to WebP; photographic content unchanged.",
+      "attribution": "Whitby Abbey: aerial 2018 — Chris, CC BY-SA 2.0."
+    },
+    "peramu-homes": {
+      "file": "images/peramu-homes.webp",
+      "title": "Decorated home in Kampong Peramu",
+      "place": "Kampong Peramu, Kampong Ayer, Brunei",
+      "creator": "Mx. Granger",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kampong_Ayer_(Water_Village)_1.jpg",
+      "licence": "CC0 1.0",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "date": "2019-02-08",
+      "retrieved": "2026-10-13",
+      "sha256": "d82bb29d9c34f1928d73b241c3fc6575aca1609ca00b77ccf1e6a30a4d143c24",
+      "alt": "A decorated home has walls, windows and a railed walkway above water. Supports beneath the walkway are visible.",
+      "adapted": "Resized and converted to WebP; photographic content unchanged.",
+      "attribution": "Decorated home in Kampong Peramu — Mx. Granger, CC0 1.0."
+    },
+    "peramu-building": {
+      "file": "images/peramu-building.webp",
+      "title": "Balai Ibadat Kampong Peramu",
+      "place": "Kampong Peramu, Kampong Ayer, Brunei",
+      "creator": "Mx. Granger",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kampong_Ayer_(Water_Village)_4.jpg",
+      "licence": "CC0 1.0",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "date": "2019-02-08",
+      "retrieved": "2026-10-13",
+      "sha256": "97f6adb156e8d5b4c56c3e007cae2f53ac223d475da6de9438b8d308473cda27",
+      "alt": "A prayer hall with a roof, walls and windows stands above river water. Supports, nearby buildings and a walkway at the edge of the view are visible.",
+      "adapted": "Resized and converted to WebP; photographic content unchanged.",
+      "attribution": "Balai Ibadat Kampong Peramu — Mx. Granger, CC0 1.0."
     }
   },
   "maps": {

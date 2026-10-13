@@ -1,0 +1,18 @@
+export const YEAR4_GEOGRAPHY_TOPIC_SKILLS = {
+  "4/geography/north-american-countries-and-cities": "I can locate selected North American countries and cities.",
+  "4/geography/south-american-countries-and-cities": "I can locate selected South American countries and regions.",
+  "4/geography/washington-state": "I can describe a region within North America.",
+  "4/geography/climate-zones": "I can describe broad climate patterns using evidence.",
+  "4/geography/biomes-and-vegetation-belts": "I can connect climate and vegetation in studied biomes.",
+  "4/geography/day-night-and-time-zones": "I can explain day and night and use given time-zone information.",
+  "4/geography/river-journeys": "I can describe a river journey and simple river processes.",
+  "4/geography/rivers-and-people": "I can explain ways rivers connect people and places.",
+  "4/geography/changing-uk-landscapes": "I can use dated maps to describe landscape change.",
+  "4/geography/settlements-and-land-use": "I can describe settlement patterns and land use.",
+  "4/geography/food-and-trade-links": "I can trace a food journey and describe a trade link.",
+  "4/geography/energy-minerals-and-water": "I can describe resources and why their distribution matters.",
+  "4/geography/comparing-three-regions": "I can compare UK, European and North American regions.",
+  "4/geography/six-figure-grid-references": "I can locate a position with a six-figure grid reference.",
+  "4/geography/maps-atlases-and-digital-mapping": "I can choose and interpret maps for a geographical question.",
+  "4/geography/local-fieldwork-enquiry": "I can plan, interpret and present a local geographical enquiry.",
+};

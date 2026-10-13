@@ -76,9 +76,9 @@ Pupils should be taught to:
 
 # Mapping to our curriculum dataset
 
-**Implementation status (2026-10-13):** The owner requested the Year 3 build.
-Its 16 topics / 64 challenges are implemented and verified locally; their IDs
-are now permanent. Year 4 remains proposed. This crosswalk describes the
+**Implementation status (2026-10-13):** The owner requested the Year 3 and Year 4 builds.
+Their 16 topics / 64 challenges each are implemented and verified locally; their IDs
+are now permanent. This crosswalk describes the
 introductory digital allocation, not full KS2 coverage or completed fieldwork. See [Geography specs and year trackers](../geography-curriculum/README.md)
 and [PROJECT_IDEAS.md](../PROJECT_IDEAS.md) #15.
 
@@ -109,12 +109,11 @@ cross-reference labels for the verbatim bullets above, not DfE identifiers.
 | Human and physical geography | Mountains, volcanoes, earthquakes, water cycle; introductory regional settlements/land use | Rivers, climate zones, biomes/vegetation; settlements, food/trade and energy/minerals/water distribution |
 | Skills and fieldwork | Eight-point compass, four-figure references, OS key/extract and local land-use survey | Six-figure references, digital mapping/scale/layers and measured local enquiry/presentation |
 
-## Topics mapped to statutory requirements (Year 3 implemented; Year 4 proposed)
+## Topics mapped to statutory requirements (Years 3 and 4 implemented)
 
 Every row has four slots and its own outcome in the linked year spec.
-Year 3 slots are implemented; Year 4 slots remain planned. Exact boundaries
-and briefs are in those specs. Year 3 title-derived IDs are now permanent;
-Year 4 IDs become permanent on first release.
+Year 3 and Year 4 slots are implemented. Exact boundaries
+and briefs are in those specs. Title-derived IDs for both years are now permanent.
 
 | Year | Category | Proposed topic | Proposed topic ID | Requirement codes |
 |---|---|---|---|---|

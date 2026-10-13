@@ -1,7 +1,7 @@
 # Geography — shared design spec
 
-**Status:** shared foundation implemented for Year 3, 2026-10-13.
-Year 3: 16 topics / 64 verified slots. Years 1, 2 and 4 remain specifications.
+**Status:** shared foundation implemented for Years 3 and 4, 2026-10-13.
+Years 3 and 4: 16 topics / 64 slots each. Years 1 and 2 remain specifications.
 **Year specs and trackers:** [Year 1](year-1-design-spec.md),
 [Year 2](year-2-design-spec.md), [Year 3](year-3-design-spec.md),
 [Year 4](year-4-design-spec.md).
@@ -269,7 +269,7 @@ Recordings stay on paper or the grown-up's device; no new learner storage field.
 
 ## 7. Proposed implementation shape
 
-Year 3 now uses this shape; the other years remain future file locations:
+Years 2–4 now use this shape; Year 1 remains a future file location:
 
 ```text
 src/data/year<N>GeographyCurriculum.js
@@ -293,8 +293,7 @@ reopening must not regenerate the bank. Keep response and progress writes in
 the existing shell/`ProblemView` flow.
 
 Geography already exists in `CURRICULUM_SUBJECTS` and `CHILD_SUBJECTS`; no new
-subject enum or signup validation change is needed. There is now a Year 3
-Geography `CURRICULA` entry; other Geography years remain unavailable. Add each future dataset explicitly; register
+subject enum or signup validation change is needed. Years 2–4 now have Geography `CURRICULA` entries; Year 1 remains unavailable. Add each future dataset explicitly; register
 with `countsTowardYear: false` so existing year certificates remain available.
 Whether Geography should count toward a completed year's award is a separate
 future product decision; this spec does not make it. Subject/topic certificates
@@ -339,10 +338,10 @@ verified topic; classroom fieldwork is never inferred from challenge completion.
 
 ## 9. Shared implementation tracker
 
-**Checkpoint:** 2026-10-13 — shared foundation and Year 3 implemented:
-1 dataset, 16 topic banks and 64 verified Geography curriculum challenges.
-**Next action:** physical-device review for Year 3. The owner requested Year 3
-first; Years 1, 2 and 4 remain future work. See the [Year 3 source pack](YEAR3_SOURCE_PACK.md).
+**Checkpoint:** 2026-10-13 — shared foundation and Years 2–4 implemented:
+3 datasets, 46 topic banks and 184 Geography curriculum challenges.
+**Next action:** Year 2 browser review and physical-device review for Years 2–4.
+Year 1 remains future work. See the [Year 3](YEAR3_SOURCE_PACK.md) and [Year 4](YEAR4_SOURCE_PACK.md) source packs.
 
 | Work package | Status | Completion evidence required |
 |---|---|---|
@@ -358,3 +357,11 @@ The year specs track each topic's C1–C4 implementation and verification
 separately. Update the shared row when its common foundation is ready, and
 each year row after every topic or pause. **Drafted**, **built**, **verified**
 and **released** are different statuses. No release or deployment is requested.
+
+Year 2 adds age limits (45-word notes, 12-word sentences), KS1 plans and a
+four-direction compass with explicit rotated north arrow. Four bundled licensed
+photographs show the two small-area studies and a genuine aerial view. Its
+fieldwork/map/weather activities reuse read-only enrichment and write no new
+progress data. Year 2 component playthroughs and pure checks pass; browser
+verification is pending because tools were unavailable. See its source pack
+and year tracker for the exact scope.

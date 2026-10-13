@@ -8,4 +8,4 @@ export const sort = (prompt, bins, cards, v, sources, hint = "Read each card and
 export const ordered = (prompt, labels, v, sources, hint = "Find the named starting point. Follow the arrows.") =>
   ({ kind: "order", prompt, labels, visual: v, sources, hint, evidence: [v.alt] });
 export const lesson = (lines, v, bank) => ({ notes: { lines, visual: v }, bank });
-export const topic = (lessons, activity) => ({ year: 3, lessons, ...(activity ? { activity } : {}) });
+export const topic = (lessons, activity, year = 3) => ({ year, lessons, ...(activity ? { activity } : {}) });

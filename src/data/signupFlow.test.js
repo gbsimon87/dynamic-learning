@@ -31,11 +31,11 @@ test("birth years run newest first and are not pre-selected", () => {
 
 test("subjects come from the registry for the year", () => {
   assert.deepEqual(subjectsForYear(null), []);
-  assert.deepEqual([...subjectsForYear(1)].sort(), ["english", "history", "math", "science"]);
-  assert.deepEqual([...subjectsForYear(2)].sort(), ["english", "history", "math", "science"]);
+  assert.deepEqual([...subjectsForYear(1)].sort(), ["english", "geography", "history", "math", "science"]);
+  assert.deepEqual([...subjectsForYear(2)].sort(), ["english", "geography", "history", "math", "science"]);
   assert.deepEqual(subjectsForYear(5), []);
   assert.deepEqual([...subjectsForYear(3)].sort(), ["english", "geography", "history", "math", "science"]);
-  assert.deepEqual(subjectsForYear(4), ["math", "english", "science", "history"]);
+  assert.deepEqual(subjectsForYear(4), ["math", "english", "geography", "science", "history"]);
 });
 
 test("under 18 is always 'me' with one learner; under 13 goes to the gate", () => {

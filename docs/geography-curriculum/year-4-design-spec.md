@@ -1,6 +1,6 @@
 # Year 4 Geography — design spec
 
-**Status:** draft, 2026-10-13; specifications only, implementation not started.
+**Status:** implemented 2026-10-13 after the owner requested the Year 4 build: 16 topics / 64 challenges. IDs are permanent. See the [Year 4 source pack](YEAR4_SOURCE_PACK.md).
 **Implementation tracker:** embedded in §7; read it first when resuming.
 **Shared spec:** [shared-design-spec.md](shared-design-spec.md).
 **Statutory source and proposed mapping:** [key-stage-2-geography.md](../curriculum/key-stage-2-geography.md).
@@ -167,49 +167,45 @@ topic in the listed order; preserve all prior subject/year progress.
 
 ## 7. Implementation tracker
 
-**Checkpoint:** 2026-10-13 — spec and crosswalk drafted; no feature work started.
-**Totals:** 0/16 topics built; 0/64 challenges built or verified.
-**First future pilot:** North American Countries and Cities. Start only after a request to implement.
-**Resume:** read the shared spec, this tracker and the source mapping before
-editing. Build in category/topic order and release all four slots together.
+**Checkpoint:** 2026-10-13 — all 16 topics built and verified locally.
+**Totals:** 16/16 topics built; 64/64 challenges built; 582 templates.
+**Remaining:** physical-device voice/touch review; an owner review of content and sources;
+swap secondary sources for primary ones where noted in the source pack.
+**Resume:** read the shared spec, the [source pack](YEAR4_SOURCE_PACK.md) and the
+Year 3 tracker before changing banks. IDs and wrapper paths are locked by
+`src/data/year4GeographyCurriculum.test.js`.
 
-In the table, **— means not started**. Record C1–C4 independently as Built
-then Verified; use the evidence column for check results, review notes and
-release state. A drafted brief does not mean a built challenge.
+| # | Topic | C1 | C2 | C3 | C4 | Verification / release evidence |
+|---|---|---|---|---|---|---|
+| 1 | North American Countries and Cities | Verified | Verified | Verified | Verified | Lint, 60-seed runs, marker geometry, jsdom run |
+| 2 | South American Countries and Cities | Verified | Verified | Verified | Verified | Same; climate answers computed from records |
+| 3 | Washington State | Verified | Verified | Verified | Verified | Same; Seattle/Spokane contrasts asserted |
+| 4 | Climate Zones | Verified | Verified | Verified | Verified | Same; zone/derived answers asserted |
+| 5 | Biomes and Vegetation Belts | Verified | Verified | Verified | Verified | Same |
+| 6 | Day Night and Time Zones | Verified | Verified | Verified | Verified | Same; offsets and day/night side asserted |
+| 7 | River Journeys | Verified | Verified | Verified | Verified | Same; river directions asserted |
+| 8 | Rivers and People | Verified | Verified | Verified | Verified | Same |
+| 9 | Changing UK Landscapes | Verified | Verified | Verified | Verified | Same; counts recomputed |
+| 10 | Settlements and Land Use | Verified | Verified | Verified | Verified | Same |
+| 11 | Food and Trade Links | Verified | Verified | Verified | Verified | Same |
+| 12 | Energy Minerals and Water | Verified | Verified | Verified | Verified | Same |
+| 13 | Comparing Three Regions | Verified | Verified | Verified | Verified | Same |
+| 14 | Six Figure Grid References | Verified | Verified | Verified | Verified | Same; references generated in code |
+| 15 | Maps Atlases and Digital Mapping | Verified | Verified | Verified | Verified | Same; explorer controls tested |
+| 16 | Local Fieldwork Enquiry | Verified | Verified | Verified | Verified | Same; optional grown-up card |
 
-| # | Topic | Brief | C1 | C2 | C3 | C4 | Verification / release evidence |
-|---|---|---|---|---|---|---|---|
-| 1 | North American Countries and Cities | Drafted | — | — | — | — | Pending |
-| 2 | South American Countries and Cities | Drafted | — | — | — | — | Pending |
-| 3 | Washington State | Drafted | — | — | — | — | Pending |
-| 4 | Climate Zones | Drafted | — | — | — | — | Pending |
-| 5 | Biomes and Vegetation Belts | Drafted | — | — | — | — | Pending |
-| 6 | Day Night and Time Zones | Drafted | — | — | — | — | Pending |
-| 7 | River Journeys | Drafted | — | — | — | — | Pending |
-| 8 | Rivers and People | Drafted | — | — | — | — | Pending |
-| 9 | Changing UK Landscapes | Drafted | — | — | — | — | Pending |
-| 10 | Settlements and Land Use | Drafted | — | — | — | — | Pending |
-| 11 | Food and Trade Links | Drafted | — | — | — | — | Pending |
-| 12 | Energy Minerals and Water | Drafted | — | — | — | — | Pending |
-| 13 | Comparing Three Regions | Drafted | — | — | — | — | Pending |
-| 14 | Six Figure Grid References | Drafted | — | — | — | — | Pending |
-| 15 | Maps Atlases and Digital Mapping | Drafted | — | — | — | — | Pending |
-| 16 | Local Fieldwork Enquiry | Drafted | — | — | — | — | Pending |
-
-| Milestone | Status | Required evidence |
+| Milestone | Status | Evidence |
 |---|---|---|
-| Spec and statutory crosswalk | Drafted | Year allocation, topic boundaries and four-slot briefs present |
-| Shared engine and asset foundation | Not started | Shared spec tracker complete enough for the pilot |
-| Dataset, registry and certificate outcomes | Not started | 16 topics / 64 slots, locked IDs and certificate coverage |
-| First topic pilot | Not started | All four runs, notes, hints, map access, reload/replay and both themes |
-| Remaining topics | Not started | Per-topic C1–C4 rows built and verified in order |
-| Lint, full tests and build | Not started | All three required commands pass for the implementation |
-| Browser and progress regression | Not started | Desktop/phone, both themes, other subjects/years and profile switching |
-| Physical-device voice and touch | Not started | Phone/tablet review, distinct from simulated viewports |
-| Subject release | Not started | Verified topics, docs updated and remaining coverage limits recorded |
+| Spec and statutory crosswalk | Done | Crosswalk IDs match the dataset (tested) |
+| Shared engine and asset foundation | Done | Year 4 limits, new drawings, maps and records |
+| Dataset, registry and certificate outcomes | Done | 16 topics / 64 slots; excluded from year awards |
+| Topic banks | Done | 582 templates; every slot ≥ 7 |
+| Lint, full tests and build | Passed | lint clean; 1,748 unit (4 skipped) and 303 component tests; build passes |
+| Browser check | Partial | New drawings (maps, rivers, day/night, tenths grids, explorer) inspected in a desktop browser, light and dark; all 64 runs played through real controls in jsdom only. A full in-app playthrough remains |
+| Physical-device voice and touch | Not started | Phone/tablet review |
 
 ### Log
 
-- **2026-10-13:** Drafted the spec, four challenge briefs per topic,
-  outcome lines and statutory mapping. Implementation is intentionally
-  unstarted under the owner’s specs-only request.
+- **2026-10-13:** Drafted the spec and briefs.
+- **2026-10-13:** Implemented Year 4 (owner request): shared drawings and maps,
+  582 templates, registry, certificates, tests and credits.

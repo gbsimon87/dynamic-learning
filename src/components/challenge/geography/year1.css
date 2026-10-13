@@ -1,0 +1,150 @@
+/* Year 1 Geography illustrations. Every hue is a --light-geo-* / --dark-geo-* token from App.css. */
+.y1-art {
+  --y1-sky: var(--light-geo-sky); --y1-sky-sunny: var(--light-geo-sky-sunny); --y1-sky-grey: var(--light-geo-sky-grey); --y1-sky-polar: var(--light-geo-sky-polar);
+  --y1-sea: var(--light-geo-sea); --y1-sea-deep: var(--light-geo-sea-deep); --y1-foam: var(--light-geo-foam); --y1-sand: var(--light-geo-sand);
+  --y1-grass: var(--light-geo-grass); --y1-leaf: var(--light-geo-leaf); --y1-leaf-dark: var(--light-geo-leaf-dark); --y1-leaf-light: var(--light-geo-leaf-light);
+  --y1-autumn: var(--light-geo-autumn); --y1-blossom: var(--light-geo-blossom); --y1-hill: var(--light-geo-hill); --y1-mountain: var(--light-geo-mountain);
+  --y1-snow: var(--light-geo-snow); --y1-rock: var(--light-geo-rock); --y1-soil: var(--light-geo-soil); --y1-soil-dark: var(--light-geo-soil-dark); --y1-trunk: var(--light-geo-trunk);
+  --y1-roof: var(--light-geo-roof); --y1-roof-2: var(--light-geo-roof-2); --y1-wall: var(--light-geo-wall); --y1-wall-2: var(--light-geo-wall-2);
+  --y1-window: var(--light-geo-window); --y1-door: var(--light-geo-door); --y1-stone: var(--light-geo-stone); --y1-stone-dark: var(--light-geo-stone-dark); --y1-stone-warm: var(--light-geo-stone-warm);
+  --y1-path: var(--light-geo-path); --y1-road: var(--light-geo-road); --y1-sun: var(--light-geo-sun); --y1-cloud: var(--light-geo-cloud); --y1-cloud-grey: var(--light-geo-cloud-grey); --y1-rain: var(--light-geo-rain);
+  --y1-ink: var(--light-geo-ink); --y1-paper: var(--light-geo-paper); --y1-text: var(--light-text); --y1-panel: var(--light-panel);
+  --y1-england: var(--light-geo-nation-england); --y1-scotland: var(--light-geo-nation-scotland); --y1-wales: var(--light-geo-nation-wales); --y1-ni: var(--light-geo-nation-ni); --y1-neighbour: var(--light-geo-neighbour);
+  --y1-africa: var(--light-geo-africa); --y1-antarctica: var(--light-geo-antarctica); --y1-asia: var(--light-geo-asia); --y1-europe: var(--light-geo-europe);
+  --y1-north-america: var(--light-geo-north-america); --y1-south-america: var(--light-geo-south-america); --y1-australia: var(--light-geo-australia);
+  --y1-pin: var(--light-geo-ink); --y1-on-pin: var(--light-geo-paper); --y1-accent: var(--light-accent);
+  --y1-label: var(--light-geo-ink); --y1-halo: var(--light-geo-paper);
+}
+body.dark .y1-art {
+  --y1-sky: var(--dark-geo-sky); --y1-sky-sunny: var(--dark-geo-sky-sunny); --y1-sky-grey: var(--dark-geo-sky-grey); --y1-sky-polar: var(--dark-geo-sky-polar);
+  --y1-sea: var(--dark-geo-sea); --y1-sea-deep: var(--dark-geo-sea-deep); --y1-foam: var(--dark-geo-foam); --y1-sand: var(--dark-geo-sand);
+  --y1-grass: var(--dark-geo-grass); --y1-leaf: var(--dark-geo-leaf); --y1-leaf-dark: var(--dark-geo-leaf-dark); --y1-leaf-light: var(--dark-geo-leaf-light);
+  --y1-autumn: var(--dark-geo-autumn); --y1-blossom: var(--dark-geo-blossom); --y1-hill: var(--dark-geo-hill); --y1-mountain: var(--dark-geo-mountain);
+  --y1-snow: var(--dark-geo-snow); --y1-rock: var(--dark-geo-rock); --y1-soil: var(--dark-geo-soil); --y1-soil-dark: var(--dark-geo-soil-dark); --y1-trunk: var(--dark-geo-trunk);
+  --y1-roof: var(--dark-geo-roof); --y1-roof-2: var(--dark-geo-roof-2); --y1-wall: var(--dark-geo-wall); --y1-wall-2: var(--dark-geo-wall-2);
+  --y1-window: var(--dark-geo-window); --y1-door: var(--dark-geo-door); --y1-stone: var(--dark-geo-stone); --y1-stone-dark: var(--dark-geo-stone-dark); --y1-stone-warm: var(--dark-geo-stone-warm);
+  --y1-path: var(--dark-geo-path); --y1-road: var(--dark-geo-road); --y1-sun: var(--dark-geo-sun); --y1-cloud: var(--dark-geo-cloud); --y1-cloud-grey: var(--dark-geo-cloud-grey); --y1-rain: var(--dark-geo-rain);
+  --y1-ink: var(--dark-geo-ink); --y1-paper: var(--dark-geo-paper); --y1-text: var(--dark-text); --y1-panel: var(--dark-panel);
+  --y1-england: var(--dark-geo-nation-england); --y1-scotland: var(--dark-geo-nation-scotland); --y1-wales: var(--dark-geo-nation-wales); --y1-ni: var(--dark-geo-nation-ni); --y1-neighbour: var(--dark-geo-neighbour);
+  --y1-africa: var(--dark-geo-africa); --y1-antarctica: var(--dark-geo-antarctica); --y1-asia: var(--dark-geo-asia); --y1-europe: var(--dark-geo-europe);
+  --y1-north-america: var(--dark-geo-north-america); --y1-south-america: var(--dark-geo-south-america); --y1-australia: var(--dark-geo-australia);
+  --y1-pin: var(--dark-text); --y1-on-pin: var(--dark-bg); --y1-accent: var(--dark-accent);
+  --y1-label: var(--dark-text); --y1-halo: var(--dark-bg);
+}
+
+.y1-art { margin: .25rem 0 .75rem; }
+.geo-visual div.y1-art svg { border: 0; }
+.geo-visual div.y1-art .y1-key svg { width: 40px; height: 40px; flex: none; }
+.geo-visual div.y1-art .y1-record-pics svg { width: 56px; height: 56px; flex: none; }
+.y1-art svg.y1-svg { display: block; width: 100%; height: auto; max-height: 440px; border: 0; border-radius: 18px; }
+.y1-art .y1-map-uk { max-width: 380px; margin: 0 auto; }
+.y1-art .y1-globe-svg { max-width: 400px; margin: 0 auto; }
+.y1-art .y1-compass { max-width: 260px; margin: 0 auto; }
+.y1-art svg, .y1-art path, .y1-art circle, .y1-art rect, .y1-art ellipse { stroke-linejoin: round; stroke-linecap: round; }
+
+/* Fills */
+.y1-sky { fill: var(--y1-sky); } .y1-sky-sunny { fill: var(--y1-sky-sunny); } .y1-sky-grey { fill: var(--y1-sky-grey); } .y1-sky-polar { fill: var(--y1-sky-polar); }
+.y1-sea, .y1-water { fill: var(--y1-sea); } .y1-sea-deep { fill: var(--y1-sea-deep); } .y1-sand { fill: var(--y1-sand); } .y1-shell { fill: var(--y1-blossom); }
+.y1-grass, .y1-field { fill: var(--y1-grass); } .y1-leaf { fill: var(--y1-leaf); } .y1-leaf-dark { fill: var(--y1-leaf-dark); } .y1-leaf-light { fill: var(--y1-leaf-light); }
+.y1-leaf-autumn { fill: var(--y1-autumn); } .y1-blossom { fill: var(--y1-blossom); } .y1-hill { fill: var(--y1-hill); } .y1-mountain { fill: var(--y1-mountain); }
+.y1-snow, .y1-ice { fill: var(--y1-snow); } .y1-ice { stroke: var(--y1-sea); stroke-width: 1.5; } .y1-rock { fill: var(--y1-rock); }
+.y1-soil { fill: var(--y1-soil); } .y1-soil-dark { fill: none; stroke: var(--y1-soil-dark); stroke-width: 3; } .y1-worm { fill: none; stroke: var(--y1-blossom); stroke-width: 4; }
+.y1-trunk { fill: var(--y1-trunk); } .y1-branch { fill: none; stroke: var(--y1-trunk); stroke-width: 3.5; }
+.y1-roof { fill: var(--y1-roof); } .y1-roof-2 { fill: var(--y1-roof-2); } .y1-wall { fill: var(--y1-wall); } .y1-wall-2, .y1-barn { fill: var(--y1-wall-2); } .y1-barn { fill: var(--y1-roof); }
+.y1-window, .y1-glass { fill: var(--y1-window); } .y1-glass { fill-opacity: .7; stroke: var(--y1-roof-2); stroke-width: 2; } .y1-door { fill: var(--y1-door); }
+.y1-stone { fill: var(--y1-stone); } .y1-stone-dark { fill: var(--y1-stone-dark); } .y1-stone-warm { fill: var(--y1-stone-warm); } .y1-dome { fill: var(--y1-leaf); }
+.y1-path { fill: var(--y1-path); } .y1-road { fill: var(--y1-road); } .y1-road-line, .y1-path-edge { fill: none; stroke: var(--y1-cloud); stroke-width: 3; }
+.y1-path-edge { stroke: var(--y1-stone-dark); stroke-width: 2; }
+.y1-sun { fill: var(--y1-sun); } .y1-sun-ray { stroke: var(--y1-sun); stroke-width: 4; } .y1-cloud { fill: var(--y1-cloud); } .y1-cloud-grey, .y1-smoke { fill: var(--y1-cloud-grey); }
+.y1-rain { stroke: var(--y1-rain); stroke-width: 3.5; } .y1-flake path { stroke: var(--y1-sea-deep); stroke-width: 2.5; }
+.y1-wind { fill: none; stroke: var(--y1-sea-deep); stroke-width: 4; }
+.y1-foam { fill: none; stroke: var(--y1-foam); stroke-width: 2.5; stroke-opacity: .85; }
+.y1-whale { fill: var(--y1-sea); stroke: var(--y1-foam); stroke-width: 1.5; }
+.y1-ink { fill: var(--y1-ink); } .y1-ink-line { fill: none; stroke: var(--y1-ink); stroke-width: 3; }
+.y1-awning { fill: var(--y1-roof); } .y1-sign { fill: var(--y1-roof-2); } .y1-crate { fill: var(--y1-roof); } .y1-crate-2 { fill: var(--y1-roof-2); } .y1-ship { fill: var(--y1-stone-dark); }
+.y1-gate { fill: none; stroke: var(--y1-trunk); stroke-width: 4; } .y1-slide { fill: var(--y1-sun); } .y1-flag { fill: var(--y1-roof); stroke: var(--y1-ink); stroke-width: 1.5; }
+.y1-paper { fill: var(--y1-paper); } .y1-shadow { fill: var(--y1-ink); fill-opacity: .18; } .y1-ridge { stroke: var(--y1-ink); stroke-width: 2; stroke-opacity: .5; }
+.y1-hair { fill: var(--y1-trunk); } .y1-shirt { fill: var(--y1-roof-2); stroke: var(--y1-roof-2); stroke-width: 10; }
+
+/* Plans and map symbols */
+.y1-plan-fill { fill: var(--y1-wall-2); stroke: var(--y1-ink); stroke-width: 3; }
+.y1-plan-tree { fill: var(--y1-leaf); stroke: var(--y1-ink); stroke-width: 3; }
+.y1-plan-water { fill: var(--y1-sea); stroke: var(--y1-ink); stroke-width: 3; }
+.y1-plan-play { fill: var(--y1-sun); stroke: var(--y1-ink); stroke-width: 3; }
+.y1-plan-label { fill: var(--y1-text); font-size: 18px; font-weight: 800; }
+.y1-sym-path { fill: none; stroke: var(--y1-ink); stroke-width: 6; stroke-dasharray: 14 10; }
+.y1-sym-gate { fill: none; stroke: var(--y1-trunk); stroke-width: 7; }
+.y1-art-views .y1-plan-label, .y1-art .y1-paper ~ text { fill: var(--y1-ink); }
+body.dark .y1-art .y1-plan-label { fill: var(--dark-text); }
+
+/* Maps */
+.y1-nation, .y1-uk-plain, .y1-neighbour, .y1-continent { stroke: var(--y1-ink); stroke-width: 1.2; stroke-opacity: .55; }
+.y1-nation-england { fill: var(--y1-england); } .y1-nation-scotland { fill: var(--y1-scotland); } .y1-nation-wales { fill: var(--y1-wales); } .y1-nation-northernIreland { fill: var(--y1-ni); }
+.y1-uk-plain { fill: var(--y1-grass); } .y1-neighbour { fill: var(--y1-neighbour); }
+.y1-c-africa { fill: var(--y1-africa); } .y1-c-antarctica { fill: var(--y1-antarctica); } .y1-c-asia { fill: var(--y1-asia); } .y1-c-europe { fill: var(--y1-europe); }
+.y1-c-northAmerica { fill: var(--y1-north-america); } .y1-c-southAmerica { fill: var(--y1-south-america); } .y1-c-australia { fill: var(--y1-australia); } .y1-c-other { fill: var(--y1-neighbour); }
+.y1-continent { stroke-width: .4; stroke-opacity: .15; }
+.y1-continent.y1-dim, .y1-nation.y1-dim { fill: var(--y1-neighbour); }
+.y1-map-label, .y1-sea-label, .y1-city-label, .y1-line-label, .y1-map-note, .y1-tag, .y1-side {
+  font-weight: 800; paint-order: stroke; stroke-linejoin: round;
+}
+.y1-map-label { fill: var(--y1-label); stroke: var(--y1-halo); stroke-width: 4px; font-size: 19px; }
+.y1-map-label.y1-small { font-size: 12px; stroke-width: 3px; }
+.y1-sea-label { fill: var(--y1-foam); stroke: var(--y1-sea-deep); stroke-width: 4px; font-size: 17px; font-style: italic; }
+.y1-sea-label.y1-small { font-size: 12px; stroke-width: 3px; }
+.y1-city-label { fill: var(--y1-label); stroke: var(--y1-halo); stroke-width: 4px; font-size: 16px; }
+.y1-map-note { fill: var(--y1-label); stroke: var(--y1-halo); stroke-width: 3px; font-size: 12px; font-weight: 700; }
+.y1-line-label { fill: var(--y1-label); stroke: var(--y1-halo); stroke-width: 4px; font-size: 15px; }
+.y1-star { fill: var(--y1-sun); stroke: var(--y1-ink); stroke-width: 3; }
+.y1-equator { fill: none; stroke: var(--y1-roof); stroke-width: 3.5; stroke-dasharray: 10 6; }
+.y1-pole { fill: var(--y1-roof); stroke: var(--y1-paper); stroke-width: 3; }
+.y1-zone-warm { fill: var(--y1-sun); fill-opacity: .35; } .y1-zone-cold { fill: var(--y1-snow); fill-opacity: .55; }
+.y1-shine-a { stop-color: var(--y1-foam); stop-opacity: .35; } .y1-shine-b { stop-color: var(--y1-sea-deep); stop-opacity: .25; }
+.y1-globe-rim { stroke: var(--y1-ink); stroke-width: 3; stroke-opacity: .6; }
+.y1-pin circle { fill: var(--y1-pin); stroke: var(--y1-on-pin); stroke-width: 3; }
+.y1-pin text { fill: var(--y1-on-pin); font-weight: 900; }
+.y1-north circle { fill: var(--y1-paper); stroke: var(--y1-ink); stroke-width: 2; }
+.y1-north path { fill: var(--y1-roof); stroke: var(--y1-ink); stroke-width: 1.5; }
+.y1-north text { fill: var(--y1-label); font-weight: 900; font-size: 16px; paint-order: stroke; stroke: var(--y1-halo); stroke-width: 4px; }
+.y1-grid { stroke: var(--y1-leaf-dark); stroke-width: 1.5; stroke-opacity: .5; }
+.y1-route { stroke: var(--y1-roof); stroke-width: 6; stroke-dasharray: 2 10; }
+.y1-bix circle { fill: var(--y1-roof); stroke: var(--y1-paper); stroke-width: 4; } .y1-bix text { fill: var(--y1-paper); font-size: 26px; }
+.y1-rose circle { fill: var(--y1-paper); stroke: var(--y1-ink); stroke-width: 2; }
+.y1-rose-n { fill: var(--y1-roof); stroke: var(--y1-ink); stroke-width: 1.5; } .y1-rose-arm { fill: var(--y1-cloud-grey); stroke: var(--y1-ink); stroke-width: 1.5; }
+.y1-rose text { fill: var(--y1-text); font-size: 17px; font-weight: 900; }
+.y1-tag { fill: var(--y1-label); stroke: var(--y1-halo); stroke-width: 4px; font-size: 16px; }
+.y1-side { fill: var(--y1-label); stroke: var(--y1-halo); stroke-width: 4px; font-size: 18px; }
+.y1-frame { fill: none; stroke: var(--y1-paper); stroke-width: 12; } .y1-sill { fill: var(--y1-trunk); }
+
+/* Seasons */
+.y1-cycle { fill: none; stroke: var(--y1-cloud-grey); stroke-width: 6; stroke-dasharray: 2 14; }
+.y1-cycle-arrow { fill: none; stroke: var(--y1-text); stroke-width: 5; }
+.y1-season-card { fill: var(--y1-panel); stroke: var(--y1-cloud-grey); stroke-width: 3; }
+.y1-season-on { stroke: var(--y1-accent); stroke-width: 6; }
+.y1-mystery { fill: var(--y1-accent); font-size: 72px; font-weight: 900; }
+.y1-art-seasons .y1-tag { fill: var(--y1-text); stroke: none; }
+
+/* HTML cards, records, keys and views */
+.y1-cards { list-style: none; padding: 0; margin: 0; display: grid; gap: .75rem; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); }
+.y1-cards-1 { --cols: 1; max-width: 280px; margin-inline: auto; } .y1-cards-2 { --cols: 2; } .y1-cards-3 { --cols: 3; } .y1-cards-4 { --cols: 4; }
+.y1-card { background: var(--y1-panel); border-radius: 18px; padding: .5rem; box-shadow: 0 3px 0 color-mix(in srgb, var(--y1-text) 18%, transparent); border: 2px solid color-mix(in srgb, var(--y1-text) 12%, transparent); text-align: center; }
+.y1-card svg { display: block; width: 100%; height: auto; border-radius: 12px; }
+.y1-card p { margin: .4rem 0 .1rem; display: flex; align-items: center; justify-content: center; gap: .4rem; font-weight: 800; font-size: 1.05rem; flex-wrap: wrap; }
+.y1-chip { display: inline-grid; place-items: center; min-width: 1.9em; height: 1.9em; padding: 0 .3em; border-radius: 999px; background: var(--y1-pin); color: var(--y1-on-pin); font-weight: 900; }
+.y1-record { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: .6rem; }
+.y1-record li { background: var(--y1-panel); border-radius: 16px; padding: .55rem; text-align: center; border: 2px solid color-mix(in srgb, var(--y1-text) 12%, transparent); display: grid; gap: .3rem; }
+.y1-record-pics { display: flex; gap: .25rem; justify-content: center; }
+.y1-record-pics svg { width: 56px; height: 56px; border-radius: 10px; }
+.y1-record-words { font-weight: 700; text-transform: capitalize; }
+.y1-key { list-style: none; padding: 0; margin: .75rem 0 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+.y1-key li { display: flex; align-items: center; gap: .5rem; padding: .3rem .7rem .3rem .3rem; border-radius: 999px; background: var(--y1-panel); border: 2px solid color-mix(in srgb, var(--y1-text) 12%, transparent); font-weight: 700; }
+.y1-key li span { display: flex; align-items: center; gap: .35rem; }
+.y1-key svg { width: 40px; height: 40px; border-radius: 50%; }
+.y1-views { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .75rem; }
+.y1-view-card { margin: 0; background: var(--y1-panel); border-radius: 18px; padding: .4rem; border: 2px solid color-mix(in srgb, var(--y1-text) 12%, transparent); }
+.y1-view-card svg { display: block; width: 100%; height: auto; border-radius: 14px; }
+.y1-view-card figcaption { text-align: center; font-weight: 800; padding: .35rem 0 .1rem; }
+@media (max-width: 520px) {
+  .y1-cards-3, .y1-cards-4 { --cols: 2; }
+  .geo-visual div.y1-art .y1-record-pics svg { width: 46px; height: 46px; }
+}

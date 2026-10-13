@@ -1,6 +1,6 @@
 # Year 1 Geography — design spec
 
-**Status:** draft, 2026-10-13; specifications only, implementation not started.
+**Status:** implemented 2026-10-13 (12 topics / 48 challenges); IDs now permanent. Physical-device review pending.
 **Implementation tracker:** embedded in §7; read it first when resuming.
 **Shared spec:** [shared-design-spec.md](shared-design-spec.md).
 **Statutory source and proposed mapping:** [key-stage-1-geography.md](../curriculum/key-stage-1-geography.md).
@@ -147,9 +147,9 @@ topic in the listed order; preserve all prior subject/year progress.
 
 ## 7. Implementation tracker
 
-**Checkpoint:** 2026-10-13 — spec and crosswalk drafted; no feature work started.
-**Totals:** 0/12 topics built; 0/48 challenges built or verified.
-**First future pilot:** Around Our School. Start only after a request to implement.
+**Checkpoint:** 2026-10-13 — all 12 topics built and verified in automated checks and browser screenshots.
+**Totals:** 12/12 topics built; 48/48 challenges built and verified (automated + browser render).
+**Next:** physical phone/tablet voice and touch review.
 **Resume:** read the shared spec, this tracker and the source mapping before
 editing. Build in category/topic order and release all four slots together.
 
@@ -159,33 +159,41 @@ release state. A drafted brief does not mean a built challenge.
 
 | # | Topic | Brief | C1 | C2 | C3 | C4 | Verification / release evidence |
 |---|---|---|---|---|---|---|---|
-| 1 | Around Our School | Drafted | — | — | — | — | Pending |
-| 2 | Human and Physical Features | Drafted | — | — | — | — | Pending |
-| 3 | Maps from Above | Drafted | — | — | — | — | Pending |
-| 4 | Four Countries of the UK | Drafted | — | — | — | — | Pending |
-| 5 | UK Capital Cities | Drafted | — | — | — | — | Pending |
-| 6 | Seas Around the UK | Drafted | — | — | — | — | Pending |
-| 7 | Seven Continents | Drafted | — | — | — | — | Pending |
-| 8 | Five Oceans | Drafted | — | — | — | — | Pending |
-| 9 | Hot and Cold Places | Drafted | — | — | — | — | Pending |
-| 10 | Daily Weather | Drafted | — | — | — | — | Pending |
-| 11 | Seasons in the UK | Drafted | — | — | — | — | Pending |
-| 12 | Routes and Simple Maps | Drafted | — | — | — | — | Pending |
+| 1 | Around Our School | Drafted | Verified | Verified | Verified | Verified | Lint, unit/component playthrough, light+dark screenshots |
+| 2 | Human and Physical Features | Drafted | Verified | Verified | Verified | Verified | Lint, unit/component playthrough, light+dark screenshots |
+| 3 | Maps from Above | Drafted | Verified | Verified | Verified | Verified | Lint, unit/component playthrough, light+dark screenshots |
+| 4 | Four Countries of the UK | Drafted | Verified | Verified | Verified | Verified | Lint, unit/component playthrough, light+dark screenshots |
+| 5 | UK Capital Cities | Drafted | Verified | Verified | Verified | Verified | Lint, unit/component playthrough, light+dark screenshots |
+| 6 | Seas Around the UK | Drafted | Verified | Verified | Verified | Verified | Lint, unit/component playthrough, light+dark screenshots |
+| 7 | Seven Continents | Drafted | Verified | Verified | Verified | Verified | Lint, unit/component playthrough, light+dark screenshots |
+| 8 | Five Oceans | Drafted | Verified | Verified | Verified | Verified | Lint, unit/component playthrough, light+dark screenshots |
+| 9 | Hot and Cold Places | Drafted | Verified | Verified | Verified | Verified | Lint, unit/component playthrough, light+dark screenshots |
+| 10 | Daily Weather | Drafted | Verified | Verified | Verified | Verified | Lint, unit/component playthrough, light+dark screenshots |
+| 11 | Seasons in the UK | Drafted | Verified | Verified | Verified | Verified | Lint, unit/component playthrough, light+dark screenshots |
+| 12 | Routes and Simple Maps | Drafted | Verified | Verified | Verified | Verified | Lint, unit/component playthrough, light+dark screenshots |
 
 | Milestone | Status | Required evidence |
 |---|---|---|
 | Spec and statutory crosswalk | Drafted | Year allocation, topic boundaries and four-slot briefs present |
-| Shared engine and asset foundation | Not started | Shared spec tracker complete enough for the pilot |
-| Dataset, registry and certificate outcomes | Not started | 12 topics / 48 slots, locked IDs and certificate coverage |
-| First topic pilot | Not started | All four runs, notes, hints, map access, reload/replay and both themes |
-| Remaining topics | Not started | Per-topic C1–C4 rows built and verified in order |
-| Lint, full tests and build | Not started | All three required commands pass for the implementation |
-| Browser and progress regression | Not started | Desktop/phone, both themes, other subjects/years and profile switching |
+| Shared engine and asset foundation | Done | Shared spec tracker complete enough for the pilot |
+| Dataset, registry and certificate outcomes | Done | 12 topics / 48 slots, locked IDs and certificate coverage |
+| First topic pilot | Done | All four runs, notes, hints, map access, reload/replay and both themes |
+| Remaining topics | Done | Per-topic C1–C4 rows built and verified in order |
+| Lint, full tests and build | Passed | All three required commands pass for the implementation |
+| Browser and progress regression | Browser render passed; progress regression by unit tests | Desktop/phone, both themes, other subjects/years and profile switching |
 | Physical-device voice and touch | Not started | Phone/tablet review, distinct from simulated viewports |
-| Subject release | Not started | Verified topics, docs updated and remaining coverage limits recorded |
+| Subject release | Registered (no deployment) | Verified topics, docs updated and remaining coverage limits recorded |
 
 ### Log
 
 - **2026-10-13:** Drafted the spec, four challenge briefs per topic,
   outcome lines and statutory mapping. Implementation is intentionally
   unstarted under the owner’s specs-only request.
+- **2026-10-13:** Implemented all 48 challenges on the owner's request using
+  the briefs above: 352 templates, a new `y1` picture system
+  (Year1Drawing/Year1Sprites, four-nations UK map, continent world map and
+  globe from Natural Earth), grown-up activities for four topics and the
+  Geography start/notes redesign. `npm run lint`, `npm test` and `npm run build`
+  pass; every challenge was rendered in light (900 px) and dark (390 px) with no
+  horizontal overflow. Country features use one sourced example each (Lake
+  District fells, Scottish islands, Welsh castles, Giant's Causeway).

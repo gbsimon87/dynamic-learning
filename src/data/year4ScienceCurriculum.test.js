@@ -47,7 +47,7 @@ test("Year 4 Science locks its stable IDs and implements all 80 mapped slots", (
       assert.ok(text.includes("onComplete={onComplete}"));
     }
   }
-  assert.deepEqual(subjectsForYear(4), ["math", "english", "science", "history"]);
+  assert.deepEqual(subjectsForYear(4), ["math", "english", "geography", "science", "history"]);
   assert.deepEqual(registeredSubjectNames(4), ["Maths", "English", "Science"]);
 });
 

@@ -42,3 +42,154 @@ body.dark .geo-start, body.dark .geo-challenge { --geo-paper: var(--dark-panel);
 .geo-paired-maps h5 { font-size: 1rem; margin: .5rem 0; }
 @media (max-width: 650px) { .geo-paired-maps { grid-template-columns: minmax(0,1fr); } }
 @media (max-width: 480px) { .geo-visual, .geo-notes { padding: .7rem; } .geo-key { font-size: .95rem; } .geo-key li { flex-basis: 120px; } }
+.geo-river { fill: none; stroke: var(--geo-ink); stroke-width: 5; stroke-dasharray: 14 4; stroke-linecap: round; }
+.geo-tenth-line { stroke: var(--geo-ink); stroke-opacity: .3; stroke-width: .5; }
+.geo-tenth-label { fill: var(--geo-ink); font-size: 13px; font-weight: bold; }
+.geo-small-label { font-size: 17px; }
+.geo-night { fill: var(--geo-ink); fill-opacity: .55; stroke: var(--geo-ink); stroke-width: 2; }
+.geo-day { fill: var(--geo-paper); stroke: var(--geo-ink); stroke-width: 2; }
+.geo-use { stroke: var(--geo-ink); stroke-width: 1; fill: var(--geo-land); }
+.geo-use-0 { fill-opacity: .15; } .geo-use-1 { fill-opacity: .3; } .geo-use-2 { fill-opacity: .45; } .geo-use-3 { fill-opacity: .6; } .geo-use-4 { fill-opacity: .8; } .geo-use-5 { fill-opacity: 1; }
+.geo-use-text { font-size: 20px; fill: var(--geo-ink); paint-order: stroke; stroke: var(--geo-paper); stroke-width: 3px; }
+.geo-explorer-controls { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: .75rem; }
+.geo-explorer-controls button { min-height: 44px; min-width: 44px; padding: .5rem 1rem; border: 2px solid var(--geo-ink); border-radius: 12px; background: var(--geo-paper); color: var(--geo-ink); font: inherit; cursor: pointer; }
+.geo-explorer-controls button[aria-pressed="true"] { background: var(--geo-ink); color: var(--geo-paper); }
+.geo-explorer-controls button:focus-visible { outline: 3px solid var(--geo-ink); outline-offset: 3px; }
+.geo-halo { paint-order: stroke; stroke: var(--geo-paper); stroke-width: 4px; }
+
+/* ===== Friendly refresh: start banner, Bix's notes bubble, picture cards =====
+   Every hue comes from the --light-geo-* / --dark-geo-* tokens in App.css. Each
+   challenge slot (data-slot 1–4) has its own colour, always paired with words. */
+.geo-start, .geo-challenge {
+  --geo-slot: var(--light-geo-explore); --geo-sky: var(--light-geo-sky); --geo-grass: var(--light-geo-grass);
+  --geo-hill: var(--light-geo-hill); --geo-sun: var(--light-geo-sun); --geo-sea: var(--light-geo-sea); --geo-leaf: var(--light-geo-leaf-dark);
+  --geo-card: var(--light-panel); --geo-soft-ink: color-mix(in srgb, var(--light-text) 14%, transparent);
+}
+.geo-start[data-slot="2"], .geo-challenge[data-slot="2"] { --geo-slot: var(--light-geo-locate); }
+.geo-start[data-slot="3"], .geo-challenge[data-slot="3"] { --geo-slot: var(--light-geo-evidence); }
+.geo-start[data-slot="4"], .geo-challenge[data-slot="4"] { --geo-slot: var(--light-geo-connect); }
+body.dark .geo-start, body.dark .geo-challenge {
+  --geo-slot: var(--dark-geo-explore); --geo-sky: var(--dark-geo-sky); --geo-grass: var(--dark-geo-grass);
+  --geo-hill: var(--dark-geo-hill); --geo-sun: var(--dark-geo-sun); --geo-sea: var(--dark-geo-sea); --geo-leaf: var(--dark-geo-leaf-dark);
+  --geo-card: var(--dark-panel); --geo-soft-ink: color-mix(in srgb, var(--dark-text) 16%, transparent);
+}
+body.dark .geo-start[data-slot="2"], body.dark .geo-challenge[data-slot="2"] { --geo-slot: var(--dark-geo-locate); }
+body.dark .geo-start[data-slot="3"], body.dark .geo-challenge[data-slot="3"] { --geo-slot: var(--dark-geo-evidence); }
+body.dark .geo-start[data-slot="4"], body.dark .geo-challenge[data-slot="4"] { --geo-slot: var(--dark-geo-connect); }
+
+.geo-start.challenge-container {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--geo-sky) 75%, var(--geo-card)) 0, var(--geo-card) 230px);
+  border-radius: 28px; overflow: hidden; text-align: left;
+}
+
+/* Banner */
+.geo-hero { position: relative; display: flex; align-items: center; gap: 1rem; min-height: 132px; padding: .5rem 0 1.25rem; }
+.geo-hero-stamp {
+  flex: none; display: grid; place-items: center; width: 72px; height: 72px; font-size: 2.2rem;
+  border-radius: 22px; transform: rotate(-6deg);
+  background: color-mix(in srgb, var(--geo-slot) 22%, var(--geo-card)); border: 3px solid var(--geo-slot);
+  box-shadow: 0 5px 0 color-mix(in srgb, var(--geo-slot) 45%, transparent);
+}
+.geo-hero-words { position: relative; z-index: 1; }
+.geo-hero-kicker { margin: 0 0 .15rem; font-size: .85rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; opacity: .8; }
+.geo-start .geo-hero .challenge-title { margin: 0; font-size: clamp(1.7rem, 5vw, 2.3rem); font-weight: 900; text-align: left; line-height: 1.1; }
+.geo-hero-scene { position: absolute; right: -8px; bottom: 0; width: min(46%, 320px); height: auto; pointer-events: none; }
+.geo-hero-sun { fill: var(--geo-sun); }
+.geo-hero-hill-far { fill: var(--geo-hill); }
+.geo-hero-hill { fill: var(--geo-grass); }
+.geo-hero-sea { fill: var(--geo-sea); }
+.geo-hero-trail { fill: none; stroke: var(--geo-card); stroke-width: 4; stroke-dasharray: 2 9; stroke-linecap: round; }
+.geo-hero-flag path:first-child { stroke: var(--geo-ink); stroke-width: 3; }
+.geo-hero-flag path:last-child { fill: var(--geo-slot); }
+
+/* Bix's notes: a speech bubble, numbered, big readable lines */
+.geo-notes { border: 0; padding: 0; background: none; }
+.geo-notes-talk { display: flex; align-items: flex-start; gap: .5rem; }
+.mascot.geo-notes-bix { flex: none; width: 150px; zoom: .55; margin-top: 1.5rem; }
+.geo-notes-bubble {
+  position: relative; flex: 1; min-width: 0; padding: 1rem 1.15rem 1.1rem;
+  background: var(--geo-card); border: 3px solid color-mix(in srgb, var(--geo-slot) 55%, var(--geo-card)); border-radius: 24px;
+  box-shadow: 0 6px 0 color-mix(in srgb, var(--geo-slot) 25%, transparent);
+}
+.geo-notes-bubble::before {
+  content: ""; position: absolute; left: -14px; top: 34px; width: 22px; height: 22px; background: var(--geo-card);
+  border-left: 3px solid color-mix(in srgb, var(--geo-slot) 55%, var(--geo-card)); border-bottom: 3px solid color-mix(in srgb, var(--geo-slot) 55%, var(--geo-card));
+  transform: rotate(45deg); border-radius: 0 0 0 6px;
+}
+.geo-notes-bubble .geo-notes-heading h4 { margin: 0 0 .5rem; font-size: 1.05rem; font-weight: 900; letter-spacing: .02em; color: inherit; }
+.geo-notes-lines { list-style: none; counter-reset: geo-note; margin: 0; padding: 0; display: grid; gap: .55rem; }
+.geo-notes-lines li { counter-increment: geo-note; display: grid; grid-template-columns: 2.1rem 1fr; align-items: start; gap: .6rem; font-size: 1.2rem; font-weight: 600; line-height: 1.45; }
+.geo-notes-lines li::before {
+  content: counter(geo-note); display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border-radius: 50%;
+  background: color-mix(in srgb, var(--geo-slot) 22%, var(--geo-card)); border: 2px solid var(--geo-slot); font-weight: 900; font-size: 1rem;
+}
+.geo-notes > .geo-visual { margin-top: 1.25rem; }
+
+/* Picture / map card */
+.geo-start .geo-visual, .geo-challenge .geo-visual {
+  border: 0; border-radius: 24px; padding: 1rem; background: var(--geo-card);
+  box-shadow: 0 0 0 2px var(--geo-soft-ink), 0 6px 0 var(--geo-soft-ink);
+}
+.geo-start .geo-visual-heading h4, .geo-challenge .geo-visual-heading h4 { display: flex; align-items: center; gap: .5rem; font-weight: 900; }
+.geo-start .geo-visual-heading h4::before, .geo-challenge .geo-visual-heading h4::before {
+  content: ""; flex: none; width: 14px; height: 14px; border-radius: 50%; background: var(--geo-slot); box-shadow: 0 0 0 4px color-mix(in srgb, var(--geo-slot) 25%, transparent);
+}
+.geo-start .geo-visual svg, .geo-challenge .geo-visual svg { border-color: var(--geo-soft-ink); border-radius: 16px; }
+.geo-start .geo-evidence-line, .geo-challenge .geo-evidence-line {
+  margin: .45rem 0; padding: .5rem .8rem; border-radius: 14px; font-size: 1.05rem; font-weight: 600;
+  background: color-mix(in srgb, var(--geo-sun) 16%, var(--geo-card)); border-left: 6px solid var(--geo-slot);
+}
+.geo-start .geo-description, .geo-start .geo-sources, .geo-challenge .geo-description, .geo-challenge .geo-sources { border-top: 0; display: inline-block; margin: .5rem .5rem 0 0; vertical-align: top; }
+.geo-start .geo-description[open], .geo-start .geo-sources[open], .geo-challenge .geo-description[open], .geo-challenge .geo-sources[open] { display: block; }
+.geo-description summary, .geo-sources summary {
+  display: inline-flex; padding: 0 1rem; border-radius: 999px; font-size: .95rem;
+  background: color-mix(in srgb, var(--geo-slot) 12%, var(--geo-card)); border: 2px solid var(--geo-soft-ink);
+}
+
+/* Big friendly start button */
+.geo-start .submit-btn.geo-go {
+  display: flex; align-items: center; justify-content: center; gap: .6rem; margin: 1.5rem auto .5rem; min-height: 60px; padding: 0 2.2rem;
+  font-size: 1.35rem; font-weight: 900; border-radius: 999px;
+  box-shadow: 0 6px 0 color-mix(in srgb, var(--geo-ink) 35%, transparent); transition: transform .15s ease, box-shadow .15s ease;
+}
+.geo-start .submit-btn.geo-go:hover, .geo-start .submit-btn.geo-go:focus-visible { transform: translateY(-2px); box-shadow: 0 8px 0 color-mix(in srgb, var(--geo-ink) 35%, transparent); }
+.geo-start .submit-btn.geo-go:active { transform: translateY(4px); box-shadow: 0 2px 0 color-mix(in srgb, var(--geo-ink) 35%, transparent); }
+.geo-go-icon { display: inline-block; animation: geo-hop 1.6s ease-in-out infinite; }
+@keyframes geo-hop { 0%, 60%, 100% { transform: translateY(0) rotate(0); } 30% { transform: translateY(-5px) rotate(-8deg); } }
+
+/* During rounds: notes pill and reopened notes */
+.geo-challenge .geo-notes-toggle {
+  display: inline-flex; align-items: center; gap: .4rem; border-radius: 999px; font-weight: 800; padding: .6rem 1.2rem;
+  border: 3px solid var(--geo-slot); background: color-mix(in srgb, var(--geo-slot) 14%, var(--geo-card));
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--geo-slot) 30%, transparent);
+}
+.geo-notes-reopened { margin: .5rem auto 1rem; max-width: 760px; text-align: left; }
+.geo-challenge .geo-notes-reopened > button { border-radius: 999px; font-weight: 800; }
+
+/* Grown-up activity: a leafy optional card */
+.geo-activity {
+  border: 3px dashed color-mix(in srgb, var(--geo-leaf) 60%, var(--geo-card)); border-radius: 20px;
+  background: color-mix(in srgb, var(--geo-grass) 14%, var(--geo-card)); padding: .5rem 1rem;
+}
+.geo-activity summary { gap: .5rem; font-size: 1.05rem; }
+.geo-activity-icon { font-size: 1.4rem; }
+
+@media (max-width: 560px) {
+  .geo-hero { flex-wrap: wrap; padding-bottom: 76px; }
+  .geo-hero-scene { width: 100%; max-height: 80px; right: 0; }
+  .mascot.geo-notes-bix { zoom: .36; margin-top: 2rem; }
+  .geo-notes-lines li { font-size: 1.1rem; }
+  .geo-notes-bubble { padding: .85rem .9rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .geo-go-icon { animation: none; }
+  .geo-start .submit-btn.geo-go { transition: none; }
+}
+body.dark .geo-start .geo-evidence-line, body.dark .geo-challenge .geo-evidence-line { background: color-mix(in srgb, var(--geo-slot) 12%, var(--geo-card)); }
+/* Older map drawings: real sea and land colours instead of the page background. */
+.geo-start, .geo-challenge { --geo-water: var(--light-geo-sea); --geo-land: var(--light-geo-grass); }
+body.dark .geo-start, body.dark .geo-challenge { --geo-water: var(--dark-geo-sea); --geo-land: var(--dark-geo-grass); }
+.geo-start .geo-land, .geo-challenge .geo-land { fill-opacity: .9; }
+/* Rivers are on land, so they can be blue (their legends already say "blue wavy lines"). */
+.geo-start .geo-river, .geo-challenge .geo-river { stroke: var(--light-geo-sea-deep); }
+body.dark .geo-start .geo-river, body.dark .geo-challenge .geo-river { stroke: var(--dark-geo-rain); }

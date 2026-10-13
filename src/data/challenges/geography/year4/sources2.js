@@ -1,0 +1,22 @@
+// Source ids for group 2 topics (Climate and the Globe). Pages fetched and checked 2026-10-13.
+export const SOURCES_G2 = {
+  g2_nasaPower: { title: "NASA POWER monthly API: MERRA-2 model grid-cell climatology, January 2001 to December 2025, retrieved 13 October 2026", url: "https://power.larc.nasa.gov/docs/services/api/temporal/monthly/" },
+  g2_noaaClimate: { title: "NOAA NESDIS: what are the different climate types? (climate is the average weather over 30 years or more; tropical, dry, temperate, polar and highland types)", url: "https://www.nesdis.noaa.gov/about/k-12-education/understanding-our-planet/what-are-the-different-climate-types" },
+  g2_metZones: { title: "Met Office: climate zones (Koppen groups; alpine climates at altitude; polar climates mainly in the Arctic and Antarctic)", url: "https://weather.metoffice.gov.uk/climate/climate-explained/climate-zones" },
+  g2_nasaBiomes: { title: "NASA Science for kids: biomes (a biome is a community of plants and animals in a certain kind of climate)", url: "https://science.nasa.gov/kids/earth/mission-biomes" },
+  g2_nasaRainforest: { title: "NASA Science for kids: rainforest biome (Manaus example)", url: "https://science.nasa.gov/kids/earth/mission-biomes/biorainforest/" },
+  g2_nasaDesert: { title: "NASA Science for kids: desert biome", url: "https://science.nasa.gov/kids/earth/mission-biomes/biodesert/" },
+  g2_nasaGrassland: { title: "NASA Science for kids: grassland biome", url: "https://science.nasa.gov/kids/earth/mission-biomes/biograssland/" },
+  g2_nasaTemperate: { title: "NASA Science for kids: temperate deciduous forest biome (Madrid example)", url: "https://science.nasa.gov/kids/earth/mission-biomes/biotemperate/" },
+  g2_nasaConiferous: { title: "NASA Science for kids: coniferous (boreal) forest biome", url: "https://science.nasa.gov/kids/earth/mission-biomes/bioconiferous/" },
+  g2_nasaTundra: { title: "NASA Science for kids: tundra biome", url: "https://science.nasa.gov/kids/earth/mission-biomes/biotundra/" },
+  g2_neonTundra: { title: "NEON: Utqiagvik (Barrow) field site, Arctic tundra on the North Slope of Alaska", url: "https://neonscience.org/field-sites/BARR" },
+  g2_saskGrassland: { title: "Biodiversity Saskatchewan: Moist Mixed Grassland ecoregion (native grassland and agriculture)", url: "https://www.biodiversity.sk.ca/ecoregions/Moist_Mixed_Grassland.htm" },
+  g2_nasaEgypt: { title: "NASA Earth Observatory: dust storm in Egypt (desert plateau outside the Nile valley)", url: "https://science.nasa.gov/earth/earth-observatory/dust-storm-in-egypt-80718" },
+  g2_pewBoreal: { title: "Pew Charitable Trusts: Northwest Territories boreal forest of black spruce and jack pine near Yellowknife", url: "https://www.pewtrusts.org/research-and-analysis/articles/2014/08/29/canadas-northwest-territories-wilderness-gems-sparkle-in-summers-light" },
+  g2_nasaLandChange: { title: "NASA Scientific Visualization Studio: land cover and land use change (forests cleared for farmland and pasture)", url: "https://svs.gsfc.nasa.gov/vis/a010000/a010400/a010496/script_1196_00.html" },
+  g2_astroDay: { title: "IAU astroEDU: why do we have day and night? (sunlight falls on one side of the rotating Earth)", url: "https://astroedu.iau.org/en/activities/why-do-we-have-day-and-night" },
+  g2_rmgGmt: { title: "Royal Museums Greenwich: Greenwich Mean Time (the Greenwich meridian marks 0 degrees longitude)", url: "https://www.rmg.co.uk/stories/topics/greenwich-mean-time-gmt" },
+  g2_govClocks: { title: "GOV.UK: when do the clocks change? (GMT and British Summer Time)", url: "https://www.gov.uk/when-do-the-clocks-change" },
+  g2_nistZones: { title: "NIST: local time FAQs (zones based on 15 degrees of longitude; borders follow local boundaries; UTC offsets)", url: "https://www.nist.gov/pml/time-and-frequency-division/local-time-faqs" },
+};

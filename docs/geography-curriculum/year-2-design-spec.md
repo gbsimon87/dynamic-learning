@@ -1,6 +1,7 @@
 # Year 2 Geography — design spec
 
-**Status:** draft, 2026-10-13; specifications only, implementation not started.
+**Status:** implemented, 2026-10-13; all 14 topics / 56 challenges built and
+automatically verified. Browser and physical-device review remain pending.
 **Implementation tracker:** embedded in §7; read it first when resuming.
 **Shared spec:** [shared-design-spec.md](shared-design-spec.md).
 **Statutory source and proposed mapping:** [key-stage-1-geography.md](../curriculum/key-stage-1-geography.md).
@@ -12,7 +13,7 @@ A Curriculum Mode path for children aged 6–7: **5 categories, 14 topics and 56
 Consolidate world and UK location, then use named small areas to compare human and physical geography. Make map-reading and local observation increasingly purposeful. A child can enter Year 2 directly; its first topics recap Year 1 knowledge.
 
 Success means a child can meet the outcomes below using pictures, maps,
-notes and read-aloud support, and apply them to visible evidence. Future
+notes and read-aloud support, and apply them to visible evidence. Digital
 challenge completion uses the existing progress/reward flow. Practical
 observations are encouraged separately and are not marked complete by the app.
 
@@ -20,8 +21,9 @@ observations are encouraged separately and are not marked complete by the app.
 
 This is the app's proposed Year 2 allocation within KS1, not a statutory year-by-year programme.
 Requirement codes identify bullets in the shared spec §2 and source mapping.
-Names, order and study choices are draft design decisions, not owner-approved
-identifiers. Once shipped, titles derive permanent IDs via `toKebabCase()`.
+The owner requested this implementation on 2026-10-13. The exact names and
+order below now derive permanent IDs via `toKebabCase()`; do not rename them
+without a progress migration.
 
 Together with Year 1, the path plans all KS1 bullets and listed vocabulary. Small-area study is sustained across four topics rather than replaced by country facts. Independent map drawing and first-hand fieldwork remain practical requirements outside automatic completion. No eight-point compass, numeric grid references, broad national generalisations or climate-zone classification.
 
@@ -151,57 +153,97 @@ outcome; they do not certify the child performed outdoor fieldwork.
 | 13 | Observing Our School Grounds | I can plan observations and a map of familiar grounds. |
 | 14 | Exploring Our Local Area | I can plan a local walk and describe observed features. |
 
-Future dataset: `src/data/year2GeographyCurriculum.js`.
-Future topic banks: `src/data/challenges/geography/year2/`.
-Future wrappers: `src/pages/skills/geography/challenges/year2/<topic-id>/<Pascal>Challenge1–4.jsx`.
+Dataset: `src/data/year2GeographyCurriculum.js`.
+Topic banks: `src/data/challenges/geography/year2/`.
+Wrappers: `src/pages/skills/geography/challenges/year2/<topic-id>/<Pascal>Challenge1–4.jsx`.
 Follow shared spec §§7–8 for registry, stable IDs, certificates, assets and
-verification. Keep the future Geography entry outside the overall year award
+verification. Keep the Geography entry outside the overall year award
 using the existing `countsTowardYear: false` mechanism. Release each complete
 topic in the listed order; preserve all prior subject/year progress.
 
 ## 7. Implementation tracker
 
-**Checkpoint:** 2026-10-13 — spec and crosswalk drafted; no feature work started.
-**Totals:** 0/14 topics built; 0/56 challenges built or verified.
-**First future pilot:** Continents and Oceans Together. Start only after a request to implement.
-**Resume:** read the shared spec, this tracker and the source mapping before
-editing. Build in category/topic order and release all four slots together.
+**Checkpoint:** 2026-10-13 — owner-requested Year 2 implementation complete.
+**Totals:** 14/14 topics built; 56/56 challenges automatically verified;
+403 authored templates, at least seven per slot.
+**Pilot:** Continents and Oceans Together — all four component runs passed.
+**Resume:** perform browser visual/interaction review and physical-device voice
+and touch review. Use disposable profiles; preserve real learner data.
 
-In the table, **— means not started**. Record C1–C4 independently as Built
-then Verified; use the evidence column for check results, review notes and
-release state. A drafted brief does not mean a built challenge.
+**Auto verified** means built and exercised by component tests; it does not
+claim browser or physical-device visual verification. Ordering state uses a
+mocked drag control in jsdom; browser keyboard/drag review is pending. All four
+slots per topic are available through the existing loader. No deployment.
 
 | # | Topic | Brief | C1 | C2 | C3 | C4 | Verification / release evidence |
 |---|---|---|---|---|---|---|---|
-| 1 | Continents and Oceans Together | Drafted | — | — | — | — | Pending |
-| 2 | UK Places and Landscapes | Drafted | — | — | — | — | Pending |
-| 3 | Compass Directions and Routes | Drafted | — | — | — | — | Pending |
-| 4 | Weather Records | Drafted | — | — | — | — | Pending |
-| 5 | The Equator and the Poles | Drafted | — | — | — | — | Pending |
-| 6 | Whitby by the Sea | Drafted | — | — | — | — | Pending |
-| 7 | Kampong Ayer by the River | Drafted | — | — | — | — | Pending |
-| 8 | Homes and Journeys in Two Places | Drafted | — | — | — | — | Pending |
-| 9 | Comparing Two Small Places | Drafted | — | — | — | — | Pending |
-| 10 | Aerial Views and Landmarks | Drafted | — | — | — | — | Pending |
-| 11 | Symbols and Map Keys | Drafted | — | — | — | — | Pending |
-| 12 | Making a Simple Map | Drafted | — | — | — | — | Pending |
-| 13 | Observing Our School Grounds | Drafted | — | — | — | — | Pending |
-| 14 | Exploring Our Local Area | Drafted | — | — | — | — | Pending |
+| 1 | Continents and Oceans Together | Built | Auto verified | Auto verified | Auto verified | Auto verified | Five-round component runs; retries, hints, notes and completion. Browser pending. |
+| 2 | UK Places and Landscapes | Built | Auto verified | Auto verified | Auto verified | Auto verified | Five-round component runs; retries, hints, notes and completion. Browser pending. |
+| 3 | Compass Directions and Routes | Built | Auto verified | Auto verified | Auto verified | Auto verified | Five-round component runs; retries, hints, notes and completion. Browser pending. |
+| 4 | Weather Records | Built | Auto verified | Auto verified | Auto verified | Auto verified | Five-round component runs; retries, hints, notes and completion. Browser pending. |
+| 5 | The Equator and the Poles | Built | Auto verified | Auto verified | Auto verified | Auto verified | Five-round component runs; retries, hints, notes and completion. Browser pending. |
+| 6 | Whitby by the Sea | Built | Auto verified | Auto verified | Auto verified | Auto verified | Five-round component runs; retries, hints, notes and completion. Browser pending. |
+| 7 | Kampong Ayer by the River | Built | Auto verified | Auto verified | Auto verified | Auto verified | Five-round component runs; retries, hints, notes and completion. Browser pending. |
+| 8 | Homes and Journeys in Two Places | Built | Auto verified | Auto verified | Auto verified | Auto verified | Five-round component runs; retries, hints, notes and completion. Browser pending. |
+| 9 | Comparing Two Small Places | Built | Auto verified | Auto verified | Auto verified | Auto verified | Five-round component runs; retries, hints, notes and completion. Browser pending. |
+| 10 | Aerial Views and Landmarks | Built | Auto verified | Auto verified | Auto verified | Auto verified | Five-round component runs; retries, hints, notes and completion. Browser pending. |
+| 11 | Symbols and Map Keys | Built | Auto verified | Auto verified | Auto verified | Auto verified | Five-round component runs; retries, hints, notes and completion. Browser pending. |
+| 12 | Making a Simple Map | Built | Auto verified | Auto verified | Auto verified | Auto verified | Five-round component runs; retries, hints, notes and completion. Browser pending. |
+| 13 | Observing Our School Grounds | Built | Auto verified | Auto verified | Auto verified | Auto verified | Five-round component runs; retries, hints, notes and completion. Browser pending. |
+| 14 | Exploring Our Local Area | Built | Auto verified | Auto verified | Auto verified | Auto verified | Five-round component runs; retries, hints, notes and completion. Browser pending. |
 
 | Milestone | Status | Required evidence |
 |---|---|---|
-| Spec and statutory crosswalk | Drafted | Year allocation, topic boundaries and four-slot briefs present |
-| Shared engine and asset foundation | Not started | Shared spec tracker complete enough for the pilot |
-| Dataset, registry and certificate outcomes | Not started | 14 topics / 56 slots, locked IDs and certificate coverage |
-| First topic pilot | Not started | All four runs, notes, hints, map access, reload/replay and both themes |
-| Remaining topics | Not started | Per-topic C1–C4 rows built and verified in order |
-| Lint, full tests and build | Not started | All three required commands pass for the implementation |
-| Browser and progress regression | Not started | Desktop/phone, both themes, other subjects/years and profile switching |
+| Spec and statutory crosswalk | Implemented | Exact titles/IDs and 14 outcomes checked against the KS1 mapping |
+| Shared engine and asset foundation | Auto verified | Year 2 age limits, KS1 four-point compass/plans, four licensed bundled photographs; files inspected |
+| Dataset, registry and certificate outcomes | Auto verified | 14 topics / 56 paths; 14 exact outcomes; outside overall year award |
+| First topic pilot | Auto verified | All four component runs; notes/hints/completion; browser layout pending |
+| Remaining topics | Auto verified | All 52 remaining component runs; seeded bank validation |
+| Lint, full tests and build | Passed | Security review: lint, 1,785 unit + 349 component tests and production build pass; four DB tests skipped |
+| Browser and progress regression | Partially verified | Automated cascades/replay, local-store child/year/subject isolation and prior awards pass. Browser controls unavailable; desktop/phone layouts and switching UI pending |
 | Physical-device voice and touch | Not started | Phone/tablet review, distinct from simulated viewports |
-| Subject release | Not started | Verified topics, docs updated and remaining coverage limits recorded |
+| Subject release | Available locally | All wrappers registered and documentation updated. Browser/device review and deployment pending |
 
 ### Log
 
 - **2026-10-13:** Drafted the spec, four challenge briefs per topic,
   outcome lines and statutory mapping. Implementation is intentionally
   unstarted under the owner’s specs-only request.
+
+- **2026-10-13 — implementation:** owner requested all Year 2 Geography using
+  the recommendations. Built all 14 topics / 56 wrappers and 403 templates,
+  including sorts and ordering, four-point and rotated compasses, simple keys,
+  UK/world maps, small-area photographs/plans and labelled example weather and
+  fieldwork records. Four optional grown-up cards remain separate from digital
+  completion. Titles and certificate outcomes follow this spec exactly.
+- **2026-10-13 — checks:** `npm run lint`, `npm test` and `npm run build` pass;
+  1,772 unit and 323 component tests passed; four database-dependent tests
+  skipped because no test database is configured. All 56 five-round component
+  runs passed, including callbacks once with combos, retries, hints and notes
+  state. The loopback API security test required running outside the sandbox.
+  Existing Vite large-chunk warning remains. See [source pack](YEAR2_SOURCE_PACK.md).
+- **Review limit:** browser/Node REPL controls were unavailable. jsdom theme
+  classes do not prove colour contrast or phone layout, and ordering-state
+  tests do not prove real drag/touch interaction. Keep browser and physical
+  device voice/touch review pending. Digital completion does not certify
+  independent map drawing or first-hand fieldwork. No deployment was made.
+
+- **Handoff:** Year 2-specific lint, 24 unit tests and 20 component tests pass,
+  including all 56 runs. Full tests/build passed at the Year 2 checkpoint.
+  Repository-wide lint is currently affected by concurrent work outside this
+  task. On the owner's instruction, that work is left alone; this handoff
+  certifies Year 2's automated checks, with browser/device review pending.
+
+- **2026-10-13 — full bug/security pass:** reviewed all 14 topics / 403
+  templates and the Year 2 runtime/progress path. Fixed ambiguous positional
+  wording, missing spoken shape descriptions, silent tally options, an
+  unsupported compass orientation and overbroad continent wording. Hardened
+  unknown/inherited topic/slot handling and remount/cancellation on prop
+  changes. No IDs, stored progress, unlock or reward rules changed.
+- **Review verification:** 29 Year 2 unit and 32 component tests pass,
+  including every template through its controls, all 56 runs, real route
+  completion/gating, delayed loads/saves and profile isolation. Repository-wide
+  lint now passes; full tests pass (1,785 unit + 349 component; four DB tests
+  skipped), build passes, and the production dependency audit reports zero
+  known vulnerabilities. Browser and physical-device review stay pending.
+  Full findings: [Year 2 bug/security review](YEAR2_BUG_SECURITY_REVIEW.md).

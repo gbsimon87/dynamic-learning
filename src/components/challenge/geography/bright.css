@@ -1,0 +1,139 @@
+/* Bright drawings for Years 2–4, matching the Year 1 picture style.
+   Every hue is a --light-geo-* / --dark-geo-* token from App.css. Meaning always
+   stays in letters, words and shapes; colour only adds life. */
+.geo-start, .geo-challenge {
+  --gb-sky: var(--light-geo-sky); --gb-sea: var(--light-geo-sea); --gb-sea-deep: var(--light-geo-sea-deep); --gb-foam: var(--light-geo-foam);
+  --gb-grass: var(--light-geo-grass); --gb-leaf: var(--light-geo-leaf); --gb-leaf-dark: var(--light-geo-leaf-dark); --gb-leaf-light: var(--light-geo-leaf-light);
+  --gb-sun: var(--light-geo-sun); --gb-roof: var(--light-geo-roof); --gb-roof-2: var(--light-geo-roof-2); --gb-wall: var(--light-geo-wall); --gb-wall-2: var(--light-geo-wall-2);
+  --gb-trunk: var(--light-geo-trunk); --gb-soil: var(--light-geo-soil); --gb-rock: var(--light-geo-rock); --gb-snow: var(--light-geo-snow); --gb-autumn: var(--light-geo-autumn);
+  --gb-mountain: var(--light-geo-mountain); --gb-door: var(--light-geo-door); --gb-stone: var(--light-geo-stone); --gb-cloud-grey: var(--light-geo-cloud-grey); --gb-sand: var(--light-geo-sand);
+  --gb-ink: var(--light-geo-ink); --gb-paper: var(--light-geo-paper); --gb-label: var(--light-geo-ink); --gb-halo: var(--light-geo-paper);
+  --gb-pin: var(--light-geo-ink); --gb-on-pin: var(--light-geo-paper); --gb-night: var(--light-geo-night);
+}
+body.dark .geo-start, body.dark .geo-challenge {
+  --gb-sky: var(--dark-geo-sky); --gb-sea: var(--dark-geo-sea); --gb-sea-deep: var(--dark-geo-sea-deep); --gb-foam: var(--dark-geo-foam);
+  --gb-grass: var(--dark-geo-grass); --gb-leaf: var(--dark-geo-leaf); --gb-leaf-dark: var(--dark-geo-leaf-dark); --gb-leaf-light: var(--dark-geo-leaf-light);
+  --gb-sun: var(--dark-geo-sun); --gb-roof: var(--dark-geo-roof); --gb-roof-2: var(--dark-geo-roof-2); --gb-wall: var(--dark-geo-wall); --gb-wall-2: var(--dark-geo-wall-2);
+  --gb-trunk: var(--dark-geo-trunk); --gb-soil: var(--dark-geo-soil); --gb-rock: var(--dark-geo-rock); --gb-snow: var(--dark-geo-snow); --gb-autumn: var(--dark-geo-autumn);
+  --gb-mountain: var(--dark-geo-mountain); --gb-door: var(--dark-geo-door); --gb-stone: var(--dark-geo-stone); --gb-cloud-grey: var(--dark-geo-cloud-grey); --gb-sand: var(--dark-geo-sand);
+  --gb-ink: var(--dark-geo-ink); --gb-paper: var(--dark-geo-paper); --gb-label: var(--dark-text); --gb-halo: var(--dark-bg);
+  --gb-pin: var(--dark-text); --gb-on-pin: var(--dark-bg); --gb-night: var(--dark-geo-night);
+}
+
+/* Shared SVG pieces */
+.geo-challenge .geo-visual svg, .geo-start .geo-visual svg { border: 0; border-radius: 18px; }
+.geo-challenge .geo-visual svg :is(path, line, circle, rect), .geo-start .geo-visual svg :is(path, line, circle, rect) { stroke-linejoin: round; stroke-linecap: round; }
+:is(.geo-start, .geo-challenge) .geo-label, :is(.geo-start, .geo-challenge) .geo-north text {
+  fill: var(--gb-label); paint-order: stroke; stroke: var(--gb-halo); stroke-width: 5px; stroke-linejoin: round; font-weight: 800;
+}
+:is(.geo-start, .geo-challenge) .geo-marker { fill: var(--gb-pin); stroke: var(--gb-on-pin); stroke-width: 3; filter: drop-shadow(0 2px 0 color-mix(in srgb, var(--gb-ink) 35%, transparent)); }
+:is(.geo-start, .geo-challenge) .geo-marker-text { fill: var(--gb-on-pin); font-weight: 900; }
+:is(.geo-start, .geo-challenge) .geo-water { fill: var(--gb-sea); stroke: color-mix(in srgb, var(--gb-sea-deep) 60%, transparent); }
+:is(.geo-start, .geo-challenge) .geo-land { fill: var(--gb-grass); fill-opacity: 1; stroke: color-mix(in srgb, var(--gb-ink) 45%, transparent); stroke-width: 1.2; }
+:is(.geo-start, .geo-challenge) .geo-region { fill: var(--gb-sun); fill-opacity: .5; stroke: var(--gb-roof); stroke-width: 3; }
+:is(.geo-start, .geo-challenge) .geo-reference { stroke: var(--gb-roof); stroke-width: 3.5; stroke-dasharray: 10 6; }
+:is(.geo-start, .geo-challenge) .geo-plate-boundary { stroke: var(--gb-roof); stroke-width: 3; }
+:is(.geo-start, .geo-challenge) .geo-north path { stroke: var(--gb-roof); stroke-width: 3.5; }
+:is(.geo-start, .geo-challenge) .geo-paper { fill: var(--gb-paper); }
+.geo-sky { fill: var(--gb-sky); }
+.geo-ground { fill: var(--gb-soil); }
+.geo-sun circle { fill: var(--gb-sun); } .geo-sun line { stroke: var(--gb-sun); stroke-width: 5; }
+.geo-snowcap { fill: var(--gb-snow); stroke: color-mix(in srgb, var(--gb-ink) 30%, transparent); stroke-width: 1; }
+.geo-smoke circle { fill: var(--gb-cloud-grey); fill-opacity: .8; }
+:is(.geo-start, .geo-challenge) .geo-rock-land { fill: var(--gb-rock); }
+:is(.geo-start, .geo-challenge) .geo-magma { fill: var(--gb-autumn); stroke: var(--gb-roof); stroke-width: 3; }
+:is(.geo-start, .geo-challenge) .geo-hot-line { stroke: var(--gb-roof); }
+
+/* Globe and grids */
+:is(.geo-start, .geo-challenge) .geo-globe { stroke: color-mix(in srgb, var(--gb-ink) 55%, transparent); stroke-width: 3; }
+:is(.geo-start, .geo-challenge) .geo-visual-globe .geo-outline { stroke: var(--gb-foam); stroke-opacity: .7; }
+:is(.geo-start, .geo-challenge) .geo-grid-line { stroke: var(--gb-leaf-dark); stroke-opacity: .6; stroke-width: 1.5; }
+:is(.geo-start, .geo-challenge) .geo-tenth-line { stroke: var(--gb-leaf-dark); }
+:is(.geo-start, .geo-challenge) :is(.geo-visual-grid, .geo-visual-plan) .geo-paper { fill: color-mix(in srgb, var(--gb-leaf-light) 35%, var(--gb-paper)); }
+:is(.geo-start, .geo-challenge) .geo-visual-coordinates .geo-water { fill: var(--gb-sea); }
+:is(.geo-start, .geo-challenge) .geo-visual-coordinates .geo-grid-line { stroke: var(--gb-foam); stroke-opacity: .55; }
+
+/* Compass rose */
+.geo-rose-back { fill: color-mix(in srgb, var(--gb-sun) 22%, var(--gb-paper)); stroke: var(--gb-sun); stroke-width: 4; }
+:is(.geo-start, .geo-challenge) .geo-visual-compass .geo-outline { stroke: var(--gb-roof-2); stroke-width: 5; }
+:is(.geo-start, .geo-challenge) .geo-visual-compass .geo-rose-north { stroke: var(--gb-roof); stroke-width: 7; }
+
+/* Day and night */
+:is(.geo-start, .geo-challenge) .geo-night { fill: var(--gb-night); fill-opacity: 1; stroke: color-mix(in srgb, var(--gb-ink) 50%, transparent); }
+:is(.geo-start, .geo-challenge) .geo-day { fill: color-mix(in srgb, var(--gb-sun) 45%, var(--gb-paper)); stroke: color-mix(in srgb, var(--gb-ink) 50%, transparent); }
+.geo-stars circle { fill: var(--gb-sun); }
+:is(.geo-start, .geo-challenge) .geo-visual-daynight .geo-outline { stroke: var(--gb-sun); stroke-width: 4; }
+:is(.geo-start, .geo-challenge) .geo-visual-daynight .geo-reference { stroke: var(--gb-roof); }
+
+/* Land-use grids: a different colour per key code; the code letter stays in every square. */
+:is(.geo-start, .geo-challenge) .geo-use { stroke: var(--gb-paper); stroke-width: 3; fill-opacity: 1; }
+:is(.geo-start, .geo-challenge) .geo-use-0 { fill: var(--gb-grass); } :is(.geo-start, .geo-challenge) .geo-use-1 { fill: var(--gb-wall-2); }
+:is(.geo-start, .geo-challenge) .geo-use-2 { fill: var(--gb-roof); } :is(.geo-start, .geo-challenge) .geo-use-3 { fill: var(--gb-sea); }
+:is(.geo-start, .geo-challenge) .geo-use-4 { fill: var(--gb-mountain); } :is(.geo-start, .geo-challenge) .geo-use-5 { fill: var(--gb-sand); }
+:is(.geo-start, .geo-challenge) .geo-use-text { fill: var(--gb-ink); stroke: var(--gb-foam); stroke-width: 4px; font-weight: 900; }
+
+/* Year 2 plans: a grassy practice area with coloured symbols (same shapes). */
+:is(.geo-start, .geo-challenge) .ks1-ground { fill: color-mix(in srgb, var(--gb-leaf-light) 40%, var(--gb-paper)); }
+:is(.geo-start, .geo-challenge) .ks1-compass-ground { fill: color-mix(in srgb, var(--gb-sun) 14%, var(--gb-paper)); }
+:is(.geo-start, .geo-challenge) .ks1-wall { fill: var(--gb-wall); stroke: var(--gb-ink); stroke-width: 2.5; }
+:is(.geo-start, .geo-challenge) .ks1-roof { fill: var(--gb-roof); stroke: var(--gb-ink); stroke-width: 2.5; }
+:is(.geo-start, .geo-challenge) .ks1-shop { fill: var(--gb-sun); stroke: var(--gb-ink); stroke-width: 2.5; }
+:is(.geo-start, .geo-challenge) .ks1-tree { fill: var(--gb-leaf); stroke: var(--gb-ink); stroke-width: 2.5; }
+:is(.geo-start, .geo-challenge) .ks1-trunk { stroke: var(--gb-trunk); stroke-width: 6; }
+:is(.geo-start, .geo-challenge) .ks1-gate { stroke: var(--gb-trunk); stroke-width: 5; }
+:is(.geo-start, .geo-challenge) .ks1-wood { fill: var(--gb-wall-2); stroke: var(--gb-trunk); stroke-width: 2.5; }
+:is(.geo-start, .geo-challenge) .ks1-water { stroke: var(--gb-sea-deep); stroke-dasharray: none; }
+:is(.geo-start, .geo-challenge) .ks1-route { stroke: var(--gb-roof); }
+.geo-ks1-key-symbol { background: color-mix(in srgb, var(--gb-leaf-light) 40%, var(--gb-paper)); border-radius: 50%; }
+
+/* Map keys become chips, like Year 1. */
+:is(.geo-start, .geo-challenge) .geo-key li {
+  flex: 0 1 auto; display: flex; align-items: center; gap: .45rem; padding: .3rem .8rem .3rem .3rem; border-radius: 999px;
+  background: var(--geo-card); border: 2px solid var(--geo-soft-ink); font-weight: 700;
+}
+:is(.geo-start, .geo-challenge) .geo-key b {
+  display: inline-grid; place-items: center; min-width: 1.9em; height: 1.9em; padding: 0 .3em; border: 0; border-radius: 999px;
+  background: var(--gb-pin); color: var(--gb-on-pin); font-weight: 900;
+}
+
+/* Step diagrams: bright numbered cards with arrows between them. */
+:is(.geo-start, .geo-challenge) .geo-flow { gap: .35rem; }
+:is(.geo-start, .geo-challenge) .geo-flow li {
+  position: relative; border: 0; border-radius: 16px; padding: .7rem .9rem; font-weight: 700; font-size: 1.05rem;
+  background: color-mix(in srgb, var(--gb-sky) 55%, var(--geo-card)); box-shadow: 0 3px 0 var(--geo-soft-ink);
+}
+:is(.geo-start, .geo-challenge) .geo-flow li:nth-child(even) { background: color-mix(in srgb, var(--gb-leaf-light) 45%, var(--geo-card)); }
+:is(.geo-start, .geo-challenge) .geo-flow li > b {
+  flex: none; display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border-radius: 50%;
+  background: var(--geo-slot); color: var(--geo-card); font-weight: 900;
+}
+:is(.geo-start, .geo-challenge) .geo-flow li > span[aria-hidden] {
+  position: absolute; left: 1.55rem; bottom: -1.05rem; z-index: 1; font-size: 1.2rem; font-weight: 900; color: var(--geo-slot);
+}
+.geo-flow-cycle { font-weight: 800; margin: .75rem 0 .25rem; }
+
+/* Tables: rounded, tinted heading row, striped rows. */
+:is(.geo-start, .geo-challenge) .geo-climate { border-radius: 18px; overflow: hidden; box-shadow: 0 0 0 2px var(--geo-soft-ink); overflow-x: auto; }
+:is(.geo-start, .geo-challenge) .geo-climate table { border-collapse: separate; border-spacing: 0; }
+:is(.geo-start, .geo-challenge) .geo-climate th, :is(.geo-start, .geo-challenge) .geo-climate td { border: 0; border-bottom: 1px solid var(--geo-soft-ink); }
+:is(.geo-start, .geo-challenge) .geo-climate thead th { background: color-mix(in srgb, var(--geo-slot) 22%, var(--geo-card)); font-weight: 900; }
+:is(.geo-start, .geo-challenge) .geo-climate tbody tr:nth-child(even) { background: color-mix(in srgb, var(--gb-sky) 30%, var(--geo-card)); }
+:is(.geo-start, .geo-challenge) .geo-climate tbody th { font-weight: 800; }
+:is(.geo-start, .geo-challenge) .geo-climate caption { font-weight: 700; caption-side: bottom; font-size: .9rem; }
+
+/* Photos and paired maps */
+:is(.geo-start, .geo-challenge) .geo-source-image img { border-radius: 16px; box-shadow: 0 4px 0 var(--geo-soft-ink); }
+:is(.geo-start, .geo-challenge) .geo-paired-maps section { background: color-mix(in srgb, var(--gb-sky) 25%, var(--geo-card)); border-radius: 18px; padding: .5rem; }
+:is(.geo-start, .geo-challenge) .geo-paired-maps h5 { margin: .25rem .25rem .5rem; font-weight: 900; }
+
+/* Text-only evidence: a picture strip on top and clue cards with a magnifier. */
+.geo-record-banner { margin: 0 0 .5rem; }
+.geo-record-banner svg.y1-svg { max-height: 120px; max-width: 360px; margin: 0 auto; }
+:is(.geo-start, .geo-challenge) .geo-visual-record:not(:has(.geo-paired-maps)) .geo-evidence-line { position: relative; padding-left: 2.6rem; }
+:is(.geo-start, .geo-challenge) .geo-visual-record:not(:has(.geo-paired-maps)) .geo-evidence-line::before {
+  content: "🔎"; position: absolute; left: .7rem; top: .5rem; font-size: 1.05rem;
+}
+
+/* Map explorer buttons */
+:is(.geo-start, .geo-challenge) .geo-explorer-controls button { border-radius: 999px; font-weight: 800; border-color: var(--geo-slot); background: color-mix(in srgb, var(--geo-slot) 10%, var(--geo-card)); }
+:is(.geo-start, .geo-challenge) .geo-explorer-controls button[aria-pressed="true"] { background: var(--geo-slot); color: var(--geo-card); }

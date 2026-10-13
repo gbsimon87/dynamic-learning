@@ -69,6 +69,17 @@ const GLYPHS_BY_SUBJECT = { english: ENGLISH_GLYPHS, science: SCIENCE_GLYPHS, hi
    anything carrying white ink — both are token names so the theme repaints
    them (PROJECT_KNOWLEDGE §9). */
 const CATEGORY_ICONS = [
+  // Geography, Year 1
+  { match: /^our place$/i, icon: "🏫" },
+  { match: /^the united kingdom$/i, icon: "🇬🇧" },
+  { match: /^the wider world$/i, icon: "🌍" },
+  { match: /^weather and exploring$/i, icon: "🌦️" },
+  // Geography, Year 4
+  { match: /^north and south america$/i, icon: "🌎" },
+  { match: /^climate and the globe$/i, icon: "🌡️" },
+  { match: /^rivers and changing landscapes$/i, icon: "🏞️" },
+  { match: /^settlements and resources$/i, icon: "🏘️" },
+  { match: /^mapping and fieldwork enquiries$/i, icon: "🧭" },
   { match: /^the uk and europe$/i, icon: "🗺️" },
   { match: /^lines on the globe$/i, icon: "🌍" },
   { match: /^physical processes$/i, icon: "🌋" },
