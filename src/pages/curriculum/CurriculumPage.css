@@ -156,7 +156,8 @@ body.dark .curriculum-page {
     background-color 200ms ease;
 }
 
-.cp-back:hover {
+.cp-back:hover,
+.cp-back:focus-visible {
   transform: translateX(-3px);
 }
 
@@ -206,7 +207,8 @@ body.dark .curriculum-page {
     box-shadow 140ms ease-out;
 }
 
-.cp-cta:hover {
+.cp-cta:hover,
+.cp-cta:focus-visible {
   transform: translateY(-2px);
 }
 
@@ -327,7 +329,8 @@ body.dark .curriculum-page {
     background-color 180ms ease;
 }
 
-.cp-dot:hover {
+.cp-dot:hover,
+.cp-dot:focus-visible {
   transform: translateY(-3px) scale(1.06);
 }
 
@@ -365,7 +368,8 @@ body.dark .curriculum-page {
     opacity 160ms ease;
 }
 
-.cp-arrow:hover:not(:disabled) {
+.cp-arrow:hover:not(:disabled),
+.cp-arrow:focus-visible:not(:disabled) {
   transform: scale(1.08);
 }
 
@@ -383,6 +387,9 @@ body.dark .curriculum-page {
 
 .cp-rail {
   display: flex;
+  /* Each card is only as tall as its own topics, not stretched to match the
+     longest quest in the row. */
+  align-items: flex-start;
   gap: clamp(1rem, 2.5vw, 1.6rem);
   /* Room for the cards' 10px colour shelf and their hover lift, which an
      overflow container would otherwise clip. */
@@ -413,18 +420,11 @@ body.dark .curriculum-page {
 
 /* ===== CATEGORY CARD ===== */
 .cp-cat {
-  /* Fixed width in the rail, and never taller than the viewport: the topics
-     inside scroll on their own so the page itself stays one screen. */
+  /* Fixed width in the rail, but no height cap: every challenge in a quest
+     is visible at once, with no scroll box inside the card to discover. */
   flex: 0 0 clamp(290px, 86vw, 400px);
   display: flex;
   flex-direction: column;
-  /* Whatever the status band, the dot row and the navbar leave — so the
-     page itself needs no vertical scroll at all on a normal screen, and the
-     topics scroll inside the card instead. */
-  max-height: max(
-    340px,
-    min(78vh, calc(100dvh - var(--navbar-height) - 215px))
-  );
   scroll-snap-align: start;
   padding: clamp(1.1rem, 3vw, 1.5rem);
   border: 3px solid var(--cat-hue);
@@ -438,7 +438,10 @@ body.dark .curriculum-page {
     box-shadow 220ms ease-out;
 }
 
-.cp-cat:hover {
+/* `:focus-within` so a keyboard learner tabbing into a quest gets the same
+   lift a pointer does on hover. */
+.cp-cat:hover,
+.cp-cat:focus-within {
   transform: translateY(-5px);
   box-shadow:
     0 15px 0 -2px var(--cat-hue),
@@ -451,7 +454,8 @@ body.dark .curriculum-page {
   box-shadow: 0 10px 26px var(--panel-shadow);
 }
 
-.cp-cat.is-locked:hover {
+.cp-cat.is-locked:hover,
+.cp-cat.is-locked:focus-within {
   transform: none;
   box-shadow: 0 10px 26px var(--panel-shadow);
 }
@@ -482,7 +486,8 @@ body.dark .curriculum-page {
   animation: none;
 }
 
-.cp-cat:hover .cp-cat-icon {
+.cp-cat:hover .cp-cat-icon,
+.cp-cat:focus-within .cp-cat-icon {
   animation: cp-icon-wiggle 700ms ease-in-out infinite;
 }
 
@@ -556,29 +561,12 @@ body.dark .curriculum-page {
 /* ===========================================================
    TOPIC
 =========================================================== */
-/* The card's only scrolling part. `min-height: 0` is what lets a flex child
-   shrink below its content and actually scroll. */
 .cp-topics {
   display: flex;
   flex: 1;
   flex-direction: column;
   gap: 0.9rem;
-  min-height: 0;
   margin-top: 1.1rem;
-  padding-right: 0.35rem;
-  overflow-y: auto;
-  overscroll-behavior-y: contain;
-  scrollbar-width: thin;
-  scrollbar-color: var(--cat-hue) transparent;
-}
-
-.cp-topics::-webkit-scrollbar {
-  width: 8px;
-}
-
-.cp-topics::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  background: var(--cat-hue);
 }
 
 .cp-topic {
@@ -717,7 +705,8 @@ body.dark .curriculum-page {
   cursor: pointer;
 }
 
-.cp-challenge.is-open:hover {
+.cp-challenge.is-open:hover,
+.cp-challenge.is-open:focus-visible {
   transform: translateY(-2px);
   box-shadow: 0 6px 0 rgba(0, 0, 0, 0.22);
 }
@@ -751,7 +740,8 @@ body.dark .curriculum-page {
   cursor: pointer;
 }
 
-.cp-challenge.is-complete:hover {
+.cp-challenge.is-complete:hover,
+.cp-challenge.is-complete:focus-visible {
   transform: translateY(-2px);
 }
 
@@ -877,6 +867,7 @@ body.dark .curriculum-page {
   .cp-glyph,
   .cp-cat-icon,
   .cp-cat:hover .cp-cat-icon,
+  .cp-cat:focus-within .cp-cat-icon,
   .cp-challenge.is-open::after,
   .cp-challenge.is-complete .cp-challenge-state,
   .cp-challenge.is-nudged {
@@ -896,11 +887,17 @@ body.dark .curriculum-page {
   }
 
   .cp-back:hover,
+  .cp-back:focus-visible,
   .cp-cta:hover,
+  .cp-cta:focus-visible,
   .cp-cat:hover,
+  .cp-cat:focus-within,
   .cp-dot:hover,
+  .cp-dot:focus-visible,
   .cp-arrow:hover:not(:disabled),
-  .cp-challenge:hover {
+  .cp-arrow:focus-visible:not(:disabled),
+  .cp-challenge:hover,
+  .cp-challenge:focus-visible {
     transform: none;
   }
 

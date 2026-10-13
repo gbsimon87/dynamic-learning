@@ -189,9 +189,9 @@ function DeadButton({ className, label, hint, icon }) {
    The eight categories used to stack, which made the page thousands of pixels
    tall — a child looking for Fractions scrolled past every challenge in
    Place Value to reach it. They now sit side by side in one snap-scrolling
-   row: swipe on touch, arrows or the dot row on a pointer. Each card caps its
-   own height and scrolls its topics internally, so the page itself stays
-   roughly one screen tall.
+   row: swipe on touch, arrows or the dot row on a pointer. Each card grows to
+   show all of its challenges, so nothing inside a quest is hidden behind a
+   scroll box.
 
    `children` is the card list; `stops` describes them for the dots. They are
    index-aligned, exactly as the curriculum and lock state are. */
