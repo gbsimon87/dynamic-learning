@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import BarChart from '../../../../../components/challenge/BarChart';
 import ChallengeShell from '../../../../../components/challenge/ChallengeShell';
 import { DataRound } from '../../../../../components/challenge/data/DataChallenge';
-import { buildYear4Math, TITLES } from '../../../../../data/challenges/year4Math/questions';
+import { buildYear4Math, titleFor } from '../../../../../data/challenges/year4Math/questions';
 import { isYear4MathCorrect } from '../../../../../data/challenges/year4Math/answers';
 import { isCorrect } from '../../../../../data/challenges/questionKinds';
 import Year4MathVisual from './Year4MathVisual';
@@ -10,7 +10,7 @@ import './Year4Math.css';
 
 export default function Year4MathGame({ topic, level, onComplete }) {
   const questions = useMemo(() => buildYear4Math(topic, level, Math.random), [topic, level]);
-  return <ChallengeShell title={TITLES[level-1]} questions={questions} onComplete={onComplete}
+  return <ChallengeShell title={titleFor(topic, level)} questions={questions} onComplete={onComplete}
     render={({ question, index, submit, locked, misses }) => question.interaction
       ? question.interaction==='chartBuild'
         ? <ChartBuildRound key={index} question={question} submit={submit} locked={locked} />
