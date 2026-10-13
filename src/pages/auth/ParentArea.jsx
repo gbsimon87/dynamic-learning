@@ -701,21 +701,23 @@ function ParentArea() {
         <section className="parent-area-section">
           <h2 className="parent-area-section-title">Account</h2>
           {signOutError && <p className="parent-area-name-error" role="alert">{signOutError}</p>}
-          <button
-            type="button"
-            className="parent-area-signout-btn"
-            disabled={signingOut}
-            onClick={handleSignOut}
-          >
-            {signingOut ? "Signing out…" : "Sign out"}
-          </button>
-          <DeleteAccount
-            isLearner={isLearner}
-            onDelete={async (password) => {
-              await deleteAccount(password);
-              navigate("/", { replace: true });
-            }}
-          />
+          <div className="parent-area-account-actions">
+            <button
+              type="button"
+              className="parent-area-signout-btn"
+              disabled={signingOut}
+              onClick={handleSignOut}
+            >
+              {signingOut ? "Signing out…" : "Sign out"}
+            </button>
+            <DeleteAccount
+              isLearner={isLearner}
+              onDelete={async (password) => {
+                await deleteAccount(password);
+                navigate("/", { replace: true });
+              }}
+            />
+          </div>
           <p className="parent-area-note">
             <Link to="/privacy">How we look after your information</Link>
           </p>

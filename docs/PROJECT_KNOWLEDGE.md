@@ -34,6 +34,28 @@ History: Years 1–4 are complete (see
 Geography's standalone Skills Mode games and saved programmes in
 `docs/curriculum/` do not count as curriculum implementations.
 
+The homepage curriculum section highlights this inventory in
+`HomeCurriculumOverview.jsx`: Years 1–6 and every registry subject, topic counts,
+totals derived from the curriculum datasets and challenge availability. The
+caption reads “Number of topics by year and subject”; cells show topic counts
+without completion labels. A small note beneath the table clarifies that Learn with Bix is
+independently developed, with no UK government affiliation or endorsement.
+Unavailable pathways are labelled “Not yet available”; Geography is the last
+column in the homepage table. The table scrolls horizontally on small
+screens and uses the homepage's paired theme tokens. Subject icons appear beside
+the table's column headings, replacing the separate subject badge list. History
+also appears in the homepage hero (2026-10-13).
+
+For signed-out visitors, the homepage's “Start my adventure” and “Explore the
+curriculum” buttons link directly to `/signup`. Signed-in users retain curriculum
+access and their next-challenge resume destination (2026-10-13).
+
+Homepage skill cards group their content in `.home-skill-copy`. At every viewport,
+the subject and skill name sit beside a compact icon, with the description below
+and tighter padding and gaps. The grid uses one, two or four columns according to
+screen width. Actions remain aligned at the bottom of each card row on desktop
+(2026-10-13).
+
 ---
 
 > **⚠️ THIS DOCUMENT IS AI-MAINTAINED.**
@@ -58,6 +80,17 @@ Geography's standalone Skills Mode games and saved programmes in
 ---
 
 ## 1. What This Project Is
+
+UI updates (2026-10-13): `components/ui/AppFooter.jsx` and its own paired-theme
+stylesheet replace the homepage-only footer. `RootLayout` shows it on `/`,
+`/curriculum`, `/skills`, `/trophies`, `/profiles`, `/parent`, `/login` and `/signup` (including trailing
+slashes). The flex shell anchors it to the bottom of short pages and places it
+after content on long pages. Profile, parent, login and signup pages defer viewport height to the
+shell. Credits' History heading uses the reading sheet's padding; parent account
+actions use a wrapping row with a 1rem gap; parent-area notes have a 1rem top
+margin. Brain-break dialogs have a permanent,
+non-empty “Brain break” heading and accessible name in both movement and cheer
+states; changing instructions remain polite live announcements.
 
 **Learn with Bix** (formerly Dynamic Learning) is an interactive web learning platform for primary-school
 children (built first for ~6-year-olds / **UK Year 2**; Curriculum Mode now
@@ -140,7 +173,7 @@ src/
 ├── main.jsx                  # Router definition — ALL routes registered here
 ├── App.css, index.css        # Global styles + CSS variables + light/dark themes
 ├── layouts/
-│   └── RootLayout.jsx        # Navbar + <Outlet />
+│   └── RootLayout.jsx        # Navbar + <Outlet /> + shared hub footer
 ├── context/
 │   ├── ThemeContext.jsx      # Global light/dark theme provider
 │   ├── theme-context.js      # Context object, split out for Fast Refresh
@@ -1028,6 +1061,19 @@ text was already verbatim. Every History and Geography file records its own
 year split, since the curriculum sets these out per key stage. Year 1 Maths (implemented below) and
 Year 1, 2 and 6 Science were added the same day, so every primary year of
 English, Maths and Science is saved.
+
+Geography updated 2026-10-13 from the owner-provided official primary PDF
+(DFE-00186-2013): the key stage 1 and 2 references reproduce its text verbatim,
+with the GOV.UK HTML page retained as a supporting reference. Source headers
+include publication date, England scope, retrieval/check date and Crown
+copyright/OGL attribution. Web-page editorial differences and the existing
+unimplemented-dataset/year-split mapping notes remain explicit. All three
+Geography references now follow the project's PDF-source convention.
+
+Key stage 3 Geography was added the same day from the owner-provided official
+secondary PDF (DFE-00193-2013), preserving its wording and nested lists. It is
+indexed in the curriculum README as reference only for years 7–9, beyond the
+app's primary years; it includes purpose, aims and key stage 3 attainment targets.
 
 History checked 2026-10-12 before the first History dataset: key stage 1 was
 correct; key stage 2 had the right words but five statutory bullets sat inside
@@ -2642,7 +2688,7 @@ heading in one aligned grid row, with the description below at full width
 “Pick your adventure” uses a compass icon; the backpack is reserved for
 Curriculum Mode.
 
-The homepage footer includes an About group linking to `/privacy` and
+The shared hub footer includes an About group linking to `/privacy` and
 `/credits` (2026-10-12), alongside Learn and Account.
 
 The colour refinement keeps reading surfaces white in light mode and warm

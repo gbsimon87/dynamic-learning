@@ -140,19 +140,20 @@ function BreakDialog({ phase, activity, line, onDone, onAnother, onClose }) {
         className="brain-break-dialog"
         role="dialog"
         aria-modal="true"
+        aria-label="Brain break"
         aria-labelledby="brain-break-title"
         tabIndex={-1}
         ref={panelRef}
       >
+        <h2 id="brain-break-title" className="brain-break-eyebrow">Brain break</h2>
         {phase === "moving" && activity && (
           <>
-            <p className="brain-break-eyebrow">Brain break</p>
             <span className={`brain-break-emoji move-${activity.move}`} aria-hidden="true">
               {activity.emoji}
             </span>
-            <h2 id="brain-break-title" className="brain-break-title" aria-live="polite">
+            <p className="brain-break-title" aria-live="polite">
               {activity.text}
-            </h2>
+            </p>
             <div className="brain-break-actions">
               <button type="button" className="brain-break-primary" onClick={onDone}>
                 I did it! <span aria-hidden="true">✅</span>
@@ -169,9 +170,9 @@ function BreakDialog({ phase, activity, line, onDone, onAnother, onClose }) {
         {phase === "cheer" && (
           <>
             <span className="brain-break-emoji move-jump" aria-hidden="true">🌟</span>
-            <h2 id="brain-break-title" className="brain-break-title" aria-live="polite">
+            <p className="brain-break-title" aria-live="polite">
               {line}
-            </h2>
+            </p>
             <div className="brain-break-actions">
               <button type="button" className="brain-break-primary" onClick={onClose}>
                 Back to playing <span aria-hidden="true">→</span>

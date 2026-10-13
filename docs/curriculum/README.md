@@ -46,10 +46,16 @@ cover.
 Set out per key stage, not per year. Splitting a key stage into years is our
 choice and must be written down in the file's mapping section.
 
+All Geography references follow the official DfE PDFs provided by the owner,
+checked on 2026-10-13. Key stages 1 and 2 retain the GOV.UK HTML page as a
+supporting reference and record its editorial differences. Key stage 3 is kept
+for reference only, beyond the app's primary years.
+
 | File | Covers |
 |---|---|
 | [key-stage-1-geography.md](key-stage-1-geography.md) | Key stage 1 (years 1 and 2), with the purpose of study and aims |
 | [key-stage-2-geography.md](key-stage-2-geography.md) | Key stage 2 (years 3 to 6), with the purpose of study and aims |
+| [key-stage-3-geography.md](key-stage-3-geography.md) | Key stage 3 (years 7 to 9), with purpose, aims and attainment targets; reference only |
 
 ### History
 

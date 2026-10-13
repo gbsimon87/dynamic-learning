@@ -1,9 +1,12 @@
 # Geography — Key stage 1 programme of study (England)
 
 **Source:** [Geography programmes of study: key stages 1 and 2](https://assets.publishing.service.gov.uk/media/5a7c1ecae5274a1f5cc75e97/PRIMARY_national_curriculum_-_Geography.pdf) (PDF, DFE-00186-2013) — Department for Education
-**Retrieved:** 2026-10-11
-**Status:** statutory, except sections marked *non-statutory*
-**Licence:** Open Government Licence v3.0
+**Published:** September 2013
+**Applies to:** England
+**Supporting web page:** [National curriculum in England: geography programmes of study](https://www.gov.uk/government/publications/national-curriculum-in-england-geography-programmes-of-study/national-curriculum-in-england-geography-programmes-of-study)
+**Retrieved and checked:** 2026-10-13
+**Status:** statutory; example content in [square brackets] is not required by law
+**Licence:** [Open Government Licence](https://www.nationalarchives.gov.uk/doc/open-government-licence/) — © Crown copyright 2013
 
 Statutory text is reproduced verbatim. Do not paraphrase it — the wording is
 the specification. Geography is set out per key stage, not per year: key stage 1 covers years
@@ -11,7 +14,10 @@ the specification. Geography is set out per key stage, not per year: key stage 1
 first. Key stage 2 is in [key-stage-2-geography.md](key-stage-2-geography.md).
 The mapping to our dataset is at the end.
 
-The text follows the PDF; how the gov.uk web page differs is listed at the end.
+The text below follows the linked official PDF verbatim, including its
+punctuation, capitalisation and list nesting. Page headers, page numbers and
+line wrapping are omitted. Editorial differences from the supporting web page
+are noted at the end.
 
 ---
 
@@ -82,10 +88,9 @@ Pupils should be taught to:
 
 ---
 
-## Differences from the gov.uk web page
+## Source fidelity notes
 
-The [gov.uk web page](https://www.gov.uk/government/publications/national-curriculum-in-england-geography-programmes-of-study/national-curriculum-in-england-geography-programmes-of-study) carries the same programme of study, revised
-in 2015. This file follows the PDF. Of the differences, 8 are only punctuation, capitals, spacing or numbers written as words
-(the web page writes “4” where the PDF writes “four”). The others:
-
-- …skills provide the — PDF: “frameworks”; web page: “framework”
+This file follows the official primary PDF supplied on 2026-10-13. The PDF uses
+“frameworks” where the GOV.UK web page uses “framework”, and differs in
+punctuation, capitalisation and numbers written as words. The PDF wording is preserved exactly; these are
+source differences, not app-authored changes to the statutory text.

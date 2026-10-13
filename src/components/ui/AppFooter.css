@@ -1,0 +1,115 @@
+.app-footer {
+  --footer-ink: var(--light-text);
+  --footer-card: var(--light-panel);
+  --footer-muted: var(--light-home-muted);
+  --footer-focus: var(--light-text);
+  --footer-card-edge: var(--light-home-card-edge);
+  --footer-curriculum-label: var(--light-home-curriculum-label);
+  --footer-curriculum-ink: var(--light-home-curriculum-ink);
+}
+
+body.dark .app-footer {
+  --footer-ink: var(--dark-text);
+  --footer-card: var(--dark-panel);
+  --footer-muted: var(--dark-home-muted);
+  --footer-focus: var(--dark-accent);
+  --footer-card-edge: var(--dark-home-card-edge);
+  --footer-curriculum-label: var(--dark-home-curriculum-label);
+  --footer-curriculum-ink: var(--dark-home-curriculum-ink);
+}
+
+.app-footer {
+  box-sizing: border-box;
+  width: min(1150px, calc(100% - 2rem));
+  margin: 1rem auto 2rem;
+  color: var(--footer-ink);
+  line-height: 1.6;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border-radius: 28px;
+  background: var(--footer-card);
+  box-shadow: 0 14px 34px var(--panel-shadow);
+}
+
+.app-footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.5rem, 5vw, 4rem);
+  justify-content: space-between;
+}
+
+.app-footer-brand {
+  display: flex;
+  gap: 0.9rem;
+  max-width: 34rem;
+}
+
+.app-footer-mark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--footer-curriculum-label);
+  color: var(--footer-curriculum-ink);
+  font-weight: 700;
+}
+
+.app-footer-name {
+  margin: 0 0 0.25rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.app-footer-tagline {
+  margin: 0;
+  color: var(--footer-muted);
+}
+
+.app-footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.5rem, 6vw, 3.5rem);
+}
+
+.app-footer-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-footer-group h2 {
+  margin: 0 0 0.3rem;
+  color: var(--footer-muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.app-footer-group a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  color: var(--footer-ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.app-footer-group a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.app-footer-group a:focus-visible {
+  outline: 3px solid var(--footer-focus);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+.app-footer-note {
+  margin: clamp(1.2rem, 4vw, 2rem) 0 0;
+  padding-top: 1.2rem;
+  border-top: 2px solid var(--footer-card-edge);
+  color: var(--footer-muted);
+  font-size: 0.9rem;
+}

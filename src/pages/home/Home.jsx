@@ -3,8 +3,8 @@ import { Link } from "react-router";
 import { AuthContext } from "../../context/auth-context";
 import { profileColour } from "../../data/avatars";
 import Mascot from "../../components/mascot/Mascot";
-import HomeFooter from "./HomeFooter";
 import HomeAchievements from "./HomeAchievements";
+import HomeCurriculumOverview from "./HomeCurriculumOverview";
 import { useHomeResume } from "./useHomeResume";
 import { useReveal } from "./useReveal";
 import { CURRICULUM_ICON } from "../../data/curriculumRegistry";
@@ -102,7 +102,7 @@ function heroState({ child, resume }) {
 
   return {
     title: "Learn with Bix",
-    subtitle: "Come on a learning adventure! Explore Maths, English and Science, one little challenge at a time.",
+    subtitle: "Come on a learning adventure! Explore Maths, English, Science and History, one little challenge at a time.",
     cta: { label: "Start my adventure", href: "/curriculum" },
   };
 }
@@ -110,16 +110,22 @@ function heroState({ child, resume }) {
 function FeaturedSkill({ skill }) {
   return (
     <Link className={`home-skill home-skill-${skill.id}`} to={skill.to} data-reveal>
-      <span className="home-skill-icon" aria-hidden="true">{skill.icon}</span>
-      <span className="home-skill-subject">{skill.subject}</span>
-      <h3>{skill.title}</h3>
-      <p>{skill.blurb}</p>
+      <div className="home-skill-copy">
+        <div className="home-skill-heading">
+          <span className="home-skill-icon" aria-hidden="true">{skill.icon}</span>
+          <div className="home-skill-title">
+            <span className="home-skill-subject">{skill.subject}</span>
+            <h3>{skill.title}</h3>
+          </div>
+        </div>
+        <p>{skill.blurb}</p>
+      </div>
       <span className="home-skill-go">{skill.action} <span aria-hidden="true">→</span></span>
     </Link>
   );
 }
 
-function CurriculumAdventure() {
+function CurriculumAdventure({ curriculumHref }) {
   return (
     <section className="home-section home-curriculum" aria-labelledby="home-curriculum-title">
       <div className="home-section-heading" data-reveal>
@@ -128,11 +134,7 @@ function CurriculumAdventure() {
         <p className="home-section-intro">Follow a path for your year. Finish curriculum challenges to save your progress and unlock the next step.</p>
       </div>
 
-      <ul className="home-curriculum-subjects" aria-label="Curriculum subjects">
-        <li><span aria-hidden="true">🧮</span> Maths</li>
-        <li><span aria-hidden="true">📚</span> English</li>
-        <li><span aria-hidden="true">🔬</span> Science</li>
-      </ul>
+      <HomeCurriculumOverview />
 
       <ol className="home-journey">
         <li data-reveal>
@@ -156,7 +158,7 @@ function CurriculumAdventure() {
       </ol>
 
       <div className="home-curriculum-actions">
-        <Link className="home-btn home-btn-primary" to="/curriculum">
+        <Link className="home-btn home-btn-primary" to={curriculumHref}>
           Explore the curriculum <span aria-hidden="true">→</span>
         </Link>
         <p>Built around the UK National Curriculum.</p>
@@ -168,11 +170,13 @@ function CurriculumAdventure() {
 /* ===== PAGE ===== */
 function Home() {
   const revealRef = useReveal();
-  const { child } = useContext(AuthContext);
+  const { child, status } = useContext(AuthContext);
   const { resume, candidates } = useHomeResume();
 
   const greeting = child ? `Hi ${child.name}!` : "Welcome!";
   const hero = heroState({ child, resume });
+  const curriculumHref = status === "signedOut" ? "/signup" : "/curriculum";
+  const heroHref = status === "signedOut" ? curriculumHref : hero.cta.href;
   const topic = resume?.topic;
 
   return (
@@ -255,7 +259,7 @@ function Home() {
             )}
 
             <div className="home-hero-actions">
-              <Link className="home-btn home-btn-primary home-btn-big" to={hero.cta.href}>
+              <Link className="home-btn home-btn-primary home-btn-big" to={heroHref}>
                 {hero.cta.label} <span aria-hidden="true">→</span>
               </Link>
               {/* Short labels: on a phone these two sit side by side under
@@ -285,7 +289,7 @@ function Home() {
         </div>
       </section>
 
-      <CurriculumAdventure />
+      <CurriculumAdventure curriculumHref={curriculumHref} />
 
       <HomeAchievements candidates={candidates} />
 
@@ -315,7 +319,6 @@ function Home() {
         </div>
       </section>
 
-      <HomeFooter />
     </div>
   );
 }

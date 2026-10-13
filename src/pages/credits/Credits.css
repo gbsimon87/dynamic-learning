@@ -6,6 +6,15 @@
   list-style: none;
 }
 
+.info-page .credits-heading {
+  margin: 0;
+  padding: clamp(1.4rem, 4.5vw, 2.25rem);
+  border-top: 2px solid var(--info-edge);
+  color: var(--info-heading);
+  font-size: clamp(1.4rem, 4vw, 1.7rem);
+  line-height: 1.3;
+}
+
 .info-page .credits-adapted { color: var(--info-muted); }
 .info-page .credits-adapted strong { color: var(--info-ink); }
 

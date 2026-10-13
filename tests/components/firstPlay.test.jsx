@@ -108,9 +108,12 @@ describe("brain breaks", () => {
     expect(screen.queryByText(/Time for a brain break/)).toBeNull();
     play(11);
     fireEvent.click(screen.getByRole("button", { name: "Let’s move!" }));
-    expect(screen.getByRole("dialog")).toBeTruthy();
+    expect(screen.getByRole("dialog", { name: "Brain break" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Brain break" })).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: /I did it/ }));
     expect(screen.getByText(/Brilliant moving/)).toBeTruthy();
+    expect(screen.getByRole("dialog", { name: "Brain break" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Brain break" })).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: /Back to playing/ }));
     expect(screen.queryByRole("dialog")).toBeNull();
   });

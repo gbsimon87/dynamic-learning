@@ -1,0 +1,13 @@
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background-color: inherit;
+}
+
+.app-layout-main { flex: 1; min-width: 0; }
+
+/* The shell fills the viewport; pages leave room for the footer. */
+.app-layout--with-footer .parent-area-page,
+.app-layout--with-footer .profiles-page,
+.app-layout--with-footer .auth-page { min-height: 0; }
