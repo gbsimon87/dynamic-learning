@@ -3,7 +3,7 @@ import { findUsSpellings, wordCount } from "../english/textChecks.js";
 /** Per-year reading limits, matching Geography's (docs/geography-curriculum/shared-design-spec.md §3). */
 export const LESSON_AGES = { 1: { lineWords: 10 }, 2: { lineWords: 12 }, 3: { lineWords: 16 }, 4: { lineWords: 18 } };
 
-const TYPES = new Set(["equation", "column", "steps", "jumps", "bar", "groups", "table"]);
+const TYPES = new Set(["equation", "column", "steps", "jumps", "bar", "groups", "table", "sentence", "fix"]);
 const text = (value) => typeof value === "string" && value.trim().length > 0;
 const number = (token) => {
   const m = /^(\d+(?:\.\d+)?)(?:\/(\d+))?$/.exec(token);
@@ -83,6 +83,13 @@ export function lintLessons(lessons, { year, topicIds }) {
       if (ex.type === "bar") need(Array.isArray(ex.bars) && ex.bars.every((b) => Number.isInteger(b.parts) && b.parts > 0 && b.parts <= 12 && Number.isInteger(b.shaded) && b.shaded >= 0 && b.shaded <= b.parts), `${at}: bad bar`);
       if (ex.type === "steps") { need(Array.isArray(ex.steps) && ex.steps.length >= 2 && ex.steps.length <= 5, `${at}: 2–5 steps`); (ex.steps ?? []).forEach((s, n) => words(s, `${at} step ${n + 1}`)); }
       if (ex.type === "groups") need(Array.isArray(ex.groups) && ex.groups.every(Array.isArray) && text(ex.label), `${at}: groups need arrays and a label`);
+      if (ex.type === "sentence") {
+        need(text(ex.text) && wordCount(ex.text.replaceAll("**", "")) <= lineWords * 2, `${at}: sentence missing or over ${lineWords * 2} words`);
+        need(/\*\*.+?\*\*/.test(ex.text ?? ""), `${at}: sentence needs a **marked** part`);
+        if (text(ex.text)) need(findUsSpellings(ex.text.replaceAll("**", "")).length === 0, `${at}: US spelling in sentence`);
+      }
+      // The wrong side is meant to be wrong, so only the right side is spell-checked.
+      if (ex.type === "fix") { need(text(ex.wrong) && ex.wrong !== ex.right, `${at}: fix needs a different wrong version`); words(ex.right, `${at} fix right`); }
       if (ex.type === "table") need(Array.isArray(ex.headers) && Array.isArray(ex.rows) && ex.rows.every((r) => r.length === ex.headers.length), `${at}: table rows must match headers`);
     });
   }

@@ -20,7 +20,7 @@ const words = (text) => text.toLowerCase().replace(/’/g, "'").match(/[a-z']+/g
 test("banks hold at least 15 items, and three passages", () => {
   assert.ok(GAP_ITEMS.length >= 15);
   assert.ok(WRONG_WORD_SENTENCES.length >= 15);
-  assert.ok(PASSAGE_SETS.length >= 3);
+  assert.ok(PASSAGE_SETS.length >= 6);
 });
 
 test("level 1: one gap per sentence, three distinct options", () => {
@@ -76,5 +76,12 @@ test("every level builds sound questions across 30 seeds", () => {
       }
       if (level === 4) assert.equal(new Set(questions.map((q) => q.passage.id)).size, 1, "one passage per run");
     }
+  }
+});
+
+test("level 2: no sentence appears twice in one run", () => {
+  for (let seed = 1; seed <= 30; seed += 1) {
+    const labels = buildDoesItMakeSenseQuestions(2, seeded(seed)).flatMap((q) => q.cards.map((card) => card.label.split(" ").slice(0, 3).join(" ")));
+    assert.equal(new Set(labels).size, labels.length, `seed ${seed}`);
   }
 });

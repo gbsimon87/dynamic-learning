@@ -19,7 +19,7 @@ const seeded = (seed) => () => {
 test("banks are big enough", () => {
   assert.ok(SETTING_ITEMS.length >= 15);
   assert.ok(PLOTS.length >= 15);
-  assert.ok(STORY_PLANS.length >= 3);
+  assert.ok(STORY_PLANS.length >= 6);
   // Level 2 takes ten of each kind per run.
   for (const kind of ["setting", "character", "plot"]) assert.ok(STORY_SENTENCES[kind].length >= 10, kind);
 });
@@ -88,4 +88,13 @@ test("every level builds answerable questions", () => {
       assert.notEqual(q.struck, q.answer);
     }
   }
+});
+
+test("the right answer is not given away by being the longest option", () => {
+  const longest = (answer, others) => answer.length > Math.max(...others.map((other) => other.length));
+  const settings = SETTING_ITEMS.filter((item) => longest(item.right, [item.elsewhere, item.character])).length;
+  assert.ok(settings <= SETTING_ITEMS.length / 2, `level 1: ${settings}/${SETTING_ITEMS.length}`);
+  const questions = STORY_PLANS.flatMap((plan) => plan.questions);
+  const plans = questions.filter((item) => longest(item.answer, item.wrong)).length;
+  assert.ok(plans <= questions.length / 2, `level 4: ${plans}/${questions.length}`);
 });

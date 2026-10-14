@@ -22,7 +22,7 @@ test("banks hold at least 15 items, and three fact files", () => {
   assert.ok(questionCount(CONTENTS_BOOKS) >= 15);
   assert.ok(questionCount(INDEX_BOOKS) >= 15);
   assert.ok(INDEX_WORDS.reduce((sum, book) => sum + book.words.length, 0) >= 15);
-  assert.ok(FACT_FILES.length >= 3);
+  assert.ok(FACT_FILES.length >= 6);
 });
 
 test("contents pages run in page order; indexes run A to Z", () => {

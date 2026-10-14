@@ -25,3 +25,13 @@ test("getLesson finds a slot and misses quietly", () => {
   assert.equal(getLesson("math", 3, "tenths", 5), null);
   assert.equal(getLesson("science", 3, "tenths", 1), null);
 });
+
+test("English examples: a sentence needs a marked part and a fix needs a different wrong version", () => {
+  const lesson = (example) => ({ t: [1, 2, 3, 4].map(() => ({ title: "Spot the joining word", lines: ["One.", "Two.", "Three."], example })) });
+  const lint = (example) => lintLessons(lesson(example), { year: 3, topicIds: ["t"] });
+  assert.deepEqual(lint({ type: "sentence", title: "Look", text: "We stayed in **because** it rained." }), []);
+  assert.match(lint({ type: "sentence", title: "Look", text: "We stayed in because it rained." })[0], /needs a \*\*marked/);
+  assert.deepEqual(lint({ type: "fix", title: "Fix it", wrong: "I seen it.", right: "I have seen it." }), []);
+  assert.match(lint({ type: "fix", title: "Fix it", wrong: "I saw it.", right: "I saw it." })[0], /different wrong/);
+  assert.match(lint({ type: "fix", title: "Fix it", wrong: "the colour", right: "the color" })[0], /US spelling/);
+});

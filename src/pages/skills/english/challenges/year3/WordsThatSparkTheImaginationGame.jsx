@@ -2,10 +2,10 @@ import ReadingTopicGame from "./ReadingTopicGame";
 import { buildSparkWordsQuestions } from "../../../../../data/challenges/english/wordsThatSparkTheImagination";
 
 const TITLES = [
-  "Some words help you picture exactly what happens. Choose the word that paints the best picture and still fits.",
+  "Some words paint a picture. Choose the word that brings the sentence to life.",
   "Does the phrase help you see, hear or feel it? Sort the phrases.",
   "Tap the word that brings the scene to life.",
-  "Read the story. Which words spark your imagination?",
+  "Read the sentence. What does the phrase help you imagine?",
 ];
 
 function WordsThatSparkTheImaginationGame({ level, onComplete }) {

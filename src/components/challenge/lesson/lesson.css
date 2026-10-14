@@ -176,3 +176,23 @@ body.dark .lesson-example-note { background: color-mix(in srgb, var(--lesson-slo
   .lesson-go-icon { animation: none; }
   .lesson-start .submit-btn.lesson-go { transition: none; }
 }
+
+/* English examples: a sentence with the key words marked, and a wrong-to-right fix. */
+.lesson-sentence { margin: 0; font-size: 1.35rem; font-weight: 700; line-height: 1.7; text-align: left; }
+.lesson-mark {
+  padding: .1rem .4rem; border-radius: 10px; color: inherit; font-weight: 900;
+  background: color-mix(in srgb, var(--lesson-slot) 24%, var(--lesson-card)); box-shadow: inset 0 -4px 0 var(--lesson-slot);
+}
+.lesson-fix { display: grid; gap: .5rem; text-align: left; }
+.lesson-fix-row {
+  display: flex; align-items: center; gap: .75rem; margin: 0; padding: .65rem .9rem; border-radius: 16px; font-size: 1.25rem; font-weight: 700;
+  background: color-mix(in srgb, var(--lesson-sky) 45%, var(--lesson-card)); box-shadow: 0 3px 0 var(--lesson-soft-ink);
+}
+.lesson-fix-row > b {
+  flex: none; display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border-radius: 50%;
+  background: var(--lesson-ink); color: var(--lesson-card); font-weight: 900;
+}
+.lesson-fix-row.is-right { background: color-mix(in srgb, var(--lesson-grass) 35%, var(--lesson-card)); border: 3px solid var(--lesson-slot); }
+.lesson-fix-row.is-right > b { background: var(--lesson-slot); }
+.lesson-fix-row s { text-decoration-thickness: 3px; }
+.lesson-fix-tag { display: block; font-size: .9rem; font-weight: 900; text-transform: uppercase; letter-spacing: .04em; opacity: .8; }

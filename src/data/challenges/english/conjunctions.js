@@ -150,6 +150,7 @@ function buildQuestion(item, rng) {
     tiles: shuffle(tiles, rng),
     answerOrder: ["main", "conj", "sub"],
     answer: item.answer,
+    wrong: item.wrong[0],
   };
 }
 

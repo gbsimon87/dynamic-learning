@@ -21,7 +21,7 @@ test("banks hold at least 15 items (three times a run), and three passages", () 
   assert.ok(FEELING_TEXTS.length >= 15);
   assert.ok(ACTION_ITEMS.length >= 15);
   assert.ok(EVIDENCE_ITEMS.length >= 15);
-  assert.ok(PASSAGE_SETS.length >= 3);
+  assert.ok(PASSAGE_SETS.length >= 6);
 });
 
 test("every feeling used has an emoji, and right and wrong never coincide", () => {
@@ -93,4 +93,8 @@ test("every level builds answerable questions", () => {
     assert.equal(new Set(passageRun.map((q) => q.passage.id)).size, 1, "one passage per run");
     for (const q of passageRun) assert.equal(q.options.filter((option) => option === q.answer).length, 1);
   }
+});
+
+test("level 3: the evidence sits in every one of the four places somewhere in the bank", () => {
+  assert.deepEqual([...new Set(EVIDENCE_ITEMS.map((item) => item.answer))].sort(), [0, 1, 2, 3]);
 });

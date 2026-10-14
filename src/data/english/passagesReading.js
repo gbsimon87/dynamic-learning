@@ -52,6 +52,43 @@ export const READING_PASSAGES = [
     ],
   },
 
+  {
+    id: "leos-football-match",
+    year: 3,
+    kind: "story",
+    title: "Leo’s Football Match",
+    skills: ["does-it-make-sense"],
+    blocks: [
+      { type: "p", text: "Leo had a football match on Sunday morning. He put on his blue kit and his boots. Then he packed a bottle of water and an orange in his bag." },
+      { type: "p", text: "The match was very close. Near the end, Leo kicked the ball as hard as he could. It flew past the goalkeeper and into the net. Snails carry their shells on their backs. Everyone on his team cheered." },
+      { type: "p", text: "After the match, Leo was very thirsty. He drank all his water and ate his orange. Then the coach gave him a shiny toaster for scoring the winning goal." },
+    ],
+  },
+  {
+    id: "priyas-snow-day",
+    year: 3,
+    kind: "story",
+    title: "Priya’s Snow Day",
+    skills: ["does-it-make-sense"],
+    blocks: [
+      { type: "p", text: "When Priya woke up, the garden was white with snow. She pulled on her coat, her hat and her warm gloves. Cows drink lots of water every day. Then she ran outside to play." },
+      { type: "p", text: "Priya rolled a big ball of snow for the body. She rolled a smaller ball for the head. She gave her snowman two stones for eyes and a trumpet for a nose." },
+      { type: "p", text: "Soon Priya’s fingers felt cold, so she went back inside. Mum made her a mug of hot chocolate. Priya sat by the window and smiled at her snowman." },
+    ],
+  },
+  {
+    id: "zayns-buns",
+    year: 3,
+    kind: "story",
+    title: "Baking Day",
+    skills: ["does-it-make-sense"],
+    blocks: [
+      { type: "p", text: "On Sunday, Zayn and his gran baked some buns. First, they weighed the flour, the sugar and the butter. Then Zayn cracked two eggs into the bowl and stirred everything together." },
+      { type: "p", text: "Gran spooned the mixture into paper cases. Zayn carried the tray carefully to the oven. Owls sleep during the day. The buns baked for twenty minutes." },
+      { type: "p", text: "When the buns were cool, Zayn spread pink icing on top with a spoon. Then he added a cherry to each one. Gran ate one and said it was the most delicious sock she had ever tasted." },
+    ],
+  },
+
   // --- Predicting What Happens Next ---
   {
     id: "the-tree-house",
@@ -87,6 +124,43 @@ export const READING_PASSAGES = [
       { type: "p", text: "It was Ellie’s birthday. Mum had made a chocolate cake with pink icing and put it on the kitchen table to cool." },
       { type: "p", text: "Ellie went upstairs to put on her party dress. Mum went into the garden to hang up balloons. The kitchen was empty, except for Biscuit." },
       { type: "p", text: "Biscuit sniffed the air. He put his front paws on a chair and stretched up towards the table. His tail was wagging faster and faster." },
+    ],
+  },
+
+  {
+    id: "the-puddle",
+    year: 3,
+    kind: "story",
+    title: "The Puddle",
+    skills: ["predicting-what-happens-next"],
+    blocks: [
+      { type: "p", text: "Amara was wearing her brand-new white trainers. “Keep them clean,” Mum had said. “They cost a lot of money.”" },
+      { type: "p", text: "It had rained all night, and the path to school was covered in deep, muddy puddles. Amara hopped carefully around each one." },
+      { type: "p", text: "Then Leo came racing round the corner on his scooter. He did not see Amara. He was heading straight for the biggest puddle, right next to her." },
+    ],
+  },
+  {
+    id: "the-ice-lolly",
+    year: 3,
+    kind: "story",
+    title: "The Ice Lolly",
+    skills: ["predicting-what-happens-next"],
+    blocks: [
+      { type: "p", text: "It was the hottest day of the summer. Zayn bought a strawberry ice lolly from the van at the park." },
+      { type: "p", text: "Just then, he spotted Priya on the swings. Zayn ran over to the swings to say hello. They chatted about football and their favourite films. Zayn forgot all about his lolly." },
+      { type: "p", text: "The sun beat down on his hand. A pink drip ran down the stick and onto his fingers. The lolly was getting softer and softer." },
+    ],
+  },
+  {
+    id: "the-paint-pot",
+    year: 3,
+    kind: "story",
+    title: "The Paint Pot",
+    skills: ["predicting-what-happens-next"],
+    blocks: [
+      { type: "p", text: "Priya was painting a picture of the sea at Ellie’s house. She had a big pot of blue paint on the floor beside her." },
+      { type: "p", text: "Biscuit trotted into the room. He loved Priya, and whenever he was happy, his tail swished from side to side." },
+      { type: "p", text: "Biscuit bounded over to say hello. His tail began to wag wildly. It was getting closer and closer to the pot of paint." },
     ],
   },
 
@@ -202,6 +276,55 @@ export const READING_PASSAGES = [
     ],
   },
 
+  {
+    id: "foxes",
+    year: 3,
+    kind: "report",
+    title: "Foxes",
+    skills: ["finding-information"],
+    blocks: [
+      { type: "p", text: "Red foxes are wild animals that belong to the dog family. They live all over Britain, in the countryside and in towns." },
+      { type: "h", text: "What do they look like?" },
+      { type: "p", text: "A fox has orange-red fur, a white chest and a long, bushy tail. Its large, pointed ears help it to hear tiny sounds." },
+      { type: "h", text: "Homes" },
+      { type: "p", text: "A fox’s home is called a den or an earth. Foxes often dig it under a shed or among tree roots." },
+      { type: "h", text: "Cubs" },
+      { type: "p", text: "Baby foxes are called cubs. They are born in spring, and they stay inside the den until they are about four weeks old." },
+    ],
+  },
+  {
+    id: "the-sun",
+    year: 3,
+    kind: "report",
+    title: "The Sun",
+    skills: ["finding-information"],
+    blocks: [
+      { type: "p", text: "The Sun is a star. It is the closest star to the Earth, and it gives us light and heat." },
+      { type: "h", text: "How big is it?" },
+      { type: "p", text: "The Sun is enormous. More than one million Earths could fit inside it!" },
+      { type: "h", text: "How far away is it?" },
+      { type: "p", text: "The Sun is about 150 million kilometres away. Its light takes about eight minutes to reach us." },
+      { type: "h", text: "Staying safe" },
+      { type: "p", text: "You must never look straight at the Sun, even with sunglasses. Its bright light can hurt your eyes." },
+    ],
+  },
+  {
+    id: "butterflies",
+    year: 3,
+    kind: "report",
+    title: "Butterflies",
+    skills: ["finding-information"],
+    blocks: [
+      { type: "p", text: "Butterflies are insects with four colourful wings. Like all insects, they have six legs." },
+      { type: "h", text: "Life cycle" },
+      { type: "p", text: "A butterfly starts life as a tiny egg on a leaf. A caterpillar hatches out and eats and eats. Then it makes a hard case called a chrysalis. Inside, it slowly changes into a butterfly." },
+      { type: "h", text: "Food" },
+      { type: "p", text: "Butterflies drink sweet nectar from flowers. They suck it up through a long, thin tube, like a straw." },
+      { type: "h", text: "Tasting" },
+      { type: "p", text: "Butterflies taste with their feet! When one lands on a leaf, it can tell if the leaf is a good place for its eggs." },
+    ],
+  },
+
   // --- Asking Questions about a Text ---
   {
     id: "missing-carrots",
@@ -237,6 +360,43 @@ export const READING_PASSAGES = [
       { type: "p", text: "In April, Priya planted a sunflower seed in a pot. She put the pot on a sunny windowsill and watered it every day." },
       { type: "p", text: "After a week, a tiny green shoot poked out of the soil. By June, the plant was too big for the pot, so Priya and her dad moved it into the garden." },
       { type: "p", text: "By August, the sunflower was taller than Dad! Its huge yellow flower turned to face the sun each morning. Priya measured it with a long tape measure. It was two metres tall." },
+    ],
+  },
+
+  {
+    id: "leos-wobbly-tooth",
+    year: 3,
+    kind: "story",
+    title: "Leo’s Wobbly Tooth",
+    skills: ["asking-questions-about-a-text"],
+    blocks: [
+      { type: "p", text: "Leo had a wobbly tooth. It wobbled when he ate his toast. It wobbled when he brushed his teeth. He wiggled it with his tongue all day long." },
+      { type: "p", text: "At teatime, Leo bit into a crunchy apple. Suddenly, there was a tiny click. Leo opened his mouth, and there was a gap where his tooth had been!" },
+      { type: "p", text: "Leo wrapped the tooth in a tissue and put it under his pillow. In the morning, the tooth had gone. In its place was a shiny gold coin." },
+    ],
+  },
+  {
+    id: "the-school-pond",
+    year: 3,
+    kind: "story",
+    title: "The School Pond",
+    skills: ["asking-questions-about-a-text"],
+    blocks: [
+      { type: "p", text: "In March, Ellie’s class went to look at the school pond. Mrs Green gave everyone a net and a clipboard." },
+      { type: "p", text: "Near the edge of the water, Ellie spotted a clump of jelly with tiny black dots inside. “That’s frogspawn,” said Mrs Green. “Each black dot will grow into a tadpole.”" },
+      { type: "p", text: "Every week, the class went back to check. The dots grew tails and wriggled free. By June, some of the tadpoles had grown legs." },
+    ],
+  },
+  {
+    id: "the-balloon",
+    year: 3,
+    kind: "story",
+    title: "The Balloon in the Field",
+    skills: ["asking-questions-about-a-text"],
+    blocks: [
+      { type: "p", text: "Early one Sunday, Priya was walking with Grandad across the fields. Suddenly, a huge red and yellow balloon floated over the trees. A basket hung underneath it." },
+      { type: "p", text: "The balloon came lower and lower. With a gentle bump, the basket landed in the field next to them. Three people climbed out, laughing." },
+      { type: "p", text: "The pilot let Priya look inside the basket. Above her head, a burner roared, and a big flame shot up. “The hot air makes the balloon rise,” the pilot explained." },
     ],
   },
 
@@ -297,6 +457,36 @@ export const READING_PASSAGES = [
       { type: "p", text: "A polar bear has a thick layer of fat and two layers of fur. Its skin is black, which helps it soak up the heat of the sun." },
       { type: "h", text: "Food" },
       { type: "p", text: "Polar bears are excellent swimmers. They hunt seals, waiting beside holes in the ice for a seal to come up for air." },
+    ],
+  },
+
+  {
+    id: "zayns-magic-pencil",
+    year: 3,
+    kind: "story",
+    title: "Zayn’s Magic Pencil",
+    skills: ["kinds-of-writing"],
+    blocks: [
+      { type: "p", text: "Once upon a time, Zayn found an old pencil lying in the park. It was silver, and it sparkled in the sun." },
+      { type: "p", text: "That night, Zayn drew a little bird on a piece of paper. Suddenly, the bird fluttered its wings, flew off the page and landed on his lamp!" },
+      { type: "p", text: "Zayn gasped. The pencil was magic! He wondered what he should draw next. A dragon? A rocket? Then he had the best idea of all." },
+    ],
+  },
+  {
+    id: "autumn-leaves",
+    year: 3,
+    kind: "poem",
+    title: "Autumn Leaves",
+    skills: ["kinds-of-writing"],
+    blocks: [
+      { type: "line", text: "Red leaves, gold leaves," },
+      { type: "line", text: "Tumbling from the tree," },
+      { type: "line", text: "Swirling, twirling," },
+      { type: "line", text: "Dancing round with me." },
+      { type: "line", text: "Crunchy leaves, crispy leaves," },
+      { type: "line", text: "Piled up high," },
+      { type: "line", text: "I jump right in" },
+      { type: "line", text: "And watch them fly!" },
     ],
   },
 

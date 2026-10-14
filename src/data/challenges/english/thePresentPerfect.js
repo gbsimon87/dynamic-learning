@@ -102,6 +102,36 @@ export const DIARY_SETS = [
       { text: "He {did not finish|has not finished} the flag yet.", answer: "perfect", clue: "yet" },
     ],
   },
+  {
+    title: "Amara’s Space Project",
+    kind: "diary",
+    sentences: [
+      { text: "I {learnt|have learnt} the names of all the planets so far.", answer: "perfect", clue: "so far" },
+      { text: "Yesterday I {made|have made} a model of Saturn.", answer: "past", clue: "Yesterday" },
+      { text: "I {did not paint|have not painted} its rings yet.", answer: "perfect", clue: "yet" },
+      { text: "Mum {bought|has bought} me a telescope last month.", answer: "past", clue: "last month" },
+    ],
+  },
+  {
+    title: "A Postcard from Priya",
+    kind: "letter",
+    sentences: [
+      { text: "We {already swam|have already swum} in the sea three times.", answer: "perfect", clue: "already" },
+      { text: "Since Monday we {ate|have eaten} ice cream every day.", answer: "perfect", clue: "Since Monday" },
+      { text: "Two days ago Dad {fell|has fallen} asleep on the beach.", answer: "past", clue: "Two days ago" },
+      { text: "Last night we {watched|have watched} the fireworks.", answer: "past", clue: "Last night" },
+    ],
+  },
+  {
+    title: "Ellie’s Garden",
+    kind: "diary",
+    sentences: [
+      { text: "Last spring I {planted|have planted} some tomato seeds.", answer: "past", clue: "Last spring" },
+      { text: "I {picked|have picked} twenty tomatoes so far.", answer: "perfect", clue: "so far" },
+      { text: "Biscuit {already dug|has already dug} up two of my plants!", answer: "perfect", clue: "already" },
+      { text: "A week ago a snail {ate|has eaten} all my lettuce.", answer: "past", clue: "A week ago" },
+    ],
+  },
 ];
 
 export const QUESTIONS_PER_CHALLENGE = 5;

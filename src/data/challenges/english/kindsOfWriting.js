@@ -151,6 +151,24 @@ export const PASSAGE_SETS = [
       { q: "What do polar bears hunt?", answer: "seals", wrong: ["fish", "penguins"], para: 4 },
     ],
   },
+  {
+    passage: "zayns-magic-pencil",
+    questions: [
+      { q: "What kind of writing is this?", answer: plain("story"), wrong: [plain("information"), plain("instructions")], para: 0 },
+      { q: "Why was it written?", answer: "to entertain the reader", wrong: ["to give facts about pencils", "to tell you how to draw a bird"], para: 0 },
+      { q: "How can you tell the events are made up?", answer: "A drawing comes to life.", wrong: ["It has numbered steps.", "It starts with a date."], para: 1 },
+      { q: "What happened to the bird that Zayn drew?", answer: "It flew off the page.", wrong: ["It fell asleep.", "It turned into a dragon."], para: 1 },
+    ],
+  },
+  {
+    passage: "autumn-leaves",
+    questions: [
+      { q: "What kind of writing is this?", answer: plain("poem"), wrong: [plain("diary"), plain("letter")], para: 0 },
+      { q: "How can you tell?", answer: "It is written in short lines.", wrong: ["It has headings.", "It starts with a date."], para: 0 },
+      { q: "Which word rhymes with “tree”?", answer: "me", wrong: ["leaves", "high"], para: 3 },
+      { q: "Which word rhymes with “high”?", answer: "fly", wrong: ["in", "me"], para: 7 },
+    ],
+  },
 ];
 
 export const QUESTIONS_PER_CHALLENGE = 5;

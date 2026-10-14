@@ -224,6 +224,38 @@ export const STORIES = [
       { q: "What is the ‘letter’ in the story?", para: 2, answer: "a written message that you post", wrong: ["one of the signs we use to write words, like a or b"], unrelated: "a kind of drawing" },
     ],
   },
+  {
+    id: "boat-race",
+    title: "The Bath-Time Boat Race",
+    kind: "story",
+    blocks: [
+      { type: "p", text: "Zayn and Leo made two toy boats out of old boxes. They filled the bath with water and set the boats side by side." },
+      { type: "p", text: "Leo blew hard, and his boat shot ahead. Then Zayn’s boat began to rock and tip. Water poured in over the side. Slowly, it started to sink. Zayn sighed. His boat was ruined." },
+      { type: "p", text: "Just then, the doorbell gave a loud ring. It was Grandma! She helped Zayn make a sturdy new boat with a strong, flat bottom. This time, it did not tip over once." },
+    ],
+    questions: [
+      { q: "Zayn’s boat began to ‘rock’. What does rock mean here?", para: 1, answer: "to move gently from side to side", wrong: ["a big, hard stone"], unrelated: "to sail very fast" },
+      { q: "What does ‘sink’ mean in the story?", para: 1, answer: "to go down under the water", wrong: ["a bowl with taps for washing things"], unrelated: "to float on top" },
+      { q: "The doorbell gave a loud ‘ring’. What is a ring here?", para: 2, answer: "the sound a bell or a phone makes", wrong: ["a piece of jewellery worn on a finger"], unrelated: "a kind of door" },
+      { q: "Grandma helped make a ‘sturdy’ boat. What does sturdy mean?", para: 2, answer: "strong and hard to break", wrong: ["weak and easy to break"], unrelated: "very colourful" },
+    ],
+  },
+  {
+    id: "duck-pond",
+    title: "Feeding the Ducks",
+    kind: "story",
+    blocks: [
+      { type: "p", text: "After school, Ellie and Priya went to feed the ducks. A big duck waddled up and quacked loudly, so Priya threw it some oats." },
+      { type: "p", text: "Suddenly, a gust of wind blew Priya’s hat towards a low branch. “Duck!” shouted Ellie. Priya bent down just in time, and the branch swished over her head." },
+      { type: "p", text: "On the way home, the girls were exhausted. Ellie said she would train her legs so that next time she could run all the way to the pond." },
+    ],
+    questions: [
+      { q: "What is the ‘duck’ in the first part of the story?", para: 0, answer: "a bird that swims and quacks", wrong: ["to bend down quickly"], unrelated: "a kind of hat" },
+      { q: "Ellie shouted ‘Duck’. What did she want Priya to do?", para: 1, answer: "to bend down quickly", wrong: ["to look at a bird that swims"], unrelated: "to run home" },
+      { q: "The girls were ‘exhausted’. What does that mean?", para: 2, answer: "very tired", wrong: ["full of energy"], unrelated: "very hungry" },
+      { q: "Ellie will ‘train’ her legs. What does train mean here?", para: 2, answer: "to practise to get better at something", wrong: ["carriages that run along a railway"], unrelated: "to rest" },
+    ],
+  },
 ];
 
 /** "🦇 a small animal that flies at night": a ChoiceGrid label. */

@@ -31,6 +31,7 @@ export const WORDS = [
   { word: "treasure", ending: "sure", emoji: "💰", meaning: "gold and jewels, often hidden", sentences: ["The pirates buried their ___ on the island.", "Leo found a box of ___ under the old tree."] },
   { word: "pleasure", ending: "sure", emoji: "😊", meaning: "a happy feeling of enjoying something", sentences: ["It was a ___ to meet you.", "Reading gives Zayn a lot of ___."] },
   { word: "enclosure", ending: "sure", emoji: "🦒", meaning: "a space with a fence round it, where animals are kept", sentences: ["The giraffes walked round their ___ at the zoo.", "The farmer built a new ___ for the goats."] },
+  { word: "leisure", ending: "sure", emoji: "🏊", meaning: "free time for things you enjoy", sentences: ["We went swimming at the ___ centre.", "Grandad likes to read at his ___ on Sundays."] },
   { word: "creature", ending: "ture", emoji: "🐉", meaning: "any living animal", sentences: ["A strange ___ crawled out of the pond.", "The dragon was a scary ___ with green scales."] },
   { word: "furniture", ending: "ture", emoji: "🛋️", meaning: "tables, chairs, beds and sofas", sentences: ["We moved all the ___ to paint the room.", "The new ___ arrived in a big van."] },
   { word: "picture", ending: "ture", emoji: "🖼️", meaning: "a drawing, painting or photo", sentences: ["Zayn drew a ___ of his house.", "Mum hung the ___ on the wall."] },

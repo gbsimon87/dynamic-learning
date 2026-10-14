@@ -57,7 +57,7 @@ export const WORDS = [
 export const LOOK_ALIKES = [
   { word: "antique", looksLike: "anti" },
   { word: "antics", looksLike: "anti" },
-  { word: "ants", looksLike: "anti" },
+  { word: "anthem", looksLike: "anti" },
   { word: "antelope", looksLike: "anti" },
   { word: "antler", looksLike: "anti" },
   { word: "anteater", looksLike: "anti" },

@@ -27,7 +27,7 @@ test("banks are big enough", () => {
   assert.ok(SPELL_ITEMS.length >= 15);
   assert.ok(MARK_ITEMS.length >= 9, "level 3 takes three a run");
   assert.ok(TENSE_ITEMS.length >= 6, "level 3 takes two a run");
-  assert.ok(HUNT_PARAGRAPHS.length >= 3);
+  assert.ok(HUNT_PARAGRAPHS.length >= 6);
 });
 
 test("spelling mistakes are in Year 3 Appendix 1 words", () => {

@@ -18,10 +18,10 @@ const seeded = (seed) => () => {
 
 const count = (sentence, word) => tokenise(sentence).filter((token) => bareWord(token) === word).length;
 
-test("banks: at least 15 words, 15 clue items and 3 stories", () => {
+test("banks: at least 15 words, 15 clue items and 5 stories", () => {
   assert.ok(MULTI_WORDS.length >= 15);
   assert.ok(CLUE_ITEMS.length >= 15);
-  assert.ok(STORIES.length >= 3);
+  assert.ok(STORIES.length >= 5);
 });
 
 test("each multi-meaning word has two meanings with two sentences, each using the word once", () => {
