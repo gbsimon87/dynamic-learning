@@ -2,33 +2,25 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import NumberInput from "../../../../../../components/challenge/NumberInput";
 import { isCorrectNumber } from "../../../../../../data/challenges/numbersAndCounting";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildCombineAndShare } from "../../../../../../data/challenges/multiplicationAndDivision";
 
 /**
- * Challenge 4 - division in longer stories, typed.
+ * Challenge 4 - put it together, then divide.
  *
- * The number to divide is not always stated directly: some stories give a
- * total to work out first. Every division stays exact.
+ * Two amounts of the same thing are joined (Mia's stickers and Ben's), then
+ * shared or grouped. The total is never stated, so the first step has to be
+ * done before the division can be. Numbers are generated per run and every
+ * division is exact.
  */
-const PROBLEMS = [
-  { prompt: "There are 5 boxes with 4 cakes in each. They are shared between 2 children. How many cakes each?", answer: 10 },
-  { prompt: "A teacher has 45 pencils. She puts 5 on each table. How many tables get pencils?", answer: 9 },
-  { prompt: "30 children line up in rows of 10. How many rows are there?", answer: 3 },
-  { prompt: "There are 20 red beads and 20 blue beads. They are shared between 10 jars. How many in each jar?", answer: 4 },
-  { prompt: "A baker makes 40 buns and puts them in bags of 5. How many bags?", answer: 8 },
-  { prompt: "18 apples and 2 pears are shared equally between 5 plates. How many on each plate?", answer: 4 },
-  { prompt: "A shop has 60 balloons in packs of 10. How many packs?", answer: 6 },
-  { prompt: "24 marbles are shared between 2 boys, then each boy shares his marbles into 2 bags. How many in each bag?", answer: 6 },
-];
 
 function DivisionProblemsChallenge4({ onComplete }) {
-  const questions = useMemo(() => shuffle(PROBLEMS, Math.random).slice(0, 6), []);
+  const questions = useMemo(() => buildCombineAndShare(Math.random), []);
 
   return (
     <ChallengeShell
       questions={questions}
       onComplete={onComplete}
-      title="Work out what to divide first."
+      title="Put them together, then divide."
       render={({ question, submit, locked, index }) => (
         <WordProblem key={index} question={question} submit={submit} locked={locked} />
       )}

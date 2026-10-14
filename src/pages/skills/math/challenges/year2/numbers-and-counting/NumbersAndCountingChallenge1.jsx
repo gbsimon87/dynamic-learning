@@ -2,29 +2,19 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import NumberLine from "../../../../../../components/challenge/NumberLine";
 import NumberInput from "../../../../../../components/challenge/NumberInput";
-import { buildSequenceWithGaps, isCorrectNumber } from "../../../../../../data/challenges/numbersAndCounting";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildFillGapQuestions, isCorrectNumber } from "../../../../../../data/challenges/numbersAndCounting";
 
 /**
  * Challenge 1 - read and write numbers by filling a run of the number line.
  *
  * One blank at a time so the keypad always has an unambiguous target, and the
  * run is consecutive, which keeps this about reading numerals rather than
- * spotting a step (that is the Counting in Steps topic).
+ * spotting a step (that is the Counting in Steps topic). Starts are generated
+ * each time.
  */
 
-const LENGTH = 8;
-const STARTS = [13, 27, 46, 58, 71, 89];
-
-function buildQuestions(rng) {
-  return shuffle(STARTS, rng).map((start) => {
-    const { terms, gaps } = buildSequenceWithGaps(start, LENGTH, 1, rng);
-    return { terms, gaps, answer: terms[gaps[0]] };
-  });
-}
-
 function NumbersAndCountingChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildFillGapQuestions(Math.random), []);
 
   return (
     <ChallengeShell

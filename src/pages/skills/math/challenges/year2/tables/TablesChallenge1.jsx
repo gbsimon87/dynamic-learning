@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import DataTable from "../../../../../../components/challenge/DataTable";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { shuffle } from "../../../../../../data/challenges/statistics";
+import { buildTableRead } from "../../../../../../data/challenges/statisticsQuestions";
 
 /**
  * Challenge 1 - find a row in a one-column table.
@@ -13,94 +13,12 @@ import { shuffle } from "../../../../../../data/challenges/statistics";
  * "look along the row".
  *
  * The options are the other numbers in the table. That matters: a number
- * from nowhere could be eliminated without reading the table at all.
+ * from nowhere could be eliminated without reading the table at all. New
+ * tables every run (see buildTableRead).
  */
 
-const SETS = [
-  {
-    caption: "Pets in our class",
-    column: "How many",
-    rows: [
-      { label: "Cats", value: 6 },
-      { label: "Dogs", value: 9 },
-      { label: "Fish", value: 4 },
-      { label: "Birds", value: 2 },
-    ],
-    ask: "Fish",
-  },
-  {
-    caption: "Cars we spotted",
-    column: "How many",
-    rows: [
-      { label: "Red", value: 12 },
-      { label: "Blue", value: 7 },
-      { label: "Green", value: 5 },
-      { label: "Gold", value: 3 },
-    ],
-    ask: "Blue",
-  },
-  {
-    caption: "Books read",
-    column: "Books",
-    rows: [
-      { label: "Monday", value: 8 },
-      { label: "Tuesday", value: 11 },
-      { label: "Wednesday", value: 6 },
-      { label: "Thursday", value: 14 },
-    ],
-    ask: "Thursday",
-  },
-  {
-    caption: "Fruit eaten",
-    column: "How many",
-    rows: [
-      { label: "Apples", value: 15 },
-      { label: "Pears", value: 9 },
-      { label: "Plums", value: 4 },
-      { label: "Grapes", value: 20 },
-    ],
-    ask: "Pears",
-  },
-  {
-    caption: "Stickers earned",
-    column: "Stickers",
-    rows: [
-      { label: "Ava", value: 13 },
-      { label: "Ben", value: 8 },
-      { label: "Cleo", value: 17 },
-      { label: "Dev", value: 5 },
-    ],
-    ask: "Cleo",
-  },
-  {
-    caption: "Weather this month",
-    column: "Days",
-    rows: [
-      { label: "Sunny", value: 10 },
-      { label: "Rainy", value: 14 },
-      { label: "Cloudy", value: 5 },
-      { label: "Snowy", value: 2 },
-    ],
-    ask: "Rainy",
-  },
-];
-
 function TablesChallenge1({ onComplete }) {
-  const questions = useMemo(
-    () =>
-      shuffle(SETS, Math.random).map((set) => {
-        const answer = set.rows.find((row) => row.label === set.ask).value;
-        return {
-          ...set,
-          answer,
-          options: shuffle(
-            set.rows.map((row) => row.value),
-            Math.random
-          ),
-        };
-      }),
-    []
-  );
+  const questions = useMemo(() => buildTableRead(Math.random), []);
 
   return (
     <ChallengeShell
@@ -126,9 +44,7 @@ function ReadCell({ question, submit, locked }) {
         highlight={{ row: question.ask }}
       />
 
-      <p className="challenge-prompt">
-        How many for <strong>{question.ask}</strong>?
-      </p>
+      <p className="challenge-prompt">{question.prompt}</p>
 
       <ChoiceGrid
         options={question.options}

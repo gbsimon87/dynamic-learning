@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import NumberInput from "../../../../../../components/challenge/NumberInput";
 import { isCorrectNumber } from "../../../../../../data/challenges/numbersAndCounting";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildFractionStatements } from "../../../../../../data/challenges/fractions";
 
 /**
  * Challenge 4 - write the whole statement.
@@ -13,19 +13,8 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * steps of a non-unit fraction have to be done.
  */
 
-const PLANS = [
-  { text: "1/2 of 6 =", answer: 3 },
-  { text: "1/4 of 16 =", answer: 4 },
-  { text: "3/4 of 16 =", answer: 12 },
-  { text: "1/3 of 21 =", answer: 7 },
-  { text: "2/4 of 20 =", answer: 10 },
-  { text: "3/4 of 24 =", answer: 18 },
-  { text: "1/2 of 18 =", answer: 9 },
-  { text: "1/4 of 40 =", answer: 10 },
-];
-
 function FractionsOfNumbersChallenge4({ onComplete }) {
-  const questions = useMemo(() => shuffle(PLANS, Math.random).slice(0, 6), []);
+  const questions = useMemo(() => buildFractionStatements(Math.random), []);
 
   return (
     <ChallengeShell

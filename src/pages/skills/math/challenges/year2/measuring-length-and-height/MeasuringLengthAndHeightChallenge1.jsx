@@ -2,37 +2,19 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import ScaleReader from "../../../../../../components/challenge/ScaleReader";
-import { scaleOptions } from "../../../../../../data/challenges/measurement";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildRulerReadQuestions } from "../../../../../../data/challenges/measurement";
 
 /**
  * Challenge 1 - read a ruler.
  *
- * The pointer always lands on a labelled mark, so this is reading a scale
- * rather than estimating between marks. Distractors are the neighbouring
- * marks, so a learner who miscounts by one finds their answer offered.
+ * Three readings sit on a numbered mark; the last three sit on a small 1 cm
+ * mark, so the learner counts on from the numbered mark before. Distractors
+ * are near-misses (one or two marks out, a whole 5 out, digits swapped) and
+ * every option carries "cm".
  */
 
-const PLANS = [
-  { value: 10, object: "pencil" },
-  { value: 25, object: "ribbon" },
-  { value: 5, object: "rubber" },
-  { value: 20, object: "book" },
-  { value: 15, object: "leaf" },
-  { value: 30, object: "scarf" },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => ({
-    ...plan,
-    // scaleOptions rather than a filtered pair: at 30 cm the "+5" falls off
-    // the ruler, which left only two options and made it a coin flip.
-    options: shuffle(scaleOptions(plan.value, 5, 0, 30, 3), rng),
-  }));
-}
-
 function MeasuringLengthAndHeightChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildRulerReadQuestions(Math.random), []);
 
   return (
     <ChallengeShell
@@ -59,6 +41,7 @@ function ReadRuler({ question, submit, locked }) {
         min={0}
         max={30}
         majorStep={5}
+        minorStep={1}
         value={question.value}
         unit="cm"
         orientation="horizontal"
@@ -76,7 +59,7 @@ function ReadRuler({ question, submit, locked }) {
         type="button"
         className="submit-btn"
         disabled={locked || selected === null}
-        onClick={() => submit(selected === question.value)}
+        onClick={() => submit(selected === question.answer)}
       >
         Check my answer
       </button>

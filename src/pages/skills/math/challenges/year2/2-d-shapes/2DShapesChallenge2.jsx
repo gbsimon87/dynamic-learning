@@ -2,9 +2,8 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import NumberInput from "../../../../../../components/challenge/NumberInput";
 import ShapeFigure from "../../../../../../components/challenge/ShapeFigure";
-import { sideCountableShapes } from "../../../../../../data/challenges/shapes";
 import { isCorrectNumber } from "../../../../../../data/challenges/numbersAndCounting";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildCountSides } from "../../../../../../data/challenges/shapeQuestions";
 
 /**
  * Challenge 2 - count the sides.
@@ -13,18 +12,12 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * method, and on an octagon it is easy to lose your place otherwise.
  *
  * The circle is deliberately absent: "how many sides has a circle" has no
- * agreed Year 2 answer, and a child should not be marked wrong for saying one
- * when the app wanted zero.
+ * agreed Year 2 answer. Irregular shapes appear too, and no side count is
+ * asked more than twice in a run (see buildCountSides).
  */
 
-function buildQuestions(rng) {
-  return shuffle(sideCountableShapes(), rng)
-    .slice(0, 6)
-    .map((shape) => ({ shape, answer: shape.sides }));
-}
-
 function ShapesChallenge2({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildCountSides(Math.random), []);
 
   return (
     <ChallengeShell

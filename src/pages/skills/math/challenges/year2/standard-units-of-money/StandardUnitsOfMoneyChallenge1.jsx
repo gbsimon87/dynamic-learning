@@ -1,35 +1,20 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { COINS, formatMoney } from "../../../../../../data/challenges/measurement";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildCoinNameQuestions } from "../../../../../../data/challenges/measurement";
 
 /**
  * Challenge 1 - name the coin.
  *
  * Statutory: "recognise and use symbols for pounds (£) and pence (p)". Before
  * combining coins a learner has to know which is which, and that £1 is written
- * with the symbol in front while 50p has it behind.
+ * with the symbol in front while 50p has it behind. The wrong options are
+ * the real slips: the other symbol, the symbol on the wrong side, or the
+ * coin next door.
  */
 
-function buildQuestions(rng) {
-  return shuffle(COINS, rng)
-    .slice(0, 6)
-    .map((coin) => {
-      const others = COINS.filter((c) => c !== coin);
-      return {
-        coin,
-        answer: formatMoney(coin),
-        options: shuffle(
-          [formatMoney(coin), ...shuffle(others, rng).slice(0, 2).map(formatMoney)],
-          rng
-        ),
-      };
-    });
-}
-
 function StandardUnitsOfMoneyChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildCoinNameQuestions(Math.random), []);
 
   return (
     <ChallengeShell
@@ -49,7 +34,7 @@ function NameCoin({ question, submit, locked }) {
   return (
     <>
       <p className="challenge-prompt">
-        How do you write a coin worth {question.coin} {question.coin === 1 ? "penny" : "pence"}?
+        How do you write a coin worth {question.words}?
       </p>
 
       <ChoiceGrid

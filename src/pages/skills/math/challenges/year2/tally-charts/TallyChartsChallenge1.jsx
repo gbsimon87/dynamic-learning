@@ -2,35 +2,21 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import TallyChart from "../../../../../../components/challenge/TallyChart";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { nearMissOptions, shuffle } from "../../../../../../data/challenges/statistics";
+import { buildTallyRead } from "../../../../../../data/challenges/statisticsQuestions";
 
 /**
  * Challenge 1 - read one row of tally marks.
  *
  * The gentlest slot: one row is highlighted, the rule is on screen, and the
  * counts are chosen so the gates of five do the work — 5, 10, then the
- * leftovers. Distractors are off by one or two, which is exactly what
- * happens when a learner counts every stroke instead of counting the gates.
+ * leftovers. The asked row always has at least one gate. Distractors are
+ * off by one or two, or a whole gate out - what happens when a learner
+ * counts every stroke, or a gate as 4 - and are picked at random, so the
+ * answer is not always in the same place (see buildTallyRead).
  */
 
-const SETS = [
-  { rows: [{ label: "Cats", value: 7 }, { label: "Dogs", value: 4 }, { label: "Fish", value: 9 }], ask: "Cats" },
-  { rows: [{ label: "Red", value: 12 }, { label: "Blue", value: 6 }, { label: "Green", value: 3 }], ask: "Red" },
-  { rows: [{ label: "Bus", value: 5 }, { label: "Car", value: 11 }, { label: "Bike", value: 8 }], ask: "Car" },
-  { rows: [{ label: "Apples", value: 10 }, { label: "Pears", value: 13 }, { label: "Plums", value: 2 }], ask: "Pears" },
-  { rows: [{ label: "Monday", value: 6 }, { label: "Tuesday", value: 14 }, { label: "Friday", value: 9 }], ask: "Monday" },
-  { rows: [{ label: "Sun", value: 15 }, { label: "Rain", value: 7 }, { label: "Cloud", value: 3 }], ask: "Sun" },
-];
-
 function TallyChartsChallenge1({ onComplete }) {
-  const questions = useMemo(
-    () =>
-      shuffle(SETS, Math.random).map((set) => {
-        const answer = set.rows.find((row) => row.label === set.ask).value;
-        return { ...set, answer, options: nearMissOptions(answer, 4, Math.random) };
-      }),
-    []
-  );
+  const questions = useMemo(() => buildTallyRead(Math.random), []);
 
   return (
     <ChallengeShell
@@ -51,9 +37,7 @@ function ReadRow({ question, submit, locked }) {
     <>
       <TallyChart rows={question.rows} highlight={question.ask} />
 
-      <p className="challenge-prompt">
-        How many for <strong>{question.ask}</strong>?
-      </p>
+      <p className="challenge-prompt">{question.prompt}</p>
 
       <ChoiceGrid
         options={question.options}

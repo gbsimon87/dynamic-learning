@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import BlockDiagram from "../../../../../../components/challenge/BlockDiagram";
 import DataTable from "../../../../../../components/challenge/DataTable";
-import { shuffle } from "../../../../../../data/challenges/statistics";
+import { buildBlockConstruct } from "../../../../../../data/challenges/statisticsQuestions";
 
 /**
  * Challenge 3 - construct the block diagram from a table.
@@ -14,68 +14,12 @@ import { shuffle } from "../../../../../../data/challenges/statistics";
  * Tapping a slot sets the whole column to that height — building a column of
  * 9 by tapping +1 nine times is a test of patience, not of statistics.
  *
- * Whole-structure: every column has to be right at once.
+ * Whole-structure: every column has to be right at once. New numbers every
+ * run (see buildBlockConstruct).
  */
 
-const SETS = [
-  {
-    caption: "Pets in our class",
-    max: 10,
-    targets: [
-      { label: "Cats", value: 6 },
-      { label: "Dogs", value: 9 },
-      { label: "Fish", value: 3 },
-    ],
-  },
-  {
-    caption: "Cars we spotted",
-    max: 10,
-    targets: [
-      { label: "Red", value: 4 },
-      { label: "Blue", value: 8 },
-      { label: "Green", value: 2 },
-    ],
-  },
-  {
-    caption: "Books read",
-    max: 12,
-    targets: [
-      { label: "Mon", value: 5 },
-      { label: "Tue", value: 11 },
-      { label: "Wed", value: 7 },
-    ],
-  },
-  {
-    caption: "Fruit eaten",
-    max: 10,
-    targets: [
-      { label: "Apples", value: 7 },
-      { label: "Pears", value: 3 },
-      { label: "Plums", value: 10 },
-    ],
-  },
-  {
-    caption: "Stickers earned",
-    max: 12,
-    targets: [
-      { label: "Ava", value: 9 },
-      { label: "Ben", value: 4 },
-      { label: "Cleo", value: 12 },
-    ],
-  },
-  {
-    caption: "Weather this month",
-    max: 12,
-    targets: [
-      { label: "Sun", value: 8 },
-      { label: "Rain", value: 12 },
-      { label: "Cloud", value: 5 },
-    ],
-  },
-];
-
 function BlockDiagramsChallenge3({ onComplete }) {
-  const questions = useMemo(() => shuffle(SETS, Math.random), []);
+  const questions = useMemo(() => buildBlockConstruct(Math.random), []);
 
   return (
     <ChallengeShell

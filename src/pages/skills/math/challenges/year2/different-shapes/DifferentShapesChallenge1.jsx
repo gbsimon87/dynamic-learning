@@ -2,37 +2,19 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import SolidFigure from "../../../../../../components/challenge/SolidFigure";
-import { SOLIDS, findShape } from "../../../../../../data/challenges/shapes";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildFaceOnSolid } from "../../../../../../data/challenges/shapeQuestions";
 
 /**
  * Challenge 1 - the flat shapes on a solid.
  *
  * Statutory, with the curriculum's own examples: a circle on a cylinder, a
- * triangle on a pyramid. This is the bridge between the two previous topics —
- * the 2-D shapes a child can name turn up as the surfaces of the 3-D ones.
+ * triangle on a pyramid. The sphere never appears, because it has no flat
+ * face, and a pyramid or prism may be asked about either kind of face it has
+ * (see buildFaceOnSolid).
  */
 
-function buildQuestions(rng) {
-  const pool = SOLIDS.filter((s) => s.faceShapes.length > 0);
-
-  return shuffle(pool, rng)
-    .slice(0, 6)
-    .map((solid) => {
-      const answer = findShape(solid.faceShapes[0]).name;
-      const wrong = ["circle", "square", "triangle", "rectangle", "hexagon"]
-        .map((id) => findShape(id).name)
-        .filter((name) => !solid.faceShapes.map((f) => findShape(f).name).includes(name));
-      return {
-        solid,
-        answer,
-        options: shuffle([answer, ...shuffle(wrong, rng).slice(0, 2)], rng),
-      };
-    });
-}
-
 function DifferentShapesChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildFaceOnSolid(Math.random), []);
 
   return (
     <ChallengeShell

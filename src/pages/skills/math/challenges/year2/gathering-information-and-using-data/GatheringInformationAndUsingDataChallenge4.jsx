@@ -2,13 +2,7 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import SurveyTray from "../../../../../../components/challenge/SurveyTray";
 import NumberInput from "../../../../../../components/challenge/NumberInput";
-import {
-  countByCategory,
-  total,
-  difference,
-  hasUniqueValues,
-  shuffle,
-} from "../../../../../../data/challenges/statistics";
+import { buildPileProblems } from "../../../../../../data/challenges/statisticsQuestions";
 
 /**
  * Challenge 4 - questions about totalling and comparing, straight off the pile.
@@ -18,77 +12,12 @@ import {
  * then combined. "How many more" off an unsorted pile is two counts and a
  * subtraction held in the head at once.
  *
- * The "most" question needs a single winner, so its pile is checked for ties.
+ * The "most" question needs a single winner; every pile is drawn with three
+ * different counts, so there always is one (see buildPileProblems).
  */
 
-const PILES = [
-  {
-    categories: ["🍎", "🍐", "🍌"],
-    counts: [7, 4, 5],
-    kind: "total",
-    story: "How many pieces of fruit are there altogether?",
-  },
-  {
-    categories: ["🐱", "🐶", "🐠"],
-    counts: [6, 9, 3],
-    kind: "difference",
-    pair: ["🐶", "🐱"],
-    story: "How many more 🐶 than 🐱?",
-  },
-  {
-    categories: ["🔴", "🔵", "🟡"],
-    counts: [8, 3, 6],
-    kind: "pair",
-    pair: ["🔵", "🟡"],
-    story: "How many 🔵 and 🟡 together?",
-  },
-  {
-    categories: ["⭐", "❤️", "🌙"],
-    counts: [5, 8, 4],
-    kind: "most",
-    story: "How many are there of the kind there are MOST of?",
-  },
-  {
-    categories: ["🚗", "🚌", "🚲"],
-    counts: [9, 4, 7],
-    kind: "difference",
-    pair: ["🚗", "🚲"],
-    story: "How many more 🚗 than 🚲?",
-  },
-  {
-    categories: ["🌻", "🌷", "🌹"],
-    counts: [4, 6, 8],
-    kind: "total",
-    story: "How many flowers are there altogether?",
-  },
-];
-
-function answerFor(rows, pile) {
-  const valueOf = (label) => rows.find((row) => row.label === label).value;
-  if (pile.kind === "total") return total(rows);
-  if (pile.kind === "difference") return difference(rows, pile.pair[0], pile.pair[1]);
-  if (pile.kind === "most") {
-    if (!hasUniqueValues(rows)) throw new Error("a 'most' pile has two categories tied");
-    return Math.max(...rows.map((row) => row.value));
-  }
-  return valueOf(pile.pair[0]) + valueOf(pile.pair[1]);
-}
-
-function buildQuestions(rng) {
-  return shuffle(PILES, rng).map((pile) => {
-    const items = shuffle(
-      pile.categories.flatMap((category, i) =>
-        Array.from({ length: pile.counts[i] }, () => category)
-      ),
-      rng
-    );
-    const rows = countByCategory(items, pile.categories);
-    return { ...pile, items, answer: answerFor(rows, pile) };
-  });
-}
-
 function GatheringChallenge4({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildPileProblems(Math.random), []);
 
   return (
     <ChallengeShell

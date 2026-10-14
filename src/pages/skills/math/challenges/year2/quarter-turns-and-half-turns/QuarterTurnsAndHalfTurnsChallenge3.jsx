@@ -2,48 +2,21 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import RotationDial from "../../../../../../components/challenge/RotationDial";
-import { turnBetween } from "../../../../../../data/challenges/positionAndDirection";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildNameTurn } from "../../../../../../data/challenges/positionQuestions";
 
 /**
  * Challenge 3 - name the turn.
  *
  * The reverse of challenge 1: both headings are shown and the learner names
- * the turn that connects them. Naming it needs the vocabulary — quarter, half,
- * clockwise, anti-clockwise — rather than just the result.
+ * the turn that connects them. Each of the three answers comes up exactly
+ * twice (see buildNameTurn).
  *
  * A three-quarter turn clockwise is reported as a quarter anti-clockwise,
  * because that is how it would be described out loud.
  */
 
-const PLANS = [
-  { from: "up", to: "right" },
-  { from: "up", to: "down" },
-  { from: "up", to: "left" },
-  { from: "right", to: "down" },
-  { from: "down", to: "up" },
-  { from: "left", to: "down" },
-];
-
-const OPTIONS = [
-  "quarter turn clockwise",
-  "quarter turn anti-clockwise",
-  "half turn",
-];
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => {
-    const { turn, direction } = turnBetween(plan.from, plan.to);
-    return {
-      ...plan,
-      answer: turn === "half" ? "half turn" : `${turn} turn ${direction}`,
-      options: OPTIONS,
-    };
-  });
-}
-
 function TurnsChallenge3({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildNameTurn(Math.random), []);
 
   return (
     <ChallengeShell

@@ -3,41 +3,21 @@ import ChallengeShell from "../../../../../../components/challenge/ChallengeShel
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import NumberLine from "../../../../../../components/challenge/NumberLine";
 import {
-  applyChange,
+  buildOneMoreLessQuestions,
   describeChange,
-  neighbourStrip,
-  moreLessDistractors,
 } from "../../../../../../data/challenges/countingMoreAndLess";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
 
 /**
  * Challenge 1 - the gentlest slot.
  *
  * The jump is named in words and a strip of neighbours sits above the answer,
  * so a learner who cannot yet do it in their head can count along the line.
- * Only the 1-more and 1-less jumps appear here.
+ * Only the 1-more and 1-less jumps appear here, three of each, from numbers
+ * generated each time.
  */
 
-const STARTS = [27, 34, 49, 16, 58, 71];
-
-function buildQuestions(rng) {
-  return shuffle(STARTS, rng).map((start, i) => {
-    const change = i % 2 === 0 ? 1 : -1;
-    const answer = applyChange(start, change);
-    const strip = neighbourStrip(start);
-    return {
-      start,
-      change,
-      answer,
-      strip,
-      highlight: strip.indexOf(start),
-      options: shuffle([answer, ...moreLessDistractors(start, change, 2)], rng),
-    };
-  });
-}
-
 function CountingMoreAndLessChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildOneMoreLessQuestions(Math.random), []);
 
   return (
     <ChallengeShell

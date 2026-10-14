@@ -2,38 +2,19 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import NumberInput from "../../../../../../components/challenge/NumberInput";
 import { isCorrectNumber } from "../../../../../../data/challenges/numbersAndCounting";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildTwoDigitQuestions } from "../../../../../../data/challenges/additionAndSubtraction";
 
 /**
  * Challenge 4 - two two-digit numbers, typed.
  *
  * The last and hardest of the statutory calculation shapes. Every pair crosses
  * a ten, so the ones column always carries or borrows - the whole difficulty
- * of the shape. Totals stay within 100.
+ * of the shape. Totals stay within 100; three sums and three differences are
+ * generated each time.
  */
 
-const PLANS = [
-  { a: 34, b: 28, operator: "+" },
-  { a: 47, b: 25, operator: "+" },
-  { a: 56, b: 19, operator: "+" },
-  { a: 63, b: 27, operator: "-" },
-  { a: 82, b: 35, operator: "-" },
-  { a: 71, b: 46, operator: "-" },
-  { a: 29, b: 43, operator: "+" },
-  { a: 94, b: 58, operator: "-" },
-];
-
 function UsingTwoDigitNumbersChallenge4({ onComplete }) {
-  const questions = useMemo(
-    () =>
-      shuffle(PLANS, Math.random)
-        .slice(0, 6)
-        .map((plan) => ({
-          ...plan,
-          answer: plan.operator === "+" ? plan.a + plan.b : plan.a - plan.b,
-        })),
-    []
-  );
+  const questions = useMemo(() => buildTwoDigitQuestions(Math.random), []);
 
   return (
     <ChallengeShell

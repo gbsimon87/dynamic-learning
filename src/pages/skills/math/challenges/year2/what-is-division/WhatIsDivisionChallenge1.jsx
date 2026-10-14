@@ -2,9 +2,8 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import NumberInput from "../../../../../../components/challenge/NumberInput";
 import ArrayGrid from "../../../../../../components/challenge/ArrayGrid";
-import { arrayRows, divide } from "../../../../../../data/challenges/multiplicationAndDivision";
 import { isCorrectNumber } from "../../../../../../data/challenges/numbersAndCounting";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildSharingPictures } from "../../../../../../data/challenges/multiplicationAndDivision";
 
 /**
  * Challenge 1 - division as sharing, with the groups drawn.
@@ -14,24 +13,8 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * it is the meaning children meet first.
  */
 
-const PLANS = [
-  { total: 20, groups: 5 },
-  { total: 12, groups: 2 },
-  { total: 30, groups: 10 },
-  { total: 20, groups: 4 },
-  { total: 18, groups: 2 },
-  { total: 25, groups: 5 },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => {
-    const answer = divide(plan.total, plan.groups);
-    return { ...plan, answer, grid: arrayRows(plan.groups, answer) };
-  });
-}
-
 function WhatIsDivisionChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildSharingPictures(Math.random), []);
 
   return (
     <ChallengeShell

@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import SurveyTray from "../../../../../../components/challenge/SurveyTray";
 import BlockDiagram from "../../../../../../components/challenge/BlockDiagram";
-import { countByCategory, shuffle } from "../../../../../../data/challenges/statistics";
+import { PILE_MAX, buildPileToBlocks } from "../../../../../../data/challenges/statisticsQuestions";
 
 /**
  * Challenge 3 - organise the pile into a block diagram.
@@ -12,38 +12,14 @@ import { countByCategory, shuffle } from "../../../../../../data/challenges/stat
  * is the only place in the category where a learner does the whole thing
  * rather than one step of it.
  *
- * Whole-structure: all four columns must be right at once.
+ * Whole-structure: all four columns must be right at once. New piles every
+ * run (see buildPileToBlocks).
  */
 
-const PILES = [
-  { categories: ["🍎", "🍐", "🍌", "🍇"], counts: [6, 3, 8, 4] },
-  { categories: ["🐱", "🐶", "🐠", "🐦"], counts: [5, 9, 2, 6] },
-  { categories: ["🔴", "🔵", "🟡", "🟢"], counts: [7, 2, 5, 3] },
-  { categories: ["⭐", "❤️", "🌙", "☀️"], counts: [4, 8, 6, 2] },
-  { categories: ["🚗", "🚌", "🚲", "🚚"], counts: [9, 4, 6, 3] },
-  { categories: ["🌻", "🌷", "🌹", "🌼"], counts: [3, 7, 5, 8] },
-];
-
-const MAX = 10;
-
-function buildQuestions(rng) {
-  return shuffle(PILES, rng).map((pile) => {
-    const items = shuffle(
-      pile.categories.flatMap((category, i) =>
-        Array.from({ length: pile.counts[i] }, () => category)
-      ),
-      rng
-    );
-    return {
-      items,
-      categories: pile.categories,
-      targets: countByCategory(items, pile.categories),
-    };
-  });
-}
+const MAX = PILE_MAX;
 
 function GatheringChallenge3({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildPileToBlocks(Math.random), []);
 
   return (
     <ChallengeShell

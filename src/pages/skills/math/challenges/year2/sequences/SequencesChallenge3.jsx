@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import PositionBoard from "../../../../../../components/challenge/PositionBoard";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildOrdinals } from "../../../../../../data/challenges/positionQuestions";
 
 /**
  * Challenge 3 - ordinal position in a line.
@@ -11,35 +11,14 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * SEQUENCES" includes knowing which one is first, third or last. The words
  * first/second/third are themselves the thing being learned, so they are
  * spelled out rather than shown as 1st, 2nd, 3rd.
+ *
+ * A new line-up every question, and the wrong options are the animals next
+ * to the right one - where counting one too few or too many lands (see
+ * buildOrdinals).
  */
 
-const LINE = [
-  { emoji: "🐶", x: 0, y: 0 },
-  { emoji: "🐱", x: 1, y: 0 },
-  { emoji: "🐰", x: 2, y: 0 },
-  { emoji: "🐻", x: 3, y: 0 },
-  { emoji: "🐼", x: 4, y: 0 },
-];
-
-const ORDINALS = ["first", "second", "third", "fourth", "fifth"];
-
-function buildQuestions(rng) {
-  return shuffle(ORDINALS, rng)
-    .concat(shuffle(ORDINALS, rng))
-    .slice(0, 6)
-    .map((ordinal) => {
-      const answer = LINE[ORDINALS.indexOf(ordinal)].emoji;
-      const others = LINE.map((o) => o.emoji).filter((e) => e !== answer);
-      return {
-        ordinal,
-        answer,
-        options: shuffle([answer, ...shuffle(others, rng).slice(0, 2)], rng),
-      };
-    });
-}
-
 function SequencesChallenge3({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildOrdinals(Math.random), []);
 
   return (
     <ChallengeShell
@@ -58,7 +37,7 @@ function FindOrdinal({ question, submit, locked }) {
 
   return (
     <>
-      <PositionBoard size={5} objects={LINE} label="five animals in a line" />
+      <PositionBoard size={5} objects={question.line} label="five animals in a line" />
 
       <p className="challenge-prompt">
         Counting from the left, who is <strong>{question.ordinal}</strong>?

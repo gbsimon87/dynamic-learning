@@ -1,54 +1,18 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import DragToOrder from "../../../../../../components/challenge/DragToOrder";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildArrangeLine } from "../../../../../../data/challenges/positionQuestions";
 
 /**
- * Challenge 4 - arrange a sequence from instructions.
+ * Challenge 4 - arrange a line from clues.
  *
- * Several position words at once, each one constraining the answer. Getting it
- * right means holding all the instructions together rather than following one
- * and hoping, which is the hardest thing in this topic.
+ * Several position words at once, given out of order, each one constraining
+ * the answer. Two lines of three, then four lines of four, and some clues
+ * only say who an animal is next to (see buildArrangeLine).
  */
 
-const PLANS = [
-  {
-    clue: "The cat is first. The dog is last. The rabbit is between them.",
-    order: ["🐱", "🐰", "🐶"],
-  },
-  {
-    clue: "The star is last. The apple is first. The fish is in the middle.",
-    order: ["🍎", "🐟", "⭐"],
-  },
-  {
-    clue: "The car is first, then the bus, then the bike.",
-    order: ["🚗", "🚌", "🚲"],
-  },
-  {
-    clue: "The sun is last. The moon is first. The cloud is between them.",
-    order: ["🌙", "☁️", "☀️"],
-  },
-  {
-    clue: "The bear is third. The panda is first. The cat is second.",
-    order: ["🐼", "🐱", "🐻"],
-  },
-  {
-    clue: "The flower is first. The tree is last. The leaf is in the middle.",
-    order: ["🌸", "🍃", "🌳"],
-  },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => {
-    let cards = shuffle(plan.order.map((emoji) => ({ id: emoji, label: emoji })), rng);
-    const solved = cards.every((card, i) => card.id === plan.order[i]);
-    if (solved) cards = [...cards].reverse();
-    return { ...plan, cards };
-  });
-}
-
 function SequencesChallenge4({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildArrangeLine(Math.random), []);
 
   return (
     <ChallengeShell

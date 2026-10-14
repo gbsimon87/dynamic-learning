@@ -2,39 +2,19 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import ShapeFigure from "../../../../../../components/challenge/ShapeFigure";
-import { SHAPES_2D } from "../../../../../../data/challenges/shapes";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildNameShapes } from "../../../../../../data/challenges/shapeQuestions";
 
 /**
  * NOTE ON THE NAME: the file must be 2DShapesChallengeN.jsx for the dynamic
  * loader, but that is not a valid JavaScript identifier, so the component is
  * named differently and reached through the default export.
  *
- * Challenge 1 - name the shape.
- *
- * Only shapes with distinct names appear, so no question can offer "triangle"
- * twice and mark one of them wrong.
+ * Challenge 1 - name the shape. The wrong options are look-alikes (a hexagon
+ * beside a pentagon and an octagon) - see buildNameShapes.
  */
 
-const NAMED = ["circle", "triangle", "square", "rectangle", "pentagon", "hexagon", "octagon", "rhombus"];
-
-function buildQuestions(rng) {
-  const pool = SHAPES_2D.filter((s) => NAMED.includes(s.id));
-
-  return shuffle(pool, rng)
-    .slice(0, 6)
-    .map((shape) => {
-      const others = pool.filter((s) => s.name !== shape.name).map((s) => s.name);
-      return {
-        shape,
-        answer: shape.name,
-        options: shuffle([shape.name, ...shuffle(others, rng).slice(0, 2)], rng),
-      };
-    });
-}
-
 function ShapesChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildNameShapes(Math.random), []);
 
   return (
     <ChallengeShell

@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { divide, productDistractors } from "../../../../../../data/challenges/multiplicationAndDivision";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildHalving } from "../../../../../../data/challenges/multiplicationAndDivision";
 
 /**
  * Challenge 2 - halving is dividing by 2, and it names a fraction.
@@ -12,23 +11,8 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * meant to begin making.
  */
 
-const NUMBERS = [24, 30, 40, 50, 60, 70, 80, 90];
-
-function buildQuestions(rng) {
-  return shuffle(NUMBERS, rng)
-    .slice(0, 6)
-    .map((n) => {
-      const answer = divide(n, 2);
-      return {
-        n,
-        answer,
-        options: shuffle([answer, ...productDistractors(answer, 2, 2)], rng),
-      };
-    });
-}
-
 function DoublingAndHalvingUsingMultiplicationAndDivisionChallenge2({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildHalving(Math.random), []);
 
   return (
     <ChallengeShell

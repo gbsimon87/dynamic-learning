@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import DragToOrder from "../../../../../../components/challenge/DragToOrder";
-import { isTrueSubtraction } from "../../../../../../data/challenges/additionAndSubtraction";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildFactFamilyQuestions, isTrueSubtraction } from "../../../../../../data/challenges/additionAndSubtraction";
 
 /**
  * Challenge 3 - build a true subtraction from three numbers.
@@ -12,28 +11,8 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * anywhere but the largest number, which is the understanding being tested.
  */
 
-const FAMILIES = [
-  [15, 6, 9],
-  [20, 12, 8],
-  [17, 9, 8],
-  [30, 18, 12],
-  [24, 10, 14],
-  [45, 25, 20],
-];
-
-function buildQuestions(rng) {
-  return FAMILIES.map((family) => {
-    let cards = shuffle(family.map((value) => ({ id: value, value, label: value })), rng);
-    // Never start already solved.
-    if (isTrueSubtraction(cards.map((c) => c.value))) {
-      cards = [cards[1], cards[0], cards[2]];
-    }
-    return { family, cards };
-  });
-}
-
 function SolvingMissingNumberProblemsChallenge3({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildFactFamilyQuestions(Math.random), []);
 
   return (
     <ChallengeShell

@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { multiply, productDistractors } from "../../../../../../data/challenges/multiplicationAndDivision";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildDoubling } from "../../../../../../data/challenges/multiplicationAndDivision";
 
 /**
  * Challenge 1 - doubling is multiplying by 2.
@@ -12,23 +11,8 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * asks for, and takes it past 20 where repeated addition stops being practical.
  */
 
-const NUMBERS = [12, 15, 20, 25, 30, 35, 40, 45];
-
-function buildQuestions(rng) {
-  return shuffle(NUMBERS, rng)
-    .slice(0, 6)
-    .map((n) => {
-      const answer = multiply(n, 2);
-      return {
-        n,
-        answer,
-        options: shuffle([answer, ...productDistractors(answer, 2, 2)], rng),
-      };
-    });
-}
-
 function DoublingAndHalvingUsingMultiplicationAndDivisionChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildDoubling(Math.random), []);
 
   return (
     <ChallengeShell

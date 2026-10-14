@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { numberInWords } from "../../../../../../data/challenges/numbersAndCounting";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildWordsToNumeralQuestions } from "../../../../../../data/challenges/numbersAndCounting";
 
 /**
  * Challenge 2 - numbers written in words.
@@ -11,23 +10,13 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * statutory, and nothing in the app covered the words half. Reading the word
  * and choosing the numeral comes before writing it (challenge 4).
  *
- * Distractors are the digit swap and the neighbouring ten, so the word has to
- * be read properly: "forty-seven" against 74 and 57.
+ * Distractors are the digit swap and a neighbouring ten, so the word has to
+ * be read properly: "forty-seven" against 74 and 57 or 37. Numbers are
+ * generated each time.
  */
 
-const NUMBERS = [47, 63, 28, 91, 16, 75];
-
-function buildQuestions(rng) {
-  return shuffle(NUMBERS, rng).map((value) => {
-    const tens = Math.floor(value / 10);
-    const ones = value % 10;
-    const options = shuffle([value, ones * 10 + tens, value + 10], rng);
-    return { value, words: numberInWords(value), options };
-  });
-}
-
 function NumbersAndCountingChallenge2({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildWordsToNumeralQuestions(Math.random), []);
 
   return (
     <ChallengeShell

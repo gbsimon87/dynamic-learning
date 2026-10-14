@@ -39,12 +39,12 @@ export const PLACE_VALUE_LESSONS = {
     },
     {
       title: "Put the count in order",
-      lines: ["Counting back starts with the biggest number.", "Each next card is 1 less.", "Say the count out loud to check."],
+      lines: ["Counting back: start with the biggest. Each card is 1 less.", "Counting on: start with the smallest. Each card is 1 more.", "Say the count out loud to check."],
       example: { type: "steps", title: "Count back from 93 to 89", steps: ["Start with 93.", "Then 92, 91, 90.", "End with 89."] },
     },
     {
       title: "Count on or count back",
-      lines: ["Read the story carefully.", "More or got on means count on.", "Left, sold or fell off means count back."],
+      lines: ["Read the story carefully.", "More, get on or climb up means count on.", "Left, sold, fly away or back means count back."],
       example: { type: "steps", title: "46 birds. 5 fly away.", steps: ["Fly away means count back.", "46, 45, 44, 43, 42, 41.", "So 41 birds are left."] },
     },
   ],
@@ -109,9 +109,9 @@ export const PLACE_VALUE_LESSONS = {
       example: { type: "steps", title: "Order 39, 93, 33, 99", steps: ["33 and 39 have 3 tens.", "93 and 99 have 9 tens.", "So: 33, 39, 93, 99."] },
     },
     {
-      title: "What is a digit worth?",
-      lines: ["The ones digit is worth just ones.", "The tens digit is worth that many tens.", "In 52, the 5 is worth 50."],
-      example: { type: "equation", title: "Splitting 52", parts: ["52", "=", "50", "+", "2"], note: "5 tens and 2 ones." },
+      title: "Split a number different ways",
+      lines: ["In 52, the 5 is worth 50.", "52 = 50 + 2. That is 5 tens and 2 ones.", "Swap 1 ten for 10 ones: 52 = 40 + 12."],
+      example: { type: "table", title: "Ways to make 52", headers: ["Tens", "Ones", "Sum"], rows: [["5 tens", "2 ones", "50 + 2"], ["4 tens", "12 ones", "40 + 12"]], note: "Both make 52." },
     },
   ],
   "less-than-greater-than-and-equal-to": [
@@ -126,8 +126,8 @@ export const PLACE_VALUE_LESSONS = {
       example: { type: "equation", title: "27 > ?", parts: ["27", ">", "19"], note: "27 > 27 is false. 27 > 19 is true." },
     },
     {
-      title: "Make every < true",
-      lines: ["Find the smallest number. Put it first.", "Each next number must be bigger.", "Check the tens, then the ones."],
+      title: "Make every sign true",
+      lines: ["For <, put the smallest number first.", "For >, put the biggest number first.", "Check the tens, then the ones."],
       example: { type: "equation", title: "A true chain", parts: ["14", "<", "19", "<", "41", "<", "49"] },
     },
     {

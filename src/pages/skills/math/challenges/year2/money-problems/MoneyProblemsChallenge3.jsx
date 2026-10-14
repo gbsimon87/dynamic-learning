@@ -1,35 +1,19 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import CoinTray from "../../../../../../components/challenge/CoinTray";
-import { formatMoney, isValidCoinCombination } from "../../../../../../data/challenges/measurement";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildCountChangeQuestions, formatMoney, isValidCoinCombination } from "../../../../../../data/challenges/measurement";
 
 /**
  * Challenge 3 - count out the change.
  *
  * Working out that the change is 35p is one thing; handing over coins that
  * make 35p is another, and it is the one a shopkeeper actually does. Any
- * combination reaching the amount is accepted.
+ * combination reaching the amount is accepted. Payment is one coin (20p,
+ * 50p or £1) and the prices are fresh each attempt.
  */
 
-const PLANS = [
-  { paid: 50, cost: 15 },
-  { paid: 100, cost: 60 },
-  { paid: 20, cost: 5 },
-  { paid: 50, cost: 30 },
-  { paid: 100, cost: 25 },
-  { paid: 80, cost: 50 },
-];
-
 function MoneyProblemsChallenge3({ onComplete }) {
-  const questions = useMemo(
-    () =>
-      shuffle(PLANS, Math.random).map((plan) => ({
-        ...plan,
-        change: plan.paid - plan.cost,
-      })),
-    []
-  );
+  const questions = useMemo(() => buildCountChangeQuestions(Math.random), []);
 
   return (
     <ChallengeShell
@@ -49,9 +33,9 @@ function CountChange({ question, submit, locked }) {
   return (
     <>
       <p className="challenge-prompt">
-        Something costs <strong>{formatMoney(question.cost)}</strong> and is
-        paid for with <strong>{formatMoney(question.paid)}</strong>. Tap the
-        coins to give the right change.
+        Something costs <strong>{formatMoney(question.cost)}</strong>. It is
+        paid for with <strong>{question.payWords}</strong>. Tap the coins to
+        give the right change.
       </p>
 
       <CoinTray

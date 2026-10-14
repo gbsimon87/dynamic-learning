@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import CoinTray from "../../../../../../components/challenge/CoinTray";
-import { formatMoney, isValidCoinCombination, totalOf } from "../../../../../../data/challenges/measurement";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildAnotherWayQuestions, formatMoney, isValidCoinCombination, totalOf } from "../../../../../../data/challenges/measurement";
 
 /**
  * Challenge 3 - make the same amount a different way.
@@ -10,19 +9,11 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * Statutory: "find DIFFERENT combinations of coins that equal the same
  * amounts of money". One way is shown and the learner must find another, so
  * repeating what is on screen is rejected even though it adds up correctly.
+ * Amounts are fresh each attempt; the way shown is the fewest coins.
  */
 
-const PLANS = [
-  { target: 50, shown: [20, 20, 10] },
-  { target: 30, shown: [20, 10] },
-  { target: 40, shown: [20, 20] },
-  { target: 25, shown: [20, 5] },
-  { target: 70, shown: [50, 20] },
-  { target: 35, shown: [20, 10, 5] },
-];
-
 function StandardUnitsOfMoneyChallenge3({ onComplete }) {
-  const questions = useMemo(() => shuffle(PLANS, Math.random), []);
+  const questions = useMemo(() => buildAnotherWayQuestions(Math.random), []);
 
   return (
     <ChallengeShell

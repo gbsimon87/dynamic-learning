@@ -1,36 +1,18 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { blockPicture, tensOf, onesOf } from "../../../../../../data/challenges/placeValue";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildCountBlocksQuestions, tensOf, onesOf } from "../../../../../../data/challenges/placeValue";
 
 /**
  * Challenge 1 - the number is drawn before it is written.
  *
  * Tens are rods and ones are single blocks, so "4 tens and 7 ones" is
- * something the learner can see and count rather than recall.
+ * something the learner can see and count rather than recall. Numbers are
+ * generated each time; the other column's digit is always a wrong option.
  */
 
-const NUMBERS = [23, 47, 35, 62, 18, 54];
-
-function buildQuestions(rng) {
-  return shuffle(NUMBERS, rng).map((value) => {
-    const asksTens = tensOf(value) !== onesOf(value) ? rng() < 0.5 : true;
-    const answer = asksTens ? tensOf(value) : onesOf(value);
-    // Options are every digit near the answer - the confusion here is reading
-    // the wrong column, not arithmetic.
-    const options = shuffle(
-      [answer, ...[tensOf(value), onesOf(value), answer + 1, answer - 1]
-        .filter((n) => n !== answer && n >= 0)
-        .slice(0, 2)],
-      rng
-    );
-    return { value, asksTens, answer, options, picture: blockPicture(value) };
-  });
-}
-
 function PlaceValueChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildCountBlocksQuestions(Math.random), []);
 
   return (
     <ChallengeShell

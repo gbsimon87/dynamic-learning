@@ -1,71 +1,58 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { fractionOf, fractionOfDistractors } from "../../../../../../data/challenges/fractions";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildHalfIsTwoQuarters } from "../../../../../../data/challenges/fractions";
 
 /**
- * Challenge 2 - the same idea with nothing drawn, and 3/4 arrives.
+ * Challenge 2 - 2/4 and 1/2 of a number are the same.
  *
- * 3/4 is the first non-unit fraction a Year 2 learner meets, and it needs two
- * moves: divide by 4, then take three of them. Distractors are other
- * fractions of the same amount, so taking 1/4 and stopping lands on an
- * offered answer.
+ * Statutory: "recognise the equivalence of 2/4 and 1/2", used on numbers.
+ * One fact is shown and a related one asked — 1/2 of 16 is 8, so 2/4 of 16?
+ * 1/4 of 16 is 4, so 2/4 (or 1/2) of 16? — or the learner picks which
+ * statement matches 1/2 of a number. Wrong options are the other quarters of
+ * the same number.
  */
 
-const PLANS = [
-  { fraction: { numerator: 1, denominator: 2 }, total: 16 },
-  { fraction: { numerator: 3, denominator: 4 }, total: 12 },
-  { fraction: { numerator: 1, denominator: 4 }, total: 20 },
-  { fraction: { numerator: 2, denominator: 4 }, total: 24 },
-  { fraction: { numerator: 3, denominator: 4 }, total: 20 },
-  { fraction: { numerator: 1, denominator: 3 }, total: 18 },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => {
-    const answer = fractionOf(plan.fraction, plan.total);
-    return {
-      ...plan,
-      answer,
-      options: shuffle(
-        [answer, ...fractionOfDistractors(plan.fraction, plan.total, 2)],
-        rng
-      ),
-    };
-  });
-}
-
 function FractionsOfNumbersChallenge2({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildHalfIsTwoQuarters(Math.random), []);
 
   return (
     <ChallengeShell
       questions={questions}
       onComplete={onComplete}
-      title="Divide by the bottom, then take the top."
+      title="2/4 of a number is the same as 1/2 of it."
       render={({ question, submit, locked, index }) => (
-        <FractionOfNumber key={index} question={question} submit={submit} locked={locked} />
+        <HalfAndQuarters key={index} question={question} submit={submit} locked={locked} />
       )}
     />
   );
 }
 
-function FractionOfNumber({ question, submit, locked }) {
+function HalfAndQuarters({ question, submit, locked }) {
   const [selected, setSelected] = useState(null);
-  const { numerator, denominator } = question.fraction;
 
   return (
     <>
-      <p className="sequence-strip">
-        {numerator}/{denominator} of {question.total} = ?
-      </p>
+      {question.kind === "same" ? (
+        <>
+          <p className="sequence-strip">{question.fact}</p>
+          <p className="challenge-prompt">{question.ask}</p>
+        </>
+      ) : (
+        <>
+          <p className="challenge-prompt">
+            You know <strong>{question.fact}</strong>. So…
+          </p>
+          <p className="sequence-strip">{question.ask}</p>
+        </>
+      )}
 
       <ChoiceGrid
         options={question.options}
         selected={selected}
         onSelect={setSelected}
         disabled={locked}
+        variant={question.kind === "same" ? "wordy" : ""}
       />
 
       <button

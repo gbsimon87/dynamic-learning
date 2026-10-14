@@ -1,48 +1,18 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import DragToOrder from "../../../../../../components/challenge/DragToOrder";
-import { SHAPES_2D, SOLIDS } from "../../../../../../data/challenges/shapes";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildOddOneOut } from "../../../../../../data/challenges/shapeQuestions";
 
 /**
  * Challenge 3 - put the odd one out at the front.
  *
  * Three cards share a property and one does not, and the learner drags the
- * exception to the front. Sorting by a property you have to find yourself is
- * harder than sorting by one you are told.
+ * exception to the front. The families sort by sides and by curved or flat
+ * surfaces, and the cards are drawn fresh every run (see buildOddOneOut).
  */
-
-/**
- * No set may contain two shapes with the same NAME. "triangle" and
- * "scalene-triangle" are both honestly called a triangle, so a set holding
- * both showed the learner two identical cards — one of which was the answer.
- */
-const PLANS = [
-  { rule: "Three of these have four sides.", odd: "triangle", rest: ["square", "rectangle", "rhombus"] },
-  { rule: "Three of these are flat.", odd: "cube", rest: ["circle", "square", "hexagon"] },
-  { rule: "Three of these have a curved surface.", odd: "cuboid", rest: ["sphere", "cylinder", "cone"] },
-  { rule: "Three of these have four sides.", odd: "triangle", rest: ["square", "trapezium", "parallelogram"] },
-  { rule: "Three of these are solid.", odd: "octagon", rest: ["cube", "cone", "sphere"] },
-  { rule: "Three of these have more than four sides.", odd: "square", rest: ["pentagon", "hexagon", "octagon"] },
-];
-
-const LABELS = new Map([
-  ...SHAPES_2D.map((s) => [s.id, s.name]),
-  ...SOLIDS.map((s) => [s.id, s.name]),
-]);
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => {
-    const ids = shuffle([plan.odd, ...plan.rest], rng);
-    let cards = ids.map((id) => ({ id, label: LABELS.get(id) }));
-    // Never start with the answer already at the front.
-    if (cards[0].id === plan.odd) cards = [cards[1], cards[0], ...cards.slice(2)];
-    return { ...plan, cards };
-  });
-}
 
 function DifferentShapesChallenge3({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildOddOneOut(Math.random), []);
 
   return (
     <ChallengeShell

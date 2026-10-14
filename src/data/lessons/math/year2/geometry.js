@@ -46,7 +46,7 @@ export const GEOMETRY_LESSONS = {
     },
     {
       title: "Sort the solids",
-      lines: ["Read the word in bold first.", "Count only that part on each solid.", "Put the one with the fewest first."],
+      lines: ["Read the words in bold first.", "Count only that part on each solid.", "Fewest first or most first? Check before you drag."],
       example: { type: "table", title: "What to count", headers: ["Word", "Count these"], rows: [["faces", "the flat surfaces"], ["edges", "the lines where faces meet"], ["corners", "the points where edges meet"]], note: "Count the hidden parts at the back too." },
     },
   ],

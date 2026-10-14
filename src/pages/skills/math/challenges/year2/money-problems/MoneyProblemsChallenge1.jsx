@@ -1,38 +1,19 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { formatMoney } from "../../../../../../data/challenges/measurement";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildAddPricesQuestions } from "../../../../../../data/challenges/measurement";
 
 /**
- * Challenge 1 - buying one thing.
+ * Challenge 1 - buying two things.
  *
  * Adding two prices, all in pence. Options are written as money, so the p is
- * part of the answer rather than an afterthought.
+ * part of the answer rather than an afterthought. Prices are fresh each
+ * attempt: three sums need no carrying, then three do. Wrong options are
+ * near-misses — 1, 2 or 10p out, as when a carried ten is lost.
  */
 
-const PROBLEMS = [
-  { prompt: "A pencil costs 15p and a rubber costs 20p. How much for both?", answer: 35 },
-  { prompt: "An apple costs 25p and a banana costs 30p. How much altogether?", answer: 55 },
-  { prompt: "A sticker costs 5p and a badge costs 40p. How much for both?", answer: 45 },
-  { prompt: "A ruler costs 45p and a pen costs 35p. How much altogether?", answer: 80 },
-  { prompt: "A cake costs 60p and a drink costs 25p. How much for both?", answer: 85 },
-  { prompt: "A card costs 50p and a stamp costs 12p. How much altogether?", answer: 62 },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PROBLEMS, rng).map((problem) => ({
-    ...problem,
-    options: shuffle(
-      [problem.answer, problem.answer - 10, problem.answer + 5].filter((v) => v > 0),
-      rng
-    ).map(formatMoney),
-    answerLabel: formatMoney(problem.answer),
-  }));
-}
-
 function MoneyProblemsChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildAddPricesQuestions(Math.random), []);
 
   return (
     <ChallengeShell
@@ -64,7 +45,7 @@ function BuyTwo({ question, submit, locked }) {
         type="button"
         className="submit-btn"
         disabled={locked || selected === null}
-        onClick={() => submit(selected === question.answerLabel)}
+        onClick={() => submit(selected === question.answer)}
       >
         Check my answer
       </button>

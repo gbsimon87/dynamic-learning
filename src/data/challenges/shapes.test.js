@@ -101,8 +101,12 @@ test("curved solids are kept out of the counting questions", () => {
   }
 });
 
-test("every solid names the 2-D shapes on its surface", () => {
+test("every solid with a flat face names the 2-D shapes on its surface", () => {
+  // The sphere is the one solid with no flat face, so it names none and is
+  // never asked "which flat shape is on its surface".
+  assert.deepEqual(findSolid("sphere").faceShapes, []);
   for (const solid of SOLIDS) {
+    if (solid.id === "sphere") continue;
     assert.ok(solid.faceShapes.length > 0, `${solid.name} has no face shapes`);
     for (const face of solid.faceShapes) {
       assert.ok(findShape(face), `${solid.name} names an unknown face shape: ${face}`);

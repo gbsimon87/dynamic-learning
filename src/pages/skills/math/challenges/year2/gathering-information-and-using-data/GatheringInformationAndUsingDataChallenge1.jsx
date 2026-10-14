@@ -2,11 +2,7 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import SurveyTray from "../../../../../../components/challenge/SurveyTray";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import {
-  countByCategory,
-  nearMissOptions,
-  shuffle,
-} from "../../../../../../data/challenges/statistics";
+import { buildPileCount } from "../../../../../../data/challenges/statisticsQuestions";
 
 /**
  * Challenge 1 - count one category in an unsorted pile.
@@ -17,35 +13,12 @@ import {
  * learner a finished chart; here the chart does not exist yet.
  *
  * Objects can be tapped to tick them off while counting, because keeping
- * track in a jumble is the actual difficulty at six years old.
+ * track in a jumble is the actual difficulty at six years old. The kinds,
+ * counts and the asked kind are new every run (see buildPileCount).
  */
 
-const PILES = [
-  { categories: ["🍎", "🍐", "🍌"], counts: [6, 4, 3], ask: "🍎", name: "apples" },
-  { categories: ["🐱", "🐶", "🐠"], counts: [5, 7, 2], ask: "🐶", name: "dogs" },
-  { categories: ["🔴", "🔵", "🟡"], counts: [4, 8, 3], ask: "🔵", name: "blue counters" },
-  { categories: ["⭐", "❤️", "🌙"], counts: [7, 3, 5], ask: "🌙", name: "moons" },
-  { categories: ["🚗", "🚌", "🚲"], counts: [8, 3, 6], ask: "🚗", name: "cars" },
-  { categories: ["🌻", "🌷", "🌹"], counts: [3, 9, 4], ask: "🌷", name: "tulips" },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PILES, rng).map((pile) => {
-    const items = shuffle(
-      pile.categories.flatMap((category, i) =>
-        Array.from({ length: pile.counts[i] }, () => category)
-      ),
-      rng
-    );
-    const answer = countByCategory(items, pile.categories).find(
-      (row) => row.label === pile.ask
-    ).value;
-    return { ...pile, items, answer, options: nearMissOptions(answer, 4, rng) };
-  });
-}
-
 function GatheringChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildPileCount(Math.random), []);
 
   return (
     <ChallengeShell

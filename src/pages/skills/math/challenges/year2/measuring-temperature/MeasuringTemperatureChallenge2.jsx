@@ -1,22 +1,17 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import MeasureDrag from "../../../../../../components/challenge/MeasureDrag";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { THERMOMETER, buildThermometerSetQuestions } from "../../../../../../data/challenges/measurement";
 
 /**
  * Challenge 2 - set the thermometer.
  *
- * Five-degree steps, and two of the targets are below zero so the learner has
- * to move the marker down past the nothing mark rather than up from it.
+ * Five-degree steps from 0 °C up. Half the targets sit on a numbered mark and
+ * half on the small mark between two, so the learner counts on by 5.
  */
 
-const TARGETS = [25, -5, 35, 5, 15, -10];
-
 function MeasuringTemperatureChallenge2({ onComplete }) {
-  const questions = useMemo(
-    () => shuffle(TARGETS, Math.random).map((target) => ({ target })),
-    []
-  );
+  const questions = useMemo(() => buildThermometerSetQuestions(Math.random), []);
 
   return (
     <ChallengeShell
@@ -40,9 +35,10 @@ function SetThermometer({ question, submit, locked }) {
       </p>
 
       <MeasureDrag
-        min={-10}
-        max={50}
-        majorStep={10}
+        min={THERMOMETER.min}
+        max={THERMOMETER.max}
+        majorStep={THERMOMETER.majorStep}
+        minorStep={THERMOMETER.minorStep}
         step={5}
         value={value}
         unit="°C"

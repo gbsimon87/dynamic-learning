@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildRelatedDivisionChoice } from "../../../../../../data/challenges/multiplicationAndDivision";
 
 /**
  * Challenge 1 - the division hiding inside a multiplication.
@@ -11,34 +11,8 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * options divide the wrong way round or by the wrong number.
  */
 
-const FACTS = [
-  { a: 4, b: 5 },
-  { a: 3, b: 10 },
-  { a: 7, b: 2 },
-  { a: 6, b: 5 },
-  { a: 9, b: 10 },
-  { a: 8, b: 2 },
-];
-
-function buildQuestions(rng) {
-  return shuffle(FACTS, rng).map(({ a, b }) => {
-    const product = a * b;
-    const answer = `${product} ÷ ${b} = ${a}`;
-    return {
-      a,
-      b,
-      product,
-      answer,
-      options: shuffle(
-        [answer, `${b} ÷ ${product} = ${a}`, `${product} ÷ ${a} = ${b + 1}`],
-        rng
-      ),
-    };
-  });
-}
-
 function ConnectingMultiplicationAndDivisionChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildRelatedDivisionChoice(Math.random), []);
 
   return (
     <ChallengeShell

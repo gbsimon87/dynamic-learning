@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import OrientationPicker from "../../../../../../components/challenge/OrientationPicker";
 import { findShape } from "../../../../../../data/challenges/shapes";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildOrientation } from "../../../../../../data/challenges/positionQuestions";
 
 /**
  * Challenge 3 - the same shape, turned.
@@ -11,31 +11,12 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * DIFFERENT ORIENTATIONS". A triangle on its side is still a triangle, and
  * that is genuinely not obvious at this age.
  *
- * Only shapes that look different when turned are used — asking which circle
- * is upright would be nonsense.
+ * Only shapes that look different at every quarter turn are used, and every
+ * rotation is asked about at least once (see buildOrientation).
  */
 
-const PLANS = [
-  { shapeId: "triangle", target: 0 },
-  { shapeId: "trapezium", target: 180 },
-  { shapeId: "right-triangle", target: 90 },
-  { shapeId: "triangle", target: 180 },
-  { shapeId: "pentagon", target: 0 },
-  { shapeId: "right-triangle", target: 270 },
-];
-
-const ALL_ROTATIONS = [0, 90, 180, 270];
-
 function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => {
-    const rotations = shuffle(ALL_ROTATIONS, rng);
-    return {
-      ...plan,
-      shape: findShape(plan.shapeId),
-      rotations,
-      answerIndex: rotations.indexOf(plan.target),
-    };
-  });
+  return buildOrientation(rng).map((q) => ({ ...q, shape: findShape(q.shapeId) }));
 }
 
 function PatternsChallenge3({ onComplete }) {

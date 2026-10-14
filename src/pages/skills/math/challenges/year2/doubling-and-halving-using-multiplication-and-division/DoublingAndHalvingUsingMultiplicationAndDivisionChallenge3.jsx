@@ -1,32 +1,18 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import DragToOrder from "../../../../../../components/challenge/DragToOrder";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildHalvingChains } from "../../../../../../data/challenges/multiplicationAndDivision";
 
 /**
  * Challenge 3 - halve, and halve again.
  *
- * Repeated halving is repeated division, and the chain has to hold across four
- * steps. Every chain divides exactly the whole way down, so no step leaves a
- * remainder.
+ * Repeated halving is repeated division. Chains start from friendly numbers
+ * (100, 80, 40, 24 …) and stop before a remainder or after four numbers, so
+ * every step is a half a Year 2 child can find.
  */
 
-const STARTS = [80, 40, 48, 32, 96, 64];
-const LENGTH = 4;
-
-function buildQuestions(rng) {
-  return shuffle(STARTS, rng).map((start) => {
-    const terms = [start];
-    for (let i = 1; i < LENGTH; i++) terms.push(terms[i - 1] / 2);
-
-    const cards = shuffle(terms.map((value) => ({ id: value, label: value })), rng);
-    const solved = cards.every((card, i) => card.id === terms[i]);
-    return { start, terms, cards: solved ? [...cards].reverse() : cards };
-  });
-}
-
 function DoublingAndHalvingUsingMultiplicationAndDivisionChallenge3({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildHalvingChains(Math.random), []);
 
   return (
     <ChallengeShell

@@ -1,45 +1,18 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import DragToOrder from "../../../../../../components/challenge/DragToOrder";
-import { applyChange, describeChange } from "../../../../../../data/challenges/countingMoreAndLess";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildRuleChainQuestions, describeChange } from "../../../../../../data/challenges/countingMoreAndLess";
 
 /**
  * Challenge 3 - apply the jump repeatedly, not once.
  *
  * The learner drags five numbers into the order the rule produces them. Holding
  * the rule across the whole chain is a step up from answering a single jump.
+ * Each rule appears once, from a start generated each time.
  */
 
-const LENGTH = 5;
-
-const PLANS = [
-  { start: 12, change: 10 },
-  { start: 74, change: -10 },
-  { start: 31, change: 1 },
-  { start: 20, change: 5 },
-  { start: 60, change: -5 },
-  { start: 45, change: -1 },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => {
-    const terms = Array.from({ length: LENGTH }, (_, i) =>
-      i === 0 ? plan.start : null
-    );
-    terms[0] = plan.start;
-    for (let i = 1; i < LENGTH; i++) terms[i] = applyChange(terms[i - 1], plan.change);
-
-    const cards = shuffle(terms.map((value) => ({ id: value, label: value })), rng);
-    // A shuffle can land already solved; reverse it so there is always a move.
-    const solved = cards.every((card, i) => card.id === terms[i]);
-
-    return { ...plan, terms, cards: solved ? [...cards].reverse() : cards };
-  });
-}
-
 function CountingMoreAndLessChallenge3({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildRuleChainQuestions(Math.random), []);
 
   return (
     <ChallengeShell

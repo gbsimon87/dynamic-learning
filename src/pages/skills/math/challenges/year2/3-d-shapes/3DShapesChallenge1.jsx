@@ -2,35 +2,20 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import SolidFigure from "../../../../../../components/challenge/SolidFigure";
-import { SOLIDS } from "../../../../../../data/challenges/shapes";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildNameSolids } from "../../../../../../data/challenges/shapeQuestions";
 
 /**
  * NOTE ON THE NAME: the file must be 3DShapesChallengeN.jsx for the dynamic
  * loader, but that is not a valid JavaScript identifier, so the component is
  * named differently and reached through the default export.
  *
- * Challenge 1 - name the solid.
- *
- * All seven solids appear, including the curved ones, because naming them is
- * not the part that depends on a counting convention.
+ * Challenge 1 - name the solid. All seven solids can appear, including the
+ * curved ones, because naming them does not depend on a counting convention.
+ * The wrong options are look-alikes (a cone beside a pyramid).
  */
 
-function buildQuestions(rng) {
-  return shuffle(SOLIDS, rng)
-    .slice(0, 6)
-    .map((solid) => {
-      const others = SOLIDS.filter((s) => s.id !== solid.id).map((s) => s.name);
-      return {
-        solid,
-        answer: solid.name,
-        options: shuffle([solid.name, ...shuffle(others, rng).slice(0, 2)], rng),
-      };
-    });
-}
-
 function SolidsChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildNameSolids(Math.random), []);
 
   return (
     <ChallengeShell

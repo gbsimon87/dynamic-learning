@@ -2,46 +2,19 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import PatternStrip from "../../../../../../components/challenge/PatternStrip";
-import { patternAt } from "../../../../../../data/challenges/positionAndDirection";
 import { findShape } from "../../../../../../data/challenges/shapes";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildFillGap } from "../../../../../../data/challenges/positionQuestions";
 
 /**
  * Challenge 1 - fill the gap in a repeating pattern.
  *
  * The gap sits inside the strip, not at the end, so the pattern can be read
- * from both sides. Two-shape patterns first, then three.
+ * from both sides. Units of two or three different shapes, drawn fresh each
+ * run, with the gap anywhere but the ends (see buildFillGap).
  */
 
-const PLANS = [
-  { pattern: ["circle", "square"], gapIndex: 4 },
-  { pattern: ["triangle", "circle"], gapIndex: 3 },
-  { pattern: ["square", "triangle", "circle"], gapIndex: 4 },
-  { pattern: ["hexagon", "circle"], gapIndex: 2 },
-  { pattern: ["circle", "triangle", "triangle"], gapIndex: 3 },
-  { pattern: ["square", "circle", "hexagon"], gapIndex: 5 },
-];
-
-const LENGTH = 6;
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => {
-    const items = Array.from({ length: LENGTH }, (_, i) => patternAt(plan.pattern, i));
-    const answer = items[plan.gapIndex];
-    const wrong = plan.pattern.filter((id) => id !== answer);
-    const extras = ["hexagon", "square", "triangle", "circle"].filter(
-      (id) => id !== answer && !plan.pattern.includes(id)
-    );
-    const options = shuffle(
-      [answer, ...[...wrong, ...extras].slice(0, 2)],
-      rng
-    );
-    return { ...plan, items, answer, options };
-  });
-}
-
 function PatternsChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildFillGap(Math.random), []);
 
   return (
     <ChallengeShell

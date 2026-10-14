@@ -2,46 +2,20 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import PatternStrip from "../../../../../../components/challenge/PatternStrip";
-import { patternAt } from "../../../../../../data/challenges/positionAndDirection";
 import { findShape } from "../../../../../../data/challenges/shapes";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildNextShape } from "../../../../../../data/challenges/positionQuestions";
 
 /**
  * Challenge 2 - what comes next?
  *
- * The gap moves to the end, so the pattern can only be read forwards. That is
- * harder than filling a hole with neighbours on both sides, which is why it
- * comes second.
+ * The gap moves to the end, so the pattern can only be read forwards, and
+ * the units repeat a shape (AAB, ABB, AABB) so the missing one cannot be
+ * found by asking which shape has not appeared lately. The strip stops at a
+ * different point each time (see buildNextShape).
  */
 
-const PLANS = [
-  ["circle", "square"],
-  ["triangle", "triangle", "circle"],
-  ["square", "hexagon"],
-  ["circle", "triangle", "square"],
-  ["hexagon", "hexagon", "circle"],
-  ["triangle", "square"],
-];
-
-const SHOWN = 5;
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((pattern) => {
-    const items = Array.from({ length: SHOWN + 1 }, (_, i) => patternAt(pattern, i));
-    const answer = items[SHOWN];
-    const extras = ["circle", "square", "triangle", "hexagon"].filter((id) => id !== answer);
-    return {
-      pattern,
-      items,
-      gapIndex: SHOWN,
-      answer,
-      options: shuffle([answer, ...shuffle(extras, rng).slice(0, 2)], rng),
-    };
-  });
-}
-
 function PatternsChallenge2({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildNextShape(Math.random), []);
 
   return (
     <ChallengeShell

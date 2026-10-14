@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import NumberInput from "../../../../../../components/challenge/NumberInput";
 import { isCorrectNumber } from "../../../../../../data/challenges/numbersAndCounting";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildMissingNumberQuestions } from "../../../../../../data/challenges/additionAndSubtraction";
 
 /**
  * Challenge 4 - missing numbers with two-digit values, typed.
@@ -12,19 +12,8 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * use of the inverse, and there are no options to work backwards from.
  */
 
-const PLANS = [
-  { text: "34 + ? = 50", answer: 16 },
-  { text: "? + 25 = 60", answer: 35 },
-  { text: "80 − ? = 45", answer: 35 },
-  { text: "? − 17 = 23", answer: 40 },
-  { text: "56 + ? = 72", answer: 16 },
-  { text: "? + 38 = 90", answer: 52 },
-  { text: "64 − ? = 29", answer: 35 },
-  { text: "? − 26 = 18", answer: 44 },
-];
-
 function SolvingMissingNumberProblemsChallenge4({ onComplete }) {
-  const questions = useMemo(() => shuffle(PLANS, Math.random).slice(0, 6), []);
+  const questions = useMemo(() => buildMissingNumberQuestions(Math.random), []);
 
   return (
     <ChallengeShell

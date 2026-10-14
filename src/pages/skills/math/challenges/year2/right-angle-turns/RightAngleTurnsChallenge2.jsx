@@ -2,33 +2,26 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import RobotGrid from "../../../../../../components/challenge/RobotGrid";
 import { runProgram } from "../../../../../../data/challenges/positionAndDirection";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { ROBOT_GRID, buildStraightRoute } from "../../../../../../data/challenges/positionQuestions";
 
 /**
  * Challenge 2 - run the program.
  *
  * The guidance's own example: "programming robots using instructions given in
- * right angles". The learner builds a list of instructions and watches the
- * robot follow them, which is movement in a straight line plus right-angle
- * turns put together.
+ * right angles". The star is in a straight line from the robot, but most of
+ * the time the robot faces another way, so it has to turn a right angle (or
+ * two) before it can go forward (see buildStraightRoute).
  *
  * The robot's position always comes from the tested runProgram, so the picture
  * cannot disagree with the answer.
  */
 
-const SIZE = 4;
+const SIZE = ROBOT_GRID;
 
-const PLANS = [
-  { start: { x: 0, y: 3, heading: "up" }, target: { x: 0, y: 1 } },
-  { start: { x: 0, y: 3, heading: "right" }, target: { x: 2, y: 3 } },
-  { start: { x: 1, y: 2, heading: "up" }, target: { x: 1, y: 0 } },
-  { start: { x: 3, y: 3, heading: "up" }, target: { x: 3, y: 1 } },
-  { start: { x: 0, y: 0, heading: "down" }, target: { x: 0, y: 2 } },
-  { start: { x: 2, y: 3, heading: "up" }, target: { x: 2, y: 1 } },
-];
+const STEP_WORDS = { forward: "forward", left: "turn left", right: "turn right" };
 
 function RobotChallenge2({ onComplete }) {
-  const questions = useMemo(() => shuffle(PLANS, Math.random), []);
+  const questions = useMemo(() => buildStraightRoute(Math.random), []);
 
   return (
     <ChallengeShell
@@ -73,7 +66,7 @@ function ProgramRobot({ question, submit, locked }) {
       </div>
 
       <p className="dial-readout">
-        {program.length === 0 ? "No instructions yet." : program.join(" → ")}
+        {program.length === 0 ? "No instructions yet." : program.map((step) => STEP_WORDS[step]).join(" → ")}
       </p>
 
       <button

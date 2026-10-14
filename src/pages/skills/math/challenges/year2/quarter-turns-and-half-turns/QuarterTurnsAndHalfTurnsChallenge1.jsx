@@ -2,39 +2,21 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import RotationDial from "../../../../../../components/challenge/RotationDial";
-import { HEADINGS, TURNS, applyTurn } from "../../../../../../data/challenges/positionAndDirection";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildPredictTurn } from "../../../../../../data/challenges/positionQuestions";
 
 /**
  * Challenge 1 - where will it point?
  *
  * The arrow starts somewhere and the turn is named; the learner says where it
  * ends up. The dial's right-angle guides stay on screen so a quarter turn can
- * be seen to be a quarter.
+ * be seen to be a quarter. Quarter, half and three-quarter turns, both ways,
+ * from any start (see buildPredictTurn).
  *
  * Controls are hidden here — this is a prediction, not an experiment.
  */
 
-const PLANS = [
-  { from: "up", turn: "quarter", direction: "clockwise" },
-  { from: "up", turn: "half", direction: "clockwise" },
-  { from: "right", turn: "quarter", direction: "anti-clockwise" },
-  { from: "down", turn: "quarter", direction: "clockwise" },
-  { from: "left", turn: "half", direction: "anti-clockwise" },
-  { from: "up", turn: "three-quarter", direction: "clockwise" },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => ({
-    ...plan,
-    turnName: TURNS.find((t) => t.id === plan.turn).name,
-    answer: applyTurn(plan.from, plan.turn, plan.direction),
-    options: HEADINGS,
-  }));
-}
-
 function TurnsChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildPredictTurn(Math.random), []);
 
   return (
     <ChallengeShell

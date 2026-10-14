@@ -2,7 +2,8 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import SurveyTray from "../../../../../../components/challenge/SurveyTray";
 import TallyChart from "../../../../../../components/challenge/TallyChart";
-import { countByCategory, clamp, shuffle } from "../../../../../../data/challenges/statistics";
+import { clamp } from "../../../../../../data/challenges/statistics";
+import { buildTallyPile } from "../../../../../../data/challenges/statisticsQuestions";
 
 /**
  * Challenge 3 - tally a real pile of things.
@@ -12,37 +13,15 @@ import { countByCategory, clamp, shuffle } from "../../../../../../data/challeng
  * tally chart solves. Objects can be tapped to tick them off while counting,
  * because at six years old losing your place is the whole difficulty.
  *
- * Whole-structure: every row must match before it passes.
+ * Whole-structure: every row must match before it passes. The kinds and
+ * counts are new every run (see buildTallyPile).
  */
 
 /** The tally chart's own cap, and the cap on the +/- control. */
 const MAX_MARKS = 20;
 
-const PILES = [
-  { categories: ["🍎", "🍐", "🍌"], counts: [5, 3, 4] },
-  { categories: ["🐱", "🐶", "🐠"], counts: [4, 6, 2] },
-  { categories: ["🔴", "🔵", "🟢"], counts: [7, 2, 5] },
-  { categories: ["⭐", "❤️", "🌙"], counts: [3, 5, 6] },
-  { categories: ["🚗", "🚌", "🚲"], counts: [6, 4, 3] },
-  { categories: ["🌻", "🌷", "🌹"], counts: [2, 7, 4] },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PILES, rng).map((pile) => {
-    // The pile is shuffled, so the categories are not already grouped - that
-    // is what makes the counting real work.
-    const items = shuffle(
-      pile.categories.flatMap((category, i) =>
-        Array.from({ length: pile.counts[i] }, () => category)
-      ),
-      rng
-    );
-    return { items, categories: pile.categories, targets: countByCategory(items, pile.categories) };
-  });
-}
-
 function TallyChartsChallenge3({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildTallyPile(Math.random), []);
 
   return (
     <ChallengeShell

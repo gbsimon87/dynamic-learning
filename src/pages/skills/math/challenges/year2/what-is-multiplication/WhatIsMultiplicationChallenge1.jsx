@@ -2,42 +2,18 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import ArrayGrid from "../../../../../../components/challenge/ArrayGrid";
-import { arrayRows, multiply, productDistractors } from "../../../../../../data/challenges/multiplicationAndDivision";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildMultiplicationArrays } from "../../../../../../data/challenges/multiplicationAndDivision";
 
 /**
  * Challenge 1 - multiplication as an array you can count.
  *
  * The dots are on screen, so a learner who cannot yet multiply can count them.
- * Every array uses a statutory table for its row length.
+ * Arrays are generated per run, use a statutory table on one side and never
+ * hold more than 30 dots, so counting stays possible.
  */
 
-const PLANS = [
-  { rows: 3, columns: 5 },
-  { rows: 4, columns: 2 },
-  { rows: 6, columns: 10 },
-  { rows: 5, columns: 5 },
-  { rows: 2, columns: 10 },
-  { rows: 7, columns: 2 },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => {
-    const answer = multiply(plan.rows, plan.columns);
-    return {
-      ...plan,
-      answer,
-      grid: arrayRows(plan.rows, plan.columns),
-      options: shuffle(
-        [answer, ...productDistractors(answer, plan.columns, 2)],
-        rng
-      ),
-    };
-  });
-}
-
 function WhatIsMultiplicationChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildMultiplicationArrays(Math.random), []);
 
   return (
     <ChallengeShell

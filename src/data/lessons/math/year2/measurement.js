@@ -9,7 +9,7 @@ export const MEASUREMENT_LESSONS = {
   "measuring-length-and-height": [
     {
       title: "Read the ruler",
-      lines: ["Start at 0 on the ruler.", "The numbered marks go up in 5s.", "Read the number where the marker stops."],
+      lines: ["Start at 0 on the ruler.", "The numbered marks go up in 5s.", "Each small mark is 1 cm. Count on from a number."],
       example: { type: "jumps", title: "Counting the ruler marks", terms: ["0", "5", "10", "15"], step: "+5", note: "cm means centimetres. It tells us how long." },
     },
     {
@@ -41,8 +41,8 @@ export const MEASUREMENT_LESSONS = {
     },
     {
       title: "Fill the jug yourself",
-      lines: ["The numbered lines go up in 250s.", "Each small step adds 50 ml.", "Stop when the number shows your amount."],
-      example: { type: "steps", title: "To fill to 550 ml", steps: ["Go up to the 500 line.", "Add 1 more step of 50 ml.", "Now it shows 550 ml."] },
+      lines: ["The numbered lines go up in 100s.", "The small line halfway between is 50 ml more.", "Stop when the number shows your amount."],
+      example: { type: "steps", title: "To fill to 550 ml", steps: ["Go up to the 500 line.", "Go up 1 more step to the small line.", "Now it shows 550 ml."] },
     },
     {
       title: "Solve weight and capacity stories",
@@ -53,8 +53,8 @@ export const MEASUREMENT_LESSONS = {
   "comparing-measurements": [
     {
       title: "Use < > or =",
-      lines: ["Look at both scales.", "The open side faces the bigger amount.", "The same amount? Use =."],
-      example: { type: "equation", title: "Which is longer?", parts: ["15 cm", "<", "20 cm"], note: "15 cm is shorter, so it opens to 20 cm." },
+      lines: ["Rulers, scales and jugs all work the same way.", "The open side faces the bigger amount.", "The same amount? Use =."],
+      example: { type: "equation", title: "Which jug holds more?", parts: ["300 ml", "<", "500 ml"], note: "300 ml is less, so it opens to 500 ml." },
     },
     {
       title: "Check the units first",
@@ -75,22 +75,22 @@ export const MEASUREMENT_LESSONS = {
   "measuring-temperature": [
     {
       title: "Read the thermometer",
-      lines: ["°C tells us how hot or cold it is.", "The numbered marks go up in 10s.", "Below 0 is very cold. We say minus."],
+      lines: ["°C tells us how hot or cold it is.", "The numbered marks go up in 10s.", "A small mark between them is 5 more."],
       example: { type: "jumps", title: "Counting up the thermometer", terms: ["0", "10", "20", "30"], step: "+10", note: "Read the number where the line stops." },
     },
     {
       title: "Set the thermometer",
-      lines: ["Each small step is 5 degrees.", "Up is warmer. Down is colder.", "For minus numbers, go down past 0."],
+      lines: ["Each small step is 5 degrees.", "Up is warmer. Down is colder.", "Count on in 5s from the number below."],
       example: { type: "steps", title: "To show 45 °C", steps: ["Go up to the 40 mark.", "Go up 1 more step of 5.", "Now it shows 45 °C."] },
     },
     {
-      title: "Coldest first",
-      lines: ["Minus numbers are colder than 0.", "The bigger the minus number, the colder it is.", "Put the coldest first and the hottest last."],
-      example: { type: "jumps", title: "Cold to hot", terms: ["−10 °C", "−5 °C", "0 °C", "5 °C"], step: "+5", note: "Each one is 5 degrees warmer." },
+      title: "Coldest or hottest first",
+      lines: ["Read it: coldest first, or hottest first?", "The smallest number is the coldest.", "The biggest number is the hottest."],
+      example: { type: "jumps", title: "Coldest first", terms: ["5 °C", "10 °C", "15 °C", "20 °C"], step: "+5", note: "Each one is 5 degrees warmer." },
     },
     {
       title: "Which temperature fits?",
-      lines: ["Think: is it hot, warm or cold?", "Freezing things are at 0 °C or below.", "Hot things have bigger numbers."],
+      lines: ["Think: is it hot, warm or cold?", "Ice and snow are about 0 °C.", "Hot things have bigger numbers."],
       example: { type: "table", title: "Some temperatures", headers: ["Place", "About"], rows: [["a fridge", "5 °C"], ["a spring day", "15 °C"], ["your body", "37 °C"]], note: "Pick the number that feels right." },
     },
   ],
@@ -107,13 +107,13 @@ export const MEASUREMENT_LESSONS = {
     },
     {
       title: "Set the clock",
-      lines: ["Set the minutes with the minute buttons.", "Past times: set the hour you read.", "To times: set the hour before it."],
-      example: { type: "steps", title: "To show 20 to 4", steps: ["20 to 4 is 40 minutes past 3.", "Set the hours to 3.", "Set the minutes to 40."] },
+      lines: ["First set the hour you hear, at o'clock.", "Past times: move the long hand forward.", "To times: move the long hand back."],
+      example: { type: "steps", title: "To show 20 to 4", steps: ["Set the clock to 4 o'clock.", "Move the long hand back 4 jumps of 5.", "The short hand moves back a little too."] },
     },
     {
       title: "How long does it last?",
-      lines: ["60 minutes make 1 hour.", "24 hours make 1 day.", "Count on from the start time to the end."],
-      example: { type: "steps", title: "From 1:10 to 1:30", steps: ["Start at 1:10.", "Count on in 5s: 1:15, 1:20, 1:25, 1:30.", "4 jumps of 5 is 20 minutes."] },
+      lines: ["60 minutes make 1 hour. 24 hours make 1 day.", "Count on from the start time to the end.", "Which lasted longer? Take the smaller away."],
+      example: { type: "steps", title: "From 10 past 1 to half past 1", steps: ["Start at 10 past 1.", "Count on in 5s: 15, 20, 25, 30.", "4 jumps of 5 is 20 minutes."] },
     },
   ],
   "standard-units-of-money": [
@@ -146,8 +146,8 @@ export const MEASUREMENT_LESSONS = {
     },
     {
       title: "Work out the change",
-      lines: ["Change is the money you get back.", "Count on from the cost to what you paid.", "Or take the cost away from what you paid."],
-      example: { type: "jumps", title: "Pay 100p for a 40p toy", terms: ["40", "50", "60", "70", "80", "90", "100"], step: "+10", note: "6 jumps of 10p. The change is 60p." },
+      lines: ["Change is the money you get back.", "Count on from the cost to what you paid.", "Pence stay in p. Pounds stay in £."],
+      example: { type: "jumps", title: "Pay with £1 for a 40p toy", terms: ["40", "50", "60", "70", "80", "90", "100"], step: "+10", note: "£1 is 100p. 6 jumps of 10p. The change is 60p." },
     },
     {
       title: "Hand over the change",

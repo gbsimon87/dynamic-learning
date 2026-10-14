@@ -2,8 +2,7 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import NumberLine from "../../../../../../components/challenge/NumberLine";
-import { estimationScale, nearestLabel } from "../../../../../../data/challenges/numbersAndCounting";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildEstimateQuestions, estimationScale } from "../../../../../../data/challenges/numbersAndCounting";
 
 /**
  * Challenge 3 - estimate against a number line.
@@ -11,24 +10,11 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * "Identify, represent and estimate numbers using different representations,
  * including the number line" is statutory and was uncovered. The 0-100 scale
  * stays on screen, so this is about placing a number rather than recalling it.
+ * Numbers are generated each time; none ends in 5, which is exactly halfway.
  */
 
-const NUMBERS = [47, 23, 68, 91, 12, 56];
-
-function buildQuestions(rng) {
-  return shuffle(NUMBERS, rng).map((value) => {
-    const answer = nearestLabel(value);
-    // The two neighbouring tens are the only sensible wrong answers.
-    const options = shuffle(
-      [answer, answer - 10, answer + 10].filter((n) => n >= 0 && n <= 100),
-      rng
-    );
-    return { value, answer, options };
-  });
-}
-
 function NumbersAndCountingChallenge3({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildEstimateQuestions(Math.random), []);
 
   return (
     <ChallengeShell

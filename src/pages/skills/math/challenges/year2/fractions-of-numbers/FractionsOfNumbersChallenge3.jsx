@@ -1,63 +1,41 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import DragToOrder from "../../../../../../components/challenge/DragToOrder";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildFractionCounting } from "../../../../../../data/challenges/fractions";
 
 /**
- * Challenge 3 - order "fraction of" calculations by their answers.
+ * Challenge 3 - count in fractions.
  *
- * A bigger fraction of a smaller number can be less than a smaller fraction of
- * a bigger one, so every card must be worked out. No two cards in a set share
- * an answer, or several orders would be correct while only one is accepted.
+ * The guidance: "count in fractions up to 10, starting from any number and
+ * using the 1/2 and 2/4 equivalence on the number line (for example, 1 1/4,
+ * 1 2/4 (or 1 1/2), 1 3/4, 2)". Four numbers that count up in quarters or in
+ * halves are shuffled, and the learner puts them back in counting order.
+ * Halves are sometimes written 2/4, so the equivalence has to be used.
  */
 
-const SETS = [
-  ["1/2 of 8", "1/4 of 20", "1/3 of 9", "3/4 of 8"],
-  ["1/4 of 12", "1/2 of 10", "3/4 of 12", "1/3 of 6"],
-  ["1/3 of 12", "1/2 of 6", "3/4 of 20", "1/4 of 8"],
-  ["1/2 of 20", "1/4 of 16", "1/3 of 18", "3/4 of 4"],
-  ["3/4 of 16", "1/2 of 4", "1/4 of 24", "1/3 of 3"],
-  ["1/4 of 4", "1/2 of 12", "1/3 of 15", "3/4 of 40"],
-];
-
-/** "3/4 of 20" -> 15. Every card has this exact shape. */
-function evaluate(expression) {
-  const [fraction, , total] = expression.split(" ");
-  const [numerator, denominator] = fraction.split("/").map(Number);
-  return (Number(total) / denominator) * numerator;
-}
-
-function buildQuestions(rng) {
-  return shuffle(SETS, rng).map((set) => {
-    const ordered = [...set].sort((a, b) => evaluate(a) - evaluate(b));
-    const cards = shuffle(set.map((label) => ({ id: label, label })), rng);
-    const solved = cards.every((card, i) => card.id === ordered[i]);
-    return { ordered, cards: solved ? [...cards].reverse() : cards };
-  });
-}
-
 function FractionsOfNumbersChallenge3({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildFractionCounting(Math.random), []);
 
   return (
     <ChallengeShell
       questions={questions}
       onComplete={onComplete}
-      title="Work each one out before you move it."
+      title="Count up in fractions."
       render={({ question, submit, locked, index }) => (
-        <OrderFractionsOf key={index} question={question} submit={submit} locked={locked} />
+        <CountInFractions key={index} question={question} submit={submit} locked={locked} />
       )}
     />
   );
 }
 
-function OrderFractionsOf({ question, submit, locked }) {
+function CountInFractions({ question, submit, locked }) {
   const [items, setItems] = useState(question.cards);
 
   return (
     <>
       <p className="challenge-prompt">
-        Drag them so the smallest answer is first.
+        These count up in <strong>{question.step}</strong>. Drag them so the
+        smallest is first.
       </p>
 
       <DragToOrder items={items} onReorder={setItems} disabled={locked} />

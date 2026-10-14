@@ -2,8 +2,7 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import ScaleReader from "../../../../../../components/challenge/ScaleReader";
-import { scaleOptions } from "../../../../../../data/challenges/measurement";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildJugReadQuestions } from "../../../../../../data/challenges/measurement";
 
 /**
  * Challenge 2 - read a measuring jug.
@@ -16,19 +15,8 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * between marks, because there the learner has a numeric readout to go by.
  */
 
-const PLANS = [400, 700, 200, 1000, 500, 900];
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((value) => ({
-    value,
-    // At 1000 ml the "+100" is off the jug, so this walks the other way
-    // instead of silently offering one fewer option.
-    options: shuffle(scaleOptions(value, 100, 0, 1000, 3), rng),
-  }));
-}
-
 function MeasuringWeightAndVolumeChallenge2({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildJugReadQuestions(Math.random), []);
 
   return (
     <ChallengeShell
@@ -47,7 +35,7 @@ function ReadJug({ question, submit, locked }) {
 
   return (
     <>
-      <p className="challenge-prompt">How much water is in the jug?</p>
+      <p className="challenge-prompt">How much {question.drink} is in the jug?</p>
 
       <ScaleReader
         min={0}
@@ -71,7 +59,7 @@ function ReadJug({ question, submit, locked }) {
         type="button"
         className="submit-btn"
         disabled={locked || selected === null}
-        onClick={() => submit(selected === question.value)}
+        onClick={() => submit(selected === question.answer)}
       >
         Check my answer
       </button>

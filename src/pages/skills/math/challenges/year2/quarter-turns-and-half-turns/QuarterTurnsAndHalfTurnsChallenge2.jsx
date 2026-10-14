@@ -2,29 +2,21 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import RotationDial from "../../../../../../components/challenge/RotationDial";
 import { applyTurn } from "../../../../../../data/challenges/positionAndDirection";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildMakeTurn } from "../../../../../../data/challenges/positionQuestions";
 
 /**
  * Challenge 2 - make the turn yourself.
  *
  * Now the controls are live. Each tap is one quarter turn, so reaching "down"
  * from "up" takes two taps and the learner feels that a half turn IS two right
- * angles rather than being told it.
+ * angles rather than being told it. Six different start-and-finish pairs each
+ * run (see buildMakeTurn).
  *
  * The arrow animates, because the movement is the lesson.
  */
 
-const PLANS = [
-  { from: "up", to: "right" },
-  { from: "up", to: "down" },
-  { from: "right", to: "up" },
-  { from: "down", to: "left" },
-  { from: "left", to: "right" },
-  { from: "up", to: "left" },
-];
-
 function TurnsChallenge2({ onComplete }) {
-  const questions = useMemo(() => shuffle(PLANS, Math.random), []);
+  const questions = useMemo(() => buildMakeTurn(Math.random), []);
 
   return (
     <ChallengeShell

@@ -1,39 +1,19 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { sumDistractors } from "../../../../../../data/challenges/additionAndSubtraction";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildTensQuestions } from "../../../../../../data/challenges/additionAndSubtraction";
 
 /**
  * Challenge 2 - a two-digit number and 10s.
  *
  * Adding or taking ten changes only the tens digit, which is why the
- * distractors include the answer ten out: a learner who adjusts the wrong
- * column lands on their own mistake rather than something obviously silly.
+ * distractors are the answer one ten out and the start with its ONES changed
+ * instead (34 + 20 -> 36): a learner who adjusts the wrong column lands on
+ * their own mistake rather than something obviously silly.
  */
 
-const PLANS = [
-  { start: 34, change: 10 },
-  { start: 56, change: -10 },
-  { start: 23, change: 20 },
-  { start: 71, change: -20 },
-  { start: 48, change: 30 },
-  { start: 65, change: -30 },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => {
-    const answer = plan.start + plan.change;
-    return {
-      ...plan,
-      answer,
-      options: shuffle([answer, ...sumDistractors(answer, 2)], rng),
-    };
-  });
-}
-
 function UsingTwoDigitNumbersChallenge2({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildTensQuestions(Math.random), []);
 
   return (
     <ChallengeShell

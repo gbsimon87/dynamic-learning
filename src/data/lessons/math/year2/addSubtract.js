@@ -8,22 +8,22 @@ export const ADD_SUBTRACT_LESSONS = {
     {
       title: "Double means twice",
       lines: ["Double means the same amount 2 times.", "Count both groups to find the double.", "Or add the number to itself."],
-      example: { type: "groups", title: "Double 11", groups: [["🍪", "🍪", "🍪", "🍪", "🍪", "🍪", "🍪", "🍪", "🍪", "🍪", "🍪"], ["🍪", "🍪", "🍪", "🍪", "🍪", "🍪", "🍪", "🍪", "🍪", "🍪", "🍪"]], label: "2 groups of 11 cookies", note: "11 + 11 = 22, so double 11 is 22." },
+      example: { type: "groups", title: "Double 7", groups: [["🍪", "🍪", "🍪", "🍪", "🍪", "🍪", "🍪"], ["🍪", "🍪", "🍪", "🍪", "🍪", "🍪", "🍪"]], label: "2 groups of 7 cookies", note: "7 + 7 = 14, so double 7 is 14." },
     },
     {
       title: "Half means 2 equal parts",
       lines: ["Half means split into 2 equal groups.", "Halving undoes doubling.", "Ask: what number doubles to make this?"],
-      example: { type: "equation", title: "Half of 24", parts: ["12", "+", "12", "=", "24"], note: "Double 12 is 24, so half of 24 is 12." },
+      example: { type: "equation", title: "Half of 16", parts: ["8", "+", "8", "=", "16"], note: "Double 8 is 16, so half of 16 is 8." },
     },
     {
-      title: "Keep on doubling",
-      lines: ["Start with the first number.", "Double it to get the next one.", "Then double that one, and keep going."],
-      example: { type: "steps", title: "Start at 7", steps: ["Start at 7.", "Double 7 is 14.", "Double 14 is 28.", "Double 28 is 56."] },
+      title: "Keep doubling or halving",
+      lines: ["Start with the first number.", "Double it, or halve it, to get the next one.", "Then do the same again, and keep going."],
+      example: { type: "steps", title: "Start at 5 and keep doubling", steps: ["Start at 5.", "Double 5 is 10.", "Double 10 is 20.", "Double 20 is 40.", "Halving goes back: 40, 20, 10, 5."] },
     },
     {
       title: "Use a fact you know",
-      lines: ["Small facts help with big ones.", "Tens work just like ones.", "Half of 6 is 3, so half of 60 is 30."],
-      example: { type: "equation", title: "2 + 5 = 7 helps here", parts: ["20", "+", "50", "=", "70"], note: "2 tens and 5 tens make 7 tens." },
+      lines: ["Small doubles help with big ones.", "Double 3 is 6, so double 30 is 60.", "Double 6 is 12, so 6 + 7 is 1 more: 13."],
+      example: { type: "steps", title: "Double 8 is 16", steps: ["Half of 8 is 4, so half of 80 is 40.", "Double 8 is 16, so 8 + 9 is 17.", "Double 8 is 16, so 8 + 7 is 15."] },
     },
   ],
   "solving-number-problems": [
@@ -34,8 +34,8 @@ export const ADD_SUBTRACT_LESSONS = {
     },
     {
       title: "Swap the order",
-      lines: ["You can add numbers in any order.", "Swapping a take away does not work.", "Work out each choice to check it."],
-      example: { type: "equation", title: "Adding in any order", parts: ["4", "+", "7", "=", "7", "+", "4"], note: "Both make 11. But 7 − 4 is not 4 − 7." },
+      lines: ["Swap the 2 numbers in an add: same answer.", "Swap the 2 numbers in a take away: not the same.", "Look at the sign before you answer."],
+      example: { type: "equation", title: "Adding in any order", parts: ["4", "+", "7", "=", "7", "+", "4"], note: "Both make 11. Swapping 7 − 4 does not work." },
     },
     {
       title: "Order the answers",

@@ -2,38 +2,20 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import NumberInput from "../../../../../../components/challenge/NumberInput";
 import PatternStrip from "../../../../../../components/challenge/PatternStrip";
-import { patternAt } from "../../../../../../data/challenges/positionAndDirection";
 import { isCorrectNumber } from "../../../../../../data/challenges/numbersAndCounting";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildRepeatLength } from "../../../../../../data/challenges/positionQuestions";
 
 /**
  * Challenge 2 - how long is the repeat?
  *
  * Seeing THAT something repeats is easier than seeing how long the repeating
  * unit is, and the unit is what makes a sequence predictable. Typed, so it
- * cannot be found by elimination.
+ * cannot be found by elimination, and repeats of 2, 3 and 4 each come up
+ * twice (see buildRepeatLength).
  */
 
-const PLANS = [
-  { pattern: ["circle", "square"], answer: 2 },
-  { pattern: ["triangle", "triangle", "circle"], answer: 3 },
-  { pattern: ["square", "circle", "hexagon"], answer: 3 },
-  { pattern: ["hexagon", "circle"], answer: 2 },
-  { pattern: ["circle", "triangle", "square", "hexagon"], answer: 4 },
-  { pattern: ["square", "square", "circle", "circle"], answer: 4 },
-];
-
-const LENGTH = 8;
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => ({
-    ...plan,
-    items: Array.from({ length: LENGTH }, (_, i) => patternAt(plan.pattern, i)),
-  }));
-}
-
 function SequencesChallenge2({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildRepeatLength(Math.random), []);
 
   return (
     <ChallengeShell

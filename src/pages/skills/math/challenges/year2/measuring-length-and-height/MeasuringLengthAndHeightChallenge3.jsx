@@ -1,27 +1,19 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildUnitChoiceQuestions } from "../../../../../../data/challenges/measurement";
 
 /**
  * Challenge 3 - choose the unit that fits.
  *
  * Statutory: "choose and use APPROPRIATE standard units". Measuring a school
  * hall in centimetres is not wrong so much as useless, and knowing which unit
- * to reach for is the skill being tested.
+ * to reach for is the skill being tested. Each run draws three cm things and
+ * three m things from a larger bank.
  */
 
-const THINGS = [
-  { thing: "the length of a pencil", answer: "cm" },
-  { thing: "the height of a door", answer: "m" },
-  { thing: "the width of a stamp", answer: "cm" },
-  { thing: "the length of a playground", answer: "m" },
-  { thing: "the height of a cup", answer: "cm" },
-  { thing: "the length of a bus", answer: "m" },
-];
-
 function MeasuringLengthAndHeightChallenge3({ onComplete }) {
-  const questions = useMemo(() => shuffle(THINGS, Math.random), []);
+  const questions = useMemo(() => buildUnitChoiceQuestions(Math.random), []);
 
   return (
     <ChallengeShell

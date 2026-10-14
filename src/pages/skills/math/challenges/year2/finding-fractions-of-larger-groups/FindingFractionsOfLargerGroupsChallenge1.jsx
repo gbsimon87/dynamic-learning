@@ -1,48 +1,25 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { fractionOf, fractionOfDistractors } from "../../../../../../data/challenges/fractions";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildFractionOfSet } from "../../../../../../data/challenges/fractions";
 
 /**
- * Challenge 1 - fractions of a set too big to draw.
+ * Challenge 1 - a fraction of a set of objects.
  *
- * The previous topic worked with amounts small enough to lay out as dots. Here
- * the set is large enough that counting is not an option, so the learner has
- * to divide. Every total divides exactly.
+ * The previous topic laid the dots out in rows already. Here the objects are
+ * one loose pile, so the learner shares them into 2, 3 or 4 equal groups
+ * themselves (with counters, or by halving and halving again). Sets stay at
+ * 24 or fewer so sharing them out really is possible.
  */
 
-const PLANS = [
-  { fraction: { numerator: 1, denominator: 2 }, total: 40, noun: "stickers" },
-  { fraction: { numerator: 1, denominator: 4 }, total: 32, noun: "marbles" },
-  { fraction: { numerator: 1, denominator: 3 }, total: 30, noun: "beads" },
-  { fraction: { numerator: 1, denominator: 2 }, total: 56, noun: "cards" },
-  { fraction: { numerator: 1, denominator: 4 }, total: 60, noun: "buttons" },
-  { fraction: { numerator: 1, denominator: 3 }, total: 45, noun: "shells" },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => {
-    const answer = fractionOf(plan.fraction, plan.total);
-    return {
-      ...plan,
-      answer,
-      options: shuffle(
-        [answer, ...fractionOfDistractors(plan.fraction, plan.total, 2)],
-        rng
-      ),
-    };
-  });
-}
-
 function FindingFractionsOfLargerGroupsChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildFractionOfSet(Math.random), []);
 
   return (
     <ChallengeShell
       questions={questions}
       onComplete={onComplete}
-      title="Too many to count — divide instead."
+      title="Share them into equal groups."
       render={({ question, submit, locked, index }) => (
         <FractionOfGroup key={index} question={question} submit={submit} locked={locked} />
       )}
@@ -57,8 +34,19 @@ function FractionOfGroup({ question, submit, locked }) {
   return (
     <>
       <p className="challenge-prompt">
-        There are {question.total} {question.noun}. How many is {numerator}/
-        {denominator} of them?
+        There are {question.total} {question.noun}. How many is{" "}
+        <strong>
+          {numerator}/{denominator}
+        </strong>{" "}
+        of them?
+      </p>
+
+      <p
+        className="sequence-strip"
+        role="img"
+        aria-label={`${question.total} ${question.noun}`}
+      >
+        {Array.from({ length: question.total }, () => question.emoji).join(" ")}
       </p>
 
       <ChoiceGrid

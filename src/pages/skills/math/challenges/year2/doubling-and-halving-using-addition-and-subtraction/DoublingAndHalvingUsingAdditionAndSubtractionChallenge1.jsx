@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { DOUBLES, double, sumDistractors } from "../../../../../../data/challenges/additionAndSubtraction";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildDoublingQuestions } from "../../../../../../data/challenges/additionAndSubtraction";
 
 /**
  * Challenge 1 - doubling, with the two equal groups drawn.
@@ -12,21 +11,8 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * to count the blocks.
  */
 
-function buildQuestions(rng) {
-  return shuffle(DOUBLES, rng)
-    .slice(0, 6)
-    .map((n) => {
-      const answer = double(n);
-      return {
-        n,
-        answer,
-        options: shuffle([answer, ...sumDistractors(answer, 2)], rng),
-      };
-    });
-}
-
 function DoublingAndHalvingUsingAdditionAndSubtractionChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildDoublingQuestions(Math.random), []);
 
   return (
     <ChallengeShell

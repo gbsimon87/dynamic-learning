@@ -2,30 +2,19 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import ScaleReader from "../../../../../../components/challenge/ScaleReader";
-import { scaleOptions } from "../../../../../../data/challenges/measurement";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { THERMOMETER, buildThermometerReadQuestions } from "../../../../../../data/challenges/measurement";
 
 /**
  * Challenge 1 - read a thermometer.
  *
- * The scale starts below zero, which is the whole reason temperature is
- * listed separately from the other measures: it is the first scale a child
- * meets that goes below nothing.
+ * Year 2 reads thermometers at 0 °C and above — negative numbers belong to a
+ * later year. The thermometer is numbered every 10 with a small mark at each
+ * 5: three readings sit on a number, then three on a small mark. Options are
+ * near-misses (5, 10 or 20 degrees out) and every one carries °C.
  */
 
-const VALUES = [20, 0, 30, 10, -10, 40];
-
-function buildQuestions(rng) {
-  return shuffle(VALUES, rng).map((value) => ({
-    value,
-    // At -10 degrees the colder neighbour is off the thermometer; without
-    // this the question offered two options and could be guessed.
-    options: shuffle(scaleOptions(value, 10, -10, 50, 3), rng),
-  }));
-}
-
 function MeasuringTemperatureChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildThermometerReadQuestions(Math.random), []);
 
   return (
     <ChallengeShell
@@ -47,14 +36,15 @@ function ReadThermometer({ question, submit, locked }) {
       <p className="challenge-prompt">What temperature does it show?</p>
 
       <ScaleReader
-        min={-10}
-        max={50}
-        majorStep={10}
+        min={THERMOMETER.min}
+        max={THERMOMETER.max}
+        majorStep={THERMOMETER.majorStep}
+        minorStep={THERMOMETER.minorStep}
         value={question.value}
         unit="°C"
         orientation="vertical"
         variant="thermometer"
-        label={`A thermometer reading ${question.value} degrees`}
+        label={`A thermometer reading ${question.value} degrees Celsius`}
       />
 
       <ChoiceGrid
@@ -68,7 +58,7 @@ function ReadThermometer({ question, submit, locked }) {
         type="button"
         className="submit-btn"
         disabled={locked || selected === null}
-        onClick={() => submit(selected === question.value)}
+        onClick={() => submit(selected === question.answer)}
       >
         Check my answer
       </button>

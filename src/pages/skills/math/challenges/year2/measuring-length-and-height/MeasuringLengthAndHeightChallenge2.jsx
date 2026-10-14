@@ -1,23 +1,19 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import MeasureDrag from "../../../../../../components/challenge/MeasureDrag";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildRulerSetQuestions } from "../../../../../../data/challenges/measurement";
 
 /**
  * Challenge 2 - set the ruler yourself.
  *
  * The inverse of reading: given a length, put the marker there. Clicking the
  * ruler, the −/+ buttons and the arrow keys all work, so no learner is shut
- * out by a drag they cannot perform.
+ * out by a drag they cannot perform. Targets are fresh each attempt and never
+ * on a numbered mark, so each one is counted on in 1 cm steps.
  */
 
-const LENGTHS = [12, 24, 8, 18, 27, 6];
-
 function MeasuringLengthAndHeightChallenge2({ onComplete }) {
-  const questions = useMemo(
-    () => shuffle(LENGTHS, Math.random).map((target) => ({ target })),
-    []
-  );
+  const questions = useMemo(() => buildRulerSetQuestions(Math.random), []);
 
   return (
     <ChallengeShell
@@ -44,6 +40,7 @@ function SetRuler({ question, submit, locked }) {
         min={0}
         max={30}
         majorStep={5}
+        minorStep={1}
         step={1}
         value={value}
         unit="cm"

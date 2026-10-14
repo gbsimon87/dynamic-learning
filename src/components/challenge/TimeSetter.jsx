@@ -1,3 +1,4 @@
+import { stepClock } from "../../data/challenges/measurement";
 import "./challenge-kit.css";
 
 /**
@@ -8,15 +9,24 @@ import "./challenge-kit.css";
  * learner can always reach any valid time.
  * onChange receives a state updater so rapid taps preserve both changes.
  *
+ * `carryHour` makes the minute buttons turn the clock like a real one: going
+ * past 12 moves the hour on, going back past 12 moves it back. Then "quarter
+ * to 3" is set as 3 o'clock and three steps back, instead of a child having
+ * to know to type 2 into the hours.
+ *
  * Deliberately not draggable hands: dragging a hand to a five-minute position
  * is fussy for small hands and impossible to check without a browser.
  */
-function TimeSetter({ hour, minute, onChange, disabled, minuteStep = 5 }) {
+function TimeSetter({ hour, minute, onChange, disabled, minuteStep = 5, carryHour = false }) {
   const setHour = (delta) => {
     onChange(prev => ({ ...prev, hour: ((prev.hour - 1 + delta + 12) % 12) + 1 }));
   };
 
   const setMinute = (delta) => {
+    if (carryHour) {
+      onChange(prev => stepClock(prev, delta * minuteStep));
+      return;
+    }
     onChange(prev => ({ ...prev, minute: (prev.minute + delta * minuteStep + 60) % 60 }));
   };
 

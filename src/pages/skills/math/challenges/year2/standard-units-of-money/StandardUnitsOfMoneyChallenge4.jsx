@@ -1,31 +1,20 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import NumberInput from "../../../../../../components/challenge/NumberInput";
-import { formatMoney } from "../../../../../../data/challenges/measurement";
+import { buildCoinTotalQuestions, formatMoney } from "../../../../../../data/challenges/measurement";
 import { isCorrectNumber } from "../../../../../../data/challenges/numbersAndCounting";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
 
 /**
  * Challenge 4 - total a handful of coins, typed.
  *
  * The coins are listed rather than tapped, so the adding is done in the head.
  * Answers are in pence throughout — mixing pounds and pence in one calculation
- * is beyond Year 2.
+ * is beyond Year 2. Handfuls are fresh each attempt: three coins at first,
+ * then four or five.
  */
 
-const PLANS = [
-  { coins: [20, 20, 5], answer: 45 },
-  { coins: [50, 20, 10, 2], answer: 82 },
-  { coins: [10, 10, 10, 5], answer: 35 },
-  { coins: [50, 20, 20, 5], answer: 95 },
-  { coins: [20, 10, 2, 2], answer: 34 },
-  { coins: [50, 5, 2, 1], answer: 58 },
-  { coins: [20, 20, 20, 5], answer: 65 },
-  { coins: [10, 5, 5, 2], answer: 22 },
-];
-
 function StandardUnitsOfMoneyChallenge4({ onComplete }) {
-  const questions = useMemo(() => shuffle(PLANS, Math.random).slice(0, 6), []);
+  const questions = useMemo(() => buildCoinTotalQuestions(Math.random), []);
 
   return (
     <ChallengeShell

@@ -1,27 +1,18 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import NumberInput from "../../../../../../components/challenge/NumberInput";
-import { isCorrectNumber, numberInWords } from "../../../../../../data/challenges/numbersAndCounting";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildWordsToDigitsQuestions, isCorrectNumber } from "../../../../../../data/challenges/numbersAndCounting";
 
 /**
  * Challenge 4 - write the numeral from the words, with nothing to choose from.
  *
  * The hardest shape of the statutory "read and write numbers ... in numerals
  * and in words": no options to eliminate, and the tens-and-ones order has to
- * come out of the word itself.
+ * come out of the word itself. Numbers are generated each time.
  */
 
-const NUMBERS = [34, 82, 19, 57, 100, 46, 73, 65];
-
 function NumbersAndCountingChallenge4({ onComplete }) {
-  const questions = useMemo(
-    () =>
-      shuffle(NUMBERS, Math.random)
-        .slice(0, 6)
-        .map((value) => ({ value, words: numberInWords(value) })),
-    []
-  );
+  const questions = useMemo(() => buildWordsToDigitsQuestions(Math.random), []);
 
   return (
     <ChallengeShell

@@ -2,8 +2,7 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import PositionBoard from "../../../../../../components/challenge/PositionBoard";
-import { describePosition } from "../../../../../../data/challenges/positionAndDirection";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildDescribePosition } from "../../../../../../data/challenges/positionQuestions";
 
 /**
  * Challenge 1 - where is it?
@@ -12,37 +11,13 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * movement". Turns cover direction and movement; position is the part nothing
  * else in this category reaches, so it comes first.
  *
- * The object being asked about is outlined, so there is no doubt which one the
- * question means.
+ * A fresh board every question, and each of above, below, left of and right
+ * of is the answer at least once (see buildDescribePosition). The object
+ * being asked about is outlined, so there is no doubt which one is meant.
  */
 
-const OBJECTS = [
-  { emoji: "🍎", x: 1, y: 0 },
-  { emoji: "⭐", x: 1, y: 1 },
-  { emoji: "🐟", x: 0, y: 1 },
-  { emoji: "🌸", x: 2, y: 1 },
-  { emoji: "🚗", x: 1, y: 2 },
-];
-
-const WORDS = ["above", "below", "left of", "right of"];
-
-function buildQuestions(rng) {
-  const centre = OBJECTS.find((o) => o.x === 1 && o.y === 1);
-  const others = OBJECTS.filter((o) => o !== centre);
-
-  return shuffle(others, rng)
-    .concat(shuffle(others, rng))
-    .slice(0, 6)
-    .map((object) => ({
-      object,
-      centre,
-      answer: describePosition(object, centre),
-      options: WORDS,
-    }));
-}
-
 function SequencesChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildDescribePosition(Math.random), []);
 
   return (
     <ChallengeShell
@@ -63,7 +38,7 @@ function DescribeWhere({ question, submit, locked }) {
     <>
       <PositionBoard
         size={3}
-        objects={OBJECTS}
+        objects={question.objects}
         highlight={question.object}
         label="a grid of objects with one outlined"
       />

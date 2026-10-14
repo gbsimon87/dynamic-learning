@@ -2,43 +2,20 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import NumberLine from "../../../../../../components/challenge/NumberLine";
 import NumberInput from "../../../../../../components/challenge/NumberInput";
-import {
-  buildSequence,
-  pickGapPositions,
-  shuffle,
-} from "../../../../../../data/challenges/countingInSteps";
+import { buildNamedStepQuestions } from "../../../../../../data/challenges/countingInSteps";
 
 /**
  * Challenge 1 - the gentlest introduction.
  *
  * The step is stated in words and the number line stays on screen, so the
  * learner only has to continue a pattern they can see. One gap per question.
+ * 2s, 3s and 5s start on a multiple (Year 2 counts those from 0); 10s may
+ * start anywhere. Every step appears, with sequences generated each time.
  */
-
-const LENGTH = 6;
-
-// The step is given, so every start is a multiple of it - the sequence a child
-// would actually chant.
-const PLANS = [
-  { step: 2, start: 2 },
-  { step: 10, start: 10 },
-  { step: 5, start: 5 },
-  { step: 2, start: 10 },
-  { step: 3, start: 3 },
-  { step: 10, start: 20 },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => {
-    const terms = buildSequence(plan.start, plan.step, LENGTH);
-    const gaps = pickGapPositions(LENGTH, 1, rng);
-    return { ...plan, terms, gaps };
-  });
-}
 
 function CountingInStepsOf235And10Challenge1({ onComplete }) {
   // Built once per mount, so replaying gives a different order.
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildNamedStepQuestions(Math.random), []);
 
   return (
     <ChallengeShell

@@ -1,40 +1,20 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { fromParts, placeValueDistractors } from "../../../../../../data/challenges/placeValue";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildPartsToNumberQuestions } from "../../../../../../data/challenges/placeValue";
 
 /**
  * Challenge 2 - no picture now.
  *
  * The learner reads "6 tens and 2 ones" and picks the number. The digit-swap
  * (62 vs 26) is always among the options, because that is the mistake this
- * topic exists to correct.
+ * topic exists to correct. Numbers are generated each time.
  */
 
-const PARTS = [
-  [6, 2],
-  [3, 8],
-  [5, 0],
-  [7, 4],
-  [2, 9],
-  [9, 1],
-];
-
-function buildQuestions(rng) {
-  return shuffle(PARTS, rng).map(([tens, ones]) => {
-    const answer = fromParts(tens, ones);
-    return {
-      tens,
-      ones,
-      answer,
-      options: shuffle([answer, ...placeValueDistractors(answer, 2)], rng),
-    };
-  });
-}
+const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
 function PlaceValueChallenge2({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildPartsToNumberQuestions(Math.random), []);
 
   return (
     <ChallengeShell
@@ -54,7 +34,7 @@ function PickNumber({ question, submit, locked }) {
   return (
     <>
       <p className="sequence-strip">
-        {question.tens} tens and {question.ones} ones
+        {plural(question.tens, "ten")} and {plural(question.ones, "one")}
       </p>
 
       <ChoiceGrid

@@ -1,54 +1,42 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildUseTheFact } from "../../../../../../data/challenges/multiplicationAndDivision";
 
 /**
- * Challenge 2 - multiplying can be done in any order; dividing cannot.
+ * Challenge 2 - use the fact you know.
  *
- * Statutory. The multiplication questions reward swapping; the division
- * questions punish it, and the swap is always offered so the rule has to be
- * known rather than guessed from the shape of the options.
+ * The guidance: "4 × 5 = 20 and 20 ÷ 5 = 4". One fact is shown and a related
+ * one asked — a division from a multiplication, or the multiplication (in
+ * either order, since × can be swapped) from a division. The answer is never
+ * printed in the question; wrong options are the other number in the fact
+ * and a near-miss, so the inverse has to be used, not spotted.
  */
 
-const QUESTIONS = [
-  { fact: "3 × 5 = 15", ask: "Which one also makes 15?", options: ["5 × 3", "15 × 3", "15 ÷ 3"], answer: "5 × 3" },
-  { fact: "4 × 10 = 40", ask: "Which one also makes 40?", options: ["10 × 4", "40 × 10", "40 ÷ 10"], answer: "10 × 4" },
-  { fact: "20 ÷ 5 = 4", ask: "Careful — which one also makes 4?", options: ["20 ÷ 5", "5 ÷ 20", "4 ÷ 20"], answer: "20 ÷ 5" },
-  { fact: "6 × 2 = 12", ask: "Which one also makes 12?", options: ["2 × 6", "12 ÷ 2", "12 × 2"], answer: "2 × 6" },
-  { fact: "30 ÷ 10 = 3", ask: "Careful — which one also makes 3?", options: ["30 ÷ 10", "10 ÷ 30", "3 ÷ 30"], answer: "30 ÷ 10" },
-  { fact: "7 × 5 = 35", ask: "Which one also makes 35?", options: ["5 × 7", "35 ÷ 7", "35 × 5"], answer: "5 × 7" },
-];
-
 function ConnectingMultiplicationAndDivisionChallenge2({ onComplete }) {
-  const questions = useMemo(
-    () =>
-      shuffle(QUESTIONS, Math.random).map((q) => ({
-        ...q,
-        options: shuffle(q.options, Math.random),
-      })),
-    []
-  );
+  const questions = useMemo(() => buildUseTheFact(Math.random), []);
 
   return (
     <ChallengeShell
       questions={questions}
       onComplete={onComplete}
-      title="Swapping works for × but not for ÷."
+      title="Use the fact you know."
       render={({ question, submit, locked, index }) => (
-        <SameAnswer key={index} question={question} submit={submit} locked={locked} />
+        <UseTheFact key={index} question={question} submit={submit} locked={locked} />
       )}
     />
   );
 }
 
-function SameAnswer({ question, submit, locked }) {
+function UseTheFact({ question, submit, locked }) {
   const [selected, setSelected] = useState(null);
 
   return (
     <>
-      <p className="sequence-strip">{question.fact}</p>
-      <p className="challenge-prompt">{question.ask}</p>
+      <p className="challenge-prompt">
+        You know <strong>{question.fact}</strong>. So…
+      </p>
+      <p className="sequence-strip">{question.ask}</p>
 
       <ChoiceGrid
         options={question.options}

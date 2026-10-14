@@ -1,38 +1,18 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { countOn, countingDistractors } from "../../../../../../data/challenges/countingForwardsAndBackwards";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildCountBackQuestions } from "../../../../../../data/challenges/countingForwardsAndBackwards";
 
 /**
  * Challenge 2 - the same counting, backwards and without a line.
  *
  * Backwards over a boundary (71, 70, 69) is harder than forwards, and there is
  * nothing on screen to count along, so the sequence has to be held in the head.
+ * Starts and counts are generated each time.
  */
 
-const PLANS = [
-  { start: 72, by: -4 },
-  { start: 31, by: -3 },
-  { start: 64, by: -6 },
-  { start: 20, by: -4 },
-  { start: 93, by: -5 },
-  { start: 41, by: -3 },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => {
-    const answer = countOn(plan.start, plan.by);
-    return {
-      ...plan,
-      answer,
-      options: shuffle([answer, ...countingDistractors(answer, 2)], rng),
-    };
-  });
-}
-
 function CountingForwardsAndBackwardsChallenge2({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildCountBackQuestions(Math.random), []);
 
   return (
     <ChallengeShell

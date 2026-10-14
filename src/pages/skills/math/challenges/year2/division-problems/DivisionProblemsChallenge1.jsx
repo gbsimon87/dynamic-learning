@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { divide } from "../../../../../../data/challenges/multiplicationAndDivision";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildDivisionStatementChoice } from "../../../../../../data/challenges/multiplicationAndDivision";
 
 /**
  * Challenge 1 - which division answers the story?
@@ -12,36 +11,8 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * a statement rather than pattern-matched.
  */
 
-const PROBLEMS = [
-  { prompt: "24 cakes are shared equally between 2 plates.", total: 24, parts: 2 },
-  { prompt: "30 pens are shared equally between 5 pots.", total: 30, parts: 5 },
-  { prompt: "50 beads are shared equally between 10 jars.", total: 50, parts: 10 },
-  { prompt: "18 sweets are shared equally between 2 bags.", total: 18, parts: 2 },
-  { prompt: "45 cards are shared equally between 5 boxes.", total: 45, parts: 5 },
-  { prompt: "20 apples are shared equally between 10 baskets.", total: 20, parts: 10 },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PROBLEMS, rng).map((problem) => {
-    const answer = `${problem.total} ÷ ${problem.parts}`;
-    return {
-      ...problem,
-      answer,
-      result: divide(problem.total, problem.parts),
-      options: shuffle(
-        [
-          answer,
-          `${problem.parts} ÷ ${problem.total}`,
-          `${problem.total} × ${problem.parts}`,
-        ],
-        rng
-      ),
-    };
-  });
-}
-
 function DivisionProblemsChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildDivisionStatementChoice(Math.random), []);
 
   return (
     <ChallengeShell

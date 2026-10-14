@@ -16,7 +16,7 @@ const PROBLEMS = [
   { prompt: "A shop has 3 shelves with 10 tins on each. 12 tins are sold. How many are left?", answer: 18 },
   { prompt: "6 children each pick 5 apples. The apples are put into bags of 10. How many bags?", answer: 3 },
   { prompt: "There are 2 rows of 10 chairs. Half the chairs are taken. How many are taken?", answer: 10 },
-  { prompt: "A tray holds 5 buns. There are 8 trays. The buns are shared between 4 shops. How many per shop?", answer: 10 },
+  { prompt: "A tray holds 5 buns. There are 8 trays. The buns are shared equally between 10 shops. How many does each shop get?", answer: 4 },
   { prompt: "9 bags hold 2 marbles each. 4 marbles are lost. How many marbles are left?", answer: 14 },
   { prompt: "5 packs of 10 cards are shared between 5 children. How many cards each?", answer: 10 },
   { prompt: "There are 7 pairs of shoes. 2 shoes are thrown away. How many shoes are left?", answer: 12 },

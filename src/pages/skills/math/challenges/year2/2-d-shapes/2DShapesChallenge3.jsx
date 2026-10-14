@@ -2,8 +2,7 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import ShapeFigure from "../../../../../../components/challenge/ShapeFigure";
-import { SHAPES_2D } from "../../../../../../data/challenges/shapes";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildSymmetry } from "../../../../../../data/challenges/shapeQuestions";
 
 /**
  * Challenge 3 - line symmetry in a vertical line.
@@ -12,25 +11,12 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * line is drawn down the middle of every shape so the question is always "does
  * this shape match across that line", not "imagine a line somewhere".
  *
- * Half the shapes are symmetric and half are not, so the answer cannot be
- * guessed from a run of yeses.
+ * Between 2 and 4 of the six shapes match, so the answer cannot be counted
+ * out from the yeses so far (see buildSymmetry).
  */
 
-const SYMMETRIC = ["square", "triangle", "hexagon", "rhombus", "trapezium", "octagon"];
-const NOT_SYMMETRIC = ["right-triangle", "scalene-triangle", "parallelogram"];
-
-function buildQuestions(rng) {
-  const yes = shuffle(SHAPES_2D.filter((s) => SYMMETRIC.includes(s.id)), rng).slice(0, 3);
-  const no = shuffle(SHAPES_2D.filter((s) => NOT_SYMMETRIC.includes(s.id)), rng).slice(0, 3);
-
-  return shuffle([...yes, ...no], rng).map((shape) => ({
-    shape,
-    answer: shape.verticalSymmetry ? "yes" : "no",
-  }));
-}
-
 function ShapesChallenge3({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildSymmetry(Math.random), []);
 
   return (
     <ChallengeShell

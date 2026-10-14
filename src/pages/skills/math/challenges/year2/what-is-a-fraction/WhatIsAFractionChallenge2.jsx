@@ -2,55 +2,20 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import FractionBar from "../../../../../../components/challenge/FractionBar";
-import { barParts } from "../../../../../../data/challenges/fractions";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildEquivalence } from "../../../../../../data/challenges/fractions";
 
 /**
  * Challenge 2 - two names for the same amount.
  *
- * Statutory: "recognise the equivalence of 2/4 and 1/2". Two bars are shown
- * shaded to the same length but cut into different numbers of parts, which is
- * what makes the equivalence visible rather than a rule to memorise.
- *
- * Three questions ask which fraction matches and three ask whether two bars
- * show the same amount, so it cannot be answered by always picking "1/2".
+ * Statutory: "recognise the equivalence of 2/4 and 1/2". Each run mixes three
+ * kinds of question: match a bar to its other name, write the missing number
+ * (1/2 = ?/4 or 2/4 = 1/?), and four "same amount?" pairs — the one equal
+ * pair plus three drawn from seven unequal ones — so the run changes every
+ * time and "yes" cannot be guessed.
  */
 
-const MATCH = [
-  { shown: { numerator: 2, denominator: 4 }, answer: "1/2", options: ["1/2", "1/4", "1/3"] },
-  { shown: { numerator: 1, denominator: 2 }, answer: "2/4", options: ["2/4", "3/4", "1/4"] },
-];
-
-const SAME = [
-  { a: { numerator: 2, denominator: 4 }, b: { numerator: 1, denominator: 2 }, answer: "yes" },
-  { a: { numerator: 1, denominator: 4 }, b: { numerator: 1, denominator: 2 }, answer: "no" },
-  { a: { numerator: 3, denominator: 4 }, b: { numerator: 1, denominator: 2 }, answer: "no" },
-  { a: { numerator: 1, denominator: 2 }, b: { numerator: 2, denominator: 4 }, answer: "yes" },
-];
-
-function buildQuestions(rng) {
-  const match = MATCH.map((q) => ({
-    kind: "match",
-    parts: barParts(q.shown),
-    answer: q.answer,
-    options: shuffle(q.options, rng),
-  }));
-
-  const same = shuffle(SAME, rng)
-    .slice(0, 4)
-    .map((q) => ({
-      kind: "same",
-      partsA: barParts(q.a),
-      partsB: barParts(q.b),
-      answer: q.answer,
-      options: ["yes", "no"],
-    }));
-
-  return shuffle([...match, ...same], rng);
-}
-
 function WhatIsAFractionChallenge2({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildEquivalence(Math.random), []);
 
   return (
     <ChallengeShell
@@ -69,17 +34,35 @@ function Equivalence({ question, submit, locked }) {
 
   return (
     <>
-      {question.kind === "match" ? (
+      {question.kind === "match" && (
         <>
-          <FractionBar parts={question.parts} label="A coloured bar" />
+          <FractionBar
+            parts={question.parts}
+            label={`A bar of ${question.parts.length} equal parts, ${question.parts.filter(Boolean).length} coloured`}
+          />
           <p className="challenge-prompt">
-            Which fraction is the same as this?
+            Which fraction is the same amount as this?
           </p>
         </>
-      ) : (
+      )}
+
+      {question.kind === "missing" && (
         <>
-          <FractionBar parts={question.partsA} label="The first bar" />
-          <FractionBar parts={question.partsB} label="The second bar" />
+          <p className="sequence-strip">{question.text}</p>
+          <p className="challenge-prompt">Which number goes in the box?</p>
+        </>
+      )}
+
+      {question.kind === "same" && (
+        <>
+          <FractionBar
+            parts={question.partsA}
+            label={`The first bar: ${question.partsA.length} equal parts, ${question.partsA.filter(Boolean).length} coloured`}
+          />
+          <FractionBar
+            parts={question.partsB}
+            label={`The second bar: ${question.partsB.length} equal parts, ${question.partsB.filter(Boolean).length} coloured`}
+          />
           <p className="challenge-prompt">
             Do these two bars show the same amount?
           </p>

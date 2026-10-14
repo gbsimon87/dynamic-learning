@@ -10,7 +10,7 @@ export const FRACTIONS_LESSONS = {
   "what-is-a-fraction": [
     {
       title: "Name the coloured part",
-      lines: ["Count all the equal parts. That number goes on the bottom.", "Count the coloured parts. That number goes on top.", "Check both numbers before you choose."],
+      lines: ["Count all the equal parts. That number goes on the bottom.", "Count the coloured parts. That number goes on top.", "Asked what is NOT coloured? Count the white parts."],
       example: { type: "bar", title: "Look at this bar", bars: [{ parts: 3, shaded: 1 }], note: "1 of 3 equal parts is coloured: 1/3." },
     },
     {
@@ -24,9 +24,9 @@ export const FRACTIONS_LESSONS = {
       example: { type: "bar", title: "1 piece of each", bars: [{ parts: 2, shaded: 1 }, { parts: 3, shaded: 1 }, { parts: 4, shaded: 1 }], note: "1/4 is the smallest. 1/2 is the biggest." },
     },
     {
-      title: "How many parts to colour?",
-      lines: ["The last word says how many equal parts.", "The first word says how many to colour.", "Half a bar is the same amount, however many parts."],
-      example: { type: "table", title: "Fraction words", headers: ["Word", "Equal parts"], rows: [["half", "2"], ["third", "3"], ["quarter", "4"]], note: "The bar already shows the bottom number for you." },
+      title: "Write the missing number",
+      lines: ["The bottom number is how many equal parts.", "The top number is how many parts are coloured.", "1/2 of 4 parts is 2 parts."],
+      example: { type: "bar", title: "What fraction is coloured?", bars: [{ parts: 3, shaded: 1 }], note: "3 equal parts, 1 coloured, so 1/3." },
     },
   ],
   "fractions-of-numbers": [
@@ -36,14 +36,14 @@ export const FRACTIONS_LESSONS = {
       example: { type: "groups", title: "1/2 of 8", groups: [many("🍓", 4), many("🍓", 4)], label: "8 strawberries in 2 equal rows of 4", note: "1 row has 4, so 1/2 of 8 is 4." },
     },
     {
-      title: "Divide, then take the top",
-      lines: ["Divide by the bottom number to find 1 part.", "The top number says how many parts to take.", "For 3/4, take 3 parts."],
-      example: { type: "steps", title: "3/4 of 8", steps: ["8 ÷ 4 = 2, so 1/4 is 2.", "3 parts is 2 + 2 + 2.", "3/4 of 8 is 6."] },
+      title: "2/4 of a number is 1/2",
+      lines: ["2/4 and 1/2 are the same amount.", "So 2/4 of a number is half of it.", "2 quarters is 1 quarter + 1 quarter."],
+      example: { type: "steps", title: "1/4 of 4 is 1", steps: ["2/4 of 4 is 1 + 1 = 2.", "1/2 of 4 is 2 too.", "So 2/4 of 4 = 1/2 of 4."] },
     },
     {
-      title: "Work out each card first",
-      lines: ["Find the answer to every card.", "A small fraction can still give a big answer.", "Put the smallest answer first."],
-      example: { type: "table", title: "Check each answer", headers: ["Card", "Answer"], rows: [["1/2 of 14", "7"], ["1/3 of 30", "10"]], note: "1/3 is smaller than 1/2, but 10 is bigger." },
+      title: "Count in fractions",
+      lines: ["You can count up in quarters or halves.", "4 quarters make 1 whole. 2 halves make 1 whole.", "1 2/4 is the same as 1 1/2."],
+      example: { type: "jumps", title: "Counting in quarters", terms: ["1", "1 1/4", "1 2/4", "1 3/4", "2"], step: "+1/4", note: "After 3/4 comes the next whole number." },
     },
     {
       title: "Finish the statement",
@@ -53,19 +53,19 @@ export const FRACTIONS_LESSONS = {
   ],
   "finding-fractions-of-larger-groups": [
     {
-      title: "Too many to count",
-      lines: ["Big groups are too many to count 1 by 1.", "For 1/2, halve the number.", "For 1/4, halve it and halve again."],
-      example: { type: "steps", title: "1/4 of 44", steps: ["Half of 44 is 22.", "Half of 22 is 11.", "So 1/4 of 44 is 11."] },
+      title: "Share the set out",
+      lines: ["The bottom number says how many equal groups.", "Share the objects out 1 at a time.", "Count how many are in 1 group."],
+      example: { type: "groups", title: "1/3 of 6 cherries", groups: [many("🍒", 2), many("🍒", 2), many("🍒", 2)], label: "6 cherries in 3 equal groups of 2", note: "1 group has 2, so 1/3 of 6 is 2." },
     },
     {
-      title: "Find 1 part, then more",
-      lines: ["First find 1/4 of the number.", "For 3/4, add 3 of those parts.", "2/4 is the same as 1/2."],
-      example: { type: "steps", title: "3/4 of 28", steps: ["Half of 28 is 14. Half of 14 is 7.", "So 1/4 of 28 is 7.", "7 + 7 + 7 = 21, so 3/4 is 21."] },
+      title: "A fraction of an amount",
+      lines: ["Find 1 part first: halve, halve again, or share in 3.", "For 3/4, add 3 of those parts.", "Keep the unit, like cm, ml or p."],
+      example: { type: "steps", title: "3/4 of 12 cm", steps: ["Half of 12 is 6. Half of 6 is 3.", "So 1/4 of 12 cm is 3 cm.", "3 + 3 + 3 = 9, so 3/4 is 9 cm."] },
     },
     {
       title: "Check both numbers",
       lines: ["Each card has a different fraction and number.", "Work out every card before you move it.", "Put the smallest answer first."],
-      example: { type: "table", title: "Smallest answer first", headers: ["Card", "Answer"], rows: [["3/4 of 12", "9"], ["1/3 of 30", "10"], ["1/2 of 90", "45"]], note: "Look at the answers, not just the fractions." },
+      example: { type: "table", title: "Smallest answer first", headers: ["Card", "Answer"], rows: [["3/4 of 8", "6"], ["1/3 of 27", "9"], ["1/2 of 22", "11"]], note: "Look at the answers, not just the fractions." },
     },
     {
       title: "Taken or left over?",

@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { divide, productDistractors } from "../../../../../../data/challenges/multiplicationAndDivision";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildGroupingQuestions } from "../../../../../../data/challenges/multiplicationAndDivision";
 
 /**
  * Challenge 2 - division as grouping, with nothing drawn.
@@ -11,28 +10,8 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * "how many groups". The phrasing changes and the picture is gone.
  */
 
-const PLANS = [
-  { total: 20, size: 5 },
-  { total: 16, size: 2 },
-  { total: 50, size: 10 },
-  { total: 30, size: 5 },
-  { total: 14, size: 2 },
-  { total: 40, size: 10 },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => {
-    const answer = divide(plan.total, plan.size);
-    return {
-      ...plan,
-      answer,
-      options: shuffle([answer, ...productDistractors(answer, 1, 2)], rng),
-    };
-  });
-}
-
 function WhatIsDivisionChallenge2({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildGroupingQuestions(Math.random), []);
 
   return (
     <ChallengeShell

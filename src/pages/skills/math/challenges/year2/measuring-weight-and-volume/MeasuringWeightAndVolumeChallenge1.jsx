@@ -2,8 +2,7 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import ScaleReader from "../../../../../../components/challenge/ScaleReader";
-import { scaleOptions } from "../../../../../../data/challenges/measurement";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildScaleReadQuestions } from "../../../../../../data/challenges/measurement";
 
 /**
  * Challenge 1 - read a kitchen scale.
@@ -13,27 +12,12 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * is what makes that obvious.
  *
  * Marks every 100 g, not every 200: the reading must land ON a labelled mark,
- * or a 6-year-old is being asked to estimate between two of them.
+ * or a 6-year-old is being asked to estimate between two of them. Readings
+ * and foods change each attempt; options carry "g".
  */
 
-const PLANS = [
-  { value: 200, thing: "flour" },
-  { value: 500, thing: "sugar" },
-  { value: 800, thing: "apples" },
-  { value: 300, thing: "rice" },
-  { value: 600, thing: "potatoes" },
-  { value: 900, thing: "sand" },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => ({
-    ...plan,
-    options: shuffle(scaleOptions(plan.value, 100, 0, 1000, 3), rng),
-  }));
-}
-
 function MeasuringWeightAndVolumeChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildScaleReadQuestions(Math.random), []);
 
   return (
     <ChallengeShell
@@ -75,7 +59,7 @@ function ReadScale({ question, submit, locked }) {
         type="button"
         className="submit-btn"
         disabled={locked || selected === null}
-        onClick={() => submit(selected === question.value)}
+        onClick={() => submit(selected === question.answer)}
       >
         Check my answer
       </button>

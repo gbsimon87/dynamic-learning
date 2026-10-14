@@ -45,6 +45,11 @@ export const SHAPES_2D = [
   { id: "right-triangle", name: "right-angled triangle", sides: 3, vertices: [[0, 0], [0, 1], [1, 1]], verticalSymmetry: false },
   { id: "scalene-triangle", name: "triangle", sides: 3, vertices: [[0.2, 0], [1, 0.7], [0, 1]], verticalSymmetry: false },
   { id: "parallelogram", name: "parallelogram", sides: 4, vertices: [[0.25, 0.2], [1, 0.2], [0.75, 0.8], [0, 0.8]], verticalSymmetry: false },
+  // Irregular polygons: a pentagon is any 5-sided shape, not only the neat
+  // one. They give side counting something to count that cannot be named
+  // from memory, and give the symmetry check more "no" shapes to ask about.
+  { id: "irregular-pentagon", name: "pentagon", sides: 5, vertices: [[0.3, 0], [1, 0.35], [0.8, 1], [0.1, 0.85], [0, 0.3]], verticalSymmetry: false },
+  { id: "irregular-hexagon", name: "hexagon", sides: 6, vertices: [[0.2, 0], [0.75, 0.05], [1, 0.5], [0.7, 1], [0.15, 0.9], [0, 0.45]], verticalSymmetry: false },
 ];
 
 export const SOLIDS = [
@@ -53,7 +58,8 @@ export const SOLIDS = [
   { id: "square-pyramid", name: "square-based pyramid", faces: 5, edges: 8, vertices: 5, faceShapes: ["square", "triangle"] },
   { id: "triangular-prism", name: "triangular prism", faces: 5, edges: 9, vertices: 6, faceShapes: ["triangle", "rectangle"] },
   // Curved: named and sorted, never counted. See the note above.
-  { id: "sphere", name: "sphere", curved: true, faceShapes: ["circle"] },
+  // A sphere has no flat face at all, so no 2-D shape is "on its surface".
+  { id: "sphere", name: "sphere", curved: true, faceShapes: [] },
   { id: "cylinder", name: "cylinder", curved: true, faceShapes: ["circle"] },
   { id: "cone", name: "cone", curved: true, faceShapes: ["circle"] },
 ];

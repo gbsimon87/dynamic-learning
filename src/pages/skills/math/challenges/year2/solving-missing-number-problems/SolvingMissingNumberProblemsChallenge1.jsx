@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { missingAddend, sumDistractors } from "../../../../../../data/challenges/additionAndSubtraction";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildMissingAddendQuestions } from "../../../../../../data/challenges/additionAndSubtraction";
 
 /**
  * Challenge 1 - a missing number in a small addition.
@@ -11,28 +10,8 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * work is understanding what the empty box means rather than the arithmetic.
  */
 
-const PLANS = [
-  { known: 6, total: 10 },
-  { known: 8, total: 15 },
-  { known: 12, total: 20 },
-  { known: 4, total: 11 },
-  { known: 9, total: 17 },
-  { known: 7, total: 13 },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => {
-    const answer = missingAddend(plan.known, plan.total);
-    return {
-      ...plan,
-      answer,
-      options: shuffle([answer, ...sumDistractors(answer, 2)], rng),
-    };
-  });
-}
-
 function SolvingMissingNumberProblemsChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildMissingAddendQuestions(Math.random), []);
 
   return (
     <ChallengeShell

@@ -2,43 +2,19 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import NumberLine from "../../../../../../components/challenge/NumberLine";
-import { countOn, countingDistractors } from "../../../../../../data/challenges/countingForwardsAndBackwards";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildCountOnQuestions } from "../../../../../../data/challenges/countingForwardsAndBackwards";
 
 /**
  * Challenge 1 - count on along a visible line.
  *
  * Every question steps over a tens boundary, because "sixty-nine, seventy" is
  * the moment a count breaks down. The line is on screen so the learner can
- * count the jumps rather than hold them.
+ * count the jumps rather than hold them. Starts and counts are generated each
+ * time, and the wrong options are a one-out slip and a ten-out or two-out slip.
  */
 
-const PLANS = [
-  { start: 68, by: 4 },
-  { start: 27, by: 5 },
-  { start: 49, by: 3 },
-  { start: 86, by: 5 },
-  { start: 18, by: 4 },
-  { start: 55, by: 6 },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => {
-    const answer = countOn(plan.start, plan.by);
-    // Show the run the learner counts along, starting two before.
-    const terms = Array.from({ length: plan.by + 3 }, (_, i) => plan.start - 2 + i);
-    return {
-      ...plan,
-      answer,
-      terms,
-      highlight: 2,
-      options: shuffle([answer, ...countingDistractors(answer, 2)], rng),
-    };
-  });
-}
-
 function CountingForwardsAndBackwardsChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildCountOnQuestions(Math.random), []);
 
   return (
     <ChallengeShell

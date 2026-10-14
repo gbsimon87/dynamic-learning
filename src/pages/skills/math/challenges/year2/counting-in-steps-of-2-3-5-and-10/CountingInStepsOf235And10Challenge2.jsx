@@ -1,46 +1,19 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import {
-  buildSequence,
-  buildDistractors,
-  shuffle,
-} from "../../../../../../data/challenges/countingInSteps";
+import { buildNextTermQuestions } from "../../../../../../data/challenges/countingInSteps";
 
 /**
  * Challenge 2 - the step is no longer given.
  *
  * The learner sees four terms and must work out the jump before choosing what
  * comes next. Two questions count backwards, which is where the pattern is
- * easiest to lose.
+ * easiest to lose. Sequences are generated each time; the wrong options are
+ * one step out and one out, on sides chosen at random.
  */
 
-const SHOWN = 4;
-
-const PLANS = [
-  { step: 2, start: 4 },
-  { step: 5, start: 15 },
-  { step: 10, start: 30 },
-  { step: 3, start: 6 },
-  { step: -2, start: 20 },
-  { step: -10, start: 100 },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => {
-    const terms = buildSequence(plan.start, plan.step, SHOWN);
-    const answer = plan.start + plan.step * SHOWN;
-    // Distractors key off the size of the jump, not its direction.
-    const options = shuffle(
-      [answer, ...buildDistractors(answer, Math.abs(plan.step), 2)],
-      rng
-    );
-    return { ...plan, terms, answer, options };
-  });
-}
-
 function CountingInStepsOf235And10Challenge2({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildNextTermQuestions(Math.random), []);
 
   return (
     <ChallengeShell

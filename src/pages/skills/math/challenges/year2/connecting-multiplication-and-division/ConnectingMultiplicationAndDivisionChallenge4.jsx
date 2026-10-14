@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import NumberInput from "../../../../../../components/challenge/NumberInput";
 import { isCorrectNumber } from "../../../../../../data/challenges/numbersAndCounting";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildInverseMissingNumbers } from "../../../../../../data/challenges/multiplicationAndDivision";
 
 /**
  * Challenge 4 - missing numbers that need the inverse.
@@ -12,19 +12,8 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * used rather than recognised.
  */
 
-const PLANS = [
-  { text: "4 × ? = 20", answer: 5 },
-  { text: "? × 10 = 70", answer: 7 },
-  { text: "30 ÷ ? = 6", answer: 5 },
-  { text: "? ÷ 2 = 9", answer: 18 },
-  { text: "5 × ? = 45", answer: 9 },
-  { text: "? × 2 = 16", answer: 8 },
-  { text: "80 ÷ ? = 8", answer: 10 },
-  { text: "? ÷ 5 = 6", answer: 30 },
-];
-
 function ConnectingMultiplicationAndDivisionChallenge4({ onComplete }) {
-  const questions = useMemo(() => shuffle(PLANS, Math.random).slice(0, 6), []);
+  const questions = useMemo(() => buildInverseMissingNumbers(Math.random), []);
 
   return (
     <ChallengeShell

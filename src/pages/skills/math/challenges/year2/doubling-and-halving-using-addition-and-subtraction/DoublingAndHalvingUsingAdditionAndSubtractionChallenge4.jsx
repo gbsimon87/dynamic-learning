@@ -1,52 +1,20 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import NumberInput from "../../../../../../components/challenge/NumberInput";
-import { double, half, relatedFactTo100 } from "../../../../../../data/challenges/additionAndSubtraction";
+import { buildUseDoublesQuestions } from "../../../../../../data/challenges/additionAndSubtraction";
 import { isCorrectNumber } from "../../../../../../data/challenges/numbersAndCounting";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
 
 /**
- * Challenge 4 - the related facts up to 100.
+ * Challenge 4 - use a doubling or halving fact to work out a new one.
  *
- * Statutory: "derive and use related facts up to 100". Each question shows the
- * small fact the learner already knows and asks for the one ten times bigger,
- * so this is reasoning from a known fact rather than a new calculation.
- *
- * The last two mix in doubling and halving of tens, which is the same move.
+ * Each question shows a double or half the learner knows and asks for one
+ * they can reach from it: double 30 from double 3, half of 80 from half of 8,
+ * and the near doubles 6 + 7 and 8 + 7 from double 6 and double 8. Typed, so
+ * there is nothing to eliminate.
  */
 
-const PAIRS = [
-  [3, 7],
-  [4, 6],
-  [2, 8],
-  [5, 5],
-  [1, 9],
-];
-
-function buildQuestions(rng) {
-  const derived = shuffle(PAIRS, rng).map(([a, b]) => {
-    const fact = relatedFactTo100(a, b);
-    return {
-      known: `${a} + ${b} = ${a + b}`,
-      prompt: `So what is ${fact.a} + ${fact.b}?`,
-      answer: fact.total,
-    };
-  });
-
-  const tens = shuffle(
-    [
-      { known: "double 3 = 6", prompt: "So what is double 30?", answer: double(30) },
-      { known: "half of 8 = 4", prompt: "So what is half of 80?", answer: half(80) },
-      { known: "double 4 = 8", prompt: "So what is double 40?", answer: double(40) },
-    ],
-    rng
-  );
-
-  return [...derived.slice(0, 4), ...tens.slice(0, 2)];
-}
-
 function DoublingAndHalvingUsingAdditionAndSubtractionChallenge4({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildUseDoublesQuestions(Math.random), []);
 
   return (
     <ChallengeShell

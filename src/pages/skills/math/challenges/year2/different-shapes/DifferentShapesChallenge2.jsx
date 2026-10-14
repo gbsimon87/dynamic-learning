@@ -3,34 +3,18 @@ import ChallengeShell from "../../../../../../components/challenge/ChallengeShel
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import ShapeFigure from "../../../../../../components/challenge/ShapeFigure";
 import SolidFigure from "../../../../../../components/challenge/SolidFigure";
-import { SHAPES_2D, SOLIDS } from "../../../../../../data/challenges/shapes";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildFlatOrSolid } from "../../../../../../data/challenges/shapeQuestions";
 
 /**
  * Challenge 2 - flat or solid?
  *
  * Sorting comes before comparing, and the first sort is the coarsest one: is
- * this shape flat or does it take up space? Both kinds are drawn with the same
- * components used elsewhere, so the only difference is the shape itself.
+ * this shape flat or does it take up space? Between 2 and 4 of the six are
+ * flat, so the last answers cannot be counted out (see buildFlatOrSolid).
  */
 
-const FLAT = ["circle", "square", "triangle", "hexagon", "pentagon", "rectangle"];
-const SOLID = ["cube", "sphere", "cone", "cylinder", "cuboid", "square-pyramid"];
-
-function buildQuestions(rng) {
-  const flat = shuffle(SHAPES_2D.filter((s) => FLAT.includes(s.id)), rng)
-    .slice(0, 3)
-    .map((shape) => ({ kind: "flat", shape, answer: "flat" }));
-
-  const solid = shuffle(SOLIDS.filter((s) => SOLID.includes(s.id)), rng)
-    .slice(0, 3)
-    .map((s) => ({ kind: "solid", solid: s, answer: "solid" }));
-
-  return shuffle([...flat, ...solid], rng);
-}
-
 function DifferentShapesChallenge2({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildFlatOrSolid(Math.random), []);
 
   return (
     <ChallengeShell

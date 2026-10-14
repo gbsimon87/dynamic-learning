@@ -1,64 +1,39 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { fractionOf, fractionOfDistractors } from "../../../../../../data/challenges/fractions";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildFractionOfMeasure } from "../../../../../../data/challenges/fractions";
 
 /**
- * Challenge 2 - non-unit fractions of large sets.
+ * Challenge 2 - fractions of a quantity: lengths, liquids, weights and money.
  *
- * 3/4 and 2/4 of numbers up to 100. Two moves every time, and the distractors
- * include the answer for the matching unit fraction, so dividing and
- * forgetting to multiply lands on an offered wrong answer.
+ * The statutory text says fractions "of a length, shape, set of objects or
+ * quantity". All five Year 2 fractions appear, of amounts a Year 2 child can
+ * halve, halve again or share into 3. Every option carries its unit, and the
+ * wrong ones are other fractions of the same amount, so taking 1/4 instead of
+ * 3/4 lands on an offered answer.
  */
 
-const PLANS = [
-  { fraction: { numerator: 3, denominator: 4 }, total: 40 },
-  { fraction: { numerator: 2, denominator: 4 }, total: 60 },
-  { fraction: { numerator: 3, denominator: 4 }, total: 80 },
-  { fraction: { numerator: 2, denominator: 4 }, total: 36 },
-  { fraction: { numerator: 3, denominator: 4 }, total: 100 },
-  { fraction: { numerator: 2, denominator: 4 }, total: 48 },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PLANS, rng).map((plan) => {
-    const answer = fractionOf(plan.fraction, plan.total);
-    return {
-      ...plan,
-      answer,
-      options: shuffle(
-        [answer, ...fractionOfDistractors(plan.fraction, plan.total, 2)],
-        rng
-      ),
-    };
-  });
-}
-
 function FindingFractionsOfLargerGroupsChallenge2({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildFractionOfMeasure(Math.random), []);
 
   return (
     <ChallengeShell
       questions={questions}
       onComplete={onComplete}
-      title="Divide by the bottom, then take the top."
+      title="Find a fraction of an amount."
       render={({ question, submit, locked, index }) => (
-        <NonUnitFraction key={index} question={question} submit={submit} locked={locked} />
+        <FractionOfAmount key={index} question={question} submit={submit} locked={locked} />
       )}
     />
   );
 }
 
-function NonUnitFraction({ question, submit, locked }) {
+function FractionOfAmount({ question, submit, locked }) {
   const [selected, setSelected] = useState(null);
-  const { numerator, denominator } = question.fraction;
 
   return (
     <>
-      <p className="sequence-strip">
-        {numerator}/{denominator} of {question.total} = ?
-      </p>
+      <p className="challenge-prompt">{question.prompt}</p>
 
       <ChoiceGrid
         options={question.options}

@@ -81,9 +81,9 @@ export const MUL_DIV_LESSONS = {
       example: { type: "steps", title: "15 sweets shared between 5 bags", steps: ["15 is being shared.", "It is shared between 5 bags.", "So the division is 15 ÷ 5."] },
     },
     {
-      title: "Share it out",
-      lines: ["Find the total and the number of groups.", "Share the total out fairly.", "Count how many land in 1 group."],
-      example: { type: "groups", title: "10 biscuits shared between 2 plates", groups: [many("🍪", 5), many("🍪", 5)], label: "2 plates with 5 biscuits each", note: "10 ÷ 2 = 5 on each plate." },
+      title: "Share lengths and money too",
+      lines: ["You can share cm, ml, g and pence.", "Divide the amount by how many shares.", "Keep the unit: cm stays cm, p stays p."],
+      example: { type: "steps", title: "A 12 cm ribbon cut into 3 pieces", steps: ["12 ÷ 3 = 4.", "Each piece is 4 cm long.", "Pens at 3p from 12p? 12 ÷ 3 = 4 pens."] },
     },
     {
       title: "Bigger total, smaller answer?",
@@ -91,9 +91,9 @@ export const MUL_DIV_LESSONS = {
       example: { type: "table", title: "Check each answer", headers: ["Card", "Answer"], rows: [["30 ÷ 10", "3"], ["10 ÷ 2", "5"]], note: "30 is bigger, but its answer is smaller." },
     },
     {
-      title: "Find the total first",
-      lines: ["Some stories do not tell you the total.", "Work out the total first.", "Then divide it."],
-      example: { type: "steps", title: "3 bags of 10 sweets, shared by 5", steps: ["3 bags of 10 is 3 × 10 = 30.", "Share 30 between 5 children.", "30 ÷ 5 = 6 sweets each."] },
+      title: "Put them together, then divide",
+      lines: ["Some stories give you 2 amounts.", "Add them to find the total first.", "Then share or group the total."],
+      example: { type: "steps", title: "7 red and 3 blue cubes, groups of 5", steps: ["7 + 3 = 10 cubes.", "10 ÷ 5 = 2.", "There are 2 groups of 5."] },
     },
   ],
   "connecting-multiplication-and-division": [
@@ -103,14 +103,14 @@ export const MUL_DIV_LESSONS = {
       example: { type: "steps", title: "From 2 × 5 = 10", steps: ["The total is 10.", "10 ÷ 5 = 2.", "10 ÷ 2 = 5 is true too."] },
     },
     {
-      title: "Swap for ×, not for ÷",
-      lines: ["You can swap the numbers in a multiplication.", "The answer stays the same.", "You cannot swap the numbers in a division."],
-      example: { type: "equation", title: "Swapping a multiplication", parts: ["2 × 10", "=", "10 × 2"], note: "But 10 ÷ 2 is not the same as 2 ÷ 10." },
+      title: "Use the fact you know",
+      lines: ["One fact gives you others with the same 3 numbers.", "3 × 5 = 15 tells you 15 ÷ 5 = 3.", "You can swap × numbers, but not ÷ numbers."],
+      example: { type: "steps", title: "You know 3 × 4 = 12", steps: ["12 ÷ 4 = 3.", "12 ÷ 3 = 4.", "4 × 3 = 12 too."] },
     },
     {
       title: "Find the true facts",
       lines: ["Check each one with your tables.", "In a ÷, the biggest number comes first.", "In a ×, the answer is the biggest number."],
-      example: { type: "table", title: "Using 2, 5 and 10", headers: ["Fact", "True?"], rows: [["2 × 5 = 10", "yes"], ["10 ÷ 5 = 2", "yes"], ["5 ÷ 10 = 2", "no"], ["10 × 5 = 2", "no"]], note: "Drag the true ones to the front." },
+      example: { type: "table", title: "Using 2, 5 and 10", headers: ["Fact", "True?"], rows: [["2 × 5 = 10", "yes"], ["10 ÷ 5 = 2", "yes"], ["5 ÷ 10 = 2", "no"], ["10 ÷ 2 = 4", "no"]], note: "Check every number. Drag the true ones to the front." },
     },
     {
       title: "Find the missing number",
@@ -147,9 +147,9 @@ export const MUL_DIV_LESSONS = {
       example: { type: "table", title: "Look for the clue", headers: ["Story says", "Use"], rows: [["5 bags with 2 each", "×"], ["shared between", "÷"], ["put into pairs", "÷"]], note: "How many altogether usually means ×." },
     },
     {
-      title: "Choose it, then do it",
-      lines: ["First decide: × or ÷?", "Then use your 2, 5 or 10 facts.", "Check your answer makes sense."],
-      example: { type: "steps", title: "3 vases hold 5 flowers each", steps: ["Equal groups joined, so use ×.", "3 × 5 = 15.", "There are 15 flowers."] },
+      title: "Rows: multiply or divide?",
+      lines: ["Rows of things make an array.", "Know the rows and how many in each? Use ×.", "Know the total and need the rows? Use ÷."],
+      example: { type: "steps", title: "3 rows of 5 chairs", steps: ["Rows joined together, so use ×.", "3 × 5 = 15 chairs.", "15 chairs in rows of 5? 15 ÷ 5 = 3 rows."] },
     },
     {
       title: "Check the sign first",

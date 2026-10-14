@@ -1,44 +1,25 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { productDistractors } from "../../../../../../data/challenges/multiplicationAndDivision";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildArrayStories } from "../../../../../../data/challenges/multiplicationAndDivision";
 
 /**
- * Challenge 2 - now choose the operation AND do it.
+ * Challenge 2 - now choose the operation AND do it, with arrays.
  *
- * Same mixture of stories as challenge 1, but the options are answers, so a
- * learner who picks the wrong operation lands on a plausible number rather
- * than an obviously silly one.
+ * Rows of chairs, seeds and tiles: three stories join equal rows (×) and
+ * three split a total into rows (÷), generated per run. Options are a row out
+ * or a slip of one or two, so picking the wrong operation or miscounting
+ * lands on a plausible number.
  */
 
-const PROBLEMS = [
-  { prompt: "5 plates hold 4 biscuits each. How many biscuits?", answer: 20, step: 4 },
-  { prompt: "40 biscuits are shared between 10 plates. How many on each?", answer: 4, step: 1 },
-  { prompt: "8 cars have 2 wheels drawn on each. How many wheels?", answer: 16, step: 2 },
-  { prompt: "35 sweets are shared between 5 bags. How many in each bag?", answer: 7, step: 1 },
-  { prompt: "9 vases hold 10 flowers each. How many flowers?", answer: 90, step: 10 },
-  { prompt: "24 cakes are shared between 2 boxes. How many in each box?", answer: 12, step: 2 },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PROBLEMS, rng).map((problem) => ({
-    ...problem,
-    options: shuffle(
-      [problem.answer, ...productDistractors(problem.answer, problem.step, 2)],
-      rng
-    ),
-  }));
-}
-
 function SolvingMultiplicationAndDivisionProblemsChallenge2({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildArrayStories(Math.random), []);
 
   return (
     <ChallengeShell
       questions={questions}
       onComplete={onComplete}
-      title="Work out which one to use, then use it."
+      title="Rows of things: multiply or divide?"
       render={({ question, submit, locked, index }) => (
         <SolveIt key={index} question={question} submit={submit} locked={locked} />
       )}

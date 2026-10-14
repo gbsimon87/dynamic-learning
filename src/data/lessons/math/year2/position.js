@@ -46,7 +46,7 @@ export const POSITION_LESSONS = {
     },
     {
       title: "Follow every clue",
-      lines: ["Read all the clues before you move anything.", "Put first and last in place first.", "Between or in the middle goes in the gap."],
+      lines: ["Read all the clues before you move anything.", "Put first and last in place first.", "Just after the lemon means right next to it, on the right."],
       example: { type: "groups", title: "Strawberry first, grapes last", groups: [["🍓", "🍋", "🍇"]], label: "strawberry, lemon, grapes", note: "The lemon is between them. Check every clue at the end." },
     },
   ],
@@ -68,7 +68,7 @@ export const POSITION_LESSONS = {
     },
     {
       title: "Turns in right angles",
-      lines: ["A right angle is a square corner, like a book.", "Every quarter turn is 1 right angle.", "Count the quarter turns to count the right angles."],
+      lines: ["A right angle is a square corner, like a book.", "Every quarter turn is 1 right angle.", "Count each quarter turn, going the way the arrow went."],
       example: { type: "jumps", title: "Counting quarter turns", terms: ["0", "1", "2", "3", "4"], step: "+1", note: "Each quarter turn adds 1 more right angle." },
     },
   ],
@@ -81,7 +81,7 @@ export const POSITION_LESSONS = {
     {
       title: "Program the robot",
       lines: ["Forward moves the robot 1 square the way it faces.", "Turn left and turn right spin it on the spot.", "Press start again if it goes the wrong way."],
-      example: { type: "steps", title: "Getting to the star", steps: ["Check which way the robot faces.", "Count the squares to the star.", "Press forward that many times."] },
+      example: { type: "steps", title: "Getting to the star", steps: ["Check which way the robot faces.", "Turn left or right until it faces the star.", "Count the squares, then press forward that many times."] },
     },
     {
       title: "Count only the turns",

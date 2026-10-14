@@ -2,32 +2,25 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import RobotGrid from "../../../../../../components/challenge/RobotGrid";
 import { runProgram } from "../../../../../../data/challenges/positionAndDirection";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { ROBOT_GRID, buildCornerRoute } from "../../../../../../data/challenges/positionQuestions";
 
 /**
  * Challenge 4 - the hardest programs.
  *
  * The star is never in a straight line from the robot, so every route needs at
  * least one right-angle turn and cannot be reached by pressing forward
- * repeatedly. Two of them need two turns.
+ * repeatedly (see buildCornerRoute).
  *
  * Any correct route is accepted: only where the robot ends up matters, not how
  * it got there.
  */
 
-const SIZE = 4;
+const SIZE = ROBOT_GRID;
 
-const PLANS = [
-  { start: { x: 0, y: 3, heading: "up" }, target: { x: 2, y: 1 } },
-  { start: { x: 0, y: 0, heading: "right" }, target: { x: 2, y: 2 } },
-  { start: { x: 3, y: 3, heading: "up" }, target: { x: 1, y: 0 } },
-  { start: { x: 1, y: 3, heading: "up" }, target: { x: 3, y: 2 } },
-  { start: { x: 0, y: 2, heading: "right" }, target: { x: 3, y: 0 } },
-  { start: { x: 2, y: 0, heading: "down" }, target: { x: 0, y: 3 } },
-];
+const STEP_WORDS = { forward: "forward", left: "turn left", right: "turn right" };
 
 function RobotChallenge4({ onComplete }) {
-  const questions = useMemo(() => shuffle(PLANS, Math.random), []);
+  const questions = useMemo(() => buildCornerRoute(Math.random), []);
 
   return (
     <ChallengeShell
@@ -72,7 +65,7 @@ function RouteRobot({ question, submit, locked }) {
       </div>
 
       <p className="dial-readout">
-        {program.length === 0 ? "No instructions yet." : program.join(" → ")}
+        {program.length === 0 ? "No instructions yet." : program.map((step) => STEP_WORDS[step]).join(" → ")}
       </p>
 
       <button

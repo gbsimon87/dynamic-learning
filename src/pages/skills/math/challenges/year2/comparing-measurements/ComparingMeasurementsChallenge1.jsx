@@ -2,35 +2,22 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import ScaleReader from "../../../../../../components/challenge/ScaleReader";
-import { compareMeasures } from "../../../../../../data/challenges/measurement";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildVisualCompareQuestions } from "../../../../../../data/challenges/measurement";
 
 /**
  * Challenge 1 - compare two measurements you can see.
  *
  * Statutory: "compare and order lengths, mass, volume/capacity and record the
- * results using >, < and =". Two scales are shown side by side, so the
- * comparison is visible before it is written as a symbol.
+ * results using >, < and =". So each run has two pairs of rulers (cm), two of
+ * kitchen scales (g) and two of jugs (ml). Two scales are shown together, so
+ * the comparison is visible before it is written as a symbol, and every run
+ * needs <, > and = at least once.
  */
 
-const PAIRS = [
-  { a: 10, b: 25, unit: "cm", max: 30, step: 5 },
-  { a: 20, b: 20, unit: "cm", max: 30, step: 5 },
-  { a: 30, b: 15, unit: "cm", max: 30, step: 5 },
-  { a: 5, b: 20, unit: "cm", max: 30, step: 5 },
-  { a: 25, b: 25, unit: "cm", max: 30, step: 5 },
-  { a: 30, b: 10, unit: "cm", max: 30, step: 5 },
-];
-
-function buildQuestions(rng) {
-  return shuffle(PAIRS, rng).map((pair) => ({
-    ...pair,
-    answer: compareMeasures(pair.a, pair.b),
-  }));
-}
+const NAMES = { cm: "ruler", g: "scale", ml: "jug" };
 
 function ComparingMeasurementsChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildVisualCompareQuestions(Math.random), []);
 
   return (
     <ChallengeShell
@@ -46,28 +33,27 @@ function ComparingMeasurementsChallenge1({ onComplete }) {
 
 function CompareScales({ question, submit, locked }) {
   const [selected, setSelected] = useState(null);
+  const vertical = question.orientation === "vertical";
+  const scale = (value, which) => (
+    <ScaleReader
+      min={0}
+      max={question.max}
+      majorStep={question.step}
+      value={value}
+      unit={question.unit}
+      orientation={question.orientation}
+      variant={question.variant}
+      label={`The ${which} ${NAMES[question.unit]}, showing ${value} ${question.unit}`}
+    />
+  );
 
   return (
     <>
-      <ScaleReader
-        min={0}
-        max={question.max}
-        majorStep={question.step}
-        value={question.a}
-        unit={question.unit}
-        orientation="horizontal"
-        label={`The first measure, ${question.a} ${question.unit}`}
-      />
-
-      <ScaleReader
-        min={0}
-        max={question.max}
-        majorStep={question.step}
-        value={question.b}
-        unit={question.unit}
-        orientation="horizontal"
-        label={`The second measure, ${question.b} ${question.unit}`}
-      />
+      {/* Two jugs stand side by side; stacked they would not fit a phone. */}
+      <div style={vertical ? { display: "flex", justifyContent: "center", gap: "2.5rem" } : undefined}>
+        {scale(question.a, "first")}
+        {scale(question.b, "second")}
+      </div>
 
       <p className="statement">
         <span>

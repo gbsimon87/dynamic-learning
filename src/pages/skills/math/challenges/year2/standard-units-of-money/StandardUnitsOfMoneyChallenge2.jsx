@@ -1,24 +1,19 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import CoinTray from "../../../../../../components/challenge/CoinTray";
-import { formatMoney, isValidCoinCombination } from "../../../../../../data/challenges/measurement";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildMakeAmountQuestions, formatMoney, isValidCoinCombination } from "../../../../../../data/challenges/measurement";
 
 /**
  * Challenge 2 - make the amount.
  *
  * Statutory: "combine amounts to make a particular value". ANY combination
  * that reaches the target is accepted, not just the fewest coins — the next
- * challenge is built on exactly that freedom.
+ * challenge is built on exactly that freedom. Targets are fresh each
+ * attempt and grow: two small, two middling, two close to £1.
  */
 
-const TARGETS = [7, 23, 45, 60, 85, 99];
-
 function StandardUnitsOfMoneyChallenge2({ onComplete }) {
-  const questions = useMemo(
-    () => shuffle(TARGETS, Math.random).map((target) => ({ target })),
-    []
-  );
+  const questions = useMemo(() => buildMakeAmountQuestions(Math.random), []);
 
   return (
     <ChallengeShell

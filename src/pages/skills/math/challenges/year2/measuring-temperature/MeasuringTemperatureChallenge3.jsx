@@ -1,45 +1,24 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import DragToOrder from "../../../../../../components/challenge/DragToOrder";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildTemperatureOrderQuestions } from "../../../../../../data/challenges/measurement";
 
 /**
- * Challenge 3 - order temperatures, coldest first.
+ * Challenge 3 - order temperatures.
  *
- * Below zero is where ordering stops being obvious: −5 °C is colder than
- * 0 °C even though 5 is more than 0. Every set includes at least one negative
- * for exactly that reason.
+ * Four temperatures from 0 °C to 50 °C, made fresh each attempt. The first
+ * three ask for the coldest first and the last three for the hottest first,
+ * so the instruction has to be read, not assumed.
  */
 
-const SETS = [
-  [-5, 0, 10, 25],
-  [-10, 5, 20, 35],
-  [0, -5, 15, 30],
-  [-10, 0, 40, 20],
-  [5, -5, 25, 15],
-  [-5, 10, 0, 45],
-];
-
-function buildQuestions(rng) {
-  return shuffle(SETS, rng).map((set) => {
-    const ordered = [...set].sort((a, b) => a - b).map((n) => `${n} °C`);
-    const cards = shuffle(
-      set.map((n) => ({ id: `${n} °C`, label: `${n} °C` })),
-      rng
-    );
-    const solved = cards.every((card, i) => card.id === ordered[i]);
-    return { ordered, cards: solved ? [...cards].reverse() : cards };
-  });
-}
-
 function MeasuringTemperatureChallenge3({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildTemperatureOrderQuestions(Math.random), []);
 
   return (
     <ChallengeShell
       questions={questions}
       onComplete={onComplete}
-      title="Below zero is colder than zero."
+      title="Put the temperatures in order."
       render={({ question, submit, locked, index }) => (
         <OrderTemperatures key={index} question={question} submit={submit} locked={locked} />
       )}
@@ -53,7 +32,7 @@ function OrderTemperatures({ question, submit, locked }) {
   return (
     <>
       <p className="challenge-prompt">
-        Drag them so the coldest is first.
+        Drag them so the <strong>{question.first}</strong> is first.
       </p>
 
       <DragToOrder items={items} onReorder={setItems} disabled={locked} />

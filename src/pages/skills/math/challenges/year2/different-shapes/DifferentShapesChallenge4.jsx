@@ -1,47 +1,19 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { SHAPES_2D, SOLIDS } from "../../../../../../data/challenges/shapes";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildShapeClues } from "../../../../../../data/challenges/shapeQuestions";
 
 /**
- * Challenge 4 - describe a shape from its properties alone.
+ * Challenge 4 - name a shape from its properties alone.
  *
- * Nothing is drawn. The learner is given the properties and has to name the
- * shape, which is the reverse of every other challenge in this category and
- * the hardest version of it: the vocabulary has to be understood rather than
- * matched to a picture.
+ * Nothing is drawn. Each clue fits exactly one shape, and its wrong options
+ * are the shapes a child would confuse it with - a rhombus beside the square
+ * clue, a cone beside the pyramid one (see SHAPE_CLUES). Three flat shapes
+ * and three solids every run.
  */
 
-const CLUES = [
-  { clue: "I have 4 equal sides and 4 corners.", answer: "square" },
-  { clue: "I have 3 sides and 3 corners.", answer: "triangle" },
-  { clue: "I have 6 sides.", answer: "hexagon" },
-  { clue: "I have 6 square faces, 12 edges and 8 corners.", answer: "cube" },
-  { clue: "I have no corners and no edges. I roll every way.", answer: "sphere" },
-  { clue: "I have 5 faces and a square at the bottom. I come to a point.", answer: "square-based pyramid" },
-  { clue: "I have 2 circles and 1 curved surface.", answer: "cylinder" },
-  { clue: "I have 8 sides.", answer: "octagon" },
-];
-
-const ALL_NAMES = [
-  ...new Set([...SHAPES_2D.map((s) => s.name), ...SOLIDS.map((s) => s.name)]),
-];
-
-function buildQuestions(rng) {
-  return shuffle(CLUES, rng)
-    .slice(0, 6)
-    .map((item) => {
-      const others = ALL_NAMES.filter((name) => name !== item.answer);
-      return {
-        ...item,
-        options: shuffle([item.answer, ...shuffle(others, rng).slice(0, 2)], rng),
-      };
-    });
-}
-
 function DifferentShapesChallenge4({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildShapeClues(Math.random), []);
 
   return (
     <ChallengeShell

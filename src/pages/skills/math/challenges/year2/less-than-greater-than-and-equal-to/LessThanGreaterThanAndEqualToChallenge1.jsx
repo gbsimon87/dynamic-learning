@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { SYMBOLS, compareSymbol } from "../../../../../../data/challenges/comparingNumbers";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { SYMBOLS, buildPickSymbolQuestions } from "../../../../../../data/challenges/comparingNumbers";
 
 /**
  * Challenge 1 - choose the symbol.
@@ -10,28 +9,13 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * Both numbers stay on screen either side of the empty slot, so the learner
  * reads the statement as a whole rather than answering an abstract question.
  * The symbols are always offered in the same order, because their shape is
- * what is being learned.
+ * what is being learned. Pairs are generated each time: a digit swap (57, 75),
+ * the same tens, an equal pair, 6 against 60, either side of a ten, and any
+ * two numbers.
  */
 
-const PAIRS = [
-  [3, 8],
-  [24, 19],
-  [46, 46],
-  [57, 75],
-  [60, 6],
-  [38, 38],
-];
-
-function buildQuestions(rng) {
-  return shuffle(PAIRS, rng).map(([left, right]) => ({
-    left,
-    right,
-    answer: compareSymbol(left, right),
-  }));
-}
-
 function LessThanGreaterThanAndEqualToChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildPickSymbolQuestions(Math.random), []);
 
   return (
     <ChallengeShell

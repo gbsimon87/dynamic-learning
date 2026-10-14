@@ -1,35 +1,22 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildPickInverseQuestions } from "../../../../../../data/challenges/additionAndSubtraction";
 
 /**
  * Challenge 2 - which calculation finds the missing number?
  *
  * Statutory: "recognise and use the inverse relationship between addition and
  * subtraction". The learner picks the calculation rather than performing it,
- * so this tests the relationship itself. The tempting wrong answer is always
- * the same operation as the question.
+ * so this tests the relationship itself. Only two calculations can be made
+ * from the two numbers shown - add them, or take the smaller from the larger -
+ * so those are the options, always in that order. The wrong one is the
+ * wrong-inverse mistake: adding for "a + ? = t", or "add it back" for
+ * "a − ? = t", where the box is what was taken away (see inverseOptions).
  */
 
-const QUESTIONS = [
-  { statement: "14 + ? = 20", options: ["20 − 14", "20 + 14", "14 − 20"], answer: "20 − 14" },
-  { statement: "? + 9 = 16", options: ["16 − 9", "16 + 9", "9 − 16"], answer: "16 − 9" },
-  { statement: "25 − ? = 10", options: ["25 − 10", "25 + 10", "10 − 25"], answer: "25 − 10" },
-  { statement: "? − 8 = 12", options: ["12 + 8", "12 − 8", "8 − 12"], answer: "12 + 8" },
-  { statement: "30 + ? = 45", options: ["45 − 30", "45 + 30", "30 − 45"], answer: "45 − 30" },
-  { statement: "? + 18 = 24", options: ["24 − 18", "24 + 18", "18 − 24"], answer: "24 − 18" },
-];
-
 function SolvingMissingNumberProblemsChallenge2({ onComplete }) {
-  const questions = useMemo(
-    () =>
-      shuffle(QUESTIONS, Math.random).map((q) => ({
-        ...q,
-        options: shuffle(q.options, Math.random),
-      })),
-    []
-  );
+  const questions = useMemo(() => buildPickInverseQuestions(Math.random), []);
 
   return (
     <ChallengeShell

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { TABLES, multiply, productDistractors } from "../../../../../../data/challenges/multiplicationAndDivision";
+import { TABLES, multiply, nearMissDistractors } from "../../../../../../data/challenges/multiplicationAndDivision";
 import { shuffle } from "../../../../../../data/challenges/countingInSteps";
 
 /**
@@ -29,7 +29,7 @@ function buildQuestions(rng) {
         table,
         n,
         answer,
-        options: shuffle([answer, ...productDistractors(answer, table, 2)], rng),
+        options: shuffle([answer, ...nearMissDistractors(answer, table, 2, rng)], rng),
       };
     });
 }

@@ -1,45 +1,19 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import SolidFigure from "../../../../../../components/challenge/SolidFigure";
-import { SOLIDS } from "../../../../../../data/challenges/shapes";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildEverydaySolids } from "../../../../../../data/challenges/shapeQuestions";
 
 /**
  * Challenge 3 - everyday objects.
  *
  * Statutory: "compare and sort common 2-D and 3-D shapes AND EVERYDAY
  * OBJECTS". A solid shape is worth nothing as a name if a child cannot see a
- * cylinder in a tin, so the question runs that way round.
+ * cylinder in a tin, so the question runs that way round. Six objects are
+ * drawn from fifteen, and no solid is the answer more than twice.
  */
 
-const OBJECTS = [
-  { object: "a tin of beans", answer: "cylinder" },
-  { object: "a dice", answer: "cube" },
-  { object: "a football", answer: "sphere" },
-  { object: "a party hat", answer: "cone" },
-  { object: "a cereal box", answer: "cuboid" },
-  { object: "an ice cream cone", answer: "cone" },
-  { object: "a marble", answer: "sphere" },
-  { object: "a shoe box", answer: "cuboid" },
-];
-
-function buildQuestions(rng) {
-  return shuffle(OBJECTS, rng)
-    .slice(0, 6)
-    .map((item) => {
-      const solid = SOLIDS.find((s) => s.id === item.answer);
-      const others = SOLIDS.filter((s) => s.id !== item.answer).map((s) => s.name);
-      return {
-        ...item,
-        answerName: solid.name,
-        options: shuffle([solid.name, ...shuffle(others, rng).slice(0, 2)], rng),
-      };
-    });
-}
-
 function SolidsChallenge3({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildEverydaySolids(Math.random), []);
 
   return (
     <ChallengeShell

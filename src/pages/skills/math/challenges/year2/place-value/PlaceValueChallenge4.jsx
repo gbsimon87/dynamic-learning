@@ -1,40 +1,19 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import NumberInput from "../../../../../../components/challenge/NumberInput";
-import { fromParts, tensOf, onesOf } from "../../../../../../data/challenges/placeValue";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildPartitionQuestions } from "../../../../../../data/challenges/placeValue";
+import { isCorrectNumber } from "../../../../../../data/challenges/numbersAndCounting";
 
 /**
- * Challenge 4 - partition in both directions, with the answer typed.
+ * Challenge 4 - partition in different ways, with the answer typed.
  *
- * Half the questions build a number from its parts and half pull a number
- * apart, so the learner cannot settle into one direction.
+ * Partitioning in more than one way: what a digit is worth, 73 = 70 + ?,
+ * and the non-standard 73 = 60 + ? and "3 tens and 14 ones" that the
+ * statutory guidance asks for (23 as 20 + 3 and 10 + 13). Generated each time.
  */
 
-const NUMBERS = [46, 73, 28, 95, 51, 67, 34, 80];
-
-function buildQuestions(rng) {
-  return shuffle(NUMBERS, rng)
-    .slice(0, 6)
-    .map((value, i) => {
-      const build = i % 2 === 0;
-      if (build) {
-        return {
-          prompt: `What number is made of ${tensOf(value)} tens and ${onesOf(value)} ones?`,
-          answer: value,
-        };
-      }
-      // Pulling apart: ask for the value of the tens digit, not the digit
-      // itself - "the 7 in 73 is worth 70" is the idea being tested.
-      return {
-        prompt: `In the number ${value}, what is the ${tensOf(value)} worth?`,
-        answer: fromParts(tensOf(value), 0),
-      };
-    });
-}
-
 function PlaceValueChallenge4({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildPartitionQuestions(Math.random), []);
 
   return (
     <ChallengeShell
@@ -53,7 +32,7 @@ function Partition({ question, submit, locked }) {
 
   return (
     <>
-      <p className="challenge-prompt">{question.prompt}</p>
+      <p className={question.prompt.includes("=") ? "sequence-strip" : "challenge-prompt"}>{question.prompt}</p>
 
       <NumberInput label="My answer is" value={value} onChange={setValue} disabled={locked} />
 
@@ -61,7 +40,7 @@ function Partition({ question, submit, locked }) {
         type="button"
         className="submit-btn"
         disabled={locked || value === ""}
-        onClick={() => submit(Number(value) === question.answer)}
+        onClick={() => submit(isCorrectNumber(value, question.answer))}
       >
         Check my answer
       </button>
