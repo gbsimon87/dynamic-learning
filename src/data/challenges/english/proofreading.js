@@ -58,7 +58,7 @@ export const SPELL_ITEMS = [
   { sentence: "The tour gide showed us the old tower.", wrong: "gide", word: "guide" },
   { sentence: "The nurse measured Leo’s hight.", wrong: "hight", word: "height" },
   { sentence: "Can you discribe the monster?", wrong: "discribe", word: "describe" },
-  { sentence: "The Erth goes around the Sun.", wrong: "Erth", word: "earth" },
+  { sentence: "The Erth goes around the Sun.", wrong: "Erth", word: "Earth" },
   { sentence: "We will continew the story tomorrow.", wrong: "continew", word: "continue" },
   { sentence: "The two pictures look very diffrent.", wrong: "diffrent", word: "different" },
   { sentence: "It was an extreem storm.", wrong: "extreem", word: "extreme" },
@@ -124,6 +124,14 @@ export const HUNT_PARAGRAPHS = [
   {
     title: "The Big Match",
     text: "Leo’s team played a big match on Sunday. It was cold and windy. Leo scored a goal in the {erly|early} part of the game. Then the other team scored two goals. {zayn|Zayn} passed the ball to Leo near the end. Leo kicked it as hard as he could. Did it go in? Yes, it did! The match ended in a {draw?|draw.}",
+  },
+  {
+    title: "The Surprise Party",
+    text: "Dad and I planned a surprise party for Mum. We hid balloons and presents in the garden shed. {amara|Amara} and Leo came round to help. We made a cake with strawberries on top, because strawberries are Mum’s {favorit|favourite} fruit. When Mum came home, everyone jumped out and shouted. Can you guess what Mum {said.|said?} She laughed and said it was the best surprise ever!",
+  },
+  {
+    title: "The Science Lesson",
+    text: "On Tuesday, our class did an {experimint|experiment} with plants. We put one plant on the sunny windowsill. We put the other plant in a dark cupboard. Every morning, we gave both plants some water. After two weeks, the plant in the cupboard looked pale and droopy. Why do you think that {happened.|happened?} Mrs Khan said plants need light to grow. {zayn|Zayn} drew a chart of what we found out."
   },
 ];
 

@@ -115,3 +115,12 @@ test("all text uses British spelling", () => {
   const text = WORDS.flatMap((entry) => [entry.meaning, entry.sentence, entry.tip]).join(" ");
   assert.deepEqual(findUsSpellings(text), []);
 });
+
+test("level 2 never repeats a word across the rounds of one run", () => {
+  for (let seed = 1; seed < 50; seed += 1) {
+    let x = seed;
+    const rng = () => ((x = (x * 16807) % 2147483647) / 2147483647);
+    const words = buildWordsOftenMisspeltQuestions(2, rng).flatMap((q) => q.cards.map((c) => c.word));
+    assert.equal(new Set(words).size, words.length);
+  }
+});

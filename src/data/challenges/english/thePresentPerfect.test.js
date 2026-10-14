@@ -23,11 +23,13 @@ const seeded = (seed) => () => {
 const PAST_CLUES = /\b(yesterday|last|ago)\b/i;
 const PERFECT_CLUES = /\b(since|so far|already|yet)\b/i;
 
-test("banks are big enough: 15+ verb items, 3+ diaries of four gaps", () => {
+test("banks are big enough: 15+ verb items, 6+ diaries in varied orders of four gaps", () => {
   assert.ok(VERB_ITEMS.length >= 15);
   // Level 2 takes ten perfect cards and ten past cards from different items.
   assert.ok(VERB_ITEMS.length - 10 + HAD_SENTENCES.length >= 10);
-  assert.ok(DIARY_SETS.length >= 3);
+  assert.ok(DIARY_SETS.length >= 6);
+  const patterns = new Set(DIARY_SETS.map((set) => set.sentences.map((s) => s.answer).join()));
+  assert.ok(patterns.size >= 3, "the past/perfect order varies between texts");
   for (const set of DIARY_SETS) assert.equal(set.sentences.length, 4, set.title);
 });
 

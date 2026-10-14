@@ -11,6 +11,8 @@ export function exampleSpeech(example) {
       case "bar": return example.bars.map((b) => `${b.shaded}/${b.parts}`).join(", ");
       case "groups": return example.label ?? "";
       case "table": return example.rows.map((row) => row.join(" ")).join(". ");
+      case "sentence": return example.text.replaceAll("**", "");
+      case "fix": return `Not this: ${example.wrong}. Write this: ${example.right}`;
       default: return "";
     }
   })();

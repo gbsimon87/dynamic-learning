@@ -80,7 +80,7 @@ function ChooseRound({ question, submit, locked, hint }) {
       </div>
       {hint && (
         <HintNote>
-          Read it with each word. “because” {MEANINGS.because}; “although” {MEANINGS.although}.
+          Read it with each word. {question.options.map((word) => `“${word}” ${MEANINGS[word]}.`).join(" ")}
         </HintNote>
       )}
       <ChoiceGrid options={question.options} selected={selected} onSelect={setSelected} disabled={locked} variant="wordy" />
@@ -100,7 +100,8 @@ function BuildRound({ question, submit, locked, hint }) {
       </div>
       {hint && (
         <HintNote>
-          Start with the part that has a capital letter. Then ask: does the last part say why, or is it a surprise?
+          Start with the part that has a capital letter. Then try each joining word.{" "}
+          {[question.answer, question.wrong].sort().map((word) => `“${word}” ${MEANINGS[word]}.`).join(" ")}
         </HintNote>
       )}
       <TileBuilder tiles={question.tiles} placed={placed} onChange={setPlaced} disabled={locked} label="Your sentence" />

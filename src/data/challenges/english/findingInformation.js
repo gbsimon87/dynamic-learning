@@ -195,6 +195,33 @@ export const FACT_FILES = [
       { field: "Year people first walked on it", answer: "1969", wrong: ["1869", "2019"], para: 6 },
     ],
   },
+  {
+    passage: "foxes",
+    facts: [
+      { field: "Animal family", answer: "the dog family", wrong: ["the cat family", "the bear family"], para: 0 },
+      { field: "Colour of fur", answer: "orange-red", wrong: ["grey", "black"], para: 2 },
+      { field: "Names for its home", answer: "a den or an earth", wrong: ["a nest or a hive", "a burrow or a warren"], para: 4 },
+      { field: "Name for baby foxes", answer: "cubs", wrong: ["calves", "chicks"], para: 6 },
+    ],
+  },
+  {
+    passage: "the-sun",
+    facts: [
+      { field: "What the Sun is", answer: "a star", wrong: ["a planet", "a moon"], para: 0 },
+      { field: "How many Earths could fit inside", answer: "more than one million", wrong: ["about ten", "about one hundred"], para: 2 },
+      { field: "Time for its light to reach us", answer: "about eight minutes", wrong: ["about eight seconds", "about eight days"], para: 4 },
+      { field: "Safety rule", answer: "never look straight at the Sun", wrong: ["always look at it through sunglasses", "only look at it in winter"], para: 6 },
+    ],
+  },
+  {
+    passage: "butterflies",
+    facts: [
+      { field: "Number of legs", answer: "six", wrong: ["eight", "ten"], para: 0 },
+      { field: "Name for the hard case", answer: "a chrysalis", wrong: ["a cocoon", "a shell"], para: 2 },
+      { field: "What they drink", answer: "nectar", wrong: ["milk", "rainwater"], para: 4 },
+      { field: "What they taste with", answer: "their feet", wrong: ["their wings", "their eyes"], para: 6 },
+    ],
+  },
 ];
 
 export const QUESTIONS_PER_CHALLENGE = 5;
@@ -204,7 +231,7 @@ const pageLabel = (page) => `page ${page}`;
 function lookupQuestion(book, item, kind, rng) {
   const others = sample(
     book.rows.map((row) => row.page).filter((page) => page !== item.page),
-    2,
+    3,
     rng
   );
   return choiceQuestion({

@@ -22,24 +22,24 @@ import { choiceQuestion, hintedWith } from "./readingKit.js";
 export const QUESTION_WORDS = ["Who", "Where", "When", "Why", "How"];
 
 export const INFO_ITEMS = [
-  { info: "at the swimming pool", answer: "Where", wrong: ["When", "Who"] },
-  { info: "Leo’s grandma", answer: "Who", wrong: ["Where", "Why"] },
-  { info: "on Saturday morning", answer: "When", wrong: ["Where", "How"] },
-  { info: "because it was raining", answer: "Why", wrong: ["Who", "When"] },
-  { info: "by bus", answer: "How", wrong: ["Who", "When"] },
-  { info: "under the bed", answer: "Where", wrong: ["When", "Why"] },
-  { info: "after lunch", answer: "When", wrong: ["Who", "How"] },
-  { info: "a tall teacher called Mr Green", answer: "Who", wrong: ["When", "Where"] },
-  { info: "because she was hungry", answer: "Why", wrong: ["Where", "How"] },
-  { info: "by mixing flour, eggs and sugar", answer: "How", wrong: ["Who", "When"] },
-  { info: "in the summer holidays", answer: "When", wrong: ["Who", "How"] },
-  { info: "in the middle of the forest", answer: "Where", wrong: ["Who", "Why"] },
-  { info: "so that he would not be late", answer: "Why", wrong: ["Who", "Where"] },
-  { info: "very slowly and carefully", answer: "How", wrong: ["Who", "Where"] },
-  { info: "Ellie and her dog", answer: "Who", wrong: ["When", "Why"] },
-  { info: "at midnight", answer: "When", wrong: ["Where", "Who"] },
-  { info: "on top of the hill", answer: "Where", wrong: ["How", "When"] },
-  { info: "because the bridge was broken", answer: "Why", wrong: ["Who", "When"] },
+  { info: "at the swimming pool", answer: "Where" },
+  { info: "Leo’s grandma", answer: "Who" },
+  { info: "on Saturday morning", answer: "When" },
+  { info: "because it was raining", answer: "Why" },
+  { info: "by bus", answer: "How" },
+  { info: "under the bed", answer: "Where" },
+  { info: "after lunch", answer: "When" },
+  { info: "a tall teacher called Mr Green", answer: "Who" },
+  { info: "because she was hungry", answer: "Why" },
+  { info: "by mixing flour, eggs and sugar", answer: "How" },
+  { info: "in the summer holidays", answer: "When" },
+  { info: "in the middle of the forest", answer: "Where" },
+  { info: "so that he would not be late", answer: "Why" },
+  { info: "very slowly and carefully", answer: "How" },
+  { info: "Ellie and her dog", answer: "Who" },
+  { info: "at midnight", answer: "When" },
+  { info: "on top of the hill", answer: "Where" },
+  { info: "because the bridge was broken", answer: "Why" },
 ];
 
 /** Level 2: two questions the text answers, two it never mentions. */
@@ -108,6 +108,33 @@ export const PASSAGE_SETS = [
       { q: "How tall was the sunflower in August?", answer: "two metres", wrong: ["two centimetres", "ten metres"], para: 2 },
     ],
   },
+  {
+    passage: "leos-wobbly-tooth",
+    questions: [
+      { q: "Which question does the story answer?", answer: "What was Leo eating when the tooth came out?", wrong: ["How old is Leo?", "What colour is Leo’s toothbrush?"], para: 1 },
+      { q: "Which question does the story NOT answer?", answer: "Who put the coin under Leo’s pillow?", wrong: ["Where did Leo put his tooth?", "What did Leo find in the morning?"], para: 2 },
+      { q: "A reader wonders why Leo’s tooth was wobbly. Which question would help them find out more?", answer: "Why do children lose their baby teeth?", wrong: ["What did Leo have for breakfast?", "How big is Leo’s pillow?"], para: 0 },
+      { q: "What was under the pillow in the morning?", answer: "a shiny gold coin", wrong: ["a silver key", "a tiny letter"], para: 2 },
+    ],
+  },
+  {
+    passage: "the-school-pond",
+    questions: [
+      { q: "Which question does the story answer?", answer: "What will each black dot grow into?", wrong: ["How deep is the school pond?", "What is Mrs Green’s first name?"], para: 1 },
+      { q: "Which question does the story NOT answer?", answer: "How many tadpoles were in the pond?", wrong: ["When did the class first visit the pond?", "What did Mrs Green give everyone?"], para: 2 },
+      { q: "A reader wants to know what happens to the tadpoles later. Which question should they ask?", answer: "What do tadpoles grow into?", wrong: ["What did Ellie write on her clipboard?", "Who else is in Ellie’s class?"], para: 2 },
+      { q: "When had some of the tadpoles grown legs?", answer: "by June", wrong: ["by March", "by Christmas"], para: 2 },
+    ],
+  },
+  {
+    passage: "the-balloon",
+    questions: [
+      { q: "Which question does the story answer?", answer: "How many people climbed out of the basket?", wrong: ["What was the pilot’s name?", "Where did the balloon take off from?"], para: 1 },
+      { q: "Which question does the story NOT answer?", answer: "How high did the balloon fly?", wrong: ["What colours were on the balloon?", "Who was Priya walking with?"], para: 0 },
+      { q: "A reader is not sure what the burner is for. Which question would help them?", answer: "What does the flame do to the air?", wrong: ["What did Grandad have for breakfast?", "How many fields did they cross?"], para: 2 },
+      { q: "What makes the balloon rise?", answer: "the hot air", wrong: ["the wind", "the basket"], para: 2 },
+    ],
+  },
 ];
 
 export const QUESTIONS_PER_CHALLENGE = 5;
@@ -117,7 +144,7 @@ function infoQuestion(item, rng) {
     prompt: "Which question word does this answer?",
     focus: `“${item.info}”`,
     answer: item.answer,
-    wrong: item.wrong,
+    wrong: sample(QUESTION_WORDS.filter((word) => word !== item.answer), 3, rng),
     hint: "Is it a person (who), a place (where), a time (when), a reason (why) or the way something is done (how)?",
     rng,
   });

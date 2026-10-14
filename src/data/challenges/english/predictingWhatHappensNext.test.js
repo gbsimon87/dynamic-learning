@@ -23,7 +23,7 @@ const flat = (text) => text.toLowerCase().replace(/’/g, "'");
 test("banks hold at least 15 items, and three passages", () => {
   assert.ok(PREDICT_ITEMS.length >= 15);
   assert.ok(CLUE_ITEMS.length >= 15);
-  assert.ok(PASSAGE_SETS.length >= 3);
+  assert.ok(PASSAGE_SETS.length >= 6);
   // Level 2: enough prediction pairs for variety, three clues each.
   assert.ok(PREDICTIONS.length >= 6);
   for (const prediction of PREDICTIONS) assert.equal(prediction.clues.length, 3, prediction.id);
@@ -94,4 +94,17 @@ test("every level builds sound questions across 30 seeds", () => {
       }
     }
   }
+});
+
+test("level 2: a run never shows the same pair twice, and uses every prediction", () => {
+  for (let seed = 1; seed <= 30; seed += 1) {
+    const questions = buildPredictingQuestions(2, seeded(seed));
+    const pairs = questions.map((q) => q.bins.map((bin) => bin.id).sort().join("+"));
+    assert.equal(new Set(pairs).size, pairs.length, `seed ${seed}`);
+    assert.equal(new Set(questions.flatMap((q) => q.bins.map((bin) => bin.id))).size, PREDICTIONS.length, `seed ${seed}`);
+  }
+});
+
+test("level 3: the clue sits in every one of the four places somewhere in the bank", () => {
+  assert.deepEqual([...new Set(CLUE_ITEMS.map((item) => item.answer))].sort(), [0, 1, 2, 3]);
 });

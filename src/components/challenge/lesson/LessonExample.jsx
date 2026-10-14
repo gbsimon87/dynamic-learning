@@ -59,7 +59,20 @@ function Table({ headers, rows }) {
   </table>;
 }
 
-const SHAPES = { equation: Equation, column: Column, steps: Steps, jumps: Jumps, bar: Bars, groups: Groups, table: Table };
+/** "**word**" marks the part the lesson is about; it is a <mark>, so it is announced, not just coloured. */
+function Sentence({ text }) {
+  return <p className="lesson-sentence">{text.split(/\*\*(.+?)\*\*/).map((part, i) =>
+    i % 2 ? <mark key={i} className="lesson-mark">{part}</mark> : part)}</p>;
+}
+
+function Fix({ wrong, right }) {
+  return <div className="lesson-fix">
+    <p className="lesson-fix-row is-wrong"><b aria-hidden="true">✗</b><span><span className="lesson-fix-tag">Not this:</span> <s>{wrong}</s></span></p>
+    <p className="lesson-fix-row is-right"><b aria-hidden="true">✓</b><span><span className="lesson-fix-tag">Write this:</span> {right}</span></p>
+  </div>;
+}
+
+const SHAPES = { equation: Equation, column: Column, steps: Steps, jumps: Jumps, bar: Bars, groups: Groups, table: Table, sentence: Sentence, fix: Fix };
 
 export default function LessonExample({ example }) {
   const Shape = SHAPES[example.type];

@@ -24,13 +24,16 @@ test("banks hold at least 15 items, and three passages", () => {
   assert.ok(ANSWERABLE_TEXTS.length >= 15);
   assert.ok(CHUNKED_SENTENCES.reduce((sum, item) => sum + item.asks.length, 0) >= 15);
   assert.ok(CHUNKED_SENTENCES.length >= QUESTIONS_PER_RUN);
-  assert.ok(PASSAGE_SETS.length >= 3);
+  assert.ok(PASSAGE_SETS.length >= 6);
 });
 
-test("level 1: options are question words, three distinct, and every word is an answer somewhere", () => {
-  for (const item of INFO_ITEMS) {
-    for (const word of [item.answer, ...item.wrong]) assert.ok(QUESTION_WORDS.includes(word), word);
-    assert.equal(new Set([item.answer, ...item.wrong]).size, 3, item.info);
+test("level 1: every answer is a question word, every word is an answer somewhere, and four options are offered", () => {
+  for (const item of INFO_ITEMS) assert.ok(QUESTION_WORDS.includes(item.answer), item.info);
+  for (let seed = 1; seed <= 10; seed += 1) {
+    for (const q of buildAskingQuestionsQuestions(1, seeded(seed))) {
+      assert.equal(q.options.length, 4);
+      assert.ok(q.options.every((word) => QUESTION_WORDS.includes(word)));
+    }
   }
   for (const word of QUESTION_WORDS) assert.ok(INFO_ITEMS.some((item) => item.answer === word), word);
 });

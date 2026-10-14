@@ -46,6 +46,42 @@ export const PASSAGES = [
       { type: "p", text: "It was the missing sock! Biscuit wagged his tail and dropped it at Ellie’s feet, as if he had found a treasure. Ellie tried to look cross, but she could not do it. She burst out laughing and gave Biscuit a pat." },
     ],
   },
+  {
+    id: "zayns-new-school",
+    year: 3,
+    kind: "story",
+    title: "Zayn’s New School",
+    skills: ["characters-feelings"],
+    blocks: [
+      { type: "p", text: "It was Zayn’s first day at a new school. He held Dad’s hand tightly at the gate. He did not know anyone, and his tummy felt full of butterflies." },
+      { type: "p", text: "In the classroom, a girl with a big smile waved at him. “I’m Amara,” she said. “Do you want to sit next to me?” Zayn nodded shyly and sat down." },
+      { type: "p", text: "At lunchtime, Amara showed him the climbing frame. They played tag with Leo until the bell rang. When Dad came to collect him, Zayn ran over, grinning. “Can I come back tomorrow?” he asked." },
+    ],
+  },
+  {
+    id: "broken-vase",
+    year: 3,
+    kind: "story",
+    title: "The Broken Vase",
+    skills: ["characters-feelings"],
+    blocks: [
+      { type: "p", text: "Leo was playing football in the living room, even though Mum had said no. He kicked the ball too hard. It hit Mum’s blue vase, and the vase smashed on the floor." },
+      { type: "p", text: "Leo stared at the pieces. His face went hot, and he felt sick inside. He thought about hiding the pieces under the sofa. Then he heard Mum’s footsteps on the stairs." },
+      { type: "p", text: "Leo took a deep breath. “Mum, I broke your vase. I’m really sorry,” he said quietly. Mum sighed, but then she gave him a hug. “Thank you for telling me the truth,” she said. Leo felt as if a heavy bag had been lifted off his back." },
+    ],
+  },
+  {
+    id: "ellies-birthday",
+    year: 3,
+    kind: "story",
+    title: "Ellie’s Birthday",
+    skills: ["characters-feelings"],
+    blocks: [
+      { type: "p", text: "On Ellie’s birthday, nobody said a word about it at breakfast. Dad read the paper. Her brother ate his toast. Ellie pushed her cereal around the bowl and did not eat a thing." },
+      { type: "p", text: "All day at school, she kept wondering if everyone had forgotten. When she walked home, her feet felt as heavy as stones." },
+      { type: "p", text: "Ellie opened the front door. “Surprise!” shouted her family and friends. The room was full of balloons, and Biscuit was wearing a party hat. Ellie gasped, and then she laughed until tears ran down her face." },
+    ],
+  },
 ];
 
 export function findPassage(id) {

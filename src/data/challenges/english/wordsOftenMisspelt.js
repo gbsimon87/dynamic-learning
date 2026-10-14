@@ -105,9 +105,13 @@ function pickQuestion(entry, rng) {
   };
 }
 
-/** Level 2: six spellings of six different words, three right and three wrong. */
-function sortQuestion(rng) {
-  const words = sample(WORDS, 6, rng);
+/**
+ * Level 2: six spellings of six different words, three right and three wrong.
+ * `used` keeps a word from coming back in a later round of the same run.
+ */
+function sortQuestion(rng, used) {
+  const words = sample(WORDS.filter((entry) => !used.has(entry.word)), 6, rng);
+  for (const entry of words) used.add(entry.word);
   const cards = words.map((entry, index) => {
     const right = index < 3;
     const [wrong] = sample(entry.wrong, 1, rng);
@@ -155,7 +159,10 @@ export const BUILDABLE = WORDS.filter((entry) => entry.word.length <= MAX_BUILD_
 
 export function buildWordsOftenMisspeltQuestions(level, rng) {
   if (level === 1) return sample(WORDS, QUESTIONS_PER_CHALLENGE, rng).map((entry) => pickQuestion(entry, rng));
-  if (level === 2) return Array.from({ length: QUESTIONS_PER_CHALLENGE }, () => sortQuestion(rng));
+  if (level === 2) {
+    const used = new Set();
+    return Array.from({ length: QUESTIONS_PER_CHALLENGE }, () => sortQuestion(rng, used));
+  }
   if (level === 3) return sample(BUILDABLE, QUESTIONS_PER_CHALLENGE, rng).map((entry) => buildQuestion(entry, rng));
   if (level === 4) return sample(WORDS, QUESTIONS_PER_CHALLENGE, rng).map(typeQuestion);
   throw new Error(`no words often misspelt level ${level}`);

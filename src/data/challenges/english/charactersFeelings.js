@@ -67,7 +67,7 @@ export const ACTION_ITEMS = [
  */
 export const EVIDENCE_ITEMS = [
   { who: "Leo", feeling: "nervous", answer: 2, sentences: ["It was the day of the school play.", "Leo peeped through the curtain at the crowd.", "His hands were shaking and his mouth felt dry.", "The music began to play."] },
-  { who: "Amara", feeling: "excited", answer: 2, sentences: ["Amara’s family packed the car for the holiday.", "The boot was full of bags and buckets.", "Amara bounced in her seat and asked, “Are we nearly there?”", "Dad started the engine."] },
+  { who: "Amara", feeling: "excited", answer: 0, sentences: ["Amara bounced in her seat and asked, “Are we nearly there?”", "Her family had packed the car for the holiday.", "The boot was full of bags and buckets.", "Dad started the engine."] },
   { who: "Priya", feeling: "sad", answer: 1, sentences: ["Rain was pouring down on the trampoline.", "Priya slumped against the window with a heavy sigh.", "Her boots stood by the door, still dry.", "It was going to rain all day."] },
   { who: "Zayn", feeling: "proud", answer: 2, sentences: ["Zayn had spent all week on his rocket model.", "He carried it into class.", "When his teacher praised it, he stood up straight and beamed.", "The bell rang for lunch."] },
   { who: "Ellie", feeling: "scared", answer: 3, sentences: ["The wood was dark and quiet.", "An owl hooted somewhere above.", "The path led down to the river.", "Ellie’s heart thumped and she grabbed her brother’s arm."] },
@@ -78,8 +78,8 @@ export const EVIDENCE_ITEMS = [
   { who: "Priya", feeling: "embarrassed", answer: 3, sentences: ["Priya walked into class.", "Everyone turned to look at her.", "She had odd socks on, one red and one green.", "Priya’s cheeks burned and she wished she could disappear."] },
   { who: "Ellie", feeling: "bored", answer: 2, sentences: ["The car journey was very long.", "The road went past fields and more fields.", "Ellie sighed, slid down in her seat and counted the lamp posts.", "Mum turned on the radio."] },
   { who: "Leo", feeling: "happy", answer: 3, sentences: ["Leo’s team had a football match.", "The score was one all.", "In the last minute, the ball went in.", "Leo ran round the pitch with his arms in the air, laughing."] },
-  { who: "Amara", feeling: "sad", answer: 2, sentences: ["Amara’s goldfish, Bubbles, had died.", "She buried him under the apple tree.", "Amara could not stop crying all afternoon.", "Her mum made her a cup of hot chocolate."] },
-  { who: "Zayn", feeling: "excited", answer: 1, sentences: ["A parcel arrived for Zayn.", "Zayn tore off the paper and whooped with joy.", "Inside was a new box of paints.", "The box had twenty colours."] },
+  { who: "Amara", feeling: "sad", answer: 0, sentences: ["Amara could not stop crying all afternoon.", "Her goldfish, Bubbles, had died.", "She buried him under the apple tree.", "Her mum made her a cup of hot chocolate."] },
+  { who: "Zayn", feeling: "excited", answer: 0, sentences: ["Zayn whooped with joy when the postman handed him a parcel.", "He tore off the brown paper.", "Inside was a new box of paints.", "The box had twenty colours."] },
   { who: "Biscuit", feeling: "scared", answer: 2, sentences: ["It was Bonfire Night.", "Fireworks banged and fizzed in the sky.", "Biscuit hid behind the sofa, shaking.", "The sky turned pink and gold."] },
   { who: "Priya", feeling: "nervous", answer: 1, sentences: ["Priya’s swimming test was today.", "Her tummy did flips and she took a big breath.", "She stood at the edge of the deep end.", "The water was blue and still."] },
 ];
@@ -114,6 +114,33 @@ export const PASSAGE_SETS = [
       { q: "Which words tell you she felt that way?", answer: "stamping her foot", wrong: ["she crept outside", "gave Biscuit a pat"], para: 0 },
       { q: "Why did Biscuit drop the sock at Ellie’s feet?", answer: "he thought he had found something special", wrong: ["he was scared of Ellie", "he wanted to go to sleep"], para: 2 },
       { q: "How did Ellie feel at the end?", answer: "she thought it was funny", wrong: ["she was furious with Biscuit", "she was frightened of Biscuit"], para: 2 },
+    ],
+  },
+  {
+    passage: "zayns-new-school",
+    questions: [
+      { q: "How did Zayn feel at the school gate?", answer: "nervous", wrong: ["bored", "angry"], para: 0 },
+      { q: "Which words show how Zayn felt at the start?", answer: "He held Dad’s hand tightly", wrong: ["Zayn ran over, grinning", "a girl with a big smile waved"], para: 0 },
+      { q: "Why did Zayn start to feel better?", answer: "Amara was friendly to him", wrong: ["Dad stayed in the classroom", "he already knew everyone"], para: 1 },
+      { q: "How did Zayn feel at the end of the day?", answer: "happy and keen to go back", wrong: ["glad that it was over", "still worried about school"], para: 2 },
+    ],
+  },
+  {
+    passage: "broken-vase",
+    questions: [
+      { q: "How did Leo feel when he saw the broken vase?", answer: "guilty", wrong: ["proud", "sleepy"], para: 1 },
+      { q: "Which words show how Leo felt after the vase broke?", answer: "he felt sick inside", wrong: ["Mum sighed", "he said quietly"], para: 1 },
+      { q: "Why did Leo think about hiding the pieces?", answer: "he did not want to get into trouble", wrong: ["he wanted to mend the vase", "he was playing hide and seek"], para: 1 },
+      { q: "How did Leo feel after he told the truth?", answer: "relieved", wrong: ["angry with Mum", "even more scared"], para: 2 },
+    ],
+  },
+  {
+    passage: "ellies-birthday",
+    questions: [
+      { q: "How did Ellie feel at breakfast?", answer: "sad", wrong: ["excited", "proud"], para: 0 },
+      { q: "Which words show that Ellie felt sad on the way home?", answer: "her feet felt as heavy as stones", wrong: ["Ellie gasped", "Dad read the paper"], para: 1 },
+      { q: "Why was Ellie sad?", answer: "she thought everyone had forgotten her birthday", wrong: ["Biscuit had eaten her breakfast", "she had lost her party hat"], para: 1 },
+      { q: "How did Ellie feel at the end?", answer: "surprised and happy", wrong: ["still sad and lonely", "frightened of the balloons"], para: 2 },
     ],
   },
 ];

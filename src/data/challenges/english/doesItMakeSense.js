@@ -87,6 +87,24 @@ export const PASSAGE_SETS = [
     odd: { para: 2, sentence: "A train can travel faster than a bicycle.", others: ["Biscuit did not like baths.", "Biscuit shook himself, and water splashed everywhere."] },
     understand: { q: "Why did Ellie give Biscuit a bath?", answer: "He was covered in mud.", wrong: ["He asked for one.", "It was his birthday."], para: 0 },
   },
+  {
+    passage: "leos-football-match",
+    word: { para: 2, wrong: "toaster", others: ["orange", "water"], fix: "medal", fixWrong: ["pillow", "carrot"] },
+    odd: { para: 1, sentence: "Snails carry their shells on their backs.", others: ["It flew past the goalkeeper and into the net.", "He drank all his water and ate his orange."] },
+    understand: { q: "Why did the coach give Leo a prize?", answer: "He scored the winning goal.", wrong: ["He drank all his water.", "He wore a blue kit."], para: 2 },
+  },
+  {
+    passage: "priyas-snow-day",
+    word: { para: 1, wrong: "trumpet", others: ["stones", "head"], fix: "carrot", fixWrong: ["ladder", "kettle"] },
+    odd: { para: 0, sentence: "Cows drink lots of water every day.", others: ["She pulled on her coat, her hat and her warm gloves.", "Mum made her a mug of hot chocolate."] },
+    understand: { q: "Why did Priya go back inside?", answer: "Her fingers felt cold.", wrong: ["The snow had melted.", "Mum called her for lunch."], para: 2 },
+  },
+  {
+    passage: "zayns-buns",
+    word: { para: 2, wrong: "sock", others: ["icing", "cherry"], fix: "bun", fixWrong: ["cloud", "shoe"] },
+    odd: { para: 1, sentence: "Owls sleep during the day.", others: ["Gran spooned the mixture into paper cases.", "Then he added a cherry to each one."] },
+    understand: { q: "How long did the buns bake for?", answer: "twenty minutes", wrong: ["two minutes", "two hours"], para: 1 },
+  },
 ];
 
 export const QUESTIONS_PER_CHALLENGE = 5;
@@ -104,9 +122,11 @@ function gapQuestion(item, rng) {
   });
 }
 
-/** Two sentences filled with the right word, two with a wrong one. */
-function sortQuestion(rng) {
-  const items = sample(GAP_ITEMS, 4, rng);
+/**
+ * Two sentences filled with the right word, two with a wrong one. `items`
+ * are four gap items no other card in the run uses.
+ */
+function sortQuestion(items, rng) {
   const cards = items.map((item, index) => {
     const sense = index < 2;
     const [wrong] = sample(item.wrong, 1, rng);
@@ -182,7 +202,11 @@ function passageQuestions(set, rng) {
 
 export function buildDoesItMakeSenseQuestions(level, rng) {
   if (level === 1) return sample(GAP_ITEMS, QUESTIONS_PER_CHALLENGE, rng).map((item) => gapQuestion(item, rng));
-  if (level === 2) return Array.from({ length: QUESTIONS_PER_CHALLENGE }, () => sortQuestion(rng));
+  if (level === 2) {
+    // Every card in a run comes from a different sentence, so none repeats.
+    const items = shuffle(GAP_ITEMS, rng);
+    return Array.from({ length: QUESTIONS_PER_CHALLENGE }, (_, index) => sortQuestion(items.slice(index * 4, index * 4 + 4), rng));
+  }
   if (level === 3) return sample(WRONG_WORD_SENTENCES, QUESTIONS_PER_CHALLENGE, rng).map((s) => wrongWordQuestion(s, rng));
   if (level === 4) return passageQuestions(sample(PASSAGE_SETS, 1, rng)[0], rng);
   throw new Error(`no does-it-make-sense level ${level}`);

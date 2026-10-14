@@ -45,3 +45,12 @@ it("a challenge with no lesson starts straight away", async () => {
   expect(await screen.findByText("The game")).toBeTruthy();
   expect(screen.queryByRole("button", { name: /Let's go/ })).toBeNull();
 });
+
+it("draws English examples with the key words marked and the fix in words, not colour alone", async () => {
+  const { default: LessonExample } = await import("../../src/components/challenge/lesson/LessonExample");
+  const { container } = render(<><LessonExample example={{ type: "sentence", title: "Look", text: "We stayed in **because** it rained." }} />
+    <LessonExample example={{ type: "fix", title: "Fix it", wrong: "I seen it.", right: "I have seen it." }} /></>);
+  expect(container.querySelector("mark").textContent).toBe("because");
+  expect(screen.getByText("Not this:")).toBeTruthy();
+  expect(screen.getByText("I have seen it.", { exact: false })).toBeTruthy();
+});

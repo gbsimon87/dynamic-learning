@@ -96,3 +96,15 @@ test("every level builds five answerable questions", () => {
     }
   }
 });
+
+test("level 3 carries its unneeded conjunction, which has a meaning for the hint", () => {
+  for (let seed = 1; seed <= 5; seed += 1) {
+    let x = seed;
+    const rng = () => ((x = (x * 9301 + 49297) % 233280) / 233280);
+    for (const q of buildConjunctionQuestions(3, rng)) {
+      assert.ok(CONJUNCTIONS.includes(q.wrong));
+      assert.notEqual(q.wrong, q.answer);
+      assert.ok(q.tiles.some((tile) => tile.label === q.wrong));
+    }
+  }
+});
