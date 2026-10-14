@@ -1,0 +1,47 @@
+.skill-guide {
+  --guide-ink: var(--light-text);
+  --guide-panel: var(--light-panel);
+  --guide-action: var(--light-home-cta);
+  --guide-on-action: var(--light-home-on-cta);
+  --guide-muted: var(--light-home-muted);
+  max-width: 54rem;
+  margin: 1rem auto 3rem;
+  padding: clamp(1rem, 4vw, 2.5rem);
+  color: var(--guide-ink);
+  background: var(--guide-panel);
+  border-radius: 1.5rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+body.dark .skill-guide {
+  --guide-ink: var(--dark-text);
+  --guide-panel: var(--dark-panel);
+  --guide-action: var(--dark-home-cta);
+  --guide-on-action: var(--dark-home-on-cta);
+  --guide-muted: var(--dark-home-muted);
+}
+.skill-guide h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); line-height: 1.2; }
+.skill-guide section { margin-top: 2rem; }
+.skill-guide a { color: inherit; text-underline-offset: 0.2em; }
+.skill-guide-breadcrumb a, .skill-guide-related a, .skill-guide-all {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0.25rem 0.5rem;
+}
+.skill-guide-subject { color: var(--guide-muted); }
+.skill-guide-intro { font-size: 1.15rem; }
+.skill-guide .skill-guide-play {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  background: var(--guide-action);
+  color: var(--guide-on-action);
+  font-weight: bold;
+  text-decoration: none;
+}
+.skill-guide a:focus-visible { outline: 3px solid var(--guide-ink); outline-offset: 4px; }
+@media (max-width: 600px) { .skill-guide { margin: 0.5rem 0.75rem 2rem; } }

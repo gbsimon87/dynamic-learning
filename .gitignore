@@ -21,6 +21,7 @@ node_modules
 # === Build output ===
 dist
 dist-ssr
+.seo-artifacts/
 build
 *.local
 

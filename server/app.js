@@ -15,11 +15,12 @@ import { createRecoveryRouter } from "./routes/recovery.js";
 import { createMailerFromEnv } from "./email.js";
 import { errorSummary } from "./logError.js";
 import { protectApiWrites, securityHeaders, validateApiBody } from "./security.js";
+import { createSeoMiddleware, createNotFoundMiddleware } from "./seo.js";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.resolve(here, "..", "dist");
 
-export function createApp({ serveStatic = process.env.NODE_ENV === "production", signup = {}, recovery = {}, trustProxy = process.env.RENDER === "true" ? 1 : false } = {}) {
+export function createApp({ serveStatic = process.env.NODE_ENV === "production", signup = {}, recovery = {}, trustProxy = process.env.RENDER === "true" ? 1 : false, seo = {}, dist = DIST } = {}) {
   const app = express();
   app.disable("x-powered-by");
   // Render is the single ingress proxy. Direct/local servers trust no headers.
@@ -27,6 +28,7 @@ export function createApp({ serveStatic = process.env.NODE_ENV === "production",
   app.set("trust proxy", trustProxy);
   const production = process.env.NODE_ENV === "production";
   app.use(securityHeaders({ csp: serveStatic, production }));
+  app.use("/api", (req, res, next) => { res.set("X-Robots-Tag", "noindex, nofollow"); next(); });
   app.use("/api", protectApiWrites({ production, publicAppUrl: process.env.PUBLIC_APP_URL }));
   app.use(express.json({ limit: "1mb" }));
   app.use("/api", validateApiBody);
@@ -50,12 +52,14 @@ export function createApp({ serveStatic = process.env.NODE_ENV === "production",
   app.use("/api", (req, res) => res.status(404).json({ error: "NOT_FOUND" }));
 
   if (serveStatic) {
-    app.use(express.static(DIST));
-    // Client-side routing: anything that is not /api/* gets the SPA shell.
-    app.use((req, res, next) => {
-      if (req.method !== "GET" && req.method !== "HEAD") return next();
-      return res.sendFile(path.join(DIST, "index.html"));
-    });
+    app.use(createSeoMiddleware({ dist, ...seo }));
+    app.use(express.static(dist, { index: false, redirect: false, setHeaders(res, filePath) {
+      // Only Vite's content-hashed assets get long-lived immutable caching.
+      if (/[/\\]assets[/\\].+-[\w-]{8,}\.[\w.]+$/.test(filePath)) res.set("Cache-Control", "public, max-age=31536000, immutable");
+      else res.set("Cache-Control", "public, max-age=3600");
+      if (seo.indexable === false || seo.indexable === undefined && process.env.SEO_INDEXABLE !== "true") res.set("X-Robots-Tag", "noindex, nofollow");
+    } }));
+    app.use(createNotFoundMiddleware({ dist, ...seo }));
   }
 
   // eslint-disable-next-line no-unused-vars

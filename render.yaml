@@ -41,6 +41,10 @@ services:
       - key: PUBLIC_APP_URL
         value: https://learnwithbix.com
 
+      # Public HTML/sitemap/robots are indexable only on this production service.
+      - key: SEO_INDEXABLE
+        value: "true"
+
       # VITE_USE_API is read at BUILD time and inlined into the bundle, so it
       # must be set here (not just at runtime) for the deployed app to talk to
       # the API instead of localStorage.
@@ -84,6 +88,8 @@ services:
         value: production
       - key: PUBLIC_APP_URL
         sync: false
+      - key: SEO_INDEXABLE
+        value: "false"
       - key: VITE_USE_API
         value: "true"
       - key: MONGODB_DB

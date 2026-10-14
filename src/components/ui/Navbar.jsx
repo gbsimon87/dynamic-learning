@@ -20,7 +20,7 @@ function Navbar() {
   const level = hydrated ? levelFor(xp).level : null;
   const news = hydrated && hasNews(rewards);
   const [hidden, setHidden] = useState(false);
-  const [prevScroll, setPrevScroll] = useState(window.scrollY);
+  const prevScroll = useRef(typeof window === 'undefined' ? 0 : window.scrollY);
   const location = useLocation();
   const navRef = useRef(null);
 
@@ -45,16 +45,16 @@ function Navbar() {
   useEffect(() => {
     const handleScroll = () => {
       const current = window.scrollY;
-      setHidden(current > prevScroll && current > 50);
-      setPrevScroll(current);
+      setHidden(current > prevScroll.current && current > 50);
+      prevScroll.current = current;
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [prevScroll]);
+  }, []);
 
   return (
-    <nav ref={navRef} className={`navbar ${hidden ? 'hidden' : ''}`}>
+    <nav aria-label="Main" ref={navRef} className={`navbar ${hidden ? 'hidden' : ''}`}>
       {/* Shortened brand: the mark carries the identity in the tight space a
           phone bar has, and the full name stays as the accessible name. */}
       <Link to="/" className="logo" aria-label="Learn with Bix, home">

@@ -7,53 +7,10 @@ import { RewardsProvider } from "./context/RewardsContext";
 import RequireChild from "./components/RequireChild";
 import RootLayout from "./layouts/RootLayout";
 import Home from "./pages/home/Home";
+import SkillGuide from "./seo/SkillGuide";
 
-// === SKILLS: Math ===
-import ClockGenerator from "./pages/skills/math/ClockGenerator";
-import ReadingNumbers from "./pages/skills/math/ReadingNumbers";
-import MultiplicationTable from "./pages/skills/math/MultiplicationTable";
-import MathPractice from "./pages/skills/math/MathPractice";
-import FindTheMissingNumber from "./pages/skills/math/FindTheMissingNumber";
-import NumberBonds from "./pages/skills/math/NumberBonds";
-import FractionFun from "./pages/skills/math/FractionFun";
-import MoneyMatch from "./pages/skills/math/MoneyMatch";
-import MeasureIt from "./pages/skills/math/MeasureIt";
-import RobotMoves from "./pages/skills/math/RobotMoves";
-import ChartDetective from "./pages/skills/math/ChartDetective";
-import PlaceValueGame from "./pages/skills/math/PlaceValueGame";
-import ShapeExplorer from "./pages/skills/math/ShapeExplorer";
-
-// === SKILLS: English ===
-import WordBuilder from "./pages/skills/english/WordBuilder";
-import WordSorter from "./pages/skills/english/WordSorter";
-import SentenceBuilder from "./pages/skills/english/SentenceBuilder";
-import OppositeMatch from "./pages/skills/english/OppositeMatch";
-import SynonymSafari from "./pages/skills/english/SynonymSafari";
-import SightWordPop from "./pages/skills/english/SightWordPop";
-import SpeedReader from "./pages/skills/english/SpeedReader";
-
-// === SKILLS: Geography ===
-import WorldMap from "./pages/skills/geography/WorldMap";
-import FlagFinder from "./pages/skills/geography/FlagFinder";
-import CitySpotlight from "./pages/skills/geography/CitySpotlight";
-import FindTheCity from "./pages/skills/geography/FindTheCity";
-import SolarSystem from "./pages/skills/geography/SolarSystem";
-
-// === CURRICULUM ===
-import ProblemView from "./pages/curriculum/ProblemView";
-import TrophyRoom, { ChildTrophyRoom } from "./pages/trophies/TrophyRoom";
-
-// === AUTH: parent accounts + child profiles ===
-import { ForgotPassword, ResetPassword } from "./pages/auth/PasswordRecovery";
-import Login from "./pages/auth/Login";
-import SignUpFlow from "./pages/auth/signup/SignUpFlow";
-import Profiles from "./pages/auth/Profiles";
-import ParentArea from "./pages/auth/ParentArea";
-
-// === SKILLS ===
+// Hubs and public guides render immediately; game/account routes load on demand.
 import SkillsPage from "./pages/skills/SkillsPage";
-import CurriculumPage from "./pages/curriculum/CurriculumPage";
-import CurriculumSelectPage from "./pages/curriculum/CurriculumSelectPage";
 import NotFound from "./pages/NotFound";
 
 // Self-hosted so no page load sends a visitor's IP address to Google Fonts.
@@ -73,17 +30,19 @@ const router = createBrowserRouter([
 
       // === Skills Hub ===
       { path: "skills", element: <SkillsPage /> },
+      // Public descriptions are prerendered; existing play routes stay ungated.
+      { path: "learn/:slug", element: <SkillGuide /> },
 
       // === Auth: ungated, these are how you get an account in the first place ===
-      { path: "login", element: <Login /> },
-      { path: "forgot-password", element: <ForgotPassword /> },
-      { path: "reset-password", element: <ResetPassword /> },
-      { path: "signup", element: <SignUpFlow /> },
-      { path: "profiles", element: <Profiles /> },
-      { path: "parent", element: <ParentArea /> },
+      { path: "login", lazy: () => import("./pages/auth/Login").then((m) => ({ Component: m.default })) },
+      { path: "forgot-password", lazy: () => import("./pages/auth/PasswordRecovery").then((m) => ({ Component: m.ForgotPassword })) },
+      { path: "reset-password", lazy: () => import("./pages/auth/PasswordRecovery").then((m) => ({ Component: m.ResetPassword })) },
+      { path: "signup", lazy: () => import("./pages/auth/signup/SignUpFlow").then((m) => ({ Component: m.default })) },
+      { path: "profiles", lazy: () => import("./pages/auth/Profiles").then((m) => ({ Component: m.default })) },
+      { path: "parent", lazy: () => import("./pages/auth/ParentArea").then((m) => ({ Component: m.default })) },
       // A grown-up's view of one child's Trophy Room. Outside RequireChild: a
       // parent looks from /parent, often with no child selected.
-      { path: "parent/trophies/:childId", element: <ChildTrophyRoom /> },
+      { path: "parent/trophies/:childId", lazy: () => import("./pages/trophies/TrophyRoom").then((m) => ({ Component: m.ChildTrophyRoom })) },
 
       // === Curriculum: gated — progress belongs to a specific child profile ===
       // Skills Mode and Home stay completely ungated.
@@ -91,20 +50,20 @@ const router = createBrowserRouter([
         element: <RequireChild />,
         children: [
           // Curriculum: year/subject picker
-          { path: "curriculum", element: <CurriculumSelectPage /> },
+          { path: "curriculum", lazy: () => import("./pages/curriculum/CurriculumSelectPage").then((m) => ({ Component: m.default })) },
 
           // Curriculum: a specific year + subject
-          { path: "curriculum/year/:year/:subject", element: <CurriculumPage /> },
+          { path: "curriculum/year/:year/:subject", lazy: () => import("./pages/curriculum/CurriculumPage").then((m) => ({ Component: m.default })) },
 
           // Curriculum Problem View
           {
             path: "year/:year/:subject/problem/:categoryId/:topicId/:challengeId",
-            element: <ProblemView />,
+            lazy: () => import("./pages/curriculum/ProblemView").then((m) => ({ Component: m.default })),
           },
 
           // Trophy Room: badges + topic stickers. Gated like the curriculum,
           // since it shows a specific child's progress.
-          { path: "trophies", element: <TrophyRoom /> },
+          { path: "trophies", lazy: () => import("./pages/trophies/TrophyRoom").then((m) => ({ Component: m.default })) },
 
           // Bix's first-play intro (once per child; replayable from /parent)
           { path: "hello", lazy: () => import("./pages/intro/BixIntro").then((m) => ({ Component: m.default })) },
@@ -112,36 +71,36 @@ const router = createBrowserRouter([
       },
 
       // === Math Skills ===
-      { path: "clock-generator", element: <ClockGenerator /> },
-      { path: "reading-numbers", element: <ReadingNumbers /> },
-      { path: "multiplication-table", element: <MultiplicationTable /> },
-      { path: "arithmetic-practice", element: <MathPractice /> },
-      { path: "missing-number", element: <FindTheMissingNumber /> },
-      { path: "number-bonds", element: <NumberBonds /> },
-      { path: "fraction-fun", element: <FractionFun /> },
+      { path: "clock-generator", lazy: () => import("./pages/skills/math/ClockGenerator").then((m) => ({ Component: m.default })) },
+      { path: "reading-numbers", lazy: () => import("./pages/skills/math/ReadingNumbers").then((m) => ({ Component: m.default })) },
+      { path: "multiplication-table", lazy: () => import("./pages/skills/math/MultiplicationTable").then((m) => ({ Component: m.default })) },
+      { path: "arithmetic-practice", lazy: () => import("./pages/skills/math/MathPractice").then((m) => ({ Component: m.default })) },
+      { path: "missing-number", lazy: () => import("./pages/skills/math/FindTheMissingNumber").then((m) => ({ Component: m.default })) },
+      { path: "number-bonds", lazy: () => import("./pages/skills/math/NumberBonds").then((m) => ({ Component: m.default })) },
+      { path: "fraction-fun", lazy: () => import("./pages/skills/math/FractionFun").then((m) => ({ Component: m.default })) },
       // Free-play games on the challenge kit (components/skills/FreePlayShell).
-      { path: "money", element: <MoneyMatch /> },
-      { path: "measure", element: <MeasureIt /> },
-      { path: "robot-moves", element: <RobotMoves /> },
-      { path: "charts", element: <ChartDetective /> },
-      { path: "place-value", element: <PlaceValueGame /> },
-      { path: "shapes", element: <ShapeExplorer /> },
+      { path: "money", lazy: () => import("./pages/skills/math/MoneyMatch").then((m) => ({ Component: m.default })) },
+      { path: "measure", lazy: () => import("./pages/skills/math/MeasureIt").then((m) => ({ Component: m.default })) },
+      { path: "robot-moves", lazy: () => import("./pages/skills/math/RobotMoves").then((m) => ({ Component: m.default })) },
+      { path: "charts", lazy: () => import("./pages/skills/math/ChartDetective").then((m) => ({ Component: m.default })) },
+      { path: "place-value", lazy: () => import("./pages/skills/math/PlaceValueGame").then((m) => ({ Component: m.default })) },
+      { path: "shapes", lazy: () => import("./pages/skills/math/ShapeExplorer").then((m) => ({ Component: m.default })) },
 
       // === English Skills ===
-      { path: "word-builder", element: <WordBuilder /> },
-      { path: "word-sorter", element: <WordSorter /> },
-      { path: "sentence-builder", element: <SentenceBuilder /> },
-      { path: "opposite-match", element: <OppositeMatch /> },
-      { path: "synonym-match", element: <SynonymSafari /> },
-      { path: "sight-word-pop", element: <SightWordPop /> },
-      { path: "speed-reader", element: <SpeedReader /> },
+      { path: "word-builder", lazy: () => import("./pages/skills/english/WordBuilder").then((m) => ({ Component: m.default })) },
+      { path: "word-sorter", lazy: () => import("./pages/skills/english/WordSorter").then((m) => ({ Component: m.default })) },
+      { path: "sentence-builder", lazy: () => import("./pages/skills/english/SentenceBuilder").then((m) => ({ Component: m.default })) },
+      { path: "opposite-match", lazy: () => import("./pages/skills/english/OppositeMatch").then((m) => ({ Component: m.default })) },
+      { path: "synonym-match", lazy: () => import("./pages/skills/english/SynonymSafari").then((m) => ({ Component: m.default })) },
+      { path: "sight-word-pop", lazy: () => import("./pages/skills/english/SightWordPop").then((m) => ({ Component: m.default })) },
+      { path: "speed-reader", lazy: () => import("./pages/skills/english/SpeedReader").then((m) => ({ Component: m.default })) },
 
       // === Geography Skills ===
-      { path: "world-map", element: <WorldMap /> },
-      { path: "flag-finder", element: <FlagFinder /> },
-      { path: "city-spotlight", element: <CitySpotlight /> },
-      { path: "find-the-city", element: <FindTheCity /> },
-      { path: "solar-system", element: <SolarSystem /> },
+      { path: "world-map", lazy: () => import("./pages/skills/geography/WorldMap").then((m) => ({ Component: m.default })) },
+      { path: "flag-finder", lazy: () => import("./pages/skills/geography/FlagFinder").then((m) => ({ Component: m.default })) },
+      { path: "city-spotlight", lazy: () => import("./pages/skills/geography/CitySpotlight").then((m) => ({ Component: m.default })) },
+      { path: "find-the-city", lazy: () => import("./pages/skills/geography/FindTheCity").then((m) => ({ Component: m.default })) },
+      { path: "solar-system", lazy: () => import("./pages/skills/geography/SolarSystem").then((m) => ({ Component: m.default })) },
 
       // === Daily Bix puzzle: ungated; a signed-in child collects one star a day ===
       { path: "daily-puzzle", lazy: () => import("./pages/puzzle/DailyPuzzle").then((m) => ({ Component: m.default })) },

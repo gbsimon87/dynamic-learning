@@ -1,6 +1,7 @@
 import { Link, useRouteError, isRouteErrorResponse } from "react-router";
 import { CURRICULUM_ICON } from "../data/curriculumRegistry";
 import "./NotFound.css";
+import PageMetadata from '../seo/PageMetadata';
 
 /**
  * Route-level error boundary.
@@ -11,10 +12,11 @@ import "./NotFound.css";
  */
 function NotFound() {
   const error = useRouteError();
-  const is404 = isRouteErrorResponse(error) && error.status === 404;
+  const is404 = !error || isRouteErrorResponse(error) && error.status === 404;
 
   return (
     <div className="notfound-page">
+      <PageMetadata notFound />
       <div className="notfound-emoji">{is404 ? "🧭" : "🛠️"}</div>
 
       <h1 className="notfound-title">

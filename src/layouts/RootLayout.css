@@ -7,6 +7,20 @@
 
 .app-layout-main { flex: 1; min-width: 0; }
 
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 200;
+  padding: 0.75rem 1rem;
+  min-height: 48px;
+  background: var(--light-panel);
+  color: var(--light-text);
+  transform: translateY(-200%);
+}
+body.dark .skip-link { background: var(--dark-panel); color: var(--dark-text); }
+.skip-link:focus { transform: none; }
+
 /* The shell fills the viewport; pages leave room for the footer. */
 .app-layout--with-footer .parent-area-page,
 .app-layout--with-footer .profiles-page,
