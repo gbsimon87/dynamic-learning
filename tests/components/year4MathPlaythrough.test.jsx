@@ -76,7 +76,11 @@ for(const topic of TOPIC_KEYS)it(`${topic}: all four complete five-question runs
       const complete=vi.fn(),questions=buildYear4Math(topic,level,()=>.375);
       const {container}=render(<Year4MathGame topic={topic} level={level} onComplete={complete}/>);
       for(const q of questions){
-        expect(screen.getByText(q.prompt,{exact:true})).toBeTruthy();
+        // Prompts may carry **bold** markup, which renders as split <strong> nodes,
+        // so match the whole prompt paragraph's text. getByText also proves it is shown once.
+        const shown=q.prompt.replace(/\*\*/g,'');
+        expect(screen.getByText((_,el)=>el?.classList.contains('challenge-prompt')&&el.textContent===shown)).toBeTruthy();
+        expect(screen.getByRole('heading',{level:3}).textContent).not.toBe(shown);
         solve(q,container);
         const check=screen.getByRole('button',{name:'Check my answer'});
         expect(check.disabled,q.prompt).toBe(false);

@@ -5,6 +5,13 @@ const shapePoints = {
   scalene:'70,35 90,191 260,191', rhombus:'150,55 250,125 150,195 50,125',
   trapezium:'100,70 200,70 250,190 50,190', rectangle:'60,75 240,75 240,175 60,175',
   square:'75,50 225,50 225,200 75,200', parallelogram:'100,75 250,75 200,175 50,175',
+  kite:'150,35 215,100 150,215 85,100', pentagon:'150,30 245.1,99.1 208.8,210.9 91.2,210.9 54.9,99.1',
+  hexagon:'250,130 200,216.6 100,216.6 50,130 100,43.4 200,43.4',
+  octagon:'242.4,168.3 188.3,222.4 111.7,222.4 57.6,168.3 57.6,91.7 111.7,37.6 188.3,37.6 242.4,91.7',
+  arrow:'40,100 170,100 170,55 260,125 170,195 170,150 40,150',
+  plus:'120,40 180,40 180,95 235,95 235,155 180,155 180,210 120,210 120,155 65,155 65,95 120,95',
+  house:'150,35 240,105 240,210 60,210 60,105', tshape:'50,50 250,50 250,100 175,100 175,210 125,210 125,100 50,100',
+  zshape:'50,50 190,50 190,150 250,150 250,200 110,200 110,100 50,100',
 };
 function Frame({ label, children, viewBox='0 0 300 250' }) {
   return <svg className="year4-diagram" role="img" aria-label={label} viewBox={viewBox}>{children}</svg>;
@@ -27,13 +34,22 @@ export default function Year4MathVisual({ question:q, selected, onPoint, coloure
   if(v.type==='decimalPlace') return <table className="year4-table"><thead><tr>{['Ones','Tenths','Hundredths'].map(label=><th key={label} scope="col">{label}</th>)}</tr></thead><tbody><tr>{v.digits.map((d,i)=><td key={i}>{d}</td>)}</tr></tbody></table>;
   if(v.type==='place') return <table className="year4-table"><thead><tr>{['Thousands','Hundreds','Tens','Ones'].map(label=><th key={label}>{label}</th>)}</tr></thead><tbody><tr>{v.digits.map((d,i)=><td key={i}>{d}</td>)}</tr></tbody></table>;
   if(v.type==='numberLine') return <div className="year4-number-line-scroll"><Frame label="Number line with equal steps through zero" viewBox="0 0 520 90"><path className="year4-stroke" d="M 20 30 H 500"/>{v.values.map((n,i)=><g key={n}><path className="year4-stroke" d={`M ${20+i*40} 22 V 38`}/><text x={20+i*40} y="67">{n}</text></g>)}</Frame></div>;
-  if(v.type==='estimate') return <Frame label={`Equal number line from ${v.start} to ${v.end}; a point halfway`} viewBox="0 0 300 100"><path className="year4-stroke" d="M 25 40 H 275 M 25 30 V 50 M 150 30 V 50 M 275 30 V 50"/><circle cx="150" cy="40" r="6" className="year4-fill"/><text x="25" y="75">{v.start}</text><text x="275" y="75">{v.end}</text></Frame>;
+  if(v.type==='estimate') { const cx=25+250*((v.point??(v.start+v.end)/2)-v.start)/(v.end-v.start); return <Frame label={`Equal number line from ${v.start} to ${v.end}; ${v.point===(v.start+v.end)/2?'a point halfway':'a marked point to estimate'}`} viewBox="0 0 300 100"><path className="year4-stroke" d="M 25 40 H 275 M 25 30 V 50 M 150 30 V 50 M 275 30 V 50"/><circle cx={cx} cy="40" r="6" className="year4-fill"/><text x="25" y="75">{v.start}</text>{v.showMiddle&&<text x="150" y="75">{(v.start+v.end)/2}</text>}<text x="275" y="75">{v.end}</text></Frame>; }
   if(v.type==='fraction') return <Frame label={`Bar with ${v.n} of ${v.d} equal parts shaded`} viewBox="0 0 300 80">{Array.from({length:v.d},(_,i)=><rect key={i} x={10+i*280/v.d} y="10" width={280/v.d} height="55" className={i<v.n?'year4-filled-square':'year4-empty-square'} />)}</Frame>;
   if(v.type==='squares') return <Frame label="Square grid; count the coloured squares" viewBox={`0 0 ${v.width*25+10} ${v.height*25+10}`}>
     {Array.from({length:v.width*v.height},(_,i)=>{const x=i%v.width,y=Math.floor(i/v.width);return <rect key={i} x={5+x*25} y={5+y*25} width="25" height="25" className={v.cells.some(([a,b])=>a===x&&b===y)?'year4-filled-square':'year4-empty-square'} />;})}</Frame>;
   if(v.type==='shape') return <figure className="year4-figure"><Frame label={v.property?`Shape with ${v.property}`:'Shape to examine'}><polygon points={shapePoints[v.shape]} transform={`rotate(${v.rotate??0} 150 125)`} className="year4-empty-square" /></Frame>{v.property&&<figcaption>{v.property}</figcaption>}</figure>;
   if(v.type==='angle') return <Frame label={`Angle of ${v.degrees} degrees`}><Angle degrees={v.degrees}/><text x="200" y="220">{v.degrees}°</text></Frame>;
   if(v.type==='angleSet') return <Frame label="Four angles to compare" viewBox="0 0 600 220">{v.values.map((degrees,i)=><g key={degrees}><Angle degrees={degrees} x={i*150+65} y={140} length={60}/><text x={i*150+75} y="190">{degrees}°</text></g>)}</Frame>;
+  if(v.type==='rectilinear') {
+    const xs=v.points.map(p=>p[0]), ys=v.points.map(p=>p[1]), W=Math.max(...xs), H=Math.max(...ys), scale=Math.min(24,220/W,160/H), ox=45, oy=40;
+    const at=([x,y])=>[ox+x*scale,oy+y*scale];
+    return <Frame label={`Rectilinear shape. Going round the edges clockwise: ${v.labels.map(t=>t==='?'?'unknown':`${t} ${v.unit}`).join(', ')}`} viewBox={`0 0 ${W*scale+90} ${H*scale+80}`}>
+      <polygon points={v.points.map(p=>at(p).join(',')).join(' ')} className="year4-empty-square"/>
+      {v.points.map((p,k)=>{const q=v.points[(k+1)%v.points.length], [x1,y1]=at(p), [x2,y2]=at(q), len=Math.hypot(x2-x1,y2-y1)||1, nx=(y2-y1)/len, ny=-(x2-x1)/len;
+        return <text key={k} x={(x1+x2)/2+nx*16} y={(y1+y2)/2+ny*16+5} textAnchor="middle">{v.labels[k]==='?'?'?':`${v.labels[k]}${k===0||v.labels[0]==='?'&&k===1?` ${v.unit}`:''}`}</text>;})}
+    </Frame>;
+  }
   if(v.type==='perimeter') {
     const {w,h,cut}=v, scale=22,x=40,y=30;
     const points=cut?`${x},${y} ${x+(w-cut.w)*scale},${y} ${x+(w-cut.w)*scale},${y+cut.h*scale} ${x+w*scale},${y+cut.h*scale} ${x+w*scale},${y+h*scale} ${x},${y+h*scale}`:`${x},${y} ${x+w*scale},${y} ${x+w*scale},${y+h*scale} ${x},${y+h*scale}`;
@@ -51,7 +67,7 @@ export default function Year4MathVisual({ question:q, selected, onPoint, coloure
   }
   if(v.type==='coordinates') {
     const selectedMatch=/^\((\d), (\d)\)$/.exec(selected??'');
-    const selectedPoint=selectedMatch?{x:Number(selectedMatch[1]),y:Number(selectedMatch[2]),label:v.join?'D':'B'}:null;
+    const selectedPoint=selectedMatch?{x:Number(selectedMatch[1]),y:Number(selectedMatch[2]),label:v.missing??(v.join?'D':'B')}:null;
     const points=selectedPoint?[...v.points,selectedPoint]:v.points;
     const joined=v.join&&selectedPoint?[...points,points[0]]:points;
     return <div className="year4-coordinate-scroll"><div className="year4-coordinate-wrap"><Frame label="Coordinate grid. x increases right, y increases up. Equal steps from 0 to 5." viewBox="0 0 360 360">

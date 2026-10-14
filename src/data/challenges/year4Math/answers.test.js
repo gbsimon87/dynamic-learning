@@ -33,8 +33,8 @@ test('equivalent expanded sums, reversed addends and both inverse checks are val
   const inverse=buildYear4Math('inverse',3,seededRng(9))[0], [sum,minus,b,equals,a]=inverse.answer.split(' ');
   assert.ok(isYear4MathCorrect(inverse,idsFor(inverse,[sum,minus,a,equals,b])));
   assert.equal(isYear4MathCorrect(inverse,idsFor(inverse,[b,minus,sum,equals,a])),false);
-  const written=buildYear4Math('written',3,seededRng(9))[0], [t,plus,o,e,total]=written.answer.split(' ');
-  assert.ok(isYear4MathCorrect(written,idsFor(written,[o,plus,t,e,total])));
+  const written=buildYear4Math('written',3,seededRng(9))[0], [h,plus,t,plus2,o,e,total]=written.answer.split(' ');
+  assert.ok(isYear4MathCorrect(written,idsFor(written,[o,plus,t,plus2,h,e,total])));
 });
 
 test('perimeter accepts all traversals and addend orders rather than one string',()=>{
@@ -83,7 +83,7 @@ test('later clock levels cover every minute and midnight without starting at the
 });
 
 test('graph differences and derived division facts vary rather than always giving the same answer',()=>{
-  for(const [topic,level,filter] of [['graphs',4,()=>true],['data',4,q=>q.ask.op==='difference'],['mental',2,q=>q.prompt.includes('÷')&&!q.prompt.includes('÷ 1')]]){
+  for(const [topic,level,filter] of [['graphs',4,()=>true],['data',4,q=>/combined/.test(q.prompt)],['mental',2,q=>q.prompt.includes('÷')&&!q.prompt.includes('÷ 1')]]){
     const answers=new Set();
     for(let seed=1;seed<=100;seed++) for(const q of buildYear4Math(topic,level,seededRng(seed)).filter(filter))answers.add(q.answer);
     assert.ok(answers.size>=3,`${topic} only offers ${answers.size} answers`);

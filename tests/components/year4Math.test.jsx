@@ -52,7 +52,7 @@ it('coordinate plotting retries a wrong answer and completes once after all five
     fireEvent.click(screen.getByRole('button',{name:'Plot (0, 0)'}));
     fireEvent.click(screen.getByRole('button',{name:'Check my answer'}));
     expect(complete).not.toHaveBeenCalled();
-    expect(screen.getByText('Plot (2, 2) on the grid.')).toBeTruthy();
+    expect(screen.getByText('Plot the point (2, 2).')).toBeTruthy(); // still on question 1 after the miss
     for(let i=0;i<5;i++){
       fireEvent.click(screen.getByRole('button',{name:'Plot (2, 2)'}));
       fireEvent.click(screen.getByRole('button',{name:'Check my answer'}));
@@ -71,11 +71,15 @@ it('reflection is completed by matching the rendered coloured cells across the m
   render(<Year4MathGame topic="reflect" level={3} onComplete={complete}/>);
   try{
     const group=screen.getByRole('group',{name:'Reflection grid'});
-    const cells=[...group.children];
-    for(let y=0;y<3;y++)for(let x=0;x<3;x++){
-      const source=cells[y*6+x];
-      if(source.classList.contains('is-filled'))fireEvent.click(within(group).getByRole('button',{name:`Row ${y+1}, column ${6-x}`}));
+    expect(group.classList.contains('is-horizontal')).toBe(false); // level 3 mirrors left to right
+    // Read every coloured source square off the rendered grid (any height) and tap its mirror partner.
+    const sources=[...group.children].filter(node=>node.tagName==='SPAN'&&node.classList.contains('is-filled'));
+    expect(sources.length).toBeGreaterThan(0);
+    for(const square of sources){
+      const [,row,col]=/Row (\d+), column (\d+)/.exec(square.getAttribute('aria-label'));
+      fireEvent.click(within(group).getByRole('button',{name:`Row ${row}, column ${7-Number(col)}`}));
     }
+    expect(screen.queryAllByRole('button',{pressed:true})).toHaveLength(sources.length);
     fireEvent.click(screen.getByRole('button',{name:'Check my answer'}));
     expect(screen.getByRole('button',{name:'Check my answer'}).disabled).toBe(true);
     await act(async()=>vi.advanceTimersByTime(1200));
@@ -100,7 +104,10 @@ it('bar construction reads the table and preserves two rapid increments',async()
       act(()=>{fireEvent.click(button);fireEvent.click(button);});
       const bar=document.querySelector(`.bar-chart-bar[title="${label}: 10"]`);
       expect(bar).toBeTruthy();
+      // Values can be as small as 5, so correct an overshoot with the lower control.
+      if(value<10)fireEvent.click(screen.getByRole('button',{name:`Lower the ${label} bar`}));
       for(let n=10;n<value;n+=5)fireEvent.click(button);
+      expect(document.querySelector(`.bar-chart-bar[title="${label}: ${value}"]`)).toBeTruthy();
     }
     fireEvent.click(screen.getByRole('button',{name:'Check my answer'}));
     expect(screen.getByRole('button',{name:'Check my answer'}).disabled).toBe(true);
@@ -131,7 +138,10 @@ it('plotted D draws all four sides of the rectangle and moves when corrected',()
 });
 
 it('shape labels wrap as ordinary captions rather than long lines in the SVG',()=>{
-  const q=buildYear4Math('shapes',2,()=>.99999).find(q=>q.visual.shape==='parallelogram');
+  // Level 1 captions each shape with its clue; the parallelogram's clue is the longest.
+  let q;
+  for(let seed=1;!q&&seed<=200;seed++)q=buildYear4Math('shapes',1,seededRng(seed)).find(q=>q.visual?.shape==='parallelogram');
+  expect(q?.visual.property.length).toBeGreaterThan(40);
   const {container}=render(<Year4MathVisual question={q}/>);
   expect(container.querySelector('figcaption').textContent).toBe(q.visual.property);
   expect(container.querySelectorAll('svg text')).toHaveLength(0);
