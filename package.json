@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently -n web,api -c magenta,cyan \"vite\" \"npm run dev:server\"",
     "dev:web": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/prerender.js",
     "lint": "eslint .",
     "test": "npm run test:unit && npm run test:components",
     "preview": "vite preview",
@@ -16,7 +16,8 @@
     "test:unit": "node --test",
     "test:components": "vitest run",
     "audit:accounts": "node --env-file-if-exists=.env scripts/auditAccountIndexes.js",
-    "audit:progress": "node --env-file-if-exists=.env scripts/auditProgress.js"
+    "audit:progress": "node --env-file-if-exists=.env scripts/auditProgress.js",
+    "check:seo": "node scripts/checkSeo.js"
   },
   "dependencies": {
     "@fontsource/abeezee": "^5.2.5",

@@ -14,8 +14,13 @@ them at any time.
 A new game must be registered in **two separate files**. Miss the second and the
 game works at its URL but is invisible to every learner:
 
-1. `src/main.jsx` — the route
-2. `src/pages/skills/SkillsPage.jsx` — the `<Link>` in the right subject card
+1. `src/main.jsx` — the lazy route
+2. `shared/skillsCatalog.js` — the game in the right subject group (the hub renders its `<Link>`)
+
+Also add its public description, instructions and skill list to
+`shared/skillGuides.js`. This creates `/learn/<game-slug>`, its metadata and its
+sitemap entry through the shared SEO catalogue; the build rejects missing guide
+content. See `docs/SEO_AUDIT.md` for public-page delivery and indexing policy.
 
 Always do both, in the same change.
 
@@ -37,8 +42,8 @@ co-located CSS with the identical base name.
 
 ### 2. Register the route
 
-In `src/main.jsx`, import the component under the matching `// === SKILLS: X ===`
-comment block and add the route inside the correct `// === X Skills ===` group.
+In `src/main.jsx`, add a lazy import route inside the correct Skills group, e.g.
+`{ path: "new-game", lazy: () => import("./pages/skills/math/NewGame").then(m => ({ Component: m.default })) }`.
 Routes are **flat and kebab-case** — `/word-builder`, not `/skills/english/word-builder`.
 
 Keep the route short and child-guessable. Match the route to the name where
@@ -47,13 +52,15 @@ many games already have an intended route recorded there; reuse it rather than i
 
 ### 3. Register the link
 
-In `src/pages/skills/SkillsPage.jsx`, add a `<Link className="skill-btn">` inside
-the `.skills-links` of the correct `.skills-card`. Use the game's display name.
+In `shared/skillsCatalog.js`, add `{ to, icon, label }` inside the correct group's
+`games` list. `SkillsPage.jsx` renders the direct-play and public-guide links.
+Use the game's display name and keep both it and its guide content current.
 
 ### 4. Update the card description if needed
 
-Each `.skills-card` has a one-line `.skills-card-text` summary. If the new game
-adds a capability the summary doesn't cover, extend it.
+Add an accurate overview, play instructions and skill list in
+`shared/skillGuides.js`, describing the implemented game without claiming new
+statutory curriculum coverage.
 
 ## Component conventions
 
@@ -100,6 +107,8 @@ milestone / retry feedback. Write a pure `makeQuestion(rng, level)` in
 3. The link appears on `/skills` and navigates correctly.
 4. Core loop works: correct answer, wrong answer, and mode switch if applicable.
 5. Both themes render correctly.
+6. `npm run build` passes and `npm run check:seo` verifies the public guide and
+   sitemap after the build (the browser check needs local Chrome/CHROME_PATH).
 
 ## Finally
 

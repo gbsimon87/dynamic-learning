@@ -37,6 +37,25 @@
   overflow-x: clip;
 }
 
+.sk-game-entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 48px;
+  align-items: center;
+  gap: 0.4rem;
+}
+.sk-guide-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  min-height: 48px;
+  border-radius: 0.75rem;
+  color: var(--sk-ink);
+  font-size: 1.35rem;
+  text-decoration: none;
+}
+.sk-guide-link:focus-visible { outline: 3px solid var(--sk-focus); outline-offset: 2px; }
+
 body.dark .skills-page {
   --sk-ink: var(--dark-text);
   --sk-muted: #c8b9bd;

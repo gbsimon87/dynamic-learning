@@ -61,7 +61,7 @@ function SpeedReader() {
 
   if (screen === "setup" || screen === "reading") {
     return (
-      <main className="sr-page page">
+      <div className="sr-page page">
         <h1 className="sr-title">⚡ Speed Reader</h1>
         <p className="sr-intro">
           Words flash one at a time. Keep your eyes still and read!
@@ -204,7 +204,7 @@ function SpeedReader() {
             />
           </ReaderOverlay>
         )}
-      </main>
+      </div>
     );
   }
 
@@ -216,7 +216,7 @@ function SpeedReader() {
   const canGoFaster = faster > wpm;
 
   return (
-    <main className="sr-page page">
+    <div className="sr-page page">
       <h1 className="sr-title">⚡ Speed Reader</h1>
 
       {screen === "questions" && (
@@ -271,7 +271,7 @@ function SpeedReader() {
           </button>
         </section>
       )}
-    </main>
+    </div>
   );
 }
 

@@ -92,6 +92,33 @@ screen width. Actions remain aligned at the bottom of each card row on desktop
 
 ## 1. What This Project Is
 
+SEO delivery (2026-10-14): public `/`, `/skills` and 25 `/learn/<game-slug>`
+guides now receive anonymous React HTML generated during `npm run build`.
+Express serves these documents with per-page metadata, canonical/social tags,
+JSON-LD, sitemap and robots policy. Account/progress/utility and direct-game
+screens retain the SPA and are `noindex`; guides link to unchanged ungated game
+URLs. Review historical game search traffic before rolling out that indexing
+policy. See [SEO audit](SEO_AUDIT.md) for findings, trade-offs and validation.
+Production opts in with `SEO_INDEXABLE=true` at build/runtime; default and dev
+are excluded. `PUBLIC_APP_URL` supplies the fixed public origin. Unknown frontend
+routes/assets now return HTTP 404, and recognised slash/case/host variants use
+308 redirects without losing query parameters. Internal prerender files and the
+generated curriculum route manifest are not public URLs. The manifest recognises
+routes only; it does not change gates, unlock rules, stored progress or ownership.
+
+The Skills hub catalogue moved to `shared/skillsCatalog.js`; guide descriptions
+live in `shared/skillGuides.js`. Adding a game requires its lazy route, catalogue
+entry and guide content (see the updated `add-skill-game` guide). Games, auth and
+curriculum pages load as lazy route modules; public hubs/guides remain eager.
+Navbar scroll tracking uses a passive listener/ref; main navigation has a name,
+the shell offers a skip link, and Speed Reader no longer nests a main landmark.
+`scripts/prerender.js` uses existing Vite/React tooling and needs no browser to
+build. `npm run check:seo` verifies built HTTP HTML and local Chrome/Playwright
+behaviour without a database or third-party requests; screenshots are ignored in
+`.seo-artifacts/`. The public sharing card is `public/social-card.png` with an
+editable SVG source. HTML revalidates, hashed Vite assets cache immutably, and
+private HTML/API responses remain `no-store`.
+
 UI updates (2026-10-13): `components/ui/AppFooter.jsx` and its own paired-theme
 stylesheet replace the homepage-only footer. `RootLayout` shows it on `/`,
 `/curriculum`, `/skills`, `/trophies`, `/profiles`, `/parent`, `/login` and `/signup` (including trailing
@@ -166,13 +193,14 @@ fetches live country data from [REST Countries API](https://restcountries.com/):
 ```bash
 npm run dev         # Vite and the watched API together (without .env the API stops at FATAL; Vite keeps running)
 npm run dev:web     # Vite only
-npm run build       # production build
+npm run build       # Vite build + public React prerendering
 npm run lint        # eslint
 npm run preview     # preview production build
 npm test            # node --test, then Vitest component tests
 npm run server      # the Express API
 npm run dev:server  # the API, watched, reading .env
 npm run seed        # development seed account (see §5, "Development seed")
+npm run check:seo   # built HTTP/crawl checks + local Chrome (no database)
 ```
 
 ---
