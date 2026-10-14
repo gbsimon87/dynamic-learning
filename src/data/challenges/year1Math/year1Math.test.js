@@ -44,6 +44,7 @@ function correctResponse(q) {
   }
   if (q.kind === "clock" && q.mode === "set") return q.time;
   if (q.kind === "fraction" && q.mode === "shade") return Array.from({ length: q.parts }, (_, i) => i < q.answer);
+  if (q.kind === "placeValue" && q.mode === "build") return { hundreds: Math.floor(q.answer / 100), tens: Math.floor(q.answer / 10) % 10, ones: q.answer % 10 };
   return q.options ? q.answer : String(q.answer);
 }
 
@@ -106,8 +107,8 @@ test("Applied money questions require reading the denomination, and time stories
       assert.ok(!/\d|£/.test(q.prompt), "the prompt states the value being asked for");
     }
     for (const q of questions("recognising-notes", 4, seed)) {
-      const wanted = Number(q.prompt.match(/£(\d+)/)[1]);
-      assert.equal(q.answer, wanted === q.visual.value ? "Yes" : "No");
+      // Counting the pictured notes: the total is the sum of their values.
+      assert.equal(q.answer, q.visual.values.reduce((sum, n) => sum + n, 0));
     }
     for (const q of questions("sequencing-events", 4, seed)) if (q.prompt.includes("lunch")) {
       checkedLunch = true;
@@ -135,11 +136,15 @@ test("Measurement answers agree with the depicted quantities and units", () => {
         const expected = [...v.rows].sort((a, b) => a.value - b.value)[larger ? 1 : 0];
         assert.equal(q.answer, expected.label);
       }
-    } else if (v.type === "capacity") assert.equal(q.answer, { 0: "empty", 1: "quarter full", 2: "half full", 4: "full" }[v.fill]);
+    } else if (v.type === "capacity") {
+      const words = { 0: "empty", 1: "quarter full", 2: "half full", 4: "full" };
+      if (v.jugs) assert.equal(v.jugs.filter(j => q.prompt.includes(`is ${words[j.fill]}?`)).map(j => j.label).join(), q.answer);
+      else assert.equal(q.answer, words[v.fill]);
+    }
     else {
       assert.equal(q.answer, v.value);
       if (v.type === "ruler") assert.equal(q.label, "Centimetres");
-      if (v.type === "instrument") assert.equal(v.unit, id.includes("mass") ? "g" : "litres");
+      if (v.type === "instrument") assert.ok((id.includes("mass") ? ["g", "kg"] : ["ml", "litres"]).includes(v.unit));
     }
   }
 });
@@ -147,7 +152,10 @@ test("Measurement answers agree with the depicted quantities and units", () => {
 test("Arrays, sharing and halves/quarters agree with their drawings and stories", () => {
   for (let seed = 1; seed <= 50; seed++) for (let level = 1; level <= 4; level++) {
     for (const q of questions("equal-groups-and-arrays", level, seed)) {
-      const total = q.visual.rows * q.visual.columns;
+      // Arrays draw rows × columns; pictured groups must all be the same size; stories state both numbers.
+      const v = q.visual, counts = v?.type === "objects" ? v.groups.map(g => g.count) : null;
+      if (counts) assert.ok(counts.every(c => c === counts[0]));
+      const total = !v ? q.prompt.match(/\d+/g).map(Number).reduce((x, y) => x * y) : counts ? counts.length * counts[0] : v.rows * v.columns;
       if (q.kind === "sequence") assert.equal(q.terms.at(-1), total);
       else assert.equal(q.answer, total);
       assert.ok(total <= 20);
@@ -164,11 +172,14 @@ test("Arrays, sharing and halves/quarters agree with their drawings and stories"
     }
     for (const [id, parts] of [["finding-a-half", 2], ["finding-a-quarter", 4]]) for (const q of questions(id, level, seed)) {
       if (q.visual?.type === "equalParts") {
-        assert.equal(q.visual.parts, parts);
-        assert.equal(q.answer, q.visual.correctFirst ? "A" : "B");
+        // Exactly one strip has `parts` equal parts, and its letter is the answer.
+        const fair = q.visual.strips.map((w, i) => (w.length === parts && w.every(x => x === w[0]) ? i : -1)).filter(i => i >= 0);
+        assert.deepEqual(fair.map(i => String.fromCharCode(65 + i)), [q.answer]);
+      } else if (q.kind === "fraction" && q.mode === "shade") {
+        assert.equal(q.answer * parts, q.parts, "shading the answer makes one half/quarter");
       } else if (q.kind === "fraction") {
-        assert.equal(q.parts, parts);
-        if (q.mode === "shade") assert.equal(q.answer, 1);
+        const share = q.shaded.length / q.parts;
+        assert.equal(q.answer, { 0.5: "a half", 0.25: "a quarter", 1: "a whole" }[share]);
       } else assert.equal(q.answer, q.visual.groups[0].count / parts);
     }
   }
@@ -189,10 +200,10 @@ test("Measurements, shape families, clocks and turns stay inside Year 1 scope", 
       else assert.equal(q.answer, q.time.minute ? `half past ${q.time.hour}` : `${q.time.hour} o'clock`);
     }
     for (const id of ["recognising-2-d-shapes", "recognising-3-d-shapes"]) for (const q of questions(id, level, seed)) {
-      for (const shape of q.visual.shapes) assert.ok((q.visual.solid ? THREE_D : TWO_D).includes(shape.id));
+      for (const shape of q.visual?.shapes ?? []) assert.ok((q.visual.solid ? THREE_D : TWO_D).includes(shape.id));
       // Don't reject a mathematically valid rectangle/cuboid answer to a square/cube.
-      if (q.visual.shapes.length === 1 && q.visual.shapes[0].id === "square") assert.ok(!q.options.includes("rectangle"));
-      if (q.visual.shapes.length === 1 && q.visual.shapes[0].id === "cube") assert.ok(!q.options.includes("cuboid"));
+      if (q.visual?.shapes.length === 1 && q.visual.shapes[0].id === "square") assert.ok(!q.options.includes("rectangle"));
+      if (q.visual?.shapes.length === 1 && q.visual.shapes[0].id === "cube") assert.ok(!q.options.includes("cuboid"));
     }
     for (const q of questions("whole-half-quarter-and-three-quarter-turns", level, seed)) if (q.visual) {
       seenTurns.add(q.visual.quarters);

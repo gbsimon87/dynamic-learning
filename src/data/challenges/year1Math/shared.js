@@ -10,9 +10,23 @@ export function shuffle(rng, items) {
   return result;
 }
 export const run = (make, level, rng) => Array.from({ length: 5 }, (_, i) => make(level, rng, i));
-export const numericOptions = (rng, answer, max = 100) => shuffle(rng,
-  [...new Set([answer, answer - 1, answer + 1, answer - 2, answer + 2])]
-    .filter(n => n >= 0 && n <= max).slice(0, 4));
+/**
+ * Four numeric options: the answer, up to two `near` misses (in priority
+ * order, e.g. swapped tens and ones), then neighbours from a run of four
+ * numbers that sits at a random offset around the answer. The random offset
+ * means the answer is not always the second-biggest option.
+ */
+export function numericOptions(rng, answer, max = 100, { min = 0, near = [] } = {}) {
+  const ok = n => Number.isInteger(n) && n >= min && n <= max;
+  const chosen = [answer];
+  const add = n => { if (ok(n) && !chosen.includes(n)) chosen.push(n); };
+  near.filter(n => ok(n) && n !== answer).slice(0, 2).forEach(add);
+  let low = answer - int(rng, 0, 3);
+  low = Math.max(min, Math.min(low, max - 3));
+  for (const n of shuffle(rng, [0, 1, 2, 3].map(k => low + k))) if (chosen.length < 4) add(n);
+  for (let d = 1; chosen.length < 4 && d <= max - min; d++) { add(answer + d); if (chosen.length < 4) add(answer - d); }
+  return shuffle(rng, chosen);
+}
 export function numberQuestion(rng, level, prompt, answer, extra = {}, max = 100) {
   return { kind: level < 3 ? "choice" : "number", prompt, answer,
     ...(level < 3 ? { options: numericOptions(rng, answer, max) } : { maxDigits: 3 }), ...extra };

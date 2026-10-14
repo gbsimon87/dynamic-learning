@@ -10,13 +10,13 @@ export const ADD_SUBTRACT_LESSONS = {
   "addition-subtraction-and-equals-signs": [
     {
       title: "Know your signs",
-      lines: ["+ means add, or put together.", "− means take away.", "= means both sides are the same."],
+      lines: ["+ means add. − means take away.", "= means both sides are the same.", "Look at the picture. More, or fewer?"],
       example: { type: "table", title: "3 signs to know", headers: ["Sign", "It means"], rows: [["+", "add"], ["−", "take away"], ["=", "the same as"]] },
     },
     {
-      title: "Find the missing sign",
-      lines: ["Is the answer bigger? The sign is +.", "Is the answer smaller? The sign is −.", "= means both sides are the same."],
-      example: { type: "equation", title: "Which sign?", parts: ["6", "−", "2", "=", "4"], note: "4 is smaller than 6, so it is −." },
+      title: "Which one is true?",
+      lines: ["Work out the side with + or −.", "Does it match the other side?", "The = can come first, too."],
+      example: { type: "table", title: "True or not?", headers: ["Number sentence", "True?"], rows: [["7 + 2 = 9", "yes"], ["7 − 2 = 9", "no"], ["9 = 7 + 2", "yes"]] },
     },
     {
       title: "Story to number sentence",
@@ -25,19 +25,19 @@ export const ADD_SUBTRACT_LESSONS = {
     },
     {
       title: "Make both sides equal",
-      lines: ["Look at the sign first.", "For +, count all the counters.", "For −, count the ones not crossed out."],
-      example: { type: "groups", title: "4 + 3 = ?", groups: [many("🍎", 4), many("🍎", 3)], label: "4 apples and 3 more apples", note: "Count them all: 4 + 3 = 7." },
+      lines: ["= means both sides are the same.", "Work out the side you can.", "Make the other side match it."],
+      example: { type: "steps", title: "7 + 2 = 2 + ?", steps: ["7 + 2 makes 9.", "2 + what makes 9? 7!", "Swap the numbers, same total."] },
     },
   ],
   "number-bonds-within-20": [
     {
-      title: "Pairs that make 10",
-      lines: ["2 parts make a whole.", "Start at the part you know.", "Count on to 10. Count your jumps."],
-      example: { type: "jumps", title: "6 + ? = 10", terms: ["6", "7", "8", "9", "10"], step: "+1", note: "4 jumps, so 6 + 4 = 10." },
+      title: "Find the other part",
+      lines: ["2 parts make a whole.", "The coloured counters are the part we know.", "Count the ones not coloured."],
+      example: { type: "groups", title: "3 + ? = 8", groups: [many("🔴", 3), many("⚪", 5)], label: "3 coloured counters and 5 white counters", note: "5 are not coloured, so 3 + 5 = 8." },
     },
     {
-      title: "Pairs that make 20",
-      lines: ["Use a pair to 10 to help.", "3 and 7 make 10.", "So 13 and 7 make 20."],
+      title: "Pairs that make 10 or 20",
+      lines: ["Pairs to 10 help with pairs to 20.", "3 and 7 make 10.", "So 13 and 7 make 20."],
       example: { type: "steps", title: "Use 10 to help", steps: ["3 + 7 = 10.", "Put 10 more on the 3.", "13 + 7 = 20."] },
     },
     {
@@ -59,12 +59,12 @@ export const ADD_SUBTRACT_LESSONS = {
     },
     {
       title: "Count on from the big one",
-      lines: ["Start with the bigger number.", "Count on the smaller number.", "Use your fingers for the jumps."],
+      lines: ["Start with the bigger number.", "Count on the smaller number.", "Adding 0 changes nothing."],
       example: { type: "jumps", title: "12 + 4", terms: ["12", "13", "14", "15", "16"], step: "+1", note: "4 jumps from 12 lands on 16." },
     },
     {
       title: "Swap them round",
-      lines: ["You can add 2 numbers in any order.", "The total stays the same.", "Find one total. The other is the same."],
+      lines: ["You can add 2 numbers in any order.", "The total stays the same.", "Use one fact to fill the other."],
       example: { type: "equation", title: "Same total", parts: ["5", "+", "8", "=", "8", "+", "5"], note: "Both make 13." },
     },
     {
@@ -81,7 +81,7 @@ export const ADD_SUBTRACT_LESSONS = {
     },
     {
       title: "Count back to take away",
-      lines: ["Start on the big number.", "Count back 1 for each one taken.", "Where you stop is how many are left."],
+      lines: ["Start on the big number. Count back.", "Where you stop is how many are left.", "Taking away 0 changes nothing."],
       example: { type: "jumps", title: "15 − 4", terms: ["15", "14", "13", "12", "11"], step: "−1", note: "4 jumps back from 15 lands on 11." },
     },
     {
@@ -91,25 +91,25 @@ export const ADD_SUBTRACT_LESSONS = {
     },
     {
       title: "Take away in a story",
-      lines: ["Fly away and left mean take away.", "Start with how many there were.", "Take away, then type what is left."],
+      lines: ["Fly away, eat and give away mean take away.", "Start with how many there were.", "Take away, then type what is left."],
       example: { type: "steps", title: "Sam has 13 cars. He gives away 5.", steps: ["Gives away means take away.", "13 − 5: count back 5 from 13.", "8 cars are left."] },
     },
   ],
   "missing-numbers-within-20": [
     {
       title: "What goes in the gap?",
-      lines: ["The gap is a number we do not know.", "Count on from the first number to the total.", "Count your jumps. That goes in the gap."],
+      lines: ["The gap can be first or second.", "Count on from the number you know.", "Count your jumps. That goes in the gap."],
       example: { type: "jumps", title: "4 + ? = 7", terms: ["4", "5", "6", "7"], step: "+1", note: "3 jumps, so 4 + 3 = 7." },
     },
     {
-      title: "The gap can move",
-      lines: ["The gap can be in any place.", "The = can be at the start, too.", "Try a number in the gap. Is it true?"],
-      example: { type: "table", title: "Say it in words", headers: ["Puzzle", "Think"], rows: [["? + 3 = 9", "what and 3 make 9?"], ["9 − ? = 3", "9 take away what leaves 3?"], ["4 = ? − 5", "what take away 5 leaves 4?"]] },
+      title: "Gaps in taking away",
+      lines: ["The gap can be in a take-away fact.", "Use adding to help.", "Try your number in the gap. Is it true?"],
+      example: { type: "table", title: "Say it in words", headers: ["Puzzle", "Think"], rows: [["9 − ? = 3", "3 + what makes 9? 6"], ["? − 5 = 4", "4 + 5 makes 9"]] },
     },
     {
-      title: "One fact helps the other",
-      lines: ["The same 3 numbers make both facts.", "Find the gap in the adding fact.", "The take-away gap is the same number."],
-      example: { type: "steps", title: "Two linked facts", steps: ["8 + 5 = 13.", "13 − 5 = 8.", "The gap is 5 both times."] },
+      title: "Sort by the missing number",
+      lines: ["Find the missing number on each card.", "Put the card with its number.", "Check: put it in. Is it true?"],
+      example: { type: "table", title: "What is the gap?", headers: ["Card", "Gap"], rows: [["3 + ? = 7", "4"], ["9 − ? = 5", "4"], ["2 + ? = 8", "6"]] },
     },
     {
       title: "Find the hidden number",
@@ -124,18 +124,18 @@ export const ADD_SUBTRACT_LESSONS = {
       example: { type: "groups", title: "4 ducks. 2 more join.", groups: [many("🦆", 4), many("🦆", 2)], label: "4 ducks and 2 more ducks joining", note: "Join means add: 4 + 2 = 6." },
     },
     {
-      title: "Altogether or left?",
-      lines: ["Altogether means add.", "Left means take away.", "Then count on or count back."],
-      example: { type: "steps", title: "8 ducks. 3 swim away.", steps: ["Swim away and left mean take away.", "Count back 3 from 8.", "5 ducks are left."] },
+      title: "Add or take away?",
+      lines: ["More come, land or get on? Add.", "Some fly away or get off? Take away.", "Then count on or count back."],
+      example: { type: "steps", title: "8 birds. 3 fly away.", steps: ["Fly away means take away.", "Count back 3 from 8.", "5 birds are left."] },
     },
     {
       title: "Build the duck sentence",
-      lines: ["Start with the ducks already there.", "Join? Use +. Swim away? Use −.", "Then = and the answer."],
+      lines: ["Start with how many are there first.", "More come? Use +. Some go? Use −.", "Then = and the answer."],
       example: { type: "equation", title: "7 ducks. 2 swim away.", parts: ["7", "−", "2", "=", "5"], note: "Ducks there first, then −, then 2." },
     },
     {
       title: "Solve the story",
-      lines: ["Read the story slowly.", "Add for join. Take away for left.", "How many more? Match them up. Count extras."],
+      lines: ["How many more? Match them up. Count extras.", "More than means add.", "Fewer than means take away."],
       example: { type: "groups", title: "Leo has 3. Maya has 5.", groups: [many("🐚", 3), many("🐚", 5)], label: "Leo has 3 shells. Maya has 5 shells.", note: "Match 3 each. Maya has 2 extra." },
     },
   ],

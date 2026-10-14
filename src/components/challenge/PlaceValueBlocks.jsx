@@ -19,6 +19,7 @@ import "./challenge-kit.css";
  * `highlight`   a place to draw attention to, e.g. the one being asked about
  * `exchanging`  a place currently mid-exchange, which pulses
  * `label`       accessible description of the whole picture
+ * `columns`     which places to show, e.g. ["tens", "ones"] for Year 1 (all three by default)
  */
 function PlaceValueBlocks({
   blocks,
@@ -27,12 +28,13 @@ function PlaceValueBlocks({
   exchanging,
   label,
   showCounts = true,
+  columns,
 }) {
   const places = [
     { key: "hundreds", name: "hundreds", worth: 100, count: blocks.hundreds || 0 },
     { key: "tens", name: "tens", worth: 10, count: blocks.tens || 0 },
     { key: "ones", name: "ones", worth: 1, count: blocks.ones || 0 },
-  ];
+  ].filter((place) => !columns || columns.includes(place.key));
 
   return (
     <div className="pv-blocks" role={onStep ? "group" : "img"} aria-label={label}>

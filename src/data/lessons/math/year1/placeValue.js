@@ -14,30 +14,30 @@ export const PLACE_VALUE_LESSONS = {
       example: { type: "groups", title: "Count the stars", groups: [row("⭐", 3)], label: "3 stars", note: "1, 2, 3. There are 3 stars." },
     },
     {
-      title: "Count up to 10",
-      lines: ["Count in a line, left to right.", "Do not skip one. Do not count twice.", "Then pick the number that matches."],
-      example: { type: "groups", title: "Count the strawberries", groups: [row("🍓", 5), row("🍓", 2)], label: "7 strawberries", note: "Count 5, then keep going: 6, 7." },
+      title: "Find the right group",
+      lines: ["Read the number Bix wants.", "Count each group carefully.", "Pick the group with that many."],
+      example: { type: "groups", title: "Which group has 7?", groups: [row("🍓", 6), row("🍓", 7), row("🍓", 8)], label: "A has 6, B has 7, C has 8", note: "B has 7. Pick B." },
     },
     {
       title: "Fewest first",
-      lines: ["Count the dots in each group.", "Fewest means the smallest number.", "Put the fewest first. The most goes last."],
-      example: { type: "groups", title: "Fewest to most", groups: [row("🔵", 3), row("🔵", 5), row("🔵", 9)], label: "3 dots, then 5 dots, then 9 dots", note: "Each group has more than the one before." },
+      lines: ["Count each group: A, B and C.", "Fewest means the smallest number.", "Put the fewest letter first. The most goes last."],
+      example: { type: "groups", title: "A has 9, B has 3, C has 5", groups: [row("🔵", 9), row("🔵", 3), row("🔵", 5)], label: "A: 9, B: 3, C: 5", note: "Fewest first: B, C, A." },
     },
     {
       title: "Count bigger groups",
-      lines: ["Each dot is one apple.", "Count to 10, then keep going.", "Type the last number you say."],
-      example: { type: "groups", title: "Count the apples", groups: [row("🍎", 10), row("🍎", 3)], label: "13 apples", note: "10, then 11, 12, 13." },
+      lines: ["Each row has 5.", "Touch each one. Keep going past 10.", "Type the last number you say."],
+      example: { type: "groups", title: "Count the apples", groups: [row("🍎", 5), row("🍎", 5), row("🍎", 3)], label: "13 apples", note: "10, then 11, 12, 13." },
     },
   ],
   "counting-forwards-and-backwards-to-100": [
     {
-      title: "What comes next?",
-      lines: ["Forwards means one more each time.", "Say the numbers out loud.", "The next number goes in the gap."],
-      example: { type: "jumps", title: "Count forwards", terms: ["17", "18", "19", "20", "21"], step: "+1", note: "After 19 comes 20." },
+      title: "Forwards and backwards",
+      lines: ["Forwards means one more each time.", "Backwards means one less each time.", "Say the numbers. Fill the gap."],
+      example: { type: "jumps", title: "Count backwards", terms: ["15", "14", "13", "12", "11"], step: "−1", note: "After 14 comes 13." },
     },
     {
       title: "Forwards or backwards?",
-      lines: ["Do the numbers go up or down?", "Up is one more. Down is one less.", "Look before and after the gap."],
+      lines: ["Do the numbers go up or down?", "Up is one more. Down is one less.", "Take care when you cross a ten."],
       example: { type: "jumps", title: "Count backwards", terms: ["43", "42", "41", "40", "39"], step: "−1", note: "After 40 comes 39, not 30." },
     },
     {
@@ -47,30 +47,30 @@ export const PLACE_VALUE_LESSONS = {
     },
     {
       title: "Jump along with Bix",
-      lines: ["Start on Bix's number.", "Forwards goes up. Backwards goes down.", "Count 4 jumps. Where does Bix land?"],
+      lines: ["Start on Bix's number.", "Forwards goes up. Back goes down.", "Say one number for each jump."],
       example: { type: "jumps", title: "Bix is on 57. Forwards 4 steps.", terms: ["57", "58", "59", "60", "61"], step: "+1", note: "4 jumps. Bix lands on 61." },
     },
   ],
   "reading-and-writing-numerals-to-100": [
     {
       title: "Read the blocks",
-      lines: ["A long rod is ten.", "A small cube is one.", "Count the rod, then the cubes."],
-      example: { type: "table", title: "1 rod and 2 cubes", headers: ["Rods", "Cubes", "Number"], rows: [["1", "2", "12"]], note: "10, then 11, 12. That makes 12." },
-    },
-    {
-      title: "Count tens, then ones",
-      lines: ["Count the rods in tens: 10, 20, 30.", "Then count on the cubes in ones.", "Pick the number that matches."],
+      lines: ["A long rod is ten. A cube is one.", "Count the rods in tens: 10, 20, 30.", "Then count on the cubes in ones."],
       example: { type: "steps", title: "4 rods and 6 cubes", steps: ["Rods: 10, 20, 30, 40.", "Cubes: 41, 42, 43, 44, 45, 46.", "The number is 46."], note: "Not 64! The rods come first." },
     },
     {
-      title: "Smallest number first",
-      lines: ["Look at the tens digit first.", "A smaller tens digit means a smaller number.", "Same tens? Then look at the ones."],
+      title: "Make it with blocks",
+      lines: ["The first digit says how many rods.", "The last digit says how many cubes.", "Tap + to add a rod or a cube."],
+      example: { type: "table", title: "Make 35", headers: ["Number", "Rods", "Cubes"], rows: [["35", "3", "5"], ["50", "5", "0"]], note: "50 has no cubes at all." },
+    },
+    {
+      title: "Smallest or biggest first",
+      lines: ["Look at the tens digit first.", "Same tens? Then look at the ones.", "Read: smallest first, or biggest first?"],
       example: { type: "steps", title: "Order 52, 47, 56, 49", steps: ["47 and 49 have 4 tens.", "47 is smaller than 49.", "52 is smaller than 56.", "47, 49, 52, 56."] },
     },
     {
-      title: "Write the number",
-      lines: ["Count the rods. That is the tens.", "Count the cubes. That is the ones.", "Type the tens digit, then the ones."],
-      example: { type: "table", title: "Blocks into numbers", headers: ["Rods", "Cubes", "Number"], rows: [["7", "2", "72"], ["2", "7", "27"], ["5", "0", "50"]], note: "No cubes? The ones digit is 0." },
+      title: "Bags of ten",
+      lines: ["Each bag holds 10.", "Count the bags in tens: 10, 20, 30.", "Count on the loose ones. Type the number."],
+      example: { type: "table", title: "Bags and sweets", headers: ["Bags of 10", "Sweets", "Number"], rows: [["7", "2", "72"], ["2", "7", "27"], ["5", "0", "50"]], note: "No loose sweets? The ones digit is 0." },
     },
   ],
   "counting-in-twos-fives-and-tens": [
@@ -80,9 +80,9 @@ export const PLACE_VALUE_LESSONS = {
       example: { type: "jumps", title: "Count in 2s from 20", terms: ["20", "22", "24", "26", "28"], step: "+2", note: "Add 2 each time." },
     },
     {
-      title: "Fill the gap in the middle",
-      lines: ["Look at the number before the gap.", "Add the step to it.", "Add the step again. Do you reach the next?"],
-      example: { type: "jumps", title: "Count in 5s", terms: ["35", "40", "45", "50", "55"], step: "+5", note: "In 5s, numbers end in 5 or 0." },
+      title: "Find the step",
+      lines: ["Find two numbers next to each other.", "How far apart are they? 2, 5 or 10?", "Add that step to fill each gap."],
+      example: { type: "jumps", title: "Count in 5s", terms: ["35", "40", "45", "50", "55"], step: "+5", note: "35 to 40 is 5. So add 5." },
     },
     {
       title: "Put the jumps in order",
@@ -112,8 +112,8 @@ export const PLACE_VALUE_LESSONS = {
       example: { type: "jumps", title: "Start on 59", terms: ["58", "59", "60", "61"], step: "+1", note: "58 is one less. 60 is one more." },
     },
     {
-      title: "Gets on or gets off?",
-      lines: ["Gets on means one more.", "Gets off means one less.", "Then type how many now."],
+      title: "One more or one less?",
+      lines: ["Gets on or adds one: one more.", "Gets off, eats or takes one: one less.", "Then type how many now."],
       example: { type: "steps", title: "30 on the bus. One gets off.", steps: ["Gets off means one less.", "One less than 30 is 29.", "Now there are 29."] },
     },
   ],
@@ -124,25 +124,25 @@ export const PLACE_VALUE_LESSONS = {
       example: { type: "groups", title: "Red and blue", groups: [row("🔴", 4), row("🔵", 3)], label: "4 red and 3 blue", note: "1 red is left over. Red has more." },
     },
     {
-      title: "Spot fewer than",
-      lines: ["Count the red. Count the blue.", "The smaller number has fewer.", "The same number means equal to."],
-      example: { type: "groups", title: "Red and blue", groups: [row("🔴", 2), row("🔵", 5)], label: "2 red and 5 blue", note: "2 is less than 5. Red has fewer." },
+      title: "More or less than?",
+      lines: ["Look at Bix's number.", "Numbers you say before it are less.", "Numbers you say after it are more."],
+      example: { type: "table", title: "More or less than 9?", headers: ["Less than 9", "More than 9"], rows: [["7", "11"], ["8", "12"]], note: "Count 7, 8, 9, 10, 11, 12." },
     },
     {
-      title: "Least to most",
-      lines: ["Count the dots in each group.", "Least is the smallest number. It goes first.", "Most is the biggest number. It goes last."],
-      example: { type: "groups", title: "Least to most", groups: [row("🟡", 3), row("🟡", 6), row("🟡", 8)], label: "3 dots, then 6 dots, then 8 dots", note: "Least first. Most last." },
+      title: "Who has the most?",
+      lines: ["Count each child's group.", "Most is the biggest number.", "Least is the smallest number."],
+      example: { type: "groups", title: "Leo, Maya and Sam", groups: [row("🐚", 3), row("🐚", 8), row("🐚", 6)], label: "Leo 3, Maya 8, Sam 6", note: "Maya has the most. Leo has the least." },
     },
     {
       title: "Compare Leo and Maya",
-      lines: ["Leo has red. Maya has blue.", "Match them one to one.", "Then say: more, fewer or equal to."],
-      example: { type: "groups", title: "Leo and Maya", groups: [row("🔴", 4), row("🔵", 4)], label: "Leo has 4 red. Maya has 4 blue.", note: "Nothing left over, so they are equal." },
+      lines: ["Read both numbers.", "The number you count to later is more.", "Same number? Pick The same."],
+      example: { type: "steps", title: "Leo has 12. Maya has 9.", steps: ["Count: 9 comes before 12.", "So Maya has fewer.", "Leo has more."] },
     },
   ],
   "number-words-to-20": [
     {
       title: "Match the word",
-      lines: ["Count the counters.", "Read each word slowly.", "Find the word that says your number."],
+      lines: ["Look at the number.", "Read each word slowly.", "Find the word that says your number."],
       example: { type: "table", title: "Words that look alike", headers: ["Number", "Word"], rows: [["2", "two"], ["3", "three"]], note: "Both start with t. Look at the end." },
     },
     {

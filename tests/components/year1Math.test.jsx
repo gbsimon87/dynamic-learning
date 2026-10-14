@@ -70,7 +70,7 @@ it("every generated drawing can render, with named shapes and measured values", 
         expect(document.querySelectorAll(".y1-counter").length).toBe(total);
       }
       if (question.visual.type === "groups") expect(document.querySelectorAll(".array-dot").length).toBe(question.visual.rows * question.visual.columns);
-      if (question.visual.type === "turn" && question.visual.showEnd) expect(document.querySelectorAll(".y1-turn-arc").length).toBe(question.visual.quarters);
+      if (question.visual.type === "turn" && question.visual.showEnd && question.visual.arcs !== false) expect(document.querySelectorAll(".y1-turn-arc").length).toBe(question.visual.quarters);
       if (question.visual.type === "shapes") expect(screen.getAllByRole("img")).toHaveLength(question.visual.shapes.length);
       if (question.visual.type === "ruler") {
         const object = document.querySelector(".y1-measured-object");

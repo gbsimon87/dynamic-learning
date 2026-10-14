@@ -336,6 +336,7 @@ function KindControl({ q, response, setResponse, locked, hint }) {
         return (
           <PlaceValueBlocks
             blocks={response}
+            columns={q.columns}
             onStep={(place, delta) =>
               setResponse((prev) => ({ ...prev, [place]: Math.min(9, Math.max(0, (prev[place] ?? 0) + delta)) }))
             }
@@ -347,6 +348,7 @@ function KindControl({ q, response, setResponse, locked, hint }) {
         <>
           <PlaceValueBlocks
             blocks={q.blocks}
+            columns={q.columns}
             highlight={q.ask && q.ask !== "value" ? q.ask : undefined}
             label="Base-ten blocks"
           />

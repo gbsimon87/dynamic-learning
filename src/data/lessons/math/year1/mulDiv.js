@@ -14,9 +14,9 @@ export const MUL_DIV_LESSONS = {
       example: { type: "groups", title: "2 rows of 4", groups: [many("🔵", 4), many("🔵", 4)], label: "2 rows of 4 dots", note: "Count 4, then 8. There are 8." },
     },
     {
-      title: "Count on in equal jumps",
-      lines: ["Find how many are in 1 row.", "Count on that many for every row.", "The last number is how many altogether."],
-      example: { type: "groups", title: "3 rows of 5", groups: [many("⭐", 5), many("⭐", 5), many("⭐", 5)], label: "3 rows of 5 stars", note: "Count 5, 10, 15. There are 15." },
+      title: "Count equal groups",
+      lines: ["Every group has the same number.", "Count 1 group first.", "Count on that many for each group."],
+      example: { type: "groups", title: "3 bags of 4 apples", groups: [many("🍎", 4), many("🍎", 4), many("🍎", 4)], label: "3 bags with 4 apples in each", note: "Count 4, 8, 12. There are 12." },
     },
     {
       title: "Fill the running totals",
@@ -36,9 +36,9 @@ export const MUL_DIV_LESSONS = {
       example: { type: "groups", title: "Share 6 between 2", groups: [many("🍓", 3), many("🍓", 3)], label: "2 equal groups of 3 strawberries", note: "Each child gets 3." },
     },
     {
-      title: "Share or make groups?",
-      lines: ["Share between children? Find how many each.", "Groups of a number? Find how many groups.", "Read the question carefully."],
-      example: { type: "table", title: "What do I find?", headers: ["Question", "Find"], rows: [["Share 8 between 2", "how many each"], ["Put 8 in groups of 2", "how many groups"]] },
+      title: "Make equal groups",
+      lines: ["Count out 1 group.", "Keep going until none are left.", "Count how many groups you made."],
+      example: { type: "steps", title: "Put 8 apples into bags of 2", steps: ["Count out 2. That is 1 bag.", "Keep going until none are left.", "There are 4 bags."] },
     },
     {
       title: "Count up in groups",
@@ -46,9 +46,9 @@ export const MUL_DIV_LESSONS = {
       example: { type: "jumps", title: "Groups of 2", terms: ["0", "2", "4", "6", "8"], step: "+2", note: "4 groups of 2 make 8." },
     },
     {
-      title: "Make equal groups",
-      lines: ["Share: give 1 each until none are left.", "Groups of: count out groups until none are left.", "Then type how many."],
-      example: { type: "steps", title: "Put 12 in groups of 3", steps: ["Count out 3. That is 1 group.", "Keep going until none are left.", "There are 4 groups."] },
+      title: "Share or make groups?",
+      lines: ["Share between children? Find how many each.", "Groups of a number? Find how many groups.", "Read the question carefully."],
+      example: { type: "table", title: "What do I find?", headers: ["Question", "Find"], rows: [["Share 8 between 2", "how many each"], ["Put 8 into bags of 2", "how many bags"]] },
     },
   ],
   "doubling-small-quantities": [
@@ -58,9 +58,9 @@ export const MUL_DIV_LESSONS = {
       example: { type: "groups", title: "Double 3", groups: [many("🐟", 3), many("🐟", 3)], label: "2 groups of 3 fish", note: "Count them all: there are 6." },
     },
     {
-      title: "Add it to itself",
-      lines: ["To double, add the number to itself.", "Double 6 is 6 + 6.", "Count on from the first one."],
-      example: { type: "equation", title: "Double 7", parts: ["7", "+", "7", "=", "14"], note: "Count on 7 from 7." },
+      title: "Double, and back again",
+      lines: ["To double, add the number to itself.", "Double 7 is 7 + 7 = 14.", "Doubled to make 14? It was 7."],
+      example: { type: "table", title: "Both ways", headers: ["Question", "Think"], rows: [["Double 6", "6 + 6 = 12"], ["Doubled to make 12?", "6 + 6 = 12, so 6"]] },
     },
     {
       title: "Double and its adding fact",

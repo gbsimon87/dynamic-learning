@@ -10,18 +10,18 @@ export const FRACTIONS_LESSONS = {
   "finding-a-half": [
     {
       title: "Halves are the same size",
-      lines: ["A half is 1 of 2 equal parts.", "Both parts must be the same size.", "Look for the fair cut."],
+      lines: ["A half is 1 of 2 equal parts.", "Count the parts. There must be 2.", "Both parts must be the same size."],
       example: { type: "bar", title: "Cut into 2 equal parts", bars: [{ parts: 2, shaded: 1, label: "a half" }], note: "Same size parts, so 1 part is a half." },
     },
     {
-      title: "Name the shaded part",
-      lines: ["Count the equal parts in the strip.", "2 equal parts? 1 part is a half.", "4 equal parts? 1 part is a quarter."],
-      example: { type: "bar", title: "Count the parts first", bars: [{ parts: 2, shaded: 1, label: "a half" }, { parts: 4, shaded: 1, label: "a quarter" }], note: "More parts means smaller parts." },
+      title: "How much is shaded?",
+      lines: ["1 of 2, or 2 of 4, is a half.", "1 of 4 equal parts is a quarter.", "All of it shaded is a whole."],
+      example: { type: "bar", title: "Count the parts first", bars: [{ parts: 2, shaded: 1, label: "a half" }, { parts: 4, shaded: 2, label: "a half" }, { parts: 4, shaded: 1, label: "a quarter" }, { parts: 2, shaded: 2, label: "a whole" }], note: "Count all the parts, then the shaded ones." },
     },
     {
-      title: "Shade one half",
-      lines: ["The strip is cut into 2 equal parts.", "Tap just 1 part to shade it.", "1 of 2 equal parts is a half."],
-      example: { type: "bar", title: "One half shaded", bars: [{ parts: 2, shaded: 1, label: "a half" }], note: "1 part shaded. The other part stays white." },
+      title: "Shade a half",
+      lines: ["Count all the equal parts.", "Half of them is a half.", "8 parts? Shade 4. 6 parts? Shade 3."],
+      example: { type: "bar", title: "A half of 8 parts", bars: [{ parts: 8, shaded: 4, label: "a half" }], note: "4 shaded and 4 white. Same both sides." },
     },
     {
       title: "Half of a group",
@@ -32,18 +32,18 @@ export const FRACTIONS_LESSONS = {
   "finding-a-quarter": [
     {
       title: "Quarters are the same size",
-      lines: ["A quarter is 1 of 4 equal parts.", "All 4 parts must be the same size.", "Count the parts. Are they all equal?"],
+      lines: ["A quarter is 1 of 4 equal parts.", "Count the parts. There must be 4.", "All 4 parts must be the same size."],
       example: { type: "bar", title: "Cut into 4 equal parts", bars: [{ parts: 4, shaded: 1, label: "a quarter" }], note: "4 same size parts, so 1 is a quarter." },
     },
     {
-      title: "Half or quarter?",
-      lines: ["Count the equal parts in the strip.", "4 equal parts? 1 part is a quarter.", "2 equal parts? 1 part is a half."],
-      example: { type: "bar", title: "Count the parts first", bars: [{ parts: 4, shaded: 1, label: "a quarter" }, { parts: 2, shaded: 1, label: "a half" }], note: "4 parts means quarters." },
+      title: "Quarter, half or whole?",
+      lines: ["1 of 4 equal parts is a quarter.", "1 of 2, or 2 of 4, is a half.", "All of it shaded is a whole."],
+      example: { type: "bar", title: "Count the parts first", bars: [{ parts: 4, shaded: 1, label: "a quarter" }, { parts: 4, shaded: 2, label: "a half" }, { parts: 4, shaded: 4, label: "a whole" }], note: "Count all the parts, then the shaded ones." },
     },
     {
-      title: "Shade one quarter",
-      lines: ["The strip is cut into 4 equal parts.", "Tap just 1 part to shade it.", "1 of 4 equal parts is a quarter."],
-      example: { type: "bar", title: "One quarter shaded", bars: [{ parts: 4, shaded: 1, label: "a quarter" }], note: "1 part shaded. The other 3 stay white." },
+      title: "Shade a quarter",
+      lines: ["Split the parts into 4 equal groups.", "Shade 1 group.", "8 parts? Shade 2. 12 parts? Shade 3."],
+      example: { type: "bar", title: "A quarter of 8 parts", bars: [{ parts: 8, shaded: 2, label: "a quarter" }], note: "4 groups of 2. Shade 1 group." },
     },
     {
       title: "A quarter of a group",

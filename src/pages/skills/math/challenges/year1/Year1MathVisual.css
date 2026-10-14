@@ -19,9 +19,12 @@ body.dark .y1-math-visual {
 .y1-math-visual .y1-counter-group { flex: 1 1 180px; border: 2px solid var(--y1-line); border-radius: 16px; padding: 0.7rem; }
 .y1-math-visual .y1-counters { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
 .y1-math-visual .y1-counter { position: relative; font-size: 30px; line-height: 1; color: var(--y1-ink); }
+.y1-math-visual .y1-counter.marked { color: var(--y1-fill); }
 .y1-math-visual .y1-counter.crossed::after { content: '×'; color: var(--y1-fill-ink); background: var(--y1-fill); position: absolute; inset: 0; border-radius: 50%; }
 .y1-math-visual .y1-track { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
 .y1-math-visual .y1-track span { border: 2px solid var(--y1-line); padding: 10px; font-size: 1.4rem; border-radius: 10px; }
+.y1-math-visual .y1-track span.blank { min-width: 1.6rem; }
+.y1-math-visual .y1-counters.rows { display: grid; grid-template-columns: repeat(var(--y1-row), max-content); justify-content: center; }
 .y1-math-visual .y1-parts { width: 180px; height: 55px; display: flex; border: 2px solid var(--y1-ink); }
 .y1-math-visual .y1-parts.vertical { width: 70px; height: 150px; flex-direction: column; }
 .y1-math-visual .y1-parts span { border: 1px solid var(--y1-ink); background: var(--y1-panel); }
@@ -71,7 +74,15 @@ body.dark .y1-math-visual {
 .y1-math-visual .y1-turn-mark { fill: var(--y1-ink); }
 .y1-math-visual .y1-start-arrow { stroke: var(--y1-ink); stroke-width: 4; stroke-dasharray: 5 4; fill: none; }
 .y1-math-visual .y1-end-arrow, .y1-math-visual .y1-turn-arc { stroke: var(--y1-ink); stroke-width: 6; fill: none; }
+.y1-math-visual .y1-place { display: grid; grid-template-columns: 120px 60px; grid-template-areas: "top ." "box side" "under ."; justify-content: center; align-items: center; font-size: 42px; line-height: 1; }
+.y1-math-visual .y1-place-top { grid-area: top; text-align: center; min-height: 46px; display: flex; align-items: end; justify-content: center; }
+.y1-math-visual .y1-place .y1-box { grid-area: box; }
+.y1-math-visual .y1-place-side { grid-area: side; text-align: center; }
+.y1-math-visual .y1-place-under { grid-area: under; text-align: center; min-height: 46px; }
 @media (max-width: 480px) {
   .y1-math-visual .y1-counter-group { flex-basis: 130px; }
   .y1-math-visual .y1-shape-card { width: 110px; }
 }
+.y1-math-visual .y1-instrument { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.y1-math-visual .y1-instrument-icon { font-size: 48px; line-height: 1; }
+.y1-math-visual .y1-instrument .scale { width: 100%; max-width: 460px; }
