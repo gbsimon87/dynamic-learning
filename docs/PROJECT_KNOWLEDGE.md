@@ -1660,7 +1660,9 @@ straight away as before. Geography keeps its own `GeographyChallenge`.
 - Slot colours are `--light-lesson-slot-1..4` / `--dark-lesson-slot-1..4` in
   App.css (aliases of Geography's slot colours).
 - Rollout order (owner, 2026-10-13): Maths, English, Science, History; within
-  each, Years 3, 4, 2, 1. Done: Maths Year 3.
+  each, Years 3, 4, 2, 1. Done: Maths Years 1–4 (2026-10-14), with the
+  existing Maths challenges fixed where the lesson audit found repeats,
+  guessable options or off-spec content. Next: English Year 3.
 
 ### Curriculum Mode — built challenges
 **Year 2 Mathematics** has all thirty-nine topics built — the year is complete:
