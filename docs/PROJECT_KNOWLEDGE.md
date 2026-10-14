@@ -1680,7 +1680,8 @@ straight away as before. Geography keeps its own `GeographyChallenge`.
 - Data: `src/data/lessons/<subject>/year<n>/<category>.js`, one file per
   category, merged by that year's `index.js`. Each slot is
   `{ title, lines: [3], example }`; example types are `equation`, `column`,
-  `steps`, `jumps`, `bar`, `groups` and `table` (`LessonExample.jsx`).
+  `steps`, `jumps`, `bar`, `groups`, `table`, and for English `sentence`
+  (`**marked**` key words) and `fix` (wrong → right) (`LessonExample.jsx`).
 - `lintLessons.js` (run by `lessons.test.js`) demands 4 lessons for every topic,
   3 lines each, Geography's per-year word limits, British spelling, and
   re-computes every numeric equation, column sum and counting sequence.
@@ -1688,9 +1689,32 @@ straight away as before. Geography keeps its own `GeographyChallenge`.
 - Slot colours are `--light-lesson-slot-1..4` / `--dark-lesson-slot-1..4` in
   App.css (aliases of Geography's slot colours).
 - Rollout order (owner, 2026-10-13): Maths, English, Science, History; within
-  each, Years 3, 4, 2, 1. Done: Maths Years 1–4, English Year 3 (2026-10-14), with the
-  existing Maths challenges fixed where the lesson audit found repeats,
-  guessable options or off-spec content. Next: English Year 4.
+  each, Years 3, 4, 2, 1. Each step writes the year's lessons **and** fixes the
+  challenges the lesson audit flags (repeats, guessable options, duplicate
+  levels, off-spec content). Update this tracker when a year lands.
+
+#### Lesson rollout tracker
+
+| # | Subject | Year | Topics | Status |
+|---|---|---|---|---|
+| 1 | Maths | 3 | 44 | ✅ Done (2026-10-13) |
+| 2 | Maths | 4 | 42 | ✅ Done (2026-10-13) |
+| 3 | Maths | 2 | 39 | ✅ Done (2026-10-14) |
+| 4 | Maths | 1 | 32 | ✅ Done (2026-10-14) |
+| 5 | English | 3 | 32 | ✅ Done (2026-10-14) — plus 6 passages per reading level 4 |
+| 6 | English | 4 | 33 | ⏭️ **Next** |
+| 7 | English | 2 | 39 | To do |
+| 8 | English | 1 | 38 | To do |
+| 9 | Science | 3 | 21 | To do |
+| 10 | Science | 4 | 20 | To do |
+| 11 | Science | 2 | 19 | To do |
+| 12 | Science | 1 | 16 | To do |
+| 13 | History | 3 | 22 | To do |
+| 14 | History | 4 | 18 | To do |
+| 15 | History | 2 | 17 | To do |
+| 16 | History | 1 | 14 | To do |
+
+Geography is not in the rollout: it already has its own lesson screens.
 
 ### Curriculum Mode — built challenges
 **Year 2 Mathematics** has all thirty-nine topics built — the year is complete:
