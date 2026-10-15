@@ -2,13 +2,17 @@ nav.navbar {
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: inherit;
+  background-color: var(--light-navbar-bg);
   /* The controls used to sit hard against the screen edge on a phone. */
   padding: 0.85rem clamp(1rem, 4vw, 1.5rem);
   display: flex;
   justify-content: space-between;
   align-items: center;
   transition: top 0.3s ease-in-out;
+}
+
+body.dark nav.navbar {
+  background-color: var(--dark-navbar-bg);
 }
 
 .navbar.hidden {

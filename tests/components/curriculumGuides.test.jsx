@@ -1,4 +1,5 @@
-import { render, screen } from '@testing-library/react';
+import { AuthContext } from '../../src/context/auth-context';
+import { render as renderView, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, RouterProvider, createMemoryRouter } from 'react-router';
 import { expect, it, vi } from 'vitest';
 import { CURRICULUM_GUIDES } from '../../shared/curriculumGuides.js';
@@ -34,3 +35,7 @@ it('does not turn an unknown curriculum guide into another year’s content', ()
   render(<RouterProvider router={createMemoryRouter([{ path: "*", element: <CurriculumGuide slug="year-5-maths" /> }])} />);
   expect(screen.getByRole('heading', { level: 1 }).textContent).toBe("We can't find that page");
 });
+
+function render(view) {
+  return renderView(<AuthContext.Provider value={{ status: "signedOut" }}>{view}</AuthContext.Provider>);
+}

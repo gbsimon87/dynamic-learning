@@ -1,3 +1,4 @@
+import ScrollableTable from "../ui/ScrollableTable";
 import "./challenge-kit.css";
 
 /**
@@ -29,7 +30,7 @@ function DataTable({ caption, columns, rows, blank, highlight, blankValue }) {
   };
 
   return (
-    <table className="data-table">
+    <ScrollableTable><table className="data-table">
       {caption && <caption className="data-caption">{caption}</caption>}
       <thead>
         <tr>
@@ -71,7 +72,7 @@ function DataTable({ caption, columns, rows, blank, highlight, blankValue }) {
           </tr>
         ))}
       </tbody>
-    </table>
+    </table></ScrollableTable>
   );
 }
 

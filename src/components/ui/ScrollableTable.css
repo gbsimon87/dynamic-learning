@@ -1,0 +1,17 @@
+.scrollable-table {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  /* Leave room for table borders, shadows and focused cell controls. */
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+.scrollable-table:focus-visible {
+  outline: 3px solid var(--light-text);
+  outline-offset: -3px;
+}
+
+body.dark .scrollable-table:focus-visible {
+  outline-color: var(--dark-text);
+}

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link, Navigate, useLocation, useNavigate } from "react-router";
 import { AuthContext } from "../../context/auth-context";
 import { profileColour } from "../../data/avatars";
 import { clearLastAccount, readLastAccount } from "../../data/lastAccount";
@@ -25,7 +25,7 @@ import "./Login.css";
  * Passwords are never rendered in plaintext by default and never logged.
  */
 function Login() {
-  const { signIn } = useContext(AuthContext);
+  const { signIn, status } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -79,6 +79,11 @@ function Login() {
       setSubmitting(false);
     }
   };
+
+  if (status === "loading") return null;
+  if (!submitting && (status === "ready" || status === "needsChild")) {
+    return <Navigate to={status === "ready" ? "/curriculum" : "/profiles"} replace />;
+  }
 
   const greeting = "Welcome back!";
 

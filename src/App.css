@@ -1,4 +1,7 @@
 :root {
+  --light-navbar-bg: #f3e5e8;
+  --dark-navbar-bg: #22181c;
+
 
   /* Home: warm rose welcome; coral, sage and honey section signposts. */
   --light-home-muted: #58474f;

@@ -153,3 +153,16 @@ body.dark {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* Table viewports must be allowed to shrink inside flex and grid layouts.
+   Keep this shared constraint on their ancestors too: automatic minimum sizes
+   otherwise expand the page before a table can overflow its own viewport. */
+:where(#root *):has(table) {
+  min-width: 0;
+  max-width: 100%;
+}
+
+:where(.table-wrapper, .home-coverage-scroll, .science-classification-scroll, .geo-climate) {
+  max-width: 100%;
+  box-sizing: border-box;
+}

@@ -1,3 +1,5 @@
+import { useContext } from 'react';
+import { AuthContext } from '../context/auth-context';
 import { Link, useParams } from 'react-router';
 import { CURRICULUM_GUIDES, GUIDE_SUBJECTS, findCurriculumGuide } from '../../shared/curriculumGuides.js';
 import { CURRICULUM_YEARS, loadCurriculum } from '../data/curriculumRegistry';
@@ -7,12 +9,19 @@ import './SkillGuide.css';
 import './CurriculumGuide.css';
 
 function Actions() {
+  const { status } = useContext(AuthContext);
+  const signedIn = status === 'ready' || status === 'needsChild';
   return (
     <div className="curriculum-guide-actions">
-      <Link className="skill-guide-play" to="/signup">Create an account <span aria-hidden="true">→</span></Link>
+      {status !== 'loading' && <Link className="skill-guide-play" to={signedIn ? '/curriculum' : '/signup'}>{signedIn ? 'Explore the curriculum' : 'Create an account'} <span aria-hidden="true">→</span></Link>}
       <Link className="curriculum-guide-secondary" to="/skills">Try a free game</Link>
     </div>
   );
+}
+
+function SignInPrompt() {
+  const { status } = useContext(AuthContext);
+  return status === 'signedOut' ? <p className="curriculum-guide-small">Already part of Bix? <Link to="/login">Sign in</Link>.</p> : null;
 }
 
 function Hero({ guide, curriculum = [] }) {
@@ -105,6 +114,8 @@ function Practice({ guide }) {
 }
 
 export default function CurriculumGuide({ slug: suppliedSlug }) {
+  const { status } = useContext(AuthContext);
+  const signedIn = status === 'ready' || status === 'needsChild';
   const params = useParams();
   const guide = findCurriculumGuide(suppliedSlug ?? params.slug);
   if (!guide) return <NotFound />;
@@ -158,9 +169,11 @@ export default function CurriculumGuide({ slug: suppliedSlug }) {
       </section>
       <Practice guide={guide} />
       <section id="start" aria-labelledby="start-title" className="curriculum-guide-start">
-        <h2 id="start-title">Ready for the first little step?</h2>
-        <p>Add your child’s learning details, choose {guide.label} and finish setting up your parent account.</p>
-        <Actions /><p className="curriculum-guide-small">Already part of Bix? <Link to="/login">Sign in</Link>.</p>
+        <h2 id="start-title">{signedIn ? 'Ready for your next little step?' : 'Ready for the first little step?'}</h2>
+        <p>{signedIn
+          ? `Explore ${guide.label} in the curriculum and choose your next learning adventure.`
+          : `Add your child’s learning details, choose ${guide.label} and finish setting up your parent account.`}</p>
+        <Actions /><SignInPrompt />
       </section>
       <details className="curriculum-guide-alignment">
         <summary>For parents: curriculum & practical learning</summary>

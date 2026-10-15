@@ -1,3 +1,4 @@
+import ScrollableTable from "../../../../../components/ui/ScrollableTable";
 import ClockFace from '../../../../../components/challenge/ClockFace';
 
 const shapePoints = {
@@ -31,8 +32,8 @@ export default function Year4MathVisual({ question:q, selected, onPoint, coloure
     <div className="year4-column-row year4-column-second"><span className="year4-column-operation">{v.op}</span>{String(v.b).padStart(4,' ').split('').map((digit,i)=><span key={i}>{digit.trim()||'\u00a0'}</span>)}</div>
     <div className="year4-column-answer">?</div>
   </div>;
-  if(v.type==='decimalPlace') return <table className="year4-table"><thead><tr>{['Ones','Tenths','Hundredths'].map(label=><th key={label} scope="col">{label}</th>)}</tr></thead><tbody><tr>{v.digits.map((d,i)=><td key={i}>{d}</td>)}</tr></tbody></table>;
-  if(v.type==='place') return <table className="year4-table"><thead><tr>{['Thousands','Hundreds','Tens','Ones'].map(label=><th key={label}>{label}</th>)}</tr></thead><tbody><tr>{v.digits.map((d,i)=><td key={i}>{d}</td>)}</tr></tbody></table>;
+  if(v.type==='decimalPlace') return <ScrollableTable><table className="year4-table"><thead><tr>{['Ones','Tenths','Hundredths'].map(label=><th key={label} scope="col">{label}</th>)}</tr></thead><tbody><tr>{v.digits.map((d,i)=><td key={i}>{d}</td>)}</tr></tbody></table></ScrollableTable>;
+  if(v.type==='place') return <ScrollableTable><table className="year4-table"><thead><tr>{['Thousands','Hundreds','Tens','Ones'].map(label=><th key={label}>{label}</th>)}</tr></thead><tbody><tr>{v.digits.map((d,i)=><td key={i}>{d}</td>)}</tr></tbody></table></ScrollableTable>;
   if(v.type==='numberLine') return <div className="year4-number-line-scroll"><Frame label="Number line with equal steps through zero" viewBox="0 0 520 90"><path className="year4-stroke" d="M 20 30 H 500"/>{v.values.map((n,i)=><g key={n}><path className="year4-stroke" d={`M ${20+i*40} 22 V 38`}/><text x={20+i*40} y="67">{n}</text></g>)}</Frame></div>;
   if(v.type==='estimate') { const cx=25+250*((v.point??(v.start+v.end)/2)-v.start)/(v.end-v.start); return <Frame label={`Equal number line from ${v.start} to ${v.end}; ${v.point===(v.start+v.end)/2?'a point halfway':'a marked point to estimate'}`} viewBox="0 0 300 100"><path className="year4-stroke" d="M 25 40 H 275 M 25 30 V 50 M 150 30 V 50 M 275 30 V 50"/><circle cx={cx} cy="40" r="6" className="year4-fill"/><text x="25" y="75">{v.start}</text>{v.showMiddle&&<text x="150" y="75">{(v.start+v.end)/2}</text>}<text x="275" y="75">{v.end}</text></Frame>; }
   if(v.type==='fraction') return <Frame label={`Bar with ${v.n} of ${v.d} equal parts shaded`} viewBox="0 0 300 80">{Array.from({length:v.d},(_,i)=><rect key={i} x={10+i*280/v.d} y="10" width={280/v.d} height="55" className={i<v.n?'year4-filled-square':'year4-empty-square'} />)}</Frame>;
@@ -56,7 +57,7 @@ export default function Year4MathVisual({ question:q, selected, onPoint, coloure
     const unit=q.unit??'cm';
     return <Frame label={`Rectilinear shape, overall width ${w} ${unit}, height ${h} ${unit}${cut?`, top-right notch ${cut.w} by ${cut.h} ${unit}`:''}`}><polygon points={points} className="year4-empty-square"/><text x={x+w*scale/2} y={y+h*scale+30}>{w} {unit}</text><text x="20" y={y+h*scale/2}>{h}</text>{cut&&<><text x={x+(w-cut.w/2)*scale} y={y+cut.h*scale+20}>{cut.w}</text><text x={x+(w-cut.w)*scale-12} y={y+cut.h*scale/2+5}>{cut.h}</text></>}</Frame>;
   }
-  if(v.type==='table') return <table className="year4-table"><thead><tr><th>Item</th><th>Count</th></tr></thead><tbody>{v.rows.map(row=><tr key={row.label}><th scope="row">{row.label}</th><td>{row.value}</td></tr>)}</tbody></table>;
+  if(v.type==='table') return <ScrollableTable><table className="year4-table"><thead><tr><th>Item</th><th>Count</th></tr></thead><tbody>{v.rows.map(row=><tr key={row.label}><th scope="row">{row.label}</th><td>{row.value}</td></tr>)}</tbody></table></ScrollableTable>;
   if(v.type==='line') {
     const max=Math.ceil(Math.max(...v.values)/5)*5, y=value=>190-value/max*140;
     return <Frame label={`Time graph. ${v.unit}. Numbered vertical scale in steps of 5.`} viewBox="0 0 360 270">

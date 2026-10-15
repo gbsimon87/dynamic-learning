@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, Navigate, useNavigate } from "react-router";
 import { MAX_CHILDREN_PER_SIGNUP } from "../../../data/childFields";
 import {
   STEP, accountErrors, addLearner, destinationFor, dropBlankLearner, editLearner, emptyDraft, isDraftReady, nextCursor, prevCursor,
@@ -208,6 +208,12 @@ export default function SignUpFlow() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   });
+
+  if (auth.status === "loading") return null;
+  // Completion signs in before the hand-over; let that in-flight signup finish.
+  if (!created && !busy && (auth.status === "ready" || auth.status === "needsChild")) {
+    return <Navigate to={auth.status === "ready" ? "/curriculum" : "/profiles"} replace />;
+  }
 
   if (created) {
     return (

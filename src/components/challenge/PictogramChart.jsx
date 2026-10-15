@@ -1,3 +1,4 @@
+import ScrollableTable from "../ui/ScrollableTable";
 import { symbolCount } from "../../data/challenges/statistics";
 import "./challenge-kit.css";
 
@@ -29,7 +30,7 @@ function PictogramChart({ rows, ratio, symbol, highlight, onStepSymbols, maxSymb
         Key: <span className="pictogram-symbol">{symbol}</span> = {ratio}
       </p>
 
-      <table className="pictogram-table">
+      <ScrollableTable><table className="pictogram-table">
         <tbody>
           {rows.map((row) => {
             const count = symbolCount(row.value, ratio);
@@ -77,7 +78,7 @@ function PictogramChart({ rows, ratio, symbol, highlight, onStepSymbols, maxSymb
             );
           })}
         </tbody>
-      </table>
+      </table></ScrollableTable>
     </div>
   );
 }

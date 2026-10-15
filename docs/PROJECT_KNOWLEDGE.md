@@ -94,6 +94,30 @@ screen width. Actions remain aligned at the bottom of each card row on desktop
 
 ## 1. What This Project Is
 
+Navbar backgrounds (2026-10-15): explicit paired tokens in `App.css` set
+light mode to `#f3e5e8` and dark mode to `#22181c`, rather than inheriting
+the page background.
+
+Mobile tables (2026-10-15): lesson examples (including place value), data and
+tally tables, pictograms and Year 4 maths visuals use the shared
+`components/ui/ScrollableTable` viewport. Native table layout and touch targets
+are preserved, with horizontal scrolling and keyboard focus when needed.
+Existing homepage, multiplication, geography and science table viewports remain
+in place. Shared minimum-width constraints let table ancestors shrink within
+flex/grid layouts instead of expanding the mobile page. New tables should use
+`ScrollableTable` or an equivalent constrained, keyboard-accessible viewport.
+Browser verification checks lesson, data, editable tally and pictogram tables at
+320, 375, 768 and 1280px in both themes: overflowing tables scroll and the page
+stays within its viewport. The real homepage also loads successfully.
+
+Signed-in auth navigation (2026-10-15): `/login` and `/signup` wait for session
+restoration, then redirect existing accounts to `/curriculum` when a child is
+active or `/profiles` otherwise. In-flight sign-in keeps its requested destination;
+new signup keeps its completion hand-over. Public curriculum hub/guide actions
+show “Explore the curriculum” for signed-in users and hide the sign-in prompt.
+The guides’ final call to action also offers a next learning step instead of
+asking existing accounts to finish account setup.
+
 Public curriculum overviews (2026-10-15): `/what-we-teach` groups all 20
 Years 1–4 Maths, English, Geography, Science and History guides by year.
 Each `/curriculum-guide/year-<year>-<subject>` page uses the approved colourful,

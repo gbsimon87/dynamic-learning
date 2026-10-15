@@ -1,3 +1,4 @@
+import ScrollableTable from "../ui/ScrollableTable";
 import { tallyGroups } from "../../data/challenges/statistics";
 import "./challenge-kit.css";
 
@@ -20,7 +21,7 @@ function TallyChart({ rows, highlight, onStepCount, max = 20, disabled, showCoun
   const editable = typeof onStepCount === "function";
 
   return (
-    <table className="tally-chart">
+    <ScrollableTable><table className="tally-chart">
       <tbody>
         {rows.map((row) => {
           const groups = tallyGroups(row.value);
@@ -78,7 +79,7 @@ function TallyChart({ rows, highlight, onStepCount, max = 20, disabled, showCoun
           );
         })}
       </tbody>
-    </table>
+    </table></ScrollableTable>
   );
 }
 

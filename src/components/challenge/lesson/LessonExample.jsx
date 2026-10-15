@@ -1,3 +1,4 @@
+import ScrollableTable from "../../ui/ScrollableTable";
 /**
  * A worked example on the lesson screen. Every shape is drawn from data in
  * src/data/lessons (see lintLessons.js for the fields), and every picture
@@ -52,11 +53,11 @@ function Groups({ groups, label }) {
 }
 
 function Table({ headers, rows }) {
-  return <table className="lesson-table">
+  return <ScrollableTable><table className="lesson-table">
     <thead><tr>{headers.map((h) => <th key={h} scope="col">{h}</th>)}</tr></thead>
     <tbody>{rows.map((row, r) => <tr key={r}>{row.map((cell, c) =>
       c === 0 ? <th key={c} scope="row">{cell}</th> : <td key={c}>{cell}</td>)}</tr>)}</tbody>
-  </table>;
+  </table></ScrollableTable>;
 }
 
 /** "**word**" marks the part the lesson is about; it is a <mark>, so it is announced, not just coloured. */
