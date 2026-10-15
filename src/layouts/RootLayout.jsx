@@ -5,11 +5,11 @@ import AppFooter from '../components/ui/AppFooter';
 import PageMetadata from '../seo/PageMetadata';
 import './RootLayout.css';
 
-const FOOTER_PAGES = new Set(['/', '/curriculum', '/skills', '/trophies', '/profiles', '/parent', '/login', '/signup']);
+const FOOTER_PAGES = new Set(['/', '/what-we-teach', '/curriculum', '/skills', '/trophies', '/profiles', '/parent', '/login', '/signup']);
 
 function RootLayout() {
   const { pathname } = useLocation();
-  const showFooter = FOOTER_PAGES.has(pathname.replace(/\/+$/, '') || '/') || pathname.startsWith('/learn/');
+  const showFooter = FOOTER_PAGES.has(pathname.replace(/\/+$/, '') || '/') || pathname.startsWith('/learn/') || pathname.startsWith('/curriculum-guide/');
   return (
     <div className={`app-layout${showFooter ? ' app-layout--with-footer' : ''}`}>
       <PageMetadata />

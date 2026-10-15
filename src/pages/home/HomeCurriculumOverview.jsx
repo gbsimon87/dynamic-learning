@@ -1,3 +1,5 @@
+import { Link } from "react-router";
+import { curriculumGuideFor } from "../../../shared/curriculumGuides.js";
 import { CURRICULUM_SUBJECTS, loadCurriculum } from "../../data/curriculumRegistry";
 import { isChallengeImplemented } from "../../data/challengeAvailability";
 
@@ -60,7 +62,7 @@ export default function HomeCurriculumOverview() {
                 {row.subjects.map((pathway, index) => (
                   <td key={overviewSubjects[index].id}>
                     {pathway ? (
-                      <strong className="home-coverage-count">{pathway.topics}</strong>
+                      curriculumGuideFor(row.year, overviewSubjects[index].id) ? <Link className="home-coverage-guide" to={curriculumGuideFor(row.year, overviewSubjects[index].id).path} aria-label={`Year ${row.year} ${overviewSubjects[index].name}: ${pathway.topics} topics. Read the overview`}>{pathway.topics} <span aria-hidden="true">↗</span></Link> : <strong className="home-coverage-count">{pathway.topics}</strong>
                     ) : <span className="home-coverage-empty">Not yet available</span>}
                   </td>
                 ))}
@@ -69,6 +71,11 @@ export default function HomeCurriculumOverview() {
           </tbody>
         </table>
       </div>
+      <p className="home-coverage-actions">
+        <Link className="home-btn home-btn-quiet" to="/what-we-teach">
+          Explore what we teach <span aria-hidden="true">→</span>
+        </Link>
+      </p>
       <p className="home-coverage-note" id="home-coverage-note">
         Learn with Bix is independently developed and is not affiliated with or endorsed by the UK government.
       </p>

@@ -154,15 +154,32 @@ function predictQuestion(item, rng) {
  * used twice, so the same clues do not keep coming back.
  */
 function sortPairs(rng) {
-  for (;;) {
-    const order = shuffle(PREDICTIONS, rng);
-    const pairs = [];
-    for (let index = 0; index + 1 < order.length; index += 2) pairs.push([order[index], order[index + 1]]);
-    const last = order[order.length - 1];
-    if (order.length % 2) pairs.push([last, sample(order.slice(0, -1), 1, rng)[0]]);
-    const picked = pairs.slice(0, QUESTIONS_PER_CHALLENGE);
-    if (picked.every(([a, b]) => !avoided(a.id, b.id))) return picked;
+  const order = shuffle(PREDICTIONS, rng);
+
+  // Search a finite shuffled bank, rather than reshuffling until lucky. Each
+  // recursive step removes two predictions, even when rng never changes.
+  function pairRemaining(remaining) {
+    if (remaining.length === 0) return [];
+    const [first] = remaining;
+    if (remaining.length === 1) {
+      // The odd final prediction appears before its partner is used twice.
+      const partners = order.filter((item) => item.id !== first.id && !avoided(first.id, item.id));
+      return partners.length ? [[first, sample(partners, 1, rng)[0]]] : null;
+    }
+    for (let index = 1; index < remaining.length; index += 1) {
+      const second = remaining[index];
+      if (avoided(first.id, second.id)) continue;
+      const rest = pairRemaining(remaining.filter((_, position) => position !== 0 && position !== index));
+      if (rest) return [[first, second], ...rest];
+    }
+    return null;
   }
+
+  const pairs = pairRemaining(order);
+  if (!pairs || pairs.length !== QUESTIONS_PER_CHALLENGE) {
+    throw new Error("Prediction bank cannot supply a complete run of compatible pairs");
+  }
+  return pairs;
 }
 
 function sortQuestion(pair, rng) {

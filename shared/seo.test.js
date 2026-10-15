@@ -43,3 +43,11 @@ test('fixed-origin SEO rejects unsafe configuration and safely serialises JSON-L
   assert.ok(head.includes('A &quot;quote&quot; &amp; &lt;tag&gt;'));
   assert.equal((head.match(/rel="canonical"/g) ?? []).length, 1);
 });
+
+ test('curriculum overview breadcrumbs stay in the public curriculum guides', () => {
+  const hub = getPageSeo('/what-we-teach').structuredData['@graph'].find(item => item['@type'] === 'BreadcrumbList');
+  const guide = getPageSeo('/curriculum-guide/year-3-maths').structuredData['@graph'].find(item => item['@type'] === 'BreadcrumbList');
+  assert.deepEqual(hub.itemListElement.map(item => item.name), ['Home', 'What we teach']);
+  assert.deepEqual(guide.itemListElement.map(item => item.name), ['Home', 'What we teach', 'Year 3 Maths']);
+  assert.equal(guide.itemListElement[2].item, 'https://learnwithbix.com/curriculum-guide/year-3-maths');
+});

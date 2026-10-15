@@ -8,6 +8,7 @@ import RequireChild from "./components/RequireChild";
 import RootLayout from "./layouts/RootLayout";
 import Home from "./pages/home/Home";
 import SkillGuide from "./seo/SkillGuide";
+import CurriculumGuide, { CurriculumOverview } from "./seo/CurriculumGuide";
 
 // Hubs and public guides render immediately; game/account routes load on demand.
 import SkillsPage from "./pages/skills/SkillsPage";
@@ -30,6 +31,8 @@ const router = createBrowserRouter([
 
       // === Skills Hub ===
       { path: "skills", element: <SkillsPage /> },
+      { path: "what-we-teach", element: <CurriculumOverview /> },
+      { path: "curriculum-guide/:slug", element: <CurriculumGuide /> },
       // Public descriptions are prerendered; existing play routes stay ungated.
       { path: "learn/:slug", element: <SkillGuide /> },
 

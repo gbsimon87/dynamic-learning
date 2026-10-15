@@ -603,6 +603,8 @@ body.dark .home-page {
 .home-coverage-count { display: block; font-size: 1.2rem; }
 .home-coverage-empty { color: var(--home-muted); font-size: 0.9rem; }
 
+.home-coverage-actions { margin: 1.25rem 0 0; text-align: center; }
+
 .home-coverage-note {
   margin: 0.85rem 0 0;
   color: var(--home-muted);
@@ -778,3 +780,5 @@ body.dark .home-page {
   .home-btn:hover,
   .home-skill:hover { transform: none; }
 }
+
+.home-coverage-guide { display: inline-flex; align-items: center; justify-content: center; min-width: 48px; min-height: 48px; color: inherit; text-underline-offset: 0.2em; }

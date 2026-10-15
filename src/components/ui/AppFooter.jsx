@@ -25,7 +25,8 @@ export default function AppFooter() {
         <nav className="app-footer-nav" aria-label="Footer">
           <div className="app-footer-group">
             <h2>Learn</h2>
-            <Link to="/curriculum">Curriculum</Link>
+            <Link to="/what-we-teach">What we teach</Link>
+            {!signedOut && <Link to="/curriculum">Curriculum</Link>}
             <Link to="/skills">Skills practice</Link>
           </div>
 

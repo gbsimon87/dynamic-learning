@@ -16,10 +16,10 @@ function mount(auth) {
   render(<AuthContext.Provider value={auth}><MemoryRouter><Home /></MemoryRouter></AuthContext.Provider>);
 }
 
-it("sends both signed-out curriculum calls to action directly to signup", () => {
+it("lets signed-out visitors explore coverage while the hero starts signup", () => {
   mount({ status: "signedOut", child: null });
   expect(screen.getByRole("link", { name: /Start my adventure/ }).getAttribute("href")).toBe("/signup");
-  expect(screen.getByRole("link", { name: /Explore the curriculum/ }).getAttribute("href")).toBe("/signup");
+  expect(screen.getByRole("link", { name: /Explore the curriculum/ }).getAttribute("href")).toBe("/what-we-teach");
 });
 
 it.each([

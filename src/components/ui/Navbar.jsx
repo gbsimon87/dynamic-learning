@@ -75,13 +75,13 @@ function Navbar() {
           <span className="navbar-link-label">Skills</span>
         </Link>
         <Link
-          to="/curriculum"
-          className={`navbar-link ${location.pathname.startsWith('/curriculum') ? 'active' : ''
+          to={status === 'signedOut' ? '/what-we-teach' : '/curriculum'}
+          className={`navbar-link ${(location.pathname.startsWith('/curriculum') || location.pathname === '/what-we-teach') ? 'active' : ''
             }`}
-          title="Curriculum"
+          title={status === 'signedOut' ? 'What we teach' : 'Curriculum'}
         >
           <span aria-hidden="true">{CURRICULUM_ICON}</span>
-          <span className="navbar-link-label">Curriculum</span>
+          <span className={status === 'signedOut' ? 'navbar-public-label' : 'navbar-link-label'}>{status === 'signedOut' ? 'What we teach' : 'Curriculum'}</span>
         </Link>
         {/* Only once a child is playing: the Trophy Room is theirs. */}
         {status === 'ready' && (

@@ -17,6 +17,7 @@ inventory for each pathway.
 | 2 | [English](../src/data/year2EnglishCurriculum.js) | 39 | 156 | Complete |
 | 2 | [Science](../src/data/year2ScienceCurriculum.js) | 19 | 76 | Complete |
 | 2 | [History](../src/data/year2HistoryCurriculum.js) | 17 | 68 | Complete |
+| 2 | [Geography](../src/data/year2GeographyCurriculum.js) | 14 | 56 | Complete |
 | 3 | [Maths](../src/data/year3MathCurriculum.js) | 44 | 176 | Complete |
 | 3 | [English](../src/data/year3EnglishCurriculum.js) | 32 | 128 | Complete |
 | 3 | [Science](../src/data/year3ScienceCurriculum.js) | 21 | 84 | Complete |
@@ -29,7 +30,7 @@ inventory for each pathway.
 | 4 | [History](../src/data/year4HistoryCurriculum.js) | 18 | 72 | Complete |
 | 5 | All subjects | 0 | 0 | Not implemented |
 | 6 | All subjects | 0 | 0 | Not implemented |
-| **Total** | **17 complete pathways** | **462 built** | **1,848 built** | |
+| **Total** | **20 complete pathways** | **504 built** | **2,016 built** | |
 
 Other year/subject combinations have no implemented Curriculum Mode pathway.
 History: Years 1–4 are complete (see
@@ -41,7 +42,8 @@ topics / 232 challenge briefs, with an embedded implementation tracker in each
 year spec and the shared spec. See [Geography specs](geography-curriculum/README.md).
 Subsequent owner requests implemented Year 3 and Year 4: 16 topics / 64 challenges
 each, included in the totals above. Year 1 (12 topics / 48 challenges) followed
-on 2026-10-13; see "Curriculum Mode — Year 1 Geography" below.
+on 2026-10-13; Year 2 (14 topics / 56 challenges) is also implemented.
+See "Curriculum Mode — Year 1 Geography" below.
 Geography uses the existing per-child progress tree and stays outside the
 overall year awards. Physical-device voice/touch review remains pending.
 
@@ -57,9 +59,9 @@ screens and uses the homepage's paired theme tokens. Subject icons appear beside
 the table's column headings, replacing the separate subject badge list. History
 also appears in the homepage hero (2026-10-13).
 
-For signed-out visitors, the homepage's “Start my adventure” and “Explore the
-curriculum” buttons link directly to `/signup`. Signed-in users retain curriculum
-access and their next-challenge resume destination (2026-10-13).
+For signed-out visitors, “Start my adventure” links to `/signup` and “Explore the
+curriculum” opens `/what-we-teach` (2026-10-15). Signed-in users retain curriculum
+access and their next-challenge resume destination.
 
 Homepage skill cards group their content in `.home-skill-copy`. At every viewport,
 the subject and skill name sit beside a compact icon, with the description below
@@ -91,6 +93,53 @@ screen width. Actions remain aligned at the bottom of each card row on desktop
 ---
 
 ## 1. What This Project Is
+
+Public curriculum overviews (2026-10-15): `/what-we-teach` groups all 20
+Years 1–4 Maths, English, Geography, Science and History guides by year.
+Each `/curriculum-guide/year-<year>-<subject>` page uses the approved colourful,
+spacious Year 3 Maths design. The public subject slug is `maths`; the curriculum
+registry keeps its existing `math` ID. `shared/curriculumGuides.js` contains
+reviewed public editorial copy keyed by category ID, subject-specific practical
+limits and game/activity suggestions. Exact topic names and counts are read
+from the existing curriculum registry. The same catalogue supplies public URLs,
+metadata and sitemap entries; no learner state is included.
+
+Summaries were checked against the topic inventories, `docs/curriculum/`
+crosswalks, lesson registry and challenge renderers. Geography and History explain
+that year allocations are Bix's choice within a statutory key stage; Years 3–4
+English identifies its shared programme. Short lesson screens are described for
+Maths and Year 3 English only. Science and History offer grown-up activity ideas
+rather than imply dedicated ungated games exist. All pages explain practical
+limits and avoid treating challenge counts as proof of full statutory coverage.
+Some mapping status paragraphs predate implementation; the live registry and
+challenge-availability checks confirm the shipped inventory.
+
+Signed-out main navigation and homepage “Explore the curriculum” open the public
+hub; “Start my adventure” still starts signup. All implemented homepage table
+cells link to their corresponding guides. A centred “Explore what we teach →”
+link directly beneath the table opens the full public hub, using the existing
+quiet button styling and touch target. The footer and signup link to the hub;
+each guide links to its year's other subjects. Signed-in learning navigation
+retains its existing destination. All 48 public URLs use anonymous prerendering,
+metadata, sitemap and existing server public-route handling. The guides use a
+lavender hero with decorative Bix, paired theme colours, concise topic cards,
+three learning steps and native expandable topic inventories/curriculum notes.
+
+Validation: lint and production build pass. Browser checks exercise all twenty
+guides without JavaScript and both themes at desktop/mobile widths; all public
+URLs are discoverable from homepage HTML. All 405 component tests pass.
+The English test blocker was fixed on 2026-10-15: prediction clue sorting now
+shuffles once and searches a finite set of compatible pairs instead of retrying
+random shuffles indefinitely. Every run still has five distinct pairs, covers all
+nine predictions with one repeat in the last round, and excludes ambiguous
+party/baking pairs. A new regression checks those constraints with constant RNGs;
+the original bounded-generator test is enabled and passes. `npm test` now runs
+unmodified to completion: 2,099 unit tests pass (four database-dependent skips)
+and all 405 component tests pass. Lint and the production build also pass.
+An isolated browser harness verifies the sorting challenge at mobile width in
+both themes with constant RNG 0.5: wrong answers retry, all five correct rounds
+finish and completion fires once. This checks the component, not the account or
+progress flow; no real learner state was used.
 
 SEO delivery (2026-10-14): public `/`, `/skills` and 25 `/learn/<game-slug>`
 guides now receive anonymous React HTML generated during `npm run build`.

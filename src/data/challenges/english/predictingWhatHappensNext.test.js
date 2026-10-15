@@ -108,3 +108,31 @@ test("level 2: a run never shows the same pair twice, and uses every prediction"
 test("level 3: the clue sits in every one of the four places somewhere in the bank", () => {
   assert.deepEqual([...new Set(CLUE_ITEMS.map((item) => item.answer))].sort(), [0, 1, 2, 3]);
 });
+
+test("level 2: constant randomness preserves coverage, distinct pairs and unambiguous clues", () => {
+  for (const value of [0, 0.5, 0.999]) {
+    const questions = buildPredictingQuestions(2, () => value);
+    assert.equal(questions.length, 5);
+    const seen = new Set();
+    const pairs = new Set();
+    const uses = new Map();
+    for (const question of questions) {
+      assert.deepEqual(questionProblems(question), []);
+      const ids = question.bins.map(bin => bin.id);
+      assert.equal(new Set(ids).size, 2);
+      assert.ok(!AVOID_PAIRS.some(pair => pair.every(id => ids.includes(id))));
+      pairs.add([...ids].sort().join("+"));
+      for (const id of ids) uses.set(id, (uses.get(id) ?? 0) + 1);
+      // Only the final round may reuse a prediction; all others come first.
+      if (seen.size < PREDICTIONS.length - 1) for (const id of ids) assert.ok(!seen.has(id));
+      ids.forEach(id => seen.add(id));
+      for (const card of question.cards) {
+        assert.ok(PREDICTIONS.find(item => item.id === card.bin).clues.includes(card.label));
+      }
+    }
+    assert.equal(pairs.size, 5);
+    assert.equal(seen.size, PREDICTIONS.length);
+    assert.equal([...uses.values()].filter(count => count === 2).length, 1);
+    assert.ok([...uses.values()].every(count => count <= 2));
+  }
+});

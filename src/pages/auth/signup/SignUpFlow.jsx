@@ -354,6 +354,7 @@ export default function SignUpFlow() {
         {hasBack && (
           <button type="button" className="auth-btn auth-btn-quiet" onClick={back} disabled={busy}>← Back</button>
         )}
+        <p className="auth-switch"><Link to="/what-we-teach">Explore what we teach</Link></p>
         {cursor.step === STEP.birthYear && (
           <p className="auth-switch">Already have an account? <Link to="/login">Sign in</Link></p>
         )}

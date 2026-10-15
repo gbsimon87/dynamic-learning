@@ -125,7 +125,7 @@ function FeaturedSkill({ skill }) {
   );
 }
 
-function CurriculumAdventure({ curriculumHref }) {
+function CurriculumAdventure({ overviewHref }) {
   return (
     <section className="home-section home-curriculum" aria-labelledby="home-curriculum-title">
       <div className="home-section-heading" data-reveal>
@@ -158,7 +158,7 @@ function CurriculumAdventure({ curriculumHref }) {
       </ol>
 
       <div className="home-curriculum-actions">
-        <Link className="home-btn home-btn-primary" to={curriculumHref}>
+        <Link className="home-btn home-btn-primary" to={overviewHref}>
           Explore the curriculum <span aria-hidden="true">→</span>
         </Link>
         <p>Built around the UK National Curriculum.</p>
@@ -289,7 +289,7 @@ function Home() {
         </div>
       </section>
 
-      <CurriculumAdventure curriculumHref={curriculumHref} />
+      <CurriculumAdventure overviewHref={status === "signedOut" ? "/what-we-teach" : curriculumHref} />
 
       <HomeAchievements candidates={candidates} />
 

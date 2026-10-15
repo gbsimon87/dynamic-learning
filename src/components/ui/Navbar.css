@@ -282,3 +282,5 @@ body.dark .navbar-streak-badge { background: var(--dark-accent); color: var(--on
   .navbar-links { min-width: 0; flex-wrap: wrap; justify-content: flex-end; }
   .navbar.hidden { top: calc(-1 * var(--navbar-height, 80px)); }
 }
+
+.navbar-public-label { font-size: 0.85rem; max-width: 5rem; padding-inline: 0.3rem; }

@@ -7,12 +7,13 @@ import AppFooter from '../components/ui/AppFooter';
 import Home from '../pages/home/Home';
 import SkillsPage from '../pages/skills/SkillsPage';
 import SkillGuide from './SkillGuide';
+import CurriculumGuide, { CurriculumOverview } from './CurriculumGuide';
 import { CURRICULUM_SUBJECTS, loadCurriculum } from '../data/curriculumRegistry';
 
 // Only public, anonymous content is rendered. No auth/store provider is mounted,
 // effects never run, and no private database/browser storage is read or written.
 export function renderPublicPage(pathname) {
-  const page = pathname === '/' ? <Home /> : pathname === '/skills' ? <SkillsPage /> : <SkillGuide slug={pathname.slice('/learn/'.length)} />;
+  const page = pathname === '/' ? <Home /> : pathname === '/skills' ? <SkillsPage /> : pathname === '/what-we-teach' ? <CurriculumOverview /> : pathname.startsWith('/curriculum-guide/') ? <CurriculumGuide slug={pathname.slice('/curriculum-guide/'.length)} /> : <SkillGuide slug={pathname.slice('/learn/'.length)} />;
   return renderToString(
     <AuthContext.Provider value={{ child: null, status: 'signedOut' }}>
       <ThemeContext.Provider value={{ theme: 'light', toggleTheme: () => {} }}>

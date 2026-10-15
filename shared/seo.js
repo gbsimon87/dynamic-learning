@@ -1,7 +1,8 @@
 import { SKILL_GUIDES } from './skillGuides.js';
+import { CURRICULUM_GUIDES } from './curriculumGuides.js';
 
 export const PUBLIC_ORIGIN = 'https://learnwithbix.com';
-export const PUBLIC_PATHS = ['/', '/skills', ...SKILL_GUIDES.map(guide => guide.path)];
+export const PUBLIC_PATHS = ['/', '/skills', '/what-we-teach', ...CURRICULUM_GUIDES.map(guide => guide.path), ...SKILL_GUIDES.map(guide => guide.path)];
 export const APP_PAGES = {
   '/login': 'Sign in', '/signup': 'Create an account', '/forgot-password': 'Reset your password',
   '/reset-password': 'Choose a new password', '/profiles': 'Learner profiles', '/parent': 'Parent area',
@@ -25,12 +26,19 @@ export function getPageSeo(pathname, { origin = PUBLIC_ORIGIN, indexable = true 
   origin = validateOrigin(origin);
   const path = normalisePath(pathname);
   const guide = SKILL_GUIDES.find(item => item.path === path || item.to === path);
+  const curriculumGuide = CURRICULUM_GUIDES.find(item => item.path === path);
   const isPublic = PUBLIC_PATHS.includes(path);
   let name = APP_PAGES[path];
   let description = 'Learning games and curriculum challenges with Learn with Bix.';
   if (path === '/') {
     name = 'Primary School Learning Games & UK Curriculum';
     description = 'Explore Maths, English, Science, History and Geography with Learn with Bix. Play skill games or follow a UK primary curriculum learning path.';
+  } else if (path === '/what-we-teach') {
+    name = 'What We Teach';
+    description = 'Explore Years 1–4 Maths, English, Geography, Science and History with Bix. See each learning path’s topics and find out how to get started.';
+  } else if (curriculumGuide) {
+    name = `${curriculumGuide.label}: Topics & Learning Path`;
+    description = `${curriculumGuide.intro} Explore ${curriculumGuide.label} with Bix before signing up.`;
   } else if (path === '/skills') {
     name = 'Maths, English & Geography Learning Games';
     description = `Explore ${SKILL_GUIDES.length} learning games for primary school children. Practise numbers, words, shapes and geography with Learn with Bix.`;
@@ -56,8 +64,8 @@ export function getPageSeo(pathname, { origin = PUBLIC_ORIGIN, indexable = true 
     });
     if (path !== '/') graph.push({ '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
-      { '@type': 'ListItem', position: 2, name: 'Skills', item: `${origin}/skills` },
-      ...(guide ? [{ '@type': 'ListItem', position: 3, name: guide.label, item: canonical }] : []),
+      { '@type': 'ListItem', position: 2, name: path === '/what-we-teach' || path.startsWith('/curriculum-guide/') ? 'What we teach' : 'Skills', item: `${origin}${path === '/what-we-teach' || path.startsWith('/curriculum-guide/') ? '/what-we-teach' : '/skills'}` },
+      ...(guide ? [{ '@type': 'ListItem', position: 3, name: guide.label, item: canonical }] : curriculumGuide ? [{ '@type': 'ListItem', position: 3, name: curriculumGuide.label, item: canonical }] : []),
     ] });
   }
   return { title, description, canonical, robots, isPublic, exists,

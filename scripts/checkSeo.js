@@ -9,6 +9,7 @@ import { JSDOM } from 'jsdom';
 import { chromium } from 'playwright-core';
 import { createApp } from '../server/app.js';
 import { PUBLIC_PATHS } from '../shared/seo.js';
+import { CURRICULUM_GUIDES } from '../shared/curriculumGuides.js';
 
 const dist = path.resolve('dist');
 const screenshots = path.resolve('.seo-artifacts');
@@ -40,7 +41,7 @@ try {
   assert.equal(xml.querySelectorAll('url > loc').length, PUBLIC_PATHS.length);
   for (const loc of xml.querySelectorAll('loc')) assert.ok(PUBLIC_PATHS.includes(new URL(loc.textContent).pathname));
   assert.equal((await fetch(`${base}/social-card.png`)).headers.get('content-type'), 'image/png');
-  for (const pathname of ['/missing', '/learn/missing', '/assets/missing.js', '/year/2/math/problem/missing/missing/999']) assert.equal((await fetch(`${base}${pathname}`)).status, 404);
+  for (const pathname of ['/missing', '/learn/missing', '/assets/missing.js', '/year/2/math/problem/missing/missing/999', '/curriculum-guide/year-5-maths', '/curriculum-guide/year-1-music']) assert.equal((await fetch(`${base}${pathname}`)).status, 404);
   for (const pathname of ['/login', '/parent', '/profiles', '/reset-password?token=example', '/number-bonds']) {
     const response = await fetch(`${base}${pathname}`);
     assert.equal(response.headers.get('x-robots-tag'), 'noindex, follow');
@@ -66,6 +67,11 @@ try {
   await page.locator('body.light, body.dark').waitFor();
   assert.equal(await page.getByRole('link', { name: 'Start my adventure', exact: true }).getAttribute('href'), '/signup');
   assert.ok(!loaded.some(url => /SolarSystem-.*\.js/.test(url)), '3D game code must not load on the homepage');
+  await page.goto(`${base}/what-we-teach`);
+  await page.getByRole('link', { name: /Year 3 Maths/ }).click();
+  await page.getByRole('heading', { name: 'Year 3 Maths with Bix', level: 1 }).waitFor();
+  await page.getByText('See all 7 topics', { exact: true }).first().click();
+  assert.ok(await page.getByText('Counting in Multiples of 4, 8, 50 and 100', { exact: true }).isVisible());
   await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Skills', exact: true }).click();
   await page.getByRole('heading', { name: 'Pick a game' }).waitFor();
   await page.getByRole('link', { name: 'About Number Bonds', exact: true }).click();
@@ -85,7 +91,7 @@ try {
   for (const width of [1280, 360]) for (const theme of ['light', 'dark']) {
     await page.setViewportSize({ width, height: 900 });
     await page.evaluate(theme => globalThis.localStorage.setItem('theme', theme), theme);
-    for (const [name, pathname] of [['home', '/'], ['skills', '/skills'], ['guide', '/learn/flag-finder']]) {
+    for (const [name, pathname] of [['home', '/'], ['skills', '/skills'], ['guide', '/learn/flag-finder'], ['overview', '/what-we-teach'], ...CURRICULUM_GUIDES.map(guide => [guide.slug, guide.path])]) {
       await page.goto(`${base}${pathname}`);
       await page.locator(`body.${theme}`).waitFor();
       assert.ok(await page.evaluate(() => globalThis.document.documentElement.scrollWidth <= globalThis.innerWidth + 1), `no horizontal overflow: ${name}/${width}/${theme}`);
@@ -94,6 +100,14 @@ try {
   }
   const noJs = await browser.newContext({ javaScriptEnabled: false });
   const staticPage = await noJs.newPage();
+  for (const guide of CURRICULUM_GUIDES) {
+    await staticPage.goto(`${base}/what-we-teach`);
+    await staticPage.getByRole('link', { name: new RegExp(guide.label) }).click();
+    await staticPage.getByRole('heading', { name: `${guide.label} with Bix`, level: 1 }).waitFor();
+    assert.ok((await staticPage.getByRole('main').innerText()).includes('What does Bix cover?'));
+    await staticPage.locator('.curriculum-guide-area summary').first().click();
+    assert.ok(await staticPage.locator('.curriculum-guide-area details[open] li').first().isVisible());
+  }
   await staticPage.goto(`${base}/learn/flag-finder`);
   await staticPage.getByRole('heading', { name: 'Flag Finder', level: 1 }).waitFor();
   assert.ok((await staticPage.getByRole('main').innerText()).includes('REST Countries'));
