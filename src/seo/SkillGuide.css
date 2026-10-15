@@ -45,3 +45,30 @@ body.dark .skill-guide {
 }
 .skill-guide a:focus-visible { outline: 3px solid var(--guide-ink); outline-offset: 4px; }
 @media (max-width: 600px) { .skill-guide { margin: 0.5rem 0.75rem 2rem; } }
+
+/* --- /learn/:slug game guides, built on the curriculum-guide look --- */
+.skill-guide-game { --tone-bg: var(--area-bg); --tone-ink: var(--area-ink); }
+.curriculum-guide.skill-guide-game .skill-guide-hero { background: var(--tone-bg); grid-template-columns: minmax(0, 1fr) 10rem; }
+.skill-guide-game .curriculum-guide-eyebrow { color: var(--tone-ink); text-transform: uppercase; }
+.skill-guide-game h1 { max-width: 18ch; }
+.skill-guide-icon { display: grid; place-items: center; width: 10rem; height: 10rem; font-size: 5rem; border-radius: 50%; background: var(--guide-panel); }
+.skill-guide-game .skill-guide-play { min-height: 56px; padding: 0.75rem 1.5rem; font-size: 1.15rem; border-radius: 1rem; }
+.skill-guide-game .skill-guide-play:hover { transform: translateY(-2px); }
+.skill-guide-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; margin-top: 2.5rem; }
+.curriculum-guide.skill-guide-game .skill-guide-cards > section { margin: 0; background: var(--guide-panel); }
+.skill-guide-cards h2 { font-size: 1.35rem; color: var(--tone-ink); }
+.skill-guide-cards p { margin: 0; }
+.skill-guide-skills { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.skill-guide-skills li { padding: 0.4rem 0.9rem; border-radius: 2rem; background: var(--tone-bg); color: var(--tone-ink); font-weight: bold; }
+.skill-guide-fit { font-size: 1rem; }
+.curriculum-guide.skill-guide-game > section { margin-top: 3rem; }
+.skill-guide-game .curriculum-guide-games a { color: inherit; }
+.skill-guide-game .curriculum-guide-games strong { font-size: 1.15rem; }
+.skill-guide-game .curriculum-guide-games a > span:last-child { color: var(--tone-ink); }
+.skill-guide-game .skill-guide-all { margin-top: 1rem; font-weight: bold; }
+@media (max-width: 700px) {
+  .curriculum-guide.skill-guide-game .skill-guide-hero { grid-template-columns: 1fr; }
+  .skill-guide-icon { display: none; }
+  .skill-guide-cards { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { .skill-guide-game .skill-guide-play:hover { transform: none; } }

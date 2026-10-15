@@ -27,7 +27,7 @@ function AnswerFeedbackLine({ feedback, ref }) {
   return (
     <p
       ref={ref}
-      className={`feedback challenge-feedback free-play-feedback ${feedback ? TONE_CLASS[feedback.tone] : ""}`}
+      className={`challenge-feedback free-play-feedback ${feedback ? TONE_CLASS[feedback.tone] : ""}`}
       role="status"
       aria-live="polite"
     >

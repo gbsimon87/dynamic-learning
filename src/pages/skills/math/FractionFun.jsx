@@ -1,6 +1,9 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import { ThemeContext } from '../../../context/theme-context';
 import './FractionFun.css';
+import SpeakButton from '../../../components/challenge/SpeakButton';
+import AnswerFeedbackLine from '../../../components/skills/AnswerFeedbackLine';
+import { useAnswerFeedback } from '../../../components/skills/useAnswerFeedback';
 
 // Utility to generate a random fraction
 function generateFraction() {
@@ -15,8 +18,12 @@ export default function FractionFun() {
   const [fraction, setFraction] = useState(generateFraction());
   const [selected, setSelected] = useState(new Set());
   const [feedback, setFeedback] = useState(null);
+  const fb = useAnswerFeedback();
+  const missedRef = useRef(false);
+  const lockedRef = useRef(false);
 
   const handleSelect = (index) => {
+    if (lockedRef.current) return;
     const newSet = new Set(selected);
     if (newSet.has(index)) newSet.delete(index);
     else newSet.add(index);
@@ -43,17 +50,25 @@ export default function FractionFun() {
   };
 
   const handleCheck = () => {
+    if (lockedRef.current || selected.size === 0) return;
     const correctCount = fraction.numerator;
     if (selected.size === correctCount) {
+      lockedRef.current = true;
+      fb.answer(true, { firstTry: !missedRef.current });
       setFeedback('correct');
       schedule(() => {
         setFraction(generateFraction());
         setSelected(new Set());
         setFeedback(null);
+        missedRef.current = false;
+        lockedRef.current = false;
+        fb.clear();
       }, 1200);
     } else {
+      fb.answer(false);
+      missedRef.current = true;
       setFeedback('wrong');
-      schedule(() => setFeedback(null), 800);
+      schedule(() => { setFeedback(null); fb.clear(); }, 800);
     }
   };
 
@@ -63,14 +78,19 @@ export default function FractionFun() {
 
       <p className="fraction-prompt">
         Shade <strong>{fraction.numerator}/{fraction.denominator}</strong> of the bar
+        {' '}<SpeakButton text={`Shade ${fraction.numerator} ${fraction.numerator === 1 ? 'part' : 'parts'} out of ${fraction.denominator} of the bar`} label="Hear the fraction" compact />
       </p>
 
-      <div className="fraction-bar">
+      <div className="fraction-bar" ref={fb.answerRef}>
         {Array.from({ length: fraction.denominator }, (_, i) => (
-          <div
+          <button
+            type="button"
             key={i}
             className={`fraction-segment ${selected.has(i) ? 'filled' : ''}`}
             onClick={() => handleSelect(i)}
+            disabled={lockedRef.current}
+            aria-label={`Part ${i + 1} of ${fraction.denominator}, ${selected.has(i) ? 'shaded' : 'unshaded'}`}
+            aria-pressed={selected.has(i)}
           />
         ))}
       </div>
@@ -78,16 +98,12 @@ export default function FractionFun() {
       <button
         onClick={handleCheck}
         className="fraction-btn"
-        disabled={selected.size === 0}
+        disabled={selected.size === 0 || feedback === 'correct'}
       >
         Check
       </button>
 
-      {feedback && (
-        <div className={`fraction-feedback ${feedback}`}>
-          {feedback === 'correct' ? '✅ Correct!' : '❌ Try again!'}
-        </div>
-      )}
+      <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
     </div>
   );
 }

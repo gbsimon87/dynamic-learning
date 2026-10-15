@@ -1,6 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './MathPractice.css';
 import { generateQuestion, OPERATIONS } from './generateQuestion';
+import { mathToSpeech } from '../../../data/mathSpeech';
+import SpeakButton from '../../../components/challenge/SpeakButton';
+import AnswerFeedbackLine from '../../../components/skills/AnswerFeedbackLine';
+import { useAnswerFeedback } from '../../../components/skills/useAnswerFeedback';
 
 const VALUE_FLOOR = 1;
 const VALUE_CEILING = 100;
@@ -26,17 +30,22 @@ function MathPractice() {
   const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
+  const fb = useAnswerFeedback();
+  const selectedRef = useRef(false);
+  const clearFeedback = fb.clear;
 
   useEffect(() => {
     if (started && selected !== null) {
       const timer = setTimeout(() => {
         setQuestion(generateQuestion(settings));
         setSelected(null);
+        selectedRef.current = false;
+        clearFeedback();
       }, 1500);
       return () => clearTimeout(timer);
     }
     // Safe dep: settings can't change mid-run (sliders are pre-start only).
-  }, [selected, started, settings]);
+  }, [selected, started, settings, clearFeedback]);
 
   // Keep at least one operation selected.
   function toggleOperation(operation) {
@@ -73,6 +82,8 @@ function MathPractice() {
   }
 
   function startPractice() {
+    fb.reset();
+    selectedRef.current = false;
     setStarted(true);
     setScore(0);
     setTotal(0);
@@ -80,8 +91,10 @@ function MathPractice() {
   }
 
   function handleSelect(option) {
-    if (selected !== null) return;
+    if (selectedRef.current || selected !== null) return;
+    selectedRef.current = true;
     setSelected(option);
+    fb.answer(option === question.correctAnswer);
     setTotal(total + 1);
     if (option === question.correctAnswer) {
       setScore(score + 1);
@@ -89,6 +102,8 @@ function MathPractice() {
   }
 
   function handleRestart() {
+    fb.reset();
+    selectedRef.current = false;
     setStarted(false);
     setQuestion(null);
     setSelected(null);
@@ -186,15 +201,10 @@ function MathPractice() {
 
       <h2 className="prompt">Solve:</h2>
 
-      <div className="word">{question?.questionText} = ?</div>
+      <div className="word" ref={fb.answerRef}>{question?.questionText} = ? <SpeakButton text={mathToSpeech(`${question?.questionText} = ?`)} label="Hear the question" compact /></div>
 
-      {selected !== null && (
-        <div className={`feedback ${isCorrect ? 'correct' : 'wrong'}`}>
-          {isCorrect
-            ? '✓ Correct!'
-            : `✗ Shucks! It was ${question.correctAnswer}`}
-        </div>
-      )}
+      {selected !== null && !isCorrect && <p className="answer-reveal">The answer was {question.correctAnswer}.</p>}
+      <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
 
       <div className="options">
         {question?.options.map((option) => {

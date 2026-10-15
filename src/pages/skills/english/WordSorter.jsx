@@ -1,7 +1,10 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { ThemeContext } from '../../../context/theme-context';
 import './WordSorter.css';
+import SpeakButton from '../../../components/challenge/SpeakButton';
+import AnswerFeedbackLine from '../../../components/skills/AnswerFeedbackLine';
+import { useAnswerFeedback } from '../../../components/skills/useAnswerFeedback';
 
 // Simple dataset
 const WORD_BANK = [
@@ -81,16 +84,20 @@ export default function WordSorter() {
   });
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
-  const [feedback, setFeedback] = useState(null);
   const [completed, setCompleted] = useState(false);
+  const [roundKey, setRoundKey] = useState(0);
+  const fb = useAnswerFeedback();
+  const clearFeedback = fb.clear;
+  const answerFeedback = fb.answer;
 
   // Used by both the auto-advance and the manual button.
-  function startNewRound() {
+  const startNewRound = useCallback(() => {
+    setRoundKey((key) => key + 1);
     setWords(generateSet());
     setBuckets({ noun: [], verb: [], adjective: [] });
-    setFeedback(null);
     setCompleted(false);
-  }
+    clearFeedback();
+  }, [clearFeedback]);
 
   // Handle drag end logic
   function handleDragEnd(result) {
@@ -142,10 +149,10 @@ export default function WordSorter() {
       setTotal((prev) => prev + allSorted.length);
 
       const isPerfect = correctCount === allSorted.length;
-      setFeedback(isPerfect ? 'correct' : 'wrong');
+      answerFeedback(isPerfect);
       setCompleted(true);
     }
-  }, [buckets, completed]);
+  }, [buckets, completed, answerFeedback]);
 
   // Must be its own effect keyed on `completed`: scheduling it alongside
   // setCompleted(true) meant the cleanup cleared the timer before it fired.
@@ -153,7 +160,7 @@ export default function WordSorter() {
     if (!completed) return;
     const timer = setTimeout(() => startNewRound(), 2000);
     return () => clearTimeout(timer);
-  }, [completed]);
+  }, [completed, startNewRound]);
 
   // Match by value, not object identity.
   function getTypeOfBucket(word, allBuckets) {
@@ -166,8 +173,9 @@ export default function WordSorter() {
     <div className={`sorter-wrapper ${theme}`}>
       <div className="sorter-score">Score: {score} / {total}</div>
       <h2 className="sorter-prompt">Drag each word into the correct category</h2>
+      <SpeakButton getText={() => `Sort each word into nouns, verbs, and adjectives. Words: ${[...words, ...TYPES.flatMap((type) => buckets[type])].map((item) => item.word).join(', ')}`} resetKey={roundKey} label="Hear the words" compact />
 
-      <DragDropContext onDragEnd={handleDragEnd}>
+      <div ref={fb.answerRef}><DragDropContext onDragEnd={handleDragEnd}>
         {/* Unsorted Words */}
         <Droppable droppableId="words" direction="horizontal">
           {(provided) => (
@@ -238,13 +246,9 @@ export default function WordSorter() {
             </Droppable>
           ))}
         </div>
-      </DragDropContext>
+      </DragDropContext></div>
 
-      {feedback && (
-        <div className={`sorter-feedback ${feedback}`}>
-          {feedback === 'correct' ? '✓ Perfect sorting!' : '✗ Some are incorrect'}
-        </div>
-      )}
+      <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
 
       <button className="sorter-newBtn" onClick={startNewRound} disabled={completed}>
         🔄 New words

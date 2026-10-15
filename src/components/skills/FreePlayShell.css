@@ -176,6 +176,13 @@ body.dark .free-play-page {
 }
 
 /* --- milestone: the combo's look, a size up --- */
+.free-play-feedback {
+  min-height: 1.6em;
+  margin-top: 1.2rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
 .free-play-feedback.free-play-milestone {
   font-size: 1.3rem;
 }

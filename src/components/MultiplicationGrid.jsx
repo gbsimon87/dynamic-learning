@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './MultiplicationGrid.css';
+import SpeakButton from './challenge/SpeakButton';
 
 const MIN_VAL = 1;
 const MAX_VAL = 20;
@@ -30,11 +31,6 @@ function MultiplicationGrid() {
     setHoveredCol(c);
   }
 
-  function handleMouseLeave() {
-    setHoveredRow(null);
-    setHoveredCol(null);
-  }
-
   const table = [];
   for (let r = 0; r <= rows; r++) {
     const row = [];
@@ -59,9 +55,9 @@ function MultiplicationGrid() {
             key={`cell-${r}-${c}`}
             className={`cell ${isActive ? 'highlight' : ''} ${isFocused ? 'focus' : ''}`}
             onMouseEnter={() => handleMouseEnter(r, c)}
-            onMouseLeave={handleMouseLeave}
+            onClick={() => handleMouseEnter(r, c)}
           >
-            {result}
+            <button type="button" className="multiplication-cell-button" onFocus={() => handleMouseEnter(r, c)} aria-label={`${r} times ${c} equals ${result}`}>{result}</button>
           </td>
         );
       }
@@ -108,6 +104,7 @@ function MultiplicationGrid() {
       {showCalculation && (
         <div className="calculation-display">
           {showCalculation}
+          {' '}<SpeakButton text={`${hoveredRow} times ${hoveredCol} equals ${hoveredRow * hoveredCol}`} label="Hear the multiplication" compact />
         </div>
       )}
     </div>

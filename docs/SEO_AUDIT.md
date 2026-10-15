@@ -300,6 +300,13 @@ public rendering, JSON-LD, shared caches or sitemap generation.
 
 ## Longer-term opportunities
 
+**Update (2026-10-15):** the public year/subject overviews proposed in item 1
+below are now implemented for all 20 Years 1–4 subject combinations, with a
+`/what-we-teach` hub. See “Public curriculum overviews (2026-10-15)” in
+[PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md) and the updated
+[follow-up checklist](SEO_NEXT_STEPS.md). The audit and verification counts above
+record the original implementation, before these pages were added.
+
 1. Improve useful public information first: expand guides with specific supported
    examples, parent guidance and accessible alternatives. Avoid mass-producing
    thin pages just because challenge IDs exist. Add substantive public year/subject

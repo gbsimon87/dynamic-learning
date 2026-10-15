@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import DualLabelClock from './DualLabelClock';
+import SpeakButton from './challenge/SpeakButton';
 
 function ClockPanel({ theme }) {
   console.log(`ClockPanel is running with theme: ${theme}`);
@@ -75,6 +76,7 @@ function ClockPanel({ theme }) {
           {formatTime(clockTime)}
         </div>
       )}
+      <SpeakButton text={clockTime.toLocaleTimeString('en-GB', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: false })} label="Hear the time" compact />
 
       <div className="option-list">
         <label>

@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import SpeakButton from './challenge/SpeakButton';
+import AnswerFeedbackLine from './skills/AnswerFeedbackLine';
+import { useAnswerFeedback } from './skills/useAnswerFeedback';
 
 const shapes = [
   { name: 'Circle', id: 'circle' },
@@ -45,21 +48,28 @@ function ShapeQuiz() {
   const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
+  const fb = useAnswerFeedback();
+  const selectedRef = useRef(false);
+  const clearFeedback = fb.clear;
 
   useEffect(() => {
     if (selected !== null) {
       const timer = setTimeout(() => {
         setQuestion(generateQuestion());
         setSelected(null);
+        selectedRef.current = false;
+        clearFeedback();
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [selected]);
+  }, [selected, clearFeedback]);
 
   function handleSelect(option) {
-    if (selected !== null) return;
+    if (selectedRef.current || selected !== null) return;
+    selectedRef.current = true;
 
     setSelected(option.id);
+    fb.answer(option.id === question.shape.id);
     setTotal(total + 1);
     if (option.id === question.shape.id) {
       setScore(score + 1);
@@ -257,7 +267,7 @@ function ShapeQuiz() {
         Score: {score} / {total}
       </div>
 
-      <div style={{
+      <div ref={fb.answerRef} style={{
         width: '200px',
         height: '200px',
         display: 'flex',
@@ -278,6 +288,7 @@ function ShapeQuiz() {
         marginTop: '1rem'
       }}>
         What shape is this?
+        {' '}<SpeakButton text="What shape is this?" label="Hear the question" compact />
       </div>
 
       <div style={{
@@ -352,16 +363,8 @@ function ShapeQuiz() {
         })}
       </div>
 
-      {selected !== null && (
-        <div style={{
-          fontSize: '1.25rem',
-          fontWeight: '600',
-          color: isCorrect ? '#10b981' : '#ef4444',
-          marginTop: '0.5rem'
-        }}>
-          {isCorrect ? '✓ Correct!' : `✗ Shucks! It was a ${question.shape.name}`}
-        </div>
-      )}
+      {selected !== null && !isCorrect && <p>The shape was a {question.shape.name}.</p>}
+      <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
     </div>
   );
 }

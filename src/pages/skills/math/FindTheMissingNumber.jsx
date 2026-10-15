@@ -1,5 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './FindTheMissingNumber.css';
+import SpeakButton from '../../../components/challenge/SpeakButton';
+import AnswerFeedbackLine from '../../../components/skills/AnswerFeedbackLine';
+import { useAnswerFeedback } from '../../../components/skills/useAnswerFeedback';
 
 function shuffleArray(array) {
   const newArray = [...array];
@@ -45,18 +48,25 @@ function FindTheMissingNumber() {
   const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
+  const fb = useAnswerFeedback();
+  const selectedRef = useRef(false);
+  const clearFeedback = fb.clear;
 
   useEffect(() => {
     if (selected !== null) {
       const timer = setTimeout(() => {
         setQuestion(generatePattern(skip));
         setSelected(null);
+        selectedRef.current = false;
+        clearFeedback();
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [selected, skip]);
+  }, [selected, skip, clearFeedback]);
 
   function startPractice() {
+    fb.reset();
+    selectedRef.current = false;
     setStarted(true);
     setScore(0);
     setTotal(0);
@@ -64,8 +74,10 @@ function FindTheMissingNumber() {
   }
 
   function handleSelect(num) {
-    if (selected !== null) return;
+    if (selectedRef.current || selected !== null) return;
+    selectedRef.current = true;
     setSelected(num);
+    fb.answer(num === question.correctAnswer);
     setTotal(total + 1);
     if (num === question.correctAnswer) {
       setScore(score + 1);
@@ -73,6 +85,8 @@ function FindTheMissingNumber() {
   }
 
   function handleRestart() {
+    fb.reset();
+    selectedRef.current = false;
     setStarted(false);
     setSelected(null);
   }
@@ -116,15 +130,10 @@ function FindTheMissingNumber() {
 
       <h2 className="prompt">What number is missing?</h2>
 
-      <div className="word">{displayedSequence}</div>
+      <div className="word" ref={fb.answerRef}>{displayedSequence} <SpeakButton text={`What number is missing? ${question.sequence.map((num, i) => i === question.missingIndex ? 'blank' : num).join(', ')}`} label="Hear the pattern" compact /></div>
 
-      {selected !== null && (
-        <div className={`feedback ${isCorrect ? 'correct' : 'wrong'}`}>
-          {isCorrect
-            ? '✓ Correct!'
-            : `✗ Shucks! It was ${question.correctAnswer}`}
-        </div>
-      )}
+      {selected !== null && !isCorrect && <p className="answer-reveal">The missing number was {question.correctAnswer}.</p>}
+      <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
 
       <div className="options">
         {question.options.map((option) => {

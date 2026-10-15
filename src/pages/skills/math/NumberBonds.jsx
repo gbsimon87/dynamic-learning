@@ -1,6 +1,9 @@
 import { useState, useEffect, useContext, useRef, useCallback } from 'react';
 import { ThemeContext } from '../../../context/theme-context';
 import './NumberBonds.css';
+import SpeakButton from '../../../components/challenge/SpeakButton';
+import AnswerFeedbackLine from '../../../components/skills/AnswerFeedbackLine';
+import { useAnswerFeedback } from '../../../components/skills/useAnswerFeedback';
 
 // Utility: shuffle array
 function shuffle(array) {
@@ -77,11 +80,18 @@ export default function NumberBonds() {
   const [tries, setTries] = useState(0);
   const [matches, setMatches] = useState(0);
   const [feedback, setFeedback] = useState(null);
+  const fb = useAnswerFeedback();
+  const missedRef = useRef(false);
+  const practiceLockedRef = useRef(false);
+  const pendingFlipsRef = useRef([]);
+  const evaluatedPairRef = useRef('');
+  const clearFeedback = fb.clear;
+  const resetFeedback = fb.reset;
+  const answerFeedback = fb.answer;
 
   // Practice mode state
   const [question, setQuestion] = useState(null);
   const [answer, setAnswer] = useState('');
-  const [practiceFeedback, setPracticeFeedback] = useState(null);
 
   // 🎯 Generate new question for Practice Mode
   const generateQuestion = useCallback(() => {
@@ -89,11 +99,17 @@ export default function NumberBonds() {
     const correct = target - a;
     setQuestion({ a, correct });
     setAnswer('');
-    setPracticeFeedback(null);
-  }, [target]);
+    missedRef.current = false;
+    practiceLockedRef.current = false;
+    clearFeedback();
+  }, [target, clearFeedback]);
 
   // Reset when target or mode changes
   useEffect(() => {
+    resetFeedback();
+    missedRef.current = false;
+    pendingFlipsRef.current = [];
+    evaluatedPairRef.current = '';
     if (practiceTimerRef.current) {
       clearTimeout(practiceTimerRef.current);
       practiceTimerRef.current = null;
@@ -109,16 +125,20 @@ export default function NumberBonds() {
     } else {
       generateQuestion();
     }
-  }, [target, mode, generateQuestion]);
+  }, [target, mode, generateQuestion, resetFeedback]);
 
   // 🔹 Flip logic for Match Mode
   const handleFlip = (id) => {
-    if (flipped.length === 2 || flipped.includes(id) || matched.includes(id)) return;
-    setFlipped(prev => [...prev, id]);
+    if (pendingFlipsRef.current.length === 2 || pendingFlipsRef.current.includes(id) || matched.includes(id)) return;
+    pendingFlipsRef.current = [...pendingFlipsRef.current, id];
+    setFlipped(pendingFlipsRef.current);
   };
 
   useEffect(() => {
     if (mode !== 'match' || flipped.length !== 2) return;
+    const pairKey = flipped.join(':');
+    if (evaluatedPairRef.current === pairKey) return;
+    evaluatedPairRef.current = pairKey;
     const [first, second] = flipped.map(id => cards.find(c => c.id === id));
     setTries(t => t + 1);
 
@@ -126,13 +146,18 @@ export default function NumberBonds() {
       setMatched(m => [...m, first.id, second.id]);
       setMatches(prev => prev + 1);
       setFeedback('correct');
+      answerFeedback(true, { firstTry: !missedRef.current });
+      missedRef.current = false;
       setFlipped([]);
+      pendingFlipsRef.current = [];
     } else {
       setFeedback('wrong');
-      const timer = setTimeout(() => setFlipped([]), 1000);
+      answerFeedback(false);
+      missedRef.current = true;
+      const timer = setTimeout(() => { setFlipped([]); pendingFlipsRef.current = []; evaluatedPairRef.current = ''; }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [flipped, cards, target, mode]);
+  }, [flipped, cards, target, mode, answerFeedback]);
 
   // Feedback reset
   useEffect(() => {
@@ -152,16 +177,22 @@ export default function NumberBonds() {
         setTries(0);
         setMatches(0);
         setFeedback(null);
+        clearFeedback();
+        missedRef.current = false;
+        pendingFlipsRef.current = [];
+        evaluatedPairRef.current = '';
       }, 2000);
       return () => clearTimeout(timer);
     }
-  }, [matched, cards, target, mode]);
+  }, [matched, cards, target, mode, clearFeedback]);
 
   // 🔢 Practice mode submit
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!question || practiceLockedRef.current || !answer) return;
     if (parseInt(answer) === question.correct) {
-      setPracticeFeedback('correct');
+      practiceLockedRef.current = true;
+      fb.answer(true, { firstTry: !missedRef.current });
       // Tracked: previously this fired even after switching to Match Mode,
       // calling setQuestion on a component no longer showing a question.
       if (practiceTimerRef.current) clearTimeout(practiceTimerRef.current);
@@ -170,7 +201,8 @@ export default function NumberBonds() {
         generateQuestion();
       }, 1000);
     } else {
-      setPracticeFeedback('wrong');
+      fb.answer(false);
+      missedRef.current = true;
     }
   };
 
@@ -243,7 +275,7 @@ export default function NumberBonds() {
             Pairs: {matches} / {cards.length / 2} | Tries: {tries}
           </div>
 
-          <p className="bonds-prompt">Find two numbers that add up to <strong>{target}</strong></p>
+          <p className="bonds-prompt">Find two numbers that add up to <strong>{target}</strong> <SpeakButton getText={() => `Find two numbers that add up to ${target}. Shown numbers: ${cards.filter((card) => flipped.includes(card.id) || matched.includes(card.id)).map((card) => card.value).join(', ') || 'Flip a card first'}.`} resetKey={cards.map((card) => card.id).join('|')} label="Hear shown numbers" compact /></p>
 
           {pairCountForTarget(target) < MIN_USEFUL_PAIRS && (
             <p className="bonds-notice">
@@ -253,30 +285,29 @@ export default function NumberBonds() {
             </p>
           )}
 
-          <div className="bonds-grid">
+          <div className="bonds-grid" ref={fb.answerRef}>
             {cards.map((card) => {
               const isFlipped = flipped.includes(card.id) || matched.includes(card.id);
               return (
-                <div
+                <button
+                  type="button"
                   key={card.id}
                   className={`bonds-card ${isFlipped ? 'flipped' : ''} ${matched.includes(card.id) ? 'matched' : ''
                     }`}
                   onClick={() => handleFlip(card.id)}
+                  disabled={matched.includes(card.id) || flipped.length === 2}
+                  aria-label={isFlipped ? `Number ${card.value}` : 'Hidden number card'}
                 >
                   <div className="bonds-card-inner">
                     <div className="bonds-card-front">❓</div>
                     <div className="bonds-card-back">{card.value}</div>
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>
+          <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
 
-          {feedback && feedback !== 'done' && (
-            <div className={`bonds-feedback ${feedback}`}>
-              {feedback === 'correct' ? '✅ Great job!' : '❌ Try again!'}
-            </div>
-          )}
 
           {feedback === 'done' && (
             <div className="bonds-feedback correct">🎉 You matched them all!</div>
@@ -286,7 +317,8 @@ export default function NumberBonds() {
 
       {/* Practice Mode */}
       {mode === 'practice' && question && (
-        <div className="practice-container">
+        <div className="practice-container" ref={fb.answerRef}>
+          <SpeakButton text={`${question.a} plus what equals ${target}?`} label="Hear the equation" compact />
           <div className="practice-equation">
             <span>{question.a}</span>
             <span> + </span>
@@ -315,13 +347,7 @@ export default function NumberBonds() {
             <span> = {target}</span>
           </div>
 
-          {practiceFeedback && (
-            <div className={`bonds-feedback ${practiceFeedback}`}>
-              {practiceFeedback === 'correct'
-                ? '✅ Correct!'
-                : `❌ Try again!`}
-            </div>
-          )}
+          <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
         </div>
       )}
     </div>

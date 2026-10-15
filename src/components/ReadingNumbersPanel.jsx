@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import writtenNumber from 'written-number';
 import './ReadingNumbersPanel.css';
+import SpeakButton from './challenge/SpeakButton';
 
 const MAX_ALLOWED = 775840;
 
@@ -98,6 +99,7 @@ function ReadingNumbersPanel() {
               <div className="output-text">{written}</div>
             </>
           )}
+          <SpeakButton text={written} label="Hear the number" compact />
         </div>
       )}
     </div>

@@ -1,7 +1,10 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { ThemeContext } from '../../../context/theme-context';
 import './OppositeMatch.css';
+import SpeakButton from '../../../components/challenge/SpeakButton';
+import AnswerFeedbackLine from '../../../components/skills/AnswerFeedbackLine';
+import { useAnswerFeedback } from '../../../components/skills/useAnswerFeedback';
 
 const PAIRS = [
   // 🌡️ Temperature / Weather
@@ -102,6 +105,11 @@ export default function OppositeMatch() {
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
   const [feedback, setFeedback] = useState(null);
+  const [roundKey, setRoundKey] = useState(0);
+  const fb = useAnswerFeedback();
+  const missedWordsRef = useRef(new Set());
+  const matchedWordsRef = useRef(new Set());
+  const clearFeedback = fb.clear;
 
   // Setup words each round
   useEffect(() => {
@@ -114,21 +122,20 @@ export default function OppositeMatch() {
     if (!result.destination) return;
 
     const dragged = result.draggableId;       // left word
+    if (matchedWordsRef.current.has(dragged)) return;
     const target = result.destination.droppableId; // right word
 
     const pair = pairs.find(([a]) => a === dragged);
     const correct = pair && pair[1] === target;
+    fb.answer(Boolean(correct), { firstTry: !missedWordsRef.current.has(dragged) });
+    if (!correct) missedWordsRef.current.add(dragged);
 
     setTotal(prev => prev + 1);
 
     if (correct) {
+      matchedWordsRef.current.add(dragged);
       setScore(prev => prev + 1);
       setMatches(prev => ({ ...prev, [dragged]: target }));
-      setFeedback('correct');
-    } else {
-      setFeedback('wrong');
-      // brief shake animation resets feedback
-      setTimeout(() => setFeedback(null), 800);
     }
   }
 
@@ -138,19 +145,24 @@ export default function OppositeMatch() {
       setFeedback('done');
       const timer = setTimeout(() => {
         setPairs(getRandomPairs());
+        setRoundKey((key) => key + 1);
         setMatches({});
         setFeedback(null);
+        missedWordsRef.current.clear();
+        matchedWordsRef.current.clear();
+        clearFeedback();
       }, 2000);
       return () => clearTimeout(timer);
     }
-  }, [matches, pairs]);
+  }, [matches, pairs, clearFeedback]);
 
   return (
     <div className={`match-wrapper ${theme}`}>
       <div className="match-score">Score: {score} / {total}</div>
       <h2 className="match-prompt">Drag each word to its opposite</h2>
+      <SpeakButton getText={() => `Drag each word to its opposite. Words: ${leftWords.join(', ')}. Opposites: ${rightWords.join(', ')}.`} resetKey={roundKey} label="Hear the words" compact />
 
-      <div className="match-area">
+      <div className="match-area" ref={fb.answerRef}>
         <DragDropContext onDragEnd={handleDragEnd}>
           {/* Left column: Draggable words */}
           <Droppable droppableId="left-column" isDropDisabled={true}>
@@ -218,11 +230,7 @@ export default function OppositeMatch() {
         </DragDropContext>
       </div>
 
-      {feedback && feedback !== 'done' && (
-        <div className={`match-feedback ${feedback}`}>
-          {feedback === 'correct' ? '✅ Correct!' : '❌ Try again!'}
-        </div>
-      )}
+      <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
       {feedback === 'done' && (
         <div className="match-feedback correct">🎉 Well done!</div>
       )}

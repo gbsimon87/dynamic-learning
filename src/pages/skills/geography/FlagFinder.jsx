@@ -2,6 +2,9 @@ import { useState, useEffect, useMemo, useContext, useRef, useSyncExternalStore 
 import { ThemeContext } from '../../../context/theme-context';
 import './FlagFinder.css';
 import { flagCountriesStore } from '../../../data/flagCountries';
+import SpeakButton from '../../../components/challenge/SpeakButton';
+import AnswerFeedbackLine from '../../../components/skills/AnswerFeedbackLine';
+import { useAnswerFeedback } from '../../../components/skills/useAnswerFeedback';
 
 const ALL_CONTINENTS = 'all';
 
@@ -61,6 +64,9 @@ export default function FlagFinder({ countryStore = flagCountriesStore }) {
   const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
+  const fb = useAnswerFeedback();
+  const selectedRef = useRef(false);
+  const clearFeedback = fb.clear;
   useEffect(() => { countryStore.start(); }, [countryStore]);
 
   // Countries available for the chosen continent.
@@ -91,15 +97,19 @@ export default function FlagFinder({ countryStore = flagCountriesStore }) {
       if (next) {
         setQuestion(next);
         setSelected(null);
+        selectedRef.current = false;
+        clearFeedback();
       }
     }, 1500);
     return () => clearTimeout(timer);
-  }, [selected]);
+  }, [selected, clearFeedback]);
 
   const handleSelect = (option) => {
-    if (selected !== null) return;
+    if (selectedRef.current || selected !== null) return;
+    selectedRef.current = true;
 
     setSelected(option);
+    fb.answer(option === question.correct.name);
     setTotal((prev) => prev + 1);
 
     if (option === question.correct.name) {
@@ -108,6 +118,8 @@ export default function FlagFinder({ countryStore = flagCountriesStore }) {
   };
 
   const handleContinentChange = (next) => {
+    fb.reset();
+    selectedRef.current = false;
     setContinent(next);
     setQuestion(generateQuestion(next === ALL_CONTINENTS ? countries
       : countries.filter((country) => country.continents.includes(next))));
@@ -187,9 +199,10 @@ export default function FlagFinder({ countryStore = flagCountriesStore }) {
 
       <h2 className="flag-prompt">
         Which country’s flag is this?
+        {' '}<SpeakButton text={`Which country's flag is this? Choose from ${question.options.map((option) => option.name).join(', ')}`} label="Hear the question and choices" compact />
       </h2>
 
-      <div className="flag-card">
+      <div className="flag-card" ref={fb.answerRef}>
         <img
           src={question.correct.flag}
           alt={question.correct.alt}
@@ -197,16 +210,8 @@ export default function FlagFinder({ countryStore = flagCountriesStore }) {
         />
       </div>
 
-      {selected !== null && (
-        <div
-          className={`flag-feedback ${isCorrect ? 'correct' : 'wrong'
-            }`}
-        >
-          {isCorrect
-            ? '✓ Correct!'
-            : `✗ Not quite! It was ${question.correct.name}`}
-        </div>
-      )}
+      {selected !== null && !isCorrect && <p className="answer-reveal">That flag belongs to {question.correct.name}.</p>}
+      <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
 
       <div className="flag-options">
         {question.options.map((option) => {

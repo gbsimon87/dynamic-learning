@@ -1,6 +1,9 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import cities from '../../../data/cities.json';
 import './CitySpotlight.css';
+import SpeakButton from '../../../components/challenge/SpeakButton';
+import AnswerFeedbackLine from '../../../components/skills/AnswerFeedbackLine';
+import { useAnswerFeedback } from '../../../components/skills/useAnswerFeedback';
 
 function shuffle(array) {
   const a = [...array];
@@ -20,6 +23,8 @@ export default function CitySpotlight() {
   const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
+  const fb = useAnswerFeedback();
+  const selectedRef = useRef(false);
 
   // ---- Hooks ----
   useEffect(() => {
@@ -34,10 +39,14 @@ export default function CitySpotlight() {
 
   // ---- Handlers ----
   function startGame() {
+    fb.reset();
+    selectedRef.current = false;
     setStarted(true);
     setScore(0);
     setTotal(0);
     setSelected(null);
+    fb.clear();
+    selectedRef.current = false;
     loadNext();
   }
 
@@ -61,8 +70,10 @@ export default function CitySpotlight() {
   }, [started, selected, current, loadNext]);
 
   function handleSelect(answerName) {
-    if (selected !== null) return;
+    if (selectedRef.current || selected !== null) return;
+    selectedRef.current = true;
     setSelected(answerName);
+    fb.answer(answerName === current.name);
     if (answerName === current.name) setScore(s => s + 1);
   }
 
@@ -124,8 +135,9 @@ export default function CitySpotlight() {
         Score: {score} / {total}
       </div>
 
-      <h2 className="prompt">{current.hint}</h2>
-      {renderImage()}
+      <h2 className="prompt">{current.hint} <SpeakButton text={`${current.hint} Which city is this?`} label="Hear the hint" compact /></h2>
+      <div ref={fb.answerRef}>{renderImage()}</div>
+      <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
 
       <div className="options">
         {options.map(opt => (

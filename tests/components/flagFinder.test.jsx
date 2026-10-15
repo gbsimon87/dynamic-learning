@@ -5,6 +5,12 @@ import FlagFinder from '../../src/pages/skills/geography/FlagFinder';
 import { ThemeContext } from '../../src/context/theme-context';
 import { createFlagCountriesStore } from '../../src/data/flagCountries';
 
+vi.mock('../../src/utils/speech', () => ({ speak: () => {}, stopNarration: () => {}, speakAndWait: async () => {}, isNarrationSupported: () => false }));
+vi.mock('../../src/components/celebration/sound/player', () => ({
+  playCue: () => () => {}, preloadSounds: () => {}, isMuted: () => true, setMuted: () => {}, subscribe: () => () => {},
+}));
+vi.mock('../../src/components/celebration/fx/effects', () => ({ playEffect: () => () => {} }));
+
 const records = (prefix, continent = 'Europe') => Array.from({ length: 4 }, (_, i) => ({
   names: { common: `${prefix}${i}` }, flag: { url_png: `https://example.org/${prefix}${i}.png` },
   continents: [continent],
@@ -30,10 +36,11 @@ describe('Flag Finder loading', () => {
     const original = flag.getAttribute('src');
     const correct = flag.getAttribute('alt').replace('Flag of ', '');
     fireEvent.click(screen.getByRole('button', { name: correct }));
-    expect(screen.getByText('✓ Correct!')).toBeTruthy();
+    expect(document.querySelector('.free-play-feedback.challenge-feedback-correct')).toBeTruthy();
+    const feedbackText = document.querySelector('.free-play-feedback').textContent;
     await act(async () => resolveSecond(response(records('Z', 'Asia'))));
     expect(screen.getByRole('img').getAttribute('src')).toBe(original);
-    expect(screen.getByText('✓ Correct!')).toBeTruthy();
+    expect(document.querySelector('.free-play-feedback').textContent).toBe(feedbackText);
     expect(screen.getByRole('option', { name: /whole planet \(8\)/ })).toBeTruthy();
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Asia' } });
     expect(screen.getByRole('img').getAttribute('alt')).toMatch(/Flag of Z/);

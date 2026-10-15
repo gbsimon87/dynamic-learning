@@ -13,6 +13,7 @@ import ReaderOverlay from "./ReaderOverlay";
 import ReadingView from "./ReadingView";
 import StoryQuestions from "./StoryQuestions";
 import "./SpeedReader.css";
+import SpeakButton from '../../../components/challenge/SpeakButton';
 
 const BAND_DOT = { easy: "🟢", medium: "🟡", longer: "🔴" };
 
@@ -66,6 +67,7 @@ function SpeedReader() {
         <p className="sr-intro">
           Words flash one at a time. Keep your eyes still and read!
         </p>
+        {screen === "setup" && <SpeakButton text={activeText} resetKey={storyId} label="Hear this story" />}
 
         <fieldset className="sr-group">
           <legend className="sr-legend">Pick a story</legend>

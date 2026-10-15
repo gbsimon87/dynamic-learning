@@ -1,7 +1,10 @@
-import { useState, useEffect, useContext, useMemo } from 'react';
+import { useState, useEffect, useContext, useMemo, useRef } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { ThemeContext } from '../../../context/theme-context';
 import './SentenceBuilder.css';
+import SpeakButton from '../../../components/challenge/SpeakButton';
+import AnswerFeedbackLine from '../../../components/skills/AnswerFeedbackLine';
+import { useAnswerFeedback } from '../../../components/skills/useAnswerFeedback';
 
 // 3-11 words so every slider range has usable sentences. Each must read
 // naturally in exactly one word order.
@@ -105,9 +108,11 @@ export default function SentenceBuilder() {
   const [question, setQuestion] = useState(null);
   const [words, setWords] = useState([]);
   const [selected, setSelected] = useState(false);
-  const [feedback, setFeedback] = useState(null);
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
+  const fb = useAnswerFeedback();
+  const selectedRef = useRef(false);
+  const clearFeedback = fb.clear;
 
   const pool = useMemo(
     () =>
@@ -130,12 +135,13 @@ export default function SentenceBuilder() {
   }
 
   function startGame() {
+    fb.reset();
+    selectedRef.current = false;
     const next = generateQuestion(pool);
     if (!next) return;
     setScore(0);
     setTotal(0);
     setSelected(false);
-    setFeedback(null);
     setQuestion(next);
     setWords(next.scrambled);
     setStarted(true);
@@ -153,12 +159,13 @@ export default function SentenceBuilder() {
 
   // Handle "Check" button
   function handleCheck() {
-    if (selected) return;
+    if (selectedRef.current || selected) return;
+    selectedRef.current = true;
     setSelected(true);
     setTotal((prev) => prev + 1);
     const isCorrect = words.join(' ') === question.correct.join(' ');
+    fb.answer(isCorrect);
     if (isCorrect) setScore((prev) => prev + 1);
-    setFeedback(isCorrect ? 'correct' : 'wrong');
   }
 
   // Move to next question automatically
@@ -170,11 +177,12 @@ export default function SentenceBuilder() {
         setQuestion(next);
         setWords(next.scrambled);
         setSelected(false);
-        setFeedback(null);
+        selectedRef.current = false;
+        clearFeedback();
       }, 2000);
       return () => clearTimeout(timer);
     }
-  }, [selected, pool]);
+  }, [selected, pool, clearFeedback]);
 
   // ---- Settings screen ----
   if (!started) {
@@ -225,8 +233,9 @@ export default function SentenceBuilder() {
         Score: {score} / {total}
       </div>
       <h2 className="sentence-prompt">Arrange the words to make a correct sentence</h2>
+      <SpeakButton text={`Arrange these words to make a sentence. ${words.join(', ')}`} label="Hear the words" compact />
 
-      <div className="sentence-area">
+      <div className="sentence-area" ref={fb.answerRef}>
         <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable droppableId="sentence" direction="horizontal">
             {(provided) => (
@@ -266,17 +275,13 @@ export default function SentenceBuilder() {
         </DragDropContext>
       </div>
 
-      {feedback && (
-        <div className={`sentence-feedback ${feedback}`}>
-          {feedback === 'correct' ? '✓ Correct!' : '✗ Try again!'}
-        </div>
-      )}
+      <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
 
       <div className="sentence-actions">
         <button className="check-btn" onClick={handleCheck} disabled={selected}>
           Check
         </button>
-        <button className="check-btn" onClick={() => setStarted(false)}>
+        <button className="check-btn" onClick={() => { fb.reset(); setStarted(false); }}>
           ⚙ Settings
         </button>
       </div>

@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./SightWordPop.css";
+import SpeakButton from '../../../components/challenge/SpeakButton';
+import AnswerFeedbackLine from '../../../components/skills/AnswerFeedbackLine';
+import { useAnswerFeedback } from '../../../components/skills/useAnswerFeedback';
 
 const SIGHT_WORDS = [
   "the", "and", "is", "you", "it", "to", "in", "he", "was", "for",
@@ -27,6 +30,9 @@ function SightWordPop() {
 
   const [targetWord, setTargetWord] = useState(() => pickRandom(SIGHT_WORDS));
   const [bubbles, setBubbles] = useState([]); // {id, word, isTarget, lane, createdAt}
+  const fb = useAnswerFeedback();
+  const poppedRef = useRef(new Set());
+  const missedRef = useRef(false);
 
   // lanes prevent overlap (even spacing + tiny jitter)
   const lanes = useMemo(() => {
@@ -191,6 +197,9 @@ function SightWordPop() {
 
   // ---------- ACTIONS ----------
   const handleStart = () => {
+    fb.reset();
+    poppedRef.current.clear();
+    missedRef.current = false;
     setScore(0);
     setTargetsShown(0);
     sinceTargetRef.current = 0;
@@ -202,12 +211,16 @@ function SightWordPop() {
   };
 
   const handleRestart = () => {
+    fb.reset();
     setStarted(false);
     setBubbles([]);
     laneBusyRef.current.clear();
   };
 
   const handleBubbleClick = (bubble) => {
+    if (started !== true || poppedRef.current.has(bubble.id)) return;
+    poppedRef.current.add(bubble.id);
+    fb.answer(bubble.isTarget, { firstTry: !missedRef.current });
     // prevent double scoring; remove bubble and free lane immediately
     setBubbles((prev) => prev.filter((b) => b.id !== bubble.id));
 
@@ -220,10 +233,13 @@ function SightWordPop() {
     releaseLane(bubble.lane, bubble.id);
 
     if (bubble.isTarget) {
+      missedRef.current = false;
       setScore((s) => s + 1);
       // pick a new target once a target bubble is successfully popped
       nextTargetWord();
       sinceTargetRef.current = 0;
+    } else {
+      missedRef.current = true;
     }
   };
 
@@ -285,9 +301,11 @@ function SightWordPop() {
 
       <h2 className="prompt">
         Pop the word: <span className="targetWord">{targetWord}</span>
+        {' '}<SpeakButton text={`Pop the word ${targetWord}`} label="Hear the target word" compact />
       </h2>
+      <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
 
-      <div className="bubbleField" ref={fieldRef}>
+      <div className="bubbleField" ref={(node) => { fieldRef.current = node; fb.answerRef.current = node; }}>
         {bubbles.map((b) => (
           <button
             key={b.id}

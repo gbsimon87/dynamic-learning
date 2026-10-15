@@ -4,7 +4,30 @@ Use this alongside [the technical audit](SEO_AUDIT.md). This is a guide to follo
 it does not deploy the SEO changes or change the app.
 
 **Suggested order:** make the game-page decision first, deploy with your
-developer, check the live site, then measure speed. Extra content can wait.
+developer, check the live site, then measure speed. The year/subject overviews are already built; verify them as part of the live checks.
+
+## Documents to use for the rollout
+
+- **This checklist:** follow the steps below and record decisions/results in
+  “Notes to keep”.
+- **[SEO_AUDIT.md](SEO_AUDIT.md):** technical implementation and “Validation
+  and rollout checklist”, including configuration, HTTP checks and search tools.
+  Original page counts describe the initial audit; the curriculum overviews
+  were added later.
+- **[PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md):** §6 item 17 identifies the
+  live production/dev services and Blueprint setup. “Public curriculum
+  overviews (2026-10-15)” documents the additional public pages.
+- **[render.yaml](../render.yaml):** actual deployment configuration. Check
+  production/dev branches, `PUBLIC_APP_URL`, `SEO_INDEXABLE` and build-time
+  `VITE_USE_API` against the intended service before deploying.
+- **[Curriculum source index](curriculum/README.md):** use the relevant statutory
+  programme and topic mapping when reviewing public coverage claims.
+
+Developer verification commands are in [package.json](../package.json): run
+`npm run lint`, `npm test`, `npm run build`, then `npm run check:seo`. The SEO
+check uses the built Express app and local Chrome; Vite preview does not
+reproduce production HTTP routing/status behaviour. Local checks do not replace
+live hosting or Search Console checks.
 
 ## 1. Decide which game pages should appear in Google
 
@@ -115,34 +138,30 @@ jumping around.
 - [ ] Real phone checked; any problems recorded with the page address.
 - [ ] Improvements selected from evidence, rather than the score alone.
 
-## 4. Decide whether to add public year/subject explanations
+## 4. Public year/subject overviews — built (2026-10-15)
 
-**In plain English:** parents may want to know what “Year 2 Maths” includes before
-creating an account. A useful public overview could answer that question while
-the child's actual lessons and progress stay behind the existing account flow.
+All 20 overviews are implemented: **Years 1–4 Maths, English, Geography,
+Science and History**. Parents can browse them without creating an account at
+`/what-we-teach`, then open a subject page such as
+`/curriculum-guide/year-2-maths`.
 
-### Simple steps — optional, after the checks above
+The pages explain who each path is for, what it covers, how activities work,
+and how to get started. They include reviewed subject-specific guidance and
+practical limits, with topic names and counts drawn from the curriculum registry.
+They are included in public prerendering, metadata and sitemap generation, and
+linked from the public hub and homepage. Learner information remains private.
 
-1. Pick one useful starting topic, such as **Year 2 Maths**. Do not create pages
-   for every combination at once.
-2. Draft answers to four questions:
-   - Who is this learning path for?
-   - What does the app actually cover?
-   - How do the lessons and practice games work?
-   - How does a parent get started?
-3. Check the claims against the implemented content and the mapped requirements
-   in `docs/curriculum/`. Completed challenge counts do not by themselves prove
-   complete statutory coverage.
-4. Ask your developer to build an openly readable page, available without signup
-   and present in the first HTML response. Link it from a relevant public page
-   and include it in the sitemap.
-5. Keep names, individual progress and account details out of the public page.
-   Use clear links to suitable free games and the existing signup flow.
-6. Review the finished page for usefulness and accuracy. Expand to other subjects
-   only when you can offer equally useful, distinct information.
+Implementation and editorial checks are recorded in
+[PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md) under “Public curriculum overviews
+(2026-10-15)”. These pages no longer need to be created.
 
-- [ ] One accurate, useful overview drafted and reviewed.
-- [ ] Public page linked and discoverable; learner information remains private.
+### Remaining follow-up — after deployment
+
+- [ ] Include `/what-we-teach` and representative curriculum guides in the live
+  source HTML, sitemap, canonical and Search Console checks in section 2.
+- [ ] Include a curriculum guide in the mobile checks in section 3.
+- [ ] Keep the public explanations accurate as curriculum content changes;
+  challenge counts alone do not establish full statutory coverage.
 
 ## Notes to keep
 
@@ -153,7 +172,7 @@ the child's actual lessons and progress stay behind the existing account flow.
 | Sitemap submission date | |
 | Pages checked in Search Console | |
 | Mobile problems found | |
-| First overview to consider | |
+| Curriculum hub/guide live checks | |
 
-For now, completing items 1–3 is enough. Item 4 is a content opportunity, not a
-requirement to launch the SEO improvements.
+Focus on the indexing decision, deployment and live checks in items 1–3.
+Include the existing curriculum overviews in those checks, as described in item 4.

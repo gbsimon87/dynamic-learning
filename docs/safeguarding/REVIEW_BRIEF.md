@@ -1,18 +1,27 @@
 # Learn with Bix: brief for a children's privacy and safeguarding review
 
-**Prepared:** 2026-10-10, from the code on the `dev` branch. This is a factual
-description for a qualified reviewer. It is not legal advice, and it does not
-claim that the app complies with any law.
+**Prepared:** 2026-10-10. **Updated:** 2026-10-15 against the current repository.
+This is a factual description for a qualified reviewer. It is not legal advice,
+and it does not claim that the app complies with any law.
 
 ## 1. The service
 
 - Learn with Bix is a web learning app (learnwithbix.com) for children aged
-  6–8. It follows the UK National Curriculum, Years 2–4.
+  6–8, with implemented curriculum paths for Years 1–4 in Maths, English,
+  Science, History and Geography, plus standalone Skills games. Public
+  overviews are available without signup at `/what-we-teach` and the 20
+  `/curriculum-guide/year-<year>-<subject>` pages. Topic counts are not a claim
+  of full statutory coverage.
 - It is live now. It runs on Render in Frankfurt and stores data in MongoDB
   Atlas on AWS Ireland (eu-west-1), a 3-node replica set. Atlas backups are
-  currently inactive.
+  recorded as inactive in the 2026-10-10 project notes. Hosting regions, backup
+  status, supplier agreements and platform-log retention need confirmation
+  against the current supplier dashboards; this update did not inspect them.
 - There are no ads, no purchases, no chat, no messages between users and no
-  content made by users other than a nickname.
+  published user-generated content. Nicknames and learning responses are
+  entered in the app; Speed Reader also accepts a pasted story. These inputs
+  stay in the browser; existing completion/reward records may be saved
+  separately. Requested read-aloud may pass text to the device speech engine.
 - The source code repository is public.
 
 ## 2. Who has an account
@@ -39,8 +48,9 @@ claim that the app complies with any law.
 - **Known weaknesses:**
   - Start again, or reloading the page, lets someone pick a different year.
     Nothing records that a person was turned away.
-  - The server trusts whatever age band the browser sends. A direct API call
-    skips the gate entirely.
+  - The server validates the permitted learner age-band values and rejects
+    `under-13`, but trusts the declared band. A caller can claim an older band
+    or a parent account; the server does not establish actual age.
   - Nothing confirms that a "parent" is an adult or is the child's parent or
     carer.
   - There is no parental consent step and no record of consent.
@@ -50,18 +60,33 @@ claim that the app complies with any law.
 
 | What | Data | Kept for |
 |---|---|---|
-| Account | Email, password hash (PBKDF2-SHA256, 150k iterations), account type, age band (learners only), created date, email-verified flag and date | Indefinitely |
+| Account | Email, salted password hash (PBKDF2-SHA256, 150k iterations), account type, age band (learners only), created date, email verification, session version; recovery metadata when requested | Until account deletion; no inactivity retention policy implemented |
 | Child profile | Nickname (≤20 chars; the form says "A nickname is fine!"), chosen avatar and colour, school year, subjects | Until a parent deletes the profile |
 | Progress | Which challenges each child completed, per year and subject | Until the profile is deleted |
-| Rewards | Badges, XP, streaks, **including the dates the child was active**, and stickers | Until the profile is deleted |
+| Rewards | Badges, XP, streaks and activity-day stamps, stickers, practice counts, intro completion timestamp, coach-mark flags and daily puzzle dates/counts | Until the profile/account is deleted |
 | Pending sign-up | Email, HMAC of the 6-digit code, send counters | About 1 hour (automatic expiry) |
-| Rate limiting | Hashes of email and IP address, held in server memory | About 1 hour, never written to disk |
-| Browser storage | Session (account id, child id, email), last account (email and profile names and pictures, for a quick switch), sign-up draft (sessionStorage, cleared when sign-up finishes), theme and mute | Until cleared on the device |
+| Request throttling | Hashed email/account/token keys and hashed client IP keys, held in server memory | Authentication buckets typically 15 minutes; email-request IP buckets up to 1 hour |
+| Email-send budget | Aggregate daily send count stored in MongoDB, without a per-person identifier | Scheduled for TTL deletion one day after the UTC send day ends; TTL cleanup is asynchronous |
+| Browser storage | App session/active profile state, remembered account/profile details for switching, signup draft (no password or birth year), theme, mute and other preferences | Depends on the item: sessionStorage lasts for the tab session; persistent items remain until cleared or removed by the app |
 
-**Not collected:** real names (beyond a nickname), date of birth, photos,
-location, voice, contact lists or free text.
+**Not requested:** legal names (the nickname field could still receive one),
+full date of birth, photos, precise device location, voice recordings or contact
+lists. Birth year is used in memory for the age gate and excluded from the saved
+signup draft and API body. Games accept typed answers and Speed Reader accepts
+a pasted story; the app has no general
+messaging or free-text publishing feature and no separate attempt-history store.
+IP addresses necessarily reach hosting/external services; app throttles use
+hashed IP keys. Supplier logging and retention must be checked separately.
 
-**Session:** an httpOnly, Secure, SameSite=Lax cookie that lasts 30 days.
+**Storage modes:** production is configured with `VITE_USE_API=true`, using the
+API/MongoDB store. Local development defaults to a separate localStorage store,
+which also holds accounts, profiles, progress and rewards on that browser and
+has no equivalent server security boundary or backup. Do not use production
+children's data for a review demonstration.
+
+**Production session:** an httpOnly, Secure, SameSite=Lax cookie that lasts
+30 days. Secure is conditional on production configuration; the local store
+does not use this API session mechanism.
 
 ## 5. Email
 
@@ -79,10 +104,10 @@ address.
 | Party | What it receives | When |
 |---|---|---|
 | Render (hosting, Frankfurt) | Everything the server handles, and platform logs | Always |
-| MongoDB Atlas | Everything in §4 | Always |
+| MongoDB Atlas | API account/profile/progress/rewards documents, pending signup records and aggregate email-send budgets; browser-only preferences and in-memory throttle maps are not stored there | API storage and email operations |
 | Resend | Email address, plus the code or reset link | Sign-up and password reset |
-| OpenStreetMap / CARTO tiles | IP address | Map-based geography games |
-| REST Countries API | IP address | Flag Finder game |
+| OpenStreetMap / CARTO tiles | Client IP and normal request metadata; requested map tiles | Map-based geography games |
+| REST Countries API and external game assets | Client IP and normal request metadata | Flag Finder and any other externally loaded game resources; confirm the full browser request inventory |
 | Device speech engine | Text being read aloud (may go to a cloud voice, depending on the device) | Read-aloud buttons |
 
 **Analytics:** none. The code includes a `track()` wrapper that sends
@@ -92,19 +117,24 @@ nothing, and adding PostHog (#36) is on hold until this review is done.
 
 - A reviewed privacy notice, terms of use, or consent wording. A placeholder
   page at `/privacy` describes current practice.
-- Exporting data, or any way to handle a subject access request.
+- A self-service export or a documented subject-access request procedure.
+  This does not establish that requests cannot be fulfilled manually; ask the
+  reviewer to define the operational process.
 - A retention policy for accounts that are no longer used.
 - Parental consent, or a way to check consent.
 
 ## 8. Questions for the reviewer
 
 1. Which rules apply to us, given a UK audience, servers in the EU and
-   possibly users elsewhere? We assume UK GDPR, the ICO Age Appropriate Design
-   Code, and the age of digital consent of 13. Should COPPA or the GDPR
-   rules for EU member states also be considered?
-2. Is relying on a parent's account, with no consent record, acceptable for
-   child profiles? If not, what proof and record of consent is proportionate
-   (for example, a confirmed email plus a declaration and a stored timestamp)?
+   possibly users elsewhere? Please assess UK GDPR, PECR and the ICO Children’s
+   Code, including the DPIA and age-assurance requirements, and identify whether
+   EU GDPR, COPPA or other rules apply given our actual audience and targeting.
+2. What is the appropriate lawful basis for each purpose: accounts, child
+   profiles, curriculum completions, rewards and operational security? Where
+   consent is the appropriate basis, what parental authorisation, verification,
+   record and withdrawal process is required? Please distinguish this from
+   parental involvement or age assurance where another lawful basis applies;
+   an email verification alone proves control of an address, not parenthood.
 3. Is a self-declared birth year enough for 13–17 self-sign-up? Should
    someone turned away under 13 be stopped from simply trying again, and if
    so, how strongly?
@@ -118,8 +148,15 @@ nothing, and adding PostHog (#36) is on hold until this review is done.
    retention of accounts nobody uses?
 9. What may be recorded for #9/#10 (attempt-level learning data: wrong
    answers, time spent), and for #36 (analytics), and on what lawful basis?
-10. Are DPAs needed or already in place with Render, MongoDB and
-    Resend?
+10. Review the actual agreements with Render, MongoDB Atlas and Resend:
+    controller/processor roles, Article 28 terms, subprocessors, processing and
+    support locations, international transfer mechanisms, security, breach
+    assistance, retention and deletion. What evidence or changes are missing?
+    Please assess external map/API requests and device speech separately;
+    an EU hosting region alone does not settle all transfer questions.
+11. Please provide reviewed adult-facing and age-appropriate child-facing privacy
+    wording, a prioritised implementation list and any unresolved assumptions.
+    Identify required operational procedures as well as code changes.
 
 ## 9. Engineering changes already made (2026-10-10)
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   MapContainer,
   TileLayer,
@@ -12,6 +12,9 @@ import cities from '../../../data/cities.json';
 import { OSM_TILES } from '../../../data/osmTiles';
 import { distanceKm, isFound, nearestCopy } from './cityGuess';
 import './FindTheCity.css';
+import SpeakButton from '../../../components/challenge/SpeakButton';
+import AnswerFeedbackLine from '../../../components/skills/AnswerFeedbackLine';
+import { useAnswerFeedback } from '../../../components/skills/useAnswerFeedback';
 
 const WORLD_CENTER = [20, 0];
 const WORLD_ZOOM = 2;
@@ -62,6 +65,9 @@ export default function FindTheCity() {
   // Where the child tapped (with the distance), and whether they asked for the hint.
   const [guess, setGuess] = useState(null);
   const [showHint, setShowHint] = useState(false);
+  const fb = useAnswerFeedback();
+  const clearFeedback = fb.clear;
+  const guessedRef = useRef(false);
 
   // ---- Hooks ----
   useEffect(() => {
@@ -70,6 +76,8 @@ export default function FindTheCity() {
 
   // ---- Handlers ----
   function startGame() {
+    fb.reset();
+    guessedRef.current = false;
     setStarted(true);
     setScore(0);
     setTotal(0);
@@ -78,7 +86,9 @@ export default function FindTheCity() {
 
   // No auto-advance: "Next city" leaves time to read the distance and look at the line.
   const loadNext = useCallback(() => {
+    clearFeedback();
     setGuess(null);
+    guessedRef.current = false;
     setShowHint(false);
     if (pool.length === 0) {
       setCurrent(null);
@@ -88,13 +98,15 @@ export default function FindTheCity() {
     setCurrent(next);
     setPool(rest);
     setTotal(t => t + 1);
-  }, [pool]);
+  }, [pool, clearFeedback]);
 
   function handleGuess(point) {
-    if (guess !== null) return;
+    if (guessedRef.current || guess !== null) return;
+    guessedRef.current = true;
     const km = distanceKm(point, current.coordinates);
     const found = isFound(km);
     setGuess({ point, cityPoint: nearestCopy(current.coordinates, point), km, found });
+    fb.answer(found);
     if (found) setScore(s => s + 1);
   }
 
@@ -137,10 +149,11 @@ export default function FindTheCity() {
         Score: {score} / {total}
       </div>
 
-      <h2 className="prompt">Find {current.name}!</h2>
+      <h2 className="prompt">Find {current.name}! <SpeakButton text={`Find ${current.name}. ${current.hint || ''}`} label="Hear the city clue" compact /></h2>
+      <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
 
       {/* Kept above the map so the result and "Next city" stay on screen. */}
-      <div className="mapStatus" aria-live="polite">
+      <div className="mapStatus" aria-live="polite" ref={fb.answerRef}>
         {guess === null ? (
           <>
             <span className="info">Tap the map where you think it is</span>

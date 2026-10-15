@@ -2,6 +2,9 @@ import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import * as turf from '@turf/turf';
 import { OSM_TILES } from '../data/osmTiles';
+import SpeakButton from './challenge/SpeakButton';
+import AnswerFeedbackLine from './skills/AnswerFeedbackLine';
+import { useAnswerFeedback } from './skills/useAnswerFeedback';
 
 /**
  * `CONTINENT` values in countries.geojson that must never be asked as a
@@ -42,6 +45,12 @@ const normalizeName = str =>
     .trim();
 
 export default function MapGame({ geoJson, mode }) {
+  const fb = useAnswerFeedback();
+  const missedRef = useRef(false);
+  const lockedRef = useRef(false);
+  const answerFeedback = fb.answer;
+  const clearFeedback = fb.clear;
+  const resetFeedback = fb.reset;
   // Game state
   const [target, setTarget] = useState(null);
   const [score, setScore] = useState(0);
@@ -74,8 +83,10 @@ export default function MapGame({ geoJson, mode }) {
       setRound((r) => r + 1);
       action();
       setIsLocked(false);
+      lockedRef.current = false;
+      clearFeedback();
     }, delay);
-  }, []);
+  }, [clearFeedback]);
 
   // Cancel any pending advance on unmount.
   useEffect(
@@ -227,6 +238,12 @@ const continentGeoJson = useMemo(() => {
     if (!countries.length) return;
 
     // reset state
+    if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
+    advanceTimerRef.current = null;
+    resetFeedback();
+    missedRef.current = false;
+    setIsLocked(false);
+    lockedRef.current = false;
     setScore(0);
     setRound(1);
     setRevealed(new Set());
@@ -239,7 +256,7 @@ const continentGeoJson = useMemo(() => {
     // pick new target (using stable pickRandomTarget)
     const next = pickRandomTarget(continentFilter, new Set());
     setTarget(next);
-  }, [continentFilter, countries, pickRandomTarget, mode]);
+  }, [continentFilter, countries, pickRandomTarget, mode, resetFeedback]);
 
   // --- Handle "game complete" ---
   useEffect(() => {
@@ -336,12 +353,15 @@ const continentGeoJson = useMemo(() => {
         layer.on('mouseout', () => layer.setStyle(styleFeature(feature)));
 
         const activateContinent = () => {
-          if (isLocked || !targetRef.current) return;
+          if (lockedRef.current || isLocked || !targetRef.current) return;
 
           const currentTarget = targetRef.current;
           setIsLocked(true);
+          lockedRef.current = true;
 
           const isCorrect = normalizeName(continentName) === normalizeName(currentTarget);
+          answerFeedback(isCorrect, { firstTry: !missedRef.current });
+          missedRef.current = !isCorrect;
 
           // Only a correct answer retires the target.
           const updated = isCorrect
@@ -360,6 +380,7 @@ const continentGeoJson = useMemo(() => {
           scheduleNext(
             () => {
               const next = pickRandomTarget(continentFilter, updated);
+              missedRef.current = !isCorrect && next === currentTarget;
               setTarget(next);
               setMessage('Tap the correct continent!');
             },
@@ -385,12 +406,15 @@ const continentGeoJson = useMemo(() => {
         layer.on('mouseout', () => layer.setStyle(styleFeature(feature)));
 
         const activateCountry = () => {
-          if (isLocked || !targetRef.current) return;
+          if (lockedRef.current || isLocked || !targetRef.current) return;
 
           const currentTarget = targetRef.current;
           setIsLocked(true);
+          lockedRef.current = true;
 
           const isCorrect = normalizeName(countryName) === normalizeName(currentTarget);
+          answerFeedback(isCorrect, { firstTry: !missedRef.current });
+          missedRef.current = !isCorrect;
 
           // Only a correct answer reveals.
           const updated = isCorrect
@@ -411,6 +435,7 @@ const continentGeoJson = useMemo(() => {
             () => {
               setLastWrong(null);
               const next = pickRandomTarget(continentFilter, updated);
+              missedRef.current = !isCorrect && next === currentTarget;
               setTarget(next);
               setMessage('Click the correct country!');
             },
@@ -422,12 +447,18 @@ const continentGeoJson = useMemo(() => {
         makeAccessible(layer, countryName, activateCountry);
       }
     },
-    [isLocked, pickRandomTarget, styleFeature, revealed, continentFilter, mode, scheduleNext, makeAccessible]
+    [isLocked, pickRandomTarget, styleFeature, revealed, continentFilter, mode, scheduleNext, makeAccessible, answerFeedback]
   );
 
 
   // --- Manual reset ---
   const reset = () => {
+    if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
+    advanceTimerRef.current = null;
+    setIsLocked(false);
+    lockedRef.current = false;
+    resetFeedback();
+    missedRef.current = false;
     setScore(0);
     setRound(1);
     setRevealed(new Set());
@@ -447,6 +478,9 @@ const continentGeoJson = useMemo(() => {
       style={{ position: 'relative', height: '100%', width: '100%' }}
     >
       <TopBar
+        feedback={fb.feedback}
+        feedbackRef={fb.feedbackRef}
+        answerRef={fb.answerRef}
         target={target}
         score={score}
         round={round}
@@ -519,9 +553,10 @@ function FitToContinent({ continent }) {
 }
 
 // --- Top Bar ---
-function TopBar({ target, score, round, message, onReset, continents, continentFilter, setContinentFilter, mode }) {
+function TopBar({ target, score, round, message, feedback, feedbackRef, answerRef, onReset, continents, continentFilter, setContinentFilter, mode }) {
   return (
     <div
+      ref={answerRef}
       className="mapgame-hud"
       style={{
         position: 'absolute',
@@ -555,6 +590,8 @@ function TopBar({ target, score, round, message, onReset, continents, continentF
       <span style={{ fontWeight: 700, color: target ? 'var(--map-text)' : 'var(--map-muted)' }}>
         {target ? target : 'Loading...'}
       </span>
+      {target && <SpeakButton text={`Find ${target}`} label="Hear the place" compact />}
+      <AnswerFeedbackLine feedback={feedback} ref={feedbackRef} />
 
       <select
         disabled={mode === 'continents'}

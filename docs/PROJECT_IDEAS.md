@@ -6,7 +6,7 @@
 > [PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md), which is where history lives.
 > The same goes for bugs: a fixed bug is deleted here and written up there.
 
-**Last reviewed:** 2026-10-12
+**Last reviewed:** 2026-10-15
 
 Item-by-item source evidence: [backlog audit in PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md#backlog-source-audit-2026-10-09).
 
@@ -67,7 +67,7 @@ Item-by-item source evidence: [backlog audit in PROJECT_KNOWLEDGE.md](PROJECT_KN
   Bix the mascot joining combos and the Trophy Room. **Streaks, XP, levels and
   a "something new" dot shipped 2026-09-30**. Skills Mode has the answer
   feedback kit since 2026-10-10, used by the free-play games; the older games
-  still need it (#41). Recorded sounds shipped the same day (Mixkit,
+  now use it too (2026-10-15). Recorded sounds shipped 2026-10-10 (Mixkit,
   see docs/sounds/README.md). The Mixkit licence covers use in the app;
   keeping the MP3s in the public repo was cleared with a lawyer.
 - **Domain and sign-up email verification are live** as recorded in
@@ -125,7 +125,7 @@ and what is left. File names and engineering detail are in
 |---|---|---|---|---|
 | 6 | **Write new questions as data** | Most challenges today are hand-built screens. A shared format lets us write a question as a few lines of data, for example "a clock showing half past 3, pick the time", and the app draws it. New topics become much quicker to build. | **Done:** the format and the screen for 13 question types (multiple choice, typed numbers, spelling, sorting, ordering, charts, clocks, coins, fractions and more). **Done:** Year 1 and Year 2 English use it for 37 and 38 topics respectively (dictation reuses its existing memory game). **Left:** move the earlier English games onto it. | 🟡 Partial |
 | 7 | **Accessibility and keyboard check** | Make sure every game works for a child using a keyboard or a screen reader, or who needs less motion, and that text is readable in both colour themes. | **Left:** nobody has played every interaction with a keyboard only and with a screen reader. Do that, and fix what breaks. | ⚪ Idea |
-| 8 | **Read-aloud everywhere** | A "Read it to me" button, so a child who can't yet read fluently can still play. | **Done:** every curriculum subject (Maths added 2026-10-10), the Solar System, the daily puzzle and the new free-play games. **Left:** the older Skills games; drag-and-build Maths questions that read their tiles out as a list; checking the voice on real phones and tablets. | 🟡 Partial |
+| 8 | **Read-aloud everywhere** | A "Read it to me" button, so a child who can't yet read fluently can still play. | **Done:** every curriculum subject (Maths added 2026-10-10), the Solar System, the daily puzzle, the new free-play games and the older Skills games (2026-10-15), including visible word banks/options and optional Speed Reader story narration. **Left:** drag-and-build Maths questions that read their tiles out as a list; checking the voice on real phones and tablets. | 🟡 Partial |
 | 9 | **Progress report for grown-ups** | Parents (and later teachers) see how a child is getting on. | **Done:** the Parent area shows each child's progress, badges and profile settings. **Left:** "time spent learning" and "topics to practise more". Both need the app to start recording each attempt (step 5 of the order below). Maybe a "reset progress" button, designed carefully so nothing is lost by accident. | 🟡 Partial |
 | 10 | **Questions that adjust to the child** | If a child keeps getting answers right, the questions get a little harder; if they struggle, a little easier. Always within what their year group should learn. | **Left:** all of it. Needs the same attempt recording as #9. The "levels" that exist today choose between a topic's four fixed challenges; they are not a difficulty dial. | ⚪ Idea |
 | 11 | **Safeguarding and parental consent** | A child under 13 can sign up by typing an age. Nothing checks it or records a parent's permission. A qualified person needs to say what the law requires for a live children's app. | **Done:** a brief for the reviewer ([safeguarding/REVIEW_BRIEF.md](safeguarding/REVIEW_BRIEF.md)). **Left:** send it to a qualified reviewer; confirm where the database is hosted and the data agreements with suppliers; then build whatever consent step they ask for (the app can already send confirmation emails). | 🟡 Partial |
@@ -147,7 +147,6 @@ and what is left. File names and engineering detail are in
 | 33 | **Story adventure** | Each year gets a light storyline ("Bix's rocket is broken: finish topics to find the parts"), and the topic list becomes a world map the child's avatar walks along. | **Left:** all of it. Mostly art and writing rather than code. | ⚪ Idea |
 | 36 | **Privacy-safe analytics** | Learn how grown-ups use the app, for example where sign-up loses people, without tracking children. | **Done:** the sign-up steps are already labelled, but nothing is sent anywhere. **Left:** connect an analytics service (PostHog) with strict privacy settings, after #11 decides what consent is needed. | 🟡 Partial |
 | 38 | **Play-test English and Science** | Both are built and pass the automated tests, but nobody has played every topic through. | **Done:** Years 1 and 2 Science, all 64 and 76 challenges played by a headless browser through the real controls (2026-10-11). Year 4 Science also passed a full content/interaction review and all 80 challenges sequentially from fresh progress, including retries, hints, awards and both themes at desktop/phone widths; see `science-curriculum/y4-science-tracker.md`. **Left:** play every topic as a child would: wrong answers, hints, keyboard and touch, finishing topics, celebrations, saving, phones, both themes, the read-aloud voice. Then the owner's review. | 🟡 Partial |
-| 41 | **Celebrations in every Skills game** | Sparkles, combos, sounds and Bix cheering after an answer, as in Curriculum Mode. | **Done:** the five new free-play games. **Left:** the older games (Number Bonds, Fraction Fun, Missing Number, Word Builder and the rest). | 🟡 Partial |
 | 42 | **History, Years 1–4** | A History path for every year: Years 1–2 from key stage 1 (then and now, famous people and events, history near you), Year 3 Stone Age to Iron Age, Romans and Ancient Egypt, Year 4 Anglo-Saxons and Vikings. Each challenge opens with a short "Bix explains" story and real museum photos. | **Done (2026-10-12):** specs for all four years approved; **Years 1–4 implemented** (Year 1: 14 topics / 56 challenges; Year 2: 17 / 68); **Year 3 complete** (22 topics / 88 challenges), with a [bug/security review](history-curriculum/YEAR3_BUG_SECURITY_REVIEW.md) fixing year-award read races; **Year 4 complete** (18 / 72), with a [bug/security review](history-curriculum/YEAR4_BUG_SECURITY_REVIEW.md). Years 1 and 3 History count toward their year certificates (owner-approved); Year 2 preserves existing year awards pending its own approval. **Left:** device review of Years 2–4 and Year 2 / Year 4 year-award inclusion. Tracker: `history-curriculum/HISTORY_TRACKER.md`. | 🟡 Partial |
 
 ---
@@ -165,8 +164,9 @@ alongside everything else.
    and Science, and fix keyboard and screen-reader problems in the same pass
    rather than a separate one. Test the meteor on a real phone whenever one is
    handy.
-3. **Bring the older Skills games up to standard (#8, #41).** Add read-aloud and
-   the celebrations in one pass, since it's the same games.
+3. **Finish read-aloud verification (#8).** The older Skills games now have
+   read-aloud and shared answer celebrations (2026-10-15). Check actual device
+   voices and the remaining drag-and-build Maths readings.
 4. **Add new content the quicker way (#15, #20).** Build Geography
    in the new question format (#6), and new Skills games on the
    free-play frame.
@@ -262,7 +262,3 @@ The detail behind the rows above, for whoever picks one up.
 - **#38** Trackers: [English](english-curriculum/IMPLEMENTATION_TRACKER.md),
   [Science](science-curriculum/y3-science-tracker.md). Use disposable profiles;
   a first React render is not a playthrough.
-- **#41** Feedback kit: `useAnswerFeedback` + `AnswerFeedbackLine` in
-  `src/components/skills/`. Keep Skills Mode ungated; decide any lasting
-  rewards separately before extending XP or streaks. Honour mute, reduced
-  motion, keyboard/touch and both themes.

@@ -2567,6 +2567,18 @@ that review is [safeguarding/REVIEW_BRIEF.md](safeguarding/REVIEW_BRIEF.md).
 - **MongoDB Atlas** runs on AWS Ireland (eu-west-1), a 3-node replica set.
   **Atlas backups are inactive.**
 
+### Privacy review brief refresh (2026-10-15)
+
+`docs/safeguarding/REVIEW_BRIEF.md` now reflects Years 1–4 across all five
+subjects and the public curriculum overviews. Source checks corrected the
+age-band validation description, distinguished API and local browser storage,
+and expanded the data inventory to include first-play/daily-puzzle records,
+recovery metadata and aggregate email-send budgets. The reviewer is asked to
+establish lawful bases by purpose before prescribing consent, and to review
+supplier contracts, subprocessors and international transfers. Live supplier
+settings, backup status and agreements were not inspected; the brief marks them
+for confirmation. This is preparation for the qualified review, not its outcome.
+
 ### Development seed (2026-09-19)
 
 ```bash
@@ -2988,6 +3000,43 @@ renders them inside `ChallengeShell` with the shared kit.
   answers, the unfair cases) and `tests/components/dataChallenge.test.jsx`
   (each interactive kind answered through the real kit).
 
+### Older Skills games: read-aloud and celebrations (2026-10-15)
+
+The 20 older Skills catalogue entries now use the shared speech/feedback tools
+where applicable. The 16 answer games use `useAnswerFeedback` and
+`AnswerFeedbackLine`: Arithmetic Practice, Missing Number, Number Bonds,
+Fraction Fun, Word Builder, Word Sorter, Sentence Builder, Opposite Match,
+Synonym Safari, Sight Word Pop, Speed Reader's comprehension questions, Shape
+Explorer, World Map, Flag Finder, City Spotlight and Find the City. Their
+existing question loops and score rules remain; correct answers, retries,
+combos and milestones use the same sound/mute and reduced-motion behaviour as
+the newer free-play games. Generic duplicate feedback was removed while useful
+answer explanations and round-completion messages remain.
+
+Clock Generator, Multiplication Grid and Reading Numbers offer speech for their
+current result; Solar System retains its existing narration. Speed Reader also
+has an optional story read-aloud before starting. Word-game speech reads visible
+words/options and does not reveal hidden memory cards. Number Bonds and Synonym
+Safari cards are native buttons, and multiplication cells support touch/keyboard
+selection. Submission guards prevent repeated scoring; mode/run changes clear
+feedback appropriately. Synonym Safari's grid now fits narrow screens. Shared
+feedback no longer uses the legacy global `.feedback` class.
+
+Skills remain ungated and untracked: this work adds no stored XP, badges,
+curriculum completions or attempt history. Real-device speech quality and the
+broader whole-app accessibility review remain open (#8/#7/#38).
+
+Validation: `npm run lint`, `npm test` (2,099 unit/API passes, four
+existing database-dependent skips, 414 component passes), `npm run build` and
+`npm run check:seo` pass. SEO checks cover 48 public URLs. Local Chrome loaded
+all Skills routes; targeted desktop-light/phone-dark interactions covered
+Number Bonds retry/mode reset, Fraction Fun, arithmetic/restart and number/grid
+speech controls. Further checks covered World Map keyboard answers/reset,
+Flag Finder feedback with a fixture API and Synonym Safari's phone layout.
+Screenshots were reviewed. Live Flag Finder API availability and physical-device
+voice quality were not established. The existing large-chunk build warning
+remains.
+
 ### Free-play Skills games on the challenge kit (#5, 2026-10-10)
 
 Five ungated Skills Mode games reuse the curriculum kit: **Money Match**
@@ -3004,7 +3053,7 @@ Detective** (`/charts`, tally / pictogram / bar) and **Place Value Blocks**
   per-answer celebration to Skills Mode: a rotating line, sparkle and sound for
   right, 🔥 combo every three right first time, a 🌟 milestone every five, a
   kind retry line and wobble for a miss. Mute and reduced motion are honoured
-  where they live. Exported separately so the older games can adopt it (#41).
+  where they live. The older answer games adopted these exports on 2026-10-15.
 - Generators in `data/freePlay/` are pure and tested (unique chart values so
   most/least never tie, bounded retries, UK coins only, no scale below zero —
   negative numbers are Year 4); the shell in `tests/components/freePlay.test.jsx`.

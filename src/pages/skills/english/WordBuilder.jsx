@@ -1,5 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './WordBuilder.css';
+import SpeakButton from '../../../components/challenge/SpeakButton';
+import AnswerFeedbackLine from '../../../components/skills/AnswerFeedbackLine';
+import { useAnswerFeedback } from '../../../components/skills/useAnswerFeedback';
 
 const WORDS = ['cat', 'bat', 'mat', 'rat', 'hat', 'man', 'fan', 'can', 'pan', 'cap'];
 
@@ -37,21 +40,28 @@ function WordBuilder() {
   const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
+  const fb = useAnswerFeedback();
+  const selectedRef = useRef(false);
+  const clearFeedback = fb.clear;
 
   useEffect(() => {
     if (selected !== null) {
       const timer = setTimeout(() => {
         setQuestion(generateQuestion());
         setSelected(null);
+        selectedRef.current = false;
+        clearFeedback();
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [selected]);
+  }, [selected, clearFeedback]);
 
   function handleSelect(letter) {
-    if (selected !== null) return;
+    if (selectedRef.current || selected !== null) return;
+    selectedRef.current = true;
     
     setSelected(letter);
+    fb.answer(letter === question.correctLetter);
     setTotal(total + 1);
     if (letter === question.correctLetter) {
       setScore(score + 1);
@@ -73,15 +83,13 @@ function WordBuilder() {
 
       <h2 className="prompt">What letter is missing?</h2>
       
-      <div className="word">
+      <div className="word" ref={fb.answerRef}>
         {displayWord}
+        <SpeakButton text={`What letter is missing? ${displayWord.split('').map((letter) => letter === '_' ? 'blank' : letter).join(', ')}. Choose from ${question.options.join(', ')}`} label="Hear the letters" compact />
       </div>
 
-      {selected !== null && (
-        <div className={`feedback ${isCorrect ? 'correct' : 'wrong'}`}>
-          {isCorrect ? '✓ Correct!' : `✗ Wrong! It was "${question.correctLetter}"`}
-        </div>
-      )}
+      {selected !== null && !isCorrect && <p className="answer-reveal">The missing letter was {question.correctLetter}.</p>}
+      <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
 
       <div className="options">
         {question.options.map((letter) => {
