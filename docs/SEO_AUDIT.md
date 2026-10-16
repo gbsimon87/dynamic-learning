@@ -234,7 +234,7 @@ public rendering, JSON-LD, shared caches or sitemap generation.
 
 ## Validation and rollout checklist
 
-1. Run `npm run lint`, `npm test`, and `npm run build` in the isolated worktree.
+1. Run `npm run lint`, `npm test`, and `npm run build` from the repository root.
    Run `npm run check:seo` after a build; it starts a local app without MongoDB
    and uses installed Playwright/Chrome. `CHROME_PATH` can select a browser.
 2. Review `.seo-artifacts/` screenshots for homepage/hub/guide at 1280px and
@@ -243,7 +243,8 @@ public rendering, JSON-LD, shared caches or sitemap generation.
    `PUBLIC_APP_URL=https://learnwithbix.com` at **build and runtime**. The Blueprint
    now contains these production settings and disables indexing for development.
    A manually managed service needs the same configuration. Redeploy via the
-   existing process; no deployment was performed by this audit.
+   dev → main release steps in [SEO_NEXT_STEPS.md](SEO_NEXT_STEPS.md#validate-locally-and-deploy).
+   No deployment was performed by this audit.
 4. After deployment, compare source HTML and rendered DOM on `/`, `/skills`, a
    `/learn/` guide, a game, a login page and a missing URL. Repeat with JavaScript
    disabled. Public source must include useful text, links, metadata and JSON-LD.
@@ -266,6 +267,137 @@ public rendering, JSON-LD, shared caches or sitemap generation.
 9. Review historical game-page traffic before activating the noindex policy
    described above. Track public impressions/clicks and soft-404/canonical reports
    after rollout. Do not change children's data collection to obtain SEO metrics.
+
+### Developer execution steps (updated 2026-10-16)
+
+You are the developer/site owner. Use [SEO_NEXT_STEPS.md](SEO_NEXT_STEPS.md) as
+the ordered runbook: it now gives the Search Console DNS verification steps,
+indexing-policy implementation files, local commands, Render dev deployment,
+production release and post-release checks. The numbered checklist above records
+the original audit scope; the public catalogue now includes 48 URLs with the
+curriculum hub and 20 year/subject guides. Do not use the original 27-page count
+as the current sitemap expectation.
+
+Before releasing the noindex policy, complete section 1 of that runbook. If
+original game URLs must stay indexable, update the public catalogue, anonymous
+prerendering, metadata/canonicals and policy tests together as described there.
+Do not only remove a robots tag while leaving the game’s initial HTML empty.
+
+To exercise a production-configured build locally, run from the repository root:
+
+```sh
+npm run lint
+npm test
+SEO_INDEXABLE=true PUBLIC_APP_URL=https://learnwithbix.com VITE_USE_API=true npm run build
+npm run check:seo
+```
+
+This only builds/checks local output; it does not deploy or contact production
+MongoDB. `check:seo` creates its own Express test server and Chrome session;
+it checks every public catalogue URL, the initial-HTML crawl graph and browser
+behaviour. Read its output and review `.seo-artifacts/` images. If it fails,
+fix the specific assertion before deployment. A skipped database test is not a
+successful database check. The Vite chunk warning is separate from test failures.
+
+### Production HTTP checks
+
+Run these commands in a terminal **after** the intended production commit is
+live. Use the actual dev origin instead when testing dev; expect noindex, a
+blanket robots disallow and an empty sitemap on dev. Commands below perform
+read-only anonymous requests and do not modify learner data.
+
+Save the actual public response, including the GET headers, for inspection:
+
+```sh
+curl -sS -D /tmp/bix-home-headers.txt -o /tmp/bix-home.html https://learnwithbix.com/
+cat /tmp/bix-home-headers.txt
+rg -n 'canonical|name="robots"|og:url|seo-jsonld|<h1' /tmp/bix-home.html
+```
+
+Expect HTTP 200, useful text and links inside `#root`, one canonical pointing
+to the requested public URL, `index, follow`, matching sharing metadata and
+parseable JSON-LD. HTML may be on one long line; use View Source to read it.
+Repeat the GET/source checks for `/skills`, `/learn/number-bonds`,
+`/what-we-teach` and `/curriculum-guide/year-2-maths`. Public HTML should
+revalidate rather than be immutable. Test a query variant too:
+
+```sh
+curl -sS 'https://learnwithbix.com/learn/number-bonds?utm_source=seo-check' -o /tmp/bix-guide.html
+rg -n 'canonical|og:url' /tmp/bix-guide.html
+```
+
+Both URLs in metadata should omit the query string. Check XML and robots:
+
+```sh
+curl -sS -D /tmp/bix-sitemap-headers.txt -o /tmp/bix-sitemap.xml https://learnwithbix.com/sitemap.xml
+cat /tmp/bix-sitemap-headers.txt
+cat /tmp/bix-sitemap.xml
+curl -sS https://learnwithbix.com/robots.txt
+```
+
+Expect sitemap HTTP 200 with XML content type, only public canonical URLs, and
+an absolute sitemap reference in robots.txt. Production must not disallow all
+crawling. Compare sitemap URLs with `PUBLIC_PATHS` in `shared/seo.js`; private
+screens, game URLs excluded by the current policy, and internal build files
+must be absent. For each sitemap URL, perform a GET and confirm 200, indexable
+headers/meta and a self-canonical. `npm run check:seo` checks these properties
+locally; repeat on the live origin rather than assuming hosting is identical.
+
+Check both GET and HEAD without following redirects first:
+
+```sh
+curl -sS -o /dev/null -w '%{http_code}\n' https://learnwithbix.com/this-page-does-not-exist
+curl -sS -I https://learnwithbix.com/this-page-does-not-exist
+curl -sS -D - -o /dev/null 'https://learnwithbix.com/skills/?seo_check=1'
+curl -sS -I 'https://learnwithbix.com/skills/?seo_check=1'
+curl -sS -D - -o /dev/null https://learnwithbix.com/api/this-page-does-not-exist
+```
+
+Missing frontend GET/HEAD must be 404; the unknown API route must be JSON/404.
+`/skills/` should return 308 with Location ending `/skills?seo_check=1`. Check
+recovery normalisation with a dummy value, never a real recovery token:
+
+```sh
+curl -sS -D - -o /dev/null 'https://learnwithbix.com/reset-password/?token=seo-check-not-a-real-token'
+curl -sS -I http://learnwithbix.com/skills
+curl -sS -I https://www.learnwithbix.com/skills
+curl -sS -I https://dynamic-learning-zkww.onrender.com/skills
+```
+
+Recovery redirect must preserve the dummy query. Host/protocol aliases must
+permanently redirect toward `https://learnwithbix.com`, preserving the intended
+path/query. Render may provide its own permanent status for HTTP/www; app path
+normalisation uses 308. Repeat an alias with GET (`-D - -o /dev/null` instead
+of `-I`), then use `curl -sS -L -o /dev/null -w '%{url_effective} %{http_code}\n'
+URL` with that exact alias URL to verify the chain ends at the canonical
+origin with 200 and no loop. If a hosted alias does not redirect, inspect
+Render’s custom-domain setup and `RENDER_EXTERNAL_HOSTNAME` handling.
+
+Check excluded pages and inaccessible internal output:
+
+```sh
+curl -sS -D - -o /tmp/bix-login.html https://learnwithbix.com/login
+curl -sS -D - -o /tmp/bix-game.html https://learnwithbix.com/number-bonds
+curl -sS -D - -o /dev/null https://learnwithbix.com/app.html
+curl -sS -D - -o /dev/null https://learnwithbix.com/prerendered/index.html
+```
+
+Login and, under the current guide-only policy, the game must send
+`X-Robots-Tag: noindex, follow`, matching HTML robots metadata, and private HTML
+`Cache-Control: no-store`. Internal build paths must return 404. If you approve
+an alternative game-indexing policy, use its reviewed expected results instead.
+In DevTools Network, copy one actual `/assets/<content-hash>.js` URL from the
+live page and inspect it with `curl -sS -I 'COPIED_ASSET_URL'`: expect immutable
+one-year caching. Check compression with
+`curl -sS --compressed -D - -o /dev/null 'COPIED_ASSET_URL'`; look for
+`Content-Encoding: br` or `gzip`. Do not guess an asset filename from an older
+build. Leave private API responses uncached.
+
+Record the production commit, deployment date, observed headers/statuses and
+Search Console results in the checklist’s “Notes to keep”. If any live check
+fails, investigate the deployed commit/configuration and fix it on dev before
+another production release; a local pass alone does not close a hosting issue.
+
 
 ### Four different outcomes
 
