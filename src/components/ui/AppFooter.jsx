@@ -1,3 +1,4 @@
+import BrandMark from "./BrandMark";
 import { useContext } from "react";
 import { Link } from "react-router";
 import { AuthContext } from "../../context/auth-context";
@@ -12,7 +13,7 @@ export default function AppFooter() {
     <footer className="app-footer">
       <div className="app-footer-inner">
         <div className="app-footer-brand">
-          <span className="app-footer-mark" aria-hidden="true">LB</span>
+          <BrandMark className="app-footer-mark" />
           <div>
             <p className="app-footer-name">Learn with Bix</p>
             <p className="app-footer-tagline">

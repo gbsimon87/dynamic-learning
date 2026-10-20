@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Bix, drawn to match src/components/mascot/Mascot.css: coral in a light
+       browser, teal in a dark one (the app's own light/dark pairing). -->
+  <style>
+    .top { stop-color: #ffb9bd; }
+    .bottom { stop-color: #ef626c; }
+    .stalk { stroke: #ef626c; }
+    .dot { fill: #ffe08a; stroke: #ef626c; }
+    .cheek { fill: #ef626c; fill-opacity: 0.45; }
+
+      .top { stop-color: #a9ece2; }
+      .bottom { stop-color: #4fb4a5; }
+      .stalk { stroke: #4fb4a5; }
+      .dot { fill: #ffd166; stroke: #4fb4a5; }
+      .cheek { fill: #ff919b; fill-opacity: 0.5; }
+    
+  </style>
+  <defs>
+    <linearGradient id="body" x1="0.3" y1="0" x2="0.7" y2="1">
+      <stop offset="0" class="top" />
+      <stop offset="1" class="bottom" />
+    </linearGradient>
+    <radialGradient id="shine" cx="0.32" cy="0.26" r="0.46">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.55" />
+      <stop offset="1" stop-color="#fff" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <g class="stalk" stroke-width="3.2" stroke-linecap="round">
+    <line x1="24" y1="20" x2="18.5" y2="8" />
+    <line x1="40" y1="20" x2="45.5" y2="8" />
+  </g>
+  <circle class="dot" cx="18" cy="7" r="4.2" stroke-width="2.4" />
+  <circle class="dot" cx="46" cy="7" r="4.2" stroke-width="2.4" />
+
+  <path d="M32 16.5c15.5 0 29 8.5 29 23.5S48 62.5 32 62.5 3 55 3 40 16.5 16.5 32 16.5z" fill="url(#body)" />
+  <path d="M32 16.5c15.5 0 29 8.5 29 23.5S48 62.5 32 62.5 3 55 3 40 16.5 16.5 32 16.5z" fill="url(#shine)" />
+
+  <ellipse cx="23.5" cy="35" rx="7" ry="7.8" fill="#fff" />
+  <ellipse cx="40.5" cy="35" rx="7" ry="7.8" fill="#fff" />
+  <circle cx="23.5" cy="35.5" r="3.6" fill="#22181c" />
+  <circle cx="40.5" cy="35.5" r="3.6" fill="#22181c" />
+  <circle cx="22.4" cy="34.2" r="1.2" fill="#fff" />
+  <circle cx="39.4" cy="34.2" r="1.2" fill="#fff" />
+
+  <ellipse class="cheek" cx="12" cy="47" rx="4.2" ry="3" />
+  <ellipse class="cheek" cx="52" cy="47" rx="4.2" ry="3" />
+
+  <path d="M26.5 47.5q5.5 6 11 0" fill="none" stroke="#22181c" stroke-width="2.8" stroke-linecap="round" />
+</svg>

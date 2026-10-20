@@ -1,6 +1,8 @@
 {
   "name": "Learn with Bix",
   "short_name": "Bix",
+  "id": "/",
+  "lang": "en-GB",
   "description": "Practice and challenges built around the UK National Curriculum.",
   "start_url": "/",
   "scope": "/",

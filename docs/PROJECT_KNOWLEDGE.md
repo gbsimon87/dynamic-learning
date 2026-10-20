@@ -94,6 +94,21 @@ screen width. Actions remain aligned at the bottom of each card row on desktop
 
 ## 1. What This Project Is
 
+Brand logo (2026-10-21): the navbar and footer share `BrandMark`, displaying
+static Bix SVG artwork derived from the existing mascot favicon. Coral and teal
+variants follow the app's selected theme. The existing LB mark appears if the
+selected image cannot load; the navbar retains its accessible home-link name.
+
+Home-screen installation (2026-10-21): the existing Bix PNG icons serve Android
+(192px, 512px and a padded maskable icon) and Apple (180px touch icon). The
+manifest uses a stable root `id`, UK English and standalone display. Shared HTML
+includes the explicit Apple touch-icon size, Bix home-screen title, standalone
+capability and default status bar metadata. Installed launches open `/` in the
+existing app; network access is still required. No offline caching is provided.
+Verify installation on physical iOS and Android devices after deployment; an
+existing shortcut may need to be removed and added again to refresh its icon.
+
+
 Column answer entry (2026-10-20): Year 3 column addition/subtraction challenges
 3–4 and short multiplication, plus Year 4 column addition/subtraction and written
 multiplication layouts, use shared `ColumnAnswer`. Learners enter one digit per

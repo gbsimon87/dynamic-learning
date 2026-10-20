@@ -1,0 +1,11 @@
+.brand-mark:not(.is-fallback),
+body.dark .brand-mark:not(.is-fallback) {
+  background: transparent;
+}
+
+.brand-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

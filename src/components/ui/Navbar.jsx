@@ -1,3 +1,4 @@
+import BrandMark from "./BrandMark";
 import { useContext, useEffect, useRef, useState } from 'react';
 import { ThemeContext } from '../../context/theme-context';
 import { profileColour } from '../../data/avatars';
@@ -58,7 +59,7 @@ function Navbar() {
       {/* Shortened brand: the mark carries the identity in the tight space a
           phone bar has, and the full name stays as the accessible name. */}
       <Link to="/" className="logo" aria-label="Learn with Bix, home">
-        <span className="logo-mark" aria-hidden="true">LB</span>
+        <BrandMark className="logo-mark" />
       </Link>
 
       {/* The theme toggle used to be the ONLY control here, so from any game the
