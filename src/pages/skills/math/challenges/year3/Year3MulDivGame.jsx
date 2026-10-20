@@ -6,7 +6,7 @@ import CorrespondenceBoard from "../../../../../components/challenge/Corresponde
 import FactTriangle from "../../../../../components/challenge/FactTriangle";
 import NumberInput from "../../../../../components/challenge/NumberInput";
 import PartitionBoard from "../../../../../components/challenge/PartitionBoard";
-import ShortMultiplication from "../../../../../components/challenge/ShortMultiplication";
+import ColumnAnswer from "../../../../../components/challenge/ColumnAnswer";
 import {
   buildTablesQuestions,
   buildEightQuestions,
@@ -109,8 +109,6 @@ function MulDivRound({ question, submit, locked }) {
   const [dealt, setDealt] = useState(0);
   const [partitionValues, setPartitionValues] = useState({ tens: "", ones: "" });
   const [activePart, setActivePart] = useState("tens");
-  const [digits, setDigits] = useState({ hundreds: "", tens: "", ones: "" });
-  const [activePlace, setActivePlace] = useState("ones");
   const [connections, setConnections] = useState([]);
 
   const numericAnswer = (answer) => isCorrectNumber(value, answer);
@@ -244,30 +242,11 @@ function MulDivRound({ question, submit, locked }) {
   }
 
   if (question.type === "short-multiplication") {
-    const setActiveDigit = (updater) => {
-      setDigits((previous) => ({
-        ...previous,
-        [activePlace]: typeof updater === "function" ? updater(previous[activePlace]) : updater,
-      }));
-    };
-    const entered = `${digits.hundreds}${digits.tens}${digits.ones}`;
-    return (
-      <>
-        <p className="challenge-prompt">Work from the ones column. Fill in all three answer digits.</p>
-        <ShortMultiplication
-          top={question.a}
-          multiplier={question.b}
-          digits={digits}
-          activePlace={activePlace}
-          onSelect={setActivePlace}
-          disabled={locked}
-          label={`${question.a} times ${question.b}. Select an answer column and enter its digit.`}
-        />
-        <p className="challenge-prompt" aria-live="polite">Enter the {activePlace} digit.</p>
-        <NumberInput hideField maxDigits={1} value={digits[activePlace]} onChange={setActiveDigit} disabled={locked} />
-        {check(Object.values(digits).every((digit) => digit !== ""), isCorrectNumber(entered, question.answer))}
-      </>
-    );
+    return <>
+      <p className="challenge-prompt">Work from the ones column. Fill in all three answer digits.</p>
+      <ColumnAnswer top={question.a} bottom={question.b} operation="multiply" onChange={setValue} disabled={locked} />
+      {check(value !== "", numericAnswer(question.answer))}
+    </>;
   }
 
   if (question.type === "scale-read" || question.type === "scale-factor") return (

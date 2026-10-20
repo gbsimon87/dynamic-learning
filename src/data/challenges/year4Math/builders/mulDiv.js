@@ -129,7 +129,7 @@ export const BUILDERS = {
       if (l === 3) return build('Split into hundreds, tens and ones. Multiply each part, then add.', [String(h * 100 * b), '+', String(t * 10 * b), '+', String(o * b), '=', String(a * b)], r,
         { equation: `${a} × ${b} = (${h * 100} × ${b}) + (${t * 10} × ${b}) + (${o} × ${b})` });
       const [groups, things] = pick(r, [['school teams', 'tokens'], ['classes', 'stickers'], ['farms', 'eggs'], ['shops', 'pencils']]);
-      return number(`${b} ${groups} each collect ${a} ${things}. How many ${things} altogether?`, a * b, { hint: 'Use the written layout: ones, then tens, then hundreds.' });
+      return number(`${b} ${groups} each collect ${a} ${things}. How many ${things} altogether?`, a * b, { visual: column(a,b,'×'), hint: 'Use the written layout: ones, then tens, then hundreds.' });
     });
   },
   mulProblems(l, r, i) {

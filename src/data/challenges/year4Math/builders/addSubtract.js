@@ -106,7 +106,7 @@ export const BUILDERS = {
     }
     const [story, sub] = COLUMN_STORIES[i];
     const [a,b] = columnPair(r, sub ? i + 5 : i + 1, sub, int(r, 2, 3));
-    return number(story(a,b), sub ? a-b : a+b, { hint: 'Decide whether to add or subtract, then use the columns.' });
+    return number(story(a,b), sub ? a-b : a+b, { visual: column(a,b,sub ? '−' : '+'), hint: 'Decide whether to add or subtract, then use the columns.' });
   },
   inverse(l,r,i) {
     const name = NAMES[(i + int(r,0,5)) % NAMES.length];

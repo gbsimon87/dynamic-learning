@@ -94,6 +94,32 @@ screen width. Actions remain aligned at the bottom of each card row on desktop
 
 ## 1. What This Project Is
 
+Column answer entry (2026-10-20): Year 3 column addition/subtraction challenges
+3–4 and short multiplication, plus Year 4 column addition/subtraction and written
+multiplication layouts, use shared `ColumnAnswer`. Learners enter one digit per
+aligned answer box, starting at ones and advancing left; selecting a box replaces
+its digit. Touch and physical keyboards work, Backspace removes a digit and
+Clear resets the whole answer. Submission waits for every column, including
+zeroes. Each round resets its entry and locks every control during success.
+`ColumnBuilder` supports variable column counts and multiplication. Year 4 column
+challenge 3 now uses the same column boxes rather than left-to-right digit tiles;
+column and written-multiplication story rounds also display the working layout.
+The existing curriculum questions, progress contracts and unlock rules remain.
+Second-pass audit: all live column-entry renderers route through this shared
+control; Year 3 column challenges 1–2 use multiple choice, and Year 4 written
+multiplication challenge 3 uses partitioned expression tiles. Years 1–2 have no
+formal column-entry screens, and Year 5 has no implemented maths pathway.
+Generated banks across 20 seeds confirm the seven Year 4 column-entry slots.
+The wrong-answer regression derives a different value from each generated
+answer, avoiding accidental correct guesses such as 99.
+
+Curriculum numeric keypads (2026-10-20): shared `NumberInput` uses three
+columns in calculator order (7–9, 4–6, 1–3), followed by Clear, 0 and Backspace.
+This applies across all maths years and other curriculum users of the shared
+input. Existing keyboard entry, digit limits, disabled states and theme tokens
+are preserved; buttons retain their 54px minimum height.
+
+
 Navbar backgrounds (2026-10-15): explicit paired tokens in `App.css` set
 light mode to `#f3e5e8` and dark mode to `#22181c`, rather than inheriting
 the page background.

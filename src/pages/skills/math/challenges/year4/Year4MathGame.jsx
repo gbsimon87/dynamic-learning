@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react';
+import HintNote from '../../../../../components/challenge/HintNote';
+import ColumnAnswer from '../../../../../components/challenge/ColumnAnswer';
 import BarChart from '../../../../../components/challenge/BarChart';
 import ChallengeShell from '../../../../../components/challenge/ChallengeShell';
 import { DataRound } from '../../../../../components/challenge/data/DataChallenge';
@@ -11,7 +13,9 @@ import './Year4Math.css';
 export default function Year4MathGame({ topic, level, onComplete }) {
   const questions = useMemo(() => buildYear4Math(topic, level, Math.random), [topic, level]);
   return <ChallengeShell title={titleFor(topic, level)} questions={questions} onComplete={onComplete}
-    render={({ question, index, submit, locked, misses }) => question.interaction
+    render={({ question, index, submit, locked, misses }) => question.visual?.type === 'column'
+      ? <WrittenRound key={index} question={question} submit={submit} locked={locked} hint={misses>=2} />
+      : question.interaction
       ? question.interaction==='chartBuild'
         ? <ChartBuildRound key={index} question={question} submit={submit} locked={locked} />
         : <SpatialRound key={index} question={question} submit={submit} locked={locked} hint={misses>=2} />
@@ -46,5 +50,21 @@ function ChartBuildRound({ question:q, submit, locked }) {
       label="Build the visitor chart" disabled={locked}
       onStep={(label,delta)=>setCounts(prev=>({...prev,[label]:Math.max(0,Math.min(max,prev[label]+delta*q.chart.step))}))} />
     <button type="button" className="submit-btn" disabled={locked} onClick={()=>submit(isCorrect(q,response))}>Check my answer</button>
+  </>;
+}
+
+function WrittenRound({ question: q, submit, locked, hint }) {
+  const [value, setValue] = useState("");
+  const v = q.visual;
+  const operation = v.op === "+" ? "add" : v.op === "×" ? "multiply" : "subtract";
+  const columns = Math.max(String(v.a).length, String(v.b).length, String(q.answer).length);
+  return <>
+    <p className="challenge-prompt">{q.prompt.replace(" Place the answer's digits from left to right.", "")}</p>
+    {q.rule && q.kind !== "build" && <p className="challenge-prompt">{q.rule}</p>}
+    {hint && q.hint && <HintNote>{q.hint}</HintNote>}
+    <ColumnAnswer top={v.a} bottom={v.b} operation={operation} columns={columns}
+      onChange={setValue} disabled={locked} />
+    <button type="button" className="submit-btn" disabled={locked || value === ""}
+      onClick={() => submit(Number(value) === Number(q.answer))}>Check my answer</button>
   </>;
 }

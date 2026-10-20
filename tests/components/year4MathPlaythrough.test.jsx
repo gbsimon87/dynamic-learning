@@ -11,7 +11,13 @@ vi.mock('../../src/components/celebration/fx/effects',()=>({playEffect:()=>{}}))
 vi.mock('../../src/components/challenge/DragToOrder',()=>({default:({items,onReorder,disabled})=><div role="group" aria-label="Reorder adapter">{items.map(item=><button key={item.id} disabled={disabled} onClick={()=>onReorder([item,...items.filter(other=>other.id!==item.id)])}>Move {item.id} first</button>)}</div>}));
 
 function solve(q,container) {
-  if(q.interaction==='plot') {
+  if(q.visual?.type==='column') {
+    const count=container.querySelectorAll('.col-sum-answer button').length;
+    const keypad=container.querySelector('.keypad');
+    act(()=>{for(const digit of String(q.answer).padStart(count,'0').split('').reverse()) {
+      fireEvent.click(within(keypad).getByRole('button',{name:digit,exact:true}));
+    }});
+  } else if(q.interaction==='plot') {
     fireEvent.click(screen.getByRole('button',{name:`Plot ${q.answer}`}));
   } else if(q.interaction==='reflection') {
     // Work from the rendered source squares, not the authored answer map.
@@ -78,7 +84,9 @@ for(const topic of TOPIC_KEYS)it(`${topic}: all four complete five-question runs
       for(const q of questions){
         // Prompts may carry **bold** markup, which renders as split <strong> nodes,
         // so match the whole prompt paragraph's text. getByText also proves it is shown once.
-        const shown=q.prompt.replace(/\*\*/g,'');
+        const shown=(q.visual?.type==='column'
+          ? q.prompt.replace(" Place the answer's digits from left to right.", "")
+          : q.prompt).replace(/\*\*/g,'');
         expect(screen.getByText((_,el)=>el?.classList.contains('challenge-prompt')&&el.textContent===shown)).toBeTruthy();
         expect(screen.getByRole('heading',{level:3}).textContent).not.toBe(shown);
         solve(q,container);

@@ -1,7 +1,7 @@
 import "./challenge-kit.css";
 
 /**
- * A columnar addition or subtraction, laid out the way it is written by hand.
+ * Column addition, subtraction or multiplication, laid out the way it is written by hand.
  *
  * Year 3 is where formal written methods arrive, and the part that actually
  * needs teaching is the EXCHANGE — the carry that hops into the next column,
@@ -10,8 +10,9 @@ import "./challenge-kit.css";
  * carries and exchanges are rendered as their own marks above the digits.
  *
  * `top`, `bottom`  the two numbers
- * `operation`      "add" | "subtract"
- * `answer`         { hundreds, tens, ones } of entered digits; "" for blank
+ * `operation`      "add" | "subtract" | "multiply"
+ * `places`         ordered column names, defaulting to hundreds, tens, ones
+ * `answer`         entered digits keyed by place; "" for blank
  * `carries`        { hundreds, tens } marks above the columns
  * `exchanges`      { hundreds, tens } crossed-out/renamed digits for subtraction
  * `activeColumn`   the column being answered, highlighted
@@ -29,15 +30,15 @@ function ColumnBuilder({
   onColumnFocus,
   revealed = false,
   label,
+  places = ["hundreds", "tens", "ones"],
+  disabled = false,
 }) {
-  const places = ["hundreds", "tens", "ones"];
-  const sign = operation === "add" ? "+" : "−";
+  const sign = operation === "add" ? "+" : operation === "multiply" ? "×" : "−";
 
-  const digitsOf = (value) => ({
-    hundreds: Math.floor(value / 100) || "",
-    tens: value >= 10 ? Math.floor((value % 100) / 10) : "",
-    ones: value % 10,
-  });
+  const digitsOf = (value) => Object.fromEntries(places.map((place, index) => {
+    const divisor = 10 ** (places.length - index - 1);
+    return [place, value >= divisor || divisor === 1 ? Math.floor(value / divisor) % 10 : ""];
+  }));
 
   const topDigits = digitsOf(top);
   const bottomDigits = digitsOf(bottom);
@@ -48,7 +49,7 @@ function ColumnBuilder({
       role={onColumnFocus ? "group" : "img"}
       aria-label={label || `${top} ${sign} ${bottom}`}
     >
-      <div className="col-sum-grid">
+      <div className="col-sum-grid" style={{ "--column-count": places.length }}>
         {/* Carries and exchanges sit above the digits, where they are written. */}
         <div className="col-sum-row col-sum-marks" aria-hidden="true">
           <span className="col-sum-sign" />
@@ -101,6 +102,8 @@ function ColumnBuilder({
                   filled ? "filled" : ""
                 }`}
                 aria-label={`${place} of the answer`}
+                aria-pressed={isActive}
+                disabled={disabled}
                 onClick={() => onColumnFocus(place)}
               >
                 {filled ? answer[place] : "?"}

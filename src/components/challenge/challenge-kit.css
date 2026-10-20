@@ -1375,12 +1375,12 @@ button.partition-cell { cursor: pointer; }
   border-bottom-color: var(--ck-accent);
 }
 
-/* Two rows, not three: the keypad was taller than the question it served. */
-.keypad {
+/* Calculator order, with Clear, zero and Backspace on the bottom row. */
+.number-input .keypad {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.6rem;
-  max-width: 430px;
+  max-width: 260px;
   width: 100%;
 }
 
@@ -1974,7 +1974,7 @@ button.survey-item:hover:not(:disabled) {
 
 .col-sum-row {
   display: grid;
-  grid-template-columns: 1.4rem repeat(3, 2.2rem);
+  grid-template-columns: 1.4rem repeat(var(--column-count, 3), minmax(44px, 1fr));
   align-items: center;
 }
 
@@ -2031,6 +2031,7 @@ button.survey-item:hover:not(:disabled) {
 }
 
 .col-sum-slot {
+  min-height: 48px;
   min-width: 2.2rem;
   padding: 0.1rem 0;
   border: 2px dashed var(--ck-border);

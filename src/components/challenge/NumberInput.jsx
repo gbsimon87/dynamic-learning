@@ -1,6 +1,6 @@
 import "./challenge-kit.css";
 
-const DIGITS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+const DIGITS = ["7", "8", "9", "4", "5", "6", "1", "2", "3"];
 
 /**
  * Numeric entry with an on-screen keypad.
@@ -11,7 +11,7 @@ const DIGITS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
  *
  * The field stays a real editable input so a physical keyboard still works.
  */
-function NumberInput({ value, onChange, disabled, label, hideField, maxDigits = 3 }) {
+function NumberInput({ value, onChange, disabled, label, hideField, maxDigits = 3, onClear }) {
   // Functional updates, not `value + key`: two quick taps land in the same
   // React batch, and reading the prop would make the second one overwrite the
   // first instead of appending to it. A child double-tapping loses a digit.
@@ -58,19 +58,28 @@ function NumberInput({ value, onChange, disabled, label, hideField, maxDigits = 
           type="button"
           className="keypad-btn action"
           disabled={disabled || value === ""}
-          onClick={backspace}
-          aria-label="Delete the last digit"
+          onClick={() => onClear ? onClear() : onChange("")}
         >
-          ⌫
+          Clear
+        </button>
+
+        <button
+          type="button"
+          className="keypad-btn"
+          disabled={disabled}
+          onClick={() => press("0")}
+        >
+          0
         </button>
 
         <button
           type="button"
           className="keypad-btn action"
           disabled={disabled || value === ""}
-          onClick={() => onChange("")}
+          onClick={backspace}
+          aria-label="Delete the last digit"
         >
-          Clear
+          ⌫
         </button>
       </div>
     </div>
