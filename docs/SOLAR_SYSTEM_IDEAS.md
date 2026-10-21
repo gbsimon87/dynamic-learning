@@ -213,7 +213,7 @@ Themes: 🚀 Vehicles & flight · 🌌 Deep space · 🌍 Earth & planets ·
 | 79 | **Movie mode** | Black bars slide in and the camera films a cinematic flyby with music | Keyframed camera paths; one music bed; skip on reduced motion | 4 |
 | 80 | **Light race** | A light pulse leaves the Sun and races outward, ticking off each planet's arrival time 🎓 | Sphere shell growing at a scaled light speed; timer overlay | 4 |
 | 81 | **Badges with confetti** | Badges for "Visited all moons of Mars" and similar, with confetti | `canvas-confetti` is already a dependency | 3 |
-| 82 | **Child control panel** | A drawer with big toggles for orbits, names, sound, speed and the visual extras ⚙️ | Replaces Tweakpane for children (Tweakpane moves behind `?debug`); one page-wide sound switch replaces the tour-only mute; see §8 | 2 |
+| 82 | **Child control panel** | A drawer with big toggles for orbits, names, speed and the visual extras ⚙️ | Sits beside Tweakpane, which stays for grown-ups because it also tunes lighting, stars, glow and the belt; sound is the navbar's site-wide switch; see §8 | 2 |
 
 ---
 
@@ -336,12 +336,14 @@ feature goes in exactly one of these places:
 |---|---|---|
 | **Toolbar** — at most five big buttons | *Modes* only: things that change what the whole screen does | Tour, Fly (#34), Sky (#67), Meteor, later Beyond (#113) |
 | **Planet card** | Facts and games about the planet you're looking at | How old (#22), How heavy (#23), Planet sounds (#77), Arrival question (#76), Line-up (#62) |
-| **Settings drawer** (#82) | Toggles and preferences, with one sound switch for the whole page | Orbits, names, Milky Way (#9), Silly faces (#32), speed (#4), sound and music, Reset |
+| **Settings drawer** (#82) | Toggles and preferences | Orbits, names, Milky Way (#9), Silly faces (#32), speed (#4), Reset |
 | **Nowhere** | Secrets, found by looking and tapping | Sun sneeze (#24), fact sparkles (#31), Golden Record (#75), shooting-star wishes (#8) |
 
-Reset moves into the drawer once Fly takes its place on the toolbar. The tour's
-mute button today only covers narration; #82 replaces it with one page-wide
-sound setting that also covers effects (#27) and music (#28, #105).
+Reset moves into the drawer once Fly takes its place on the toolbar. Sound
+needs no new switch: the navbar's site-wide sound switch already exists, and
+effects (#27) and music (#28, #105) follow it. The tour's own narration mute
+stays as it is. Tweakpane stays visible for grown-ups, because it covers tuning
+the drawer doesn't (lighting, stars, sun glow, asteroid belt).
 
 ---
 
@@ -403,7 +405,7 @@ machine). Each is large, and earlier items deliver most of the same feeling.
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 — Foundations | In progress: 2 of 5 items done | Started 2026-10-21 |
+| 0 — Foundations | In progress: 3 of 5 items done | Started 2026-10-21 |
 | 1 — The first ten seconds | Not started | |
 | 2 — Meet your ship | Not started | |
 | 3 — A living Solar System | Not started | |
@@ -477,8 +479,15 @@ after every phase using the playtest notes.
   **New feature code goes in a module, not in the `SolarSystem.jsx` effect.**
 - **Composer spike** (see above) and close backlog #17 on a real phone, so
   there's a frame-time baseline to protect.
-- **#82 settings drawer**, empty apart from sound, orbits and names, because
-  Phase 1 adds four toggles that need a home.
+- ✅ **#82 "My view" settings drawer** (2026-10-22). A gear button in the
+  bottom-right corner opens big switches for orbit lines, planet names and moon
+  names ([`SolarSettingsDrawer.jsx`](../src/pages/skills/geography/SolarSettingsDrawer.jsx)).
+  The toggles are data in [`solarViewSettings.js`](../src/pages/skills/geography/solarViewSettings.js),
+  so Phase 1 adds a row, not markup. Choices are saved per browser under
+  `dl.solarView` (not learner progress), stay in step with Tweakpane, and
+  survive Reset. The drawer shows only when the launch buttons do, and opening
+  it folds Tweakpane away. It has no sound switch (see §8). Checked at
+  1200×535 and 390×844 in both themes: 48 px switches, no sideways scroll.
 - ✅ **Asset checklist** (2026-10-21). Added to `public/static/` from Solar
   System Scope (CC BY 4.0): `2k_earth_clouds.jpg`, `2k_earth_nightmap.jpg`,
   `2k_saturn_ring_alpha.png` (2048×125, RGBA). `4k_stars_milky_way.jpg`

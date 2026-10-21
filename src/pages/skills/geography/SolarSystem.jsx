@@ -12,6 +12,8 @@ import { createFrameReadout } from "./solarFrameReadout.js";
 import { speak, stopNarration } from "../../../utils/speech.js";
 import { constellations } from "./constellations.js";
 import ConstellationCard from "./ConstellationCard.jsx";
+import SolarSettingsDrawer from "./SolarSettingsDrawer.jsx";
+import { loadViewSettings, saveViewSettings } from "./solarViewSettings.js";
 import "./SolarSystem.css";
 
 /**
@@ -59,6 +61,11 @@ export default function ThreeSolarSystem() {
     // above 720px CSS keeps it permanently expanded and this is inert.
     const [searchExpanded, setSearchExpanded] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
+    // The "My view" drawer's toggles. viewSettingsRef is the copy the scene
+    // effect reads, so Tweakpane, the drawer and Reset all agree.
+    const [viewSettings, setViewSettings] = useState(loadViewSettings);
+    const viewSettingsRef = useRef(viewSettings);
+    const [settingsOpen, setSettingsOpen] = useState(false);
 
     useEffect(() => {
         if (!containerRef.current || !canvasRef.current) return;
@@ -855,7 +862,13 @@ export default function ThreeSolarSystem() {
         // ================================================================
         // Simulation Settings & Tweakpane
         // ================================================================
-        const simulation = { ...defaults.simulation };
+        const simulation = { ...defaults.simulation, ...viewSettingsRef.current };
+        const syncViewSetting = (key, value) => {
+            if (viewSettingsRef.current[key] === value) return;
+            viewSettingsRef.current = { ...viewSettingsRef.current, [key]: value };
+            saveViewSettings(viewSettingsRef.current);
+            setViewSettings(viewSettingsRef.current);
+        };
 
         const pane = new Pane({
             container: containerRef.current,
@@ -883,9 +896,9 @@ export default function ThreeSolarSystem() {
         const simulationFolder = pane.addFolder({ title: "Simulation Controls" });
         simulationFolder.addBinding(simulation, "orbitSpeedMultiplier", { label: "Orbit Speed", min: 1, max: 100, step: 0.1 });
         simulationFolder.addBinding(simulation, "rotationSpeedMultiplier", { label: "Rotation Speed", min: 1, max: 100, step: 0.1 });
-        simulationFolder.addBinding(simulation, "showOrbits", { label: "Show Orbits" });
-        simulationFolder.addBinding(simulation, "showLabels", { label: "Show Labels" });
-        simulationFolder.addBinding(simulation, "showMoonLabels", { label: "Moon Labels" });
+        simulationFolder.addBinding(simulation, "showOrbits", { label: "Show Orbits" }).on("change", (ev) => syncViewSetting("showOrbits", ev.value));
+        simulationFolder.addBinding(simulation, "showLabels", { label: "Show Labels" }).on("change", (ev) => syncViewSetting("showLabels", ev.value));
+        simulationFolder.addBinding(simulation, "showMoonLabels", { label: "Moon Labels" }).on("change", (ev) => syncViewSetting("showMoonLabels", ev.value));
         simulationFolder.addBinding(simulation, "enableTilt", { label: "Axial Tilt" });
 
         const lightingFolder = pane.addFolder({ title: "Lighting", expanded: false });
@@ -1038,7 +1051,8 @@ export default function ThreeSolarSystem() {
             followBlendT = 0;
             zoomAnimating = false;
             experiment?.reset();
-            Object.assign(simulation, defaults.simulation);
+            // Reset puts the world back, but keeps the child's "My view" choices.
+            Object.assign(simulation, defaults.simulation, viewSettingsRef.current);
             Object.assign(glowSettings, defaults.glow);
             Object.assign(starSettings, defaults.stars);
             Object.assign(beltSettings, defaults.belt);
@@ -1260,6 +1274,11 @@ export default function ThreeSolarSystem() {
             toggleNarration: toggleTourNarration,
             exit: (hideCard = false) => stopTour(hideCard),
             collapsePane: () => { pane.expanded = false; },
+            setViewSetting: (key, value) => {
+                simulation[key] = value;
+                pane.refresh();
+                syncViewSetting(key, value);
+            },
         };
         setSceneReady(true);
 
@@ -1334,7 +1353,7 @@ export default function ThreeSolarSystem() {
                 return;
             }
             // Escape inside the search field clears the field instead of the view.
-            if (e.target?.closest?.(".solar-toolbar")) return;
+            if (e.target?.closest?.(".solar-toolbar, .solar-settings")) return;
             stopFollowing();
             stopTour(true);
         }
@@ -1590,6 +1609,12 @@ export default function ThreeSolarSystem() {
             : constellationState.active
                 ? "constellations"
                 : "idle";
+    // Same rule as the launch buttons: the drawer steps aside for a planet
+    // card or any other mode, and comes back closed.
+    const drawerVisible = mode === "idle" && !selectedPlanet;
+    useEffect(() => {
+        if (!drawerVisible) setSettingsOpen(false);
+    }, [drawerVisible]);
     const phaseMessages = {
         ready: "",
         preparing: "Getting Earth ready to watch…",
@@ -1895,12 +1920,25 @@ export default function ThreeSolarSystem() {
                     }}
                 />
             )}
+            {drawerVisible && (
+                <SolarSettingsDrawer
+                    settings={viewSettings}
+                    open={settingsOpen}
+                    onOpenChange={(next) => {
+                        // Tweakpane sits above the drawer, so fold it away (as Constellations does).
+                        if (next) sceneApiRef.current?.collapsePane?.();
+                        setSettingsOpen(next);
+                    }}
+                    onChange={(key, value) => sceneApiRef.current?.setViewSetting(key, value)}
+                />
+            )}
             {mode === "idle" && <div
                 className="solar-system__hint"
                 style={{
                     position: "absolute",
                     left: "1rem",
-                    maxWidth: "calc(100% - 2rem)",
+                    // Leaves room for the My view button in the bottom-right corner.
+                    maxWidth: "calc(100% - 5.5rem)",
                     padding: "0.5rem 0.75rem",
                     border: "1px solid rgba(255,255,255,0.14)",
                     borderRadius: "999px",
