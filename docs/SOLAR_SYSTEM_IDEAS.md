@@ -600,6 +600,13 @@ Done so far:
   is saved in `dl.solarView` and survives Reset. It is off by default, so the
   uncredited cube map is still what most children see (see the asset
   checklist in Phase 0).
+- ✅ **#11 Earth clouds and #12 atmosphere glow** (2026-10-22). Solar System
+  Scope's cloud map drifts over Earth a little faster than the ground, and
+  stops with ⏸. Earth has a soft blue halo, Venus a yellow one and Mars a faint
+  pink one, brighter on the day side
+  ([`planetAtmospheres.js`](../src/pages/skills/geography/planetAtmospheres.js),
+  a small rim shader). They are children of the planet, so they tilt, bounce
+  and hide with it, and the meteor's check of Earth's exact size still passes.
 - ⏳ **#27 arrival sounds.** Waiting on a decision.
   [`docs/sounds/README.md`](sounds/README.md) says all of Skills Mode is
   silent by design, and every sound in the app was chosen by ear. To add a

@@ -13,6 +13,7 @@ import { createRenderPipeline } from "./solarRenderPipeline.js";
 import { SUN_SAFETY_LINE, SUN_SNEEZE_LINE, createBounces, createSunTapCounter } from "./solarTaps.js";
 import { createSunSneeze } from "./sunSneeze.js";
 import { createSolarSky } from "./solarSky.js";
+import { createPlanetAtmospheres } from "./planetAtmospheres.js";
 import { isMuted } from "../../../components/celebration/sound/player.js";
 import { speak, stopNarration } from "../../../utils/speech.js";
 import { constellations } from "./constellations.js";
@@ -1458,6 +1459,13 @@ export default function ThreeSolarSystem() {
         const bounces = modules.add("bounces", createBounces());
         const sunSneeze = modules.add("sunSneeze", createSunSneeze({ scene, sun, camera, quality: currentQuality() }));
         const sunTaps = createSunTapCounter();
+
+        // Earth's clouds (#11) and the glow round Earth, Venus and Mars (#12).
+        modules.add("atmospheres", createPlanetAtmospheres({
+            bodies: Object.fromEntries(planetSystems.map((system) => [system.userData.planet.name, system.userData.body])),
+            cloudTexture: textureLoader.load("/static/2k_earth_clouds.jpg"),
+            getSpinTime: () => worldTime.spinTime,
+        }));
         function tapSun() {
             const result = sunTaps.tap(performance.now());
             const calm = reducedQuery.matches;
