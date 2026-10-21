@@ -405,7 +405,7 @@ machine). Each is large, and earlier items deliver most of the same feeling.
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 — Foundations | In progress: 3 of 5 items done | Started 2026-10-21 |
+| 0 — Foundations | Code done; ⏳ waiting on the phone baseline | Started 2026-10-21. Phase 1 can begin: only #5 bloom waits on the phone numbers |
 | 1 — The first ten seconds | Not started | |
 | 2 — Meet your ship | Not started | |
 | 3 — A living Solar System | Not started | |
@@ -477,8 +477,39 @@ after every phase using the playtest notes.
   (Chrome, DPR 2, 1200×535, standard): 120 fps, frame 8.3 ms / p95 9.3 ms,
   our work 0.8 ms / p95 1.0 ms.
   **New feature code goes in a module, not in the `SolarSystem.jsx` effect.**
-- **Composer spike** (see above) and close backlog #17 on a real phone, so
-  there's a frame-time baseline to protect.
+- ✅ **Bloom spike, desktop part** (2026-10-22).
+  [`solarRenderPipeline.js`](../src/pages/skills/geography/solarRenderPipeline.js)
+  draws the scene either directly (bloom off: exactly the old
+  `renderer.render`) or through `EffectComposer` → `UnrealBloomPass` →
+  `OutputPass` into a 4× MSAA half-float target. With bloom on, the Sun's
+  emissive goes from 0.6 to 2.5 so only it passes the 1.0 threshold; on the
+  `low` tier the blur runs at half resolution. Children get bloom off. It turns
+  on with `?bloom=1`, and `?debug` adds a "Bloom (test)" Tweakpane folder
+  (strength, radius, threshold, Sun brightness).
+  - Desktop, Chrome, DPR 1, 1280×647, 120 Hz screen: bloom off 8.3 / p95
+    9.1 ms; bloom on 8.3 / p95 9.0 ms; bloom on at `low` 8.3 / p95 9.2 ms.
+    Our work stays ~1 ms. A desktop GPU hides the cost, so only the phone
+    numbers can decide.
+  - The meteor runs through all five phases with bloom on, with no console
+    errors.
+  - **Finding:** in the bloom path, see-through things blend in linear light,
+    so orbit lines look brighter. Measured on a 0–255 scale, the outer rings
+    go from 134 and 102 to 201 and 192. Scaling opacity by `^2.2` only got them
+    to 166 and 151, so it was dropped. If real bloom wins, Phase 1 #5 should
+    draw lines and labels in a second pass after `OutputPass` instead.
+- ⏳ **Phone baseline and bloom decision** (backlog #17). Waiting on
+  measurements from a real phone or tablet. No deploy is needed:
+  1. On the Mac: `npm run build`, then `npx vite preview --host`. Note the
+     `Network:` address it prints, such as `http://192.168.1.20:4173`. Allow
+     incoming connections if macOS asks.
+  2. On the phone, on the same Wi-Fi: open `<address>/solar-system?debug`,
+     leave it alone for 20 seconds, and screenshot the green readout.
+  3. Repeat with `<address>/solar-system?debug&bloom=1`.
+  4. On both, tap Launch meteor and screenshot the readout as the pieces
+     drift apart.
+  5. Record the numbers here and decide: if bloom's p95 stays within about
+     2 ms of bloom off at the `low` tier, use real bloom for #5. Otherwise #5
+     becomes a sprite-only glow.
 - ✅ **#82 "My view" settings drawer** (2026-10-22). A gear button in the
   bottom-right corner opens big switches for orbit lines, planet names and moon
   names ([`SolarSettingsDrawer.jsx`](../src/pages/skills/geography/SolarSettingsDrawer.jsx)).

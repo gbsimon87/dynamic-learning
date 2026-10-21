@@ -9,6 +9,7 @@ import { createMeteorExperiment } from "./meteorExperiment.js";
 import { createModuleHost } from "./solarModules.js";
 import { detectQuality, readDebugFlags } from "./solarQuality.js";
 import { createFrameReadout } from "./solarFrameReadout.js";
+import { createRenderPipeline } from "./solarRenderPipeline.js";
 import { speak, stopNarration } from "../../../utils/speech.js";
 import { constellations } from "./constellations.js";
 import ConstellationCard from "./ConstellationCard.jsx";
@@ -815,6 +816,17 @@ export default function ThreeSolarSystem() {
         renderer.outputColorSpace = THREE.SRGBColorSpace;
         renderer.physicallyCorrectLights = true;
 
+        // Bloom is a Phase 0 test (idea #5): off unless `?bloom=1`. With it on,
+        // the Sun is pushed above white so only it glows.
+        const pipeline = createRenderPipeline({ renderer, scene, camera, getQuality: currentQuality });
+        const sunEmissive = materials.sun.emissiveIntensity;
+        const bloomSettings = { enabled: debugFlags.bloom, sunBrightness: 2.5 };
+        const applyBloom = () => {
+            pipeline.setBloom(bloomSettings.enabled);
+            materials.sun.emissiveIntensity = bloomSettings.enabled ? bloomSettings.sunBrightness : sunEmissive;
+        };
+        applyBloom();
+
         // ================================================================
         // Controls with Smooth Zoom to Mouse
         // ================================================================
@@ -938,6 +950,18 @@ export default function ThreeSolarSystem() {
         const stopBtnApi = cameraFolder.addButton({ title: "Stop Following" });
         cameraFolder.addButton({ title: "Reset View" }).on("click", () => resetView());
         cameraFolder.addButton({ title: "Start Guided Tour" }).on("click", () => visitTourPlanet(0));
+
+        if (debugFlags.debug) {
+            const bloomFolder = pane.addFolder({ title: "Bloom (test)", expanded: false });
+            bloomFolder.addBinding(bloomSettings, "enabled", { label: "Bloom" }).on("change", () => {
+                applyBloom();
+                frameReadout?.reset();
+            });
+            bloomFolder.addBinding(pipeline.settings, "strength", { label: "Strength", min: 0, max: 3, step: 0.05 });
+            bloomFolder.addBinding(pipeline.settings, "radius", { label: "Radius", min: 0, max: 1, step: 0.01 });
+            bloomFolder.addBinding(pipeline.settings, "threshold", { label: "Threshold", min: 0, max: 2, step: 0.01 });
+            bloomFolder.addBinding(bloomSettings, "sunBrightness", { label: "Sun brightness", min: 0.6, max: 6, step: 0.1 }).on("change", applyBloom);
+        }
 
         const glowFolder = pane.addFolder({ title: "Sun Glow", expanded: false });
         glowFolder.addBinding(glowSettings, "enabled", { label: "Visible" });
@@ -1401,7 +1425,7 @@ export default function ThreeSolarSystem() {
                 dpr: renderer.getPixelRatio(),
                 width: containerRef.current?.clientWidth ?? 0,
                 height: containerRef.current?.clientHeight ?? 0,
-                bloom: false,
+                bloom: pipeline.bloomEnabled,
             }),
         })) : null;
         let lastFrameStart = 0;
@@ -1488,7 +1512,7 @@ export default function ThreeSolarSystem() {
             }
             updateSunGlow();
             modules.update(dt, { active });
-            renderer.render(scene, camera);
+            pipeline.render();
             if (frameReadout && lastFrameStart > 0 && !document.hidden) {
                 frameReadout.record(frameStart - lastFrameStart, performance.now() - frameStart);
             }
@@ -1506,6 +1530,7 @@ export default function ThreeSolarSystem() {
             camera.aspect = getAspect();
             camera.updateProjectionMatrix();
             renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
+            pipeline.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
             experiment?.resize({ width: containerRef.current.clientWidth, height: containerRef.current.clientHeight, reservedBottomPx: 24 });
             modules.resize({ width: containerRef.current.clientWidth, height: containerRef.current.clientHeight });
         });
@@ -1531,6 +1556,7 @@ export default function ThreeSolarSystem() {
             controls.dispose();
             experiment?.dispose();
             modules.dispose();
+            pipeline.dispose();
             const seenGeometries = new Set();
             const seenMaterials = new Set();
             const seenTextures = new Set(Object.values(textures));
