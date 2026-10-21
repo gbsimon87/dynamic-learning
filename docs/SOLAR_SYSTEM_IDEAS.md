@@ -403,7 +403,7 @@ machine). Each is large, and earlier items deliver most of the same feeling.
 
 | Phase | Status | Notes |
 |---|---|---|
-| 0 — Foundations | In progress: 1 of 5 items done | Started 2026-10-21 |
+| 0 — Foundations | In progress: 2 of 5 items done | Started 2026-10-21 |
 | 1 — The first ten seconds | Not started | |
 | 2 — Meet your ship | Not started | |
 | 3 — A living Solar System | Not started | |
@@ -479,10 +479,20 @@ after every phase using the playtest notes.
   there's a frame-time baseline to protect.
 - **#82 settings drawer**, empty apart from sound, orbits and names, because
   Phase 1 adds four toggles that need a home.
-- **Asset checklist.** Cloud, night-lights, ring-alpha and Pluto textures and a
-  4k Milky Way. The 8k image is only 1.9 MB to download, but it decodes to about
-  128 MB of GPU memory and many phones can't load textures wider than 4096 px.
-  Add each source to the `/credits` page as it's used.
+- ✅ **Asset checklist** (2026-10-21). Added to `public/static/` from Solar
+  System Scope (CC BY 4.0): `2k_earth_clouds.jpg`, `2k_earth_nightmap.jpg`,
+  `2k_saturn_ring_alpha.png` (2048×125, RGBA). `4k_stars_milky_way.jpg`
+  (4096×2048, 0.5 MB) is resized from the 8k original. The 8k image is only
+  1.9 MB to download, but it decodes to about 128 MB of GPU memory and many
+  phones can't load textures wider than 4096 px. `/credits` now has a Solar
+  System Scope entry. The Sun, Mercury, Venus, Earth, Moon, Mars, Uranus and
+  Milky Way files were checked byte for byte against Solar System Scope's
+  downloads. Pluto is deferred: Solar System Scope has no real Pluto map.
+  - ⏳ **Unknown source:** `2k_jupiter.jpg` (1024×576), `2k_neptune.jpg`
+    (1800×900), `2k_saturn.jpg` (318×159) and the `cubeMap/` sky don't match
+    Solar System Scope, and nothing records where they came from. Replace them
+    with Solar System Scope versions (Phase 1, #13), or find and credit their
+    source.
 
 *Exit:* the settings drawer is the only visible change, there's a phone
 baseline in hand, and real bloom versus sprite glow is decided.
