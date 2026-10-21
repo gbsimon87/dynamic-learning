@@ -10,6 +10,9 @@ import { createModuleHost } from "./solarModules.js";
 import { detectQuality, readDebugFlags } from "./solarQuality.js";
 import { createFrameReadout } from "./solarFrameReadout.js";
 import { createRenderPipeline } from "./solarRenderPipeline.js";
+import { SUN_SAFETY_LINE, SUN_SNEEZE_LINE, createBounces, createSunTapCounter } from "./solarTaps.js";
+import { createSunSneeze } from "./sunSneeze.js";
+import { isMuted } from "../../../components/celebration/sound/player.js";
 import { speak, stopNarration } from "../../../utils/speech.js";
 import { constellations } from "./constellations.js";
 import ConstellationCard from "./ConstellationCard.jsx";
@@ -48,6 +51,8 @@ export default function ThreeSolarSystem() {
     const [meteorPhase, setMeteorPhase] = useState("ready");
     const [sceneReady, setSceneReady] = useState(false);
     const [meteorError, setMeteorError] = useState("");
+    // A line from the Sun when it's tapped (#24, #25); `id` restarts the timer.
+    const [sunMessage, setSunMessage] = useState(null);
     const [selectedPlanet, setSelectedPlanet] = useState(null);
     const [tourState, setTourState] = useState({ active: false, index: 0, total: 0, muted: false });
     // The constellation explorer is pure React — it never touches the scene —
@@ -1090,6 +1095,7 @@ export default function ThreeSolarSystem() {
             followBlendT = 0;
             zoomAnimating = false;
             experiment?.reset();
+            bounces.settle();
             // Reset puts the world back, but keeps the child's "My view" choices.
             Object.assign(simulation, defaults.simulation, viewSettingsRef.current);
             applySpeed(DEFAULT_SPEED);
@@ -1153,6 +1159,8 @@ export default function ThreeSolarSystem() {
 
         function launchExperiment() {
             if (disposed || resetting || experiment?.isActive()) return false;
+            // The meteor needs Earth at its exact size.
+            bounces.settle();
             try {
                 if (!experiment) experiment = createMeteorExperiment({
                     scene, camera, earthBody: planetSystems.find((system) => system.userData.planet.name === "Earth").userData.body,
@@ -1333,9 +1341,12 @@ export default function ThreeSolarSystem() {
             clickMouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
             clickRaycaster.setFromCamera(clickMouse, camera);
             const visibleLabels = labelSprites.filter((label) => label.visible);
-            const intersects = clickRaycaster.intersectObjects([...visibleLabels, ...planetBodies], false);
-            if (intersects.length > 0) {
+            const intersects = clickRaycaster.intersectObjects([...visibleLabels, ...planetBodies, sun], false);
+            if (intersects[0]?.object === sun) {
+                tapSun();
+            } else if (intersects.length > 0) {
                 const planetIndex = intersects[0].object.userData.planetIndex;
+                if (!reducedQuery.matches) bounces.bounce(planetBodies[planetIndex]);
                 flyToPlanet(planetSystems[planetIndex]);
             } else {
                 stopFollowing();
@@ -1436,6 +1447,21 @@ export default function ThreeSolarSystem() {
                     mesh.rotation.y = moonPose.rotationY;
                 });
             });
+        }
+
+        // Tap feedback (#24, #25, #26).
+        const bounces = modules.add("bounces", createBounces());
+        const sunSneeze = modules.add("sunSneeze", createSunSneeze({ scene, sun, camera, quality: currentQuality() }));
+        const sunTaps = createSunTapCounter();
+        function tapSun() {
+            const result = sunTaps.tap(performance.now());
+            const calm = reducedQuery.matches;
+            if (!calm) bounces.bounce(sun, result === "sneeze" ? 0.3 : 0.12);
+            if (!result) return;
+            const text = result === "sneeze" ? SUN_SNEEZE_LINE : SUN_SAFETY_LINE;
+            if (result === "sneeze" && !calm) sunSneeze.sneeze();
+            setSunMessage({ text, id: performance.now() });
+            if (!isMuted()) speak(text);
         }
 
         const frameReadout = debugFlags.debug ? modules.add("frameReadout", createFrameReadout({
@@ -1661,6 +1687,11 @@ export default function ThreeSolarSystem() {
     useEffect(() => {
         if (!drawerVisible) setSettingsOpen(false);
     }, [drawerVisible]);
+    useEffect(() => {
+        if (!sunMessage) return undefined;
+        const timer = window.setTimeout(() => setSunMessage(null), 5000);
+        return () => window.clearTimeout(timer);
+    }, [sunMessage]);
     const phaseMessages = {
         ready: "",
         preparing: "Getting Earth ready to watch…",
@@ -1839,6 +1870,11 @@ export default function ThreeSolarSystem() {
             {(meteorActive || meteorError) && (
                 <p className="solar-meteor-status" role="status" aria-live="polite" aria-atomic="true">
                     {meteorError || phaseMessages[meteorPhase]}
+                </p>
+            )}
+            {sunMessage && !meteorActive && (
+                <p key={sunMessage.id} className="solar-meteor-status solar-sun-message" role="status">
+                    <span aria-hidden="true">☀️ </span>{sunMessage.text}
                 </p>
             )}
             {(mode === "idle" || mode === "tour") && selectedPlanet && (

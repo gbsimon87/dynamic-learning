@@ -577,6 +577,20 @@ Done so far:
   never the child's. Sentences are read aloud only while the navbar sound is
   on. Shown for the eight planets, Pluto and the Moon (the Moon has weight
   only); hidden during the tour, whose card is already full.
+- ✅ **#24 sun sneeze, #25 sun safety and #26 bounce** (2026-10-22). The Sun
+  can now be tapped. The first tap of a visit shows and reads "Never look at
+  the real Sun. It can hurt your eyes!"; five taps within 3 seconds (the first
+  counts) give "A-a-achoo! The Sun sneezed out a solar flare!" with a burst of
+  sparks that curl back towards the Sun
+  ([`sunSneeze.js`](../src/pages/skills/geography/sunSneeze.js), one pooled
+  `Points`, 90 sparks on `low`, 180 on `standard`). Tapped planets and the Sun
+  do a squishy bounce ([`solarTaps.js`](../src/pages/skills/geography/solarTaps.js),
+  with the tap counter, both unit-tested). Changes from the plan: no camera
+  nudge, because the follow camera sets its position every frame, so the Sun
+  scrunches up instead; and the bounce ends at once before the meteor launches
+  and on Reset, because the meteor checks Earth's exact size. Reduced motion
+  keeps the words and drops the bounce and sparks. Lines are read aloud only
+  while the navbar sound is on.
 
 *Exit:* a child opening the page for the first time reacts within ten seconds,
 and phone frame time stays within the Phase 0 baseline.
