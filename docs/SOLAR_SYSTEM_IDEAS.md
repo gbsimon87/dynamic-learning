@@ -502,6 +502,12 @@ after every phase using the playtest notes.
   1. On the Mac: `npm run build`, then `npx vite preview --host`. Note the
      `Network:` address it prints, such as `http://192.168.1.20:4173`. Allow
      incoming connections if macOS asks.
+     If the phone can't connect but the address works on the Mac: on recent
+     macOS, the app that started the server needs Local Network permission.
+     Turn on Visual Studio Code (or Terminal) in System Settings → Privacy &
+     Security → Local Network, quit and reopen it, then start the preview
+     again. Also make sure the phone isn't on a guest network, and type the
+     address with `http://`.
   2. On the phone, on the same Wi-Fi: open `<address>/solar-system?debug`,
      leave it alone for 20 seconds, and screenshot the green readout.
   3. Repeat with `<address>/solar-system?debug&bloom=1`.
@@ -528,11 +534,12 @@ after every phase using the playtest notes.
   System Scope entry. The Sun, Mercury, Venus, Earth, Moon, Mars, Uranus and
   Milky Way files were checked byte for byte against Solar System Scope's
   downloads. Pluto is deferred: Solar System Scope has no real Pluto map.
-  - ⏳ **Unknown source:** `2k_jupiter.jpg` (1024×576), `2k_neptune.jpg`
-    (1800×900), `2k_saturn.jpg` (318×159) and the `cubeMap/` sky don't match
-    Solar System Scope, and nothing records where they came from. Replace them
-    with Solar System Scope versions (Phase 1, #13), or find and credit their
-    source.
+  - ✅ **Jupiter, Neptune and Saturn replaced** (2026-10-22). The old files
+    (1024×576, 1800×900 and a blurry 318×159) had no recorded source. They are
+    now Solar System Scope's 2048×1024 maps, covered by the same credit.
+  - ⏳ **Unknown source:** the `cubeMap/` sky (six PNGs, 2.5 MB) still has no
+    recorded source. Find and credit it, or replace it with the credited Milky
+    Way sky (#9).
 
 *Exit:* the settings drawer is the only visible change, there's a phone
 baseline in hand, and real bloom versus sprite glow is decided.
