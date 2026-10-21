@@ -837,7 +837,7 @@ rewards:  { _id, childId, schemaVersion: 1, data: {...}, createdAt, updatedAt }
 Rewards are **one document per child**, not per year+subject like progress — a
 badge belongs to the learner across every year they study (§4.10).
 
-Two browser-local keys, neither of them identity:
+Browser-local keys, none of them identity:
 
 - `dl.session` = `{ parentId, childId, email }`. The `email` is a **display hint
   only** — identity always re-validates `parentId` against the store.
@@ -849,6 +849,9 @@ Two browser-local keys, neither of them identity:
   credential, hash or token, and a test asserts that. It does not skip
   authentication; the 30-day session cookie is what usually keeps a family
   signed in, and when `/login` does appear the password is genuinely required.
+- `dl.solarView` = `{ showOrbits, showLabels, showMoonLabels }`, the Solar
+  System's "My view" switches. A per-device view preference, not learner
+  progress; safe to lose. The speed buttons are deliberately not saved.
 
 `verifyParent` returns `null` identically for "no such account" and "wrong password", so
 the login screen cannot be used to enumerate accounts. Keep it that way.
@@ -1053,6 +1056,45 @@ retry message.
 Still open: physical-device performance, which no device in this workspace can
 supply — tracked in the
 [tracker](solar-system-meteor/IMPLEMENTATION_TRACKER.md). No dependencies added.
+
+**Solar System enhancement roadmap (Phase 0 and Phase 1a, 2026-10-21/22):**
+[`SOLAR_SYSTEM_IDEAS.md`](SOLAR_SYSTEM_IDEAS.md) holds 113 ranked ideas and a
+phased roadmap, and is the progress tracker (§11). What exists now:
+
+- *Foundations.* `solarModules.js` is a small module host the animate loop
+  calls (`update(dt, { active })`, `resize`, `dispose`); a module that throws is
+  reported and dropped without stopping the page. **New scene features go in a
+  module, not the `SolarSystem.jsx` effect.** `solarQuality.js` has the one
+  `low` / `standard` rule (under 720 px or a coarse pointer is `low`) and the
+  grown-up URL switches `?debug` (frame-time readout, `solarFrameReadout.js` +
+  `frameStats.js`), `bloom=1` and `quality=low|standard`.
+  `solarRenderPipeline.js` renders either directly (the default) or through
+  `EffectComposer` + `UnrealBloomPass` + `OutputPass`; bloom stays off for
+  children until a phone baseline decides it (backlog #17).
+- *Textures.* All planet, Moon and Sun maps, Earth clouds and night lights,
+  Saturn's ring map and the Milky Way are Solar System Scope (CC BY 4.0),
+  credited on `/credits`. The `cubeMap/` sky still has no recorded source.
+- *My view drawer* (`SolarSettingsDrawer.jsx`, `solarViewSettings.js`): a gear
+  in the bottom-right corner, shown only when the launch buttons are, with big
+  switches for orbit lines, planet names and moon names (saved as
+  `dl.solarView`, §4.7) and Stop / Slow / Fast speed buttons (not saved; Reset
+  returns to Slow). Tweakpane stays for grown-ups and folds away when the
+  drawer opens.
+- *Planet card games* (`PlanetPlayCard.jsx`, `planetPlay.js`): "How old would
+  I be?" (ages 4–11, whole birthdays, never stored) and "How heavy would Bix
+  be?" (always Bix, 20 kg on Earth, "at the cloud tops" on gas giants), on the
+  eight planets, Pluto and the Moon, outside the tour.
+- *Tap feedback* (`solarTaps.js`, `sunSneeze.js`): the Sun can be tapped; the
+  first tap gives a sun-safety line, five quick taps a sneeze with a spark
+  burst. Tapped planets and the Sun bounce. Bounces are settled before a meteor
+  launch because the meteor checks Earth's exact scale.
+- Spoken lines in these features follow the navbar sound switch
+  (`isMuted()`); the tour keeps its own narration mute. Reduced motion keeps
+  the words and drops bounces and sparks.
+
+Still open: the phone baseline and bloom decision, #27 arrival sounds (Skills
+Mode is silent by design, see `docs/sounds/README.md`, so this needs a
+decision and sounds chosen by ear), and Phase 1b (the look).
 
 ### Accounts — built 2026-09-15, rebuilt 2026-09-19
 Sign-up (`/signup`), sign-in (`/login`), child profile picker (`/profiles`), and an

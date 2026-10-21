@@ -406,7 +406,7 @@ machine). Each is large, and earlier items deliver most of the same feeling.
 | Phase | Status | Notes |
 |---|---|---|
 | 0 — Foundations | Code done; ⏳ waiting on the phone baseline | Started 2026-10-21. Phase 1 can begin: only #5 bloom waits on the phone numbers |
-| 1 — The first ten seconds | In progress | Started 2026-10-22 with 1a |
+| 1 — The first ten seconds | 1a done except #27 (⏳ sound decision); 1b not started | Started 2026-10-22 |
 | 2 — Meet your ship | Not started | |
 | 3 — A living Solar System | Not started | |
 | 4 — Missions and stars | Not started | |
@@ -591,6 +591,13 @@ Done so far:
   and on Reset, because the meteor checks Earth's exact size. Reduced motion
   keeps the words and drops the bounce and sparks. Lines are read aloud only
   while the navbar sound is on.
+- ⏳ **#27 arrival sounds.** Waiting on a decision.
+  [`docs/sounds/README.md`](sounds/README.md) says all of Skills Mode is
+  silent by design, and every sound in the app was chosen by ear. To add a
+  whoosh and an arrival chime: pick them in
+  [`mixkit-audition.html`](sounds/mixkit-audition.html), add them to
+  `process-sounds.py` and `cues.js`, and update the README's "Silent by
+  design" line.
 
 *Exit:* a child opening the page for the first time reacts within ten seconds,
 and phone frame time stays within the Phase 0 baseline.
