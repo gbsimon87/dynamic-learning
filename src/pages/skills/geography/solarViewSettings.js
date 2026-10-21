@@ -14,6 +14,22 @@ export const DEFAULT_VIEW_SETTINGS = {
     showMoonLabels: false,
 };
 
+// Kid-sized time controls (#4). Not saved: a Solar System that is still
+// stopped from last time would look broken. `orbit` is the orbit-speed
+// multiplier; "pause" freezes orbits and spins.
+export const SPEED_PRESETS = [
+    { key: "pause", label: "Stop", icon: "⏸", orbit: 1 },
+    { key: "slow", label: "Slow", icon: "🐢", orbit: 1 },
+    { key: "fast", label: "Fast", icon: "🐇", orbit: 20 },
+];
+
+export const DEFAULT_SPEED = "slow";
+
+/** The preset an orbit multiplier matches while running, or null (a grown-up's Tweakpane value). */
+export function speedPresetFor(orbitSpeedMultiplier) {
+    return SPEED_PRESETS.find((preset) => preset.key !== "pause" && preset.orbit === orbitSpeedMultiplier)?.key ?? null;
+}
+
 const KNOWN_KEYS = Object.keys(DEFAULT_VIEW_SETTINGS);
 
 function pickBooleans(source) {

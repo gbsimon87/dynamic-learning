@@ -1,11 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
+    DEFAULT_SPEED,
     DEFAULT_VIEW_SETTINGS,
+    SPEED_PRESETS,
     VIEW_SETTINGS_KEY,
     VIEW_TOGGLES,
     loadViewSettings,
     saveViewSettings,
+    speedPresetFor,
 } from "./solarViewSettings.js";
 
 function fakeStorage(initial = {}) {
@@ -67,4 +70,23 @@ test("save swallows errors and returns false", () => {
     const bad = { setItem: () => { throw new Error("quota"); } };
     assert.equal(saveViewSettings(DEFAULT_VIEW_SETTINGS, bad), false);
     assert.equal(saveViewSettings(DEFAULT_VIEW_SETTINGS, null), false);
+});
+
+test("speed presets: the default runs at the normal orbit speed", () => {
+    const byKey = Object.fromEntries(SPEED_PRESETS.map((preset) => [preset.key, preset]));
+    assert.deepEqual(Object.keys(byKey), ["pause", "slow", "fast"]);
+    assert.equal(byKey[DEFAULT_SPEED].orbit, 1);
+    assert.ok(byKey.fast.orbit > byKey.slow.orbit);
+});
+
+test("speedPresetFor matches running presets only", () => {
+    assert.equal(speedPresetFor(1), "slow");
+    assert.equal(speedPresetFor(20), "fast");
+    assert.equal(speedPresetFor(7.5), null);
+});
+
+test("speed is never saved with the view settings", () => {
+    const storage = fakeStorage();
+    saveViewSettings({ ...DEFAULT_VIEW_SETTINGS, speed: "fast" }, storage);
+    assert.equal("speed" in JSON.parse(storage.data[VIEW_SETTINGS_KEY]), false);
 });

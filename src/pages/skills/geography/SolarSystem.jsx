@@ -14,7 +14,7 @@ import { speak, stopNarration } from "../../../utils/speech.js";
 import { constellations } from "./constellations.js";
 import ConstellationCard from "./ConstellationCard.jsx";
 import SolarSettingsDrawer from "./SolarSettingsDrawer.jsx";
-import { loadViewSettings, saveViewSettings } from "./solarViewSettings.js";
+import { DEFAULT_SPEED, SPEED_PRESETS, loadViewSettings, saveViewSettings, speedPresetFor } from "./solarViewSettings.js";
 import "./SolarSystem.css";
 
 /**
@@ -67,6 +67,8 @@ export default function ThreeSolarSystem() {
     const [viewSettings, setViewSettings] = useState(loadViewSettings);
     const viewSettingsRef = useRef(viewSettings);
     const [settingsOpen, setSettingsOpen] = useState(false);
+    // The drawer's speed buttons (#4); null when Tweakpane set some other speed.
+    const [speed, setSpeed] = useState(DEFAULT_SPEED);
 
     useEffect(() => {
         if (!containerRef.current || !canvasRef.current) return;
@@ -881,6 +883,15 @@ export default function ThreeSolarSystem() {
             saveViewSettings(viewSettingsRef.current);
             setViewSettings(viewSettingsRef.current);
         };
+        // ⏸ in the drawer: orbits and spins both stop.
+        let paused = false;
+        function applySpeed(key) {
+            const preset = SPEED_PRESETS.find((candidate) => candidate.key === key);
+            if (!preset) return;
+            paused = key === "pause";
+            simulation.orbitSpeedMultiplier = preset.orbit;
+            setSpeed(key);
+        }
 
         const pane = new Pane({
             container: containerRef.current,
@@ -906,7 +917,10 @@ export default function ThreeSolarSystem() {
         wideQuery.addEventListener("change", applyPaneWidth);
 
         const simulationFolder = pane.addFolder({ title: "Simulation Controls" });
-        simulationFolder.addBinding(simulation, "orbitSpeedMultiplier", { label: "Orbit Speed", min: 1, max: 100, step: 0.1 });
+        simulationFolder.addBinding(simulation, "orbitSpeedMultiplier", { label: "Orbit Speed", min: 1, max: 100, step: 0.1 }).on("change", (ev) => {
+            paused = false;
+            setSpeed(speedPresetFor(ev.value));
+        });
         simulationFolder.addBinding(simulation, "rotationSpeedMultiplier", { label: "Rotation Speed", min: 1, max: 100, step: 0.1 });
         simulationFolder.addBinding(simulation, "showOrbits", { label: "Show Orbits" }).on("change", (ev) => syncViewSetting("showOrbits", ev.value));
         simulationFolder.addBinding(simulation, "showLabels", { label: "Show Labels" }).on("change", (ev) => syncViewSetting("showLabels", ev.value));
@@ -1077,6 +1091,7 @@ export default function ThreeSolarSystem() {
             experiment?.reset();
             // Reset puts the world back, but keeps the child's "My view" choices.
             Object.assign(simulation, defaults.simulation, viewSettingsRef.current);
+            applySpeed(DEFAULT_SPEED);
             Object.assign(glowSettings, defaults.glow);
             Object.assign(starSettings, defaults.stars);
             Object.assign(beltSettings, defaults.belt);
@@ -1298,6 +1313,10 @@ export default function ThreeSolarSystem() {
             toggleNarration: toggleTourNarration,
             exit: (hideCard = false) => stopTour(hideCard),
             collapsePane: () => { pane.expanded = false; },
+            setSpeed: (key) => {
+                applySpeed(key);
+                pane.refresh();
+            },
             setViewSetting: (key, value) => {
                 simulation[key] = value;
                 pane.refresh();
@@ -1438,7 +1457,7 @@ export default function ThreeSolarSystem() {
             dt = document.hidden ? 0 : Math.min(Math.max(dt, 0), 0.1);
             const active = experiment?.isActive() ?? false;
             if (!active) {
-                worldTime = advanceWorldTime(worldTime, dt, simulation);
+                worldTime = advanceWorldTime(worldTime, dt, simulation, paused);
                 applyWorldPoses();
             } else {
                 try { experiment.update(dt); }
@@ -1956,6 +1975,8 @@ export default function ThreeSolarSystem() {
                         setSettingsOpen(next);
                     }}
                     onChange={(key, value) => sceneApiRef.current?.setViewSetting(key, value)}
+                    speed={speed}
+                    onSpeedChange={(key) => sceneApiRef.current?.setSpeed(key)}
                 />
             )}
             {mode === "idle" && <div

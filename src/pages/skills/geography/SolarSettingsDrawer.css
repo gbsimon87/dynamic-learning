@@ -150,6 +150,57 @@
   transform: translateX(1.3rem);
 }
 
+.solar-settings__speed {
+  margin-top: 0.85rem;
+}
+
+.solar-settings__subtitle {
+  margin: 0 0 0.5rem;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.solar-settings__speed-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.solar-settings__speed-button {
+  display: grid;
+  justify-items: center;
+  gap: 0.15rem;
+  min-height: 3.5rem;
+  padding: 0.4rem 0.25rem;
+  border: 1px solid rgba(246, 189, 104, 0.25);
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font: 700 0.9rem/1.1 system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.solar-settings__speed-button:hover {
+  border-color: #f6bd68;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.solar-settings__speed-button:focus-visible {
+  outline: 2px solid #f6bd68;
+  outline-offset: 3px;
+}
+
+.solar-settings__speed-button[aria-pressed="true"] {
+  border-color: #f6bd68;
+  background: #f6bd68;
+  color: #1b1304;
+}
+
+.solar-settings__speed-icon {
+  font-size: 1.35rem;
+}
+
 @media (min-width: 720px) {
   .solar-settings__panel {
     right: 1rem;

@@ -406,7 +406,7 @@ machine). Each is large, and earlier items deliver most of the same feeling.
 | Phase | Status | Notes |
 |---|---|---|
 | 0 — Foundations | Code done; ⏳ waiting on the phone baseline | Started 2026-10-21. Phase 1 can begin: only #5 bloom waits on the phone numbers |
-| 1 — The first ten seconds | Not started | |
+| 1 — The first ten seconds | In progress | Started 2026-10-22 with 1a |
 | 2 — Meet your ship | Not started | |
 | 3 — A living Solar System | Not started | |
 | 4 — Missions and stars | Not started | |
@@ -556,6 +556,16 @@ Two drops, so children see something in the first week:
   atmospheres.
 - *Stretch:* #6 lens flare, #7 twinkle, #13 rings, #10 sun shimmer, #31 fact
   sparkles, #33 car ride.
+
+Done so far:
+
+- ✅ **#4 time controls** (2026-10-22). "Planet speed" in My view: ⏸ Stop,
+  🐢 Slow (the normal speed, 1×) and 🐇 Fast (20×, so Earth goes round in
+  about a minute). Stop freezes orbits and spins. The choice is not saved,
+  because a Solar System still stopped from last time would look broken, and
+  Reset goes back to Slow. Moving Tweakpane's Orbit Speed slider un-presses
+  the buttons unless it lands on 1 or 20. Presets live in
+  [`solarViewSettings.js`](../src/pages/skills/geography/solarViewSettings.js).
 
 *Exit:* a child opening the page for the first time reacts within ten seconds,
 and phone frame time stays within the Phase 0 baseline.

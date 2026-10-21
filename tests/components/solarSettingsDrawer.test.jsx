@@ -48,3 +48,18 @@ it("Escape and the close button ask to close", async () => {
   await userEvent.click(screen.getByRole("button", { name: "Close my view settings" }));
   expect(onOpenChange).toHaveBeenCalledWith(false);
 });
+
+it("speed buttons show the current preset and ask for a new one", async () => {
+  const onSpeedChange = vi.fn();
+  setup({ speed: "slow", onSpeedChange });
+  const group = screen.getByRole("group", { name: "Planet speed" });
+  const pressed = [...group.querySelectorAll("button")].map((b) => [b.textContent.trim(), b.getAttribute("aria-pressed")]);
+  expect(pressed).toEqual([["⏸Stop", "false"], ["🐢Slow", "true"], ["🐇Fast", "false"]]);
+  await userEvent.click(screen.getByRole("button", { name: "Fast" }));
+  expect(onSpeedChange).toHaveBeenCalledWith("fast");
+});
+
+it("leaves out the speed row when no handler is given", () => {
+  setup();
+  expect(screen.queryByRole("group", { name: "Planet speed" })).toBeNull();
+});

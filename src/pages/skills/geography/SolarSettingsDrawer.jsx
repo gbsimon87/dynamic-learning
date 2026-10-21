@@ -1,9 +1,10 @@
 import { useEffect, useRef } from "react";
-import { VIEW_TOGGLES } from "./solarViewSettings.js";
+import { SPEED_PRESETS, VIEW_TOGGLES } from "./solarViewSettings.js";
 import "./SolarSettingsDrawer.css";
 
 const PANEL_ID = "solar-settings-panel";
 const HEADING_ID = "solar-settings-heading";
+const SPEED_ID = "solar-settings-speed";
 
 function GearGlyph() {
     return (
@@ -22,7 +23,7 @@ function CloseGlyph() {
     );
 }
 
-export default function SolarSettingsDrawer({ settings, onChange, open, onOpenChange }) {
+export default function SolarSettingsDrawer({ settings, onChange, speed, onSpeedChange, open, onOpenChange }) {
     const triggerRef = useRef(null);
     const firstSwitchRef = useRef(null);
     const wasOpen = useRef(false);
@@ -78,6 +79,25 @@ export default function SolarSettingsDrawer({ settings, onChange, open, onOpenCh
                             );
                         })}
                     </ul>
+                    {onSpeedChange && (
+                        <div className="solar-settings__speed" role="group" aria-labelledby={SPEED_ID}>
+                            <h3 id={SPEED_ID} className="solar-settings__subtitle">Planet speed</h3>
+                            <div className="solar-settings__speed-buttons">
+                                {SPEED_PRESETS.map((preset) => (
+                                    <button
+                                        key={preset.key}
+                                        type="button"
+                                        aria-pressed={speed === preset.key}
+                                        className="solar-settings__speed-button"
+                                        onClick={() => onSpeedChange(preset.key)}
+                                    >
+                                        <span className="solar-settings__speed-icon" aria-hidden="true">{preset.icon}</span>
+                                        {preset.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </section>
             )}
             <button
