@@ -16,6 +16,8 @@ import { createSolarSky } from "./solarSky.js";
 import { createPlanetAtmospheres } from "./planetAtmospheres.js";
 import { createShootingStars } from "./shootingStars.js";
 import { WISH_LINE } from "./shootingStarTiming.js";
+import { createWarpIn } from "./warpIn.js";
+import { markWarpSeen, shouldPlayWarp } from "./warpTimeline.js";
 import { isMuted } from "../../../components/celebration/sound/player.js";
 import { speak, stopNarration } from "../../../utils/speech.js";
 import { constellations } from "./constellations.js";
@@ -1069,6 +1071,7 @@ export default function ThreeSolarSystem() {
         }
 
         function resetView() {
+            warpIn?.skip();
             if (experiment?.isActive()) {
                 resetSolarSystem();
                 return;
@@ -1096,6 +1099,7 @@ export default function ThreeSolarSystem() {
 
         function resetSolarSystem() {
             if (disposed || resetting) return;
+            warpIn?.skip();
             resetting = true;
             stopNarration();
             stopTour(true);
@@ -1167,6 +1171,7 @@ export default function ThreeSolarSystem() {
 
         function launchExperiment() {
             if (disposed || resetting || experiment?.isActive()) return false;
+            warpIn?.skip();
             // The meteor needs Earth at its exact size.
             bounces.settle();
             try {
@@ -1259,6 +1264,7 @@ export default function ThreeSolarSystem() {
 
         function focusEntry(entry, fromTour = false) {
             if (!entry || experiment?.isActive() || resetting) return;
+            warpIn?.skip();
             if (!fromTour && tourActive) stopTour();
             const isMoon = entry.kind === "moon";
             followActive = true;
@@ -1371,6 +1377,7 @@ export default function ThreeSolarSystem() {
             event.preventDefault();
             event.stopImmediatePropagation();
             if (experiment?.isActive()) return;
+            warpIn?.skip();
 
             const zoomFactor = Math.exp(THREE.MathUtils.clamp(event.deltaY, -120, 120) * 0.0025);
             if (followActive && followTarget) {
@@ -1410,6 +1417,7 @@ export default function ThreeSolarSystem() {
 
         function onControlsStart() {
             if (experiment?.isActive()) return;
+            warpIn?.skip();
             zoomAnimating = false;
             desiredCameraPosition.copy(camera.position);
             desiredControlsTarget.copy(controls.target);
@@ -1489,6 +1497,15 @@ export default function ThreeSolarSystem() {
         const shootingStars = modules.add("shootingStars", createShootingStars({
             scene, camera, quality: currentQuality(), reducedMotion: () => reducedQuery.matches,
         }));
+
+        // Warp-in arrival (#1), once per visit. Anything the child does skips it.
+        const warpIn = shouldPlayWarp({ reducedMotion: reducedQuery.matches }) ? modules.add("warpIn", createWarpIn({
+            camera,
+            endPosition: new THREE.Vector3().fromArray(defaults.camera.position),
+            target: controls.target.clone(),
+            quality: currentQuality(),
+            onDone: () => markWarpSeen(),
+        })) : null;
 
         const frameReadout = debugFlags.debug ? modules.add("frameReadout", createFrameReadout({
             container: containerRef.current,

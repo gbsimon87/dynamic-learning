@@ -616,6 +616,15 @@ Done so far:
   tap within 44 px of its head makes a golden sparkle and "🌠 Make a wish!",
   read aloud while the navbar sound is on. None appear under reduced motion or
   during the meteor. The Sun's lines and the wish share one message slot.
+- ✅ **#1 warp-in arrival** (2026-10-22). The page opens at warp speed:
+  streaks of light rush past while the camera swoops in from six times further
+  out to the usual overview, over 2.6 seconds
+  ([`warpIn.js`](../src/pages/skills/geography/warpIn.js), timing in
+  [`warpTimeline.js`](../src/pages/skills/geography/warpTimeline.js); 160
+  streaks on `low`, 320 on `standard`). It plays once per visit
+  (`dl.solarWarpSeen` in sessionStorage) and never under reduced motion.
+  Anything the child does skips it: a tap, drag or scroll, search, the tour,
+  Reset or the meteor.
 - ⏳ **#27 arrival sounds.** Waiting on a decision.
   [`docs/sounds/README.md`](sounds/README.md) says all of Skills Mode is
   silent by design, and every sound in the app was chosen by ear. To add a
