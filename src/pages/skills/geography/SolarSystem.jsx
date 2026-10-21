@@ -6,6 +6,9 @@ import { matchBodies } from "./solarSearch.js";
 import { moonFacts } from "./moonFacts.js";
 import { createSolarDefaults, createWorldTime, advanceWorldTime, getBodyPose } from "./solarSimulation.js";
 import { createMeteorExperiment } from "./meteorExperiment.js";
+import { createModuleHost } from "./solarModules.js";
+import { detectQuality, readDebugFlags } from "./solarQuality.js";
+import { createFrameReadout } from "./solarFrameReadout.js";
 import { speak, stopNarration } from "../../../utils/speech.js";
 import { constellations } from "./constellations.js";
 import ConstellationCard from "./ConstellationCard.jsx";
@@ -71,6 +74,15 @@ export default function ThreeSolarSystem() {
         // ================================================================
         const getAspect = () => containerRef.current.clientWidth / containerRef.current.clientHeight;
         const MAX_PIXEL_RATIO = Math.min(window.devicePixelRatio, 2);
+        const debugFlags = readDebugFlags(window.location.search);
+        const currentQuality = () => detectQuality({
+            width: containerRef.current.clientWidth,
+            coarsePointer: window.matchMedia("(pointer: coarse)").matches,
+            override: debugFlags.quality,
+        });
+        // New scene features are modules driven from animate() (see
+        // docs/SOLAR_SYSTEM_IDEAS.md §11); the code above them predates this.
+        const modules = createModuleHost();
 
         // ================================================================
         // Scene Setup
@@ -1091,7 +1103,7 @@ export default function ThreeSolarSystem() {
                 if (!experiment) experiment = createMeteorExperiment({
                     scene, camera, earthBody: planetSystems.find((system) => system.userData.planet.name === "Earth").userData.body,
                     earthTexture: textures.earth,
-                    quality: containerRef.current.clientWidth < 720 || window.matchMedia("(pointer: coarse)").matches ? "low" : "standard",
+                    quality: currentQuality(),
                     onPhaseChange: (phase) => { if (!disposed) setMeteorPhase(phase); },
                 });
                 experiment.resize({ width: containerRef.current.clientWidth, height: containerRef.current.clientHeight, reservedBottomPx: 24 });
@@ -1363,8 +1375,21 @@ export default function ThreeSolarSystem() {
             });
         }
 
+        const frameReadout = debugFlags.debug ? modules.add("frameReadout", createFrameReadout({
+            container: containerRef.current,
+            getInfo: () => ({
+                quality: currentQuality(),
+                dpr: renderer.getPixelRatio(),
+                width: containerRef.current?.clientWidth ?? 0,
+                height: containerRef.current?.clientHeight ?? 0,
+                bloom: false,
+            }),
+        })) : null;
+        let lastFrameStart = 0;
+
         function animate() {
-            const now = performance.now() / 1000;
+            const frameStart = performance.now();
+            const now = frameStart / 1000;
             let dt = now - prevTime;
             prevTime = now;
             dt = document.hidden ? 0 : Math.min(Math.max(dt, 0), 0.1);
@@ -1443,7 +1468,12 @@ export default function ThreeSolarSystem() {
                 updateAsteroidBelt(worldTime.orbitTime, worldTime.elapsed);
             }
             updateSunGlow();
+            modules.update(dt, { active });
             renderer.render(scene, camera);
+            if (frameReadout && lastFrameStart > 0 && !document.hidden) {
+                frameReadout.record(frameStart - lastFrameStart, performance.now() - frameStart);
+            }
+            lastFrameStart = frameStart;
             animationFrameId = requestAnimationFrame(animate);
         }
         animate();
@@ -1458,6 +1488,7 @@ export default function ThreeSolarSystem() {
             camera.updateProjectionMatrix();
             renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
             experiment?.resize({ width: containerRef.current.clientWidth, height: containerRef.current.clientHeight, reservedBottomPx: 24 });
+            modules.resize({ width: containerRef.current.clientWidth, height: containerRef.current.clientHeight });
         });
         ro.observe(containerRef.current);
 
@@ -1480,6 +1511,7 @@ export default function ThreeSolarSystem() {
             pane.dispose();
             controls.dispose();
             experiment?.dispose();
+            modules.dispose();
             const seenGeometries = new Set();
             const seenMaterials = new Set();
             const seenTextures = new Set(Object.values(textures));

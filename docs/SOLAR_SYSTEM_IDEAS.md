@@ -6,8 +6,8 @@ build, scores how much each will impress a child for the effort, and sets out
 a phased roadmap that ends with a flyable ship and warp travel to other star
 systems.
 
-Nothing here is built yet. Status lives in [`PROJECT_IDEAS.md`](PROJECT_IDEAS.md)
-once an idea is picked up.
+Progress is tracked in this document: see [§11 Progress](#progress), and the
+✅ / ⏳ marks on each roadmap item. Update both in the same commit as the work.
 
 ---
 
@@ -397,6 +397,20 @@ machine). Each is large, and earlier items deliver most of the same feeling.
 
 ## 11. Roadmap
 
+### Progress
+
+✅ done · ⏳ waiting on something outside the code · blank = not started.
+
+| Phase | Status | Notes |
+|---|---|---|
+| 0 — Foundations | In progress: 1 of 5 items done | Started 2026-10-21 |
+| 1 — The first ten seconds | Not started | |
+| 2 — Meet your ship | Not started | |
+| 3 — A living Solar System | Not started | |
+| 4 — Missions and stars | Not started | |
+| 5 — Take the controls | Not started | |
+| 6 — Beyond the Solar System | Not started | |
+
 ### Principles
 
 1. **Something new a child can see every 1–2 weeks.** Only Phase 0 is
@@ -448,9 +462,19 @@ after every phase using the playtest notes.
 
 ### Phase 0 — Foundations (1–2 weeks) ⚙️
 
-- **Module host.** A small registry the animate loop calls (`update`,
-  `resize`, `dispose`), using the `meteorExperiment.js` contract, so every new
-  feature lands in its own file.
+- ✅ **Module host and quality tier** (2026-10-21).
+  [`solarModules.js`](../src/pages/skills/geography/solarModules.js) is the
+  registry the animate loop calls (`update(dt, { active })`, `resize`,
+  `dispose`); a module that throws is reported and dropped without stopping
+  the page. [`solarQuality.js`](../src/pages/skills/geography/solarQuality.js)
+  holds the one `low` / `standard` rule (the meteor now uses it too) and the
+  grown-up URL switches: `?debug`, `bloom=1`, `quality=low|standard`. The first
+  module is the `?debug` frame readout
+  ([`solarFrameReadout.js`](../src/pages/skills/geography/solarFrameReadout.js)),
+  which shows median and p95 frame times, the tier, DPR and viewport. Desktop
+  (Chrome, DPR 2, 1200×535, standard): 120 fps, frame 8.3 ms / p95 9.3 ms,
+  our work 0.8 ms / p95 1.0 ms.
+  **New feature code goes in a module, not in the `SolarSystem.jsx` effect.**
 - **Composer spike** (see above) and close backlog #17 on a real phone, so
   there's a frame-time baseline to protect.
 - **#82 settings drawer**, empty apart from sound, orbits and names, because
