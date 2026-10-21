@@ -607,6 +607,15 @@ Done so far:
   ([`planetAtmospheres.js`](../src/pages/skills/geography/planetAtmospheres.js),
   a small rim shader). They are children of the planet, so they tilt, bounce
   and hide with it, and the meteor's check of Earth's exact size still passes.
+- ✅ **#8 shooting stars** (2026-10-22). The first streak crosses the part of
+  the sky you're looking at 6–10 seconds after the page opens, then one every
+  20–40 seconds ([`shootingStars.js`](../src/pages/skills/geography/shootingStars.js),
+  timing and the tap test in
+  [`shootingStarTiming.js`](../src/pages/skills/geography/shootingStarTiming.js)).
+  Each lasts 1.6 s, slower than a real one, so a child has time to tap it. A
+  tap within 44 px of its head makes a golden sparkle and "🌠 Make a wish!",
+  read aloud while the navbar sound is on. None appear under reduced motion or
+  during the meteor. The Sun's lines and the wish share one message slot.
 - ⏳ **#27 arrival sounds.** Waiting on a decision.
   [`docs/sounds/README.md`](sounds/README.md) says all of Skills Mode is
   silent by design, and every sound in the app was chosen by ear. To add a

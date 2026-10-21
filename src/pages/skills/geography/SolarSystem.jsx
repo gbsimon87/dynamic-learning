@@ -14,6 +14,8 @@ import { SUN_SAFETY_LINE, SUN_SNEEZE_LINE, createBounces, createSunTapCounter } 
 import { createSunSneeze } from "./sunSneeze.js";
 import { createSolarSky } from "./solarSky.js";
 import { createPlanetAtmospheres } from "./planetAtmospheres.js";
+import { createShootingStars } from "./shootingStars.js";
+import { WISH_LINE } from "./shootingStarTiming.js";
 import { isMuted } from "../../../components/celebration/sound/player.js";
 import { speak, stopNarration } from "../../../utils/speech.js";
 import { constellations } from "./constellations.js";
@@ -54,7 +56,8 @@ export default function ThreeSolarSystem() {
     const [sceneReady, setSceneReady] = useState(false);
     const [meteorError, setMeteorError] = useState("");
     // A line from the Sun when it's tapped (#24, #25); `id` restarts the timer.
-    const [sunMessage, setSunMessage] = useState(null);
+    // A short line after tapping the Sun or a shooting star.
+    const [tapMessage, setTapMessage] = useState(null);
     const [selectedPlanet, setSelectedPlanet] = useState(null);
     const [tourState, setTourState] = useState({ active: false, index: 0, total: 0, muted: false });
     // The constellation explorer is pure React — it never touches the scene —
@@ -1343,6 +1346,11 @@ export default function ThreeSolarSystem() {
         function onClick(event) {
             if (experiment?.isActive()) return;
             const rect = renderer.domElement.getBoundingClientRect();
+            if (shootingStars.tryTap(event.clientX, event.clientY, rect)) {
+                setTapMessage({ icon: "🌠", text: WISH_LINE, id: performance.now() });
+                if (!isMuted()) speak(WISH_LINE);
+                return;
+            }
             clickMouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
             clickMouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
             clickRaycaster.setFromCamera(clickMouse, camera);
@@ -1473,9 +1481,14 @@ export default function ThreeSolarSystem() {
             if (!result) return;
             const text = result === "sneeze" ? SUN_SNEEZE_LINE : SUN_SAFETY_LINE;
             if (result === "sneeze" && !calm) sunSneeze.sneeze();
-            setSunMessage({ text, id: performance.now() });
+            setTapMessage({ icon: "☀️", text, id: performance.now() });
             if (!isMuted()) speak(text);
         }
+
+        // Shooting stars (#8): tap one to make a wish.
+        const shootingStars = modules.add("shootingStars", createShootingStars({
+            scene, camera, quality: currentQuality(), reducedMotion: () => reducedQuery.matches,
+        }));
 
         const frameReadout = debugFlags.debug ? modules.add("frameReadout", createFrameReadout({
             container: containerRef.current,
@@ -1701,10 +1714,10 @@ export default function ThreeSolarSystem() {
         if (!drawerVisible) setSettingsOpen(false);
     }, [drawerVisible]);
     useEffect(() => {
-        if (!sunMessage) return undefined;
-        const timer = window.setTimeout(() => setSunMessage(null), 5000);
+        if (!tapMessage) return undefined;
+        const timer = window.setTimeout(() => setTapMessage(null), 5000);
         return () => window.clearTimeout(timer);
-    }, [sunMessage]);
+    }, [tapMessage]);
     const phaseMessages = {
         ready: "",
         preparing: "Getting Earth ready to watch…",
@@ -1885,9 +1898,9 @@ export default function ThreeSolarSystem() {
                     {meteorError || phaseMessages[meteorPhase]}
                 </p>
             )}
-            {sunMessage && !meteorActive && (
-                <p key={sunMessage.id} className="solar-meteor-status solar-sun-message" role="status">
-                    <span aria-hidden="true">☀️ </span>{sunMessage.text}
+            {tapMessage && !meteorActive && (
+                <p key={tapMessage.id} className="solar-meteor-status solar-tap-message" role="status">
+                    <span aria-hidden="true">{tapMessage.icon} </span>{tapMessage.text}
                 </p>
             )}
             {(mode === "idle" || mode === "tour") && selectedPlanet && (
