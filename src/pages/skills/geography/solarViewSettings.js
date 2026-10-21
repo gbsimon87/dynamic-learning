@@ -6,12 +6,14 @@ export const VIEW_TOGGLES = [
     { key: "showOrbits", label: "Orbit lines", icon: "⭕" },
     { key: "showLabels", label: "Planet names", icon: "🪐" },
     { key: "showMoonLabels", label: "Moon names", icon: "🌙" },
+    { key: "milkyWay", label: "Milky Way sky", icon: "🌌" },
 ];
 
 export const DEFAULT_VIEW_SETTINGS = {
     showOrbits: true,
     showLabels: true,
     showMoonLabels: false,
+    milkyWay: false,
 };
 
 // Kid-sized time controls (#4). Not saved: a Solar System that is still

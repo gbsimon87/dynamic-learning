@@ -24,10 +24,10 @@ it("trigger asks to open", async () => {
   expect(onOpenChange).toHaveBeenCalledWith(true);
 });
 
-it("shows three switches with the right state and focuses the first", () => {
+it("shows four switches with the right state and focuses the first", () => {
   setup();
   const state = Object.fromEntries(screen.getAllByRole("switch").map((s) => [s.querySelector(".solar-settings__label").textContent, s.getAttribute("aria-checked")]));
-  expect(state).toEqual({ "Orbit lines": "true", "Planet names": "true", "Moon names": "false" });
+  expect(state).toEqual({ "Orbit lines": "true", "Planet names": "true", "Moon names": "false", "Milky Way sky": "false" });
   expect(document.activeElement).toBe(screen.getByRole("switch", { name: /Orbit lines/ }));
   expect(screen.getByRole("region", { name: "My view" })).toBeTruthy();
 });

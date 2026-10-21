@@ -12,6 +12,7 @@ import { createFrameReadout } from "./solarFrameReadout.js";
 import { createRenderPipeline } from "./solarRenderPipeline.js";
 import { SUN_SAFETY_LINE, SUN_SNEEZE_LINE, createBounces, createSunTapCounter } from "./solarTaps.js";
 import { createSunSneeze } from "./sunSneeze.js";
+import { createSolarSky } from "./solarSky.js";
 import { isMuted } from "../../../components/celebration/sound/player.js";
 import { speak, stopNarration } from "../../../utils/speech.js";
 import { constellations } from "./constellations.js";
@@ -889,6 +890,11 @@ export default function ThreeSolarSystem() {
             saveViewSettings(viewSettingsRef.current);
             setViewSettings(viewSettingsRef.current);
         };
+        // The Milky Way sky (#9) swaps the cube map and the star dots.
+        const sky = modules.add("sky", createSolarSky({
+            scene, cubeTexture: backgroundTexture, getStars: () => stars, quality: currentQuality(), loader: textureLoader,
+        }));
+        sky.apply({ milkyWay: simulation.milkyWay });
         // ⏸ in the drawer: orbits and spins both stop.
         let paused = false;
         function applySpeed(key) {
@@ -944,9 +950,7 @@ export default function ThreeSolarSystem() {
         const backgroundSettings = { ...defaults.background };
         starsFolder
             .addBinding(backgroundSettings, "enabled", { label: "Show Galaxy" })
-            .on("change", (ev) => {
-                scene.background = ev.value ? backgroundTexture : null;
-            });
+            .on("change", (ev) => sky.apply({ milkyWay: simulation.milkyWay, skyVisible: ev.value }));
 
         const cameraFolder = pane.addFolder({ title: "Navigation" });
         const cameraSettings = { focus: "Overview" };
@@ -1105,7 +1109,7 @@ export default function ThreeSolarSystem() {
             Object.assign(backgroundSettings, defaults.background);
             sunLight.intensity = defaults.lighting.sun;
             ambientLight.intensity = defaults.lighting.ambient;
-            scene.background = backgroundTexture;
+            sky.apply({ milkyWay: simulation.milkyWay });
             if (stars.geometry.attributes.position.count !== initialStarPositions.length / 3) createStars();
             stars.geometry.attributes.position.array.set(initialStarPositions);
             stars.geometry.attributes.position.needsUpdate = true;
@@ -1330,6 +1334,7 @@ export default function ThreeSolarSystem() {
                 simulation[key] = value;
                 pane.refresh();
                 syncViewSetting(key, value);
+                if (key === "milkyWay") sky.apply({ milkyWay: value, skyVisible: backgroundSettings.enabled });
             },
         };
         setSceneReady(true);

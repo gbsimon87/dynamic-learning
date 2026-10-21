@@ -33,7 +33,7 @@ test("defaults when storage is empty", () => {
 
 test("merges stored values over defaults", () => {
     const s = fakeStorage({ [VIEW_SETTINGS_KEY]: JSON.stringify({ showOrbits: false, showMoonLabels: true }) });
-    assert.deepEqual(loadViewSettings(s), { showOrbits: false, showLabels: true, showMoonLabels: true });
+    assert.deepEqual(loadViewSettings(s), { ...DEFAULT_VIEW_SETTINGS, showOrbits: false, showMoonLabels: true });
 });
 
 test("ignores unknown keys and non-boolean values", () => {

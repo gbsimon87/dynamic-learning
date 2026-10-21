@@ -406,7 +406,7 @@ machine). Each is large, and earlier items deliver most of the same feeling.
 | Phase | Status | Notes |
 |---|---|---|
 | 0 — Foundations | Code done; ⏳ waiting on the phone baseline | Started 2026-10-21. Phase 1 can begin: only #5 bloom waits on the phone numbers |
-| 1 — The first ten seconds | 1a done except #27 (⏳ sound decision); 1b not started | Started 2026-10-22 |
+| 1 — The first ten seconds | 1a done except #27 (⏳ sound decision); 1b in progress | Started 2026-10-22 |
 | 2 — Meet your ship | Not started | |
 | 3 — A living Solar System | Not started | |
 | 4 — Missions and stars | Not started | |
@@ -591,6 +591,15 @@ Done so far:
   and on Reset, because the meteor checks Earth's exact size. Reduced motion
   keeps the words and drops the bounce and sparks. Lines are read aloud only
   while the navbar sound is on.
+- ✅ **#9 Milky Way sky** (2026-10-22). A "Milky Way sky" switch in My view
+  swaps the cube-map sky and the star dots for Solar System Scope's Milky Way
+  photo ([`solarSky.js`](../src/pages/skills/geography/solarSky.js)). The band
+  is tilted 60° to the planets' plane, as the real one is, and shown 3× brighter
+  because the photo is true to life and very dark. It loads the first time it's
+  switched on: the 4k copy on the `low` tier, the 8k one otherwise. The choice
+  is saved in `dl.solarView` and survives Reset. It is off by default, so the
+  uncredited cube map is still what most children see (see the asset
+  checklist in Phase 0).
 - ⏳ **#27 arrival sounds.** Waiting on a decision.
   [`docs/sounds/README.md`](sounds/README.md) says all of Skills Mode is
   silent by design, and every sound in the app was chosen by ear. To add a
