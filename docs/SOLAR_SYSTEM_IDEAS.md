@@ -566,6 +566,17 @@ Done so far:
   Reset goes back to Slow. Moving Tweakpane's Orbit Speed slider un-presses
   the buttons unless it lands on 1 or 20. Presets live in
   [`solarViewSettings.js`](../src/pages/skills/geography/solarViewSettings.js).
+- ✅ **#22 how old and #23 how heavy** (2026-10-22). Two big buttons on the
+  planet card ([`PlanetPlayCard.jsx`](../src/pages/skills/geography/PlanetPlayCard.jsx),
+  maths in [`planetPlay.js`](../src/pages/skills/geography/planetPlay.js)).
+  Ages 4–11 as buttons give "On Mars you'd be 3!" (whole birthdays, so
+  Jupiter says "you haven't had your first birthday yet"); the age is never
+  stored. The weight game puts the CSS Bix on bathroom scales that bounce
+  higher on light worlds. Bix weighs 20 kg on Earth; the gas giants say "at
+  the cloud tops" because they have no ground. It is always Bix's weight,
+  never the child's. Sentences are read aloud only while the navbar sound is
+  on. Shown for the eight planets, Pluto and the Moon (the Moon has weight
+  only); hidden during the tour, whose card is already full.
 
 *Exit:* a child opening the page for the first time reacts within ten seconds,
 and phone frame time stays within the Phase 0 baseline.

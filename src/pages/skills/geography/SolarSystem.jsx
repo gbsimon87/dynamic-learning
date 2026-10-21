@@ -14,6 +14,7 @@ import { speak, stopNarration } from "../../../utils/speech.js";
 import { constellations } from "./constellations.js";
 import ConstellationCard from "./ConstellationCard.jsx";
 import SolarSettingsDrawer from "./SolarSettingsDrawer.jsx";
+import PlanetPlayCard from "./PlanetPlayCard.jsx";
 import { DEFAULT_SPEED, SPEED_PRESETS, loadViewSettings, saveViewSettings, speedPresetFor } from "./solarViewSettings.js";
 import "./SolarSystem.css";
 
@@ -1877,6 +1878,7 @@ export default function ThreeSolarSystem() {
                         {selectedPlanet.summary && !tourState.active && (
                             <p className="solar-info-card__summary">{selectedPlanet.summary}</p>
                         )}
+                        {!tourState.active && <PlanetPlayCard bodyName={selectedPlanet.name} />}
                         {tourState.active && (
                             <div className="solar-tour-narration">
                                 <span aria-hidden="true">{tourState.muted ? "◼" : "♪"}</span>
