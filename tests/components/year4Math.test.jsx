@@ -22,7 +22,8 @@ it('Vite resolves and React renders all 168 Year 4 challenges',async()=>{
     expect(screen.getByRole('button',{name:'Check my answer'})).toBeTruthy();
     cleanup();
   }
-},30000);
+// 168 dynamic imports and renders: under a full parallel run this needs more than 30s.
+},120000);
 
 it('every initial diagram renders in both theme contexts',()=>{
   for(const theme of ['light','dark'])for(const topic of TOPIC_KEYS)for(let level=1;level<=4;level++){

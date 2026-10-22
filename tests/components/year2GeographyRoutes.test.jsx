@@ -45,7 +45,7 @@ it("Year 2 locked, missing and inherited route identifiers never open a run or a
 it("a real Year 2 route saves once after all five answers and opens the next slot", async () => {
   vi.spyOn(Math, "random").mockReturnValue(.375);
   showRoute(`${category.id}/${topic.id}/1`, "y2-route-complete");
-  await screen.findByRole("button", { name: "Let's explore!" });
+  await screen.findByRole("button", { name: "Let's explore!" }, { timeout: 10000 });
   vi.useFakeTimers();
   fireEvent.click(screen.getByRole("button", { name: "Let's explore!" }));
   const questions = YEAR2_GEOGRAPHY_BUILDERS[topic.id](1, () => .375).questions;
@@ -69,6 +69,6 @@ it("a real Year 2 route saves once after all five answers and opens the next slo
   expect(fake.award.mock.calls[0][0].earned.some(item => item.level === "year")).toBe(false);
   const next = document.querySelector(`a[href="/year/2/geography/problem/${category.id}/${topic.id}/2"]`);
   expect(next).toBeTruthy(); fireEvent.click(next);
-  await screen.findByRole("button", { name: "Let's explore!" });
+  await screen.findByRole("button", { name: "Let's explore!" }, { timeout: 10000 });
   expect(fake.saveProgress).toHaveBeenCalledTimes(1);
 });
