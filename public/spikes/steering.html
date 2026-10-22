@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Steering playtest</title>
+<!-- THROWAWAY playtest page. Nothing is sent anywhere and nothing is stored. -->
+<style>
+  :root {
+    --ink: #fff; --panel: rgba(12, 14, 48, .78); --accent: #ffd23d; --edge: rgba(255,255,255,.35);
+    --safe-t: env(safe-area-inset-top, 0px); --safe-b: env(safe-area-inset-bottom, 0px);
+    --safe-l: env(safe-area-inset-left, 0px); --safe-r: env(safe-area-inset-right, 0px);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #05061a; color: var(--ink);
+    font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif; overscroll-behavior: none; }
+  body { position: fixed; inset: 0; width: 100%; user-select: none; -webkit-user-select: none; }
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+  button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
+
+  #top { position: fixed; left: 0; right: 0; top: 0; z-index: 5; pointer-events: none;
+    padding: calc(var(--safe-t) + 8px) calc(var(--safe-r) + 8px) 0 calc(var(--safe-l) + 8px);
+    display: grid; gap: 8px; grid-template-columns: 1fr auto;
+    grid-template-areas: "modes notes" "banner banner" "hint hint"; }
+  #modes { grid-area: modes; display: flex; gap: 8px; max-width: 460px; }
+  .mode { flex: 1; min-height: 64px; min-width: 64px; border-radius: 18px; border: 3px solid var(--edge);
+    background: var(--panel); font-size: 18px; font-weight: 800; pointer-events: auto; }
+  .mode[aria-pressed="true"] { background: var(--accent); color: #1a1440; border-color: #fff; }
+  #notesBtn { grid-area: notes; min-width: 64px; min-height: 64px; border-radius: 18px; border: 3px solid var(--edge);
+    background: var(--panel); font-size: 14px; font-weight: 700; pointer-events: auto; }
+  #banner { grid-area: banner; justify-self: center; display: flex; align-items: center; gap: 12px; max-width: 100%;
+    background: var(--panel); border: 3px solid var(--edge); border-radius: 22px; padding: 8px 18px;
+    font-size: clamp(22px, 5.4vw, 34px); font-weight: 800; text-align: center; text-shadow: 0 2px 0 rgba(0,0,0,.4); }
+  #swatch { flex: none; width: 38px; height: 38px; border-radius: 50%; border: 3px solid #fff; }
+  #again { min-height: 64px; padding: 0 22px; border-radius: 18px; border: 3px solid #fff; background: var(--accent);
+    color: #1a1440; font-size: 20px; font-weight: 800; pointer-events: auto; display: none; }
+  #hint { grid-area: hint; justify-self: center; font-size: 16px; opacity: .85; text-align: center;
+    background: rgba(0,0,0,.35); border-radius: 12px; padding: 2px 12px; }
+  #hint .kbd { display: none; }
+  @media (pointer: fine) { #hint .kbd { display: inline; } }
+  @media (orientation: landscape) and (max-height: 520px) {
+    #top { grid-template-columns: auto 1fr auto; grid-template-areas: "modes banner notes"; align-items: start; }
+    #modes .mode { min-width: 130px; }
+    #banner { font-size: clamp(20px, 3.2vw, 30px); padding: 6px 14px; }
+    #hint { display: none; }
+  }
+
+  #toast { position: fixed; left: 50%; top: 42%; transform: translate(-50%, -50%); z-index: 4; pointer-events: none;
+    font-size: clamp(40px, 11vw, 84px); font-weight: 900; color: var(--accent); text-align: center; width: 96vw;
+    text-shadow: 0 4px 0 #6a2cff, 0 0 30px rgba(255,210,61,.7); opacity: 0; }
+  #toast.show { animation: pop 1.4s ease-out forwards; }
+  @keyframes pop { 0% { opacity: 0; transform: translate(-50%,-50%) scale(.5); } 15% { opacity: 1; transform: translate(-50%,-50%) scale(1.1); }
+    25% { transform: translate(-50%,-50%) scale(1); } 80% { opacity: 1; } 100% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { #toast.show { animation: fade 1.4s linear forwards; }
+    @keyframes fade { 0%, 80% { opacity: 1; } 100% { opacity: 0; } } }
+
+  #arrow { position: fixed; left: 0; top: 0; z-index: 3; width: 0; height: 0; pointer-events: none; display: none;
+    border-left: 22px solid transparent; border-right: 22px solid transparent; border-bottom: 44px solid #fff;
+    filter: drop-shadow(0 0 6px #000); margin: -22px 0 0 -22px; }
+
+  #stick { position: fixed; z-index: 5; left: calc(var(--safe-l) + 20px); bottom: calc(var(--safe-b) + 20px);
+    width: 150px; height: 150px; border-radius: 50%; background: rgba(255,255,255,.14); border: 4px solid var(--edge);
+    touch-action: none; }
+  #thumb { position: absolute; left: 43px; top: 43px; width: 64px; height: 64px; border-radius: 50%;
+    background: var(--accent); border: 3px solid #fff; pointer-events: none; box-shadow: 0 4px 12px rgba(0,0,0,.5); }
+  #thrust { position: fixed; z-index: 5; right: calc(var(--safe-r) + 20px); bottom: calc(var(--safe-b) + 20px);
+    width: 104px; height: 104px; border-radius: 50%; border: 4px solid #fff; background: #ff6a2c;
+    font-size: 18px; font-weight: 900; letter-spacing: .5px; touch-action: none; box-shadow: 0 6px 0 #a83a0a; }
+  #thrust.on { background: #ffb02c; transform: translateY(4px); box-shadow: 0 2px 0 #a83a0a; }
+  body[data-style="B"] #stick, body[data-style="B"] #thrust { display: none; }
+
+  #notes { position: fixed; z-index: 8; top: calc(var(--safe-t) + 80px); right: calc(var(--safe-r) + 8px);
+    width: min(360px, calc(100vw - 16px)); max-height: calc(100dvh - 100px); overflow: auto; display: none;
+    background: #080a24; border: 3px solid var(--edge); border-radius: 16px; padding: 12px;
+    font-size: 15px; line-height: 1.4; user-select: text; -webkit-user-select: text; touch-action: pan-y; }
+  #notes.open { display: block; }
+  #notes h3 { margin: 8px 0 4px; font-size: 16px; color: var(--accent); }
+  #notes table { width: 100%; border-collapse: collapse; }
+  #notes td, #notes th { padding: 2px 4px; text-align: left; border-bottom: 1px solid rgba(255,255,255,.15); }
+  #notes .row { display: flex; gap: 8px; margin-top: 10px; }
+  #notes .row button { flex: 1; min-height: 48px; border-radius: 12px; border: 2px solid var(--edge); background: #24286e; font-weight: 700; }
+  #msg { font-size: 13px; opacity: .8; margin-top: 6px; min-height: 1em; }
+  #fail { position: fixed; inset: 0; z-index: 20; display: none; align-items: center; justify-content: center;
+    text-align: center; padding: 24px; font-size: 22px; background: #05061a; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.181.0/build/three.module.js" } }
+</script>
+</head>
+<body data-style="A">
+<div id="top">
+  <div id="modes">
+    <button class="mode" id="modeA" aria-pressed="true">A: Joystick</button>
+    <button class="mode" id="modeB" aria-pressed="false">B: Tap to go</button>
+  </div>
+  <button id="notesBtn" aria-expanded="false">Notes</button>
+  <div id="banner"><span id="swatch"></span><span id="goal">Fly to the RED planet!</span><button id="again">Go again</button></div>
+  <div id="hint"></div>
+</div>
+<div id="toast">You did it!</div>
+<div id="arrow"></div>
+<div id="stick"><div id="thumb"></div></div>
+<button id="thrust" aria-label="Thrust">GO!</button>
+<div id="notes">
+  <div id="notesBody"></div>
+  <div class="row"><button id="newRound">New round</button><button id="copy">Copy results</button></div>
+  <div id="msg"></div>
+</div>
+<div id="fail">Sorry, this page needs the internet for a moment to load the 3D bits. Please check the connection and reload.</div>
+
+<script type="module">
+let THREE;
+try { THREE = await import('three'); }
+catch (e) { document.getElementById('fail').style.display = 'flex'; throw e; }
+
+const $ = (id) => document.getElementById(id);
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+// ---------- scene ----------
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+document.body.prepend(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x05061a);
+const camera = new THREE.PerspectiveCamera(70, 1, 0.1, 2000);
+scene.add(new THREE.AmbientLight(0xffffff, 1.1));
+const sun = new THREE.DirectionalLight(0xffffff, 2.2); sun.position.set(1, 1.2, .6); scene.add(sun);
+
+// stars: a far shell plus nearer specks so you can feel yourself moving
+function makeStars(n, rMin, rMax, size) {
+  const pos = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) {
+    const v = new THREE.Vector3().randomDirection().multiplyScalar(rMin + Math.random() * (rMax - rMin));
+    pos.set([v.x, v.y, v.z], i * 3);
+  }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  scene.add(new THREE.Points(g, new THREE.PointsMaterial({ color: 0xffffff, size, sizeAttenuation: true })));
+}
+makeStars(1500, 500, 900, 3); makeStars(350, 70, 260, 0.45);
+
+const COLOURS = [
+  { name: 'RED', hex: 0xff4d4d }, { name: 'BLUE', hex: 0x3d8bff }, { name: 'GREEN', hex: 0x3ddc6a },
+  { name: 'YELLOW', hex: 0xffd23d }, { name: 'PURPLE', hex: 0xb05cff } ];
+const HEIGHTS = [0, 12, -10, 8, -6];
+const planets = COLOURS.map((c, i) => {
+  const a = i * Math.PI * 2 / 5, r = 7 + (i % 3);
+  const mesh = new THREE.Mesh(new THREE.SphereGeometry(r, 40, 28),
+    new THREE.MeshStandardMaterial({ color: c.hex, emissive: c.hex, emissiveIntensity: .3, roughness: .6 }));
+  mesh.position.set(Math.sin(a) * 60, HEIGHTS[i], -Math.cos(a) * 60);
+  if (i === 3 || i === 4) { // rings on two planets for fun
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(r * 1.6, 0.6, 8, 60), new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x666666 }));
+    ring.rotation.x = Math.PI / 2.4; mesh.add(ring);
+  }
+  const halo = new THREE.Mesh(new THREE.SphereGeometry(r * 1.25, 24, 16),
+    new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: .3, side: THREE.BackSide }));
+  halo.visible = false; mesh.add(halo);
+  scene.add(mesh);
+  return { ...c, mesh, halo, r };
+});
+
+// rocket: built along +y, then the inner group is turned so the nose points to -z
+const ship = new THREE.Group(); const rocket = new THREE.Group(); rocket.rotation.x = -Math.PI / 2; ship.add(rocket);
+const mat = (c) => new THREE.MeshStandardMaterial({ color: c, roughness: .5 });
+const body = new THREE.Mesh(new THREE.CylinderGeometry(.6, .6, 1.8, 20), mat(0xf4f4ff));
+const nose = new THREE.Mesh(new THREE.ConeGeometry(.6, 1.1, 20), mat(0xff3d5a)); nose.position.y = 1.45;
+const win = new THREE.Mesh(new THREE.SphereGeometry(.28, 16, 12), mat(0x55ccff)); win.position.set(0, .4, .5);
+rocket.add(body, nose, win);
+for (let i = 0; i < 3; i++) {
+  const fin = new THREE.Mesh(new THREE.BoxGeometry(.12, .9, .7), mat(0xff3d5a));
+  const g = new THREE.Group(); g.rotation.y = i * Math.PI * 2 / 3; fin.position.set(.75, -.8, 0); g.add(fin); rocket.add(g);
+}
+const flame = new THREE.Mesh(new THREE.ConeGeometry(.4, 1.4, 14),
+  new THREE.MeshBasicMaterial({ color: 0xffa21f })); flame.rotation.x = Math.PI; flame.position.y = -1.6; rocket.add(flame);
+ship.scale.setScalar(.75); scene.add(ship);
+
+const marker = new THREE.Mesh(new THREE.TorusGeometry(1, .15, 8, 32), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+marker.visible = false; scene.add(marker);
+
+// ---------- game state ----------
+const P = { pos: new THREE.Vector3(), vel: new THREE.Vector3(), yaw: 0, pitch: 0, roll: 0 };
+const input = { stickX: 0, stickY: 0, thrustTouch: false, keys: new Set() };
+let style = 'A', goalPos = null, shake = 0, bumpCooldown = 0, prevThrust = false;
+const shuffle = (a) => a.map((x) => [Math.random(), x]).sort((p, q) => p[0] - q[0]).map((p) => p[1]);
+const newState = () => ({ order: shuffle(COLOURS.map((_, i) => i)), idx: 0, done: false, log: [], cur: { t: 0, bumps: 0, acts: 0 } });
+const rounds = { A: newState(), B: newState() };
+const S = () => rounds[style];
+const target = () => { const s = S(); return s.done ? null : planets[s.order[s.idx]]; };
+
+function updateBanner() {
+  const t = target(), s = S();
+  $('swatch').style.display = t ? 'block' : 'none';
+  $('again').style.display = t ? 'none' : 'inline-block';
+  if (t) { $('swatch').style.background = '#' + t.hex.toString(16).padStart(6, '0'); $('goal').textContent = `Fly to the ${t.name} planet!`; }
+  else $('goal').textContent = 'All done, star pilot!';
+  planets.forEach((p) => { p.halo.visible = p === t; p.halo.material.color.set(p.hex); });
+  $('hint').innerHTML = style === 'A'
+    ? 'Steer with the joystick, hold GO! to fly<span class="kbd"> (or arrow keys / WASD + Space)</span>'
+    : 'Tap a planet or anywhere in space to fly there';
+  void s;
+}
+function setStyle(st) {
+  style = st; goalPos = null; marker.visible = false; input.stickX = input.stickY = 0; input.thrustTouch = false;
+  document.body.dataset.style = st; $('modeA').setAttribute('aria-pressed', st === 'A'); $('modeB').setAttribute('aria-pressed', st === 'B');
+  $('thrust').classList.remove('on'); $('thumb').style.transform = ''; updateBanner(); renderNotes();
+}
+function newRound() { rounds[style] = newState(); goalPos = null; marker.visible = false; updateBanner(); renderNotes(); }
+$('modeA').onclick = (e) => { setStyle('A'); e.target.blur(); };
+$('modeB').onclick = (e) => { setStyle('B'); e.target.blur(); };
+$('again').onclick = newRound;
+
+// ---------- controls ----------
+const stick = $('stick'); let stickId = null;
+function moveStick(e) {
+  const r = stick.getBoundingClientRect(), max = r.width / 2 - 32;
+  let dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+  const d = Math.hypot(dx, dy); if (d > max) { dx *= max / d; dy *= max / d; }
+  input.stickX = dx / max; input.stickY = -dy / max;
+  $('thumb').style.transform = `translate(${dx}px, ${dy}px)`;
+}
+stick.addEventListener('pointerdown', (e) => { stickId = e.pointerId; stick.setPointerCapture(e.pointerId); moveStick(e); e.preventDefault(); });
+stick.addEventListener('pointermove', (e) => { if (e.pointerId === stickId) moveStick(e); });
+const endStick = (e) => { if (e.pointerId !== stickId) return; stickId = null; input.stickX = input.stickY = 0; $('thumb').style.transform = ''; };
+stick.addEventListener('pointerup', endStick); stick.addEventListener('pointercancel', endStick);
+
+const thrustBtn = $('thrust');
+thrustBtn.addEventListener('pointerdown', (e) => { input.thrustTouch = true; thrustBtn.setPointerCapture(e.pointerId); e.preventDefault(); });
+const endThrust = () => { input.thrustTouch = false; };
+thrustBtn.addEventListener('pointerup', endThrust); thrustBtn.addEventListener('pointercancel', endThrust);
+thrustBtn.addEventListener('contextmenu', (e) => e.preventDefault());
+
+addEventListener('keydown', (e) => {
+  if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) e.preventDefault();
+  input.keys.add(e.key.length === 1 ? e.key.toLowerCase() : e.key);
+});
+addEventListener('keyup', (e) => input.keys.delete(e.key.length === 1 ? e.key.toLowerCase() : e.key));
+addEventListener('blur', () => input.keys.clear());
+const k = (...names) => names.some((n) => input.keys.has(n));
+
+// Style B: tap a planet or empty space
+const ray = new THREE.Raycaster();
+renderer.domElement.addEventListener('pointerdown', (e) => {
+  if (style !== 'B') return;
+  ray.setFromCamera(new THREE.Vector2(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1), camera);
+  const hit = ray.intersectObjects(planets.map((p) => p.mesh), false)[0];
+  goalPos = hit ? hit.point.clone() : ray.ray.at(70, new THREE.Vector3());
+  marker.position.copy(goalPos); marker.visible = true;
+  if (!S().done) S().cur.acts++;
+});
+
+// ---------- effects ----------
+const bursts = [];
+function burst(at, hex) {
+  if (reduced) return;
+  const n = 60, pos = new Float32Array(n * 3), vel = [];
+  for (let i = 0; i < n; i++) { pos.set([at.x, at.y, at.z], i * 3); vel.push(new THREE.Vector3().randomDirection().multiplyScalar(8 + Math.random() * 14)); }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const pts = new THREE.Points(g, new THREE.PointsMaterial({ color: hex, size: 1.6, transparent: true }));
+  scene.add(pts); bursts.push({ pts, vel, life: 1.2 });
+}
+function toast(text) { const t = $('toast'); t.textContent = text; t.classList.remove('show'); void t.offsetWidth; t.classList.add('show'); }
+
+function reached(t) {
+  const s = S(); s.log.push({ name: t.name, ...s.cur });
+  burst(ship.position.clone().add(new THREE.Vector3(0, 1, 0)), t.hex);
+  s.idx++; s.cur = { t: 0, bumps: 0, acts: 0 };
+  if (s.idx >= 5) { s.done = true; goalPos = null; marker.visible = false; toast('You did it! All done!'); }
+  else toast('You did it!');
+  updateBanner(); renderNotes();
+}
+
+// ---------- physics ----------
+const fwd = new THREE.Vector3(), tmp = new THREE.Vector3();
+const forward = (yaw, pitch, out) => out.set(-Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), -Math.cos(yaw) * Math.cos(pitch));
+const wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a));
+let thrusting = false, turnRate = 0;
+
+function step(dt) {
+  forward(P.yaw, P.pitch, fwd);
+  turnRate = 0;
+  if (style === 'A') {
+    let sx = input.stickX, sy = input.stickY;
+    if (k('ArrowLeft', 'a')) sx -= 1; if (k('ArrowRight', 'd')) sx += 1;
+    if (k('ArrowUp', 'w')) sy += 1; if (k('ArrowDown', 's')) sy -= 1;
+    sx = clamp(sx, -1, 1); sy = clamp(sy, -1, 1);
+    if (Math.hypot(sx, sy) < .12) sx = sy = 0; // dead zone so shaky thumbs don't wobble
+    turnRate = -sx * 1.7; P.yaw += turnRate * dt;
+    if (sy) P.pitch = clamp(P.pitch + sy * 1.0 * dt, -.9, .9);
+    else P.pitch *= Math.exp(-1.4 * dt); // auto-level
+    thrusting = input.thrustTouch || k(' ');
+    if (prevThrust && !thrusting && !S().done) S().cur.acts++;
+    prevThrust = thrusting;
+    if (thrusting) P.vel.addScaledVector(fwd, 24 * dt);
+    P.vel.multiplyScalar(Math.exp(-.8 * dt));
+    const sp = P.vel.length(); if (sp > 22) P.vel.multiplyScalar(Math.exp(-3 * dt)); // soft speed cap
+  } else {
+    thrusting = false; prevThrust = false;
+    if (goalPos) {
+      tmp.subVectors(goalPos, P.pos); const dist = tmp.length();
+      if (dist < 2.5) { goalPos = null; marker.visible = false; }
+      else {
+        const wantYaw = Math.atan2(-tmp.x, -tmp.z), wantPitch = clamp(Math.asin(tmp.y / dist), -.9, .9);
+        const dy = wrap(wantYaw - P.yaw), before = P.yaw;
+        P.yaw += clamp(dy * (1 - Math.exp(-4 * dt)), -2.4 * dt, 2.4 * dt); turnRate = (P.yaw - before) / dt;
+        P.pitch += (wantPitch - P.pitch) * (1 - Math.exp(-3 * dt));
+        const speed = Math.min(22, dist * .9) * clamp(1 - Math.abs(dy) / 1.6, 0, 1);
+        P.vel.lerp(fwd.multiplyScalar(speed), 1 - Math.exp(-2.5 * dt)); thrusting = speed > 3;
+      }
+    }
+    if (!goalPos) { P.vel.multiplyScalar(Math.exp(-2.5 * dt)); P.pitch *= Math.exp(-1.4 * dt); }
+  }
+  P.pos.addScaledVector(P.vel, dt);
+
+  // gentle bounce off invisible bumpers around planets
+  bumpCooldown -= dt;
+  for (const p of planets) {
+    tmp.subVectors(P.pos, p.mesh.position); const d = tmp.length(), lim = p.r + 1.8;
+    if (d < lim) {
+      tmp.divideScalar(d || 1); P.pos.copy(p.mesh.position).addScaledVector(tmp, lim);
+      const vn = P.vel.dot(tmp);
+      if (vn < 0) {
+        P.vel.addScaledVector(tmp, -1.4 * vn);
+        if (-vn > 3 && bumpCooldown <= 0) { bumpCooldown = .6; if (!S().done) S().cur.bumps++; if (!reduced) shake = .6; }
+      }
+    }
+  }
+  // soft boundary: the further out, the harder it nudges you home
+  const out = P.pos.length() - 120;
+  if (out > 0) P.vel.addScaledVector(tmp.copy(P.pos).normalize(), -out * 4 * dt).multiplyScalar(Math.exp(-.5 * dt));
+
+  // challenge
+  const t = target();
+  if (t) { S().cur.t += dt; if (P.pos.distanceTo(t.mesh.position) < t.r + 7) reached(t); }
+
+  // ship visuals
+  ship.position.copy(P.pos);
+  P.roll += (clamp(-turnRate * .3, -.7, .7) - P.roll) * (1 - Math.exp(-6 * dt));
+  ship.rotation.set(P.pitch, P.yaw, P.roll, 'YXZ');
+  flame.scale.setScalar(thrusting ? 1 + Math.random() * .3 : .35);
+}
+
+const camBase = new THREE.Vector3(), look = new THREE.Vector3(), camDir = new THREE.Vector3();
+function updateCamera(dt, snap) {
+  forward(P.yaw, P.pitch * .5, camDir);
+  tmp.copy(P.pos).addScaledVector(camDir, -11); tmp.y += 4;
+  if (snap) camBase.copy(tmp); else camBase.lerp(tmp, 1 - Math.exp(-5 * dt));
+  camera.position.copy(camBase);
+  if (shake > 0) { camera.position.add(new THREE.Vector3(Math.random() - .5, Math.random() - .5, Math.random() - .5).multiplyScalar(shake)); shake = Math.max(0, shake - dt * 2); }
+  forward(P.yaw, P.pitch, tmp); look.copy(P.pos).addScaledVector(tmp, 8); camera.lookAt(look);
+}
+
+// arrow at the screen edge pointing to the goal when it is off-screen
+function updateArrow() {
+  const t = target(), a = $('arrow');
+  if (!t) { a.style.display = 'none'; return; }
+  camera.updateMatrixWorld();
+  const c = t.mesh.position.clone().applyMatrix4(camera.matrixWorldInverse), behind = c.z > 0;
+  const ndc = t.mesh.position.clone().project(camera);
+  if (!behind && Math.abs(ndc.x) < .85 && Math.abs(ndc.y) < .8) { a.style.display = 'none'; return; }
+  let x = c.x, y = c.y; if (behind) { x = -x; y = -y; }
+  const len = Math.hypot(x, y) || 1; x /= len; y /= len;
+  const cx = innerWidth / 2, cy = innerHeight / 2, m = 50;
+  const sc = Math.min((cx - m) / (Math.abs(x) || 1e-6), ((y > 0 ? cy - (innerHeight > 520 ? 170 : 90) : cy - 130)) / (Math.abs(y) || 1e-6));
+  a.style.display = 'block'; a.style.borderBottomColor = '#' + t.hex.toString(16).padStart(6, '0');
+  a.style.left = cx + x * sc + 'px'; a.style.top = cy - y * sc + 'px';
+  a.style.transform = `rotate(${Math.atan2(x, y)}rad)`;
+}
+
+// ---------- notes for the grown-up ----------
+const NAMES = { A: 'A: Joystick', B: 'B: Tap to go' }, ACT = { A: 'let-go', B: 'taps' };
+const f1 = (n) => n.toFixed(1);
+function rowsFor(st) {
+  const s = rounds[st], rows = s.log.map((r) => ({ ...r, live: false }));
+  if (!s.done && (s.cur.t > 0 || s.log.length)) rows.push({ name: COLOURS[s.order[s.idx]].name + ' (now)', ...s.cur, live: true });
+  return rows;
+}
+function renderNotes() {
+  if (!$('notes').classList.contains('open')) return;
+  let h = '';
+  for (const st of ['A', 'B']) {
+    const rows = rowsFor(st), done = rounds[st].log;
+    h += `<h3>${NAMES[st]}${style === st ? ' (playing)' : ''}</h3>`;
+    if (!rows.length) { h += '<div>No targets yet.</div>'; continue; }
+    h += `<table><tr><th>Target</th><th>Time</th><th>Bumps</th><th>${ACT[st]}</th></tr>` +
+      rows.map((r) => `<tr><td>${r.name}</td><td>${f1(r.t)} s</td><td>${r.bumps}</td><td>${r.acts}</td></tr>`).join('') + '</table>';
+    if (done.length) h += `<div>Done: ${done.length}/5, total ${f1(done.reduce((a, r) => a + r.t, 0))} s</div>`;
+  }
+  $('notesBody').innerHTML = h;
+}
+function summary() {
+  return ['Steering playtest', ...['A', 'B'].flatMap((st) => {
+    const d = rounds[st].log;
+    return [`${NAMES[st]}: ${d.length}/5 targets, total ${f1(d.reduce((a, r) => a + r.t, 0))} s, bumps ${d.reduce((a, r) => a + r.bumps, 0)}, ${ACT[st]} ${d.reduce((a, r) => a + r.acts, 0)}`,
+      ...d.map((r) => `  ${r.name}: ${f1(r.t)} s, ${r.bumps} bumps, ${r.acts} ${ACT[st]}`)];
+  })].join('\n');
+}
+$('notesBtn').onclick = () => {
+  const o = $('notes').classList.toggle('open'); $('notesBtn').setAttribute('aria-expanded', o); renderNotes();
+};
+$('newRound').onclick = newRound;
+$('copy').onclick = async () => {
+  try { await navigator.clipboard.writeText(summary()); $('msg').textContent = 'Copied!'; }
+  catch { $('msg').textContent = 'Could not copy. You can select the numbers above instead.'; }
+};
+setInterval(renderNotes, 500);
+
+// ---------- loop ----------
+function resize() {
+  renderer.setSize(innerWidth, innerHeight, false);
+  camera.aspect = innerWidth / innerHeight; camera.fov = camera.aspect < 1 ? 80 : 65; camera.updateProjectionMatrix();
+}
+addEventListener('resize', resize); addEventListener('orientationchange', resize); resize();
+setStyle('A'); updateCamera(0, true);
+let last = performance.now(), time = 0;
+renderer.setAnimationLoop((now) => {
+  const dt = Math.min((now - last) / 1000, .05); last = now; time += dt;
+  step(dt); updateCamera(dt, false);
+  planets.forEach((p, i) => { p.mesh.rotation.y += dt * .15; p.halo.material.opacity = .3 + .15 * Math.sin(time * 4 + i); });
+  if (marker.visible) { marker.quaternion.copy(camera.quaternion); marker.scale.setScalar(1 + .2 * Math.sin(time * 6)); }
+  for (let i = bursts.length - 1; i >= 0; i--) {
+    const b = bursts[i], pos = b.pts.geometry.attributes.position; b.life -= dt;
+    b.vel.forEach((v, j) => pos.setXYZ(j, pos.getX(j) + v.x * dt, pos.getY(j) + v.y * dt, pos.getZ(j) + v.z * dt));
+    pos.needsUpdate = true; b.pts.material.opacity = Math.max(0, b.life);
+    if (b.life <= 0) { scene.remove(b.pts); b.pts.geometry.dispose(); b.pts.material.dispose(); bursts.splice(i, 1); }
+  }
+  updateArrow(); renderer.render(scene, camera);
+});
+</script>
+</body>
+</html>
