@@ -1,0 +1,275 @@
+/* Secret Rule Zoo. Buttons, levels and the feedback line are the kit's own
+   (challenge-kit.css, FreePlayShell.css); this lays out the pens, the
+   parade and the clue cards, and draws the creatures. */
+
+.zoo-toolbar {
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.zoo-message {
+  min-height: 3.2rem;
+  margin: 0.4rem 0 1rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.zoo-secret {
+  margin: 0 0 0.8rem;
+  font-size: 1.05rem;
+}
+
+/* --- the two pens --- */
+.zoo-pens {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+}
+
+.zoo-pen {
+  min-height: 9rem;
+  padding: 0.6rem;
+  border: 3px dashed var(--ck-border);
+  border-radius: 18px;
+}
+
+/* Tinted, but the ☀️ / 🌙 and the names carry the meaning too. */
+.zoo-pen--sunny {
+  background: rgba(255, 190, 60, 0.16);
+}
+
+.zoo-pen--moon {
+  background: rgba(110, 130, 255, 0.14);
+}
+
+.zoo-pen__title {
+  margin: 0 0 0.4rem;
+  font-size: 1.05rem;
+}
+
+.zoo-pen__creatures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.zoo-pen__creature {
+  position: relative;
+  border-radius: 14px;
+}
+
+.zoo-pen__creature.is-new {
+  animation: zoo-arrive 0.5s ease-out;
+  outline: 3px solid var(--ck-accent);
+}
+
+.zoo-pen__creature.is-clue {
+  outline: 3px solid var(--ck-accent);
+}
+
+.zoo-pen__creature.is-clue::after {
+  content: "👀";
+  position: absolute;
+  top: -0.6rem;
+  right: -0.4rem;
+  font-size: 1.2rem;
+}
+
+@keyframes zoo-arrive {
+  from { transform: translateY(-16px) scale(0.7); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+/* --- the parade of creatures to test --- */
+.zoo-parade,
+.zoo-guess {
+  margin-bottom: 1rem;
+}
+
+.zoo-parade__title {
+  margin: 0 0 0.6rem;
+  font-size: 1.15rem;
+}
+
+.zoo-parade__creatures {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem;
+}
+
+.zoo-parade__creature {
+  display: grid;
+  place-items: center;
+  min-width: 104px;
+  min-height: 104px;
+  padding: 0.3rem;
+  border: 3px solid var(--ck-border);
+  border-radius: 20px;
+  background: var(--ck-muted);
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.zoo-parade__creature:hover {
+  transform: translateY(-3px);
+  border-color: var(--ck-accent);
+}
+
+.zoo-parade__creature:focus-visible {
+  outline: 3px solid var(--ck-accent);
+  outline-offset: 3px;
+}
+
+/* --- clue cards --- */
+.zoo-clues {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 0.7rem;
+  margin-bottom: 1rem;
+}
+
+.choice-btn.zoo-clue {
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
+  min-width: 0;
+  font-size: 1.05rem;
+  line-height: 1.25;
+}
+
+.zoo-clue__mark {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.zoo-clue__mark.is-out {
+  text-decoration: line-through;
+  opacity: 0.75;
+}
+
+.zoo-help {
+  margin: 0 0 1rem;
+  padding: 0.6rem 1rem;
+  border-radius: 14px;
+  background: var(--ck-muted);
+  list-style: none;
+  font-size: 1.05rem;
+}
+
+.zoo-help__item.is-out {
+  opacity: 0.7;
+  text-decoration: line-through;
+}
+
+.zoo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 1rem;
+}
+
+.zoo-actions .zoo-secondary {
+  min-height: 56px;
+  padding: 0 1.2rem;
+}
+
+/* --- Stump Bix: Bix's pick and the two pen buttons --- */
+.zoo-bix-pick {
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.zoo-bix {
+  width: 72px;
+}
+
+.zoo-bix-pick__pens {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem;
+}
+
+.choice-btn.zoo-pen-btn {
+  font-size: 1.15rem;
+}
+
+/* --- the creatures --- */
+.zoo-creature {
+  display: block;
+  overflow: visible;
+}
+
+.zoo-creature__body,
+.zoo-creature__wings ellipse,
+.zoo-creature__horns path,
+.zoo-creature__leg {
+  stroke: #2b2024;
+  stroke-width: 2.5;
+}
+
+.zoo-creature__wings ellipse {
+  fill: #e8f4ff;
+}
+
+.zoo-creature__horns path {
+  fill: #f4e2b0;
+}
+
+.zoo-creature__leg {
+  fill: #5a4a50;
+}
+
+.zoo-creature__spots circle {
+  fill: rgba(43, 32, 36, 0.45);
+}
+
+.zoo-creature__eye circle {
+  fill: #ffffff;
+  stroke: #2b2024;
+  stroke-width: 2;
+}
+
+.zoo-creature__eye .zoo-creature__pupil {
+  fill: #2b2024;
+  stroke: none;
+}
+
+.zoo-creature__mouth {
+  fill: none;
+  stroke: #2b2024;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zoo-pen__creature.is-new {
+    animation: none;
+  }
+
+  .zoo-parade__creature,
+  .zoo-parade__creature:hover {
+    transition: none;
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .zoo-pens {
+    gap: 0.5rem;
+  }
+
+  .zoo-pen {
+    padding: 0.4rem;
+  }
+}

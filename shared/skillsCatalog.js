@@ -19,6 +19,7 @@ export const SKILL_GROUPS = [
       { to: "/robot-moves", icon: "🤖", label: "Robot Moves" },
       { to: "/charts", icon: "📊", label: "Chart Detective" },
       { to: "/place-value", icon: "🧱", label: "Place Value Blocks" },
+      { to: "/rule-zoo", icon: "🦓", label: "Secret Rule Zoo" },
     ],
   },
   {
