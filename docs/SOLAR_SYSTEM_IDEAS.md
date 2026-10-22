@@ -407,7 +407,7 @@ machine). Each is large, and earlier items deliver most of the same feeling.
 |---|---|---|
 | 0 — Foundations | Code done; ⏳ waiting on the phone baseline | Started 2026-10-21. Phase 1 can begin: only #5 bloom waits on the phone numbers |
 | 1 — The first ten seconds | Done except ⏳ #27 (sound decision) and ⏳ #5 bloom (phone numbers) | Started 2026-10-22 |
-| 2 — Meet your ship | In progress: ✅ #34 | Started 2026-10-22 |
+| 2 — Meet your ship | In progress: ✅ #34, #50 | Started 2026-10-22 |
 | 3 — A living Solar System | Not started | |
 | 4 — Missions and stars | Not started | |
 | 5 — Take the controls | Not started | |
@@ -677,6 +677,17 @@ and phone frame time stays within the Phase 0 baseline.
     itself once you're there. This was already true before the ship. Framing
     the planet in the space above the card (`camera.setViewOffset`) would fix
     it for both.
+- ✅ **#50 the ISS** (2026-10-22). A station made from boxes and cylinders
+  ([`issStation.js`](../src/pages/skills/geography/issStation.js), orbit in
+  [`issOrbit.js`](../src/pages/skills/geography/issOrbit.js)) circles Earth
+  once every 12 seconds at normal speed, tilted 51.6° like the real one, with
+  its solar panels turned to the Sun. It's shown about 100 times too big so it
+  can be seen. It runs on the world clock, so it stops with ⏸, and it hides
+  during the meteor. It is a child of Earth's orbit group, not the planet
+  body, so it doesn't spin with the ground. A generous invisible ball makes it
+  easy to tap: "That's the International Space Station! Astronauts live there,
+  and it goes round the Earth 16 times a day." Not in search yet; flying the
+  ship to it would need a new kind of search entry.
 - **#34 autopilot ship** replaces the camera-only fly-to used by search, tap
   and the tour. Keep the old camera move behind reduced motion. Write tests
   first, because three existing features change at once.

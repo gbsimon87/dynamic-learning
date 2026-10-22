@@ -1115,9 +1115,12 @@ phased roadmap, and is the progress tracker (§11). What exists now:
   is. Outside the tour the planet card opens on landing, because on phones it
   covers the flight. Reduced motion keeps the old glide and just moves the
   ship. Tapping the ship says what it's for.
+- *The ISS* (`issStation.js`, orbit in `issOrbit.js`): circles Earth every
+  12 s on the world clock, parented to Earth's `root` (not `body`), hidden
+  during the meteor; tapping it gives one spoken line.
 - Spoken lines in these features follow the navbar sound switch
   (`isMuted()`); the tour keeps its own narration mute. The Sun's lines and the
-  shooting-star wish and the ship share one message slot (`tapMessage`). Reduced motion
+  shooting-star wish, the ship and the ISS share one message slot (`tapMessage`). Reduced motion
   keeps the words and drops bounces, sparks, shooting stars and the warp.
 
 Still open: the phone baseline and the bloom decision (#5, the last Phase 1b

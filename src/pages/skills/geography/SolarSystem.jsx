@@ -20,6 +20,8 @@ import { createWarpIn } from "./warpIn.js";
 import { markWarpSeen, shouldPlayWarp } from "./warpTimeline.js";
 import { createAutopilotShip } from "./autopilotShip.js";
 import { SHIP_LINE } from "./shipFlight.js";
+import { createIss } from "./issStation.js";
+import { ISS_LINE } from "./issOrbit.js";
 import { isMuted } from "../../../components/celebration/sound/player.js";
 import { speak, stopNarration } from "../../../utils/speech.js";
 import { constellations } from "./constellations.js";
@@ -1393,12 +1395,13 @@ export default function ThreeSolarSystem() {
             clickMouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
             clickRaycaster.setFromCamera(clickMouse, camera);
             const visibleLabels = labelSprites.filter((label) => label.visible);
-            const intersects = clickRaycaster.intersectObjects([...visibleLabels, ...planetBodies, sun, ship.hitTarget], false);
+            const intersects = clickRaycaster.intersectObjects([...visibleLabels, ...planetBodies, sun, ship.hitTarget, iss.hitTarget], false);
             if (intersects[0]?.object === sun) {
                 tapSun();
-            } else if (intersects[0]?.object === ship.hitTarget) {
-                setTapMessage({ icon: "🚀", text: SHIP_LINE, id: performance.now() });
-                if (!isMuted()) speak(SHIP_LINE);
+            } else if (intersects[0]?.object === ship.hitTarget || intersects[0]?.object === iss.hitTarget) {
+                const [icon, text] = intersects[0].object === iss.hitTarget ? ["🛰️", ISS_LINE] : ["🚀", SHIP_LINE];
+                setTapMessage({ icon, text, id: performance.now() });
+                if (!isMuted()) speak(text);
             } else if (intersects.length > 0) {
                 const planetIndex = intersects[0].object.userData.planetIndex;
                 if (!reducedQuery.matches) bounces.bounce(planetBodies[planetIndex]);
@@ -1519,6 +1522,13 @@ export default function ThreeSolarSystem() {
             cloudTexture: textureLoader.load("/static/2k_earth_clouds.jpg"),
             getSpinTime: () => worldTime.spinTime,
         }));
+        // The International Space Station (#50) zips round Earth; tap it.
+        const iss = modules.add("iss", createIss({
+            earthRoot: searchEntriesById.get("Earth").object3d,
+            getOrbitTime: () => worldTime.orbitTime,
+            quality: currentQuality(),
+        }));
+
         function tapSun() {
             const result = sunTaps.tap(performance.now());
             const calm = reducedQuery.matches;
