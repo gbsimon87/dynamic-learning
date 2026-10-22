@@ -37,8 +37,26 @@ Backlog: `docs/PROJECT_IDEAS.md`. Deployment: `render.yaml` and `docs/PROJECT_KN
    never paraphrase statutory text when saving a new programme of study.
 3. **Both themes, large touch targets.** Colour comes from the `--light-*` /
    `--dark-*` tokens in `App.css`; the audience is 6–8 years old.
-4. **Load the UI before calling it done** — a written file is not a working
-   change. `npm run lint`, `npm test` and `npm run build` must pass.
+4. **Prove it works before calling it done** — a written file is not a working
+   change. `npm run lint`, `npm test` and `npm run build` must pass; see
+   "Browser checks and subagents" for when a browser pass is needed too.
+
+## Browser checks and subagents
+
+**Browser (Playwright) checks are a last resort.** Prove a change with lint,
+tests and the build first, and add or extend a test before reaching for a
+browser. `tests/components/` playthrough tests drive whole challenges in jsdom.
+Open the browser only for what jsdom cannot show: canvas, WebGL and 3D scenes,
+real layout or overlap, drag, maps. Then make it one batched pass, with every
+viewport and both themes in one script. Fix everything it shows, confirm with
+at most one more pass, and say in the report what was not checked in a browser.
+
+**Subagents only when they pay for themselves:** independent work that can run
+in parallel, or a broad search whose file dumps you don't need. Never for work
+you can do in a handful of tool calls. Give each the cheapest model that can do
+it well: haiku for search and lookup, sonnet for routine building and checks,
+opus only for hard reasoning, or a review where a miss is costly. At most 2 at
+once.
 
 # Browser Inspection
 

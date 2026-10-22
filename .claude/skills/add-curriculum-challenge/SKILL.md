@@ -108,21 +108,26 @@ owns progress persistence; the challenge only reports success.
 ## Styling
 
 - Plain CSS in the co-located file. No frameworks, no CSS-in-JS.
-- Drive all colours from the CSS variables in `src/index.css` so the challenge
-  works in **both light and dark themes**. Verify both before claiming done.
+- Drive all colours from the `--light-*` / `--dark-*` variables in `src/App.css` so the challenge
+  works in **both light and dark themes**.
 - Touch targets must be large — the audience is 6–8 years old.
 
 ## Verify before claiming completion
 
-Do not report success on file creation alone. Confirm:
+Do not report success on file creation alone. Follow "Browser checks and
+subagents" in `AGENTS.md`: prove it with tests first. Confirm:
 
-1. `npm run lint` passes.
-2. The dev server loads the challenge at its real URL:
-   `/year/{year}/{subject}/problem/{categoryId}/{topicId}/{n}` — reaching it may
-   require unlocking prior topics, so seed `localStorage` if needed.
-3. A correct answer advances and returns you to `/curriculum`.
-4. A wrong answer shows retry feedback and does **not** complete.
-5. The challenge is legible in both themes.
+1. `npm run lint`, `npm test` and `npm run build` pass.
+2. A component test renders the challenge through the loader's path and proves
+   that a correct answer calls `onComplete` and a wrong answer shows retry
+   feedback **without** calling it. `tests/components/year4MathPlaythrough.test.jsx`
+   is the model.
+3. Both themes: the CSS uses only the `src/App.css` theme variables, with no
+   hard-coded colours.
+4. Open the browser only for what jsdom cannot show (drag, real layout,
+   canvas). The URL is `/year/{year}/{subject}/problem/{categoryId}/{topicId}/{n}`;
+   reaching it may require unlocking prior topics, so seed `localStorage`. Make
+   it one batched pass.
 
 ## Finally
 

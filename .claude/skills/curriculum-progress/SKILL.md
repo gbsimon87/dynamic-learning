@@ -112,9 +112,16 @@ Do not remove it.
 
 ## Verify before claiming completion
 
-`npm test` covers the pure rules, lock state and navigation. That is necessary
-but NOT sufficient — the storage and hydration path has no automated coverage,
-so manual verification is still mandatory. Confirm:
+`npm test` covers the pure rules, lock state and navigation, and
+`tests/components/progress.test.jsx` covers hydration, persistence across a
+remount, unlock order and sibling isolation. Extend those tests for any change
+here.
+
+A browser pass is still required when a change touches the **stored shape or
+the storage key**, because that is where a learner's progress could be lost.
+Follow "Browser checks and subagents" in `AGENTS.md` and make it one scripted
+pass (one `browser_evaluate` that seeds, plays and reads back storage), not
+click by click. Confirm:
 
 1. **Fresh user:** clear the key → only the first category is unlocked, only the
    first topic within it, only Challenge 1 within that.
