@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { speak, speakAndWait, stopNarration } from "./speech.js";
+import { speak, speakAndWait, stopNarration, stopNarrationOf } from "./speech.js";
 
 test("speech cancellation, replacement and native errors settle callers", async (t) => {
   const original = globalThis.window;
@@ -29,4 +29,19 @@ test("speech cancellation, replacement and native errors settle callers", async 
 
 test("speech resolves immediately when unavailable", async () => {
   await speakAndWait("words");
+});
+
+test("stopNarrationOf only stops speech it still owns", (t) => {
+  const original = globalThis.window;
+  t.after(() => { if (original === undefined) delete globalThis.window; else globalThis.window = original; });
+  let cancels = 0;
+  globalThis.window = { SpeechSynthesisUtterance: class { constructor(text) { this.text = text; } }, speechSynthesis: { speak: () => {}, cancel: () => { cancels += 1; } } };
+  speak("card sentence");
+  speak("line-up line");
+  const before = cancels;
+  stopNarrationOf("card sentence"); // someone else has spoken since: leave it
+  stopNarrationOf(null);
+  assert.equal(cancels, before);
+  stopNarrationOf("line-up line");
+  assert.equal(cancels, before + 1);
 });

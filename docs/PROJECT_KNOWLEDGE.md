@@ -837,7 +837,7 @@ rewards:  { _id, childId, schemaVersion: 1, data: {...}, createdAt, updatedAt }
 Rewards are **one document per child**, not per year+subject like progress — a
 badge belongs to the learner across every year they study (§4.10).
 
-Two browser-local keys, neither of them identity:
+Browser-local keys, none of them identity:
 
 - `dl.session` = `{ parentId, childId, email }`. The `email` is a **display hint
   only** — identity always re-validates `parentId` against the store.
@@ -849,6 +849,11 @@ Two browser-local keys, neither of them identity:
   credential, hash or token, and a test asserts that. It does not skip
   authentication; the 30-day session cookie is what usually keeps a family
   signed in, and when `/login` does appear the password is genuinely required.
+- `dl.solarView` = `{ showOrbits, showLabels, showMoonLabels, milkyWay }`, the
+  Solar System's "My view" switches. A per-device view preference, not learner
+  progress; safe to lose. The speed buttons are deliberately not saved.
+- `dl.solarWarpSeen` = `"1"` in `sessionStorage`, so the Solar System's warp-in
+  plays once per visit. Safe to lose.
 
 `verifyParent` returns `null` identically for "no such account" and "wrong password", so
 the login screen cannot be used to enumerate accounts. Keep it that way.
@@ -1053,6 +1058,109 @@ retry message.
 Still open: physical-device performance, which no device in this workspace can
 supply — tracked in the
 [tracker](solar-system-meteor/IMPLEMENTATION_TRACKER.md). No dependencies added.
+
+**Solar System enhancement roadmap (Phases 0–1 and Phase 2 in progress, 2026-10-21/22):**
+[`SOLAR_SYSTEM_IDEAS.md`](SOLAR_SYSTEM_IDEAS.md) holds 113 ranked ideas and a
+phased roadmap, and is the progress tracker (§11). What exists now:
+
+- *Foundations.* `solarModules.js` is a small module host the animate loop
+  calls (`update(dt, { active })`, `resize`, `dispose`); a module that throws is
+  reported and dropped without stopping the page. **New scene features go in a
+  module, not the `SolarSystem.jsx` effect.** `solarQuality.js` has the one
+  `low` / `standard` rule (under 720 px or a coarse pointer is `low`) and the
+  grown-up URL switches `?debug` (frame-time readout, `solarFrameReadout.js` +
+  `frameStats.js`), `bloom=1` and `quality=low|standard`.
+  `solarRenderPipeline.js` renders either directly (the default) or through
+  `EffectComposer` + `UnrealBloomPass` + `OutputPass`; bloom stays off for
+  children until a phone baseline decides it (backlog #17).
+- *Textures.* All planet, Moon and Sun maps, Earth clouds and night lights,
+  Saturn's ring map and the Milky Way are Solar System Scope (CC BY 4.0),
+  credited on `/credits`. The `cubeMap/` sky still has no recorded source.
+- *My view drawer* (`SolarSettingsDrawer.jsx`, `solarViewSettings.js`): a gear
+  in the bottom-right corner, shown only when the launch buttons are, with big
+  switches for orbit lines, planet names, moon names and the Milky Way sky
+  (saved as `dl.solarView`, §4.7) and Stop / Slow / Fast speed buttons (not saved; Reset
+  returns to Slow). Tweakpane stays for grown-ups and folds away when the
+  drawer opens.
+- *Planet card games* (`PlanetPlayCard.jsx`, `planetPlay.js`): "How old would
+  I be?" (ages 4–11, whole birthdays, never stored) and "How heavy would Bix
+  be?" (always Bix, 20 kg on Earth, "at the cloud tops" on gas giants), on the
+  eight planets, Pluto and the Moon, outside the tour.
+- *Tap feedback* (`solarTaps.js`, `sunSneeze.js`): the Sun can be tapped; the
+  first tap gives a sun-safety line, five quick taps a sneeze with a spark
+  burst. Tapped planets and the Sun bounce. Bounces are settled before a meteor
+  launch because the meteor checks Earth's exact scale.
+- *The look* (Phase 1b), each a module:
+  - `solarSky.js` swaps the cube map and star dots for the Milky Way photo
+    (8k, or 4k on `low`, loaded on first use), tilted 60° and brightened 3×.
+  - `planetAtmospheres.js` adds Earth's drifting clouds and rim-shader halos
+    on Earth, Venus and Mars. They are children of the planet body, so they
+    bounce and hide with it, and never change `body.scale`.
+  - `shootingStars.js` (timing in `shootingStarTiming.js`) sends a streak
+    across the view every 20–40 s. A tap within 44 px gives a sparkle and
+    "Make a wish!".
+  - `warpIn.js` (timing in `warpTimeline.js`) is the 2.6 s warp and swoop on
+    arrival. It owns `camera.position` while it runs, so every camera action
+    (`focusEntry`, `resetView`, Reset, the meteor, drag, wheel) calls
+    `warpIn?.skip()` first.
+- *The ship* (Phase 2), `autopilotShip.js` with the path maths in
+  `shipFlight.js`: a low-poly rocket made from primitives that starts beside
+  Earth. `focusEntry` (search, tap, the tour, Tweakpane's Focus) flies it to
+  the planet or moon on a curve that climbs and bends round the Sun, 2–6.5 s,
+  with the camera chasing it. While `ship.isFlying()` it owns
+  `camera.position` and `controls.target`, so the follow camera in `animate()`
+  pauses until `onArrive`; it lands exactly where the follow camera frames the
+  planet, which carries on from there. A drag lands it at once, a stray tap on
+  empty space is ignored mid-flight, and `stopFollowing()` stops it where it
+  is. Outside the tour the planet card opens on landing, because on phones it
+  covers the flight. Reduced motion keeps the old glide and just moves the
+  ship. Tapping the ship says what it's for.
+- *Lift-off* (`liftOff.js`, timing in `liftOffTimeline.js`): `startTour()`
+  parks the ship at Earth and runs a spoken 3-2-1 countdown with smoke before
+  `visitTourPlanet(0)`. The countdown is React state (`countdown`, mode
+  `"liftoff"`). A tap or drag launches at once; `stopTour()` and a
+  non-tour `focusEntry` cancel it.
+- *Line-up by size* (`lineUp.js`, layout in `lineUpLayout.js`): its own
+  scene, camera and pan-only OrbitControls, drawn instead of the Solar System
+  while open (`lineUp.render()` in `animate()`); the main controls are
+  disabled and `onWheel` steps aside so the line-up's controls get the event.
+  Opened from `PlanetPlayCard`'s `onLineUp`; React mode `"lineup"`.
+- *Pale Blue Dot* (`paleBlueDot.js`, maths in `paleBlueDotView.js`): the
+  tour's "next" on the last stop calls `startPaleBlueDot()`, which flies the
+  ship to the module's `marker`, then `look()` owns the camera and narrows its
+  `fov` (put back by `end()`). While `hidesScenery()`, `animate()` hides
+  labels, orbit lines, the belt, the star dots and the sky. React mode
+  `"palebluedot"`.
+- *Fly the rocket* (`SteeringGame.jsx`, game in `steeringFlight.js`, logic in
+  `steeringRound.js`): the Phase 2 steering test, opened from the toolbar.
+  It's a separate overlay with its own canvas and renderer; `setPaused(true)`
+  stops the Solar System drawing (and hides Tweakpane) while it's open.
+  Import `./SteeringGame.jsx` with its extension. The toolbar's Reset moved
+  into the My view drawer (`onReset`) to make room.
+- *The ISS* (`issStation.js`, orbit in `issOrbit.js`): circles Earth every
+  12 s on the world clock, parented to Earth's `root` (not `body`), hidden
+  during the meteor; tapping it gives one spoken line.
+- Spoken lines in these features follow the navbar sound switch
+  (`isMuted()`); the tour keeps its own narration mute. The Sun's lines and the
+  shooting-star wish, the ship and the ISS share one message slot (`tapMessage`). Reduced motion
+  keeps the words and drops bounces, sparks, shooting stars and the warp.
+- *Bug pass before merging into `dev` (2026-10-22).* Rules these fixes set:
+  a closing component calls `stopNarrationOf(itsOwnText)` (in `speech.js`),
+  never `stopNarration()`, so it can't cut off the line that closed it (the
+  line-up line, the countdown's "Three"). The launch buttons and the My view
+  drawer hide while `shipFlying` (synced from `ship.isFlying()` each frame),
+  as they do for a card. Both renderers call `forceContextLoss()` after
+  `dispose()`, but only once the canvas has left the page, because StrictMode
+  remounts reuse the same canvas. Lift-off ignores `skip()` for 500 ms, so a
+  double-tap on Tour keeps the 3-2-1. The Solar System ignores Escape while
+  Fly the rocket is open. The rocket game takes focus on its own dialog (not
+  on Back, so Space still fires the engine), lets Space press a focused
+  button, never steps time backwards, and hands focus back to Fly the rocket
+  on close.
+
+Still open: the phone baseline and the bloom decision (#5, the last Phase 1b
+item), and #27 arrival sounds. Skills Mode is silent by design (see
+`docs/sounds/README.md`), so #27 needs a decision and sounds chosen by ear.
 
 ### Accounts — built 2026-09-15, rebuilt 2026-09-19
 Sign-up (`/signup`), sign-in (`/login`), child profile picker (`/profiles`), and an

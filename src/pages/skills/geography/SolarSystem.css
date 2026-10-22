@@ -673,3 +673,99 @@
 @media (prefers-reduced-motion: reduce) {
   .solar-tour-launch { transition: none; }
 }
+
+/* ?debug frame-time readout (solarFrameReadout.js); grown-ups only. */
+.solar-frame-readout {
+  position: absolute;
+  z-index: 60;
+  left: 1rem;
+  bottom: 3.75rem;
+  margin: 0;
+  padding: 0.5rem 0.7rem;
+  border-radius: 0.6rem;
+  background: rgba(0, 0, 0, 0.78);
+  color: #b6f5c8;
+  font: 600 0.78rem/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+  pointer-events: none;
+  white-space: pre;
+}
+
+/* ============================================================
+   Lift-off countdown before the tour (#35)
+   ============================================================ */
+
+.solar-countdown {
+  position: absolute;
+  z-index: 44;
+  top: 22%;
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%);
+  color: #fff;
+  font: 800 clamp(4.5rem, 22vw, 9rem)/1 system-ui, sans-serif;
+  text-shadow: 0 0.06em 0.3em rgba(0, 0, 0, 0.75);
+  white-space: nowrap;
+  pointer-events: none;
+  animation: solar-countdown-pop 0.9s ease-out both;
+}
+
+.solar-countdown--go {
+  color: #ffd27f;
+  font-size: clamp(3rem, 14vw, 6rem);
+}
+
+@keyframes solar-countdown-pop {
+  0% { opacity: 0; transform: translateX(-50%) scale(1.6); }
+  25% { opacity: 1; transform: translateX(-50%) scale(1); }
+  80% { opacity: 1; }
+  100% { opacity: 0.25; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .solar-countdown { animation: none; }
+}
+
+/* ============================================================
+   Line-up by size (#62)
+   ============================================================ */
+
+.solar-lineup {
+  position: absolute;
+  z-index: 46;
+  top: 4.4rem;
+  left: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.solar-lineup > * {
+  pointer-events: auto;
+}
+
+.solar-lineup__back {
+  flex: none;
+  min-height: 3rem;
+}
+
+.solar-lineup__caption {
+  max-width: 34rem;
+  margin: 0;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid rgba(255, 205, 117, 0.3);
+  border-radius: 1rem;
+  background: rgba(13, 18, 34, 0.88);
+  color: #fff;
+  font: 600 0.95rem/1.4 system-ui, sans-serif;
+}
+
+/* ============================================================
+   The Pale Blue Dot (#47)
+   ============================================================ */
+
+.solar-pale-blue-dot .solar-info-card__body p {
+  margin: 0 0 0.6rem;
+  line-height: 1.45;
+}

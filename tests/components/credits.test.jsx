@@ -37,3 +37,12 @@ it("lists every History picture with its museum, licence and source link", () =>
     expect(within(card).getByRole("link", { name: "Source" }).getAttribute("href")).toBe(image.objectUrl);
   }
 });
+
+it("credits Solar System Scope for the Solar System textures under CC BY 4.0", () => {
+  const { container } = render(<MemoryRouter><Credits /></MemoryRouter>);
+  const card = container.querySelector('li[id="solar-system-scope"]');
+  expect(card).not.toBeNull();
+  expect(card.textContent).toMatch(/Solar System Scope/);
+  const licence = within(card).getByRole("link", { name: LICENCES["CC-BY-4.0"].name });
+  expect(licence.getAttribute("href")).toBe("https://creativecommons.org/licenses/by/4.0/");
+});

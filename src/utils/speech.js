@@ -13,6 +13,7 @@
 
 const VOICE = { lang: "en-GB", rate: 0.95, pitch: 1.02 };
 let finishPending = null;
+let lastText = null;
 
 export function isNarrationSupported() {
     return typeof window !== "undefined"
@@ -30,9 +31,19 @@ export function stopNarration() {
     }
 }
 
+/**
+ * Stops narration only if `text` was the last thing asked to be said, so a
+ * component tidying up as it closes cannot cut off speech someone else has
+ * just started.
+ */
+export function stopNarrationOf(text) {
+    if (text && text === lastText) stopNarration();
+}
+
 export function speak(text, options = {}) {
     if (!isNarrationSupported() || !text) return;
     stopNarration();
+    lastText = text;
     const utterance = new window.SpeechSynthesisUtterance(text);
     Object.assign(utterance, VOICE, options);
     try { window.speechSynthesis.speak(utterance); } catch { /* unavailable voice */ }
@@ -50,6 +61,7 @@ export function speakAndWait(text, options = {}) {
             return;
         }
         stopNarration();
+        lastText = text;
         const finish = () => {
             if (finishPending === finish) finishPending = null;
             resolve();
