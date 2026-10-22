@@ -109,6 +109,7 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
     let size = 0.3;
     let hoverClock = 0;
     let ignition = 0; // the engine burning on the pad before lift-off (#35), 0..1
+    let hidden = false;
 
     // The camera looks at a planet from between the way the ship came and the
     // Sun, a little from above, so the planet is lit when it arrives.
@@ -170,6 +171,10 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
         size: () => size,
         /** Where the engine is, in world space: smoke comes from here. */
         nozzle: (out) => ship.localToWorld(out.set(0, -0.45, 0)),
+        /** Hides the ship, as when the camera looks back past it (#47). */
+        setHidden(value) {
+            hidden = value;
+        },
         /** Burns the engine on the pad: the ship stands up straight and shakes. */
         ignite(level) {
             ignition = level;
@@ -235,7 +240,7 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
         },
 
         update(dt, { active }) {
-            ship.visible = !active;
+            ship.visible = !active && !hidden;
             if (active || !target) return;
 
             if (!flight) {

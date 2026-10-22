@@ -26,6 +26,8 @@ import { createLiftOff } from "./liftOff.js";
 import { COUNT_WORDS } from "./liftOffTimeline.js";
 import { createLineUp } from "./lineUp.js";
 import { LINE_UP_LINE, TRUE_RADII_KM } from "./lineUpLayout.js";
+import { createPaleBlueDot } from "./paleBlueDot.js";
+import { PALE_BLUE_DOT_STORY, PALE_BLUE_DOT_TITLE } from "./paleBlueDotView.js";
 import { isMuted } from "../../../components/celebration/sound/player.js";
 import { speak, stopNarration } from "../../../utils/speech.js";
 import { constellations } from "./constellations.js";
@@ -74,6 +76,8 @@ export default function ThreeSolarSystem() {
     const [countdown, setCountdown] = useState(null);
     // The planet the line-up by size (#62) was opened from, or null when it's closed.
     const [lineUpName, setLineUpName] = useState(null);
+    // The Pale Blue Dot at the end of the tour (#47): null, "flying" or "looking".
+    const [paleBlueDotPhase, setPaleBlueDotPhase] = useState(null);
     // The constellation explorer is pure React — it never touches the scene —
     // so unlike tourState this has no mirror inside the Three.js effect.
     const [constellationState, setConstellationState] = useState({ active: false, index: 0, muted: false });
@@ -620,7 +624,8 @@ export default function ThreeSolarSystem() {
         }
 
         function updateAsteroidBelt(orbitTime, elapsed) {
-            if (!asteroidBelt || !beltSettings.enabled) return;
+            // animate() decides whether the belt shows; a hidden belt needn't move.
+            if (!asteroidBelt?.mesh.visible) return;
             const { mesh, angles, baseAngles, radii, speeds, scales, inc, eccPhase, dummy, settings } = asteroidBelt;
             const count = angles.length;
 
@@ -643,7 +648,6 @@ export default function ThreeSolarSystem() {
                 mesh.setMatrixAt(i, dummy.matrix);
             }
             mesh.instanceMatrix.needsUpdate = true;
-            mesh.visible = beltSettings.enabled;
         }
 
         // ================================================================
@@ -1114,6 +1118,7 @@ export default function ThreeSolarSystem() {
         function resetSolarSystem() {
             if (disposed || resetting) return;
             closeLineUp();
+            endPaleBlueDot({ home: false });
             warpIn?.skip();
             resetting = true;
             stopNarration();
@@ -1289,6 +1294,7 @@ export default function ThreeSolarSystem() {
         function focusEntry(entry, fromTour = false, { card = true } = {}) {
             if (!entry || experiment?.isActive() || resetting) return;
             closeLineUp();
+            endPaleBlueDot({ home: false });
             warpIn?.skip();
             if (!fromTour) liftOff.cancel();
             if (!fromTour && tourActive) stopTour();
@@ -1391,9 +1397,10 @@ export default function ThreeSolarSystem() {
             start: () => startTour(),
             previous: () => visitTourPlanet(tourIndex - 1),
             next: () => {
-                if (tourIndex >= planetSystems.length - 1) stopTour();
+                if (tourIndex >= planetSystems.length - 1) startPaleBlueDot();
                 else visitTourPlanet(tourIndex + 1);
             },
+            endPaleBlueDot: () => endPaleBlueDot(),
             replay: () => speakPlanet(planetData[tourIndex]),
             toggleNarration: toggleTourNarration,
             exit: (hideCard = false) => stopTour(hideCard),
@@ -1414,7 +1421,7 @@ export default function ThreeSolarSystem() {
         setSceneReady(true);
 
         function onClick(event) {
-            if (experiment?.isActive() || lineUp.isActive()) return;
+            if (experiment?.isActive() || lineUp.isActive() || paleBlueDot.isActive()) return;
             if (liftOff.isCounting()) {
                 liftOff.skip();
                 return;
@@ -1451,7 +1458,7 @@ export default function ThreeSolarSystem() {
             if (lineUp.isActive()) return;
             event.preventDefault();
             event.stopImmediatePropagation();
-            if (experiment?.isActive()) return;
+            if (experiment?.isActive() || paleBlueDot.isActive()) return;
             warpIn?.skip();
 
             const zoomFactor = Math.exp(THREE.MathUtils.clamp(event.deltaY, -120, 120) * 0.0025);
@@ -1504,6 +1511,10 @@ export default function ThreeSolarSystem() {
             if (e.key !== "Escape") return;
             if (lineUp.isActive()) {
                 closeLineUp();
+                return;
+            }
+            if (paleBlueDot.isActive()) {
+                endPaleBlueDot();
                 return;
             }
             if (experiment?.isActive()) {
@@ -1642,6 +1653,58 @@ export default function ThreeSolarSystem() {
             setLineUpName(null);
         }
 
+        // The Pale Blue Dot (#47): after the last stop, the ship flies out past
+        // Neptune and the camera looks back at home, as Voyager 1 did.
+        const paleBlueDot = modules.add("paleBlueDot", createPaleBlueDot({
+            scene,
+            camera,
+            controls,
+            getEarthPosition: (out) => searchEntriesById.get("Earth").object3d.getWorldPosition(out),
+            defaultFov: defaults.camera.fov,
+            reducedMotion: () => reducedQuery.matches,
+        }));
+
+        function startPaleBlueDot() {
+            if (experiment?.isActive() || resetting) return;
+            stopTour(true);
+            stopFollowing();
+            clearControlDamping();
+            controls.enabled = false;
+            pane.hidden = true;
+            paleBlueDot.begin();
+            setPaleBlueDotPhase("flying");
+            const lookBack = () => {
+                ship.setHidden(true);
+                paleBlueDot.look(() => {
+                    if (disposed) return;
+                    setPaleBlueDotPhase("looking");
+                    if (!tourMuted) speak(`${PALE_BLUE_DOT_TITLE}. ${PALE_BLUE_DOT_STORY.join(" ")}`);
+                });
+            };
+            const leg = { radius: 2, framingDistance: () => 24 };
+            if (reducedQuery.matches) {
+                ship.park(paleBlueDot.marker, leg);
+                lookBack();
+            } else ship.flyTo(paleBlueDot.marker, { ...leg, onArrive: lookBack });
+        }
+
+        // `home`: the ship comes back to Earth and the camera to the overview.
+        function endPaleBlueDot({ home = true } = {}) {
+            if (!paleBlueDot?.isActive()) return;
+            paleBlueDot.end();
+            sky.apply({ milkyWay: simulation.milkyWay, skyVisible: backgroundSettings.enabled });
+            ship.cancel();
+            ship.setHidden(false);
+            controls.enabled = true;
+            pane.hidden = false;
+            stopNarration();
+            setPaleBlueDotPhase(null);
+            if (home) {
+                parkShipAtEarth();
+                resetView();
+            }
+        }
+
         // Warp-in arrival (#1), once per visit. Anything the child does skips it.
         const warpIn = shouldPlayWarp({ reducedMotion: reducedQuery.matches }) ? modules.add("warpIn", createWarpIn({
             camera,
@@ -1684,14 +1747,16 @@ export default function ThreeSolarSystem() {
                 }
             }
 
-            orbitPaths.forEach((orbit) => (orbit.visible = !active && simulation.showOrbits));
-            asteroidBelt.mesh.visible = !active && beltSettings.enabled;
+            // The Pale Blue Dot's zoomed view is just the Sun, Earth and the stars.
+            const quiet = active || paleBlueDot.hidesScenery();
+            orbitPaths.forEach((orbit) => (orbit.visible = !quiet && simulation.showOrbits));
+            asteroidBelt.mesh.visible = !quiet && beltSettings.enabled;
 
             labelSprites.forEach((label) => {
                 label.userData.owner.getWorldPosition(labelWorldPosition);
                 label.position.copy(labelWorldPosition);
                 label.position.y += label.userData.labelOffset;
-                label.visible = !active && (label.userData.isMoonLabel
+                label.visible = !quiet && (label.userData.isMoonLabel
                     ? (simulation.showMoonLabels || forceMoonLabels)
                         && followActive
                         && label.userData.planetSystem === followSystem
@@ -1745,6 +1810,13 @@ export default function ThreeSolarSystem() {
             }
             updateSunGlow();
             modules.update(dt, { active });
+            // Zoomed that far in, the star dots turn into grey squares and the sky
+            // photo into blurry blocks, so the sky goes black, as in Voyager's
+            // photo. After modules.update, because the sky module sets the dots too.
+            if (paleBlueDot.hidesScenery()) {
+                stars.visible = false;
+                scene.background = null;
+            }
             if (lineUp.isActive()) lineUp.render();
             else pipeline.render();
             if (frameReadout && lastFrameStart > 0 && !document.hidden) {
@@ -1865,6 +1937,7 @@ export default function ThreeSolarSystem() {
     let mode = "idle";
     if (meteorActive) mode = "meteor";
     else if (lineUpName) mode = "lineup";
+    else if (paleBlueDotPhase) mode = "palebluedot";
     else if (tourState.active) mode = "tour";
     else if (countdown !== null) mode = "liftoff";
     else if (constellationState.active) mode = "constellations";
@@ -2059,6 +2132,26 @@ export default function ThreeSolarSystem() {
                     {meteorError || phaseMessages[meteorPhase]}
                 </p>
             )}
+            {mode === "palebluedot" && paleBlueDotPhase === "looking" && (
+                <aside className="solar-info-card solar-pale-blue-dot" aria-label={PALE_BLUE_DOT_TITLE} aria-live="polite">
+                    <div className="solar-info-card__header">
+                        <div>
+                            <span className="solar-info-card__eyebrow">Looking back at home</span>
+                            <h2>{PALE_BLUE_DOT_TITLE}</h2>
+                        </div>
+                    </div>
+                    <div className="solar-info-card__body">
+                        {PALE_BLUE_DOT_STORY.map((line) => <p key={line}>{line}</p>)}
+                    </div>
+                    <button
+                        type="button"
+                        className="solar-info-card__tour-button"
+                        onClick={() => sceneApiRef.current?.endPaleBlueDot()}
+                    >
+                        🚀 Fly home
+                    </button>
+                </aside>
+            )}
             {mode === "lineup" && (
                 <div className="solar-lineup" role="region" aria-label="The planets lined up by size">
                     <button
@@ -2162,12 +2255,12 @@ export default function ThreeSolarSystem() {
                                 <button
                                     type="button"
                                     className="solar-tour-controls__next"
-                                    aria-label={tourState.index === tourState.total - 1 ? "Finish tour" : "Next"}
-                                    title={tourState.index === tourState.total - 1 ? "Finish tour" : "Next"}
+                                    aria-label={tourState.index === tourState.total - 1 ? "One last look back at Earth" : "Next"}
+                                    title={tourState.index === tourState.total - 1 ? "One last look back at Earth" : "Next"}
                                     onClick={() => sceneApiRef.current?.next()}
                                 >
-                                    <span className="solar-control-icon" aria-hidden="true">{tourState.index === tourState.total - 1 ? "✓" : "→"}</span>
-                                    <span className="solar-control-label">{tourState.index === tourState.total - 1 ? "Finish tour" : "Next →"}</span>
+                                    <span className="solar-control-icon" aria-hidden="true">{tourState.index === tourState.total - 1 ? "🌍" : "→"}</span>
+                                    <span className="solar-control-label">{tourState.index === tourState.total - 1 ? "One last look →" : "Next →"}</span>
                                 </button>
                             </div>
                         </div>

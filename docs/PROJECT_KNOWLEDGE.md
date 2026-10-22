@@ -1125,6 +1125,12 @@ phased roadmap, and is the progress tracker (§11). What exists now:
   while open (`lineUp.render()` in `animate()`); the main controls are
   disabled and `onWheel` steps aside so the line-up's controls get the event.
   Opened from `PlanetPlayCard`'s `onLineUp`; React mode `"lineup"`.
+- *Pale Blue Dot* (`paleBlueDot.js`, maths in `paleBlueDotView.js`): the
+  tour's "next" on the last stop calls `startPaleBlueDot()`, which flies the
+  ship to the module's `marker`, then `look()` owns the camera and narrows its
+  `fov` (put back by `end()`). While `hidesScenery()`, `animate()` hides
+  labels, orbit lines, the belt, the star dots and the sky. React mode
+  `"palebluedot"`.
 - *The ISS* (`issStation.js`, orbit in `issOrbit.js`): circles Earth every
   12 s on the world clock, parented to Earth's `root` (not `body`), hidden
   during the meteor; tapping it gives one spoken line.

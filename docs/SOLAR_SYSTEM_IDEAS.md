@@ -407,7 +407,7 @@ machine). Each is large, and earlier items deliver most of the same feeling.
 |---|---|---|
 | 0 — Foundations | Code done; ⏳ waiting on the phone baseline | Started 2026-10-21. Phase 1 can begin: only #5 bloom waits on the phone numbers |
 | 1 — The first ten seconds | Done except ⏳ #27 (sound decision) and ⏳ #5 bloom (phone numbers) | Started 2026-10-22 |
-| 2 — Meet your ship | In progress: ✅ #34, #50, #35, #62 | Started 2026-10-22 |
+| 2 — Meet your ship | Core built: ✅ #34, #50, #35, #62, #47. ⏳ the steering spike playtest | Started 2026-10-22 |
 | 3 — A living Solar System | Not started | |
 | 4 — Missions and stars | Not started | |
 | 5 — Take the controls | Not started | |
@@ -711,6 +711,25 @@ and phone frame time stays within the Phase 0 baseline.
   nothing in the real scene moves. Back or Escape returns to the card. The
   line is read aloud with the site's sound on. Under reduced motion it opens
   on the whole row. Checked at 1200×700 and 390×844.
+- ✅ **#47 Pale Blue Dot** (2026-10-22), the tour's new last leg. On Pluto the
+  tour's last button is now "One last look →". The ship flies out past
+  Neptune to a point 32° above the planets' plane, where Voyager 1 was. Then
+  the camera turns round and zooms in like a telephoto lens until Earth is a
+  tiny dot near the Sun, circled by a pulsing gold ring. The orbit lines,
+  labels, asteroid belt, star dots and sky photo all fade out, so the view is
+  just the Sun and the dots in black, as in the real photo. A card tells
+  Voyager's story in four short lines, read aloud unless the tour is muted,
+  and "🚀 Fly home" (or Escape) brings the ship back to Earth and the camera
+  to the overview. The viewpoint stays side-on to Earth as it orbits, and the
+  zoom keeps the Sun-to-Earth gap at about a third of the screen. On tall
+  phones the view sits higher, clear of the card
+  ([`paleBlueDot.js`](../src/pages/skills/geography/paleBlueDot.js), maths in
+  [`paleBlueDotView.js`](../src/pages/skills/geography/paleBlueDotView.js)).
+  Reduced motion cuts straight to the view.
+  - **Fixed on the way:** the asteroid belt's per-frame update forced it
+    visible every frame, overriding anything that hid it.
+  - **Found, not fixed:** on narrow screens the toolbar's Tour button's only
+    accessible name is "▶", because its text label is hidden there.
 - **#34 autopilot ship** replaces the camera-only fly-to used by search, tap
   and the tour. Keep the old camera move behind reduced motion. Write tests
   first, because three existing features change at once.
