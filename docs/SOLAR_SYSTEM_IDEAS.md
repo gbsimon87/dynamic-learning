@@ -748,6 +748,17 @@ and phone frame time stays within the Phase 0 baseline.
   `public/spikes/` once it's decided**, so it doesn't stay on the live site.
   - Known limit: in B you can only tap inside the current view, so turning
     right round takes several taps.
+  - **Run 1** (2026-10-22; who played and on what device not yet noted).
+    A, joystick: 4 of 5 targets in 34.3 s, about 8½ s each, 4 bumps, and
+    GO! never let go. B, tap to go: not tried. No decision yet: B still
+    needs trying, and the steering pick needs 2–3 children.
+
+    | Target | Time | Bumps | Let-gos |
+    |---|---|---|---|
+    | Red | 10.5 s | 0 | 0 |
+    | Yellow | 6.5 s | 2 | 0 |
+    | Purple | 10.9 s | 1 | 0 |
+    | Blue | 6.4 s | 1 | 0 |
 - **#34 autopilot ship** replaces the camera-only fly-to used by search, tap
   and the tour. Keep the old camera move behind reduced motion. Write tests
   first, because three existing features change at once.
