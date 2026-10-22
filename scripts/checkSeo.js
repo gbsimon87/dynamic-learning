@@ -112,7 +112,7 @@ try {
   await staticPage.getByRole('heading', { name: 'Flag Finder', level: 1 }).waitFor();
   assert.ok((await staticPage.getByRole('main').innerText()).includes('REST Countries'));
   await staticPage.goto(`${base}/skills`);
-  assert.equal(await staticPage.locator('a.sk-guide-link').count(), 25);
+  assert.equal(await staticPage.locator('a.sk-guide-link').count(), 26);
   assert.deepEqual(errors, [], 'no client errors or CSP errors');
   console.log(`Browser verification passed: SPA navigation, gameplay, metadata, 404, no-JS pages and both themes at desktop/mobile sizes. Screenshots: ${screenshots}`);
 } finally {

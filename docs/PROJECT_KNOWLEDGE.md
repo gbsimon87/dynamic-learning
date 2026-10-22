@@ -3061,6 +3061,32 @@ Detective** (`/charts`, tally / pictogram / bar) and **Place Value Blocks**
   used by both `ChallengeShell` and `useAnswerFeedback`, so Curriculum and
   Skills Mode feel the same.
 
+### Secret Rule Zoo (2026-10-22)
+
+The first prototype from `docs/PLAYFUL_LEARNING_EXPLORATION.md` ("What to
+prototype next": the strongest small experiment). **Secret Rule Zoo**
+(`/rule-zoo`, Maths group) is a detective game about sorting with invented
+creatures, so nothing teaches a false animal fact.
+- *Find the rule:* the keeper sorts creatures into the ☀️ Sunny Pen and the
+  🌙 Moon Pen by one hidden feature (horns, wings, spots, four legs or one
+  eye). The two starting creatures fit every possible rule, so the child has
+  to test. They choose which of three waiting creatures to test; at least two
+  of the three can always rule something out, and no two look alike. A guess
+  that fits every creature so far is never marked wrong ("fits so far, test
+  more"); one that doesn't is answered with the 👀 creature that disproves it.
+  "Help me think" lists which clues are still possible. Easier changes three
+  features, Trickier all five.
+- *Stump Bix:* the child picks a rule, then sorts each creature Bix asks
+  about; a wrong sort gets "Check your rule". Bix tests the creature that
+  splits the possible rules most evenly and names the rule once only one is
+  left.
+- Logic is pure and tested in `data/freePlay/ruleZoo.js` (8 tests over
+  hundreds of seeds); the page is `pages/skills/math/RuleZoo.jsx` with its
+  own loop on `useAnswerFeedback`, tested in `tests/components/ruleZoo.test.jsx`.
+  A mode or level change starts a new zoo. Nothing is stored.
+- Not yet playtested with children; the exploration doc's playtest plan
+  applies (look for a purposeful test choice, not random tapping).
+
 ### Topic stickers & the Trophy Room (2026-09-29)
 
 **Stickers are derived, never stored.** `stickers.js` marks a topic's sticker

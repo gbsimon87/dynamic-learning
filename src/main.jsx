@@ -87,6 +87,7 @@ const router = createBrowserRouter([
       { path: "robot-moves", lazy: () => import("./pages/skills/math/RobotMoves").then((m) => ({ Component: m.default })) },
       { path: "charts", lazy: () => import("./pages/skills/math/ChartDetective").then((m) => ({ Component: m.default })) },
       { path: "place-value", lazy: () => import("./pages/skills/math/PlaceValueGame").then((m) => ({ Component: m.default })) },
+      { path: "rule-zoo", lazy: () => import("./pages/skills/math/RuleZoo").then((m) => ({ Component: m.default })) },
       { path: "shapes", lazy: () => import("./pages/skills/math/ShapeExplorer").then((m) => ({ Component: m.default })) },
 
       // === English Skills ===
