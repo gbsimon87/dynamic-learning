@@ -406,7 +406,7 @@ machine). Each is large, and earlier items deliver most of the same feeling.
 | Phase | Status | Notes |
 |---|---|---|
 | 0 — Foundations | Code done; ⏳ waiting on the phone baseline | Started 2026-10-21. Phase 1 can begin: only #5 bloom waits on the phone numbers |
-| 1 — The first ten seconds | 1a done except #27 (⏳ sound decision); 1b in progress | Started 2026-10-22 |
+| 1 — The first ten seconds | Done except ⏳ #27 (sound decision) and ⏳ #5 bloom (phone numbers) | Started 2026-10-22 |
 | 2 — Meet your ship | Not started | |
 | 3 — A living Solar System | Not started | |
 | 4 — Missions and stars | Not started | |
@@ -625,6 +625,8 @@ Done so far:
   (`dl.solarWarpSeen` in sessionStorage) and never under reduced motion.
   Anything the child does skips it: a tap, drag or scroll, search, the tour,
   Reset or the meteor.
+- ⏳ **#5 glowing Sun.** Waiting on the Phase 0 phone baseline: real bloom
+  (with lines and labels drawn after `OutputPass`) or a sprite-only glow.
 - ⏳ **#27 arrival sounds.** Waiting on a decision.
   [`docs/sounds/README.md`](sounds/README.md) says all of Skills Mode is
   silent by design, and every sound in the app was chosen by ear. To add a
