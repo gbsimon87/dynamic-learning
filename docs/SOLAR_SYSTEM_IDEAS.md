@@ -413,6 +413,21 @@ machine). Each is large, and earlier items deliver most of the same feeling.
 | 5 — Take the controls | Not started | |
 | 6 — Beyond the Solar System | Not started | |
 
+### Waiting on you
+
+The code can't move these on. Each one says what to do and what it unblocks.
+Tick one off here when it's done.
+
+| # | What's needed | How | Unblocks |
+|---|---|---|---|
+| 1 | **Phone baseline screenshots** | Follow the five steps under ⏳ *Phone baseline* in Phase 0: two `?debug` readouts on a real phone or tablet, with and without `&bloom=1`, plus one during the meteor | #5 glowing Sun: real bloom or a sprite glow. Phase 0's exit |
+| 2 | **Arrival sounds: yes or no** (#27) | Decide whether Skills Mode may make sounds at all (it's silent by design today). If yes, pick a whoosh and a chime by ear in [`mixkit-audition.html`](sounds/mixkit-audition.html) | #27, and later the lift-off rumble (#35) and music (#28) |
+| 3 | **The old sky** | Either find where the six `cubeMap/` images came from so they can be credited, or say "make the Milky Way the default" and they get deleted. Recommended: the second | Phase 0 asset checklist |
+| 4 | **Phase 1 playtest** | 2–3 children, each with a parent present and agreeing, open the page for the first time. Watch the first ten seconds: do they react, and what do they tap? | Phase 1's exit. The order of Phase 2's remaining items |
+| 5 | **Steering spike** (Phase 2) | The same children try both steering styles on the throwaway test page (see Phase 2) for about five minutes each. Note which one they manage without help | Phase 2's exit. The control scheme for #83 free flight |
+| 6 | **Odd toggle, once** | While testing Phase 1b, Orbit lines turned off and the Sun message appeared with no tap. It couldn't be repeated. Say if you ever see it | Nothing yet |
+| 7 | **Push and merge** | `feat/solar-system` is only on this Mac. Say when to push it and open a pull request | Getting any of this onto learnwithbix.com |
+
 ### Principles
 
 1. **Something new a child can see every 1–2 weeks.** Only Phase 0 is
