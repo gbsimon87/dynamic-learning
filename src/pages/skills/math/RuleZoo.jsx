@@ -396,9 +396,11 @@ function Stump({ game, setGame, level, fb, onNew }) {
         const feature = featureById(rule);
         if (pen !== penFor(rule, pending)) {
             fb.answer(false);
+            const check = `Check your rule: "${feature.clue}". Does this creature have ${feature.has}?`;
+            // A new wording each time, so a screen reader says it again.
             setGame({
                 ...game,
-                message: `Check your rule: "${feature.clue}". Does this creature have ${feature.has}?`,
+                message: game.message === check ? `Look again: does this creature have ${feature.has}? Your rule is "${feature.clue}".` : check,
             });
             return;
         }
@@ -427,7 +429,7 @@ function Stump({ game, setGame, level, fb, onNew }) {
             {pending && (
                 <section className="zoo-bix-pick" ref={fb.answerRef} aria-label="The creature Bix wants to test">
                     <Mascot decorative className="zoo-bix" />
-                    <div className="zoo-bix-pick__creature" aria-label={describeCreature(pending)}>
+                    <div className="zoo-bix-pick__creature" role="img" aria-label={describeCreature(pending)}>
                         <Creature creature={pending} size={96} />
                     </div>
                     <div className="zoo-bix-pick__pens" role="group" aria-label="Which pen?">

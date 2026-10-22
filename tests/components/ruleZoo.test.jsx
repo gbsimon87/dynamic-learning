@@ -70,3 +70,21 @@ it("Stump Bix: the child sets a rule and sorts each creature Bix asks about", ()
   }
   expect(message()).toMatch(/I think your secret rule is Has horns!/);
 });
+
+it("Stump Bix: the creature Bix picks is described, and a wrong pen is explained afresh each time", () => {
+  zoo();
+  fireEvent.click(screen.getByRole("button", { name: /Stump Bix/ }));
+  fireEvent.click(screen.getByRole("button", { name: /Has horns/ }));
+  fireEvent.click(screen.getByRole("button", { name: /Bix, pick one/ }));
+  const picked = within(screen.getByRole("region", { name: "The creature Bix wants to test" })).getByRole("img");
+  const described = picked.getAttribute("aria-label");
+  expect(described).toMatch(/^A \w+ creature with /);
+  const wrong = described.includes("no horns") ? /Sunny Pen/ : /Moon Pen/;
+  fireEvent.click(screen.getByRole("button", { name: wrong }));
+  const first = message();
+  expect(first).toMatch(/Check your rule/);
+  fireEvent.click(screen.getByRole("button", { name: wrong }));
+  expect(message()).not.toBe(first);
+  fireEvent.click(screen.getByRole("button", { name: wrong }));
+  expect(message()).toBe(first);
+});
