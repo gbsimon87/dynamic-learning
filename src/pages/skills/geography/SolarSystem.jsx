@@ -22,6 +22,8 @@ import { createAutopilotShip } from "./autopilotShip.js";
 import { SHIP_LINE } from "./shipFlight.js";
 import { createIss } from "./issStation.js";
 import { ISS_LINE } from "./issOrbit.js";
+import { createLiftOff } from "./liftOff.js";
+import { COUNT_WORDS } from "./liftOffTimeline.js";
 import { isMuted } from "../../../components/celebration/sound/player.js";
 import { speak, stopNarration } from "../../../utils/speech.js";
 import { constellations } from "./constellations.js";
@@ -66,6 +68,8 @@ export default function ThreeSolarSystem() {
     const [tapMessage, setTapMessage] = useState(null);
     const [selectedPlanet, setSelectedPlanet] = useState(null);
     const [tourState, setTourState] = useState({ active: false, index: 0, total: 0, muted: false });
+    // The lift-off countdown before the tour (#35): 3, 2, 1, 0 for "Lift off!", or null.
+    const [countdown, setCountdown] = useState(null);
     // The constellation explorer is pure React — it never touches the scene —
     // so unlike tourState this has no mirror inside the Three.js effect.
     const [constellationState, setConstellationState] = useState({ active: false, index: 0, muted: false });
@@ -983,7 +987,7 @@ export default function ThreeSolarSystem() {
             });
         const stopBtnApi = cameraFolder.addButton({ title: "Stop Following" });
         cameraFolder.addButton({ title: "Reset View" }).on("click", () => resetView());
-        cameraFolder.addButton({ title: "Start Guided Tour" }).on("click", () => visitTourPlanet(0));
+        cameraFolder.addButton({ title: "Start Guided Tour" }).on("click", () => startTour());
 
         if (debugFlags.debug) {
             const bloomFolder = pane.addFolder({ title: "Bloom (test)", expanded: false });
@@ -1063,12 +1067,13 @@ export default function ThreeSolarSystem() {
             desiredControlsTarget.copy(controls.target);
         }
 
-        function speakPlanet(planet) {
+        function speakPlanet(planet, intro = "") {
             if (tourMuted) return;
-            speak(`${planet.name}. ${planet.tourNarration}`);
+            speak(`${intro}${planet.name}. ${planet.tourNarration}`);
         }
 
         function stopTour(hideCard = false) {
+            liftOff.cancel();
             tourActive = false;
             stopNarration();
             setTourState((current) => ({ ...current, active: false }));
@@ -1276,9 +1281,10 @@ export default function ThreeSolarSystem() {
                 : Math.max(entry.radius * 6, 4);
         }
 
-        function focusEntry(entry, fromTour = false) {
+        function focusEntry(entry, fromTour = false, { card = true } = {}) {
             if (!entry || experiment?.isActive() || resetting) return;
             warpIn?.skip();
+            if (!fromTour) liftOff.cancel();
             if (!fromTour && tourActive) stopTour();
             const isMoon = entry.kind === "moon";
             followActive = true;
@@ -1302,7 +1308,7 @@ export default function ThreeSolarSystem() {
             // The ship flies there and the follow camera takes over when it lands.
             // Under reduced motion it just appears there, and the camera glides as before.
             const calm = reducedQuery.matches;
-            const info = createFocusInfo(entry);
+            const info = card ? createFocusInfo(entry) : null;
             if (calm) ship.park(entry.object3d, { radius: entry.radius, framingDistance: () => followDesiredDistance, from: camera.position });
             if (!calm && ship.flyTo(entry.object3d, {
                 radius: entry.radius,
@@ -1332,7 +1338,23 @@ export default function ThreeSolarSystem() {
             focusEntry(searchEntriesById.get(system.userData.planet.name), fromTour);
         }
 
-        function visitTourPlanet(nextIndex) {
+        // The tour starts with a lift-off from Earth (#35), unless motion is reduced.
+        function startTour() {
+            if (experiment?.isActive() || resetting) return;
+            if (tourActive || reducedQuery.matches) {
+                visitTourPlanet(0);
+                return;
+            }
+            const earth = searchEntriesById.get("Earth");
+            if (!ship.isBeside(earth.object3d)) {
+                ship.park(earth.object3d, { radius: earth.radius, framingDistance: framingDistanceFor(earth) });
+            }
+            pane.expanded = false;
+            focusEntry(earth, true, { card: false });
+            liftOff.start();
+        }
+
+        function visitTourPlanet(nextIndex, intro = "") {
             if (experiment?.isActive() || resetting) return;
             if (!tourActive) pane.expanded = false;
             const clampedIndex = THREE.MathUtils.clamp(nextIndex, 0, planetSystems.length - 1);
@@ -1345,7 +1367,7 @@ export default function ThreeSolarSystem() {
                 muted: tourMuted,
             });
             flyToPlanet(planetSystems[clampedIndex], true);
-            speakPlanet(planetData[clampedIndex]);
+            speakPlanet(planetData[clampedIndex], intro);
         }
 
         function toggleTourNarration() {
@@ -1360,7 +1382,7 @@ export default function ThreeSolarSystem() {
             resetView,
             resetSolarSystem,
             launchMeteor: launchExperiment,
-            start: () => visitTourPlanet(0),
+            start: () => startTour(),
             previous: () => visitTourPlanet(tourIndex - 1),
             next: () => {
                 if (tourIndex >= planetSystems.length - 1) stopTour();
@@ -1385,6 +1407,10 @@ export default function ThreeSolarSystem() {
 
         function onClick(event) {
             if (experiment?.isActive()) return;
+            if (liftOff.isCounting()) {
+                liftOff.skip();
+                return;
+            }
             const rect = renderer.domElement.getBoundingClientRect();
             if (shootingStars.tryTap(event.clientX, event.clientY, rect)) {
                 setTapMessage({ icon: "🌠", text: WISH_LINE, id: performance.now() });
@@ -1457,6 +1483,7 @@ export default function ThreeSolarSystem() {
         function onControlsStart() {
             if (experiment?.isActive()) return;
             warpIn?.skip();
+            liftOff.skip();
             ship.skip();
             zoomAnimating = false;
             desiredCameraPosition.copy(camera.position);
@@ -1554,6 +1581,20 @@ export default function ThreeSolarSystem() {
             ship.park(earth.object3d, { radius: earth.radius, framingDistance: framingDistanceFor(earth) });
         };
         parkShipAtEarth();
+
+        // Lift-off (#35): a countdown at Earth, then the ship leaves for the tour's first stop.
+        const liftOff = modules.add("liftOff", createLiftOff({
+            scene,
+            ship,
+            quality: currentQuality(),
+            onCount: (n) => {
+                if (disposed) return;
+                setCountdown(n);
+                // "Lift off!" is said with the first stop's narration, so it isn't cut off.
+                if (n > 0 && !isMuted()) speak(COUNT_WORDS[n]);
+            },
+            onLaunch: () => visitTourPlanet(0, isMuted() ? "" : `${COUNT_WORDS[0]} `),
+        }));
 
         // Warp-in arrival (#1), once per visit. Anything the child does skips it.
         const warpIn = shouldPlayWarp({ reducedMotion: reducedQuery.matches }) ? modules.add("warpIn", createWarpIn({
@@ -1774,13 +1815,11 @@ export default function ThreeSolarSystem() {
     const meteorActive = meteorPhase !== "ready";
     // Derived, never stored: meteorPhase, tourState and constellationState are
     // the sources of truth, so these four modes cannot drift out of sync.
-    const mode = meteorActive
-        ? "meteor"
-        : tourState.active
-            ? "tour"
-            : constellationState.active
-                ? "constellations"
-                : "idle";
+    let mode = "idle";
+    if (meteorActive) mode = "meteor";
+    else if (tourState.active) mode = "tour";
+    else if (countdown !== null) mode = "liftoff";
+    else if (constellationState.active) mode = "constellations";
     // Same rule as the launch buttons: the drawer steps aside for a planet
     // card or any other mode, and comes back closed.
     const drawerVisible = mode === "idle" && !selectedPlanet;
@@ -1970,6 +2009,11 @@ export default function ThreeSolarSystem() {
             {(meteorActive || meteorError) && (
                 <p className="solar-meteor-status" role="status" aria-live="polite" aria-atomic="true">
                     {meteorError || phaseMessages[meteorPhase]}
+                </p>
+            )}
+            {countdown !== null && (
+                <p key={countdown} className={`solar-countdown${countdown === 0 ? " solar-countdown--go" : ""}`} role="status">
+                    {countdown === 0 ? COUNT_WORDS[0] : countdown}
                 </p>
             )}
             {tapMessage && !meteorActive && (

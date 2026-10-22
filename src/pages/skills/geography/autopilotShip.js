@@ -108,6 +108,7 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
     let flight = null;
     let size = 0.3;
     let hoverClock = 0;
+    let ignition = 0; // the engine burning on the pad before lift-off (#35), 0..1
 
     // The camera looks at a planet from between the way the ship came and the
     // Sun, a little from above, so the planet is lit when it arrives.
@@ -165,6 +166,15 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
     return {
         hitTarget,
         isFlying: () => flight !== null,
+        isBeside: (object3d) => target === object3d && !flight,
+        size: () => size,
+        /** Where the engine is, in world space: smoke comes from here. */
+        nozzle: (out) => ship.localToWorld(out.set(0, -0.45, 0)),
+        /** Burns the engine on the pad: the ship stands up straight and shakes. */
+        ignite(level) {
+            ignition = level;
+            if (level > 0) heading.copy(UP);
+        },
 
         /** Puts the ship beside `object3d` at once: the start, Reset, and reduced motion. */
         park(object3d, { radius, framingDistance, from = null }) {
@@ -189,6 +199,7 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
             if (target === object3d && !flight) return false;
             target = object3d;
             targetRadius = radius;
+            ignition = 0;
             getFramingDistance = framingDistance;
             flightStart.copy(ship.position);
             chooseFraming(flightStart);
@@ -235,8 +246,20 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
                 ship.scale.setScalar(size);
                 ship.position.copy(updateParkPoint(distance));
                 if (!reducedMotion()) ship.position.y += Math.sin(hoverClock * 1.8) * size * 0.06;
-                heading.copy(sideDir).addScaledVector(UP, 0.45).normalize();
-                wantedTurn.setFromUnitVectors(UP, heading);
+                flame.visible = ignition > 0;
+                if (ignition > 0) {
+                    flame.scale.set(1, 0.3 + ignition, 1);
+                    flameMaterial.opacity = 0.3 + ignition * 0.6;
+                    if (!reducedMotion()) {
+                        const shake = size * 0.025 * ignition;
+                        ship.position.x += (Math.random() - 0.5) * shake;
+                        ship.position.z += (Math.random() - 0.5) * shake;
+                    }
+                    wantedTurn.identity();
+                } else {
+                    heading.copy(sideDir).addScaledVector(UP, 0.45).normalize();
+                    wantedTurn.setFromUnitVectors(UP, heading);
+                }
                 ship.quaternion.slerp(wantedTurn, 1 - Math.exp(-3 * dt));
                 return;
             }

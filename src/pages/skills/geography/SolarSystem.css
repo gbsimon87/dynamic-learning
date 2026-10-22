@@ -689,3 +689,38 @@
   pointer-events: none;
   white-space: pre;
 }
+
+/* ============================================================
+   Lift-off countdown before the tour (#35)
+   ============================================================ */
+
+.solar-countdown {
+  position: absolute;
+  z-index: 44;
+  top: 22%;
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%);
+  color: #fff;
+  font: 800 clamp(4.5rem, 22vw, 9rem)/1 system-ui, sans-serif;
+  text-shadow: 0 0.06em 0.3em rgba(0, 0, 0, 0.75);
+  white-space: nowrap;
+  pointer-events: none;
+  animation: solar-countdown-pop 0.9s ease-out both;
+}
+
+.solar-countdown--go {
+  color: #ffd27f;
+  font-size: clamp(3rem, 14vw, 6rem);
+}
+
+@keyframes solar-countdown-pop {
+  0% { opacity: 0; transform: translateX(-50%) scale(1.6); }
+  25% { opacity: 1; transform: translateX(-50%) scale(1); }
+  80% { opacity: 1; }
+  100% { opacity: 0.25; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .solar-countdown { animation: none; }
+}

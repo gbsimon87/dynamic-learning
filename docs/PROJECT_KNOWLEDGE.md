@@ -1115,6 +1115,11 @@ phased roadmap, and is the progress tracker (§11). What exists now:
   is. Outside the tour the planet card opens on landing, because on phones it
   covers the flight. Reduced motion keeps the old glide and just moves the
   ship. Tapping the ship says what it's for.
+- *Lift-off* (`liftOff.js`, timing in `liftOffTimeline.js`): `startTour()`
+  parks the ship at Earth and runs a spoken 3-2-1 countdown with smoke before
+  `visitTourPlanet(0)`. The countdown is React state (`countdown`, mode
+  `"liftoff"`). A tap or drag launches at once; `stopTour()` and a
+  non-tour `focusEntry` cancel it.
 - *The ISS* (`issStation.js`, orbit in `issOrbit.js`): circles Earth every
   12 s on the world clock, parented to Earth's `root` (not `body`), hidden
   during the meteor; tapping it gives one spoken line.

@@ -407,7 +407,7 @@ machine). Each is large, and earlier items deliver most of the same feeling.
 |---|---|---|
 | 0 — Foundations | Code done; ⏳ waiting on the phone baseline | Started 2026-10-21. Phase 1 can begin: only #5 bloom waits on the phone numbers |
 | 1 — The first ten seconds | Done except ⏳ #27 (sound decision) and ⏳ #5 bloom (phone numbers) | Started 2026-10-22 |
-| 2 — Meet your ship | In progress: ✅ #34, #50 | Started 2026-10-22 |
+| 2 — Meet your ship | In progress: ✅ #34, #50, #35 | Started 2026-10-22 |
 | 3 — A living Solar System | Not started | |
 | 4 — Missions and stars | Not started | |
 | 5 — Take the controls | Not started | |
@@ -688,6 +688,16 @@ and phone frame time stays within the Phase 0 baseline.
   easy to tap: "That's the International Space Station! Astronauts live there,
   and it goes round the Earth 16 times a day." Not in search yet; flying the
   ship to it would need a new kind of search entry.
+- ✅ **#35 lift-off** (2026-10-22). The tour now starts at Earth: the ship
+  stands upright, its engine burns harder and smoke billows from under it
+  while a big "3, 2, 1" counts down on screen and is spoken, then "Lift off!"
+  and the ship flies to Mercury, the first stop. "Lift off!" is said at the
+  start of Mercury's narration so it isn't cut off. The smoke is a pool of
+  sprites ([`liftOff.js`](../src/pages/skills/geography/liftOff.js), timing in
+  [`liftOffTimeline.js`](../src/pages/skills/geography/liftOffTimeline.js)).
+  A tap or a drag during the countdown launches at once; Escape, search,
+  Reset and the meteor cancel it. Under reduced motion the tour starts as
+  before. No rumble yet: sound waits on the #27 decision.
 - **#34 autopilot ship** replaces the camera-only fly-to used by search, tap
   and the tour. Keep the old camera move behind reduced motion. Write tests
   first, because three existing features change at once.
