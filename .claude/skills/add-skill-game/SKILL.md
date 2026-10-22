@@ -1,6 +1,7 @@
 ---
 name: add-skill-game
 description: Use when adding a new standalone Skills Mode mini-game (math, english, geometry, or geography) to the Learn with Bix app - covers the two required registration points, folder placement, and the conventions that keep games consistent.
+model: sonnet
 ---
 
 # Adding a Skills Mode Game
@@ -79,7 +80,7 @@ statutory curriculum coverage.
 
 ## Styling
 
-- Plain CSS only. Colours from the CSS variables in `src/index.css`.
+- Plain CSS only. Colours from the `--light-*` / `--dark-*` variables in `src/App.css`.
 - Must render correctly in **both light and dark themes**.
 - Large touch targets and legible type — the audience is 6–8 years old.
 - Reuse `.skill-btn` and other existing shared classes rather than inventing
@@ -100,15 +101,28 @@ milestone / retry feedback. Write a pure `makeQuestion(rng, level)` in
 `MoneyMatch.jsx` does. A game with its own loop can still use
 `useAnswerFeedback` + `AnswerFeedbackLine` for the feedback alone.
 
+## Keep it lean
+
+One game is one component plus three registrations. Build it in this session:
+don't spawn subagents, and don't re-check the page after every tweak.
+
 ## Verify before claiming completion
 
-1. `npm run lint` passes.
-2. The game loads at its route.
-3. The link appears on `/skills` and navigates correctly.
-4. Core loop works: correct answer, wrong answer, and mode switch if applicable.
-5. Both themes render correctly.
-6. `npm run build` passes and `npm run check:seo` verifies the public guide and
-   sitemap after the build (the browser check needs local Chrome/CHROME_PATH).
+Follow "Browser checks and subagents" in `AGENTS.md`: tests first, the browser
+only when a test cannot show it.
+
+1. `npm run lint && npm test && npm run build && npm run check:seo`. check:seo
+   already loads the public guide and sitemap in Chrome (it needs local
+   Chrome/CHROME_PATH), so don't re-check those by hand.
+2. A component test in `tests/components/` covers the core loop: a correct
+   answer, a wrong answer, and a mode switch that fully resets state if the game
+   has modes. Render it through its route to prove the route and the `/skills`
+   link resolve.
+3. Both themes: the CSS uses only the `src/App.css` theme variables, with no
+   hard-coded colours.
+4. Open the browser only if the game depends on canvas, maps, drag or real
+   layout. Then make it one batched pass: the route, one right and one wrong
+   answer, and one screenshot per theme.
 
 ## Finally
 

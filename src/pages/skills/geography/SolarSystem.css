@@ -769,3 +769,10 @@
   margin: 0 0 0.6rem;
   line-height: 1.45;
 }
+
+.solar-system .solar-comet-read { min-height: 48px; }
+
+.solar-system .solar-saturn-rings { margin-top: 0.75rem; line-height: 1.5; }
+.solar-system .solar-saturn-rings summary { min-height: 48px; align-content: center; font-weight: 700; cursor: pointer; }
+.solar-system .solar-saturn-rings button { min-height: 48px; }
+.solar-system .solar-saturn-rings summary:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }

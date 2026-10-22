@@ -134,7 +134,7 @@ and what is left. File names and engineering detail are in
 | 14 | **Works offline, installs like an app** | Install it on a tablet and keep playing without internet. Useful on shared school devices. | **Left:** all of it. The risk: progress made offline has to merge safely once back online, or a child loses work. Decide how before building anything. | ⚪ Idea |
 | 15 | **Geography curriculum, Years 1–4** | A topic path for local places, the UK/world, regions, weather, processes, resources and map/fieldwork skills. | **Left:** review Years 1–4 on physical phones/tablets and play Years 2 and 4 through in the app; swap secondary Year 4 sources for primary ones; deepen Years 5–6 and practical coverage later. Years 1–4 are implemented: Year 1 has 12 topics / 48 slots and 352 templates (2026-10-13); Year 2 has 14 topics / 56 slots and 403 templates; Years 3–4 have 16 / 64 each. See their trackers/source packs. | 🟡 Partial |
 | 17 | **Solar System meteor: test on real devices** | The meteor shower in the Solar System is built and runs smoothly on a computer. | **Left:** measure how smoothly it runs on a real phone and a real tablet. No more code needed. | 🟡 Partial |
-| 19 | **Constellations in the 3D sky** | The constellation card is a flat picture today. Add a "Find it in the real sky →" button that flies the 3D view to that constellation among the stars. | **Left:** all of it. | ⚪ Idea |
+| 19 | **Constellations in the 3D sky** | Existing charts open real-coordinate star patterns around the Solar System with labels, drag-to-look and recenter. | **Built 2026-10-22:** five patterns, phone framing and calm reduced-motion path. Physical-device checks remain. | ✅ Built |
 | 20 | **More Skills games (from the original notes)** | **Maths:** Math Sentence Builder, Compare the Numbers, Math Maze, Clock Quiz, Skip Count Jump, Estimate It!, Magic Squares, Number Line Jump, Odd or Even Sort, Shape Sorter 3D, Pattern Play, Tally Marks Trainer, Math Bingo. **English:** Sentence Fixer, Word Picture Puzzle, Riddle Time, Emoji Sentences, Picture Vocabulary, Alphabet Adventure, Listening & Repeat. **Geography:** Country Puzzle. | **Left:** pick any and build it on the free-play game frame, so it gets levels, read-aloud and celebrations for free. | ⚪ Idea |
 | 24 | **Avatar wardrobe** | Earn hats, glasses, capes or a pet for your avatar, shown wherever your picture appears. Earned only, never bought. | **Left:** all of it. Decide which achievements unlock what. | ⚪ Idea |
 | 25 | **Bix's den** | A room for Bix that the child decorates with things earned from topics: a telescope from the Solar System, a rock shelf from Rocks. Tapping an object replays a fact from that topic, which doubles as gentle revision. | **Left:** all of it. Comes after #24, which sets up the unlocking. | ⚪ Idea |
@@ -179,7 +179,7 @@ alongside everything else.
    - **Do in order:** avatar wardrobe (#24) before Bix's den (#25); read-aloud
      (#8) before phonics (#12) and the story adventure (#33).
    - **Any time:** Story Maker (#13), teach the grown-up (#28), pass-and-play
-     (#29), constellations in 3D (#19).
+     (#29). Constellations in 3D (#19) are built.
    - **Tied to a date:** seasonal events (#32). Plan each a term ahead.
    - **Decide first, then build:** offline mode (#14). Agree how offline
      progress merges before writing any code, because a bad merge loses a
@@ -231,14 +231,11 @@ The detail behind the rows above, for whoever picks one up.
   (median 8.3 ms per frame) are recorded. Simulated phone viewports don't count.
   See the [implementation plan](solar-system-meteor/IMPLEMENTATION_PLAN.md) and
   [tracker](solar-system-meteor/IMPLEMENTATION_TRACKER.md).
-- **#19** Add a `constellationSky.js` module shaped like `meteorExperiment.js`
-  (`enter / update / resize / exit / dispose / isActive`): a `THREE.Group` on a
-  celestial sphere at radius ≈2700 from the same RA/Dec via
-  `raDecToUnitVector`, `Points` for stars, `LineSegments` for the figure and a
-  `createLabel()` sprite. To solve: framing a point outward on the sphere within
-  `controls.minDistance` 1.5 / `maxDistance` 3000 and a far plane of 5000;
-  `depthTest: false` plus a `renderOrder` so planets don't slice through the
-  figure; dimming the random star field at radius 3000 while active.
+- **#19** Built in `constellationSky.js`; pure layout in
+  `constellationSkyLayout.js`. Reuses catalogue RA/Dec, converts to a right-handed
+  ecliptic sky sphere and frames all five patterns above the compact card. The
+  main camera/sky restore on exit; actual star distances and tonight’s local sky
+  remain separate roadmap ideas (#70 and #100).
 - **#20** Intended routes: `/math-sentences` (word problem → equation),
   `/compare-numbers`, `/math-maze`, `/clock-quiz` (analogue ↔ digital),
   `/skip-count`, `/estimate`, `/magic-squares` (3×3 equal sums), `/number-line`

@@ -1,10 +1,11 @@
 import { useEffect, useRef } from "react";
-import { SPEED_PRESETS, VIEW_TOGGLES } from "./solarViewSettings.js";
+import { CONSTELLATION_BRIGHTNESS, SPEED_PRESETS, VIEW_TOGGLES } from "./solarViewSettings.js";
 import "./SolarSettingsDrawer.css";
 
 const PANEL_ID = "solar-settings-panel";
 const HEADING_ID = "solar-settings-heading";
 const SPEED_ID = "solar-settings-speed";
+const BRIGHTNESS_ID = "solar-settings-brightness";
 
 function GearGlyph() {
     return (
@@ -79,6 +80,24 @@ export default function SolarSettingsDrawer({ settings, onChange, speed, onSpeed
                             );
                         })}
                     </ul>
+                    {settings.constellations && (
+                        <div className="solar-settings__speed" role="group" aria-labelledby={BRIGHTNESS_ID}>
+                            <h3 id={BRIGHTNESS_ID} className="solar-settings__subtitle">Constellation brightness</h3>
+                            <div className="solar-settings__speed-buttons">
+                                {CONSTELLATION_BRIGHTNESS.map((level) => (
+                                    <button
+                                        key={level.key}
+                                        type="button"
+                                        aria-pressed={settings.constellationBrightness === level.key}
+                                        className="solar-settings__speed-button solar-settings__brightness-button"
+                                        onClick={() => onChange("constellationBrightness", level.key)}
+                                    >
+                                        {level.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                     {onSpeedChange && (
                         <div className="solar-settings__speed" role="group" aria-labelledby={SPEED_ID}>
                             <h3 id={SPEED_ID} className="solar-settings__subtitle">Planet speed</h3>

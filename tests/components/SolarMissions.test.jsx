@@ -1,0 +1,33 @@
+import React from 'react';
+import { render, screen, fireEvent, cleanup, within } from '@testing-library/react';
+import { afterEach, beforeEach, expect, test, vi } from 'vitest';
+import SolarMissions from '../../src/pages/skills/geography/SolarMissions.jsx';
+import { MISSION_KEY } from '../../src/pages/skills/geography/solarMissions.js';
+vi.mock('../../src/utils/speech.js', () => ({ speak: vi.fn(), stopNarrationOf: vi.fn() }));
+vi.mock('../../src/components/celebration/sound/player.js', () => ({ isMuted: () => false }));
+beforeEach(() => localStorage.removeItem(MISSION_KEY));
+afterEach(cleanup);
+test('only an active mission arrival earns one stamp; wrong worlds and other modes remain free', () => {
+  const props = { enabled: true, body: null, onOpen: vi.fn(), onStart: vi.fn() };
+  const { rerender } = render(<SolarMissions {...props} />);
+  fireEvent.click(screen.getByRole('button', { name: /Missions/ }));
+  fireEvent.click(within(screen.getByRole('dialog')).getAllByText('Try this mission')[0]);
+  expect(props.onStart).toHaveBeenCalledTimes(1);
+  rerender(<SolarMissions {...props} body={{ name: 'Venus' }} />);
+  expect(screen.queryByText(/Found it/)).toBeNull();
+  rerender(<SolarMissions {...props} enabled={false} body={{ name: 'Mars' }} />);
+  expect(JSON.parse(localStorage.getItem(MISSION_KEY)).completed).toEqual([]);
+  rerender(<SolarMissions {...props} body={{ name: 'Mars' }} />);
+  expect(screen.getByRole('status').textContent).toContain('Found it');
+  expect(JSON.parse(localStorage.getItem(MISSION_KEY)).completed).toEqual(['red']);
+  rerender(<SolarMissions {...props} body={{ name: 'Mars' }} />);
+  expect(JSON.parse(localStorage.getItem(MISSION_KEY)).completed).toEqual(['red']);
+});
+test('loads stamps from earlier visits and offers replay', () => {
+  localStorage.setItem(MISSION_KEY, JSON.stringify({ version: 1, completed: ['red'] }));
+  render(<SolarMissions enabled body={null} onStart={vi.fn()} onOpen={vi.fn()} />);
+  fireEvent.click(screen.getByRole('button', { name: /Missions 1\/6/ }));
+  expect(screen.getByRole('button', { name: 'Explore again' })).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'Close', exact: true }));
+  expect(screen.queryByRole('dialog')).toBeNull();
+});

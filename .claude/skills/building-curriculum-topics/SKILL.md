@@ -144,7 +144,13 @@ as both 20 + 3 and 10 + 13, pictograms with one symbol standing for 2, 5 or 10.
 Four multiple-choice screens is a weak topic. Vary the interaction. Keep Year 2
 inside 100, short sentences, digits not number words.
 
-## Verify without clicking 24 times
+## Verify without a browser first
+
+Follow "Browser checks and subagents" in `AGENTS.md`. The default proof is a
+jsdom playthrough test that drives all four challenges, like
+`tests/components/year4MathPlaythrough.test.jsx`, plus the static checks below.
+Use the browser driver in this section only for what jsdom cannot show (drag,
+real layout, canvas), and then in one batched pass.
 
 Dev server may be on 5174 if 5173 is taken. The URL is:
 
@@ -241,7 +247,7 @@ quoted evidence appearing verbatim in its passage.
 - Composition is choice-and-build only. Nothing is free writing.
 - British spelling, enforced by `findUsSpellings` in every bank's test.
 
-**Verifying in the browser.** A driver can import a topic's bank from the
+**Verifying in the browser, when it is needed.** A driver can import a topic's bank from the
 dev server, `await import('/src/data/challenges/english/<topic>.js')`, and
 map what is ON SCREEN (the sentence, the meaning, the clue) back to its
 answer. A prompt the driver cannot match is a prompt a child cannot answer
@@ -250,8 +256,8 @@ appear and confirm the question does not advance.
 
 ## Static checks that catch what a playthrough would
 
-When a browser pass is not on the table, these are what stand in for it. Each
-has caught a real bug in this project:
+These are the default, with the playthrough test; a browser pass is the
+exception. Each has caught a real bug in this project:
 
 - **Ordering challenges must have no tied answers.** If two cards evaluate to
   the same number, several arrangements are correct but the validator accepts
@@ -270,8 +276,8 @@ has caught a real bug in this project:
 
 **Confirm before claiming done:** a wrong answer retries without advancing; a
 full run redirects to the curriculum page and increments the topic counter;
-`npm run lint`, `npm test` and `npm run build` pass; and the topic is legible in
-**both** themes.
+`npm run lint`, `npm test` and `npm run build` pass; and the topic's CSS uses
+only theme variables, so it is legible in **both** themes.
 
 ## Write Bix's four lessons
 

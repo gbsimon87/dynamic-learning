@@ -23,10 +23,12 @@ export function advanceWorldTime(time, dt, settings, paused = false) {
   };
 }
 
-export function getBodyPose({ speed, distance, phase = 0 }, time) {
+export function getBodyPose({ speed, distance, phase = 0, tidallyLocked = false }, time) {
   const angle = speed * time.orbitTime + phase;
   return {
     position: { x: Math.sin(angle) * distance, y: 0, z: Math.cos(angle) * distance },
-    rotationY: speed * time.spinTime * 60,
+    // SphereGeometry's map centre (local +X) is the near side. Keep it
+    // pointing towards the parent at the origin, regardless of spin speed.
+    rotationY: tidallyLocked ? angle + Math.PI / 2 : speed * time.spinTime * 60,
   };
 }

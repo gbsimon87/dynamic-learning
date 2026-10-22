@@ -116,12 +116,19 @@ default prop.
 
 ## Verify before claiming completion
 
-1. `npm run lint` passes.
-2. Year 2 renders unchanged and pre-existing Year 2 progress still loads.
-3. The new year renders its full category/topic tree.
-4. Locking cascades correctly from a clean `localStorage`.
-5. A topic with no challenge files shows the "not yet available" fallback.
-6. Both themes render correctly.
+Follow "Browser checks and subagents" in `AGENTS.md`: prove each point with a
+test first.
+
+1. `npm run lint`, `npm test` and `npm run build` pass.
+2. Year 2 renders unchanged, and a test loads a saved Year 2 progress fixture
+   (from before your change) and finds it intact.
+3. A test renders the new year's full category/topic tree.
+4. A test shows locking cascades correctly from a clean `localStorage`.
+5. A test shows a topic with no challenge files gets the "not yet available"
+   fallback.
+6. Both themes: new CSS uses only the theme variables.
+7. Open the browser only if a loader or routing change cannot be reached from a
+   test, and then in one batched pass.
 
 ## Finally
 

@@ -213,3 +213,56 @@
     animation: none;
   }
 }
+
+.solar-constellation .solar-constellation__sky-toggle {
+  min-height: 48px;
+  border: 1px solid currentColor;
+  border-radius: 12px;
+  background: var(--light-bg);
+  color: var(--light-text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+body.dark .solar-constellation .solar-constellation__sky-toggle {
+  background: var(--dark-bg);
+  color: var(--dark-text);
+}
+.solar-constellation .solar-constellation__close,
+.solar-constellation .solar-tour-controls button { min-width: 48px; min-height: 48px; }
+.solar-constellation .solar-constellation__sky-toggle:focus-visible { outline: 3px solid #9fd0ff; outline-offset: 3px; }
+.solar-constellation.solar-constellation--sky {
+  top: auto;
+  bottom: 12px;
+  left: 50%;
+  width: min(620px, calc(100% - 24px));
+  max-height: min(230px, 42%);
+  padding: 10px 14px;
+  flex-direction: column;
+}
+.solar-constellation--sky .solar-constellation__body { gap: 6px; }
+.solar-constellation--sky .solar-constellation__header h2 { font-size: 1.1rem; }
+.solar-constellation--sky .solar-constellation__aka { display: none; }
+.solar-constellation--sky .solar-constellation__sky-toggle { min-height: 48px; }
+.solar-constellation--sky .solar-constellation__scroll { min-height: 35px; }
+.solar-constellation--sky .solar-tour-controls {
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+.solar-constellation--sky .solar-tour-controls__audio,
+.solar-constellation--sky .solar-tour-controls__nav { display: flex; gap: 8px; }
+.solar-constellation--sky .solar-control-label { display: none; }
+.solar-constellation--sky .solar-control-icon { display: inline; }
+.solar-constellation--sky .solar-tour-controls button { flex: 0 0 48px; padding: 6px; }
+.solar-constellation--sky .solar-constellation__header > div { margin-right: auto; }
+.solar-system[data-constellation-layout="side"] .solar-constellation--sky {
+  left: auto;
+  right: 12px;
+  transform: none;
+  width: min(340px, 44%);
+  max-height: calc(100% - 24px);
+}

@@ -52,7 +52,7 @@ function makePoints(count, size, texture) {
  * Nothing is allocated per frame. `reducedMotion` is a function returning a
  * boolean; under it, and during the meteor experiment, no streak appears.
  */
-export function createShootingStars({ scene, camera, quality, reducedMotion = () => false }) {
+export function createShootingStars({ scene, camera, quality, reducedMotion = () => false, isHidden = () => false }) {
     const low = quality === "low";
     // Slower than a real one, so a child has time to tap it.
     const duration = 1.6;
@@ -177,7 +177,9 @@ export function createShootingStars({ scene, camera, quality, reducedMotion = ()
     return {
         update(dt, { active = false } = {}) {
             if (sparkleAge < SPARKLE_SECONDS) updateSparkle(dt);
-            if (active || reducedMotion()) {
+            if (active || reducedMotion() || isHidden()) {
+                sparkleAge = SPARKLE_SECONDS;
+                sparkle.points.visible = false;
                 if (age >= 0) {
                     age = -1;
                     tail.points.visible = false;

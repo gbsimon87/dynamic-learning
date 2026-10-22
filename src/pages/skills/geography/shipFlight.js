@@ -86,12 +86,14 @@ export function flightPoint(start, waypoint, end, t, sunClearance = SUN_CLEARANC
  * The flight `age` seconds in. `progress` is how far along the path the ship
  * is (eased, so it speeds up and slows down), `chase` how far the camera has
  * swung in behind the ship, and `arrive` how far it has handed over to
- * framing the planet. All three are 0..1.
+ * framing the planet. `thrust` is the ship's speed along the path, 1 at its
+ * fastest, halfway. All four are 0..1.
  */
 export function flightFrame(age, seconds) {
     const x = clamp01(age / seconds);
     return {
         progress: Math.min(1, x * x * x * (x * (x * 6 - 15) + 10)),
+        thrust: (30 * x * x * (1 - x) * (1 - x)) / 1.875,
         chase: smoothstep(0, Math.min(CHASE_IN_SECONDS, seconds * 0.4), age),
         arrive: smoothstep(ARRIVE_FROM, 1, x),
         done: age >= seconds,

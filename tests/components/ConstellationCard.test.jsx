@@ -1,0 +1,38 @@
+import React from 'react';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { afterEach, expect, test, vi } from 'vitest';
+import ConstellationCard from '../../src/pages/skills/geography/ConstellationCard.jsx';
+import { constellations } from '../../src/pages/skills/geography/constellations.js';
+import { speak, stopNarration } from '../../src/utils/speech.js';
+import { isMuted } from '../../src/components/celebration/sound/player.js';
+vi.mock('../../src/utils/speech.js', () => ({ speak: vi.fn(), stopNarration: vi.fn() }));
+vi.mock('../../src/components/celebration/sound/player.js', () => ({ isMuted: vi.fn(() => false) }));
+afterEach(() => { cleanup(); vi.clearAllMocks(); });
+const props = { constellation: constellations[0], index: 0, total: 5, muted: false, onPrevious: vi.fn(), onNext: vi.fn(), onToggleMute: vi.fn(), onExit: vi.fn(), onFindSky: vi.fn(), onShowChart: vi.fn() };
+test('chart opens the sky, which keeps navigation and explains the teaching sphere', () => {
+  const { rerender, unmount } = render(<ConstellationCard {...props} />);
+  expect(screen.getByRole('img')).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: /Find in the 3D sky/ }));
+  expect(props.onFindSky).toHaveBeenCalledTimes(1);
+  rerender(<ConstellationCard {...props} skyView />);
+  expect(screen.queryByRole('img')).toBeNull();
+  expect(screen.getByRole('dialog').getAttribute('aria-modal')).toBeNull();
+  expect(screen.getByText(/not tonight’s sky/)).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: /Back to star chart/ }));
+  expect(props.onShowChart).toHaveBeenCalledTimes(1);
+  fireEvent.click(screen.getByRole('button', { name: 'Next', exact: true }));
+  expect(props.onNext).toHaveBeenCalledTimes(1);
+  fireEvent.keyDown(window, { key: 'Escape' });
+  expect(props.onExit).toHaveBeenCalledTimes(1);
+  unmount(); expect(stopNarration).toHaveBeenCalled();
+});
+test('site mute and explorer mute suppress sky teaching narration', () => {
+  isMuted.mockReturnValue(true);
+  const { rerender } = render(<ConstellationCard {...props} skyView />);
+  expect(speak).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button', { name: 'Replay narration' }));
+  expect(speak).not.toHaveBeenCalled();
+  isMuted.mockReturnValue(false);
+  rerender(<ConstellationCard {...props} muted skyView />);
+  expect(screen.getByRole('button', { name: 'Replay narration' }).disabled).toBe(true);
+});

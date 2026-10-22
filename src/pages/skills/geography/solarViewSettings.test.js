@@ -6,6 +6,8 @@ import {
     SPEED_PRESETS,
     VIEW_SETTINGS_KEY,
     VIEW_TOGGLES,
+    CONSTELLATION_BRIGHTNESS,
+    DEFAULT_CONSTELLATION_BRIGHTNESS,
     loadViewSettings,
     saveViewSettings,
     speedPresetFor,
@@ -22,9 +24,28 @@ function fakeStorage(initial = {}) {
     };
 }
 
-test("uses a dl.-prefixed key and one toggle per default", () => {
+test("uses a dl.-prefixed key and one toggle per boolean default", () => {
     assert.equal(VIEW_SETTINGS_KEY, "dl.solarView");
-    assert.deepEqual(VIEW_TOGGLES.map((t) => t.key).sort(), Object.keys(DEFAULT_VIEW_SETTINGS).sort());
+    const booleans = Object.keys(DEFAULT_VIEW_SETTINGS).filter((key) => typeof DEFAULT_VIEW_SETTINGS[key] === "boolean");
+    assert.deepEqual(VIEW_TOGGLES.map((t) => t.key).sort(), booleans.sort());
+});
+
+test("constellations start off, at the middle brightness", () => {
+    assert.equal(DEFAULT_VIEW_SETTINGS.constellations, false);
+    assert.equal(DEFAULT_VIEW_SETTINGS.constellationBrightness, DEFAULT_CONSTELLATION_BRIGHTNESS);
+    assert.deepEqual(CONSTELLATION_BRIGHTNESS.map((level) => level.key), ["faint", "bright", "brightest"]);
+    for (const field of ["lines", "stars", "names"]) {
+        const values = CONSTELLATION_BRIGHTNESS.map((level) => level[field]);
+        assert.ok(values[0] < values[1] && values[1] < values[2], `${field} gets brighter`);
+    }
+});
+
+test("a known brightness round-trips; an unknown one falls back", () => {
+    const storage = fakeStorage();
+    saveViewSettings({ ...DEFAULT_VIEW_SETTINGS, constellations: true, constellationBrightness: "brightest" }, storage);
+    assert.deepEqual(loadViewSettings(storage), { ...DEFAULT_VIEW_SETTINGS, constellations: true, constellationBrightness: "brightest" });
+    const odd = fakeStorage({ [VIEW_SETTINGS_KEY]: JSON.stringify({ constellationBrightness: "blinding" }) });
+    assert.deepEqual(loadViewSettings(odd), DEFAULT_VIEW_SETTINGS);
 });
 
 test("defaults when storage is empty", () => {
