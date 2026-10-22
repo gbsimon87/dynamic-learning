@@ -1131,6 +1131,12 @@ phased roadmap, and is the progress tracker (§11). What exists now:
   `fov` (put back by `end()`). While `hidesScenery()`, `animate()` hides
   labels, orbit lines, the belt, the star dots and the sky. React mode
   `"palebluedot"`.
+- *Fly the rocket* (`SteeringGame.jsx`, game in `steeringFlight.js`, logic in
+  `steeringRound.js`): the Phase 2 steering test, opened from the toolbar.
+  It's a separate overlay with its own canvas and renderer; `setPaused(true)`
+  stops the Solar System drawing (and hides Tweakpane) while it's open.
+  Import `./SteeringGame.jsx` with its extension. The toolbar's Reset moved
+  into the My view drawer (`onReset`) to make room.
 - *The ISS* (`issStation.js`, orbit in `issOrbit.js`): circles Earth every
   12 s on the world clock, parented to Earth's `root` (not `body`), hidden
   during the meteor; tapping it gives one spoken line.

@@ -339,7 +339,9 @@ feature goes in exactly one of these places:
 | **Settings drawer** (#82) | Toggles and preferences | Orbits, names, Milky Way (#9), Silly faces (#32), speed (#4), Reset |
 | **Nowhere** | Secrets, found by looking and tapping | Sun sneeze (#24), fact sparkles (#31), Golden Record (#75), shooting-star wishes (#8) |
 
-Reset moves into the drawer once Fly takes its place on the toolbar. Sound
+Reset moves into the drawer once Fly takes its place on the toolbar. Done
+2026-10-22: "Fly the rocket" took the slot and Reset is at the bottom of My
+view. Sound
 needs no new switch: the navbar's site-wide sound switch already exists, and
 effects (#27) and music (#28, #105) follow it. The tour's own narration mute
 stays as it is. Tweakpane stays visible for grown-ups, because it covers tuning
@@ -424,7 +426,7 @@ Tick one off here when it's done.
 | 2 | **Arrival sounds: yes or no** (#27) | Decide whether Skills Mode may make sounds at all (it's silent by design today). If yes, pick a whoosh and a chime by ear in [`mixkit-audition.html`](sounds/mixkit-audition.html) | #27, and later the lift-off rumble (#35) and music (#28) |
 | 3 | **The old sky** | Either find where the six `cubeMap/` images came from so they can be credited, or say "make the Milky Way the default" and they get deleted. Recommended: the second | Phase 0 asset checklist |
 | 4 | **Phase 1 playtest** | 2–3 children, each with a parent present and agreeing, open the page for the first time. Watch the first ten seconds: do they react, and what do they tap? | Phase 1's exit. The order of Phase 2's remaining items |
-| 5 | **Steering spike** (Phase 2) | The same children try both steering styles on the test page at `/spikes/steering.html` for about five minutes each. Note which one they manage without help. Steps under ⏳ *Steering spike* in Phase 2 | Phase 2's exit. The control scheme for #83 free flight |
+| 5 | **Steering spike** (Phase 2) | The same children try both steering styles in **🕹 Fly the rocket** on the Solar System page, about five minutes each. Note which one they manage without help. Steps under ⏳ *Steering spike* in Phase 2. You tried it yourself on 2026-10-22 (keyboard, desktop and phone width) and are happy with it for now | Phase 2's exit. The control scheme for #83 free flight |
 | 6 | **Odd toggle, once** | While testing Phase 1b, Orbit lines turned off and the Sun message appeared with no tap. It couldn't be repeated. Say if you ever see it | Nothing yet |
 | 7 | **Push and merge** | `feat/solar-system` is only on this Mac. Say when to push it and open a pull request | Getting any of this onto learnwithbix.com |
 
@@ -730,25 +732,33 @@ and phone frame time stays within the Phase 0 baseline.
     visible every frame, overriding anything that hid it.
   - **Found, not fixed:** on narrow screens the toolbar's Tour button's only
     accessible name is "▶", because its text label is hidden there.
-- ⏳ **Steering spike** (2026-10-22). The throwaway test page is built:
-  [`public/spikes/steering.html`](../public/spikes/steering.html), one file,
-  not linked from the app, and it stores and sends nothing. A ship and five
+- ⏳ **Steering spike** (2026-10-22). Now in the app: **🕹 Fly the rocket**
+  on the Solar System page's toolbar opens it over the page, and Back or
+  Escape returns. The Solar System stops drawing while it's open, so a phone
+  isn't running two 3D scenes
+  ([`SteeringGame.jsx`](../src/pages/skills/geography/SteeringGame.jsx), the
+  game in [`steeringFlight.js`](../src/pages/skills/geography/steeringFlight.js),
+  round and notes logic in
+  [`steeringRound.js`](../src/pages/skills/geography/steeringRound.js)). It
+  stores and sends nothing. The first version was a separate test page,
+  `public/spikes/steering.html`, now removed. A ship and five
   coloured planets; "Fly to the RED planet!", five targets a round. Two
   styles, switched at the top: **A** an on-screen joystick plus a big GO!
   button (or arrow keys and Space), **B** tap where to go. Both bounce gently
   off planets, can't get lost (a soft edge and an arrow pointing to the
   target), and have no way to fail. A small **Notes** button (top right) shows
   the grown-up each target's time, bumps, and let-gos (A) or taps (B), and
-  copies a summary. It needs the internet, because it loads three.js from a CDN.
-  To run it: `npm run build`, `npx vite preview --host`, then open
-  `<address>/spikes/steering.html` on a tablet or phone on the same Wi-Fi (see
-  the phone baseline steps in Phase 0 if it won't connect). Each child tries
-  B first (easier), then A, about five minutes each. Write down which style
-  they managed without help and paste the Notes summary here. **Delete
-  `public/spikes/` once it's decided**, so it doesn't stay on the live site.
+  copies a summary. To playtest on a tablet before it's deployed:
+  `npm run build`, `npx vite preview --host`, then open
+  `<address>/solar-system` on the same Wi-Fi (see the phone baseline steps in
+  Phase 0 if it won't connect) and tap 🕹. Each child tries B first (easier),
+  then A, about five minutes each. Write down which style they managed
+  without help and paste the Notes summary here. Once Phase 5 has chosen,
+  this becomes #83 free flight.
   - Known limit: in B you can only tap inside the current view, so turning
     right round takes several taps.
-  - **Run 1** (2026-10-22; who played and on what device not yet noted).
+  - **Run 1** (2026-10-22): Simon, on a computer with the keyboard, at
+    desktop and phone width; happy with it for now.
     A, joystick: 4 of 5 targets in 34.3 s, about 8½ s each, 4 bumps, and
     GO! never let go. B, tap to go: not tried. No decision yet: B still
     needs trying, and the steering pick needs 2–3 children.

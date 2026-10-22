@@ -201,6 +201,17 @@
   font-size: 1.35rem;
 }
 
+/* Reset moved here from the toolbar when "Fly the rocket" took its place
+   (docs/SOLAR_SYSTEM_IDEAS.md §8). It keeps the planets' "My view" choices. */
+.solar-settings__reset {
+  width: 100%;
+  margin-top: 0.85rem;
+  grid-auto-flow: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 @media (min-width: 720px) {
   .solar-settings__panel {
     right: 1rem;

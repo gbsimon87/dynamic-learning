@@ -63,3 +63,13 @@ it("leaves out the speed row when no handler is given", () => {
   setup();
   expect(screen.queryByRole("group", { name: "Planet speed" })).toBeNull();
 });
+
+it("offers Reset Solar System only when given a handler, and calls it", async () => {
+  setup();
+  expect(screen.queryByRole("button", { name: /Reset Solar System/ })).toBeNull();
+  const onReset = vi.fn();
+  document.body.innerHTML = "";
+  setup({ onReset });
+  await userEvent.click(screen.getByRole("button", { name: /Reset Solar System/ }));
+  expect(onReset).toHaveBeenCalledTimes(1);
+});

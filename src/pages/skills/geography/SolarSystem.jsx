@@ -34,6 +34,8 @@ import { constellations } from "./constellations.js";
 import ConstellationCard from "./ConstellationCard.jsx";
 import SolarSettingsDrawer from "./SolarSettingsDrawer.jsx";
 import PlanetPlayCard from "./PlanetPlayCard.jsx";
+// With the extension: steeringFlight.js once differed from this only by case.
+import SteeringGame from "./SteeringGame.jsx";
 import { DEFAULT_SPEED, SPEED_PRESETS, loadViewSettings, saveViewSettings, speedPresetFor } from "./solarViewSettings.js";
 import "./SolarSystem.css";
 
@@ -78,6 +80,9 @@ export default function ThreeSolarSystem() {
     const [lineUpName, setLineUpName] = useState(null);
     // The Pale Blue Dot at the end of the tour (#47): null, "flying" or "looking".
     const [paleBlueDotPhase, setPaleBlueDotPhase] = useState(null);
+    // "Fly the rocket", the steering game: its own overlay and scene, so the
+    // Solar System stops drawing while it's open.
+    const [steeringOpen, setSteeringOpen] = useState(false);
     // The constellation explorer is pure React — it never touches the scene —
     // so unlike tourState this has no mirror inside the Three.js effect.
     const [constellationState, setConstellationState] = useState({ active: false, index: 0, muted: false });
@@ -1411,6 +1416,12 @@ export default function ThreeSolarSystem() {
                 applySpeed(key);
                 pane.refresh();
             },
+            // Only reachable from the idle view, so the pane is shown again after.
+            setPaused: (value) => {
+                drawingPaused = value;
+                pane.hidden = value;
+                prevTime = performance.now() / 1000;
+            },
             setViewSetting: (key, value) => {
                 simulation[key] = value;
                 pane.refresh();
@@ -1725,8 +1736,13 @@ export default function ThreeSolarSystem() {
             }),
         })) : null;
         let lastFrameStart = 0;
+        let drawingPaused = false;
 
         function animate() {
+            if (drawingPaused) {
+                animationFrameId = requestAnimationFrame(animate);
+                return;
+            }
             const frameStart = performance.now();
             const now = frameStart / 1000;
             let dt = now - prevTime;
@@ -1936,6 +1952,7 @@ export default function ThreeSolarSystem() {
     // the sources of truth, so these four modes cannot drift out of sync.
     let mode = "idle";
     if (meteorActive) mode = "meteor";
+    else if (steeringOpen) mode = "steering";
     else if (lineUpName) mode = "lineup";
     else if (paleBlueDotPhase) mode = "palebluedot";
     else if (tourState.active) mode = "tour";
@@ -2072,10 +2089,24 @@ export default function ThreeSolarSystem() {
                     <button
                         type="button"
                         className="solar-tour-launch"
+                        aria-label="Tour the Solar System"
                         onClick={() => sceneApiRef.current?.start()}
                     >
                         <span className="solar-tour-launch__icon" aria-hidden="true">▶</span>
                         <span className="solar-action-label">Tour the Solar System</span>
+                    </button>
+                    <button
+                        type="button"
+                        className="solar-tour-launch"
+                        aria-label="Fly the rocket"
+                        disabled={!sceneReady}
+                        onClick={() => {
+                            sceneApiRef.current?.setPaused(true);
+                            setSteeringOpen(true);
+                        }}
+                    >
+                        <span className="solar-tour-launch__icon" aria-hidden="true">🕹</span>
+                        <span className="solar-action-label">Fly the rocket</span>
                     </button>
                     <button
                         type="button"
@@ -2099,17 +2130,6 @@ export default function ThreeSolarSystem() {
                     >
                         <span className="solar-tour-launch__icon" aria-hidden="true">☄</span>
                         <span className="solar-action-label">Launch meteor</span>
-                    </button>
-                    <button
-                        ref={resetButtonRef}
-                        type="button"
-                        className="solar-tour-launch solar-tour-launch--reset"
-                        aria-label="Reset Solar System"
-                        disabled={!sceneReady}
-                        onClick={() => sceneApiRef.current?.resetSolarSystem()}
-                    >
-                        <span className="solar-tour-launch__icon" aria-hidden="true">↻</span>
-                        <span className="solar-action-label">Reset Solar System</span>
                     </button>
                 </div>
             )}
@@ -2151,6 +2171,14 @@ export default function ThreeSolarSystem() {
                         🚀 Fly home
                     </button>
                 </aside>
+            )}
+            {steeringOpen && (
+                <SteeringGame
+                    onClose={() => {
+                        setSteeringOpen(false);
+                        sceneApiRef.current?.setPaused(false);
+                    }}
+                />
             )}
             {mode === "lineup" && (
                 <div className="solar-lineup" role="region" aria-label="The planets lined up by size">
@@ -2318,6 +2346,10 @@ export default function ThreeSolarSystem() {
                     onChange={(key, value) => sceneApiRef.current?.setViewSetting(key, value)}
                     speed={speed}
                     onSpeedChange={(key) => sceneApiRef.current?.setSpeed(key)}
+                    onReset={() => {
+                        setSettingsOpen(false);
+                        sceneApiRef.current?.resetSolarSystem();
+                    }}
                 />
             )}
             {mode === "idle" && <div

@@ -23,7 +23,7 @@ function CloseGlyph() {
     );
 }
 
-export default function SolarSettingsDrawer({ settings, onChange, speed, onSpeedChange, open, onOpenChange }) {
+export default function SolarSettingsDrawer({ settings, onChange, speed, onSpeedChange, onReset, open, onOpenChange }) {
     const triggerRef = useRef(null);
     const firstSwitchRef = useRef(null);
     const wasOpen = useRef(false);
@@ -97,6 +97,12 @@ export default function SolarSettingsDrawer({ settings, onChange, speed, onSpeed
                                 ))}
                             </div>
                         </div>
+                    )}
+                    {onReset && (
+                        <button type="button" className="solar-settings__speed-button solar-settings__reset" onClick={onReset}>
+                            <span className="solar-settings__speed-icon" aria-hidden="true">↻</span>
+                            Reset Solar System
+                        </button>
                     )}
                 </section>
             )}
