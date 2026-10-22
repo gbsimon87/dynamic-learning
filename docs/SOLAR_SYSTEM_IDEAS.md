@@ -407,7 +407,7 @@ machine). Each is large, and earlier items deliver most of the same feeling.
 |---|---|---|
 | 0 — Foundations | Code done; ⏳ waiting on the phone baseline | Started 2026-10-21. Phase 1 can begin: only #5 bloom waits on the phone numbers |
 | 1 — The first ten seconds | Done except ⏳ #27 (sound decision) and ⏳ #5 bloom (phone numbers) | Started 2026-10-22 |
-| 2 — Meet your ship | In progress: ✅ #34, #50, #35 | Started 2026-10-22 |
+| 2 — Meet your ship | In progress: ✅ #34, #50, #35, #62 | Started 2026-10-22 |
 | 3 — A living Solar System | Not started | |
 | 4 — Missions and stars | Not started | |
 | 5 — Take the controls | Not started | |
@@ -698,6 +698,19 @@ and phone frame time stays within the Phase 0 baseline.
   A tap or a drag during the countdown launches at once; Escape, search,
   Reset and the meteor cancel it. Under reduced motion the tour starts as
   before. No rumble yet: sound waits on the #27 decision.
+- ✅ **#62 line-up by size** (2026-10-22). A "📏 How big is it really?"
+  button on each planet's card (and Pluto's) opens the eight planets and Pluto
+  side by side at their true sizes, with the edge of a Sun 109 times wider
+  than Earth filling the left of the screen. It opens on the planet you came
+  from, then pulls back to show the whole row, so Earth shrinks to a dot
+  beside Jupiter. Drag to slide along, pinch or scroll to zoom; labels stay
+  the same size on screen and hide when they'd run into a neighbour. It's a
+  separate small scene drawn instead of the Solar System
+  ([`lineUp.js`](../src/pages/skills/geography/lineUp.js), sizes and framing in
+  [`lineUpLayout.js`](../src/pages/skills/geography/lineUpLayout.js)), so
+  nothing in the real scene moves. Back or Escape returns to the card. The
+  line is read aloud with the site's sound on. Under reduced motion it opens
+  on the whole row. Checked at 1200×700 and 390×844.
 - **#34 autopilot ship** replaces the camera-only fly-to used by search, tap
   and the tour. Keep the old camera move behind reduced motion. Write tests
   first, because three existing features change at once.

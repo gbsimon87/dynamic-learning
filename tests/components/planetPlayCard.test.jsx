@@ -68,3 +68,12 @@ it("stops narration on unmount", () => {
   unmount();
   expect(stopNarration).toHaveBeenCalled();
 });
+
+it("offers the line-up by size only when asked to, and opens it", async () => {
+  const onLineUp = vi.fn();
+  const { rerender } = render(<PlanetPlayCard bodyName="Earth" />);
+  expect(screen.queryByRole("button", { name: /How big is it really/ })).toBeNull();
+  rerender(<PlanetPlayCard bodyName="Earth" onLineUp={onLineUp} />);
+  await userEvent.click(screen.getByRole("button", { name: /How big is it really/ }));
+  expect(onLineUp).toHaveBeenCalledTimes(1);
+});

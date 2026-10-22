@@ -24,6 +24,8 @@ import { createIss } from "./issStation.js";
 import { ISS_LINE } from "./issOrbit.js";
 import { createLiftOff } from "./liftOff.js";
 import { COUNT_WORDS } from "./liftOffTimeline.js";
+import { createLineUp } from "./lineUp.js";
+import { LINE_UP_LINE, TRUE_RADII_KM } from "./lineUpLayout.js";
 import { isMuted } from "../../../components/celebration/sound/player.js";
 import { speak, stopNarration } from "../../../utils/speech.js";
 import { constellations } from "./constellations.js";
@@ -70,6 +72,8 @@ export default function ThreeSolarSystem() {
     const [tourState, setTourState] = useState({ active: false, index: 0, total: 0, muted: false });
     // The lift-off countdown before the tour (#35): 3, 2, 1, 0 for "Lift off!", or null.
     const [countdown, setCountdown] = useState(null);
+    // The planet the line-up by size (#62) was opened from, or null when it's closed.
+    const [lineUpName, setLineUpName] = useState(null);
     // The constellation explorer is pure React — it never touches the scene —
     // so unlike tourState this has no mirror inside the Three.js effect.
     const [constellationState, setConstellationState] = useState({ active: false, index: 0, muted: false });
@@ -1109,6 +1113,7 @@ export default function ThreeSolarSystem() {
 
         function resetSolarSystem() {
             if (disposed || resetting) return;
+            closeLineUp();
             warpIn?.skip();
             resetting = true;
             stopNarration();
@@ -1283,6 +1288,7 @@ export default function ThreeSolarSystem() {
 
         function focusEntry(entry, fromTour = false, { card = true } = {}) {
             if (!entry || experiment?.isActive() || resetting) return;
+            closeLineUp();
             warpIn?.skip();
             if (!fromTour) liftOff.cancel();
             if (!fromTour && tourActive) stopTour();
@@ -1392,6 +1398,8 @@ export default function ThreeSolarSystem() {
             toggleNarration: toggleTourNarration,
             exit: (hideCard = false) => stopTour(hideCard),
             collapsePane: () => { pane.expanded = false; },
+            openLineUp,
+            closeLineUp,
             setSpeed: (key) => {
                 applySpeed(key);
                 pane.refresh();
@@ -1406,7 +1414,7 @@ export default function ThreeSolarSystem() {
         setSceneReady(true);
 
         function onClick(event) {
-            if (experiment?.isActive()) return;
+            if (experiment?.isActive() || lineUp.isActive()) return;
             if (liftOff.isCounting()) {
                 liftOff.skip();
                 return;
@@ -1439,6 +1447,8 @@ export default function ThreeSolarSystem() {
         }
 
         function onWheel(event) {
+            // The line-up has its own controls, which need this event.
+            if (lineUp.isActive()) return;
             event.preventDefault();
             event.stopImmediatePropagation();
             if (experiment?.isActive()) return;
@@ -1492,6 +1502,10 @@ export default function ThreeSolarSystem() {
 
         function onKeyDown(e) {
             if (e.key !== "Escape") return;
+            if (lineUp.isActive()) {
+                closeLineUp();
+                return;
+            }
             if (experiment?.isActive()) {
                 resetSolarSystem();
                 return;
@@ -1596,6 +1610,38 @@ export default function ThreeSolarSystem() {
             onLaunch: () => visitTourPlanet(0, isMuted() ? "" : `${COUNT_WORDS[0]} `),
         }));
 
+        // Line-up by size (#62): its own small scene, drawn instead of this one while open.
+        const lineUp = modules.add("lineUp", createLineUp({
+            renderer,
+            getSky: () => scene,
+            names: planetData.map(({ name }) => name),
+            materialFor: (name) => planetData.find((planet) => planet.name === name).material,
+            sunMaterial: materials.sun,
+            makeRings: createSaturnRings,
+            makeLabel: (text, color) => createLabel(text, 64, color),
+            reducedMotion: () => reducedQuery.matches,
+        }));
+
+        function openLineUp(name) {
+            if (experiment?.isActive() || resetting || lineUp.isActive()) return;
+            warpIn?.skip();
+            clearControlDamping();
+            controls.enabled = false;
+            pane.hidden = true;
+            lineUp.open(name);
+            setLineUpName(name);
+            if (!isMuted()) speak(LINE_UP_LINE);
+        }
+
+        function closeLineUp() {
+            if (!lineUp?.isActive()) return;
+            lineUp.close();
+            controls.enabled = true;
+            pane.hidden = false;
+            stopNarration();
+            setLineUpName(null);
+        }
+
         // Warp-in arrival (#1), once per visit. Anything the child does skips it.
         const warpIn = shouldPlayWarp({ reducedMotion: reducedQuery.matches }) ? modules.add("warpIn", createWarpIn({
             camera,
@@ -1699,7 +1745,8 @@ export default function ThreeSolarSystem() {
             }
             updateSunGlow();
             modules.update(dt, { active });
-            pipeline.render();
+            if (lineUp.isActive()) lineUp.render();
+            else pipeline.render();
             if (frameReadout && lastFrameStart > 0 && !document.hidden) {
                 frameReadout.record(frameStart - lastFrameStart, performance.now() - frameStart);
             }
@@ -1817,6 +1864,7 @@ export default function ThreeSolarSystem() {
     // the sources of truth, so these four modes cannot drift out of sync.
     let mode = "idle";
     if (meteorActive) mode = "meteor";
+    else if (lineUpName) mode = "lineup";
     else if (tourState.active) mode = "tour";
     else if (countdown !== null) mode = "liftoff";
     else if (constellationState.active) mode = "constellations";
@@ -2011,6 +2059,19 @@ export default function ThreeSolarSystem() {
                     {meteorError || phaseMessages[meteorPhase]}
                 </p>
             )}
+            {mode === "lineup" && (
+                <div className="solar-lineup" role="region" aria-label="The planets lined up by size">
+                    <button
+                        type="button"
+                        className="solar-tour-launch solar-lineup__back"
+                        onClick={() => sceneApiRef.current?.closeLineUp()}
+                    >
+                        <span className="solar-tour-launch__icon" aria-hidden="true">←</span>
+                        <span>Back</span>
+                    </button>
+                    <p className="solar-lineup__caption">{LINE_UP_LINE}</p>
+                </div>
+            )}
             {countdown !== null && (
                 <p key={countdown} className={`solar-countdown${countdown === 0 ? " solar-countdown--go" : ""}`} role="status">
                     {countdown === 0 ? COUNT_WORDS[0] : countdown}
@@ -2058,7 +2119,12 @@ export default function ThreeSolarSystem() {
                         {selectedPlanet.summary && !tourState.active && (
                             <p className="solar-info-card__summary">{selectedPlanet.summary}</p>
                         )}
-                        {!tourState.active && <PlanetPlayCard bodyName={selectedPlanet.name} />}
+                        {!tourState.active && (
+                            <PlanetPlayCard
+                                bodyName={selectedPlanet.name}
+                                onLineUp={TRUE_RADII_KM[selectedPlanet.name] ? () => sceneApiRef.current?.openLineUp(selectedPlanet.name) : undefined}
+                            />
+                        )}
                         {tourState.active && (
                             <div className="solar-tour-narration">
                                 <span aria-hidden="true">{tourState.muted ? "◼" : "♪"}</span>

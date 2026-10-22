@@ -13,8 +13,11 @@ function yearLine(name) {
     return `A year on ${name} is ${years.toFixed(1)} Earth years long.`;
 }
 
-/** Two small games on a planet card: your age there, and Bix's weight there. */
-export default function PlanetPlayCard({ bodyName }) {
+/**
+ * Two small games on a planet card: your age there, and Bix's weight there.
+ * With `onLineUp`, a third button opens the line-up by size (#62).
+ */
+export default function PlanetPlayCard({ bodyName, onLineUp }) {
     // Open panel and chosen age are keyed to the body so they reset when it changes.
     const [state, setState] = useState({ body: bodyName, panel: null, age: null });
     const current = state.body === bodyName ? state : { body: bodyName, panel: null, age: null };
@@ -70,6 +73,11 @@ export default function PlanetPlayCard({ bodyName }) {
                         onClick={() => toggle("weight")}
                     >
                         <span aria-hidden="true">⚖️</span> How heavy would Bix be?
+                    </button>
+                )}
+                {onLineUp && (
+                    <button type="button" className="planet-play__toggle" onClick={onLineUp}>
+                        <span aria-hidden="true">📏</span> How big is it really?
                     </button>
                 )}
             </div>

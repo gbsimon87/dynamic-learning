@@ -1120,6 +1120,11 @@ phased roadmap, and is the progress tracker (§11). What exists now:
   `visitTourPlanet(0)`. The countdown is React state (`countdown`, mode
   `"liftoff"`). A tap or drag launches at once; `stopTour()` and a
   non-tour `focusEntry` cancel it.
+- *Line-up by size* (`lineUp.js`, layout in `lineUpLayout.js`): its own
+  scene, camera and pan-only OrbitControls, drawn instead of the Solar System
+  while open (`lineUp.render()` in `animate()`); the main controls are
+  disabled and `onWheel` steps aside so the line-up's controls get the event.
+  Opened from `PlanetPlayCard`'s `onLineUp`; React mode `"lineup"`.
 - *The ISS* (`issStation.js`, orbit in `issOrbit.js`): circles Earth every
   12 s on the world clock, parented to Earth's `root` (not `body`), hidden
   during the meteor; tapping it gives one spoken line.
