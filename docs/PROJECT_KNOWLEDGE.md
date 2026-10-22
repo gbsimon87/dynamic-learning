@@ -849,9 +849,14 @@ Browser-local keys, none of them identity:
   credential, hash or token, and a test asserts that. It does not skip
   authentication; the 30-day session cookie is what usually keeps a family
   signed in, and when `/login` does appear the password is genuinely required.
-- `dl.solarView` = `{ showOrbits, showLabels, showMoonLabels, milkyWay }`, the
-  Solar System's "My view" switches. A per-device view preference, not learner
+- `dl.solarView` = `{ showOrbits, showLabels, showMoonLabels, milkyWay,
+  constellations, constellationBrightness }`, the Solar System's "My view"
+  switches; `constellationBrightness` is `"faint"`, `"bright"` or
+  `"brightest"`, and any other value loads as the default. A per-device view preference, not learner
   progress; safe to lose. The speed buttons are deliberately not saved.
+- `dl.solarMissions` = `{ version: 1, completed: [missionId, ...] }`, six
+  optional Solar System mission stamps. Browser-wide and shared across profiles;
+  retained through sign-out, with no curriculum progress or identity fields.
 - `dl.solarWarpSeen` = `"1"` in `sessionStorage`, so the Solar System's warp-in
   plays once per visit. Safe to lose.
 
@@ -1005,7 +1010,7 @@ readable. On phones, narration and Previous/Next controls use icon buttons with
 accessible labels; the card's × is the sole exit control. The pure
 `constellationProjection.js` module converts it to a proportion-preserving
 gnomonic chart, handles the 0h/24h right-ascension seam, and also exposes unit
-vectors for a future Three.js sky stage.
+vectors for the Three.js sky stage.
 Constellation mode is derived from the existing meteor/tour state, dims but does
 not stop the scene, hides exploration overlays, and prevents meteor launch. The
 Solar System control panel automatically collapses when either the planet tour
@@ -1013,6 +1018,23 @@ or constellation explorer begins, leaving only its compact title bar. The
 chart and data contracts have pure tests. Desktop, 375 px, both themes,
 reduced motion, narration controls, tour/meteor/search regressions, and both exit
 paths were browser-verified with no runtime errors. No dependencies were added.
+
+**3D constellation sky (#67 / backlog #19, 2026-10-22):** each existing chart
+has **Find in the 3D sky**. `constellationSkyLayout.js` converts catalogue J2000
+RA/Dec into a right-handed y-up ecliptic frame (east left from inside) and fits
+all five figures with space reserved for bottom or landscape-side controls. `constellationSky.js`
+owns the 2,700-unit star sphere, magnitude-sized shader points, connecting lines,
+focused sprite labels with overlap suppression, and a separate look-around
+OrbitControls instance. New controls turn the existing camera in place; the
+module saves/restores pose, up, FOV and view offset. Reduced motion skips the
+short turn; direct dragging has no inertia. Previous/Next, recenter, Back to
+chart and Close/Escape are available with 48px targets. Site and explorer mute
+suppress narration. Decorative star dots dim and the unaligned photo hides while looking at
+the coordinate-based patterns; both restore on exit. Comet tails and ambient shooting stars hide during sky focus. Planet tap/wheel handlers
+step aside; other scene modes hide the new layer. This is a direction model,
+not true stellar distances or a tonight/location forecast. No new assets,
+dependencies, persistence or progress changes. Sources remain the existing
+HYG/Stellarium catalogue; teaching follows the IAU constellation explanation.
 
 **Solar System meteor experiment (implementation in progress, 2026-09-20):**
 `/solar-system` keeps Tour, Constellations, Launch meteor and Reset Solar System
@@ -1078,8 +1100,9 @@ phased roadmap, and is the progress tracker (§11). What exists now:
   credited on `/credits`. The `cubeMap/` sky still has no recorded source.
 - *My view drawer* (`SolarSettingsDrawer.jsx`, `solarViewSettings.js`): a gear
   in the bottom-right corner, shown only when the launch buttons are, with big
-  switches for orbit lines, planet names, moon names and the Milky Way sky
-  (saved as `dl.solarView`, §4.7) and Stop / Slow / Fast speed buttons (not saved; Reset
+  switches for orbit lines, planet names, moon names, the Milky Way sky and
+  constellations, with Faint / Bright / Brightest buttons while constellations
+  are on (saved as `dl.solarView`, §4.7), and Stop / Slow / Fast speed buttons (not saved; Reset
   returns to Slow). Tweakpane stays for grown-ups and folds away when the
   drawer opens.
 - *Planet card games* (`PlanetPlayCard.jsx`, `planetPlay.js`): "How old would
@@ -1161,6 +1184,77 @@ phased roadmap, and is the progress tracker (§11). What exists now:
 Still open: the phone baseline and the bloom decision (#5, the last Phase 1b
 item), and #27 arrival sounds. Skills Mode is silent by design (see
 `docs/sounds/README.md`), so #27 needs a decision and sounds chosen by ear.
+
+Solar System Phase 3 began on 2026-10-22 with Earth's day/night and city
+lights (#48). `earthDayNight.js` patches the existing standard material using
+world-space sunlight and the already credited night map, without another render
+pass. The Earth card includes read-aloud teaching copy, also used by the tour,
+covering rotation, day/night and the model's accelerated time. Moon phases (#54) followed on 2026-10-22: `MoonPhaseCard` on Earth and Moon
+cards uses `moonPhase.js` to draw a north-up 128px view from the actual scene
+positions. It samples only while open, cleans up its timer/narration, and follows
+existing pause/speed/reset controls. Read-aloud distinguishes phases from eclipses
+and labels this as accelerated model time, not a real-sky forecast. Pure tests
+check the phase geometry and illuminated pixel area. No new assets, persistence,
+or render passes. Earth's Moon now uses `tidallyLocked: true` in `getBodyPose` (2026-10-22):
+rotation follows the orbit angle plus a texture-alignment offset, independently
+of the adult rotation-speed control. Only Earth's Moon opts in. Pure tests
+check inward-facing alignment over multiple orbits and through pause, speed
+changes and reset; Moon facts and phase narration explain one turn per orbit.
+Northern/southern lights (#55) followed on 2026-10-22. `earthAurora.js` adds
+polar ribbon meshes to Earth's body with green/pink shader curtains that fade
+in daylight. It uses the shared elapsed clock for pause/reset and freezes the
+shader for reduced motion. Resize swaps 679 vertices per pole for 132 on the
+phone tier. `AuroraCard` adds an Earth-card explanation/read-aloud, respects
+site/tour mute and stops its own speech on close/unmount. The display is labelled
+as enlarged and illustrative; content source: https://science.nasa.gov/sun/auroras/.
+No new textures, render passes, dependencies or stored data. Real-device checks
+remain open. Comets (#41) followed on 2026-10-22. `cometOrbit.js` computes a compressed,
+inclined retrograde Halley-like ellipse and anti-solar tail centre lines;
+`halleyComet.js` owns the nucleus, generated coma texture and two camera-facing
+ribbons. The gas tail stays radial, dust curves, and activity fades with distance.
+The shared orbit clock drives pause/speed/reset; the effect hides during meteor,
+size line-up and Pale Blue Dot. Phone quality uses 12 segments per ribbon versus
+32 on standard and updates on resize. Halley's Comet is tappable/searchable,
+with a comet-specific info card, narration and existing ship/follow support.
+The card labels the orbit, scale and time as illustrative rather than a current
+position prediction. Facts: https://spaceplace.nasa.gov/comets/en/ and
+https://science.nasa.gov/solar-system/comets/1p-halley/ . No new persisted data
+or dependencies. Saturn's rings up close (#57) followed on 2026-10-22. `saturnRingDetail.js`
+shares band definitions with the distant rings and cross-fades to 3,200 instanced
+ice pieces (900 on phones) between six and three Saturn radii from the camera.
+Seeded pieces preserve model gaps; inner orbits advance faster using shared
+orbit time. Reduced motion holds the pieces still, and resize rebuilds the
+instance count. The module restores original band opacity and frees resources
+on disposal. Saturn card/tour copy explains ice particles and enlarged size/
+thickness with narration. No new assets, dependencies or persistence.
+The Phase 3 core features are built; its wider moving-surprise exit and physical
+device checks remain open. Roadmap details live in
+`SOLAR_SYSTEM_IDEAS.md`.
+
+Solar System missions (#73, 2026-10-22): `SolarMissions` offers six optional,
+replayable clue journeys using existing search/tap arrivals. Clues avoid changing
+moon-count rankings. Wrong destinations remain freely explorable; success earns
+one deduplicated stamp. `solarMissions.js` owns matching and guarded storage.
+Explicit Skills persistence decision: browser-wide `dl.solarMissions` stores
+`{ version: 1, completed: [missionId, ...] }`, separate from curriculum progress;
+shared across profiles, retained through sign-out, no personal information.
+Unavailable storage leaves missions playable and shows a save notice. No changes
+to learner progress, unlocking or existing keys. Manual read-aloud follows site
+mute; the shared Dialog supplies keyboard/focus handling. Missions hide in other
+modes and while flying, and resume afterwards. The full passport (#74) is next.
+`SOLAR_SYSTEM_IDEAS.md` was audited and shortened, retaining all 113 IDs and
+external checks without treating Phase 3’s wider exit as complete.
+
+Constellations in the sky, screen-sized badges and flight streaks
+(2026-10-22): with "Constellations" on, `constellationSky.js` draws every figure's
+lines, stars and a quieter name badge on a sky sphere centred on the camera,
+behind the planets (depth-tested), at the drawer's brightness; off, the figures
+are hidden entirely. Opening a figure from the star chart keeps the focused
+view. Planet, moon and constellation name badges keep one on-screen size
+(`labelLayout.js`: 26px tall, 22px under 720px wide), and where planet or moon
+badges overlap, the body nearer the camera keeps its name. `warpStreaks.js` is
+the warp-in's streak tunnel, shared with every ship flight, which drives it from
+`ship.thrust()` (0 at take-off and landing, 1 at top speed).
 
 ### Accounts — built 2026-09-15, rebuilt 2026-09-19
 Sign-up (`/signup`), sign-in (`/login`), child profile picker (`/profiles`), and an
@@ -3735,7 +3829,7 @@ not by itself deliver a standalone game or its proposed reward flow.
 | #16 Year 1–2 English | [Curriculum registry](../src/data/curriculumRegistry.js), English datasets/challenge directories. | Completed 2026-10-11: Year 1 has 38 topics / 152 challenges and Year 2 has 39 / 156. Years 1–4 English are registered and implemented. |
 | #17 Meteor benchmark | [Meteor controller](../src/pages/skills/geography/meteorExperiment.js), [tracker](solar-system-meteor/IMPLEMENTATION_TRACKER.md). | Feature exists; the required physical phone/tablet timing evidence is explicitly outstanding. |
 | #18 Science diagrams | [Follow-up checklist](science-curriculum/DIAGRAM_REVIEW_FOLLOWUPS.md), diagram components and `scripts/science-assets/`. | All 11 checklist items remain open in source: dog skeleton, leaf water, muscle geometry/titles, labels/Plants, renderer sandboxing, checksums, cache path validation, SVG stripping and built licence notices. |
-| #19 3D constellations | [SolarSystem](../src/pages/skills/geography/SolarSystem.jsx), [ConstellationCard](../src/pages/skills/geography/ConstellationCard.jsx), projection modules. | Card explicitly stays outside the scene; no celestial-sphere constellation controller or real-sky action. |
+| #19 3D constellations | [SolarSystem](../src/pages/skills/geography/SolarSystem.jsx), [ConstellationCard](../src/pages/skills/geography/ConstellationCard.jsx), projection modules. | Built 2026-10-22: chart-to-sky action, celestial-sphere controller, look-around and camera restoration. Physical-device checks remain. |
 | #20 Standalone game list | [All routes](../src/main.jsx), [Skills hub](../src/pages/skills/SkillsPage.jsx) and existing standalone implementations; individual inventory below. | None of its 21 proposed games is implemented as the described standalone activity. |
 | #22 Certificates | [CertificateStep](../src/components/celebration/steps/CertificateStep.jsx), [celebration steps](../src/data/celebrationSteps.js), [TrophyRoom](../src/pages/trophies/TrophyRoom.jsx). | Year print/save exists; no topic/category certificate, avatar/signature/skill statement or reprint entry point. **Shipped 2026-10-10:** §5, "Certificates"; row removed. |
 | #23 Jokes/reactions | [Mascot](../src/components/mascot/Mascot.jsx), [celebration messages](../src/data/celebrationMessages.js). | Tap-to-cheer, pointer following and combo reactions exist; no joke catalogue/read-aloud or long-tap/five-tap secrets. **Shipped 2026-10-10:** §5, "Bix's jokes"; row removed. |

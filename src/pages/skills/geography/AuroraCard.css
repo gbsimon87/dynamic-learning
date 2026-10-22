@@ -1,0 +1,25 @@
+.solar-aurora-card {
+  margin-top: 0.75rem;
+  padding: 0.65rem;
+  border-radius: 0.8rem;
+  background: var(--light-bg);
+  color: var(--light-text);
+}
+body.dark .solar-aurora-card { background: var(--dark-bg); color: var(--dark-text); }
+.solar-aurora-card summary { min-height: 48px; align-content: center; font-weight: 700; cursor: pointer; }
+.solar-aurora-card p { line-height: 1.5; }
+.solar-aurora-card button {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.65rem;
+  border: 1px solid currentColor;
+  border-radius: 0.7rem;
+  background: inherit;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.solar-aurora-card summary:focus-visible,
+.solar-aurora-card button:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.solar-aurora-card button:disabled { opacity: 0.6; cursor: default; }

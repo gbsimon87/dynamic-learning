@@ -1,4 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react";
+import { SKY_LINE } from "./constellationSkyLayout.js";
+import { isMuted } from "../../../components/celebration/sound/player.js";
 import { projectConstellation } from "./constellationProjection.js";
 import { speak, stopNarration } from "../../../utils/speech.js";
 import "./ConstellationCard.css";
@@ -9,6 +11,9 @@ const LINE_STAGGER_MS = 90;
 const STARS_DELAY_PADDING_MS = 200;
 
 export default function ConstellationCard({
+    skyView = false,
+    onFindSky,
+    onShowChart,
     constellation,
     index,
     total,
@@ -31,10 +36,10 @@ export default function ConstellationCard({
         [constellation],
     );
 
-    const spokenText = constellation.narration;
+    const spokenText = `${constellation.narration}${skyView ? ` ${SKY_LINE}` : ""}`;
 
     useEffect(() => {
-        if (muted) {
+        if (muted || isMuted()) {
             stopNarration();
             return undefined;
         }
@@ -60,12 +65,12 @@ export default function ConstellationCard({
 
     return (
         <aside
-            className="solar-constellation"
+            className={`solar-constellation${skyView ? " solar-constellation--sky" : ""}`}
             role="dialog"
-            aria-modal="true"
+            aria-modal={skyView ? undefined : true}
             aria-label={`${constellation.name} information`}
         >
-            <div className="solar-constellation__chart-pane">
+            {!skyView && <div className="solar-constellation__chart-pane">
                 <svg
                     className="solar-constellation__chart"
                     viewBox={`0 0 ${chart.width} ${chart.height}`}
@@ -134,7 +139,7 @@ export default function ConstellationCard({
                         })}
                     </g>
                 </svg>
-            </div>
+            </div>}
 
             <div className="solar-constellation__body">
                 <div className="solar-constellation__header">
@@ -145,6 +150,8 @@ export default function ConstellationCard({
                         <h2>{constellation.name}</h2>
                         <p className="solar-constellation__aka">{constellation.alsoKnownAs}</p>
                     </div>
+                    {skyView && <button type="button" className="solar-constellation__close"
+                        aria-label="Centre constellation" title="Centre constellation" onClick={onFindSky}>🎯</button>}
                     <button
                         ref={closeButtonRef}
                         type="button"
@@ -156,7 +163,12 @@ export default function ConstellationCard({
                     </button>
                 </div>
 
+                <button type="button" className="solar-constellation__sky-toggle"
+                    onClick={skyView ? onShowChart : onFindSky}>
+                    {skyView ? "↩ Back to star chart" : "✨ Find in the 3D sky"}
+                </button>
                 <div className="solar-constellation__scroll">
+                    {skyView && <p className="solar-constellation__description">Drag the sky to look around. {SKY_LINE}</p>}
                     <p className="solar-constellation__description">{constellation.description}</p>
                     <h3>Did you know?</h3>
                     <ul>
@@ -166,7 +178,7 @@ export default function ConstellationCard({
 
                 <div className="solar-tour-controls" aria-label="Constellation navigation">
                     <div className="solar-tour-controls__audio">
-                        <button type="button" aria-label="Replay narration" title="Replay narration" onClick={() => speak(spokenText)} disabled={muted}>
+                        <button type="button" aria-label="Replay narration" title="Replay narration" onClick={() => { if (!isMuted()) speak(spokenText); }} disabled={muted}>
                             <span className="solar-control-icon" aria-hidden="true">↻</span>
                             <span className="solar-control-label">Replay narration</span>
                         </button>

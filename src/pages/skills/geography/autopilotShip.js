@@ -110,6 +110,7 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
     let hoverClock = 0;
     let ignition = 0; // the engine burning on the pad before lift-off (#35), 0..1
     let hidden = false;
+    let thrust = 0; // 0..1 while flying, for the flame and the warp streaks
 
     // The camera looks at a planet from between the way the ship came and the
     // Sun, a little from above, so the planet is lit when it arrives.
@@ -167,6 +168,8 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
     return {
         hitTarget,
         isFlying: () => flight !== null,
+        /** How hard the engine is pushing: 0 when not flying, 1 at top speed. */
+        thrust: () => (flight ? thrust : 0),
         isBeside: (object3d) => target === object3d && !flight,
         size: () => size,
         /** Where the engine is, in world space: smoke comes from here. */
@@ -288,8 +291,7 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
             lastPosition.copy(ship.position);
             wantedTurn.setFromUnitVectors(UP, heading);
             ship.quaternion.slerp(wantedTurn, 1 - Math.exp(-12 * dt));
-            const x = flight.age / flight.seconds;
-            const thrust = (30 * x * x * (1 - x) * (1 - x)) / 1.875;
+            thrust = frame.thrust;
             flame.scale.set(1, 0.4 + thrust * 1.6, 1);
             flameMaterial.opacity = 0.35 + thrust * 0.6;
 

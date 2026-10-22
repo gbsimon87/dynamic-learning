@@ -7,13 +7,26 @@ export const VIEW_TOGGLES = [
     { key: "showLabels", label: "Planet names", icon: "🪐" },
     { key: "showMoonLabels", label: "Moon names", icon: "🌙" },
     { key: "milkyWay", label: "Milky Way sky", icon: "🌌" },
+    { key: "constellations", label: "Constellations", icon: "✨" },
 ];
+
+// How strongly the sky's constellations are drawn while "Constellations" is
+// on: line opacity, star glow and name-badge opacity.
+export const CONSTELLATION_BRIGHTNESS = [
+    { key: "faint", label: "Faint", lines: 0.3, stars: 1, names: 0.5 },
+    { key: "bright", label: "Bright", lines: 0.55, stars: 1.5, names: 0.75 },
+    { key: "brightest", label: "Brightest", lines: 0.85, stars: 2, names: 0.95 },
+];
+
+export const DEFAULT_CONSTELLATION_BRIGHTNESS = "bright";
 
 export const DEFAULT_VIEW_SETTINGS = {
     showOrbits: true,
     showLabels: true,
     showMoonLabels: false,
     milkyWay: false,
+    constellations: false,
+    constellationBrightness: DEFAULT_CONSTELLATION_BRIGHTNESS,
 };
 
 // Kid-sized time controls (#4). Not saved: a Solar System that is still
@@ -33,12 +46,17 @@ export function speedPresetFor(orbitSpeedMultiplier) {
 }
 
 const KNOWN_KEYS = Object.keys(DEFAULT_VIEW_SETTINGS);
+const BRIGHTNESS_KEYS = CONSTELLATION_BRIGHTNESS.map((level) => level.key);
 
-function pickBooleans(source) {
+// Each key keeps only values of its default's kind; the brightness only a known level.
+function pickKnown(source) {
     const out = {};
     if (!source || typeof source !== "object" || Array.isArray(source)) return out;
     for (const key of KNOWN_KEYS) {
-        if (typeof source[key] === "boolean") out[key] = source[key];
+        const valid = key === "constellationBrightness"
+            ? BRIGHTNESS_KEYS.includes(source[key])
+            : typeof source[key] === "boolean";
+        if (valid) out[key] = source[key];
     }
     return out;
 }
@@ -47,7 +65,7 @@ export function loadViewSettings(storage = globalThis.localStorage) {
     try {
         const raw = storage?.getItem(VIEW_SETTINGS_KEY);
         if (!raw) return { ...DEFAULT_VIEW_SETTINGS };
-        return { ...DEFAULT_VIEW_SETTINGS, ...pickBooleans(JSON.parse(raw)) };
+        return { ...DEFAULT_VIEW_SETTINGS, ...pickKnown(JSON.parse(raw)) };
     } catch {
         return { ...DEFAULT_VIEW_SETTINGS };
     }
@@ -56,7 +74,7 @@ export function loadViewSettings(storage = globalThis.localStorage) {
 export function saveViewSettings(settings, storage = globalThis.localStorage) {
     try {
         if (!storage) return false;
-        storage.setItem(VIEW_SETTINGS_KEY, JSON.stringify(pickBooleans(settings)));
+        storage.setItem(VIEW_SETTINGS_KEY, JSON.stringify(pickKnown(settings)));
         return true;
     } catch {
         return false;

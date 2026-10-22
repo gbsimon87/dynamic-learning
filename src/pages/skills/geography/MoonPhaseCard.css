@@ -1,0 +1,32 @@
+.moon-phase {
+  margin-top: 0.75rem;
+  color: var(--light-text);
+}
+body.dark .moon-phase { color: var(--dark-text); }
+.moon-phase button {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.65rem;
+  border: 1px solid currentColor;
+  border-radius: 0.8rem;
+  background: var(--light-bg);
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+body.dark .moon-phase button { background: var(--dark-bg); }
+.moon-phase button:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.moon-phase section {
+  margin-top: 0.6rem;
+  padding: 0.75rem;
+  border-radius: 0.8rem;
+  background: var(--light-bg);
+}
+body.dark .moon-phase section { background: var(--dark-bg); }
+.moon-phase canvas { display: block; margin: auto; background: #080d19; border-radius: 50%; }
+.moon-phase .moon-phase__name { text-align: center; font-weight: 700; }
+.moon-phase p { line-height: 1.5; }
+
+.solar-system .moon-phase h3 { color: inherit; margin-top: 0; }
+.moon-phase button:disabled { opacity: 0.6; cursor: default; }

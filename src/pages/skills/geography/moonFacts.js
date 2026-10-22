@@ -16,7 +16,7 @@ export const moonFacts = {
         facts: [
             "The Moon is about a quarter of Earth's width — roughly as wide as the United States.",
             "It orbits at an average distance of 384,399 km (238,854 miles).",
-            "Tidal forces locked its rotation, so the same near side always faces us.",
+            "The Moon turns once each time it travels around Earth, keeping the same face towards us. This is called tidal locking.",
             "The Moon's gravity is the main driver of Earth's ocean tides.",
             "Twelve people walked on the Moon across six Apollo landings, ending in 1972.",
         ],

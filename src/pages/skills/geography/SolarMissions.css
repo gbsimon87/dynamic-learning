@@ -1,0 +1,20 @@
+.solar-missions { position: absolute; left: 12px; bottom: 12px; z-index: 8; max-width: min(440px, calc(100% - 80px)); }
+.solar-missions[hidden] { display: none; }
+.solar-missions, .solar-missions-dialog { color: var(--light-text); }
+.solar-missions button, .solar-missions__task, .solar-missions-dialog { background: var(--light-bg); }
+body.dark .solar-missions, body.dark .solar-missions-dialog { color: var(--dark-text); }
+body.dark .solar-missions button, body.dark .solar-missions__task, body.dark .solar-missions-dialog { background: var(--dark-bg); }
+.solar-missions button, .solar-missions-dialog button { min-height: 48px; min-width: 48px; border: 1px solid currentColor; border-radius: 12px; padding: 8px 12px; color: inherit; background: var(--light-bg); font: inherit; cursor: pointer; }
+body.dark .solar-missions-dialog button { background: var(--dark-bg); }
+.solar-missions button:focus-visible, .solar-missions-dialog button:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.solar-missions__task { display: flex; gap: 6px; align-items: center; border-radius: 12px; padding: 8px; margin-top: 6px; font-size: .9rem; line-height: 1.4; }
+.solar-missions-dialog { width: min(620px, 94vw); line-height: 1.5; }
+.solar-missions-dialog__list { display: grid; gap: 12px; }
+.solar-missions-dialog article { padding: 12px; border: 1px solid currentColor; border-radius: 12px; }
+.solar-missions-dialog article button { margin: 4px; }
+@media (max-width: 719px) {
+  .solar-system:has(.solar-missions:not([hidden])) .solar-info-card:not(.solar-info-card--tour) {
+    bottom: calc(var(--solar-mission-height, 180px) + 24px);
+    max-height: 48%;
+  }
+}

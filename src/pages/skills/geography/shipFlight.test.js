@@ -89,3 +89,11 @@ test("the camera swings in behind the ship first, and frames the planet by the e
     assert.equal(flightFrame(1, 4).arrive, 0);
     assert.equal(flightFrame(4, 4).arrive, 1);
 });
+
+test("thrust builds from nothing, peaks halfway and dies away on landing", () => {
+    assert.equal(flightFrame(0, 4).thrust, 0);
+    assert.ok(Math.abs(flightFrame(2, 4).thrust - 1) < 1e-9);
+    assert.ok(flightFrame(1, 4).thrust > flightFrame(0.2, 4).thrust);
+    assert.ok(flightFrame(3.9, 4).thrust < 0.05);
+    assert.equal(flightFrame(5, 4).thrust, 0);
+});
