@@ -407,7 +407,7 @@ machine). Each is large, and earlier items deliver most of the same feeling.
 |---|---|---|
 | 0 — Foundations | Code done; ⏳ waiting on the phone baseline | Started 2026-10-21. Phase 1 can begin: only #5 bloom waits on the phone numbers |
 | 1 — The first ten seconds | Done except ⏳ #27 (sound decision) and ⏳ #5 bloom (phone numbers) | Started 2026-10-22 |
-| 2 — Meet your ship | Not started | |
+| 2 — Meet your ship | In progress: ✅ #34 | Started 2026-10-22 |
 | 3 — A living Solar System | Not started | |
 | 4 — Missions and stars | Not started | |
 | 5 — Take the controls | Not started | |
@@ -655,6 +655,28 @@ and phone frame time stays within the Phase 0 baseline.
 
 ### Phase 2 — Meet your ship (2½–5½ weeks)
 
+- ✅ **#34 autopilot ship** (2026-10-22). A red-and-white rocket made from
+  primitives ([`autopilotShip.js`](../src/pages/skills/geography/autopilotShip.js),
+  path maths in [`shipFlight.js`](../src/pages/skills/geography/shipFlight.js))
+  waits beside Earth. Search, tapping a planet, the tour and Tweakpane's Focus
+  all fly it now. The flight climbs out of the planets' plane and bends round
+  the Sun, takes 2 s for a short hop and 6½ s at most (Pluto), and the camera
+  swings in behind the ship. On arrival the camera is exactly where the old
+  follow camera framed the planet, looking from between the way the ship came
+  and the Sun so the planet is lit, and following carries on from there. The
+  ship then hovers beside the planet, as long as the planet is wide (within
+  limits), and above it on narrow phones so it stays on screen. A drag lands
+  it at once; a stray tap on empty space doesn't stop it. Outside the tour,
+  the planet card opens on landing, because on a phone it covers the middle
+  of the screen where the ship flies. Reduced motion keeps the old glide and
+  just moves the ship. Tapping the ship: "That's your spaceship! Tap a planet
+  and it will fly you there." Checked at 1200×700 and 390×844: Mars, Jupiter,
+  Saturn, Venus across the Sun, the Moon, the tour with a mid-flight Next, a
+  drag mid-flight, the meteor (ship hidden) and Reset (ship back at Earth).
+  - **Found, not fixed:** on phones the planet card also covers the planet
+    itself once you're there. This was already true before the ship. Framing
+    the planet in the space above the card (`camera.setViewOffset`) would fix
+    it for both.
 - **#34 autopilot ship** replaces the camera-only fly-to used by search, tap
   and the tour. Keep the old camera move behind reduced motion. Write tests
   first, because three existing features change at once.

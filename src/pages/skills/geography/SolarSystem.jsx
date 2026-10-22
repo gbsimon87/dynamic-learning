@@ -18,6 +18,8 @@ import { createShootingStars } from "./shootingStars.js";
 import { WISH_LINE } from "./shootingStarTiming.js";
 import { createWarpIn } from "./warpIn.js";
 import { markWarpSeen, shouldPlayWarp } from "./warpTimeline.js";
+import { createAutopilotShip } from "./autopilotShip.js";
+import { SHIP_LINE } from "./shipFlight.js";
 import { isMuted } from "../../../components/celebration/sound/player.js";
 import { speak, stopNarration } from "../../../utils/speech.js";
 import { constellations } from "./constellations.js";
@@ -1048,6 +1050,7 @@ export default function ThreeSolarSystem() {
         const followOffset = new THREE.Vector3();
 
         function stopFollowing() {
+            ship?.cancel();
             followActive = false;
             followSystem = null;
             followTarget = null;
@@ -1146,6 +1149,7 @@ export default function ThreeSolarSystem() {
             desiredCameraPosition.copy(camera.position);
             desiredControlsTarget.copy(controls.target);
             previousFollowPosition.copy(controls.target);
+            parkShipAtEarth();
             cameraSettings.focus = "Overview";
             tourMuted = false;
             setTourState({ active: false, index: 0, total: 0, muted: false });
@@ -1262,6 +1266,14 @@ export default function ThreeSolarSystem() {
                 : createPlanetInfo(planetData[entry.planetIndex], entry.planetIndex);
         }
 
+        // How far the camera frames a planet or moon from.
+        function framingDistanceFor(entry) {
+            // Moons are tiny, so frame them tighter — but stay clear of minDistance.
+            return entry.kind === "moon"
+                ? Math.max(entry.radius * 8, 1.8)
+                : Math.max(entry.radius * 6, 4);
+        }
+
         function focusEntry(entry, fromTour = false) {
             if (!entry || experiment?.isActive() || resetting) return;
             warpIn?.skip();
@@ -1278,17 +1290,37 @@ export default function ThreeSolarSystem() {
             followBlendTargetStart.copy(controls.target);
             const targetPos = new THREE.Vector3();
             entry.object3d.getWorldPosition(targetPos);
-            // Moons are tiny, so frame them tighter — but stay clear of minDistance.
-            followDesiredDistance = isMoon
-                ? Math.max(entry.radius * 8, 1.8)
-                : Math.max(entry.radius * 6, 4);
+            followDesiredDistance = framingDistanceFor(entry);
             followOffset.subVectors(camera.position, targetPos);
             if (followOffset.lengthSq() < 0.001) {
                 followOffset.set(0, entry.radius * 2, entry.radius * 6);
             }
             followOffset.setLength(followDesiredDistance);
             previousFollowPosition.copy(targetPos);
-            setSelectedPlanet(createFocusInfo(entry));
+            // The ship flies there and the follow camera takes over when it lands.
+            // Under reduced motion it just appears there, and the camera glides as before.
+            const calm = reducedQuery.matches;
+            const info = createFocusInfo(entry);
+            if (calm) ship.park(entry.object3d, { radius: entry.radius, framingDistance: () => followDesiredDistance, from: camera.position });
+            if (!calm && ship.flyTo(entry.object3d, {
+                radius: entry.radius,
+                framingDistance: () => followDesiredDistance,
+                onArrive: () => {
+                    followBlendT = 1;
+                    entry.object3d.getWorldPosition(previousFollowPosition);
+                    setSelectedPlanet(info);
+                },
+            })) {
+                followBlendT = 1;
+                // On a phone the card covers the middle of the screen, where the
+                // ship flies, so it opens on landing. The tour's card stays: it
+                // holds the tour's buttons.
+                setSelectedPlanet(fromTour ? info : null);
+            } else {
+                // Already there, or reduced motion: glide round to where the ship sees the planet from.
+                ship.framingDirection(followOffset).setLength(followDesiredDistance);
+                setSelectedPlanet(info);
+            }
             setFocusedId(entry.id);
             updateCameraFocus(isMoon ? entry.parentName : entry.name);
         }
@@ -1361,14 +1393,18 @@ export default function ThreeSolarSystem() {
             clickMouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
             clickRaycaster.setFromCamera(clickMouse, camera);
             const visibleLabels = labelSprites.filter((label) => label.visible);
-            const intersects = clickRaycaster.intersectObjects([...visibleLabels, ...planetBodies, sun], false);
+            const intersects = clickRaycaster.intersectObjects([...visibleLabels, ...planetBodies, sun, ship.hitTarget], false);
             if (intersects[0]?.object === sun) {
                 tapSun();
+            } else if (intersects[0]?.object === ship.hitTarget) {
+                setTapMessage({ icon: "🚀", text: SHIP_LINE, id: performance.now() });
+                if (!isMuted()) speak(SHIP_LINE);
             } else if (intersects.length > 0) {
                 const planetIndex = intersects[0].object.userData.planetIndex;
                 if (!reducedQuery.matches) bounces.bounce(planetBodies[planetIndex]);
                 flyToPlanet(planetSystems[planetIndex]);
-            } else {
+            } else if (!ship.isFlying()) {
+                // A stray tap mid-flight shouldn't strand the ship in space.
                 stopFollowing();
             }
         }
@@ -1418,6 +1454,7 @@ export default function ThreeSolarSystem() {
         function onControlsStart() {
             if (experiment?.isActive()) return;
             warpIn?.skip();
+            ship.skip();
             zoomAnimating = false;
             desiredCameraPosition.copy(camera.position);
             desiredControlsTarget.copy(controls.target);
@@ -1498,6 +1535,16 @@ export default function ThreeSolarSystem() {
             scene, camera, quality: currentQuality(), reducedMotion: () => reducedQuery.matches,
         }));
 
+        // The autopilot ship (#34) starts beside Earth.
+        const ship = modules.add("ship", createAutopilotShip({
+            scene, camera, controls, quality: currentQuality(), reducedMotion: () => reducedQuery.matches,
+        }));
+        const parkShipAtEarth = () => {
+            const earth = searchEntriesById.get("Earth");
+            ship.park(earth.object3d, { radius: earth.radius, framingDistance: framingDistanceFor(earth) });
+        };
+        parkShipAtEarth();
+
         // Warp-in arrival (#1), once per visit. Anything the child does skips it.
         const warpIn = shouldPlayWarp({ reducedMotion: reducedQuery.matches }) ? modules.add("warpIn", createWarpIn({
             camera,
@@ -1556,7 +1603,7 @@ export default function ThreeSolarSystem() {
                     : simulation.showLabels && !followActive);
             });
 
-            if (!active && followActive && followTarget) {
+            if (!active && followActive && followTarget && !ship.isFlying()) {
                 followTarget.getWorldPosition(currentFollowPosition);
 
                 if (followBlendT < 1) {

@@ -1059,7 +1059,7 @@ Still open: physical-device performance, which no device in this workspace can
 supply — tracked in the
 [tracker](solar-system-meteor/IMPLEMENTATION_TRACKER.md). No dependencies added.
 
-**Solar System enhancement roadmap (Phase 0 and most of Phase 1, 2026-10-21/22):**
+**Solar System enhancement roadmap (Phases 0–1 and Phase 2 in progress, 2026-10-21/22):**
 [`SOLAR_SYSTEM_IDEAS.md`](SOLAR_SYSTEM_IDEAS.md) holds 113 ranked ideas and a
 phased roadmap, and is the progress tracker (§11). What exists now:
 
@@ -1103,9 +1103,21 @@ phased roadmap, and is the progress tracker (§11). What exists now:
     arrival. It owns `camera.position` while it runs, so every camera action
     (`focusEntry`, `resetView`, Reset, the meteor, drag, wheel) calls
     `warpIn?.skip()` first.
+- *The ship* (Phase 2), `autopilotShip.js` with the path maths in
+  `shipFlight.js`: a low-poly rocket made from primitives that starts beside
+  Earth. `focusEntry` (search, tap, the tour, Tweakpane's Focus) flies it to
+  the planet or moon on a curve that climbs and bends round the Sun, 2–6.5 s,
+  with the camera chasing it. While `ship.isFlying()` it owns
+  `camera.position` and `controls.target`, so the follow camera in `animate()`
+  pauses until `onArrive`; it lands exactly where the follow camera frames the
+  planet, which carries on from there. A drag lands it at once, a stray tap on
+  empty space is ignored mid-flight, and `stopFollowing()` stops it where it
+  is. Outside the tour the planet card opens on landing, because on phones it
+  covers the flight. Reduced motion keeps the old glide and just moves the
+  ship. Tapping the ship says what it's for.
 - Spoken lines in these features follow the navbar sound switch
   (`isMuted()`); the tour keeps its own narration mute. The Sun's lines and the
-  shooting-star wish share one message slot (`tapMessage`). Reduced motion
+  shooting-star wish and the ship share one message slot (`tapMessage`). Reduced motion
   keeps the words and drops bounces, sparks, shooting stars and the warp.
 
 Still open: the phone baseline and the bloom decision (#5, the last Phase 1b
