@@ -64,6 +64,7 @@ export default function ThreeSolarSystem() {
     const sceneApiRef = useRef(null);
     const searchInputRef = useRef(null);
     const launchButtonRef = useRef(null);
+    const flyButtonRef = useRef(null);
     const resetButtonRef = useRef(null);
     const focusRequestRef = useRef(null);
     const [meteorPhase, setMeteorPhase] = useState("ready");
@@ -73,6 +74,9 @@ export default function ThreeSolarSystem() {
     // A short line after tapping the Sun or a shooting star.
     const [tapMessage, setTapMessage] = useState(null);
     const [selectedPlanet, setSelectedPlanet] = useState(null);
+    // While the ship flies to a planet the launch buttons step aside, as they
+    // do for its card, so another mode can't start mid-flight.
+    const [shipFlying, setShipFlying] = useState(false);
     const [tourState, setTourState] = useState({ active: false, index: 0, total: 0, muted: false });
     // The lift-off countdown before the tour (#35): 3, 2, 1, 0 for "Lift off!", or null.
     const [countdown, setCountdown] = useState(null);
@@ -1520,6 +1524,8 @@ export default function ThreeSolarSystem() {
 
         function onKeyDown(e) {
             if (e.key !== "Escape") return;
+            // The steering game is open on top and closes itself on Escape.
+            if (drawingPaused) return;
             if (lineUp.isActive()) {
                 closeLineUp();
                 return;
@@ -1737,6 +1743,7 @@ export default function ThreeSolarSystem() {
         })) : null;
         let lastFrameStart = 0;
         let drawingPaused = false;
+        let wasFlying = false;
 
         function animate() {
             if (drawingPaused) {
@@ -1781,7 +1788,13 @@ export default function ThreeSolarSystem() {
                     : simulation.showLabels && !followActive);
             });
 
-            if (!active && followActive && followTarget && !ship.isFlying()) {
+            const flying = ship.isFlying();
+            if (flying !== wasFlying) {
+                wasFlying = flying;
+                setShipFlying(flying);
+            }
+
+            if (!active && followActive && followTarget && !flying) {
                 followTarget.getWorldPosition(currentFollowPosition);
 
                 if (followBlendT < 1) {
@@ -1894,6 +1907,12 @@ export default function ThreeSolarSystem() {
             seenMaterials.forEach((m) => m.dispose());
             seenTextures.forEach((t) => t.dispose());
             renderer.dispose();
+            // Release the WebGL context once the canvas has left the page, so
+            // repeat visits don't pile up contexts (StrictMode remounts reuse it).
+            const canvas = renderer.domElement;
+            setTimeout(() => {
+                if (!canvas.isConnected) renderer.forceContextLoss();
+            }, 0);
         };
     }, []);
 
@@ -1908,6 +1927,13 @@ export default function ThreeSolarSystem() {
         else return;
         focusRequestRef.current = null;
     }, [meteorPhase, sceneReady]);
+
+    // Closing the rocket game hands focus back to the button that opened it.
+    useEffect(() => {
+        if (steeringOpen || focusRequestRef.current !== "fly") return;
+        focusRequestRef.current = null;
+        flyButtonRef.current?.focus();
+    }, [steeringOpen]);
 
     const matches = useMemo(() => matchBodies(searchBodies, query), [searchBodies, query]);
     const highlighted = matches.length === 0 ? -1 : Math.min(activeIndex, matches.length - 1);
@@ -1960,7 +1986,7 @@ export default function ThreeSolarSystem() {
     else if (constellationState.active) mode = "constellations";
     // Same rule as the launch buttons: the drawer steps aside for a planet
     // card or any other mode, and comes back closed.
-    const drawerVisible = mode === "idle" && !selectedPlanet;
+    const drawerVisible = mode === "idle" && !selectedPlanet && !shipFlying;
     useEffect(() => {
         if (!drawerVisible) setSettingsOpen(false);
     }, [drawerVisible]);
@@ -2084,7 +2110,7 @@ export default function ThreeSolarSystem() {
                     )}
                 </div>
             )}
-            {mode === "idle" && !selectedPlanet && (
+            {mode === "idle" && !selectedPlanet && !shipFlying && (
                 <div className="solar-launch-buttons">
                     <button
                         type="button"
@@ -2098,6 +2124,7 @@ export default function ThreeSolarSystem() {
                     <button
                         type="button"
                         className="solar-tour-launch"
+                        ref={flyButtonRef}
                         aria-label="Fly the rocket"
                         disabled={!sceneReady}
                         onClick={() => {
@@ -2175,6 +2202,7 @@ export default function ThreeSolarSystem() {
             {steeringOpen && (
                 <SteeringGame
                     onClose={() => {
+                        focusRequestRef.current = "fly";
                         setSteeringOpen(false);
                         sceneApiRef.current?.setPaused(false);
                     }}

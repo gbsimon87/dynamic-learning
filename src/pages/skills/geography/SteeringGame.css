@@ -20,6 +20,11 @@
     overscroll-behavior: none;
 }
 
+/* It takes focus on opening so keys reach the game; the whole screen needs no ring. */
+.steering:focus {
+    outline: none;
+}
+
 .steering * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;

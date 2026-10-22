@@ -428,7 +428,7 @@ Tick one off here when it's done.
 | 4 | **Phase 1 playtest** | 2–3 children, each with a parent present and agreeing, open the page for the first time. Watch the first ten seconds: do they react, and what do they tap? | Phase 1's exit. The order of Phase 2's remaining items |
 | 5 | **Steering spike** (Phase 2) | The same children try both steering styles in **🕹 Fly the rocket** on the Solar System page, about five minutes each. Note which one they manage without help. Steps under ⏳ *Steering spike* in Phase 2. You tried it yourself on 2026-10-22 (keyboard, desktop and phone width) and are happy with it for now | Phase 2's exit. The control scheme for #83 free flight |
 | 6 | **Odd toggle, once** | While testing Phase 1b, Orbit lines turned off and the Sun message appeared with no tap. It couldn't be repeated. Say if you ever see it | Nothing yet |
-| 7 | **Push and merge** | `feat/solar-system` is only on this Mac. Say when to push it and open a pull request | Getting any of this onto learnwithbix.com |
+| 7 | **Push** | `feat/solar-system` had a bug pass and was merged into `dev` on this Mac on 2026-10-22. Nothing is pushed yet. Say when to push `dev` (and open a pull request to `main`) | Getting any of this onto learnwithbix.com |
 
 ### Principles
 

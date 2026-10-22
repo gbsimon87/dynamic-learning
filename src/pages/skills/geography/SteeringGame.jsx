@@ -95,6 +95,11 @@ export default function SteeringGame({ onClose }) {
         };
     }, []);
 
+    // Focus moves into the game (not onto Back, so Space still fires the engine).
+    useEffect(() => {
+        rootRef.current?.focus({ preventScroll: true });
+    }, []);
+
     useEffect(() => {
         const onKeyDown = (event) => {
             if (event.key === "Escape") onCloseRef.current?.();
@@ -161,7 +166,7 @@ export default function SteeringGame({ onClose }) {
         : "Tap a planet or anywhere in space to fly there";
 
     return (
-        <div ref={rootRef} className="steering" data-style={style} role="dialog" aria-label="Rocket steering practice">
+        <div ref={rootRef} className="steering" data-style={style} role="dialog" aria-label="Rocket steering practice" tabIndex={-1}>
             <canvas ref={canvasRef} className="steering__canvas" onPointerDown={(e) => gameRef.current?.tap(e.clientX, e.clientY)} />
             {failed && (
                 <p className="steering__fail">Sorry, the 3D bits could not start on this device. Please go back and try again.</p>

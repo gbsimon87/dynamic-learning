@@ -2,11 +2,11 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, expect, it, vi } from "vitest";
 
-vi.mock("../../src/utils/speech", () => ({ speak: vi.fn(), stopNarration: vi.fn() }));
+vi.mock("../../src/utils/speech", () => ({ speak: vi.fn(), stopNarrationOf: vi.fn() }));
 vi.mock("../../src/components/celebration/sound/player", async (orig) => ({ ...(await orig()), isMuted: vi.fn(() => false) }));
 
 import PlanetPlayCard from "../../src/pages/skills/geography/PlanetPlayCard";
-import { speak, stopNarration } from "../../src/utils/speech";
+import { speak, stopNarrationOf } from "../../src/utils/speech";
 import { isMuted } from "../../src/components/celebration/sound/player";
 
 beforeEach(() => {
@@ -63,10 +63,17 @@ it("stays quiet when sound is off", async () => {
   expect(speak).not.toHaveBeenCalled();
 });
 
-it("stops narration on unmount", () => {
+it("on unmount stops only its own sentence, so it cannot cut off the line that closed it", async () => {
+  const { unmount } = render(<PlanetPlayCard bodyName="Mars" />);
+  await userEvent.click(screen.getByRole("button", { name: /How heavy would Bix be/ }));
+  unmount();
+  expect(stopNarrationOf).toHaveBeenCalledWith("On Mars, Bix would weigh 8 kg.");
+});
+
+it("on unmount without having spoken, stops nothing", () => {
   const { unmount } = render(<PlanetPlayCard bodyName="Mars" />);
   unmount();
-  expect(stopNarration).toHaveBeenCalled();
+  expect(stopNarrationOf).toHaveBeenCalledWith(null);
 });
 
 it("offers the line-up by size only when asked to, and opens it", async () => {

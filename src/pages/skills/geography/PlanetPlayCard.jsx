@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Mascot from "../../../components/mascot/Mascot";
 import { isMuted } from "../../../components/celebration/sound/player";
-import { speak, stopNarration } from "../../../utils/speech";
+import { speak, stopNarrationOf } from "../../../utils/speech";
 import { PLANET_PLAY, ageSentence, playFor, weightOn, weightSentence, BIX_EARTH_KG } from "./planetPlay";
 import "./PlanetPlayCard.css";
 
@@ -32,12 +32,17 @@ export default function PlanetPlayCard({ bodyName, onLineUp }) {
                 : null;
 
     // Read aloud when a sentence appears, only with the app's sound on.
+    const spoken = useRef(null);
     useEffect(() => {
-        if (sentence && !isMuted()) speak(sentence);
+        if (sentence && !isMuted()) {
+            speak(sentence);
+            spoken.current = sentence;
+        }
     }, [sentence]);
 
-    // Stop narration when the body changes or the card goes away.
-    useEffect(() => () => stopNarration(), [bodyName]);
+    // Stop the card's own sentence when the body changes or the card goes
+    // away, but not the line-up line or countdown that closed it.
+    useEffect(() => () => stopNarrationOf(spoken.current), [bodyName]);
 
     if (!can.age && !can.weight) return null;
 

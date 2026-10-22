@@ -1144,6 +1144,19 @@ phased roadmap, and is the progress tracker (§11). What exists now:
   (`isMuted()`); the tour keeps its own narration mute. The Sun's lines and the
   shooting-star wish, the ship and the ISS share one message slot (`tapMessage`). Reduced motion
   keeps the words and drops bounces, sparks, shooting stars and the warp.
+- *Bug pass before merging into `dev` (2026-10-22).* Rules these fixes set:
+  a closing component calls `stopNarrationOf(itsOwnText)` (in `speech.js`),
+  never `stopNarration()`, so it can't cut off the line that closed it (the
+  line-up line, the countdown's "Three"). The launch buttons and the My view
+  drawer hide while `shipFlying` (synced from `ship.isFlying()` each frame),
+  as they do for a card. Both renderers call `forceContextLoss()` after
+  `dispose()`, but only once the canvas has left the page, because StrictMode
+  remounts reuse the same canvas. Lift-off ignores `skip()` for 500 ms, so a
+  double-tap on Tour keeps the 3-2-1. The Solar System ignores Escape while
+  Fly the rocket is open. The rocket game takes focus on its own dialog (not
+  on Back, so Space still fires the engine), lets Space press a focused
+  button, never steps time backwards, and hands focus back to Fly the rocket
+  on close.
 
 Still open: the phone baseline and the bloom decision (#5, the last Phase 1b
 item), and #27 arrival sounds. Skills Mode is silent by design (see

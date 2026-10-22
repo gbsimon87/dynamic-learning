@@ -27,6 +27,9 @@ function makePuffTexture(size = 64) {
  * launching (Reset, search, the meteor). The caller doesn't start it under
  * reduced motion.
  */
+// A double-tap on Tour lands its second tap on the scene; that is not a skip.
+const SKIP_GRACE_MS = 500;
+
 export function createLiftOff({ scene, ship, quality, onCount = () => {}, onLaunch = () => {} }) {
     const count = quality === "low" ? 40 : 80;
     const texture = makePuffTexture();
@@ -42,6 +45,7 @@ export function createLiftOff({ scene, ship, quality, onCount = () => {}, onLaun
     const nozzle = new THREE.Vector3();
     let next = 0;
     let age = 0;
+    let startedAt = 0;
     let running = false;
     let launched = false;
     let shownCount;
@@ -86,6 +90,7 @@ export function createLiftOff({ scene, ship, quality, onCount = () => {}, onLaun
     return {
         isCounting: () => running && !launched,
         start() {
+            startedAt = performance.now();
             age = 0;
             running = true;
             launched = false;
@@ -94,7 +99,7 @@ export function createLiftOff({ scene, ship, quality, onCount = () => {}, onLaun
             show(liftOffFrame(0).count);
         },
         skip() {
-            if (!running) return;
+            if (!running || performance.now() - startedAt < SKIP_GRACE_MS) return;
             launch();
             stop();
         },

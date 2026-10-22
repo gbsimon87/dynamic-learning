@@ -184,11 +184,19 @@ export function createSteeringGame({ canvas, reducedMotion = false, onChange, ar
         input.thrustTouch = !!on;
     }
 
+    const keyName = (e) => (typeof e.key !== "string" || !e.key ? null : e.key.length === 1 ? e.key.toLowerCase() : e.key);
+    // Space on a focused button presses that button rather than firing the engine.
+    const onButton = (e) => e.key === " " && e.target instanceof Element && !!e.target.closest("button, input, select, textarea, a[href]");
     const onKeyDown = (e) => {
+        const key = keyName(e);
+        if (!key || onButton(e)) return;
         if (KEY_NAMES.includes(e.key)) e.preventDefault();
-        input.keys.add(e.key.length === 1 ? e.key.toLowerCase() : e.key);
+        input.keys.add(key);
     };
-    const onKeyUp = (e) => input.keys.delete(e.key.length === 1 ? e.key.toLowerCase() : e.key);
+    const onKeyUp = (e) => {
+        const key = keyName(e);
+        if (key) input.keys.delete(key);
+    };
     const onBlur = () => input.keys.clear();
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
@@ -283,7 +291,7 @@ export function createSteeringGame({ canvas, reducedMotion = false, onChange, ar
                     const dy = wrap(wantYaw - P.yaw);
                     const before = P.yaw;
                     P.yaw += clamp(dy * (1 - Math.exp(-4 * dt)), -2.4 * dt, 2.4 * dt);
-                    turnRate = (P.yaw - before) / dt;
+                    turnRate = dt > 0 ? (P.yaw - before) / dt : 0;
                     P.pitch += (wantPitch - P.pitch) * (1 - Math.exp(-3 * dt));
                     const speed = Math.min(22, dist * 0.9) * clamp(1 - Math.abs(dy) / 1.6, 0, 1);
                     P.vel.lerp(fwd.multiplyScalar(speed), 1 - Math.exp(-2.5 * dt));
@@ -409,7 +417,8 @@ export function createSteeringGame({ canvas, reducedMotion = false, onChange, ar
     let frame = 0;
     function loop(now) {
         frame = requestAnimationFrame(loop);
-        const dt = Math.min((now - last) / 1000, 0.05);
+        // rAF can hand back a timestamp at or before the last one; never step backwards.
+        const dt = Math.max(0, Math.min((now - last) / 1000, 0.05));
         last = now;
         time += dt;
         step(dt);
@@ -461,6 +470,12 @@ export function createSteeringGame({ canvas, reducedMotion = false, onChange, ar
             else m?.dispose();
         });
         renderer.dispose();
+        // dispose() keeps the WebGL context; after many opens the browser
+        // drops the oldest one, which is the Solar System's. Release it once
+        // the canvas has left the page (StrictMode remounts reuse it).
+        setTimeout(() => {
+            if (!canvas.isConnected) renderer.forceContextLoss();
+        }, 0);
     }
 
     return {

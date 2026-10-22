@@ -93,3 +93,8 @@ it("finishing shows Go again, and disposing happens on unmount", async () => {
   unmount();
   expect(game.dispose).toHaveBeenCalled();
 });
+
+it("takes focus on opening, on the game itself rather than a button", () => {
+  render(<SteeringGame onClose={vi.fn()} />);
+  expect(document.activeElement).toBe(screen.getByRole("dialog", { name: "Rocket steering practice" }));
+});
