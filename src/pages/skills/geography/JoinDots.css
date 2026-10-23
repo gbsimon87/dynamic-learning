@@ -1,0 +1,16 @@
+.solar-dots { position: absolute; inset: 0; z-index: 65; pointer-events: none; color: var(--light-text); }
+body.dark .solar-dots { color: var(--dark-text); }
+.solar-dots__panel { pointer-events: auto; outline: none; }
+.solar-dots__progress { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; padding: 4px 0; font-size: 12px; font-variant-numeric: tabular-nums; }
+.solar-dots__progress progress { flex: 1; min-width: 0; height: 8px; accent-color: currentColor; }
+.solar-dots__content { padding: 4px 0; }
+.solar-dots__instruction { margin: 0 0 6px; font-size: 16px; line-height: 1.4; font-weight: 650; }
+.solar-dots__instruction--retry { border-left: 3px solid currentColor; padding-left: 8px; }
+.solar-dots__collection { margin: 6px 0 0; font-size: 12px; line-height: 1.4; opacity: .8; }
+.solar-dots__actions { justify-content: space-between; }
+.solar-dots__actions .solar-dots__primary { flex: 1; font-weight: 700; border: 1px solid currentColor; }
+.solar-dots__reward { padding-bottom: 6px; font-size: 15px; }
+.solar-dots__star { position: absolute; transform: translate(-50%, -50%); width: 48px; height: 48px; border: 0; border-radius: 50%; background: transparent; color: transparent; pointer-events: auto; cursor: pointer; }
+.solar-dots__star--next { z-index: 2; background: var(--light-panel); color: var(--light-text); border: 3px solid currentColor; font: 800 22px system-ui; box-shadow: 0 0 14px currentColor; }
+body.dark .solar-dots__star--next { background: var(--dark-panel); color: var(--dark-text); }
+.solar-dots__star--next:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }

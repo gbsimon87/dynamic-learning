@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { lookBackPoint, separationDegrees, zoomFov } from "./paleBlueDotView.js";
+import { holdsClock, lookBackPoint, separationDegrees, zoomFov } from "./paleBlueDotView.js";
 
 const TURN_SECONDS = 3;
 // The ring round Earth, as a share of the screen's height.
@@ -28,7 +28,7 @@ function makeRingTexture(size = 128) {
  * A module for solarModules.js. While `isActive()` it owns the camera from
  * `look()` on; `end()` puts the field of view back. `hidesScenery()` tells the
  * caller to hide labels, orbit lines and the asteroid belt, which would
- * clutter the zoomed view.
+ * clutter the zoomed view, and `holdsClock()` to stop the world clock.
  */
 export function createPaleBlueDot({ scene, camera, controls, getEarthPosition, defaultFov, reducedMotion = () => false }) {
     const marker = new THREE.Object3D();
@@ -78,6 +78,7 @@ export function createPaleBlueDot({ scene, camera, controls, getEarthPosition, d
         marker,
         isActive: () => phase !== "idle",
         hidesScenery: () => phase === "turning" || phase === "looking",
+        holdsClock: () => holdsClock(phase),
 
         /** Starts the leg: put the marker out where the ship should fly to. */
         begin() {

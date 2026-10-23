@@ -1,3 +1,5 @@
+import { orbitPosition } from "./planetOrbits.js";
+
 export function createSolarDefaults({ marsDistance = 39, jupiterDistance = 133.33 } = {}) {
   return {
     simulation: { orbitSpeedMultiplier: 1, rotationSpeedMultiplier: 1, showOrbits: true, showLabels: true, showMoonLabels: false, enableTilt: true },
@@ -23,10 +25,14 @@ export function advanceWorldTime(time, dt, settings, paused = false) {
   };
 }
 
-export function getBodyPose({ speed, distance, phase = 0, tidallyLocked = false }, time) {
+// Bodies with `orbit` elements (the planets) follow real ellipses; the rest
+// (moons) keep simple circles.
+export function getBodyPose({ speed, distance, phase = 0, tidallyLocked = false, orbit }, time) {
   const angle = speed * time.orbitTime + phase;
   return {
-    position: { x: Math.sin(angle) * distance, y: 0, z: Math.cos(angle) * distance },
+    position: orbit
+      ? orbitPosition({ distance, speed, orbit }, time.orbitTime)
+      : { x: Math.sin(angle) * distance, y: 0, z: Math.cos(angle) * distance },
     // SphereGeometry's map centre (local +X) is the near side. Keep it
     // pointing towards the parent at the origin, regardless of spin speed.
     rotationY: tidallyLocked ? angle + Math.PI / 2 : speed * time.spinTime * 60,

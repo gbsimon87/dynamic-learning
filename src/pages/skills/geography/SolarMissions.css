@@ -18,3 +18,15 @@ body.dark .solar-missions-dialog button { background: var(--dark-bg); }
     max-height: 48%;
   }
 }
+.ui-dialog-panel.solar-missions-dialog { width: min(440px, calc(100vw - 24px)); min-height: 0; max-height: calc(100dvh - 24px); margin: auto 0; padding: 16px; border-radius: 16px; display: flex; flex-direction: column; gap: 8px; background: var(--light-panel); line-height: 1.4; }
+body.dark .ui-dialog-panel.solar-missions-dialog { background: var(--dark-panel); }
+.solar-missions-dialog header { padding-right: 42px; }
+.solar-missions-dialog h2 { margin: 0; font-size: 22px; }
+.solar-missions-dialog__eyebrow { font-size: 12px; opacity: .75; }
+.solar-missions-dialog__intro { margin: 0; font-size: 14px; }
+.solar-missions-dialog__progress { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.solar-missions-dialog__progress progress { flex: 1; min-width: 0; height: 8px; accent-color: currentColor; }
+.solar-missions-dialog__list { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.solar-missions-dialog .solar-section__toggle { padding: 4px 2px; border: 0; border-radius: 0; background: transparent; }
+.solar-missions-dialog__actions { display: flex; gap: 6px; }
+.solar-missions-dialog__actions button:last-child { flex: 1; font-weight: 700; }

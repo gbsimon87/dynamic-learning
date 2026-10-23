@@ -999,28 +999,18 @@ distance, and next-city reset. Country API responses were intercepted: live timi
 API key was blocked by automatic approval review, so no live latency reduction
 is claimed. Build still reports the existing large-chunk warning.
 
-**Solar System constellation explorer (built and expanded 2026-09-21):**
-`/solar-system` includes an idle-only Constellations entry point. It presents
-Ursa Major's full Great Bear figure, Ursa Minor, Cassiopeia, Cygnus and Orion as
-animated, responsive SVG star charts with child-friendly descriptions, facts,
-shared speech-synthesis narration, mute/replay controls and Previous/Next
-navigation. Catalogue data stores real J2000 right ascension, declination and
-apparent magnitude in `constellations.js`; optional labels keep dense figures
-readable. On phones, narration and Previous/Next controls use icon buttons with
-accessible labels; the card's × is the sole exit control. The pure
-`constellationProjection.js` module converts it to a proportion-preserving
-gnomonic chart, handles the 0h/24h right-ascension seam, and also exposes unit
-vectors for the Three.js sky stage.
-Constellation mode is derived from the existing meteor/tour state, dims but does
-not stop the scene, hides exploration overlays, and prevents meteor launch. The
-Solar System control panel automatically collapses when either the planet tour
-or constellation explorer begins, leaving only its compact title bar. The
-chart and data contracts have pure tests. Desktop, 375 px, both themes,
-reduced motion, narration controls, tour/meteor/search regressions, and both exit
-paths were browser-verified with no runtime errors. No dependencies were added.
+**Solar System constellation explorer (built 2026-09-21, 3D-only UI 2026-10-23):**
+`/solar-system` includes an idle-only Constellations entry point. Ursa Major,
+Ursa Minor, Cassiopeia, Cygnus and Orion open directly in the integrated 3D sky.
+The original duplicate SVG charts and chart/sky toggle have been removed.
+Catalogue J2000 coordinates and gnomonic/unit-vector maths remain in
+`constellations.js` / `constellationProjection.js` for the 3D sky and its tests.
+The compact themed card has recenter, read/mute, Join dots and Previous/Next;
+its description and facts are exclusive collapsible sections. Header and
+navigation remain outside the scrollable content. Closing restores the camera.
 
-**3D constellation sky (#67 / backlog #19, 2026-10-22):** each existing chart
-has **Find in the 3D sky**. `constellationSkyLayout.js` converts catalogue J2000
+**3D constellation sky (#67 / backlog #19, 2026-10-22):** the Constellations
+entry opens the sky directly (the former chart entry was removed 2026-10-23). `constellationSkyLayout.js` converts catalogue J2000
 RA/Dec into a right-handed y-up ecliptic frame (east left from inside) and fits
 all five figures with space reserved for bottom or landscape-side controls. `constellationSky.js`
 owns the 2,700-unit star sphere, magnitude-sized shader points, connecting lines,
@@ -1154,12 +1144,10 @@ phased roadmap, and is the progress tracker (§11). What exists now:
   `fov` (put back by `end()`). While `hidesScenery()`, `animate()` hides
   labels, orbit lines, the belt, the star dots and the sky. React mode
   `"palebluedot"`.
-- *Fly the rocket* (`SteeringGame.jsx`, game in `steeringFlight.js`, logic in
-  `steeringRound.js`): the Phase 2 steering test, opened from the toolbar.
-  It's a separate overlay with its own canvas and renderer; `setPaused(true)`
-  stops the Solar System drawing (and hides Tweakpane) while it's open.
-  Import `./SteeringGame.jsx` with its extension. The toolbar's Reset moved
-  into the My view drawer (`onReset`) to make room.
+- *Fly the rocket*: the initial separate colour-planet A/B prototype was
+  retired on 2026-10-23. `SolarFlightControls` / `solarFreeFlight.js` now use the
+  main scene and shared rocket model; `flightControls.js` retains only the
+  shared joystick/keyboard maths. There is no secondary practice renderer.
 - *The ISS* (`issStation.js`, orbit in `issOrbit.js`): circles Earth every
   12 s on the world clock, parented to Earth's `root` (not `body`), hidden
   during the meteor; tapping it gives one spoken line.
@@ -1241,7 +1229,7 @@ shared across profiles, retained through sign-out, no personal information.
 Unavailable storage leaves missions playable and shows a save notice. No changes
 to learner progress, unlocking or existing keys. Manual read-aloud follows site
 mute; the shared Dialog supplies keyboard/focus handling. Missions hide in other
-modes and while flying, and resume afterwards. The full passport (#74) is next.
+modes and while flying, and resume afterwards. The full passport (#74) is deferred by the owner (2026-10-23).
 `SOLAR_SYSTEM_IDEAS.md` was audited and shortened, retaining all 113 IDs and
 external checks without treating Phase 3’s wider exit as complete.
 
@@ -1249,12 +1237,139 @@ Constellations in the sky, screen-sized badges and flight streaks
 (2026-10-22): with "Constellations" on, `constellationSky.js` draws every figure's
 lines, stars and a quieter name badge on a sky sphere centred on the camera,
 behind the planets (depth-tested), at the drawer's brightness; off, the figures
-are hidden entirely. Opening a figure from the star chart keeps the focused
+are hidden entirely. Opening a figure directly in the integrated sky keeps the focused
 view. Planet, moon and constellation name badges keep one on-screen size
 (`labelLayout.js`: 26px tall, 22px under 720px wide), and where planet or moon
 badges overlap, the body nearer the camera keeps its name. `warpStreaks.js` is
 the warp-in's streak tunnel, shared with every ship flight, which drives it from
 `ship.thrust()` (0 at take-off and landing, 1 at top speed).
+
+Solar System join-the-dots and main-scene free flight (#68 / #83, 2026-10-23):
+`ConstellationCard` opens `JoinDots` on the existing 3D sky. `constellationTrace.js`
+walks catalogue edges, including branches and revisited stars; earned lines use
+geometry draw ranges. DOM targets track projected sky positions with 48px hit
+areas and a numbered next star. Wrong taps preserve progress; restart, figure
+navigation, recenter, keyboard focus and manual read-aloud are included. Both
+mutes apply. No persistence. The normal diagram returns on exit.
+
+“Fly the rocket” now opens `SolarFlightControls` over the main scene.
+`solarFreeFlight.js` is a module driven by the existing animation loop, reusing
+`buildShip` from `autopilotShip.js` and the prototype's joystick/input maths.
+The same planets and moons continue moving. Joystick / arrows / WASD steer,
+GO / Space thrust, release brakes. Speed scales with clearance; substeps,
+surface bumpers (including the Sun), camera clearance and an outer boundary
+keep travel forgiving. Face world points towards a selected planet; Back to
+Earth resets position/input. Exit restores the camera and OrbitControls;
+blur/hidden page/cancelled pointers clear input. The original separate A/B
+practice scene was subsequently removed in the compact UI pass below. Controls
+still need child testing; owner requested integration before those tests.
+Sizes/distances and pretend speed are labelled. Overlays use both themes' tokens.
+No new assets, dependencies or stored data; mission/curriculum storage untouched.
+
+Lint, full tests and build pass; new tests cover all five trace playthroughs,
+wrong taps, replay/reset/navigation/mutes, projected framing on desktop/phone/
+landscape, manual motion/braking, bumpers, camera restoration and control cleanup.
+Subsequent focused Chrome checks verified the panel layout in both themes at
+desktop/phone/landscape sizes; physical touch, performance and speech remain
+unverified. See `SOLAR_SYSTEM_IDEAS.md` for the remaining roadmap.
+
+Solar activities second pass (2026-10-23): free flight now has 25 shuffled
+clues in `flightClues.js`, spanning planets, moons, Sun, the ISS, asteroid belt and
+Halley’s Comet. `solarFreeFlight` validates proximity to the exact live target
+(with a short dwell and travel/re-entry guard); the belt uses its annulus/height.
+Correct arrivals brake the rocket and earn one checkmarked discovery/star,
+with teaching fact/read-aloud, Next clue and milestone badges at 1/5/10/20/25.
+Hints, wrong destinations and skips have no star penalty. A discovery list
+retains rewards for the adventure; a new adventure resets them. **No rewards
+are persisted:** no changes to storage, the existing mission stamps or curriculum
+progress. Instance/adventure/clue tokens and reducer guards reject stale or
+duplicate arrival rewards. Back to Earth does not count as flying to a target.
+
+The destination chooser includes all scene moons and new flight-only ISS/Sun/
+belt entries. Heading assistance tracks the selected moving body while holding
+GO; manual steering cancels it. The asteroid belt is visible during flight,
+then returns to its setting. Keyboard activation of the GO button is supported.
+The compact HUD keeps secondary navigation/help/collection expandable and
+scrolls/focuses the reward on success. Celebrations use CSS with reduced-motion
+support and keep the existing Solar System effect-sound policy.
+
+JoinDots now shows progress, a completion checkmark/star and a next-figure action.
+`SolarSystem` retains a deduplicated constellation collection in memory across
+figure changes and reopening the activity, resetting when the page is left.
+No new assets/dependencies. Clue sources and honest verification limits are in
+`SOLAR_SYSTEM_IDEAS.md`. Lint, full tests and build pass; focused Chrome checks
+subsequently verified tracing layout and completion in both themes. Physical
+device checks remain open.
+
+Compact Solar System UI and turbo (2026-10-23): `SolarSections` provides
+exclusive collapsible content. `SolarInfoCard` is extracted from the main page,
+with a visible name/short intro and Discover, Play & compare, Look closer.
+Only two facts show initially; extra facts and special features expand when
+wanted. Planet activities use one child-friendly chooser instead of ambiguous
+buttons; embedded MoonPhaseCard/AuroraCard avoid nested opening controls.
+The flight HUD keeps a small clue/header/tool row; Where to?, Hint and More
+share one expanded panel. Both themes use tokens and preserve 48px targets.
+The mission Dialog has compact dimensions, one clue open, a stamp progress bar
+and a collapsible explanation; its existing storage/matching contract remains.
+
+Constellations now open directly in 3D: the duplicate star chart UI is removed.
+The compact card has a bounded scroll area with visible header/navigation,
+fixing the previous desktop content clipping. Chart projection maths remains
+because the sky uses its coordinate conversion. The obsolete SteeringGame,
+steeringFlight and steeringRound scoring modules/tests are removed; only the
+input maths remain as `flightControls.js`. No extra WebGL renderer is started.
+
+Hold Turbo (or Shift) to fly at up to 3× normal open-space speed. It slows near
+objects and the active clue/destination, with an immediate near-zone speed cap
+to prevent overshoot. Stop, arrival, release/capture loss, blur, hiding and exit
+clear the inputs. Turbo shares the tour’s pooled light streaks; reduced motion
+suppresses them. Collider world positions are read once per frame for cheaper
+substeps. No new assets/dependencies, stored data or curriculum changes.
+
+Validation for the compact UI pass: lint, full tests and build pass. The local
+batched Chrome script `scripts/checkSolarUi.js` checked 1280×900, 390×844 and
+844×390 in both themes: panel bounds, visible constellation footer, mission
+picker, birthday activity, embedded Moon phases, single-renderer flight and
+Shift turbo/streaks, with zero page/module errors. Screenshots were visually
+reviewed. HUD heights were 192–215px; constellation height was 253px. Physical
+device performance, touch and speech are still not verified.
+
+
+Desktop constellation reading panel (2026-10-23): at scene widths of 600px
+and above, browsing uses a panel capped at 340px / 40% of the scene at the top-left with the full available
+height for reading. The sky framing reserves a left gutter and centres the
+stars in the remaining area, so the panel does not cover the selected pattern.
+Join dots now shares the same constellation card styling and desktop-left
+layout, with compact instructions, progress, scrollable content and a fixed
+control row. Portrait phones below 600px retain bottom controls; phone landscape also uses the left layout. Projection tests cover all five patterns
+at 1024px, 1280px and 1920px, including changing back into tracing mode.
+
+Validated with lint, full tests and build, plus a focused Chrome pass in both
+themes at desktop, phone and phone-landscape sizes. Desktop panel position,
+extra reading height, footer visibility and zero page/module errors passed.
+
+
+Solar System orbit/clock audit (2026-10-23): `planetOrbits.js` supplies J2000
+mean elements and a Kepler solver for elliptical, inclined planet/Pluto paths.
+`solarSimulation.js` and visible path geometry share positions; moons remain
+circular. Distances/time remain compressed and J2000 orientation is not today’s
+ephemeris (#63/#66 stay open). Tests cover the solver, apsides, inclination,
+Pluto’s projected crossings, direction/speed and simulation wiring. The other
+agent’s Pale Blue Dot fix holds the shared clock during turning/looking, but
+not outbound flight, via `holdsClock()`; phase tests cover it.
+
+`docs/SOLAR_SYSTEM_IDEAS.md` consolidates all current implementation notes,
+retains all 113 stable IDs, distinguishes six persisted mission stamps from
+25 memory-only flight clues, and records retired duplicate UI and remaining
+physical-device/child/audio/deployment gates.
+
+Latest JoinDots verification: lint, production build, 2,238 unit tests and 466
+component tests passed (four unit tests skipped). One focused Chrome batch
+completed Ursa Major at 1280×900, 390×844 and 844×390 in both themes, checking
+panel bounds, 48px controls, visible navigation and completion/Next pattern.
+Screenshots were reviewed; no page/module errors occurred. Physical-device
+touch/performance/speech and child usability remain unverified.
+
 
 ### Accounts — built 2026-09-15, rebuilt 2026-09-19
 Sign-up (`/signup`), sign-in (`/login`), child profile picker (`/profiles`), and an
@@ -4089,3 +4204,13 @@ than failing the whole load.
 Several bugs only appeared in the real app: the Word Sorter never re-dealt, the counting inputs
 were invisible in dark mode, and the map scored wrong answers as found. Contrast in particular
 must be **measured** from computed styles — the target is WCAG AA **4.5:1**.
+
+Constellation positioning correction (2026-10-23): the left layout now starts
+at 600 CSS pixels, including narrow/zoomed desktop windows and landscape
+phones. Card width and sky gutter shrink together; portrait phones below
+600px retain bottom controls. Regression coverage includes 600px and 619px.
+
+Positioning fix verified: lint, full tests and build passed. The focused Chrome
+check passed in both themes at 1280×900, 619×756, 390×844 and 844×390, including
+left alignment, expanded reading content and visible navigation. Screenshots
+were reviewed; physical-device checks remain open.

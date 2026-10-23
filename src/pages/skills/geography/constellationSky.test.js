@@ -96,3 +96,44 @@ test('the sky controls orbit about celestial north, and the camera keeps its own
   assert.ok(Number.isFinite(badge.scale.y) && Number.isFinite(badge.position.x), 'a 0px-tall mount gives finite badges');
   sky.dispose();
 });
+
+test('join-the-dots projects touch targets and reveals only earned edges in every framing', () => {
+  for (const [width, height] of [[1200, 760], [390, 756], [844, 302]]) {
+    const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(50, width / height, .1, 5000);
+    const sky = createConstellationSky({ scene, camera, domElement: { clientWidth: width, clientHeight: height },
+      makeLabel: () => new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.Texture({ width: 160, height: 50 }) })),
+      getQuality: () => 'low', reducedMotion: () => true,
+      createControls: () => ({ target: new THREE.Vector3(), update() {}, dispose() {} }) });
+    for (const figure of constellations) {
+      sky.enter(figure.id); sky.setTrace(0); sky.update();
+      const group = scene.getObjectByName(figure.id);
+      assert.equal(group.children[1].geometry.drawRange.count, 0);
+      for (const star of figure.stars) {
+        const target = sky.projectStar(star.id);
+        assert.ok(target.visible, `${figure.id}/${star.id} hidden at ${width}: ${JSON.stringify(target)}`);
+      }
+      sky.setTrace(2); sky.update(); assert.equal(group.children[1].geometry.drawRange.count, 4);
+      assert.equal(group.children[2].visible, false, 'names cannot cover touch targets during play');
+      sky.setTrace(null); sky.update(); assert.equal(group.children[1].geometry.drawRange.count, Infinity);
+    }
+    sky.dispose();
+  }
+});
+
+test('desktop browsing frames all stars to the right of the left information panel', () => {
+  for (const [width, height] of [[600, 756], [619, 756], [844, 302], [1024, 700], [1280, 828], [1920, 1000]]) for (const figure of constellations) {
+    const frame = constellationFrame(figure.stars, width / height, height, { leftPanel: true });
+    assert.ok(Math.abs(frame.reservedLeft - (Math.min(340, width * .4) + 24)) < 1e-8); assert.equal(frame.reserved, 0); assert.equal(frame.reservedX, 0);
+    const camera = new THREE.PerspectiveCamera(frame.fov, width / height, .1, 5000);
+    camera.up.copy(vector(skyDirection({ raHours: 0, decDeg: 90 })));
+    camera.lookAt(vector(frame.center));
+    camera.setViewOffset(width, height, -frame.reservedLeft / 2, 0, width, height); camera.updateMatrixWorld();
+    for (const star of figure.stars) {
+      const p = vector(skyDirection(star)).multiplyScalar(SKY_RADIUS).project(camera);
+      assert.ok(p.x > -1 + frame.reservedLeft / width * 2 && p.x < 1 && Math.abs(p.y) < 1, `${figure.id}/${star.id} overlaps desktop panel`);
+    }
+    const tracing = constellationFrame(figure.stars, width / height, height, { leftPanel: true });
+    assert.equal(tracing.reservedLeft, frame.reservedLeft, 'tracing shares the desktop left panel');
+  }
+  assert.equal(constellationFrame(constellations[0].stars, 390 / 756, 756, { leftPanel: true }).reservedLeft, 0);
+});

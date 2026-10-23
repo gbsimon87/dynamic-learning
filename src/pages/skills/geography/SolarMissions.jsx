@@ -3,6 +3,7 @@ import Dialog from '../../../components/ui/Dialog.jsx';
 import { speak, stopNarrationOf } from '../../../utils/speech.js';
 import { isMuted } from '../../../components/celebration/sound/player.js';
 import { MISSIONS, missionMatches, loadMissionStamps, saveMissionStamps } from './solarMissions.js';
+import SolarSections, { SolarSection } from './SolarSections.jsx';
 import './SolarMissions.css';
 
 export default function SolarMissions({ enabled, body, onStart, onOpen }) {
@@ -41,15 +42,23 @@ export default function SolarMissions({ enabled, body, onStart, onOpen }) {
       <button type="button" onClick={() => { stopNarrationOf(narration.current); setActive(null); }} aria-label="Put mission away">✕</button>
     </div>}
     {open && <Dialog label="Space missions" className="solar-missions-dialog" onClose={close}>
-      <h2>🎯 Space missions</h2>
-      <p>Pick a clue, then use search or tap a world to fly there. Explore as much as you like!</p>
-      <p>{completed.length} of {MISSIONS.length} stamps collected. Saved in this browser, shared by everyone using it.</p>
+      <header><span className="solar-missions-dialog__eyebrow">Collect a discovery stamp</span><h2>🎯 Space missions</h2></header>
+      <p className="solar-missions-dialog__intro">Pick a clue. Tap a world or use search to fly there.</p>
+      <div className="solar-missions-dialog__progress"><progress value={completed.length} max={MISSIONS.length} aria-label="Mission stamps" /><span>{completed.length} / {MISSIONS.length} stamps</span></div>
       {!saved && <p role="status">Your browser cannot save stamps right now. You can still play.</p>}
-      <div className="solar-missions-dialog__list">{MISSIONS.map(mission => <article key={mission.id}>
-        <p>{completed.includes(mission.id) ? '✅ ' : '🌟 '}{mission.clue}</p>
-        <button type="button" onClick={() => read(mission.clue)} aria-label={`Read ${mission.id} clue aloud`}>🔊 Hear clue</button>
-        <button type="button" onClick={() => { close(); onStart(); setFound(false); setActive(mission); }}> {completed.includes(mission.id) ? 'Explore again' : 'Try this mission'}</button>
-      </article>)}</div>
+      <div className="solar-missions-dialog__list">
+        <SolarSections defaultOpen={MISSIONS.find(mission => !completed.includes(mission.id))?.id}>
+          {MISSIONS.map((mission, index) => <SolarSection key={mission.id} section={mission.id}
+            title={`${completed.includes(mission.id) ? '✅' : '🌟'} ${['Red planet', 'Bright rings', 'Our home', 'A giant planet', 'Icy geysers', 'Earth’s companion'][index]}`}>
+            <p>{mission.clue}</p>
+            <div className="solar-missions-dialog__actions">
+              <button type="button" onClick={() => read(mission.clue)} aria-label={`Read ${mission.id} clue aloud`}>🔊</button>
+              <button type="button" onClick={() => { close(); onStart(); setFound(false); setActive(mission); }}>{completed.includes(mission.id) ? 'Explore again' : 'Try this mission'}</button>
+            </div>
+          </SolarSection>)}
+          <SolarSection section="stamps" title="About your stamps"><p>Saved in this browser, shared by everyone using it. Replay a mission whenever you like.</p></SolarSection>
+        </SolarSections>
+      </div>
     </Dialog>}
   </div>;
 }

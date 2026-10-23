@@ -48,3 +48,12 @@ export function zoomFov(separation, aspect) {
     const shorter = Math.min(1, aspect);
     return Math.min(20, Math.max(1.5, separation / 0.35 / shorter));
 }
+
+/**
+ * Whether the world clock stops in `phase`. From the turn round on, orbits and
+ * spins hold still: the zoom magnifies any motion into a whirl, and Voyager's
+ * photo was one frozen moment.
+ */
+export function holdsClock(phase) {
+    return phase === "turning" || phase === "looking";
+}
