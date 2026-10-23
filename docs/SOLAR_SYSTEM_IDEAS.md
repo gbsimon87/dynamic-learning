@@ -1,7 +1,7 @@
 # Solar System — ideas and roadmap
 
 Skills Mode → Geography · [SolarSystem.jsx](../src/pages/skills/geography/SolarSystem.jsx)
-Reviewed against source: **2026-10-22**. All 113 idea IDs are retained.
+Reviewed against source: **2026-10-23**. All 113 idea IDs are retained.
 
 ## Current position
 
@@ -9,10 +9,10 @@ Reviewed against source: **2026-10-22**. All 113 idea IDs are retained.
 |---|---|---|
 | 0 — Foundations | Module host, quality tiers/readout, bloom test, #82 My view, credited replacement planet textures | Real-phone bloom baseline; unknown-source cube-map sky |
 | 1 — First ten seconds | #4 time, #22 age, #23 Bix’s weight, #24 sneeze, #25 Sun safety, #26 bounce, #1 warp arrival, #8 shooting stars, #9 Milky Way, #11 clouds, #12 atmospheres | #5 bloom decision; #27 arrival audio; child playtest |
-| 2 — Meet your ship | #34 autopilot, #50 ISS, #35 tour lift-off, #62 size line-up, #47 Pale Blue Dot; steering prototype | Child steering comparison; rumble depends on audio decision |
+| 2 — Meet your ship | #34 autopilot, #50 ISS, #35 tour lift-off, #62 size line-up, #47 Pale Blue Dot; integrated flight | Integrated-flight child checks; rumble depends on audio decision |
 | 3 — Living Solar System | #48 day/night, #54 Moon phases, #16 tidal-locking core, #55 auroras, #41 comet tails, #57 close-up rings | Optional #16 arrow/label; device checks; original “surprise on every planet” exit is not met |
-| 4 — Missions and stars | #73 mission cards; #67 sky constellations | #74 passport, #68 join the dots, #75 Golden Record; lensing spike |
-| 5 — Take the controls | Prototype only | #83 free flight after steering choice, then #84 asteroid run |
+| 4 — Missions and stars | #73 mission cards; #67 sky constellations; #68 join the dots | #74 passport (deferred by owner), #75 Golden Record; lensing spike |
+| 5 — Take the controls | #83 free flight in the main Solar System; hold-to-boost turbo with shared light streaks | Child/device steering checks; #84 asteroid run |
 | 6 — Beyond | Nothing yet | #113 warp, then #90 black hole and #91 nebula |
 
 ✅ built · ◐ partial · ⏳ external dependency · — unbuilt. Built means implemented,
@@ -34,9 +34,9 @@ not deployed or physically device-tested. Stretch ideas are not phase blockers.
 - **Old sky:** establish a source for the six `cubeMap/` images or approve
   replacing them with the credited Milky Way default.
 - **Playtests:** 2–3 children with a parent present and agreeing: first-visit
-  reaction, then steering B (tap) and A (joystick), about five minutes each.
-  Copy the steering Notes summary and record which worked without help.
-  Simon’s keyboard trial: 4/5 targets in 34.3 s, four bumps; B not tried.
+  reaction, then integrated joystick/keyboard flight, clues and hold-to-boost
+  turbo. Record which destinations they reach without help. The old A/B
+  colour-planet prototype was removed at the owner’s request (2026-10-23).
 - **Physical devices:** touch, speech and performance remain unverified for
   recent effects. Browser phone-width checks do not close this.
 - **Reported once:** orbit lines switched off and a Sun message appeared without
@@ -64,20 +64,21 @@ not deployed or physically device-tested. Stretch ideas are not phase blockers.
   #73 explicitly uses **`dl.solarMissions`**, version 1, browser-wide completed
   mission IDs; shared across profiles and retained through sign-out. Storage
   failures leave play available. #74 will build the passport on these stamps.
+  Flight rewards last only for that adventure; traced-figure collections last
+  only for this page visit. Neither changes curriculum progress or mission stamps.
 - Update this roadmap and `PROJECT_KNOWLEDGE.md` with implementation; lint,
   tests, build and UI checks are required. Keep device/playtest gates honest.
 
 ## Upcoming sequence and dependencies
 
-1. **#74 passport:** turn visited worlds into a browsable collection; retain
-   mission stamps and keep the Skills-only storage contract explicit.
-2. **#68 join the dots:** builds on the now-implemented #67 sky constellations;
-   #101 comes later.
-3. **#75 Golden Record**, then a tablet lensing spike before #90.
-4. **#83 → #84:** choose controls from playtests, then free flight and asteroid
-   stardust; #87 garage depends on stardust and #85 docking on #50 ISS.
-5. **#113 → #90/#91:** warp opens separate Beyond scenes. #108 galaxy map is
+1. **#75 Golden Record**, then a tablet lensing spike before #90.
+2. **#84 asteroid run:** builds on #83 main-scene free flight; child/device
+   steering checks remain open. #87 garage depends on stardust and #85 docking on #50 ISS.
+3. **#113 → #90/#91:** warp opens separate Beyond scenes. #108 galaxy map is
    optional later navigation; #109 other systems follows warp.
+4. **#74 passport** is deferred at the owner's request. Retain mission stamps
+   and the explicit Skills-only storage contract when it returns.
+5. **#101 custom constellations** comes later; #68 join the dots is now built.
 
 Other chains: composer → #5/#90/#92/#113; #34 ship → #35–39/#47/#73;
 #73 missions → #74/#81/#102; #48 + #65 → #98; #66 → #110.
@@ -110,7 +111,7 @@ days, Hard 1–3 weeks, Complex 3+ weeks; these are sizing guides, not schedules
 | 10 | **Sun surface shimmer** | The Sun's surface slowly boils | — |
 | 11 | **Earth clouds** | White clouds drift over Earth at their own speed | ✅ |
 | 12 | **Atmosphere glow** | A thin blue halo around Earth; yellow haze on Venus; faint pink on Mars | ✅ |
-| 13 | **Realistic Saturn rings** | Saturn's rings have real gaps and dusty transparency | — |
+| 13 | **Realistic Saturn rings** | Saturn's rings have real gaps and dusty transparency | ◐ Gapped translucent bands built; finer dusty structure pending |
 | 14 | **Faint rings elsewhere** | Jupiter, Uranus and Neptune show their thin rings when you zoom in | — |
 | 15 | **Pluto's heart** | Pluto gets its real heart-shaped plain | — |
 | 16 | **Moon always faces Earth** | Arrow shows the Moon keeps the same face towards us 🎓 | ◐ Core built; optional arrow/label pending |
@@ -137,8 +138,8 @@ days, Hard 1–3 weeks, Complex 3+ weeks; these are sizing guides, not schedules
 | # | Idea | Experience | Status |
 |---|---|---|---|
 | 34 | **Autopilot spaceship** | Tap a planet; a real ship flies there on a smooth curve and the camera chases it | ✅ |
-| 35 | **Lift-off from Earth** | "3, 2, 1, lift off!" with smoke and a rumble, then the ship leaves Earth | ✅ |
-| 36 | **Engine flames and boost** | Glowing exhaust that flares when the ship speeds up | ◐ Basic exhaust built; boost pending |
+| 35 | **Lift-off from Earth** | "3, 2, 1, lift off!" with smoke and a rumble, then the ship leaves Earth | ◐ Countdown/smoke/lift-off built; rumble awaits audio decision |
+| 36 | **Engine flames and boost** | Glowing exhaust that flares when the ship speeds up | ◐ Exhaust, turbo and streaks built; manual boost flame flare pending |
 | 37 | **Settle into orbit** | On arrival the ship circles the planet so the child watches it turn below | — |
 | 38 | **Camera choices** | Buttons for "behind the ship", "cockpit window" and "watch from outside" | — |
 | 39 | **Gravity slingshot** | Autopilot to Saturn swings past Jupiter and speeds up: "Slingshot!" 🎓 | — |
@@ -169,28 +170,28 @@ days, Hard 1–3 weeks, Complex 3+ weeks; these are sizing guides, not schedules
 | 64 | **Orbit trails** | Planets leave fading ribbons behind them | — |
 | 65 | **Seasons on Earth** | Tilt arrow; the UK side gets more sunlight in summer | — |
 | 66 | **Where are the planets today?** | Planets jump to their real positions for today's date | — |
-| 67 | **Find it in the 3D sky** | Existing charts open real-coordinate star patterns around the Solar System; drag to look around | ✅ |
-| 68 | **Join the dots** | Tap the stars in order and the constellation draws itself with glowing lines | — |
+| 67 | **Find it in the 3D sky** | Open real-coordinate star patterns directly around the Solar System; drag to look around | ✅ |
+| 68 | **Join the dots** | Tap numbered stars in the existing 3D sky; each completed edge reveals its glowing line | ✅ |
 | 69 | **Story and fact flip** | Each constellation card flips between its story and a true fact | — |
 | 70 | **Stars aren't flat** | Turn Orion sideways and see its stars are at very different distances | — |
 | 71 | **The planets' road** | A faint line shows all planets travel along the same path across the sky | — |
 | 72 | **Brightest stars** | Labels for Sirius, Vega, Betelgeuse and friends, sized by brightness | — |
 | 73 | **Mission cards** | Choose a clue, fly to its world and collect a mission stamp. | ✅ |
-| 74 | **Space passport** | Every planet visited stamps a page in a passport | — |
+| 74 | **Space passport** | Every planet visited stamps a page in a passport | — Owner deferred |
 | 75 | **Golden Record** | A hidden Voyager spacecraft plays "Hello from the children of planet Earth" | — |
 | 76 | **Arrival question** | One big-button question on arrival ("Is Mars bigger or smaller than Earth?") | — |
 | 77 | **Planet sounds** | 🔊 on each card plays NASA's "sounds" (sonifications) of that planet | — |
 | 78 | **Design an alien** | Pick a planet and build a creature that could live there (thick fur for Neptune, heat shield for Venus) 🎓 | — |
 | 79 | **Movie mode** | Black bars slide in and the camera films a cinematic flyby with music | — |
 | 80 | **Light race** | A light pulse leaves the Sun and races outward, ticking off each planet's arrival time 🎓 | — |
-| 81 | **Badges with confetti** | Badges for "Visited all moons of Mars" and similar, with confetti | — |
+| 81 | **Badges with confetti** | Badges for "Visited all moons of Mars" and similar, with confetti | ◐ Session flight stars/milestone badges built; broader goals/confetti pending |
 | 82 | **Child control panel** | A drawer with big toggles for orbits, names, speed and the visual extras ⚙️ | ✅ |
 
 ### Hard
 
 | # | Idea | Experience | Status |
 |---|---|---|---|
-| 83 | **Free-flight spaceship** | Steer the ship yourself: on-screen joystick and a big thrust button, or arrow keys and WASD | ◐ Steering prototype only |
+| 83 | **Free-flight spaceship** | Steer through the main Solar System; 25 shuffled clues validate arrivals and earn stars/badges; hold-to-boost turbo and light streaks | ✅ Device/playtest checks pending |
 | 84 | **Asteroid-belt run** | Weave through the belt collecting crystals; bumping a rock just wobbles you | — |
 | 85 | **Dock with the ISS** | Line up rings and drift in slowly; Bix cheers when it clicks | — |
 | 86 | **Land on the Moon** | Switch to a Moon surface, steer the lander down gently, Bix plants a flag | — |
@@ -227,46 +228,145 @@ days, Hard 1–3 weeks, Complex 3+ weeks; these are sizing guides, not schedules
 | 111 | **Visit a planet's surface** | Fly low over Mars's Valles Marineris or Titan's lakes | — |
 | 112 | **Move to React Three Fiber** ⚙️ | Rewrite the scene declaratively with R3F and Drei | — |
 
-## Deferred choices and known limits
+## Current implementation and limits
 
-- Stretch work from phases 1–3 remains in the catalogue: #6–7, #10, #13,
-  #31, #33, #36–39, #43, #51–52, #58–59, #63 and #65.
-- Later: #99 neighbours, #108 galaxy map, more #109 systems, #100 tonight’s
-  sky, #101 custom constellations, #102 stories, #103 builder, #104 gravity,
-  #86 landing and #96 countries. Choose order from playtests.
-- Phone planet cards can cover the planet; framing above the card needs work.
-  The ISS is tappable but not searchable. Steering B turns only through taps
-  within the current view. #16’s optional arrow/label is not implemented.
-- No voice commands (children’s audio/cloud review needed), VR (age mismatch),
-  multiplayer (moderation unavailable) or advertising/brand cameos.
+### Orbits and shared clock — including the other agent’s changes
 
-## Recent implementation reference
+`planetOrbits.js` supplies J2000 mean orbital elements, a Kepler solver and
+elliptical, inclined paths for the eight planets and Pluto. `solarSimulation.js`
+uses the same positions as the visible orbit paths; moons retain circular paths.
+Pluto’s inclined ellipse can cross Neptune’s path in projection without their
+3D paths meeting. Scene distances and time are compressed. Initial J2000
+orientation is **not today’s ephemeris**: #63 real-distance mode and #66 current-date
+positions remain unbuilt. Tests cover the solver, perihelion/aphelion, inclination,
+Pluto’s projected crossings, orbital direction/speed and shared simulation wiring.
 
-#73 provides six replayable clues, accepts arrivals through existing search/tap
-ship paths, gives gentle success feedback and saves deduplicated stamps. Wrong
-worlds remain freely explorable. Missions pause in other modes and have manual
-read-aloud. No full passport or automatic destination reveal yet.
-Teaching sources: [Mars](https://science.nasa.gov/mars/facts/),
-[Saturn](https://science.nasa.gov/saturn/facts/),
-[Enceladus](https://science.gsfc.nasa.gov/690/solar-system-tour/Saturn.html).
+`paleBlueDotView.js` / `paleBlueDot.js` expose `holdsClock()` while turning back
+and looking at Earth. `SolarSystem.jsx` holds the shared simulation during those
+phases so the magnified look-back stays steady; outbound flight still advances
+normally. Phase tests cover this distinction.
 
-Phase 3 modules: `earthDayNight.js`, `moonPhase.js` / `MoonPhaseCard`,
-`earthAurora.js` / `AuroraCard`, `cometOrbit.js` / `halleyComet.js`, and
-`saturnRingDetail.js`. Moon locking lives in `solarSimulation.js`.
-All use the existing world clock; ring chunks use 3,200/900 instances,
-auroras 679/132 vertices per pole and comet ribbons 32/12 segments for
-standard/low quality. Motion freezes where appropriate for reduced motion.
-Assets are credited at `/credits`; phase 3 introduced no new downloads.
+### Living-world modules
 
-#67 (2026-10-22): existing five charts now offer **Find in the 3D sky**.
-`constellationSky.js` draws catalogue stars and imaginary connecting lines on a
-2,700-unit celestial sphere, with focused labels, drag-to-look, recenter and
-Previous/Next. Framing reserves room for phone controls; reduced motion snaps
-to each pattern. Back to chart/Close restores the original camera and sky.
+`earthDayNight.js`, `moonPhase.js` / `MoonPhaseCard`, `earthAurora.js` /
+`AuroraCard`, `cometOrbit.js` / `halleyComet.js`, and `saturnRingDetail.js` use
+the existing world clock. Moon locking lives in `solarSimulation.js`. Close-up
+rings use 3,200/900 instances, auroras 679/132 vertices per pole and comet ribbons
+32/12 segments for standard/low quality. Saturn’s distant translucent annuli
+retain a deliberate Cassini Division; finer ring detail remains stretch work.
+Reduced motion freezes effects where appropriate. Assets are credited at
+`/credits`; these effects introduced no new downloads.
+
+### Integrated constellations and Join the Dots — #67 / #68
+
+Five catalogue figures open directly in the **3D Solar System sky**; the duplicate
+SVG chart and mode toggle are removed. `constellationSky.js` draws stars and
+imaginary connecting lines on a 2,700-unit celestial sphere. Drag, recenter,
+Previous/Next and read-aloud remain available. Closing restores the camera/sky.
 The sphere shows directions, not stellar distances or a local/date-specific sky;
-#70 and #100 remain unbuilt. No new assets, dependencies or stored data.
-Teaching: [IAU constellation explanation](https://www.iau.org/IAU/IAU/Astronomy-FAQs/Constellations.aspx?hkey=bb9dc841-0618-41b5-ac70-149741062141).
+#70 and #100 remain unbuilt.
 
-Verification: lint, full tests and build pass; Chrome checks cover both themes,
-phone/landscape framing, touch dragging, recenter, motion preferences and camera
-restoration. Physical-device performance and voice checks remain open.
+`JoinDots` follows catalogue edges in order, explicitly returning to branch
+stars rather than inventing lines. Numbered 48px targets, forgiving wrong taps,
+progress, restart, read-aloud and a completion checkmark/star support play. A
+prominent Next pattern action continues the collection; duplicate completions
+do not increase the count. The collection survives figure changes and reopening
+on this page, then resets on leaving/reloading.
+
+The tracing panel shares `solar-constellation--sky` styling: compact header,
+short instruction, progress, scrollable content and a fixed navigation row.
+Both browsing and tracing sit at the **top-left on desktop scene widths ≥600px**,
+with a card capped at 340px / 40% of the scene and a reserved star-framing gutter. Portrait phones below 600px keep bottom controls;
+phone landscape also uses the left layout. Completion scrolls/focuses the reward.
+Tests cover all five tracing loops, wrong taps, collection/reset/navigation/mute
+and projected framing, including the shared desktop-left layout.
+
+### Spaceship adventure and rewards — #83 / partial #81
+
+`solarFreeFlight.js` reuses the scene, clock and rocket. `flightControls.js`
+provides joystick/keyboard input; the redundant standalone colour-planet steering
+game and its renderer/scoring tests are removed. Releasing GO brakes; surface
+bumpers protect worlds and the camera, and an outer boundary keeps travel local.
+Face world follows moving targets while GO is held; manual steering overrides
+it. Back to Earth repositions safely. Leaving restores the previous camera.
+
+`flightClues.js` supplies **25 shuffled clues**, avoiding consecutive identical
+destinations. They cover the eight planets, Pluto, Sun, Earth’s Moon, moons of
+Mars/Jupiter/Saturn/Neptune/Pluto, ISS, asteroid belt and Halley’s Comet. All scene
+destinations are selectable; hints and skips are free, and the belt stays visible.
+
+Arrival requires actual proximity to the requested object, held for 0.45 seconds
+after travel. Belt detection uses its annular region and height. Success brakes
+the ship and shows a checkmark, star, teaching fact, optional narration and Next
+clue. Badges at 1/5/10/20/25 stars and a discovery list provide rewards. Wrong,
+stale and duplicate arrivals cannot award; an already-near target and Back to
+Earth cannot immediately award. Replay starts a fresh adventure. Rewards are
+**memory-only for that flight**, independent of the six persisted #73 missions.
+Celebrations respect reduced motion; no new effect sounds are enabled.
+
+Turbo is **hold to boost**, with **Shift** as the keyboard equivalent. It can
+power the engine alone or with GO, reaching up to three times open-space cruise.
+Automatic slowdown near surfaces/destinations and a near-target speed cap protect
+arrival detection. Pooled tour light streaks respond to manual boost; reduced
+motion suppresses them. Pointer capture loss, blur, page hiding, Stop, arrival
+and exit clear boost. Collision positions are cached once per frame.
+Tests cover the full clue deck/rewards/replay, moving destinations, belt region,
+wrong/stale/duplicate arrivals, hints/mutes, steering/boost cleanup and camera return.
+Child steering/playtest and physical-device checks remain open.
+
+### Compact cards and missions
+
+`SolarSections` provides exclusive collapsible sections. `SolarInfoCard` keeps
+the name/introduction visible, opens Discover first, shows two facts before More
+facts, and groups extras under Look closer. Play & compare has one activity
+chooser: space birthday, Bix on the scales or planet sizes. Moon phases and
+auroras embed in their sections. Card limits are 340px wide / 400px high.
+The flight HUD is capped at 340px with one open Where to? / Hint / More tool.
+Mission selection is a bounded 440px dialog with one clue expanded, stamp progress
+and the shared-browser storage explanation. Theme tokens, 48px targets and
+scrolling content preserve accessible navigation. Mission matching/storage are
+unchanged. Phone planet cards may still cover their planet; camera framing above
+the card remains open. ISS is tappable and a flight destination, but absent from
+the main planet search. #16’s optional arrow/label is still pending.
+
+### Verification and outstanding checks
+
+Lint, full tests and production build are required for every implementation pass.
+The local-only `scripts/checkSolarUi.js` checks both themes at 1280×900, 390×844
+and 844×390. Previous batched checks covered mission selection, compact planet
+activities, embedded Moon phases, main-scene flight, Shift turbo, constellation
+bounds and desktop-left reading/navigation with no page/module errors.
+The latest tracing panel pass completed Ursa Major in all six viewport/theme
+combinations: panel bounds, 48px controls, visible navigation and completion/Next
+pattern passed, with no page/module errors. Screenshots were reviewed. Lint,
+build, 2,238 unit tests and 466 component tests passed (four unit tests skipped).
+Automated browser sizes do **not** verify physical touch, device performance,
+speech voices or child usability; those gates remain open above.
+
+Stretch work remains in the catalogue; select it from playtests rather than old
+calendar estimates. The old A/B steering prototype is retired, not awaiting a
+choice. Adaptive quality, finer effects, Beyond scenes and passport remain open
+as marked; a built feature is not a claim of deployment.
+
+Teaching references retained from the implemented activities:
+[NASA planets](https://science.nasa.gov/solar-system/planets/),
+[Jupiter moons](https://science.nasa.gov/jupiter/jupiter-moons/),
+[Mars moons](https://science.nasa.gov/mars/moons/),
+[Saturn moons](https://science.nasa.gov/saturn/moons/),
+[Triton](https://science.nasa.gov/neptune/moons/triton/),
+[Charon](https://science.nasa.gov/dwarf-planets/pluto/moons/charon/),
+[asteroids](https://science.nasa.gov/solar-system/asteroids/),
+[ISS](https://www.nasa.gov/international-space-station/),
+[Halley](https://science.nasa.gov/solar-system/comets/1p-halley/), and
+[IAU constellations](https://www.iau.org/IAU/IAU/Astronomy-FAQs/Constellations.aspx?hkey=bb9dc841-0618-41b5-ac70-149741062141).
+These support Skills exploration, not a claim of statutory Year 5 coverage.
+
+Constellation positioning correction (2026-10-23): the left layout now starts
+at 600 CSS pixels, including narrow/zoomed desktop windows and landscape
+phones. Card width and sky gutter shrink together; portrait phones below
+600px retain bottom controls. Regression coverage includes 600px and 619px.
+
+Positioning fix verified: lint, full tests and build passed. The focused Chrome
+check passed in both themes at 1280×900, 619×756, 390×844 and 844×390, including
+left alignment, expanded reading content and visible navigation. Screenshots
+were reviewed; physical-device checks remain open.

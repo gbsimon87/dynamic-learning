@@ -776,3 +776,29 @@
 .solar-system .solar-saturn-rings summary { min-height: 48px; align-content: center; font-weight: 700; cursor: pointer; }
 .solar-system .solar-saturn-rings button { min-height: 48px; }
 .solar-system .solar-saturn-rings summary:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+
+/* Compact planet explorer: one section at a time, with the scene kept in view. */
+.solar-system .solar-info-card { top: auto; width: min(340px, calc(100% - 24px)); left: 12px; bottom: 76px; max-height: min(400px, calc(100% - 96px)); padding: 12px; gap: 6px; border-radius: 16px; background: var(--light-panel); color: var(--light-text); border: 1px solid color-mix(in srgb, currentColor 20%, transparent); box-sizing: border-box; backdrop-filter: none; }
+body.dark .solar-system .solar-info-card { background: var(--dark-panel); color: var(--dark-text); }
+.solar-system .solar-info-card--tour { top: 12px; bottom: auto; }
+.solar-system .solar-info-card__header { gap: 4px; flex: 0 0 auto; }
+.solar-system .solar-info-card h2 { color: inherit; font-size: 22px; margin: 0; }
+.solar-system .solar-info-card__eyebrow { color: inherit; font-size: 11px; opacity: .75; }
+.solar-system .solar-info-card__summary { margin: 0; color: inherit; font-size: 13px; line-height: 1.4; flex: 0 0 auto; }
+.solar-system .solar-info-card__body { min-height: 0; overflow-y: auto; padding-right: 2px; overscroll-behavior: contain; }
+.solar-system .solar-info-card__close { min-width: 48px; min-height: 48px; color: inherit; border: 0; background: transparent; }
+.solar-system .solar-info-card__meta { gap: 4px; margin: 0 0 6px; }
+.solar-system .solar-info-card__meta span { color: inherit; background: transparent; border: 1px solid color-mix(in srgb, currentColor 22%, transparent); padding: 2px 6px; font-size: 11px; }
+.solar-system .solar-info-card ul { color: inherit; font-size: 13px; line-height: 1.45; gap: 6px; }
+.solar-system .solar-info-card li::marker { color: inherit; }
+.solar-system .solar-info-card__tour-button, .solar-info-card__navigation button { min-height: 48px; min-width: 48px; padding: 6px 10px; border: 1px solid color-mix(in srgb, currentColor 22%, transparent); border-radius: 8px; font: inherit; color: inherit; background: transparent; margin: 0; }
+.solar-info-card__navigation { display: flex; gap: 6px; flex: 0 0 auto; }
+.solar-info-card__navigation button { flex: 1; cursor: pointer; }
+.solar-info-card__navigation button:disabled { opacity: .4; }
+.solar-system .solar-info-card .moon-phase, .solar-system .solar-info-card .solar-aurora-card { color: inherit; margin: 0; padding: 0; border: 0; background: transparent; }
+.solar-system .solar-info-card .moon-phase section { padding: 0; background: transparent; }
+.solar-system .solar-info-card .moon-phase p, .solar-system .solar-info-card .solar-aurora-card p { color: inherit; font-size: 13px; }
+.solar-system .solar-info-card .moon-phase button, .solar-system .solar-info-card .solar-aurora-card button { color: inherit; background: transparent; min-height: 48px; }
+@media (max-width: 719px) { .solar-system .solar-info-card { max-height: min(420px, 54%); } }
+
+.solar-info-card__more-facts summary { min-height: 48px; display: flex; align-items: center; cursor: pointer; font-weight: 700; }

@@ -27,7 +27,20 @@ test('loads stamps from earlier visits and offers replay', () => {
   localStorage.setItem(MISSION_KEY, JSON.stringify({ version: 1, completed: ['red'] }));
   render(<SolarMissions enabled body={null} onStart={vi.fn()} onOpen={vi.fn()} />);
   fireEvent.click(screen.getByRole('button', { name: /Missions 1\/6/ }));
+  fireEvent.click(screen.getByRole('button', { name: /Red planet/ }));
   expect(screen.getByRole('button', { name: 'Explore again' })).toBeTruthy();
   fireEvent.click(screen.getByRole('button', { name: 'Close', exact: true }));
   expect(screen.queryByRole('dialog')).toBeNull();
+});
+
+test('the compact picker opens only one clue at a time and preserves stamp information', () => {
+  render(<SolarMissions enabled body={null} onStart={vi.fn()} onOpen={vi.fn()} />);
+  fireEvent.click(screen.getByRole('button', { name: /Missions/ }));
+  expect(screen.getAllByRole('button', { name: 'Try this mission' }).length).toBe(1);
+  fireEvent.click(screen.getByRole('button', { name: /Bright rings/ }));
+  expect(screen.getAllByRole('button', { name: 'Try this mission' }).length).toBe(1);
+  expect(screen.getByRole('button', { name: /Red planet/ }).getAttribute('aria-expanded')).toBe('false');
+  fireEvent.click(screen.getByRole('button', { name: /About your stamps/ }));
+  expect(screen.getByText(/Saved in this browser, shared by everyone/)).toBeTruthy();
+  expect(screen.queryByRole('button', { name: 'Try this mission' })).toBeNull();
 });

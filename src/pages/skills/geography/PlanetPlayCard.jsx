@@ -46,9 +46,6 @@ export default function PlanetPlayCard({ bodyName, onLineUp }) {
 
     if (!can.age && !can.weight) return null;
 
-    const ageId = "planet-play-age";
-    const weightId = "planet-play-weight";
-    const toggle = (name) => set({ panel: panel === name ? null : name, age: null });
     const gravity = PLANET_PLAY[bodyName].gravity;
     // Lighter bodies bounce higher, heavier ones squash more.
     const lift = Math.round(Math.min(34, Math.max(6, 22 / Math.max(gravity, 0.3))));
@@ -58,37 +55,24 @@ export default function PlanetPlayCard({ bodyName, onLineUp }) {
     return (
         <div className="planet-play">
             <div className="planet-play__buttons">
-                {can.age && (
-                    <button
-                        type="button"
-                        className="planet-play__toggle"
-                        aria-expanded={panel === "age"}
-                        aria-controls={ageId}
-                        onClick={() => toggle("age")}
-                    >
-                        <span aria-hidden="true">🎂</span> How old would I be?
-                    </button>
-                )}
-                {can.weight && (
-                    <button
-                        type="button"
-                        className="planet-play__toggle"
-                        aria-expanded={panel === "weight"}
-                        aria-controls={weightId}
-                        onClick={() => toggle("weight")}
-                    >
-                        <span aria-hidden="true">⚖️</span> How heavy would Bix be?
-                    </button>
-                )}
-                {onLineUp && (
-                    <button type="button" className="planet-play__toggle" onClick={onLineUp}>
-                        <span aria-hidden="true">📏</span> How big is it really?
-                    </button>
-                )}
+                <label>Choose an activity
+                    <select aria-label="Choose an activity" value={panel ?? ""} onChange={event => {
+                        const choice = event.target.value;
+                        if (choice === "size") { onLineUp?.(); return; }
+                        stopNarrationOf(spoken.current);
+                        set({ panel: choice || null, age: null });
+                    }}>
+                        <option value="">Pick one…</option>
+                        {can.age && <option value="age">🎂 Your space birthday</option>}
+                        {can.weight && <option value="weight">⚖️ Bix on the scales</option>}
+                        {onLineUp && <option value="size">📏 Compare planet sizes</option>}
+                    </select>
+                </label>
             </div>
 
             {panel === "age" && (
-                <div className="planet-play__panel" id={ageId}>
+                <div className="planet-play__panel">
+                    {age === null && <p className="planet-play__prompt">How old are you on Earth?</p>}
                     {age === null && (
                         <div className="planet-play__ages" role="group" aria-label="How old are you?">
                             {AGES.map((n) => (
@@ -115,7 +99,7 @@ export default function PlanetPlayCard({ bodyName, onLineUp }) {
             )}
 
             {panel === "weight" && (
-                <div className="planet-play__panel" id={weightId}>
+                <div className="planet-play__panel">
                     <div
                         className="planet-play__stage"
                         style={{ "--play-lift": `${lift}px`, "--play-squash": squash }}

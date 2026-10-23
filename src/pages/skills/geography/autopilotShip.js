@@ -8,7 +8,7 @@ const SIZE = { perRadius: 0.9, min: 0.035, max: 0.07 };
 // How far behind the ship the camera chases, in ship lengths.
 const CHASE_LENGTHS = 5.5;
 
-function buildShip(quality) {
+export function buildShip(quality) {
     const segments = quality === "low" ? 10 : 18;
     const white = new THREE.MeshStandardMaterial({ color: 0xf4f6fb, roughness: 0.5, metalness: 0.15, emissive: 0x1c1f26 });
     const red = new THREE.MeshStandardMaterial({ color: 0xe8473d, roughness: 0.55, metalness: 0.1, emissive: 0x2a0806 });

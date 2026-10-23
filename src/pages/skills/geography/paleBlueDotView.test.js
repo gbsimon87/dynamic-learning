@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { LOOK_BACK_DISTANCE, PALE_BLUE_DOT_STORY, lookBackPoint, separationDegrees, zoomFov } from "./paleBlueDotView.js";
+import { LOOK_BACK_DISTANCE, PALE_BLUE_DOT_STORY, holdsClock, lookBackPoint, separationDegrees, zoomFov } from "./paleBlueDotView.js";
 
 const earth = { x: 25.64, y: 0, z: 0 };
 
@@ -37,4 +37,11 @@ test("the zoom makes the gap about a third of the shorter side", () => {
 test("the story is short enough to read aloud", () => {
     const words = PALE_BLUE_DOT_STORY.join(" ").split(/\s+/).length;
     assert.ok(words < 90, `${words} words`);
+});
+
+test("the planets hold still once the camera turns round, like a photo", () => {
+    assert.equal(holdsClock("idle"), false);
+    assert.equal(holdsClock("flying"), false);
+    assert.equal(holdsClock("turning"), true);
+    assert.equal(holdsClock("looking"), true);
 });

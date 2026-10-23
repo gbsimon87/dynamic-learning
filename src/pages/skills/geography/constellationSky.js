@@ -22,7 +22,7 @@ export function createConstellationSky({ scene, camera, domElement, makeLabel, m
   controls.enabled = false; controls.enableZoom = false; controls.enablePan = false;
   controls.enableDamping = false; controls.rotateSpeed = .35;
   controls.minDistance = .01; controls.maxDistance = .01;
-  let saved = null, selected = null, transition = null, framing = null;
+  let saved = null, selected = null, transition = null, framing = null, trace = null;
   let size = { width: domElement.clientWidth, height: domElement.clientHeight };
   const anchor = new THREE.Vector3(), targetRotation = new THREE.Quaternion(), offset = new THREE.Vector3();
   const geometries = [], materials = [], labels = [], badges = [];
@@ -63,11 +63,11 @@ export function createConstellationSky({ scene, camera, domElement, makeLabel, m
   }
   function setSize() {
     if (saved && selected) {
-      const frame = constellationFrame(selected.stars, camera.aspect, size.height);
+      const frame = constellationFrame(selected.stars, camera.aspect, size.height, { leftPanel: true });
       framing = frame;
-      domElement.parentElement?.setAttribute('data-constellation-layout', frame.reservedX ? 'side' : 'bottom');
-      camera.fov = frame.fov;
-      camera.setViewOffset(size.width, size.height, frame.reservedX / 2, frame.reserved / 2, size.width, size.height);
+      domElement.parentElement?.setAttribute('data-constellation-layout', frame.reservedLeft ? 'left' : frame.reservedX ? 'side' : 'bottom');
+      camera.fov = trace === null ? frame.fov : Math.min(135, frame.fov * 1.12);
+      camera.setViewOffset(size.width, size.height, (frame.reservedX - frame.reservedLeft) / 2, frame.reserved / 2, size.width, size.height);
       camera.updateProjectionMatrix();
     }
     for (const label of labels) {
@@ -80,6 +80,20 @@ export function createConstellationSky({ scene, camera, domElement, makeLabel, m
 
   }
   const api = {
+    setTrace(lineCount) {
+      const reframing = (trace === null) !== (lineCount === null);
+      trace = lineCount;
+      if (reframing) setSize();
+    },
+    projectStar(id) {
+      const star = selected?.stars.find(s => s.id === id);
+      if (!saved || !star) return null;
+      const direction = skyDirection(star);
+      camera.updateMatrixWorld();
+      const point = new THREE.Vector3(direction.x, direction.y, direction.z).multiplyScalar(SKY_RADIUS).add(root.position).project(camera);
+      const x = (point.x + 1) * size.width / 2, y = (1 - point.y) * size.height / 2;
+      return { x, y, visible: !transition && point.z < 1 && x > framing.reservedLeft + 24 && x < size.width - framing.reservedX - 24 && y > 24 && y < size.height - framing.reserved - 24 };
+    },
     enter(id) {
       const constellation = constellations.find(c => c.id === id);
       if (!constellation) return false;
@@ -90,7 +104,7 @@ export function createConstellationSky({ scene, camera, domElement, makeLabel, m
       selected = constellation;
       camera.up.copy(north);
       setSize();
-      const frame = constellationFrame(selected.stars, camera.aspect, size.height);
+      const frame = constellationFrame(selected.stars, camera.aspect, size.height, { leftPanel: true });
       const direction = new THREE.Vector3(frame.center.x, frame.center.y, frame.center.z);
       targetRotation.setFromRotationMatrix(new THREE.Matrix4().lookAt(anchor.clone().addScaledVector(direction, -.01), anchor, north));
       transition = { from: camera.quaternion.clone(), t: 0 };
@@ -119,7 +133,8 @@ export function createConstellationSky({ scene, camera, domElement, makeLabel, m
         item.points.material.uniforms.strength.value = display ? display.stars : focus ? 1.8 : .6;
         item.points.material.uniforms.pointScale.value = getQuality() === 'low' ? 1.2 : 1;
         item.lines.material.opacity = display ? display.lines : focus ? .85 : .16;
-        item.nameGroup.visible = Boolean(focus);
+        item.lines.geometry.setDrawRange(0, trace !== null && saved ? (focus ? trace * 2 : 0) : Infinity);
+        item.nameGroup.visible = Boolean(focus && trace === null);
         item.badge.visible = Boolean(display);
         if (display) item.badge.material.opacity = display.names;
         // Behind the planets in the Solar System; on top of everything when opened.
@@ -145,7 +160,7 @@ export function createConstellationSky({ scene, camera, domElement, makeLabel, m
         const halfWidth = 9 * label.scale.x / label.scale.y / size.width * 2;
         const halfHeight = 22 / size.height;
         const box = { x: projected.x, y: projected.y, w: halfWidth, h: halfHeight };
-        label.visible = projected.z < 1 && projected.x > -1 + halfWidth && projected.x < 1 - halfWidth - framing.reservedX / size.width * 2 && projected.y < 1 - halfHeight
+        label.visible = projected.z < 1 && projected.x > -1 + halfWidth + framing.reservedLeft / size.width * 2 && projected.x < 1 - halfWidth - framing.reservedX / size.width * 2 && projected.y < 1 - halfHeight
           && projected.y > -1 + framing.reserved / size.height * 2
           && !occupied.some(b => Math.abs(b.x-box.x) < b.w+box.w && Math.abs(b.y-box.y) < b.h+box.h);
         if (label.visible) occupied.push(box);
@@ -159,7 +174,7 @@ export function createConstellationSky({ scene, camera, domElement, makeLabel, m
       if (saved.view?.enabled) camera.setViewOffset(saved.view.fullWidth, saved.view.fullHeight, saved.view.offsetX, saved.view.offsetY, saved.view.width, saved.view.height);
       else camera.clearViewOffset();
       camera.updateProjectionMatrix();
-      saved = null; selected = null; root.position.set(0,0,0);
+      saved = null; selected = null; trace = null; root.position.set(0,0,0);
       domElement.parentElement?.removeAttribute('data-constellation-layout');
       api.update();
     },

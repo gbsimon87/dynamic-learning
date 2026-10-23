@@ -4,8 +4,9 @@ import { isMuted } from "../../../components/celebration/sound/player.js";
 import { drawMoonPhase, MOON_PHASE_LINE } from "./moonPhase.js";
 import "./MoonPhaseCard.css";
 
-export default function MoonPhaseCard({ sceneApiRef, muted = false }) {
-    const [open, setOpen] = useState(false);
+export default function MoonPhaseCard({ sceneApiRef, muted = false, embedded = false }) {
+    const [expanded, setOpen] = useState(false);
+    const open = embedded || expanded;
     const [name, setName] = useState("");
     const canvas = useRef(null);
     const timer = useRef(null);
@@ -24,9 +25,9 @@ export default function MoonPhaseCard({ sceneApiRef, muted = false }) {
     }, [open, sceneApiRef]);
     return (
         <div className="moon-phase">
-            <button type="button" aria-expanded={open} aria-controls="moon-phase-window" onClick={() => setOpen(!open)}>
+            {!embedded && <button type="button" aria-expanded={open} aria-controls="moon-phase-window" onClick={() => setOpen(!open)}>
                 🌗 See the Moon from Earth
-            </button>
+            </button>}
             {open && <section id="moon-phase-window" aria-label="Moon phases: view from Earth">
                 <h3>View from Earth</h3>
                 <canvas ref={canvas} width="128" height="128" role="img" aria-label={`Moon seen from Earth: ${name}`} />

@@ -10,16 +10,18 @@ export function skyDirection(star) {
   const p = raDecToUnitVector(star);
   return { x: p.x, y: p.y * Math.cos(OBLIQUITY) - p.z * Math.sin(OBLIQUITY), z: -p.y * Math.sin(OBLIQUITY) - p.z * Math.cos(OBLIQUITY) };
 }
-export function constellationFrame(stars, aspect, height) {
+export function constellationFrame(stars, aspect, height, { leftPanel = false } = {}) {
   const points = stars.map(skyDirection);
   const center = points.reduce((a, p) => ({ x: a.x + p.x, y: a.y + p.y, z: a.z + p.z }), { x: 0, y: 0, z: 0 });
   const length = Math.hypot(center.x, center.y, center.z) || 1;
   for (const key of ['x', 'y', 'z']) center[key] /= length;
   const angle = Math.max(...points.map(p => Math.acos(Math.min(1, Math.max(-1, p.x * center.x + p.y * center.y + p.z * center.z)))));
+  const desktop = leftPanel && Math.round(aspect * height) >= 600;
   const landscape = height <= 420 && aspect > 1.3;
-  const reserved = landscape ? 0 : Math.min(250, height * .44);
-  const reservedX = landscape ? Math.min(364, aspect * height * .44 + 24) : 0;
+  const reserved = desktop || landscape ? 0 : Math.min(250, height * .44);
+  const reservedLeft = desktop ? Math.min(340, aspect * height * .4) + 24 : 0;
+  const reservedX = !desktop && landscape ? Math.min(364, aspect * height * .44 + 24) : 0;
   const usable = Math.max(.25, (height - reserved) / height);
-  const fov = Math.min(120, Math.max(25, 2 * Math.atan(Math.tan(angle * 1.18) / Math.min((aspect - reservedX / height) * .88, usable)) * 180 / Math.PI));
-  return { center, fov, reserved, reservedX };
+  const fov = Math.min(120, Math.max(25, 2 * Math.atan(Math.tan(angle * 1.18) / Math.min((aspect - (reservedX + reservedLeft) / height) * .88, usable)) * 180 / Math.PI));
+  return { center, fov, reserved, reservedX, reservedLeft };
 }
