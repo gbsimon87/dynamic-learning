@@ -30,6 +30,12 @@ test("activities are unique, short and British English", () => {
   }
 });
 
+test("every activity uses a move BrainBreak.css animates", () => {
+  for (const activity of ACTIVITIES) {
+    assert.ok(["jump", "stretch", "spin", "sway"].includes(activity.move), activity.id);
+  }
+});
+
 test("only play pages count towards a break", () => {
   for (const path of ["/", "/skills", "/daily-puzzle", "/curriculum/year/3/math", "/trophies", "/solar-system"]) {
     assert.equal(countsTowardsBreak(path), true, path);
