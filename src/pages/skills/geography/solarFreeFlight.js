@@ -3,9 +3,14 @@ import { buildShip } from './autopilotShip.js';
 import { steerInput } from './flightControls.js';
 import { flightArrivalMargin, flightTargetGap } from './flightClues.js';
 import { createFlightCamera } from './solarFlightCamera.js';
+import { createPlanetOrbit, nearestOrbitBody } from './solarPlanetOrbit.js';
 
 const UP = new THREE.Vector3(0, 1, 0);
 const clamp = THREE.MathUtils.clamp;
+// The edge of travel, just past Pluto's furthest point (about 1,250). Reaching
+// it offers the warp to Beyond (#113); it never warps on its own.
+export const FLIGHT_EDGE_RADIUS = 1350;
+const EDGE_OFFER_MARGIN = 5;
 
 // How much of Turbo's 3× applies: all of it until the last few units before a surface.
 const boostShare = clearance => THREE.MathUtils.smoothstep(clearance, .5, 3);
@@ -29,6 +34,7 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, quality
   const previous = new THREE.Vector3(), destinationPoint = new THREE.Vector3();
   const obstacles = bodies.filter(b => b.object3d && !['comet', 'satellite', 'belt'].includes(b.kind));
   const colliders = obstacles.map(body => ({ body, position: new THREE.Vector3() }));
+  const orbit = createPlanetOrbit({ ship, camera, controls, getCameraView, reducedMotion, obstacles });
   const flightCamera = createFlightCamera({ camera, controls, getView: getCameraView, reducedMotion });
   function pointFor(body, out) {
     if (body.kind !== 'belt') return body.object3d.getWorldPosition(out);
@@ -39,9 +45,12 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, quality
   }
   function gapTo(body) { pointFor(body, destinationPoint); return flightTargetGap(body, ship.position, destinationPoint); }
   function emit() {
+    const orbitPlanet = orbit.target() ?? nearestOrbitBody(bodies, ship.position);
     onChange({ nearest: nearest?.id, name: nearest?.name, speed: Math.round(velocity.length()), arrival, boosting: boostStrength > .1,
       navigationArrived: navigation && navigation.id !== goal?.id && !arrival && gapTo(navigation) <= flightArrivalMargin(navigation) ? navigation.name : null,
-      navigation: navigation?.name ?? null, gap: navigation ? Math.round(gapTo(navigation)) : null });
+      orbitPlanet: orbitPlanet ? { id: orbitPlanet.id, name: orbitPlanet.name } : null, orbiting: orbit.isActive(), orbitSteady: reducedMotion(),
+      navigation: navigation?.name ?? null, gap: navigation ? Math.round(gapTo(navigation)) : null,
+      atEdge: ship.position.length() >= FLIGHT_EDGE_RADIUS - EDGE_OFFER_MARGIN });
   }
   const earth = bodies.find(b => b.id === 'Earth');
   const clearInput = () => { keys.clear(); stickX = stickY = 0; thrust = boost = false; boostStrength = 0; velocity.set(0, 0, 0); };
@@ -53,17 +62,27 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, quality
   }
   function face(body) {
     if (!active || !body) return;
-    navigation = body; aim(body); velocity.set(0, 0, 0);
+    endOrbit(); navigation = body; aim(body); velocity.set(0, 0, 0);
   }
   function home() {
     if (!earth) return;
-    clearInput(); earth.object3d.getWorldPosition(center); ship.position.copy(center).add(new THREE.Vector3(0, 1.3, 3));
+    orbit.stop(); clearInput(); earth.object3d.getWorldPosition(center); ship.position.copy(center).add(new THREE.Vector3(0, 1.3, 3));
     aim(earth); navigation = null; nearest = earth; lastName = ''; travelled = 0; insideSeconds = 0; goalArmed = false; flightCamera.reset(ship); updateCamera(0, true);
   }
   function updateCamera(dt, snap = false) {
     direction();
     ship.quaternion.setFromUnitVectors(UP, forward);
     flightCamera.update(ship, forward, dt, obstacles, snap);
+  }
+  function endOrbit(clear = true) {
+    if (!orbit.isActive()) return;
+    orbit.stop();
+    if (clear) clearInput();
+    forward.set(0, 1, 0).applyQuaternion(ship.quaternion);
+    yaw = Math.atan2(-forward.x, -forward.z);
+    pitch = clamp(Math.asin(clamp(forward.y, -1, 1)), -.95, .95);
+    travelled = insideSeconds = 0; goalArmed = Boolean(goal && gapTo(goal) > flightArrivalMargin(goal));
+    flightCamera.reset(ship);
   }
   const editable = e => e.target?.closest?.('input, textarea, select, [contenteditable="true"]');
   const keydown = e => {
@@ -72,6 +91,8 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, quality
     if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd', ' ', 'Shift'].includes(key)) return;
     // Keep Space available for activating a focused HUD button; steering keys still work from the HUD.
     if (editable(e) || (key === ' ' && e.target?.closest?.('button, a[href]'))) return;
+    // A dialog over flight (the Beyond picker) keeps its keys; the rocket waits.
+    if (e.target?.closest?.('[role="dialog"]')) return;
     // Held keys repeat; only a fresh press counts, so Stop holds until the key is pressed again.
     e.preventDefault(); if (!e.repeat) keys.add(key);
   };
@@ -88,17 +109,27 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, quality
     },
     exit() {
       if (!active) return;
-      active = false; ship.visible = false; clearInput(); goal = null; arrival = null; navigation = null;
+      orbit.stop(); active = false; ship.visible = false; clearInput(); goal = null; arrival = null; navigation = null;
       camera.position.copy(saved.position); camera.quaternion.copy(saved.quaternion); controls.target.copy(saved.target); controls.enabled = saved.enabled;
       saved = null;
     },
     getTargets: () => bodies.map(({ id, name, kind, parentName }) => ({ id, name, kind, parentName })),
     setGoal(id, token = id) {
+      endOrbit();
       goal = bodies.find(b => b.id === id) ?? null; goalToken = token; arrival = null; navigation = null;
       insideSeconds = travelled = 0; goalArmed = Boolean(goal && gapTo(goal) > flightArrivalMargin(goal));
       clearInput(); emit();
     },
     home,
+    enterOrbit() {
+      if (!active || orbit.isActive()) return false;
+      const body = nearestOrbitBody(bodies, ship.position);
+      if (!body) return false;
+      clearInput(); navigation = null; insideSeconds = travelled = 0; goalArmed = false;
+      orbit.start(body); emit(); return true;
+    },
+    leaveOrbit() { endOrbit(); emit(); },
+    isOrbiting: () => orbit.isActive(),
     face: id => face(bodies.find(b => b.id === id)),
     setStick(x, y) { stickX = clamp(x, -1, 1); stickY = clamp(y, -1, 1); },
     setThrust(value) { thrust = Boolean(value); },
@@ -111,6 +142,16 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, quality
       ship.visible = getCameraView() === 'behind';
       dt = clamp(dt, 0, .05);
       const input = steerInput(stickX, stickY, keys);
+      if (orbit.isActive()) {
+        const takingControl = !arrival && (input.x || input.y || thrust || boost || keys.has(' ') || keys.has('Shift'));
+        if (takingControl) endOrbit(false);
+        else {
+          orbit.update(dt); model.flame.visible = false;
+          age += dt;
+          if (age >= .2) { age = 0; emit(); }
+          return;
+        }
+      }
       if (input.x || input.y) navigation = null;
       if (navigation) aim(navigation);
       yaw -= input.x * 1.7 * dt;
@@ -148,7 +189,7 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, quality
           }
         }
       }
-      if (ship.position.length() > 1350) { ship.position.setLength(1350); velocity.set(0, 0, 0); }
+      if (ship.position.length() > FLIGHT_EDGE_RADIUS) { ship.position.setLength(FLIGHT_EDGE_RADIUS); velocity.set(0, 0, 0); }
       travelled += ship.position.distanceTo(previous);
       if (goal && !arrival) {
         const inside = gapTo(goal) <= flightArrivalMargin(goal);
@@ -171,7 +212,7 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, quality
     dispose() {
       api.exit(); window.removeEventListener('keydown', keydown); window.removeEventListener('keyup', keyup); window.removeEventListener('blur', clearInput);
       document.removeEventListener('visibilitychange', visibility);
-      ship.removeFromParent(); model.disposables.forEach(item => item.dispose());
+      orbit.dispose(); ship.removeFromParent(); model.disposables.forEach(item => item.dispose());
     },
   };
   return api;

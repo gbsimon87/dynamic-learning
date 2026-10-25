@@ -46,3 +46,13 @@ it("credits Solar System Scope for the Solar System textures under CC BY 4.0", (
   const licence = within(card).getByRole("link", { name: LICENCES["CC-BY-4.0"].name });
   expect(licence.getAttribute("href")).toBe("https://creativecommons.org/licenses/by/4.0/");
 });
+
+it("credits the moon and Pluto surface maps, including the share-alike Deimos map", () => {
+  const { container } = render(<MemoryRouter><Credits /></MemoryRouter>);
+  const card = container.querySelector('li[id="solar-system-worlds"]');
+  expect(card).not.toBeNull();
+  expect(card.textContent).toMatch(/Björn Jónsson/);
+  expect(card.textContent).toMatch(/Amalthea, Hyperion and Nereid/);
+  const licence = within(card).getByRole("link", { name: LICENCES["CC-BY-SA-3.0"].name });
+  expect(licence.getAttribute("href")).toBe("https://creativecommons.org/licenses/by-sa/3.0/");
+});

@@ -1,0 +1,38 @@
+/* Warp to Beyond (#113) and Space ripples (#94). Theme tokens, 48px targets. */
+
+.ui-dialog-panel.beyond-picker { width: min(440px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); margin: auto 0; padding: 16px; border-radius: 16px; display: flex; flex-direction: column; gap: 8px; background: var(--light-panel); color: var(--light-text); line-height: 1.4; }
+body.dark .ui-dialog-panel.beyond-picker { background: var(--dark-panel); color: var(--dark-text); }
+.beyond-picker header { padding-right: 42px; }
+.beyond-picker h2 { margin: 0; font-size: 22px; }
+.beyond-picker__eyebrow { font-size: 12px; opacity: .75; }
+.beyond-picker__intro { margin: 0; font-size: 14px; }
+.beyond-picker__list { display: grid; gap: 10px; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.beyond-picker__card { display: grid; gap: 4px; min-height: 48px; padding: 12px 14px; text-align: left; border: 1px solid currentColor; border-radius: 12px; color: inherit; background: var(--light-bg); font: inherit; cursor: pointer; }
+body.dark .beyond-picker__card { background: var(--dark-bg); }
+.beyond-picker__card strong { font-size: 18px; }
+.beyond-picker__place, .beyond-picker__pretend { font-size: 13px; opacity: .8; }
+.beyond-picker__pretend { font-style: italic; }
+.beyond-picker__card:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+
+.beyond-warp { position: absolute; z-index: 50; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); width: min(340px, calc(100% - 32px)); display: grid; gap: 10px; justify-items: center; padding: 12px; border-radius: 16px; background: var(--light-panel); color: var(--light-text); box-sizing: border-box; }
+body.dark .beyond-warp { background: var(--dark-panel); color: var(--dark-text); }
+.beyond-warp__bar { width: 100%; height: 10px; border-radius: 999px; overflow: hidden; background: color-mix(in srgb, currentColor 18%, transparent); }
+.beyond-warp__bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #8a5cff, #3fa9ff); }
+.beyond-warp__hint { margin: 0; font-size: 14px; text-align: center; }
+.beyond-warp__hold { display: grid; place-items: center; gap: 2px; width: 100%; min-height: 72px; border: 2px solid currentColor; border-radius: 16px; color: inherit; background: var(--light-bg); font: inherit; font-size: 20px; font-weight: 700; cursor: pointer; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+body.dark .beyond-warp__hold { background: var(--dark-bg); }
+.beyond-warp__hold:active { background: color-mix(in srgb, #8a5cff 30%, var(--light-bg)); }
+body.dark .beyond-warp__hold:active { background: color-mix(in srgb, #8a5cff 30%, var(--dark-bg)); }
+.beyond-warp__hold:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.beyond-warp__key { display: none; font-size: 13px; font-weight: 400; opacity: .8; }
+@media (hover: hover) and (pointer: fine) { .beyond-warp__key { display: block; } }
+
+.beyond-ripples-card__facts { margin: 0 0 8px; padding-left: 1.1rem; display: grid; gap: 6px; }
+.beyond-ripples-card__label { margin: 0 0 6px; font-size: 13px; font-style: italic; opacity: .85; }
+.solar-system .beyond-ripples-card button { min-height: 48px; min-width: 48px; padding: 8px 12px; border: 1px solid currentColor; border-radius: 12px; color: inherit; background: transparent; font: inherit; cursor: pointer; }
+.beyond-ripples-card__listen { margin-top: 2px; }
+.beyond-ripples-card__actions { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 6px; }
+.beyond-ripples-card__actions button { flex: 1 1 auto; }
+.solar-system .beyond-ripples-card .beyond-ripples-card__primary { font-weight: 700; background: color-mix(in srgb, #8a5cff 22%, transparent); }
+.solar-system .beyond-ripples-card button:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.beyond-ripples-card h2:focus { outline: none; } /* focused only to keep keyboard focus in the card while merging */

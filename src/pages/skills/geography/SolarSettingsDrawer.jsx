@@ -24,7 +24,8 @@ function CloseGlyph() {
     );
 }
 
-export default function SolarSettingsDrawer({ settings, onChange, speed, onSpeedChange, onReset, open, onOpenChange }) {
+export default function SolarSettingsDrawer({ settings, onChange, speed, onSpeedChange, onReset, open, onOpenChange, bloom, onBloomChange }) {
+    const toggles = bloom === undefined ? VIEW_TOGGLES : [...VIEW_TOGGLES, { key: "bloom", label: "Bloom (test)", icon: "💡" }];
     const triggerRef = useRef(null);
     const firstSwitchRef = useRef(null);
     const wasOpen = useRef(false);
@@ -58,8 +59,8 @@ export default function SolarSettingsDrawer({ settings, onChange, speed, onSpeed
                         </button>
                     </header>
                     <ul className="solar-settings__list">
-                        {VIEW_TOGGLES.map((toggle, index) => {
-                            const on = Boolean(settings[toggle.key]);
+                        {toggles.map((toggle, index) => {
+                            const on = Boolean(toggle.key === "bloom" ? bloom : settings[toggle.key]);
                             return (
                                 <li key={toggle.key}>
                                     <button
@@ -68,7 +69,7 @@ export default function SolarSettingsDrawer({ settings, onChange, speed, onSpeed
                                         aria-checked={on}
                                         className="solar-settings__switch"
                                         ref={index === 0 ? firstSwitchRef : undefined}
-                                        onClick={() => onChange(toggle.key, !on)}
+                                        onClick={() => toggle.key === "bloom" ? onBloomChange?.(!on) : onChange(toggle.key, !on)}
                                     >
                                         <span className="solar-settings__icon" aria-hidden="true">{toggle.icon}</span>
                                         <span className="solar-settings__label">{toggle.label}</span>

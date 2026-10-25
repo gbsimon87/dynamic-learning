@@ -18,7 +18,7 @@ test('defaults are fresh and invalid deltas do nothing', () => {
   const a = createSolarDefaults();
   const b = createSolarDefaults();
   a.belt.count = 0;
-  assert.equal(b.belt.count, 4500);
+  assert.equal(b.belt.count, 6000);
   for (const dt of [0, -1, NaN, Infinity]) assert.equal(advanceWorldTime(createWorldTime(), dt, a.simulation).elapsed, 0);
 });
 
@@ -55,4 +55,23 @@ test('Moon locking follows orbit clock through pause, speed changes and reset, i
   assert.equal(getBodyPose(moon, createWorldTime()).rotationY, Math.PI / 2);
   // Existing independently spinning bodies retain their behaviour.
   assert.equal(getBodyPose({ speed: 0.02, distance: 10 }, { orbitTime: 5, spinTime: 2 }).rotationY, 2.4);
+});
+
+test('a tilted moon circles in its planet\'s equator and a locked one still faces the planet', async () => {
+  const THREE = await import('three');
+  const tilt = THREE.MathUtils.degToRad(97.77);
+  const axis = new THREE.Vector3(0, 1, 0).applyAxisAngle(new THREE.Vector3(0, 0, 1), tilt);
+  const moon = { speed: 0.02, distance: 4, tidallyLocked: true, tilt };
+  const mesh = new THREE.Object3D(); mesh.rotation.order = 'ZYX';
+  for (const orbitTime of [0, 30, 77, 140, 260]) {
+    const pose = getBodyPose(moon, { orbitTime, spinTime: 0 });
+    const position = new THREE.Vector3(pose.position.x, pose.position.y, pose.position.z);
+    assert.ok(Math.abs(position.length() - 4) < 1e-9);
+    assert.ok(Math.abs(position.dot(axis)) < 1e-9, 'stays in the equator plane');
+    mesh.rotation.set(0, pose.rotationY, pose.rotationZ); mesh.updateMatrix();
+    const nearSide = new THREE.Vector3(1, 0, 0).applyQuaternion(mesh.quaternion);
+    assert.ok(nearSide.dot(position.normalize()) < -1 + 1e-9, 'near side faces the planet');
+  }
+  const flat = getBodyPose({ speed: 0.02, distance: 4 }, { orbitTime: 30, spinTime: 0 });
+  assert.equal(flat.position.y, 0); assert.equal(flat.rotationZ, 0);
 });

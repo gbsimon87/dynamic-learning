@@ -4,10 +4,11 @@ import { speak, stopNarration } from '../../../utils/speech.js';
 import { isMuted } from '../../../components/celebration/sound/player.js';
 import { createFlightRound, flightRoundReducer, FLIGHT_BADGES } from './flightClues.js';
 import SolarCameraChoices from './SolarCameraChoices.jsx';
+import SolarOrbitControl from './SolarOrbitControl.jsx';
 import './SolarFlightControls.css';
 
 const HELP = 'Use the joystick or arrow keys or W A S D to steer. Hold GO or Space to fly and Turbo or Shift to boost; let go to slow down. Press C to switch camera view. Choose a world and press Point rocket here to face it. Turbo slows near destinations. The sizes and distances in this Solar System are compressed.';
-export default function SolarFlightControls({ api, bodies, view, cameraView = 'behind', onCameraViewChange = () => {}, onClose }) {
+export default function SolarFlightControls({ api, bodies, view, cameraView = 'behind', onCameraViewChange = () => {}, onClose, onBeyond }) {
   const hud = useRef(null), reward = useRef(null);
   const root = useRef(null), thumb = useRef(null), stickPointer = useRef(null), thrustPointer = useRef(null), boostPointer = useRef(null);
   const closeRef = useRef(onClose);
@@ -41,7 +42,8 @@ export default function SolarFlightControls({ api, bodies, view, cameraView = 'b
   const release = () => { api?.brake(); setBurning(false); stickPointer.current = thrustPointer.current = boostPointer.current = null; if (thumb.current) thumb.current.style.transform = ''; };
   useEffect(() => {
     root.current?.focus();
-    const escape = e => { if (e.key === 'Escape') closeRef.current(); };
+    // A dialog over the flight (the Beyond picker) handles its own Escape first.
+    const escape = e => { if (e.key === 'Escape' && !e.defaultPrevented) closeRef.current(); };
     window.addEventListener('keydown', escape);
     return () => { window.removeEventListener('keydown', escape); stopNarration(); };
   }, []);
@@ -75,6 +77,12 @@ export default function SolarFlightControls({ api, bodies, view, cameraView = 'b
         <button className="solar-flight__panel-toggle" aria-label={hudCollapsed ? 'Expand flight panel' : 'Collapse flight panel'} title={hudCollapsed ? 'Expand flight panel' : 'Collapse flight panel'} aria-expanded={!hudCollapsed} aria-controls="solar-flight-details" onClick={() => setHudCollapsed(value => !value)}>{hudCollapsed ? '⌄' : '⌃'}</button>
       </header>
       <SolarCameraChoices value={cameraView} onChange={changeCameraView} compact={hudCollapsed} />
+      <SolarOrbitControl name={view?.orbitPlanet?.name} active={view?.orbiting} reducedMotion={view?.orbitSteady}
+        onEnter={() => { release(); api?.enterOrbit(); root.current?.focus(); }}
+        onLeave={() => { api?.leaveOrbit(); root.current?.focus(); }} />
+      {view?.atEdge && onBeyond && <div className="solar-orbit-control">
+        <button type="button" onClick={() => { release(); onBeyond(); }}><span aria-hidden="true">🌀</span> Warp to Beyond</button>
+      </div>}
       <div className="solar-flight__details" id="solar-flight-details" hidden={hudCollapsed}>
       {round.solved ? <div className="solar-flight__reward" key={clue.id} role="status" ref={reward} tabIndex={-1}>
         <strong>✅ You found {targetName}!</strong><p>⭐ +1 star</p>

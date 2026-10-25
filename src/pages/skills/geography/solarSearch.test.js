@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { matchBodies, MAX_SEARCH_RESULTS } from "./solarSearch.js";
+import { SOLAR_REGIONS } from "./solarRegionInfo.js";
 
 const BODIES = [
   { id: "Earth", name: "Earth", kind: "planet", parentName: null },
@@ -16,6 +17,13 @@ const BODIES = [
 ];
 
 const ids = (query, limit) => matchBodies(BODIES, query, limit).map(({ id }) => id);
+
+test("regions are searchable alongside planets, with both Trojan swarms returned", () => {
+  const bodies = [...BODIES, ...SOLAR_REGIONS];
+  for (const region of SOLAR_REGIONS) assert.equal(matchBodies(bodies, region.name)[0].id, region.id);
+  assert.deepEqual(matchBodies(bodies, 'trojan').map(({ id }) => id), ['trojans-l4', 'trojans-l5']);
+  assert.deepEqual(matchBodies(bodies, 'belt').map(({ id }) => id), ['kuiper-belt', 'asteroid-belt']);
+});
 
 test("a blank query returns no results", () => {
   assert.deepEqual(matchBodies(BODIES, ""), []);

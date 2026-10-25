@@ -31,7 +31,7 @@ export function createSolarSky({ scene, cubeTexture, getStars, quality, loader =
     }
 
     return {
-        /** `skyVisible` is Tweakpane's grown-up "Show Galaxy" switch. */
+        /** `skyVisible` is My view’s "Galaxy background" switch. */
         apply({ milkyWay: wantMilkyWay, skyVisible = true }) {
             milkyWayOn = wantMilkyWay;
             if (!skyVisible) scene.background = null;

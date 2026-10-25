@@ -42,7 +42,8 @@
   top: 1rem;
   left: 1rem;
   display: grid;
-  grid-template-columns: repeat(2, 2.65rem);
+  /* Three a row, so five buttons stay in two rows above the search toggle. */
+  grid-template-columns: repeat(3, 2.65rem);
   align-items: flex-start;
   gap: 0.5rem;
 }
@@ -557,9 +558,10 @@
 
   .solar-toolbar {
     top: 1rem;
-    /* The compact launch controls occupy the left edge at tablet widths. */
-    left: 14rem;
-    right: 17.5rem;
+    /* The five compact launch controls occupy the left edge at tablet widths;
+       My view (220px) sits at the right. */
+    left: 18.5rem;
+    right: 15.25rem;
     justify-content: flex-start;
   }
 
@@ -613,14 +615,44 @@
   }
 }
 
+/* Five fully labelled launch buttons (Beyond, #113, is the fifth) take about
+   49rem; search sits beside them, as a button until 1280px (below). */
 @media (min-width: 1100px) {
   .solar-toolbar {
-    /* Leave room for both fully labelled launch buttons. */
-    left: 43rem;
+    left: 50.5rem;
   }
 
   .solar-action-label {
     display: inline;
+  }
+}
+
+/* Too narrow for an open search field beside the launch buttons: search opens
+   from its button, as on phones, and spreads over them while in use. */
+@media (min-width: 720px) and (max-width: 767.98px), (min-width: 1100px) and (max-width: 1279.98px) {
+  .solar-search-toggle {
+    display: grid;
+  }
+
+  .solar-search {
+    display: none;
+  }
+
+  .solar-toolbar--searching {
+    left: 1rem;
+  }
+
+  .solar-toolbar--searching .solar-search {
+    display: flex;
+    flex: 1 1 auto;
+  }
+}
+
+/* Without the labelled launch buttons (a planet chosen, or the ship flying),
+   search and Overview move left, still clear of the ship's camera buttons. */
+@media (min-width: 1100px) {
+  .solar-system:not(:has(.solar-launch-buttons)) .solar-toolbar {
+    left: 21rem;
   }
 }
 

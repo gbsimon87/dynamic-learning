@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { flightFrame, flightPoint, flightSeconds, planWaypoint } from "./shipFlight.js";
 import { flightCameraPose } from "./solarFlightCamera.js";
+import { createPlanetOrbit } from "./solarPlanetOrbit.js";
 
 const UP = new THREE.Vector3(0, 1, 0);
 // The ship is about as long as the planet is wide, but never so small it
@@ -84,7 +85,7 @@ export function buildShip(quality) {
  * caller pauses its own follow camera until `onArrive`. Under reduced motion
  * the caller uses `park()` instead, which moves the ship without a flight.
  */
-export function createAutopilotShip({ scene, camera, controls, quality, reducedMotion = () => false, getCameraView = () => "behind" }) {
+export function createAutopilotShip({ scene, camera, controls, quality, reducedMotion = () => false, getCameraView = () => "behind", onOrbitChange = () => {}, obstacles = [] }) {
     const { ship, flame, flameMaterial, hitTarget, disposables } = buildShip(quality);
     scene.add(ship);
 
@@ -116,6 +117,14 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
     let thrust = 0; // 0..1 while flying, for the flame and the warp streaks
     let activeCameraView = getCameraView();
     let viewBlend = null;
+    let orbitParkOffset = null;
+    const orbit = createPlanetOrbit({ ship, camera, controls, getCameraView, reducedMotion, obstacles });
+    function leaveOrbit() {
+        if (!orbit.isActive()) return;
+        target.getWorldPosition(targetPosition);
+        orbitParkOffset = ship.position.clone().sub(targetPosition);
+        orbit.stop(); onOrbitChange(null);
+    }
 
     // The camera looks at a planet from between the way the ship came and the
     // Sun, a little from above, so the planet is lit when it arrives.
@@ -172,6 +181,13 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
 
     return {
         hitTarget,
+        isOrbiting: () => orbit.isActive(),
+        enterOrbit(body) {
+            if (flight || target !== body?.object3d || !orbit.start(body)) return false;
+            ignition = 0; flame.visible = false; orbitParkOffset = null;
+            onOrbitChange({ id: body.id, name: body.name, steady: reducedMotion() }); return true;
+        },
+        leaveOrbit,
         isFlying: () => flight !== null,
         /** How hard the engine is pushing: 0 when not flying, 1 at top speed. */
         thrust: () => (flight ? thrust : 0),
@@ -191,6 +207,7 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
 
         /** Puts the ship beside `object3d` at once: the start, Reset, and reduced motion. */
         park(object3d, { radius, framingDistance, from = null }) {
+            leaveOrbit(); orbitParkOffset = null;
             flight = null;
             flame.visible = false;
             target = object3d;
@@ -209,6 +226,7 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
          * because the child can zoom while the ship flies.
          */
         flyTo(object3d, { radius, framingDistance, onArrive = () => {} }) {
+            leaveOrbit(); orbitParkOffset = null;
             if (target === object3d && !flight) return false;
             target = object3d;
             targetRadius = radius;
@@ -243,6 +261,7 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
 
         /** Stops a flight where it is. A ship that has landed keeps hovering. */
         cancel() {
+            leaveOrbit();
             if (!flight) return;
             flight = null;
             flame.visible = false;
@@ -255,8 +274,9 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
                 activeCameraView = cameraView;
                 viewBlend = { age: 0, view: cameraView, position: camera.position.clone(), target: controls.target.clone() };
             }
-            ship.visible = !active && !hidden && !(flight && (cameraView === "cockpit" || viewBlend?.view === "behind"));
+            ship.visible = !active && !hidden && !((flight || orbit.isActive()) && (cameraView === "cockpit" || viewBlend?.view === "behind"));
             if (active || !target) return;
+            if (orbit.isActive()) { orbit.update(dt); flame.visible = false; return; }
 
             if (!flight) {
                 // Hover beside the planet, bobbing gently, side-on to the camera.
@@ -264,8 +284,11 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
                 const distance = getFramingDistance();
                 size = THREE.MathUtils.lerp(size, sizeFor(distance), 1 - Math.exp(-4 * dt));
                 ship.scale.setScalar(size);
-                ship.position.copy(updateParkPoint(distance));
-                if (!reducedMotion()) ship.position.y += Math.sin(hoverClock * 1.8) * size * 0.06;
+                if (orbitParkOffset) {
+                    target.getWorldPosition(targetPosition);
+                    ship.position.copy(targetPosition).add(orbitParkOffset);
+                } else ship.position.copy(updateParkPoint(distance));
+                if (!orbitParkOffset && !reducedMotion()) ship.position.y += Math.sin(hoverClock * 1.8) * size * 0.06;
                 flame.visible = ignition > 0;
                 if (ignition > 0) {
                     flame.scale.set(1, 0.3 + ignition, 1);
@@ -336,7 +359,7 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
         },
 
         dispose() {
-            ship.removeFromParent();
+            orbit.dispose(); ship.removeFromParent();
             for (const item of disposables) item.dispose();
         },
     };

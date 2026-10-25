@@ -10,7 +10,6 @@ import {
     DEFAULT_CONSTELLATION_BRIGHTNESS,
     loadViewSettings,
     saveViewSettings,
-    speedPresetFor,
 } from "./solarViewSettings.js";
 
 function fakeStorage(initial = {}) {
@@ -100,14 +99,17 @@ test("speed presets: the default runs at the normal orbit speed", () => {
     assert.ok(byKey.fast.orbit > byKey.slow.orbit);
 });
 
-test("speedPresetFor matches running presets only", () => {
-    assert.equal(speedPresetFor(1), "slow");
-    assert.equal(speedPresetFor(20), "fast");
-    assert.equal(speedPresetFor(7.5), null);
-});
-
 test("speed is never saved with the view settings", () => {
     const storage = fakeStorage();
     saveViewSettings({ ...DEFAULT_VIEW_SETTINGS, speed: "fast" }, storage);
     assert.equal("speed" in JSON.parse(storage.data[VIEW_SETTINGS_KEY]), false);
+});
+
+test('new scene toggles round-trip while old saved views gain defaults', () => {
+    const storage = fakeStorage({ [VIEW_SETTINGS_KEY]: JSON.stringify({ showOrbits: false }) });
+    assert.deepEqual(loadViewSettings(storage), { ...DEFAULT_VIEW_SETTINGS, showOrbits: false });
+    const settings = { ...loadViewSettings(storage), enableTilt: false, skyVisible: false, sunGlow: false, asteroidBelt: false };
+    saveViewSettings({ ...settings, bloom: true }, storage);
+    assert.deepEqual(loadViewSettings(storage), settings);
+    assert.equal('bloom' in JSON.parse(storage.data[VIEW_SETTINGS_KEY]), false);
 });

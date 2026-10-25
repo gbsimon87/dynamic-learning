@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import { createSolarFreeFlight, flightSpeed } from './solarFreeFlight.js';
+import { FLIGHT_EDGE_RADIUS, createSolarFreeFlight, flightSpeed } from './solarFreeFlight.js';
 
 function setup({ reduced = true, onCameraViewChange = () => {}, getCameraView = () => 'behind' } = {}) {
   const oldWindow = globalThis.window, oldDocument = globalThis.document;
@@ -228,5 +228,62 @@ test('cockpit view hides the rocket shell and switching back restores the close 
     assert.ok(t.ship.position.distanceTo(position) > .1, 'view changes preserve active thrust');
     assert.ok(t.camera.position.distanceTo(t.ship.position) < 3.2);
     assert.equal(cameraView, 'behind');
+  } finally { t.clean(); }
+});
+
+test('nearby manual orbit tracks a moving world without awarding clues and yields to steering or thrust', () => {
+  const t = setup({ reduced: false });
+  try {
+    t.flight.enter(); t.flight.setGoal('Earth', 'home-clue'); t.tick();
+    assert.equal(t.changes.at(-1).orbitPlanet.name, 'Earth');
+    assert.equal(t.flight.enterOrbit(), true); assert.equal(t.changes.at(-1).orbiting, true);
+    const start = t.ship.position.clone();
+    for (let i = 0; i < 200; i++) { t.bodies[0].object3d.position.x += .01; t.tick(); }
+    assert.ok(t.ship.position.distanceTo(start) > 1);
+    assert.equal(t.changes.at(-1).arrival, null, 'orbit cannot complete a clue');
+    t.key('keydown', 'd'); t.tick(); assert.equal(t.flight.isOrbiting(), false);
+    t.key('keyup', 'd'); t.flight.home(); t.flight.setGoal(null); t.flight.enterOrbit();
+    t.key('keydown', 'Shift'); t.tick(); assert.equal(t.flight.isOrbiting(), false);
+    t.key('keyup', 'Shift'); t.flight.home(); t.flight.enterOrbit(); t.tick(10);
+    t.flight.leaveOrbit(); assert.equal(t.changes.at(-1).orbiting, false);
+    assert.equal(t.changes.at(-1).speed, 0);
+    t.flight.enterOrbit(); t.flight.home(); assert.equal(t.flight.isOrbiting(), false);
+    t.ship.position.set(1000, 1000, 1000); assert.equal(t.flight.enterOrbit(), false, 'distant planets cannot be orbited');
+  } finally { t.clean(); }
+});
+
+test('reaching the flight edge past Pluto offers the warp to Beyond, and flying back in withdraws it', () => {
+  assert.equal(FLIGHT_EDGE_RADIUS, 1350);
+  const t = setup({ reduced: false });
+  try {
+    t.flight.enter(); t.flight.setStick(-1, 0); t.tick(20); t.flight.setStick(0, 0);
+    t.flight.setBoost(true);
+    for (let i = 0; i < 5000 && t.ship.position.length() < FLIGHT_EDGE_RADIUS - .01; i++) t.flight.update(1 / 60);
+    assert.equal(t.changes.some(c => c.atEdge), false, 'no offer on the way out');
+    for (let i = 0; i < 30; i++) t.flight.update(1 / 60);
+    assert.equal(t.changes.at(-1).atEdge, true);
+    t.flight.setStick(1, 0);
+    for (let i = 0; i < Math.ceil(Math.PI / 1.7 * 60); i++) t.flight.update(1 / 60);
+    t.flight.setStick(0, 0);
+    for (let i = 0; i < 240; i++) t.flight.update(1 / 60);
+    assert.ok(t.ship.position.length() < FLIGHT_EDGE_RADIUS - 5);
+    assert.equal(t.changes.at(-1).atEdge, false);
+  } finally { t.clean(); }
+});
+
+test('keys pressed inside a dialog over flight, such as the Beyond picker, do not steer the rocket', () => {
+  const t = setup();
+  try {
+    const inDialog = { closest: selector => (selector.includes('[role="dialog"]') ? {} : null) };
+    const press = (type, key) => {
+      const event = new Event(type, { cancelable: true }); event.key = key;
+      Object.defineProperty(event, 'target', { value: inDialog }); window.dispatchEvent(event); return event;
+    };
+    t.flight.enter(); t.tick();
+    const start = t.ship.position.clone();
+    assert.equal(press('keydown', ' ').defaultPrevented, false);
+    assert.equal(press('keydown', 'ArrowLeft').defaultPrevented, false);
+    t.tick(20);
+    assert.ok(t.ship.position.distanceTo(start) < 1e-6, 'the rocket stays put while the child reads the picker');
   } finally { t.clean(); }
 });

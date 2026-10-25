@@ -6,6 +6,10 @@ export const VIEW_TOGGLES = [
     { key: "showOrbits", label: "Orbit lines", icon: "⭕" },
     { key: "showLabels", label: "Planet names", icon: "🪐" },
     { key: "showMoonLabels", label: "Moon names", icon: "🌙" },
+    { key: "enableTilt", label: "Planet tilt", icon: "🌍" },
+    { key: "skyVisible", label: "Galaxy background", icon: "🌠" },
+    { key: "sunGlow", label: "Sun glow", icon: "☀️" },
+    { key: "asteroidBelt", label: "Asteroid belt", icon: "🪨" },
     { key: "milkyWay", label: "Milky Way sky", icon: "🌌" },
     { key: "constellations", label: "Constellations", icon: "✨" },
 ];
@@ -24,6 +28,10 @@ export const DEFAULT_VIEW_SETTINGS = {
     showOrbits: true,
     showLabels: true,
     showMoonLabels: false,
+    enableTilt: true,
+    skyVisible: true,
+    sunGlow: true,
+    asteroidBelt: true,
     milkyWay: false,
     constellations: false,
     constellationBrightness: DEFAULT_CONSTELLATION_BRIGHTNESS,
@@ -39,11 +47,6 @@ export const SPEED_PRESETS = [
 ];
 
 export const DEFAULT_SPEED = "slow";
-
-/** The preset an orbit multiplier matches while running, or null (a grown-up's Tweakpane value). */
-export function speedPresetFor(orbitSpeedMultiplier) {
-    return SPEED_PRESETS.find((preset) => preset.key !== "pause" && preset.orbit === orbitSpeedMultiplier)?.key ?? null;
-}
 
 const KNOWN_KEYS = Object.keys(DEFAULT_VIEW_SETTINGS);
 const BRIGHTNESS_KEYS = CONSTELLATION_BRIGHTNESS.map((level) => level.key);

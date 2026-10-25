@@ -1075,6 +1075,41 @@ supply — tracked in the
 [`SOLAR_SYSTEM_IDEAS.md`](SOLAR_SYSTEM_IDEAS.md) holds 113 ranked ideas and a
 phased roadmap, and is the progress tracker (§11). What exists now:
 
+Small-body regions (2026-10-25): `smallBodyRegions.js` adds an inclined Hungaria
+group between Mars and the existing main belt, two Trojan swarms centred 60°
+ahead of and behind Jupiter, and a broad icy Kuiper disk beyond Neptune through
+Pluto's region. Distances and rock sizes use the scene's teaching scale. The
+Trojans follow Jupiter's actual orbital position and plane; all regions use the
+shared simulation clock, so speed, pause and Reset agree with the planets.
+Four instanced populations share geometry, reduce their counts at low quality,
+and follow the existing Asteroid belt visibility preference (including its
+free-flight override and quiet-scene hiding). Tests cover spatial bounds,
+Trojan alignment over multiple orbits, clock/reset behaviour, visibility,
+quality changes and resource disposal. Browser/WebGL appearance was not checked
+in this session because browser controls were unavailable.
+
+Main asteroid belt settings (2026-10-25): fixed at 6,000 rocks, sizes 0.30–0.45,
+and inner/outer radii 55/90 in scene units. The upper size matches the scale of
+the neighbouring Trojan rocks; size 10 would exceed the Sun's radius. All
+asteroid-belt Tweakpane controls have been removed. `createSolarDefaults()` is
+the shared source for initialisation, Reset and spatial tests, with no runtime
+radius overrides. Hungaria placement follows the new inner edge; the belt's
+drift and largest rocks keep clear of Mars and the Trojan swarms.
+
+Region labels (2026-10-25): `solarRegionLabels.js` adds clickable name badges
+for the main belt, Hungaria Group, each Trojan swarm (L4 and L5), and Kuiper
+Belt. Stable anchors follow the Trojan clouds through orbit and quality changes.
+Badges use the existing name style, avoid planet labels, and have invisible
+44px tap targets; hidden and offscreen badges cannot be selected. They follow
+the scene's names/asteroid visibility settings and step aside during planet
+following and flight. Selecting a region opens `.solar-info-card` immediately
+from the current camera view. `solarRegionInfo.js` supplies child-facing facts,
+closer reading and related destinations, also available through keyboard search.
+Regions stay out of the ship's collision and flight-target lists. Unit tests
+cover raycast selection, touch areas, responsive sizing, hiding, overlap and
+cleanup; card tests cover every region and its related links. Browser/WebGL
+layout remains unverified because browser controls are unavailable.
+
 - *Foundations.* `solarModules.js` is a small module host the animate loop
   calls (`update(dt, { active })`, `resize`, `dispose`); a module that throws is
   reported and dropped without stopping the page. **New scene features go in a
@@ -1088,6 +1123,24 @@ phased roadmap, and is the progress tracker (§11). What exists now:
 - *Textures.* All planet, Moon and Sun maps, Earth clouds and night lights,
   Saturn's ring map and the Milky Way are Solar System Scope (CC BY 4.0),
   credited on `/credits`. The `cubeMap/` sky still has no recorded source.
+  Pluto and every featured moon use 1024×512 maps in `public/static/worlds/`
+  (1.7 MB total), listed in `worldSurfaces.js`: public-domain NASA/USGS
+  mosaics, Björn Jónsson's Ganymede/Callisto (attribution) and a CC BY-SA 3.0
+  Deimos. `scripts/geography-assets/build-moon-maps.mjs` (needs `sharp` in a
+  scratch folder; sources are not in the repo) fills unmapped areas with
+  smooth colour plus texture borrowed from mapped areas, matches the longitude
+  seam, smooths the poles, removes Cassini false-colour tints, warms Europa,
+  brightens Io and levels each moon to its real relative brightness (outer
+  moons are lit mostly by ambient light). Titan is tinted for its haze;
+  Amalthea, Hyperion and Nereid (never fully mapped) are recoloured stand-ins.
+  All credited on `/credits` (`#solar-system-worlds`).
+- *Moon shapes and orbits* (`moonShapes.js`, `getBodyPose` tilt): Phobos,
+  Deimos, Amalthea and Hyperion are lumpy ellipsoids from their measured axes,
+  kept inside their listed radius. Moons are tidally locked unless marked
+  `spins` (Hyperion, Phoebe, Nereid) and circle in their planet's equator
+  unless marked `ecliptic` (Earth's Moon, Phoebe, Triton, Nereid); Triton and
+  Phoebe orbit backwards. Jupiter's moons moved out (Amalthea 5.1 … Callisto 13)
+  so Amalthea and Io no longer skim the cloud tops.
 - *My view drawer* (`SolarSettingsDrawer.jsx`, `solarViewSettings.js`): a gear
   in the bottom-right corner, shown only when the launch buttons are, with big
   switches for orbit lines, planet names, moon names, the Milky Way sky and
@@ -1118,7 +1171,7 @@ phased roadmap, and is the progress tracker (§11). What exists now:
     `warpIn?.skip()` first.
 - *The ship* (Phase 2), `autopilotShip.js` with the path maths in
   `shipFlight.js`: a low-poly rocket made from primitives that starts beside
-  Earth. `focusEntry` (search, tap, the tour, Tweakpane's Focus) flies it to
+  Earth. `focusEntry` (search, tap and the tour) flies it to
   the planet or moon on a curve that climbs and bends round the Sun, 2–6.5 s,
   with the camera chasing it. While `ship.isFlying()` it owns
   `camera.position` and `controls.target`, so the follow camera in `animate()`
@@ -1312,6 +1365,41 @@ share one expanded panel. Both themes use tokens and preserve 48px targets.
 The mission Dialog has compact dimensions, one clue open, a stamp progress bar
 and a collapsible explanation; its existing storage/matching contract remains.
 
+Compact tuning controls (2026-10-25): Tweakpane is now “Fine tuning”, starts
+collapsed on every viewport (including after Reset), and all folders start
+collapsed. Its desktop width is capped at 220px; expanded content scrolls within
+the scene height. All boolean controls live in `#solar-settings-panel`: orbit,
+planet/moon labels, planet tilt, galaxy background, sun glow, asteroid belt,
+Milky Way and constellations. The new view switches merge into existing
+`dl.solarView` preferences using defaults when absent, preserving old choices;
+`applySceneSettings` applies them at load, on change and after numeric Reset.
+Bloom’s switch is also in My view when `?debug` is present and remains session-only
+with its `bloom=1` URL default. Fine tuning retains rotation speed, lighting,
+star count and Sun-glow sliders, with Bloom sliders in debug mode. Its Navigation
+folder (Focus, Stop Following, Reset View and Start Guided Tour) and Orbit Speed
+slider have been removed: search, the main view controls and My view's
+Stop / Slow / Fast buttons cover those actions. The unused focus/speed syncing
+code has also been removed. Learner progress keys and rules are untouched.
+Validation: lint, full tests and build pass; the batched Chrome settings check
+passes at 1280×900, 619×756, 390×844 and 844×390 in both themes, including
+switches, Reset/reload persistence, scrolling and debug-only Bloom.
+
+Solar System lighting defaults (2026-10-25): ambient starts at 0.8 and Sun
+Intensity at 400, the maximum values of their Lighting controls. Initial scene
+creation and Reset use the same `createSolarDefaults().lighting` values.
+
+Planet card reading content (2026-10-25): `planetDetails.js` supplies four
+short Discover facts and two Look closer paragraphs for all eight planets plus
+Pluto (labelled a dwarf planet by the existing card metadata). Each entry records
+its NASA Science facts-page source. `SolarInfoCard` uses this copy in both normal
+navigation and tours, with two facts initially visible and two under More facts.
+Look closer includes a read-aloud button respecting global/tour mute, alongside
+the existing Earth and Saturn activities. Non-planet cards retain their existing
+facts. Content avoids changing moon totals and explains atmosphere versus ground
+and enhanced Neptune colours. Scene materials, textures and tour narration are
+independent. Component coverage exercises every planet in both tour and normal
+cards; no new layout or 3D rendering is introduced.
+
 Constellations now open directly in 3D: the duplicate star chart UI is removed.
 The compact card has a bounded scroll area with visible header/navigation,
 fixing the previous desktop content clipping. Chart projection maths remains
@@ -1339,10 +1427,44 @@ manual flight panel collapsed. Collapsed panels keep a labelled camera toggle
 in the header; expanded panels show both view choices. The shortcut listens
 during capture and accepts physical KeyC as well as the C character. Held-key
 repeats, text entry and browser modifier shortcuts are ignored; the listener is
-removed when camera choices unmount. Autopilot arrival restores planet framing and keeps the selected view for
+removed when camera choices unmount. The owner confirmed these camera changes
+work as expected. Autopilot arrival restores planet framing and keeps the selected view for
 the next leg. “Watch from outside” remains pending; no saved data or renderer
 was added. Details and open validation gates are in
 `solar-system-camera/IMPLEMENTATION_PLAN.md`.
+
+Optional planet orbit (#37, 2026-10-25): `solarPlanetOrbit.js` is the shared
+pilot inside the existing `autopilotShip` and `solarFreeFlight` modules. An
+**Orbit planet** button appears after click/search navigation and tour arrivals,
+and near live planets in manual flight. Planet offers include Pluto. Moons
+offer **Orbit <moon>** too (2026-10-25): after navigation to a moon, or within
+`max(6r, r + 1.2)` of one in manual flight; the ride and chase camera sit much
+closer for moons, and the card's toggle reads Show/Hide moon facts. Moons stay
+out of the guided tour. Sun, comets, ISS and belts do not offer this mode. `SolarOrbitControl` keeps
+entry/exit available independently of the collapsed manual panel. Autopilot
+entry/exit floats beneath the information card, with a compact camera switch
+while orbiting. Planet facts compact automatically to keep the planet visible;
+Show planet facts expands them, and tour navigation remains visible. Both
+camera views and C work throughout the ride.
+
+The ship settles onto an illustrative, minute-long circular path relative to the
+moving planet, beyond Saturn's outer rings, with live body/camera bumpers. There
+is no additional renderer, clock, saved state, mission stamp or progress change.
+Reduced motion holds the orbital angle and tracks the moving planet with a
+steady view. Orbiting does not complete clues or earn flight stars. Leave orbit
+releases the pilot; manual steering/thrust/boost resumes manual control. Tour
+Next/Previous, destination changes, Back to Earth, Reset, Escape and activity
+exits clear orbit and restore the appropriate camera/control owner. Camera
+translation carries both position and target, including inside the cockpit.
+
+Validation: lint, production build, 2,257 unit tests and 480 component tests pass
+(four database-dependent tests skipped). Orbit tests cover moving worlds,
+30/60/120 Hz, nearby offers, Saturn clearance, live moon bumpers, camera views,
+reduced motion, manual override, clue isolation and leaving before another leg.
+`scripts/checkSolarUi.js` passed at 1280×900, 619×756, 390×844 and 844×390 in
+both themes with zero page/module errors: planet arrival, tour Next releasing
+orbit, manual entry/exit/steering, C and compact facts. Screenshots were reviewed.
+Physical-device touch, sustained performance and child comfort remain open.
 
 Chase camera direction fix (2026-10-25): manual flight now carries both the
 camera position and its look target with the rocket before easing the relative
@@ -1351,6 +1473,46 @@ fall behind the camera, reversing the view in open space. A regression test
 flies to the 1,350-unit boundary, holds outward thrust, steers around and returns
 inwards, checking heading and rocket visibility every frame at 30/60/120 Hz with
 normal thrust and Turbo. The flight boundary and steering rules are unchanged.
+
+Warp to Beyond and Space ripples (#113 / #94, 2026-10-25): the first place
+outside the Solar System. A fifth **Beyond** launch button, or **Warp to Beyond**
+in the flight HUD at the 1,350-unit edge past Pluto (`FLIGHT_EDGE_RADIUS` and the
+`atEdge` emit in `solarFreeFlight.js`), opens `BeyondPicker`. It lists only
+`ready` entries from `beyondDestinations.js` (galaxy → system/event → bodies; the
+galaxy map #108 will read the same list; owner rule: real Milky Way systems only,
+other galaxies seen from outside). `beyond.js` sequences warp out → arrived →
+warp home → off and is a module drawn instead of the Solar System (like the
+line-up). The world clock holds while away, and home always lands at the overview.
+`beyondWarp.js` / `beyondWarpTimeline.js`: a pretend black-hole doorway, a
+purple-blue swirl and the shared `warpStreaks.js`. The child holds
+`BeyondWarpControls` (or Space/Shift) for about 5 s. Letting go drifts at a
+quarter speed and still arrives. Blur, a hidden page and pointer loss release
+the hold. Reduced motion shows a progress bar only. The ride home is 3 s and
+automatic. The warp is handed `buildShip()`'s rocket rather than building its own.
+`spaceRipples.js` / `rippleTimeline.js` draw a GPU-displaced glowing grid (96
+lines, 48 on low) with two black holes. **Bring them together** runs a 12 s
+GW150914-style chirp (spiral in, merge, flash, wobble). **Replay** repeats it,
+and tapping the grid sends a ring (8 at most, never pushing out the merge's big
+ring; a drag or a two-finger touch is not a tap). Portrait phones lift the view above `SpaceRipplesCard`, which carries
+three facts (`spaceRipplesFacts.js`), read-aloud, and the "picture to help us
+imagine" and "pretend space shortcut" labels. The warp is built and compiled
+(`compileScene.js`, hidden parts included) while the picker is open, and the
+destination during the warp out; both are disposed once home, so the next trip
+is rebuilt at the current quality. Focus moves to the hold button, the card's
+action, and back to Beyond on return. Keys pressed inside a dialog never steer
+the rocket. Nothing is saved, and no sound effects are added.
+Layout: the phone launch grid is three a row; the ≥720px toolbar starts at
+18.5rem and stops 15.25rem from the right (My view). Labels show from 1100px.
+Search is a button that spreads over the launch row at 720–767px and
+1100–1279px, and an open field of at least 216px otherwise.
+Flying inside Beyond needs `createSolarFreeFlight` to accept another scene and
+bodies first (#109). Validation: lint, build and the full suite pass. The
+batched local Chrome checks (`node scripts/checkSolarUi.js --beyond-only`, plus
+the default run) covered both themes at 1280×900, 390×844 and 844×390: picker,
+hold, warp, arrival, merge, tap ripple and return, all with zero page/module
+errors. Screenshots were reviewed. Not checked in a browser: the fly-past-Pluto
+offer (covered by unit/component tests). Physical-device touch, performance
+and child playtests remain open.
 
 Cockpit instrument detail (2026-10-25): `SolarCockpit` now draws a deeper,
 proportional SVG instrument deck with recessed orbital navigation and engine

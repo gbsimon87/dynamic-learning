@@ -1,7 +1,7 @@
 # Solar System — ideas and roadmap
 
 Skills Mode → Geography · [SolarSystem.jsx](../src/pages/skills/geography/SolarSystem.jsx)
-Reviewed against source: **2026-10-23**. All 113 idea IDs are retained.
+Reviewed against source: **2026-10-25**. All 113 idea IDs are retained.
 
 ## Current position
 
@@ -13,7 +13,7 @@ Reviewed against source: **2026-10-23**. All 113 idea IDs are retained.
 | 3 — Living Solar System | #48 day/night, #54 Moon phases, #16 tidal-locking core, #55 auroras, #41 comet tails, #57 close-up rings | Optional #16 arrow/label; device checks; original “surprise on every planet” exit is not met |
 | 4 — Missions and stars | #73 mission cards; #67 sky constellations; #68 join the dots | #74 passport (deferred by owner), #75 Golden Record; lensing spike |
 | 5 — Take the controls | #83 free flight in the main Solar System; hold-to-boost turbo with shared light streaks | Child/device steering checks; #84 asteroid run |
-| 6 — Beyond | Nothing yet | #113 warp, then #90 black hole and #91 nebula |
+| 6 — Beyond | #113 warp, picker and one destination; #94 space ripples | More destinations (#90 black hole, #91 nebula, #109 systems); flying in Beyond; tablet/device checks |
 
 ✅ built · ◐ partial · ⏳ external dependency · — unbuilt. Built means implemented,
 not deployed or physically device-tested. Stretch ideas are not phase blockers.
@@ -74,7 +74,9 @@ not deployed or physically device-tested. Stretch ideas are not phase blockers.
 1. **#75 Golden Record**, then a tablet lensing spike before #90.
 2. **#84 asteroid run:** builds on #83 main-scene free flight; child/device
    steering checks remain open. #87 garage depends on stardust and #85 docking on #50 ISS.
-3. **#113 → #90/#91:** warp opens separate Beyond scenes. #108 galaxy map is
+3. **#113 → #90/#91:** warp opens separate Beyond scenes (warp and #94 built
+   2026-10-25; flying in Beyond first needs `createSolarFreeFlight` to accept
+   another scene and bodies). #108 galaxy map is
    optional later navigation; #109 other systems follows warp.
 4. **#74 passport** is deferred at the owner's request. Retain mission stamps
    and the explicit Skills-only storage contract when it returns.
@@ -91,10 +93,28 @@ reorder stretch work from playtests; old calendar estimates were speculative.
 
 ## Idea catalogue
 
-**#38 implemented in part (2026-10-25):** Behind rocket and a light Cockpit view
-are available during manual flight and autopilot/tours. The chase camera now
-follows ship displacement before smoothing its offset, avoiding the speed-driven
-gap. “Watch from outside” remains a later part of #38. See the
+**#37 built (2026-10-25):** Optional **Orbit planet** entry appears after
+navigation/tour arrivals and close to planets in manual flight. Leave orbit,
+manual steering/thrust, tour navigation and resets release the orbit pilot.
+The existing rocket circles a live moving planet; reduced motion holds a steady
+orbital angle. This is an illustrative ride, independent of the world clock.
+
+**Moons pass (2026-10-25):** every featured moon's map was rebuilt (textured
+fills for unmapped areas, no false-colour tints, real relative brightness);
+Phobos, Deimos, Amalthea and Hyperion are lumpy; regular moons orbit in their
+planet's equator (Uranus's moons circle vertically) and are tidally locked;
+Triton and Phoebe orbit backwards; Jupiter's moons no longer skim its clouds.
+**Orbit <moon>** reuses the #37 pilot at moon scale with the moon's own card;
+the tour still visits planets only. The My view **Moon names** switch now also
+names moons in the overview where badges do not overlap planet names
+(previously it only worked while following a planet).
+
+**#38 implemented in part (2026-10-25):** Behind rocket and a detailed Cockpit view
+are available during manual flight and autopilot/tours, including planet orbit.
+**C** switches cameras; collapsed flight panels keep a camera button visible.
+Both ends of the chase camera rig follow ship displacement before easing,
+avoiding both the speed-driven gap and backwards view near the flight boundary.
+The owner confirmed the camera changes work as expected. “Watch from outside” remains a later part of #38. See the
 [camera implementation record](solar-system-camera/IMPLEMENTATION_PLAN.md).
 
 Original IDs remain stable. Difficulty is relative: Easy ≲1 day, Medium 2–5
@@ -119,7 +139,7 @@ days, Hard 1–3 weeks, Complex 3+ weeks; these are sizing guides, not schedules
 | 12 | **Atmosphere glow** | A thin blue halo around Earth; yellow haze on Venus; faint pink on Mars | ✅ |
 | 13 | **Realistic Saturn rings** | Saturn's rings have real gaps and dusty transparency | ◐ Gapped translucent bands built; finer dusty structure pending |
 | 14 | **Faint rings elsewhere** | Jupiter, Uranus and Neptune show their thin rings when you zoom in | — |
-| 15 | **Pluto's heart** | Pluto gets its real heart-shaped plain | — |
+| 15 | **Pluto's heart** | Pluto gets its real heart-shaped plain | ✅ New Horizons map (2026-10-25) |
 | 16 | **Moon always faces Earth** | Arrow shows the Moon keeps the same face towards us 🎓 | ◐ Core built; optional arrow/label pending |
 | 17 | **Backwards and sideways spinners** | Curly arrows show Venus spins backwards and Uranus rolls on its side | — |
 | 18 | **Dwarf-planet friends** | Ceres in the asteroid belt, egg-shaped Haumea and Eris beyond Pluto | — |
@@ -146,7 +166,7 @@ days, Hard 1–3 weeks, Complex 3+ weeks; these are sizing guides, not schedules
 | 34 | **Autopilot spaceship** | Tap a planet; a real ship flies there on a smooth curve and the camera chases it | ✅ |
 | 35 | **Lift-off from Earth** | "3, 2, 1, lift off!" with smoke and a rumble, then the ship leaves Earth | ◐ Countdown/smoke/lift-off built; rumble awaits audio decision |
 | 36 | **Engine flames and boost** | Glowing exhaust that flares when the ship speeds up | ◐ Exhaust, turbo and streaks built; manual boost flame flare pending |
-| 37 | **Settle into orbit** | On arrival the ship circles the planet so the child watches it turn below | — |
+| 37 | **Settle into orbit** | Optional orbit ride after tour/navigation arrivals or near a planet in manual flight | ✅ Built; physical-device/comfort checks pending |
 | 38 | **Camera choices** | Buttons for "behind the ship", "cockpit window" and "watch from outside" | ◐ Behind rocket + cockpit built; outside view pending |
 | 39 | **Gravity slingshot** | Autopilot to Saturn swings past Jupiter and speeds up: "Slingshot!" 🎓 | — |
 | 40 | **Real spacecraft cameos** | Voyager 1 and 2, New Horizons, Juno and Parker Solar Probe sit roughly where they are, each with a card | — |
@@ -208,9 +228,9 @@ days, Hard 1–3 weeks, Complex 3+ weeks; these are sizing guides, not schedules
 | 91 | **Nebula clouds** | Fly through glowing pink and blue gas clouds where new stars are born | — |
 | 92 | **Supernova** | A giant star swells, flashes, sends out a ring and leaves a new nebula: "You're made of star stuff!" | — |
 | 93 | **Pulsar lighthouse** | A tiny spinning star sweeps beams of light like a lighthouse | — |
-| 94 | **Space ripples** | Two black holes spin together and the space grid ripples outward | — |
+| 94 | **Space ripples** | Two black holes spin together and the space grid ripples outward | ✅ Device/playtest checks pending |
 | 95 | **Bix's pretend anomaly** | A shimmering mystery portal hides a bonus surprise | — |
-| 113 | **Warp to Beyond** | A big Beyond button: the ship enters a swirling warp tunnel and comes out at a black hole, a nebula or another star system | — |
+| 113 | **Warp to Beyond** | A big Beyond button: the ship enters a swirling warp tunnel and comes out at a black hole, a nebula or another star system | ◐ Warp, picker and Space ripples built; more destinations pending |
 | 96 | **Tap a country on Earth** | Zoom in, tap the globe, and hear the country's name; link to Flag Finder | — |
 | 97 | **Real sky colours** | Earth's edge glows sunset orange where day meets night | — |
 | 98 | **A year on Earth** | Watch Earth orbit once; the UK's day length grows and shrinks 🎓 | — |
@@ -286,6 +306,56 @@ with a card capped at 340px / 40% of the scene and a reserved star-framing gutte
 phone landscape also uses the left layout. Completion scrolls/focuses the reward.
 Tests cover all five tracing loops, wrong taps, collection/reset/navigation/mute
 and projected framing, including the shared desktop-left layout.
+
+### Warp to Beyond and Space ripples — #113 / #94
+
+Design: [spec](superpowers/specs/2026-10-25-beyond-warp-and-space-ripples-design.md),
+[plan](superpowers/plans/2026-10-25-beyond-warp-and-space-ripples.md).
+**Beyond** is the fifth launch button, and **Warp to Beyond** appears in the
+flight HUD at the edge past Pluto (never automatic). The picker shows only
+destinations that exist. The child holds the engine (button, Space or Shift)
+through a pretend black-hole doorway, a purple-blue swirl and the shared light
+streaks. Letting go drifts slowly and still arrives. The ride home is
+automatic and lands at the overview. Space ripples: a glowing grid with two black
+holes. **Bring them together** plays a sped-up GW150914 chirp and merge; Replay
+and tap-to-ripple follow. The card labels the grid as a picture and the doorway
+as pretend, with three read-aloud facts. Nothing is saved; no sound effects.
+Reduced motion: a progress bar instead of the swirl, and calmer ripples with no
+wobble. Destinations are listed as galaxy → system/event → bodies for #108.
+Owner rule: real Milky Way systems only; other galaxies are seen from outside.
+Follow-up fixes (2026-10-25): shaders compile while the picker is open and
+during the warp, both scenes are freed once home, focus follows the controls,
+two-finger touches and fast taps behave, and keys inside the picker no longer
+steer the rocket. Search becomes a button where the toolbar is too narrow, so
+labels show again from 1100px.
+Limits: no flying in Beyond yet (#109 needs the free-flight refactor). The
+fly-past-Pluto offer is covered by unit/component tests, not the browser pass.
+Physical-device touch, performance and child playtests are open. Lint, build,
+full tests and the batched Chrome pass (1280×900, 390×844, 844×390, both themes,
+zero errors) passed.
+
+### Optional planet orbit — #37
+
+`solarPlanetOrbit.js` is a shared pilot used by the existing autopilot and manual
+flight modules. No new renderer, animation loop or saved data is added. The
+**Orbit planet** button appears after planet navigation/tour arrival, or within
+`orbitEntryDistance` of a live planet or moon during manual flight (including
+Pluto; Sun, satellites, belts and comets do not offer orbit).
+
+The ride circles in a plane through the moving planet's centre, settles to a
+safe distance, clears Saturn's outer rings and retains surface/moon camera
+bumpers. A lap takes about a minute; the speed is illustrative. Both camera
+views and **C** remain available. Planet information compacts during orbit;
+**Show planet facts** restores reading while tour navigation stays available.
+**Leave orbit** returns to the same scene;
+manual steering/thrust/boost also resumes manual control. Tour Next/Previous,
+new destinations, Back to Earth, Reset and mode exits stop orbit. Orbiting does
+not satisfy flight clues or award stars. Reduced motion tracks the planet from
+a fixed orbital angle instead of continuously circling. Child comfort and
+physical-device touch/performance checks remain open. Lint, build and all tests
+pass. The local Chrome matrix (1280×900, 619×756, 390×844, 844×390; both themes)
+checks all three orbit entry contexts, exits, tour Next, manual override, C and
+compact facts with zero page/module errors; screenshots were reviewed.
 
 ### Spaceship adventure and rewards — #83 / partial #81
 
@@ -363,7 +433,8 @@ Teaching references retained from the implemented activities:
 [Charon](https://science.nasa.gov/dwarf-planets/pluto/moons/charon/),
 [asteroids](https://science.nasa.gov/solar-system/asteroids/),
 [ISS](https://www.nasa.gov/international-space-station/),
-[Halley](https://science.nasa.gov/solar-system/comets/1p-halley/), and
+[Halley](https://science.nasa.gov/solar-system/comets/1p-halley/),
+[GW150914 / LIGO](https://www.ligo.caltech.edu/news/ligo20160211) ([summary](https://en.wikipedia.org/wiki/First_observation_of_gravitational_waves)), and
 [IAU constellations](https://www.iau.org/IAU/IAU/Astronomy-FAQs/Constellations.aspx?hkey=bb9dc841-0618-41b5-ac70-149741062141).
 These support Skills exploration, not a claim of statutory Year 5 coverage.
 

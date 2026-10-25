@@ -24,10 +24,10 @@ it("trigger asks to open", async () => {
   expect(onOpenChange).toHaveBeenCalledWith(true);
 });
 
-it("shows five switches with the right state and focuses the first", () => {
+it("shows all view switches with the right state and focuses the first", () => {
   setup();
   const state = Object.fromEntries(screen.getAllByRole("switch").map((s) => [s.querySelector(".solar-settings__label").textContent, s.getAttribute("aria-checked")]));
-  expect(state).toEqual({ "Orbit lines": "true", "Planet names": "true", "Moon names": "false", "Milky Way sky": "false", "Constellations": "false" });
+  expect(state).toEqual({ "Orbit lines": "true", "Planet names": "true", "Moon names": "false", "Planet tilt": "true", "Galaxy background": "true", "Sun glow": "true", "Asteroid belt": "true", "Milky Way sky": "false", "Constellations": "false" });
   expect(document.activeElement).toBe(screen.getByRole("switch", { name: /Orbit lines/ }));
   expect(screen.getByRole("region", { name: "My view" })).toBeTruthy();
 });
@@ -90,4 +90,24 @@ it("brightness buttons show the current level and ask for a new one", async () =
   expect(pressed).toEqual([["Faint", "false"], ["Bright", "true"], ["Brightest", "false"]]);
   await userEvent.click(screen.getByRole("button", { name: "Brightest" }));
   expect(onChange).toHaveBeenCalledWith("constellationBrightness", "brightest");
+});
+
+it.each([
+  ["Planet tilt", "enableTilt"], ["Galaxy background", "skyVisible"],
+  ["Sun glow", "sunGlow"], ["Asteroid belt", "asteroidBelt"],
+])("%s switches off and reflects the updated scene preference", async (label, key) => {
+  const { onChange, rerender } = setup();
+  await userEvent.click(screen.getByRole("switch", { name: new RegExp(label) }));
+  expect(onChange).toHaveBeenCalledWith(key, false);
+  rerender(<SolarSettingsDrawer settings={{ ...DEFAULT_VIEW_SETTINGS, [key]: false }} onChange={onChange} open onOpenChange={() => {}} />);
+  expect(screen.getByRole("switch", { name: new RegExp(label) }).getAttribute("aria-checked")).toBe("false");
+});
+it("Bloom remains a debug-only switch with its own callback", async () => {
+  const { rerender, onChange } = setup();
+  expect(screen.queryByRole("switch", { name: /Bloom/ })).toBeNull();
+  const onBloomChange = vi.fn();
+  rerender(<SolarSettingsDrawer settings={DEFAULT_VIEW_SETTINGS} onChange={onChange} open onOpenChange={() => {}} bloom={false} onBloomChange={onBloomChange} />);
+  await userEvent.click(screen.getByRole("switch", { name: /Bloom/ }));
+  expect(onBloomChange).toHaveBeenCalledWith(true);
+  expect(onChange).not.toHaveBeenCalled();
 });
