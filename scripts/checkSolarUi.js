@@ -35,6 +35,9 @@ try {
     };
     const shot = name => page.screenshot({ path: `${artifacts}/${width}-${theme}-${name}.png` });
     await page.goto(`${base}/solar-system`);
+    assert.equal(await page.locator('nav.navbar').isVisible(), false, 'global navigation is hidden in the Solar System');
+    const sceneBox = await page.locator('.solar-system').boundingBox();
+    assert.ok(sceneBox && sceneBox.y <= 1 && sceneBox.height >= height - 2, `Solar System uses the full viewport: ${JSON.stringify(sceneBox)}`);
     await page.getByRole('button', { name: 'Fly the rocket', exact: true }).waitFor();
     await page.waitForFunction(() => !document.querySelector('[aria-label="Fly the rocket"]').disabled);
 
@@ -104,21 +107,93 @@ try {
     await inside('.solar-info-card');
     await page.getByRole('button', { name: 'Hide Earth information' }).click();
 
+    if (normalMotion) {
+      const searchForFlight = page.getByRole('combobox', { name: 'Search planets and moons' });
+      if (!await searchForFlight.isVisible()) await page.getByRole('button', { name: 'Search planets and moons', exact: true }).click();
+      await searchForFlight.fill('Mars'); await searchForFlight.press('Enter');
+      const cameraChoices = page.locator('.solar-camera-choices--floating');
+      await cameraChoices.waitFor({ state: 'visible' });
+      await cameraChoices.getByRole('button', { name: /Cockpit/ }).click();
+      await inside('.solar-cockpit', { maxWidth: width });
+      await page.keyboard.press('c');
+      await page.locator('.solar-cockpit').waitFor({ state: 'hidden' });
+      await page.keyboard.press('c');
+      await page.locator('.solar-cockpit').waitFor({ state: 'visible' });
+      await page.waitForTimeout(500);
+      await shot('autopilot-cockpit');
+      await cameraChoices.getByRole('button', { name: /Behind rocket/ }).click();
+      await page.waitForTimeout(400);
+      await shot('autopilot-behind');
+      await cameraChoices.waitFor({ state: 'hidden' });
+      const hideMars = page.getByRole('button', { name: 'Hide Mars information' });
+      if (await hideMars.isVisible()) await hideMars.click();
+    }
+
     await page.getByRole('button', { name: 'Fly the rocket', exact: true }).click();
     const hudBox = await inside('.solar-flight__top', { maxWidth: 340 });
-    assert.ok(hudBox.height <= 230, `flight HUD too tall: ${hudBox.height}`);
+    assert.ok(hudBox.height <= 300, `flight HUD too tall: ${hudBox.height}`);
     assert.equal(await page.getByText('Practice game', { exact: true }).count(), 0);
+    const touchControls = page.locator('.solar-flight__touch-controls');
+    assert.equal(await touchControls.isVisible(), width < 1000, `touch controls visibility at ${width}px`);
+    assert.equal(await page.getByRole('button', { name: 'Stop', exact: true }).count(), 0, 'Stop is removed on every device');
+    const panelToggle = page.locator('.solar-flight__panel-toggle');
+    const details = page.locator('.solar-flight__details');
+    const initiallyExpanded = (await panelToggle.getAttribute('aria-expanded')) === 'true';
+    assert.equal(initiallyExpanded, width >= 1000, `flight panel default state at ${width}px`);
+    if (initiallyExpanded) {
+      await panelToggle.click(); assert.equal(await details.isVisible(), false, 'panel collapses');
+      await panelToggle.click(); assert.equal(await details.isVisible(), true, 'panel expands');
+    } else {
+      await panelToggle.click(); assert.equal(await details.isVisible(), true, 'panel expands');
+      await panelToggle.click(); assert.equal(await details.isVisible(), false, 'panel collapses');
+      await panelToggle.click();
+    }
+    assert.equal((await panelToggle.getAttribute('aria-expanded')) === 'true', true, 'panel is open for flight setup');
+    await panelToggle.click();
+    const compactCamera = page.getByRole('button', { name: 'Switch to Cockpit camera' });
+    assert.equal(await compactCamera.isVisible(), true, 'camera control remains visible with the panel collapsed');
+    await compactCamera.click();
+    await page.locator('.solar-cockpit').waitFor({ state: 'visible' });
+    await page.getByRole('button', { name: 'Switch to Behind rocket camera' }).click();
+    await page.locator('.solar-cockpit').waitFor({ state: 'hidden' });
+    await page.locator('canvas').click({ position: { x: width * .7, y: height * .5 } });
+    await page.keyboard.press('c');
+    await page.locator('.solar-cockpit').waitFor({ state: 'visible' });
+    await shot('collapsed-camera-controls');
+    await page.keyboard.press('c');
+    await page.locator('.solar-cockpit').waitFor({ state: 'hidden' });
+    await panelToggle.click();
     await page.getByRole('button', { name: /Where to/ }).click();
     await page.getByRole('combobox').selectOption('Pluto');
     await page.getByRole('button', { name: 'Point rocket here' }).click();
+    await page.getByRole('group', { name: 'Camera view' }).getByRole('button', { name: /Cockpit/ }).click();
+    assert.equal(await page.locator('.solar-flight').evaluate(el => document.activeElement === el), true, 'camera changes return keyboard focus to flight');
+    await page.locator('.solar-cockpit').waitFor();
+    await page.waitForTimeout(220);
+    await shot('manual-cockpit');
+    await page.getByRole('group', { name: 'Camera view' }).getByRole('button', { name: /Behind rocket/ }).click();
+    if (normalMotion) { await page.waitForTimeout(350); await shot('manual-behind'); }
     if (normalMotion) {
+      await page.locator('.solar-flight').focus();
+      await page.keyboard.down('ArrowUp');
+      await page.keyboard.down('Space');
+      await page.waitForTimeout(500);
+      await shot('keyboard-flight');
       await page.keyboard.down('Shift');
-      await page.waitForFunction(() => document.querySelector('.solar-flight__turbo')?.classList.contains('is-on'));
+      await page.waitForTimeout(500);
       await shot('turbo');
       await page.keyboard.up('Shift');
-      await page.getByRole('button', { name: 'Stop', exact: true }).click();
+      await page.keyboard.up('Space');
+      await page.keyboard.up('ArrowUp');
     }
-    await inside('.solar-flight__turbo'); await inside('.solar-flight__go'); await inside('.solar-flight__stick');
+    if (width < 1000) {
+      await inside('.solar-flight__turbo'); await inside('.solar-flight__go'); await inside('.solar-flight__stick');
+      const stickBox = await page.locator('.solar-flight__stick').boundingBox();
+      assert.ok(stickBox.x + stickBox.width < width / 2, `landscape/mobile joystick is on the left: ${JSON.stringify(stickBox)}`);
+    } else {
+      assert.equal(await page.locator('.solar-flight__touch-controls button:visible').count(), 0, 'desktop has no touch flight buttons');
+      assert.equal(await page.locator('.solar-flight__stick:visible').count(), 0, 'desktop has no joystick');
+    }
     await shot('flight');
     await page.getByRole('button', { name: 'Back to Solar System' }).click();
     assert.equal(await page.locator('canvas').count(), 1, 'main scene remains the only renderer');

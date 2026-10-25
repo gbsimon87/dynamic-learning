@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { createSolarFreeFlight, flightSpeed } from './solarFreeFlight.js';
 
-function setup() {
+function setup({ reduced = true, onCameraViewChange = () => {}, getCameraView = () => 'behind' } = {}) {
   const oldWindow = globalThis.window, oldDocument = globalThis.document;
   globalThis.window = new EventTarget(); globalThis.document = new EventTarget();
   const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(50, 1, .1, 5000);
@@ -14,7 +14,7 @@ function setup() {
     return { id, name: id, radius, object3d, kind: id === 'Sun' ? 'star' : 'planet' };
   });
   const changes = [];
-  const flight = createSolarFreeFlight({ scene, camera, controls, bodies, quality: 'low', reducedMotion: () => true, onChange: state => changes.push(state) });
+  const flight = createSolarFreeFlight({ scene, camera, controls, bodies, quality: 'low', reducedMotion: () => reduced, onChange: state => changes.push(state), onCameraViewChange, getCameraView });
   const ship = scene.getObjectByName('solar-free-flight');
   const tick = (n = 1) => { for (let i = 0; i < n; i++) flight.update(.05); };
   const key = (type, value) => { const event = new Event(type, { cancelable: true }); event.key = value; window.dispatchEvent(event); return event; };
@@ -159,5 +159,74 @@ test('Stop holds even while Space or Shift is still held down', () => {
     assert.equal(t.changes.at(-1).speed, 0);
     t.key('keyup', ' '); press(' '); t.tick(10);
     assert.ok(t.changes.at(-1).speed > 0, 'a fresh press flies again');
+  } finally { t.clean(); }
+});
+
+test('the chase camera carries rocket movement at ordinary and Turbo speed instead of falling behind', () => {
+  for (const [step, ticks] of [[1 / 30, 100], [1 / 60, 180], [1 / 120, 360]]) {
+    for (const turbo of [false, true]) {
+      const t = setup({ reduced: false });
+      try {
+        t.flight.enter(); t.flight.setStick(-1, 0); t.tick(20); t.flight.setStick(0, 0);
+        if (turbo) t.flight.setBoost(true); else t.flight.setThrust(true);
+        let largestGap = 0, totalTravel = 0, previous = t.ship.position.clone();
+        for (let i = 0; i < ticks; i++) {
+          t.flight.update(step);
+          largestGap = Math.max(largestGap, t.camera.position.distanceTo(t.ship.position));
+          totalTravel += t.ship.position.distanceTo(previous); previous.copy(t.ship.position);
+        }
+        assert.ok(totalTravel > 20, `flight moved at ${1 / step} Hz`);
+        assert.ok(largestGap < 3.2, `${turbo ? 'Turbo' : 'thrust'} at ${1 / step} Hz: ${largestGap}`);
+      } finally { t.clean(); }
+    }
+  }
+});
+
+test('the chase camera keeps looking ahead through the flight boundary and the rocket can turn back', () => {
+  for (const step of [1 / 30, 1 / 60, 1 / 120]) for (const turbo of [false, true]) {
+    const t = setup({ reduced: false });
+    try {
+      t.flight.enter(); t.flight.setStick(-1, 0); t.tick(20); t.flight.setStick(0, 0);
+      if (turbo) t.flight.setBoost(true); else t.flight.setThrust(true);
+      const nose = new THREE.Vector3(), cameraDirection = new THREE.Vector3();
+      const checkView = () => {
+        nose.set(0, 1, 0).applyQuaternion(t.ship.quaternion);
+        t.camera.getWorldDirection(cameraDirection);
+        assert.ok(cameraDirection.dot(nose) > .8, `camera looks along the rocket heading at ${1 / step} Hz, turbo=${turbo}, radius=${t.ship.position.length()}`);
+        const projected = t.ship.position.clone().project(t.camera);
+        assert.ok(Math.abs(projected.x) < 1 && Math.abs(projected.y) < 1 && projected.z < 1, 'rocket stays in the camera view');
+      };
+      // Cruise outwards, then keep thrust held against the boundary.
+      for (let i = 0; i < 5000 && t.ship.position.length() < 1349.99; i++) {
+        t.flight.update(step); checkView();
+      }
+      assert.ok(t.ship.position.length() >= 1349.99, 'flight reached the outer boundary');
+      for (let i = 0; i < Math.ceil(1 / step); i++) { t.flight.update(step); checkView(); }
+      assert.ok(t.ship.position.length() <= 1350.000001, 'the existing flight boundary still holds');
+      // Turn with the steering controls while thrust is still held, then fly back in.
+      t.flight.setStick(1, 0);
+      for (let i = 0; i < Math.ceil(Math.PI / 1.7 / step); i++) { t.flight.update(step); checkView(); }
+      t.flight.setStick(0, 0);
+      for (let i = 0; i < Math.ceil(4 / step); i++) { t.flight.update(step); checkView(); }
+      assert.ok(t.ship.position.length() < 1250, 'manual steering lets the rocket return towards the Solar System');
+    } finally { t.clean(); }
+  }
+});
+
+test('cockpit view hides the rocket shell and switching back restores the close chase', () => {
+  let cameraView = 'behind';
+  const t = setup({ reduced: false, getCameraView: () => cameraView });
+  try {
+    t.flight.enter(); t.flight.setStick(-1, 0); t.tick(20); t.flight.setStick(0, 0); t.flight.setThrust(true); t.tick(30);
+    cameraView = 'cockpit'; t.tick();
+    assert.equal(t.ship.visible, false);
+    assert.ok(t.camera.position.distanceTo(t.ship.position) < .1, 'cockpit camera is inside the rocket');
+    assert.ok(t.controls.target.distanceTo(t.ship.position) > 4, 'cockpit looks ahead');
+    const position = t.ship.position.clone();
+    cameraView = 'behind'; t.tick(20);
+    assert.equal(t.ship.visible, true);
+    assert.ok(t.ship.position.distanceTo(position) > .1, 'view changes preserve active thrust');
+    assert.ok(t.camera.position.distanceTo(t.ship.position) < 3.2);
+    assert.equal(cameraView, 'behind');
   } finally { t.clean(); }
 });

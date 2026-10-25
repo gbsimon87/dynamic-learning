@@ -29,6 +29,7 @@ function Navbar() {
   // subtract it instead of hardcoding a guess - the bar is ~56px on desktop but
   // wraps taller on a phone.
   useEffect(() => {
+    if (location.pathname === '/solar-system') return;
     const el = navRef.current;
     if (!el) return;
     const publish = () =>
@@ -41,7 +42,7 @@ function Navbar() {
     const ro = new ResizeObserver(publish);
     ro.observe(el);
     return () => ro.disconnect();
-  }, []);
+  }, [location.pathname]);
 
   useEffect(() => {
     const handleScroll = () => {

@@ -5,6 +5,9 @@
   background-color: inherit;
 }
 
+.app-layout--solar-system { --navbar-height: 0px; }
+.app-layout--solar-system > nav.navbar { display: none; }
+
 .app-layout-main { flex: 1; min-width: 0; }
 
 .skip-link {

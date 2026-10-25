@@ -37,6 +37,8 @@ import { constellations } from "./constellations.js";
 import ConstellationCard from "./ConstellationCard.jsx";
 import JoinDots from "./JoinDots.jsx";
 import SolarFlightControls from "./SolarFlightControls.jsx";
+import SolarCameraChoices from "./SolarCameraChoices.jsx";
+import SolarCockpit from "./SolarCockpit.jsx";
 import { createSolarFreeFlight } from "./solarFreeFlight.js";
 import SolarSettingsDrawer from "./SolarSettingsDrawer.jsx";
 import { createSaturnRingDetail, SATURN_RING_BANDS, SATURN_RING_LINE } from "./saturnRingDetail.js";
@@ -97,6 +99,13 @@ export default function ThreeSolarSystem() {
     // While the ship flies to a planet the launch buttons step aside, as they
     // do for its card, so another mode can't start mid-flight.
     const [shipFlying, setShipFlying] = useState(false);
+    const [cameraView, setCameraView] = useState("behind");
+    const cameraViewRef = useRef("behind");
+    const selectCameraView = (view) => {
+        if (view !== "behind" && view !== "cockpit") return;
+        cameraViewRef.current = view;
+        setCameraView(view);
+    };
     const [tourState, setTourState] = useState({ active: false, index: 0, total: 0, muted: false });
     // The lift-off countdown before the tour (#35): 3, 2, 1, 0 for "Lift off!", or null.
     const [countdown, setCountdown] = useState(null);
@@ -1163,6 +1172,7 @@ export default function ThreeSolarSystem() {
 
         function resetSolarSystem() {
             if (disposed || resetting) return;
+            selectCameraView("behind");
             closeLineUp();
             endPaleBlueDot({ home: false });
             warpIn?.skip();
@@ -1721,6 +1731,7 @@ export default function ThreeSolarSystem() {
         // The autopilot ship (#34) starts beside Earth.
         const ship = modules.add("ship", createAutopilotShip({
             scene, camera, controls, quality: currentQuality(), reducedMotion: () => reducedQuery.matches,
+            getCameraView: () => cameraViewRef.current,
         }));
         const parkShipAtEarth = () => {
             const earth = searchEntriesById.get("Earth");
@@ -1859,6 +1870,7 @@ export default function ThreeSolarSystem() {
 
         const freeFlight = modules.add("freeFlight", createSolarFreeFlight({
             scene, camera, controls, quality: currentQuality(), reducedMotion: () => reducedQuery.matches,
+            getCameraView: () => cameraViewRef.current,
             bodies: [...searchEntries,
                 { id: "Sun", name: "Sun", radius: 5, object3d: sun, kind: "star" },
                 { id: "ISS", name: "International Space Station", parentName: "Earth", radius: .12, object3d: iss.object3d, kind: "satellite" },
@@ -2157,6 +2169,7 @@ export default function ThreeSolarSystem() {
     // Same rule as the launch buttons: the drawer steps aside for a planet
     // card or any other mode, and comes back closed.
     const drawerVisible = mode === "idle" && !selectedPlanet && !shipFlying;
+    const autopilotViewVisible = shipFlying && !freeFlightOpen && (mode === "idle" || mode === "tour");
     useEffect(() => {
         if (!drawerVisible) setSettingsOpen(false);
     }, [drawerVisible]);
@@ -2192,6 +2205,12 @@ export default function ThreeSolarSystem() {
                 aria-label="Interactive model of the Solar System"
                 style={{ display: "block", width: "100%", height: "100%", cursor: meteorActive ? "default" : "grab" }}
             />
+            {cameraView === "cockpit" && (freeFlightOpen || autopilotViewVisible) && <SolarCockpit />}
+            {autopilotViewVisible && <SolarCameraChoices
+                className="solar-camera-choices--floating"
+                value={cameraView}
+                onChange={selectCameraView}
+            />}
             {mode === "idle" && (
                 <div className={`solar-toolbar${searchExpanded ? " solar-toolbar--searching" : ""}`}>
                     <button
@@ -2375,6 +2394,7 @@ export default function ThreeSolarSystem() {
                 </aside>
             )}
             {freeFlightOpen && <SolarFlightControls api={sceneApiRef.current?.freeFlight} bodies={sceneApiRef.current?.freeFlight.getTargets() ?? []} view={freeFlightView}
+                cameraView={cameraView} onCameraViewChange={selectCameraView}
                 onClose={() => {
                     sceneApiRef.current?.stopFreeFlight(); focusRequestRef.current = "fly"; setFreeFlightOpen(false);
                 }}

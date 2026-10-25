@@ -1,0 +1,127 @@
+.solar-cockpit {
+  --cockpit-deck-height: clamp(190px, 16.25vw, 310px);
+  position: absolute;
+  z-index: 48;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  color: #c2dce0;
+  animation: solar-cockpit-enter 180ms ease-out both;
+}
+
+.solar-cockpit *,
+.solar-cockpit *::before,
+.solar-cockpit *::after { box-sizing: border-box; pointer-events: none; }
+
+.solar-cockpit__window {
+  position: absolute;
+  inset: 12px 14px calc(var(--cockpit-deck-height) - 27px);
+  overflow: hidden;
+  border: 14px solid #294757;
+  border-bottom-width: 19px;
+  border-radius: 78px 78px 12px 12px / 64px 64px 12px 12px;
+  box-shadow: inset 0 0 0 2px #8eafb8, inset 0 0 0 5px #081522,
+    0 0 0 2px #78949e, 0 0 0 6px #0b1926, 0 9px 25px #0009;
+}
+
+.solar-cockpit__window::before {
+  content: '';
+  position: absolute;
+  inset: -12px 42px auto;
+  height: 12px;
+  background: repeating-linear-gradient(90deg, #a6bbc2 0 3px, #253d4b 3px 96px);
+  border-block: 2px solid #152a38;
+}
+
+.solar-cockpit__strut {
+  position: absolute;
+  z-index: 1;
+  display: block;
+  top: -3%;
+  bottom: -1%;
+  width: 17px;
+  background: linear-gradient(90deg, #081520, #395463 26%, #738e98 43%, #314b5a 55%, #142936 85%);
+  border-inline: 1px solid #07121c;
+  box-shadow: 3px 0 8px #0008, -1px 0 0 #9ab5be55;
+}
+.solar-cockpit__strut::after {
+  content: '';
+  position: absolute;
+  inset: 17px 5px;
+  background: repeating-linear-gradient(180deg, #c4d4d8 0 3px, transparent 3px 110px);
+  opacity: .55;
+}
+.solar-cockpit__strut--left { left: 5%; transform: rotate(3deg); transform-origin: top; }
+.solar-cockpit__strut--right { right: 5%; transform: rotate(-3deg); transform-origin: top; }
+.solar-cockpit__glass-glint { position: absolute; inset: 0; background: linear-gradient(122deg, #a3d5ed05 8%, transparent 8% 79%, #c4eaf305 79% 83%, transparent 83%); }
+
+.solar-cockpit__overhead {
+  position: absolute;
+  top: 9px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 430px;
+  height: 35px;
+  padding: 0 22px 5px;
+  transform: translateX(-50%);
+  border: 1px solid #78929c;
+  border-radius: 0 0 18px 18px;
+  background: linear-gradient(#3f596a, #1a2e3e 45%, #0a1825);
+  box-shadow: inset 0 -3px 0 #354e5c, 0 4px 8px #0008;
+  font: 6px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .1em;
+}
+.solar-cockpit__overhead i { width: 6px; height: 6px; flex-shrink: 0; border: 1px solid #a0c6c4; border-radius: 2px; background: #73bfb4; box-shadow: 0 0 4px #73bfb444; }
+.solar-cockpit__overhead i:nth-of-type(3) { background: #e3b772; }
+.solar-cockpit__overhead b { width: 1px; height: 17px; background: #6c879077; margin-inline: 3px; }
+.solar-cockpit__overhead em { color: #8ee3d6; font-size: 9px; font-style: normal; padding: 3px 5px; background: #081923; border: 1px solid #3b5a66; }
+
+.solar-cockpit__dashboard {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--cockpit-deck-height);
+  overflow: hidden;
+  filter: drop-shadow(0 -4px 6px #0009);
+}
+.solar-cockpit__dashboard::before {
+  content: '';
+  position: absolute;
+  inset: 45% 0 0;
+  background: linear-gradient(#21394b, #091522);
+  clip-path: polygon(0 20%, 10% 0, 90% 0, 100% 20%, 100% 100%, 0 100%);
+}
+.solar-cockpit__instruments { position: relative; display: block; width: 100%; height: 100%; overflow: visible; }
+.solar-cockpit__instruments text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-weight: 500; fill: #b6d0d3; }
+.solar-cockpit__label { font-size: 8px; letter-spacing: 1.8px; }
+.solar-cockpit__display-label { font-size: 6px; letter-spacing: 1px; }
+.solar-cockpit__micro { font-size: 5px; letter-spacing: .6px; }
+.solar-cockpit__screw circle { fill: #526c78; stroke: #091823; stroke-width: 1.5; }
+.solar-cockpit__screw path { stroke: #b5c9cb; stroke-width: .8; }
+
+@keyframes solar-cockpit-enter { from { opacity: 0; } to { opacity: 1; } }
+
+/* Keep the instrument shapes proportional; crop outer equipment on narrow phones. */
+@media (max-width: 620px) {
+  .solar-cockpit { --cockpit-deck-height: 150px; }
+  .solar-cockpit__window { inset: 8px 8px 130px; border-width: 8px; border-bottom-width: 12px; border-radius: 46px 46px 8px 8px; }
+  .solar-cockpit__strut { width: 9px; }
+  .solar-cockpit__strut::after { inset-inline: 3px; }
+  .solar-cockpit__instruments { position: absolute; left: 50%; width: 760px; max-width: none; transform: translateX(-50%); }
+  .solar-cockpit__overhead { top: 7px; width: 245px; height: 26px; gap: 5px; padding-inline: 10px; }
+  .solar-cockpit__overhead span { font-size: 5px; }
+  .solar-cockpit__overhead span:first-child, .solar-cockpit__overhead b:first-of-type { display: none; }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .solar-cockpit { --cockpit-deck-height: 122px; }
+  .solar-cockpit__window { inset: 7px 10px 102px; border-width: 8px; border-bottom-width: 13px; border-radius: 38px 38px 8px 8px; }
+  .solar-cockpit__strut { width: 10px; }
+  .solar-cockpit__overhead { top: 7px; height: 25px; }
+}
+
+@media (prefers-reduced-motion: reduce) { .solar-cockpit { animation: none; } }

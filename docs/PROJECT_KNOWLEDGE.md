@@ -1326,6 +1326,68 @@ clear the inputs. Turbo shares the tour’s pooled light streaks; reduced motion
 suppresses them. Collider world positions are read once per frame for cheaper
 substeps. No new assets/dependencies, stored data or curriculum changes.
 
+Solar flight cameras (2026-10-25): idea #38 now offers **Behind rocket** and
+**Cockpit** during manual flight and autopilot/tours. `solarFlightCamera.js`
+tracks each frame's ship displacement before easing the relative chase offset,
+so thrust speed no longer makes the rocket recede; the chase distance is also
+shorter. The cockpit uses a forward-facing camera, hides the active rocket shell,
+and adds a lightweight responsive windshield/dashboard overlay. The two-choice
+control is labelled, keyboard accessible and at least 48px tall. The choice is
+page-local, defaults to Behind rocket, and is shared by manual and autopilot
+flight. Pressing C toggles the view in either flight mode, including with the
+manual flight panel collapsed. Collapsed panels keep a labelled camera toggle
+in the header; expanded panels show both view choices. The shortcut listens
+during capture and accepts physical KeyC as well as the C character. Held-key
+repeats, text entry and browser modifier shortcuts are ignored; the listener is
+removed when camera choices unmount. Autopilot arrival restores planet framing and keeps the selected view for
+the next leg. “Watch from outside” remains pending; no saved data or renderer
+was added. Details and open validation gates are in
+`solar-system-camera/IMPLEMENTATION_PLAN.md`.
+
+Chase camera direction fix (2026-10-25): manual flight now carries both the
+camera position and its look target with the rocket before easing the relative
+pose. Previously the world-space target lagged at cruise/Turbo speed and could
+fall behind the camera, reversing the view in open space. A regression test
+flies to the 1,350-unit boundary, holds outward thrust, steers around and returns
+inwards, checking heading and rocket visibility every frame at 30/60/120 Hz with
+normal thrust and Turbo. The flight boundary and steering rules are unchanged.
+
+Cockpit instrument detail (2026-10-25): `SolarCockpit` now draws a deeper,
+proportional SVG instrument deck with recessed orbital navigation and engine
+displays, a banked attitude indicator, proximity radar, ticked pressure/thermal
+dials, switch banks, a keypad, guarded reserve switch and twin throttle levers.
+Layered metal bezels, fasteners, grab rails, vents and a compact overhead panel
+add definition around the open windshield. The artwork is decorative, hidden
+from assistive technology and ignores pointer events; it adds no renderer,
+frame loop or functional flight controls. Mobile crops the outside equipment
+while retaining the central instruments and existing touch controls. Validation:
+lint, all 2,250 unit tests and 475 component tests, and the production build
+pass (four database-dependent tests skipped). Local Chrome layout checks cover
+1280×900, 1971×1280, 390×844 and 844×390 in both themes, with expanded and
+collapsed panels. Physical-device touch and performance remain unverified.
+
+Manual-flight UI follow-up (2026-10-25): fine-pointer desktop hides the touch
+joystick, GO and Turbo controls. Arrows/WASD steer, Space flies and Shift boosts;
+releasing the keys slows the ship. Coarse-pointer or narrow layouts retain the
+touch controls and get touch-specific guidance. The touch flight panel starts
+collapsed on mobile and short landscape screens, with an accessible toggle on
+all devices. The landscape joystick stays left. The Stop button is removed; the
+ship slows when thrust is released. The global nav is hidden only on
+`/solar-system`, and that scene uses the full viewport. The cockpit console uses
+a brighter blue palette and leaves the desktop view unobstructed by flight
+buttons. Validation: lint, build and the full test suite pass; the batched local
+browser check covers both themes at 1280×900, 619×756, 390×844 and 844×390,
+including hidden navigation, viewport fill, panel collapse/expand, keyboard
+flight, left joystick and no Stop button. Physical-device touch remains open.
+
+Validation: lint, production build and the full test suite passed (2,250 unit
+tests and 475 component tests; four database-dependent tests skipped). A local Playwright pass covered
+both themes at 1280×900, 619×756, 390×844 and 844×390, checking manual movement
+and both camera views with zero page errors. Autopilot switching/arrival were
+checked at 1280×900 in light theme. Reduced-motion behavior has automated
+coverage; physical-device comfort, touch, child playtest and the complete
+autopilot viewport/theme matrix remain open.
+
 Validation for the compact UI pass: lint, full tests and build pass. The local
 batched Chrome script `scripts/checkSolarUi.js` checked 1280×900, 390×844 and
 844×390 in both themes: panel bounds, visible constellation footer, mission

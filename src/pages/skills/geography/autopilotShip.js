@@ -1,12 +1,13 @@
 import * as THREE from "three";
 import { flightFrame, flightPoint, flightSeconds, planWaypoint } from "./shipFlight.js";
+import { flightCameraPose } from "./solarFlightCamera.js";
 
 const UP = new THREE.Vector3(0, 1, 0);
 // The ship is about as long as the planet is wide, but never so small it
 // vanishes or so big it hides the planet, as shares of the framing distance.
 const SIZE = { perRadius: 0.9, min: 0.035, max: 0.07 };
 // How far behind the ship the camera chases, in ship lengths.
-const CHASE_LENGTHS = 5.5;
+const CHASE_LENGTHS = 3.2;
 
 export function buildShip(quality) {
     const segments = quality === "low" ? 10 : 18;
@@ -83,7 +84,7 @@ export function buildShip(quality) {
  * caller pauses its own follow camera until `onArrive`. Under reduced motion
  * the caller uses `park()` instead, which moves the ship without a flight.
  */
-export function createAutopilotShip({ scene, camera, controls, quality, reducedMotion = () => false }) {
+export function createAutopilotShip({ scene, camera, controls, quality, reducedMotion = () => false, getCameraView = () => "behind" }) {
     const { ship, flame, flameMaterial, hitTarget, disposables } = buildShip(quality);
     scene.add(ship);
 
@@ -96,11 +97,13 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
     const cameraStart = new THREE.Vector3();
     const lookStart = new THREE.Vector3();
     const lastPosition = new THREE.Vector3();
-    const chasePosition = new THREE.Vector3();
-    const chaseLook = new THREE.Vector3();
     const look = new THREE.Vector3();
     const wantedTurn = new THREE.Quaternion();
     const scratch = new THREE.Vector3();
+    const flightCameraPosition = new THREE.Vector3();
+    const flightCameraTarget = new THREE.Vector3();
+    const blendedCameraPosition = new THREE.Vector3();
+    const blendedCameraTarget = new THREE.Vector3();
 
     let target = null; // the object the ship is flying to or hovering beside
     let targetRadius = 1;
@@ -111,6 +114,8 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
     let ignition = 0; // the engine burning on the pad before lift-off (#35), 0..1
     let hidden = false;
     let thrust = 0; // 0..1 while flying, for the flame and the warp streaks
+    let activeCameraView = getCameraView();
+    let viewBlend = null;
 
     // The camera looks at a planet from between the way the ship came and the
     // Sun, a little from above, so the planet is lit when it arrives.
@@ -219,6 +224,8 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
                 startSize: size,
                 onArrive,
             };
+            activeCameraView = getCameraView();
+            viewBlend = null;
             cameraStart.copy(camera.position);
             lookStart.copy(controls.target);
             lastPosition.copy(flightStart);
@@ -243,7 +250,12 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
         },
 
         update(dt, { active }) {
-            ship.visible = !active && !hidden;
+            const cameraView = getCameraView();
+            if (!active && flight && cameraView !== activeCameraView) {
+                activeCameraView = cameraView;
+                viewBlend = { age: 0, view: cameraView, position: camera.position.clone(), target: controls.target.clone() };
+            }
+            ship.visible = !active && !hidden && !(flight && (cameraView === "cockpit" || viewBlend?.view === "behind"));
             if (active || !target) return;
 
             if (!flight) {
@@ -296,14 +308,29 @@ export function createAutopilotShip({ scene, camera, controls, quality, reducedM
             flameMaterial.opacity = 0.35 + thrust * 0.6;
 
             // Camera: from where it was, in behind the ship, then round to frame the planet.
-            const chaseDistance = size * CHASE_LENGTHS;
-            chasePosition.copy(ship.position)
-                .addScaledVector(heading, -chaseDistance)
-                .addScaledVector(UP, chaseDistance * 0.35);
-            chaseLook.copy(ship.position).addScaledVector(heading, size * 2);
-            camera.position.lerpVectors(cameraStart, chasePosition, frame.chase)
-                .lerp(framingPosition(distance, scratch), frame.arrive);
-            look.lerpVectors(lookStart, chaseLook, frame.chase).lerp(targetPosition, frame.arrive);
+            flightCameraPose({
+                position: ship.position,
+                forward: heading,
+                view: cameraView,
+                shipScale: size,
+                behindDistance: Math.max(size * CHASE_LENGTHS, .15),
+                height: Math.max(size * .9, .11),
+                lookAhead: Math.max(size * 4, .55),
+            }, flightCameraPosition, flightCameraTarget);
+            blendedCameraPosition.lerpVectors(cameraStart, flightCameraPosition, frame.chase);
+            blendedCameraTarget.lerpVectors(lookStart, flightCameraTarget, frame.chase);
+            if (viewBlend) {
+                viewBlend.age += dt;
+                const transition = THREE.MathUtils.smoothstep(viewBlend.age, 0, .24);
+                camera.position.lerpVectors(viewBlend.position, blendedCameraPosition, transition);
+                look.lerpVectors(viewBlend.target, blendedCameraTarget, transition);
+                if (transition >= 1) viewBlend = null;
+            } else {
+                camera.position.copy(blendedCameraPosition);
+                look.copy(blendedCameraTarget);
+            }
+            camera.position.lerp(framingPosition(distance, scratch), frame.arrive);
+            look.lerp(targetPosition, frame.arrive);
             controls.target.copy(look);
             camera.lookAt(look);
         },

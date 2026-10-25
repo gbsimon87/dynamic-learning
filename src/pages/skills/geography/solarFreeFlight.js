@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { buildShip } from './autopilotShip.js';
 import { steerInput } from './flightControls.js';
 import { flightArrivalMargin, flightTargetGap } from './flightClues.js';
+import { createFlightCamera } from './solarFlightCamera.js';
 
 const UP = new THREE.Vector3(0, 1, 0);
 const clamp = THREE.MathUtils.clamp;
@@ -15,19 +16,20 @@ export function flightSpeed(clearance, boost) {
 }
 
 /** Manual flight in the existing scene; no renderer, world clock or storage of its own. */
-export function createSolarFreeFlight({ scene, camera, controls, bodies, quality, reducedMotion = () => false, onChange = () => {} }) {
+export function createSolarFreeFlight({ scene, camera, controls, bodies, quality, reducedMotion = () => false, onChange = () => {}, getCameraView = () => 'behind' }) {
   const model = buildShip(quality);
   const ship = model.ship;
   ship.name = 'solar-free-flight'; ship.visible = false; ship.scale.setScalar(.3); scene.add(ship);
   const keys = new Set();
   const velocity = new THREE.Vector3(), forward = new THREE.Vector3(), scratch = new THREE.Vector3();
-  const center = new THREE.Vector3(), chase = new THREE.Vector3(), look = new THREE.Vector3();
+  const center = new THREE.Vector3();
   let active = false, saved = null, yaw = 0, pitch = 0, stickX = 0, stickY = 0, thrust = false, boost = false, boostStrength = 0;
   let nearest = null, lastName = '', age = 0;
   let goal = null, goalToken = null, arrival = null, insideSeconds = 0, goalArmed = false, travelled = 0, navigation = null;
   const previous = new THREE.Vector3(), destinationPoint = new THREE.Vector3();
   const obstacles = bodies.filter(b => b.object3d && !['comet', 'satellite', 'belt'].includes(b.kind));
   const colliders = obstacles.map(body => ({ body, position: new THREE.Vector3() }));
+  const flightCamera = createFlightCamera({ camera, controls, getView: getCameraView, reducedMotion });
   function pointFor(body, out) {
     if (body.kind !== 'belt') return body.object3d.getWorldPosition(out);
     const region = body.getRegion();
@@ -56,29 +58,20 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, quality
   function home() {
     if (!earth) return;
     clearInput(); earth.object3d.getWorldPosition(center); ship.position.copy(center).add(new THREE.Vector3(0, 1.3, 3));
-    aim(earth); navigation = null; nearest = earth; lastName = ''; travelled = 0; insideSeconds = 0; goalArmed = false; updateCamera(0, true);
+    aim(earth); navigation = null; nearest = earth; lastName = ''; travelled = 0; insideSeconds = 0; goalArmed = false; flightCamera.reset(ship); updateCamera(0, true);
   }
   function updateCamera(dt, snap = false) {
     direction();
     ship.quaternion.setFromUnitVectors(UP, forward);
-    chase.copy(ship.position).addScaledVector(forward, -2.2).addScaledVector(UP, .7);
-    look.copy(ship.position).addScaledVector(forward, 2);
-    if (snap || reducedMotion()) camera.position.copy(chase);
-    else camera.position.lerp(chase, 1 - Math.exp(-6 * dt));
-    for (const body of obstacles) {
-      body.object3d.getWorldPosition(center); scratch.subVectors(camera.position, center);
-      if (scratch.lengthSq() < (body.radius + .2) ** 2) {
-        if (scratch.lengthSq() < 1e-10) scratch.copy(UP);
-        camera.position.copy(center).addScaledVector(scratch.normalize(), body.radius + .2);
-      }
-    }
-    controls.target.copy(look); camera.lookAt(look);
+    flightCamera.update(ship, forward, dt, obstacles, snap);
   }
-  const editable = e => e.target?.closest?.('input, textarea, select, button, a[href], [contenteditable="true"]');
+  const editable = e => e.target?.closest?.('input, textarea, select, [contenteditable="true"]');
   const keydown = e => {
-    if (!active || editable(e)) return;
+    if (!active) return;
     const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
     if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd', ' ', 'Shift'].includes(key)) return;
+    // Keep Space available for activating a focused HUD button; steering keys still work from the HUD.
+    if (editable(e) || (key === ' ' && e.target?.closest?.('button, a[href]'))) return;
     // Held keys repeat; only a fresh press counts, so Stop holds until the key is pressed again.
     e.preventDefault(); if (!e.repeat) keys.add(key);
   };
@@ -91,7 +84,7 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, quality
     enter() {
       if (active) return;
       saved = { position: camera.position.clone(), quaternion: camera.quaternion.clone(), target: controls.target.clone(), enabled: controls.enabled };
-      active = true; controls.enabled = false; ship.visible = true; home();
+      active = true; controls.enabled = false; ship.visible = getCameraView() === 'behind'; home();
     },
     exit() {
       if (!active) return;
@@ -115,6 +108,7 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, quality
     update(dt, { active: otherMode = false } = {}) {
       if (!active) return;
       if (otherMode) { clearInput(); return; }
+      ship.visible = getCameraView() === 'behind';
       dt = clamp(dt, 0, .05);
       const input = steerInput(stickX, stickY, keys);
       if (input.x || input.y) navigation = null;

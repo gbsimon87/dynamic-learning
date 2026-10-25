@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup, within } from '@testing-library/react';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import SolarFlightControls from '../../src/pages/skills/geography/SolarFlightControls.jsx';
 import { FLIGHT_CLUES } from '../../src/pages/skills/geography/flightClues.js';
@@ -31,7 +31,6 @@ test('touch steering and thrust release on cancellation; navigation and cleanup 
   fireEvent.click(screen.getByText('Point rocket here')); expect(api.face).toHaveBeenCalledWith('Earth');
   fireEvent.click(screen.getByRole('button', { name: /More/ }));
   fireEvent.click(screen.getByText('Back to Earth')); expect(api.home).toHaveBeenCalledOnce();
-  fireEvent.click(screen.getByText('Stop')); expect(api.brake).toHaveBeenCalled();
   expect(screen.queryByText('Practice game')).toBeNull();
   fireEvent.keyDown(window, { key: 'Escape' }); expect(close).toHaveBeenCalledOnce();
   unmount(); expect(api.brake).toHaveBeenCalled();
@@ -90,6 +89,24 @@ test('a full clue adventure earns 25 stars, milestone badges and a fresh replay'
   expect(screen.getByText('Clue 1 / 25')).toBeTruthy();
 });
 
+test('choosing a camera returns desktop keyboard focus to the flight surface', () => {
+  const onCameraViewChange = vi.fn();
+  const props = { api, bodies, onClose: noop, onCameraViewChange };
+  const { rerender } = render(<SolarFlightControls {...props} />);
+  const viewChoices = screen.getByRole('group', { name: 'Camera view' });
+  fireEvent.click(within(viewChoices).getByRole('button', { name: /Cockpit/ }));
+  expect(onCameraViewChange).toHaveBeenCalledWith('cockpit');
+  expect(document.activeElement).toBe(screen.getByRole('region', { name: 'Fly through the Solar System' }));
+  rerender(<SolarFlightControls {...props} cameraView="cockpit" />);
+  fireEvent.click(screen.getByRole('button', { name: 'Collapse flight panel' }));
+  const cameraToggle = screen.getByRole('button', { name: 'Switch to Behind rocket camera' });
+  fireEvent.click(cameraToggle);
+  expect(onCameraViewChange).toHaveBeenLastCalledWith('behind');
+  fireEvent.keyDown(window, { key: 'c' });
+  expect(onCameraViewChange).toHaveBeenLastCalledWith('behind');
+  expect(document.activeElement).toBe(screen.getByRole('region', { name: 'Fly through the Solar System' }));
+});
+
 test('clue and discovery read-aloud obey mute; the focused GO button supports keyboard thrust', () => {
   const props = { api, bodies: allBodies, onClose: noop, onPractice: noop };
   const { rerender } = render(<SolarFlightControls {...props} />);
@@ -121,11 +138,16 @@ test('flight tools open one compact panel at a time and Turbo releases on captur
   fireEvent.keyUp(turbo, { key: 'Enter' }); expect(api.setBoost).toHaveBeenLastCalledWith(false);
 });
 
-test('Stop brakes on touch-down, so it works while another finger holds GO', () => {
+test('flight panel collapses and expands; touch layout has no Stop button', () => {
   render(<SolarFlightControls api={api} bodies={bodies} onClose={noop} />);
-  const go = screen.getByRole('button', { name: 'Thrust' });
-  fireEvent.pointerDown(go, { pointerId: 1 }); expect(go.className).toContain('is-on');
-  fireEvent.pointerDown(screen.getByRole('button', { name: 'Stop' }), { pointerId: 2 });
-  expect(api.brake).toHaveBeenCalled();
-  expect(go.className).not.toContain('is-on');
+  expect(screen.getByRole('group', { name: 'Joystick' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Thrust' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Hold Turbo to boost' })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: 'Stop' })).toBeNull();
+  const details = document.querySelector('#solar-flight-details');
+  const collapse = screen.getByRole('button', { name: 'Collapse flight panel' });
+  fireEvent.click(collapse);
+  expect(details.hidden).toBe(true);
+  fireEvent.click(screen.getByRole('button', { name: 'Expand flight panel' }));
+  expect(details.hidden).toBe(false);
 });

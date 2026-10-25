@@ -15,17 +15,10 @@ export function steerInput(stickX, stickY, keys) {
     return { x, y };
 }
 
-/**
- * Turn a pointer offset from the joystick centre into a stick value.
- * `dx`, `dy` are screen pixels (y down); `max` is how far the thumb may travel.
- * Returns the stick (y up) and the clamped thumb offset in pixels.
- */
+/** Convert a pointer offset from a joystick centre into a clamped stick vector. */
 export function stickVector(dx, dy, max) {
     const d = Math.hypot(dx, dy);
-    if (d > max) {
-        dx *= max / d;
-        dy *= max / d;
-    }
+    if (d > max) { dx *= max / d; dy *= max / d; }
     return { x: dx / max, y: -dy / max, thumbX: dx, thumbY: dy };
 }
 

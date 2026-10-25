@@ -3,10 +3,11 @@ import { stickVector } from './flightControls.js';
 import { speak, stopNarration } from '../../../utils/speech.js';
 import { isMuted } from '../../../components/celebration/sound/player.js';
 import { createFlightRound, flightRoundReducer, FLIGHT_BADGES } from './flightClues.js';
+import SolarCameraChoices from './SolarCameraChoices.jsx';
 import './SolarFlightControls.css';
 
-const HELP = 'Steer with the joystick. Hold GO to fly. Let go to slow down. On a keyboard, use arrow keys or W A S D to steer, and Space to fly. Choose a world and press Face world to point towards it. Hold Turbo or Shift to boost. Turbo slows near destinations. The sizes and distances in this Solar System are compressed.';
-export default function SolarFlightControls({ api, bodies, view, onClose }) {
+const HELP = 'Use the joystick or arrow keys or W A S D to steer. Hold GO or Space to fly and Turbo or Shift to boost; let go to slow down. Press C to switch camera view. Choose a world and press Point rocket here to face it. Turbo slows near destinations. The sizes and distances in this Solar System are compressed.';
+export default function SolarFlightControls({ api, bodies, view, cameraView = 'behind', onCameraViewChange = () => {}, onClose }) {
   const hud = useRef(null), reward = useRef(null);
   const root = useRef(null), thumb = useRef(null), stickPointer = useRef(null), thrustPointer = useRef(null), boostPointer = useRef(null);
   const closeRef = useRef(onClose);
@@ -16,6 +17,7 @@ export default function SolarFlightControls({ api, bodies, view, onClose }) {
   const [hint, setHint] = useState(false);
   const [adventure, setAdventure] = useState(0);
   const [panel, setPanel] = useState(null);
+  const [hudCollapsed, setHudCollapsed] = useState(() => typeof window !== 'undefined' && Boolean(window.matchMedia?.('(pointer: coarse), (max-width: 720px), (orientation: landscape) and (max-height: 520px)').matches));
   const clue = round.deck[round.index];
   const flightId = useId();
   const goalToken = `${flightId}:${adventure}:${clue.id}`;
@@ -23,6 +25,7 @@ export default function SolarFlightControls({ api, bodies, view, onClose }) {
   const badges = FLIGHT_BADGES.filter(badge => stars >= badge.stars);
   const newBadge = FLIGHT_BADGES.find(badge => stars === badge.stars);
   const targetName = bodies.find(body => body.id === clue.target)?.name ?? clue.target.split('/').at(-1);
+  const changeCameraView = nextView => { onCameraViewChange(nextView); root.current?.focus(); };
   useEffect(() => { api?.setGoal?.(clue.target, goalToken); }, [api, clue, goalToken]);
   useEffect(() => () => api?.setGoal?.(null), [api]);
   useEffect(() => {
@@ -63,13 +66,16 @@ export default function SolarFlightControls({ api, bodies, view, onClose }) {
     thrustPointer.current = null; api?.setThrust(false); setBurning(false);
   };
   return <section className="solar-flight" ref={root} tabIndex={-1} aria-label="Fly through the Solar System">
-    <div className="solar-flight__top" ref={hud}>
+    <div className={`solar-flight__top${hudCollapsed ? ' is-collapsed' : ''}`} ref={hud}>
       <header className="solar-flight__header">
         <button onClick={onClose} aria-label="Back to Solar System">←</button>
         <div><strong>Space explorer</strong><span>Clue {round.index + 1} / {round.deck.length}</span></div>
         <span className="solar-flight__stars" aria-label={`${stars} stars earned`}>⭐ {stars}</span>
-        <button aria-label="Read clue" title="Read clue" onClick={() => { if (!isMuted()) speak(`${clue.clue}${hint ? ` ${clue.hint}` : ''}`); }}>🔊</button>
+        <button className="solar-flight__read-aloud" aria-label="Read clue" title="Read clue" onClick={() => { if (!isMuted()) speak(`${clue.clue}${hint ? ` ${clue.hint}` : ''}`); }}>🔊</button>
+        <button className="solar-flight__panel-toggle" aria-label={hudCollapsed ? 'Expand flight panel' : 'Collapse flight panel'} title={hudCollapsed ? 'Expand flight panel' : 'Collapse flight panel'} aria-expanded={!hudCollapsed} aria-controls="solar-flight-details" onClick={() => setHudCollapsed(value => !value)}>{hudCollapsed ? '⌄' : '⌃'}</button>
       </header>
+      <SolarCameraChoices value={cameraView} onChange={changeCameraView} compact={hudCollapsed} />
+      <div className="solar-flight__details" id="solar-flight-details" hidden={hudCollapsed}>
       {round.solved ? <div className="solar-flight__reward" key={clue.id} role="status" ref={reward} tabIndex={-1}>
         <strong>✅ You found {targetName}!</strong><p>⭐ +1 star</p>
         {newBadge && <p>{newBadge.icon} New badge: <strong>{newBadge.name}</strong></p>}
@@ -94,8 +100,8 @@ export default function SolarFlightControls({ api, bodies, view, onClose }) {
           <button disabled={!destination} onClick={() => { release(); setPanel(null); api?.face(destination); root.current?.focus(); }}>Point rocket here</button>
         </div>}
         <p className="solar-flight__guidance" aria-live="polite">{view?.navigationArrived ? `You reached ${view.navigationArrived}. Keep following the clue!` : view?.navigation
-          ? view.gap < 2 ? `Nearly at ${view.navigation}!` : `Towards ${view.navigation} · hold GO or Turbo`
-          : 'Steer + hold GO · hold Turbo for a boost'}</p>
+          ? view.gap < 2 ? `Nearly at ${view.navigation}!` : <>Towards {view.navigation}<span className="solar-flight__guidance--keyboard"> · hold Space to fly</span><span className="solar-flight__guidance--touch"> · hold GO or Turbo</span></>
+          : <><span className="solar-flight__guidance--keyboard">Arrows / WASD steer · hold Space to fly · Shift boosts · C switches view</span><span className="solar-flight__guidance--touch">Joystick steers · hold GO to fly · Turbo boosts</span></>}</p>
       </>}
       {panel === 'extras' && <div className="solar-flight__panel" id="flight-extras">
         <strong>My discoveries</strong><p>Stars are for this adventure. Hints cost no stars.</p>
@@ -103,7 +109,7 @@ export default function SolarFlightControls({ api, bodies, view, onClose }) {
         {stars > 0 && <ul aria-label="Discoveries">{round.earned.map(item => <li key={item.id}>✅ {bodies.find(body => body.id === item.target)?.name ?? item.target.split('/').at(-1)}</li>)}</ul>}
         <button onClick={() => { release(); api?.home(); root.current?.focus(); }}>Back to Earth</button>
         <button onClick={() => { if (!isMuted()) speak(HELP); }}>Read aloud</button>
-        <p>Arrows / WASD steer · Space flies · Shift boosts. Sizes and distances are compressed; travel speed is pretend.</p>
+        <p>Desktop: arrows / WASD steer · hold Space to fly · hold Shift to boost · C switches camera view. Touch: joystick steers · hold GO to fly · Turbo boosts. Sizes and distances are compressed; travel speed is pretend.</p>
       </div>}
       {(round.solved || panel === 'extras') && <button className="solar-flight__next" onClick={() => {
         release(); stopNarration(); hud.current?.scrollTo({ top: 0 }); setHint(false); setDestination(''); setPanel(null);
@@ -111,29 +117,29 @@ export default function SolarFlightControls({ api, bodies, view, onClose }) {
         else dispatch({ type: 'next' });
         root.current?.focus();
       }}>{round.index === round.deck.length - 1 ? 'New adventure' : round.solved ? 'Next clue →' : 'Skip clue'}</button>}
+      </div>
     </div>
-    <div className="solar-flight__stick" role="group" aria-label="Joystick"
-      onPointerDown={e => { if (stickPointer.current !== null) return; stickPointer.current = e.pointerId; e.currentTarget.setPointerCapture?.(e.pointerId); move(e); e.preventDefault(); root.current?.focus(); }}
-      onPointerMove={e => { if (stickPointer.current === e.pointerId) move(e); }}
-      onPointerUp={endStick} onPointerCancel={endStick} onLostPointerCapture={endStick}>
-      <span ref={thumb} />
+    <div className="solar-flight__touch-controls">
+      <div className="solar-flight__stick" role="group" aria-label="Joystick"
+        onPointerDown={e => { if (stickPointer.current !== null) return; stickPointer.current = e.pointerId; e.currentTarget.setPointerCapture?.(e.pointerId); move(e); e.preventDefault(); root.current?.focus(); }}
+        onPointerMove={e => { if (stickPointer.current === e.pointerId) move(e); }}
+        onPointerUp={endStick} onPointerCancel={endStick} onLostPointerCapture={endStick}>
+        <span ref={thumb} />
+      </div>
+      <button className={`solar-flight__go${burning && !round.solved ? ' is-on' : ''}`} aria-label="Thrust" disabled={round.solved}
+        onPointerDown={e => { if (thrustPointer.current !== null) return; thrustPointer.current = e.pointerId; e.currentTarget.setPointerCapture?.(e.pointerId); e.preventDefault(); root.current?.focus(); api?.setThrust(true); setBurning(true); }}
+        onPointerUp={endThrust} onPointerCancel={endThrust} onLostPointerCapture={endThrust}
+        onKeyDown={e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); api?.setThrust(true); setBurning(true); } }}
+        onKeyUp={e => { if (e.key === ' ' || e.key === 'Enter') { api?.setThrust(false); setBurning(false); } }}
+        onBlur={() => { api?.setThrust(false); setBurning(false); }}>GO!</button>
+      <button className={`solar-flight__turbo${view?.boosting ? ' is-on' : ''}`} aria-label="Hold Turbo to boost" title="Hold to boost · Shift" disabled={round.solved}
+        onPointerDown={e => { if (boostPointer.current !== null) return; boostPointer.current = e.pointerId; e.currentTarget.setPointerCapture?.(e.pointerId); e.preventDefault(); root.current?.focus(); api?.setBoost(true); }}
+        onPointerUp={e => { if (boostPointer.current === e.pointerId) { boostPointer.current = null; api?.setBoost(false); } }}
+        onPointerCancel={() => { boostPointer.current = null; api?.setBoost(false); }}
+        onLostPointerCapture={() => { boostPointer.current = null; api?.setBoost(false); }}
+        onKeyDown={e => { if ([' ', 'Enter', 'Shift'].includes(e.key)) { e.preventDefault(); api?.setBoost(true); } }}
+        onKeyUp={e => { if ([' ', 'Enter', 'Shift'].includes(e.key)) api?.setBoost(false); }}
+        onBlur={() => api?.setBoost(false)}>⚡ Turbo</button>
     </div>
-    <button className={`solar-flight__go${burning && !round.solved ? ' is-on' : ''}`} aria-label="Thrust" disabled={round.solved}
-      onPointerDown={e => { if (thrustPointer.current !== null) return; thrustPointer.current = e.pointerId; e.currentTarget.setPointerCapture?.(e.pointerId); e.preventDefault(); root.current?.focus(); api?.setThrust(true); setBurning(true); }}
-      onPointerUp={endThrust} onPointerCancel={endThrust} onLostPointerCapture={endThrust}
-      onKeyDown={e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); api?.setThrust(true); setBurning(true); } }}
-      onKeyUp={e => { if (e.key === ' ' || e.key === 'Enter') { api?.setThrust(false); setBurning(false); } }}
-      onBlur={() => { api?.setThrust(false); setBurning(false); }}>GO!</button>
-    <button className={`solar-flight__turbo${view?.boosting ? ' is-on' : ''}`} aria-label="Hold Turbo to boost" title="Hold to boost · Shift" disabled={round.solved}
-      onPointerDown={e => { if (boostPointer.current !== null) return; boostPointer.current = e.pointerId; e.currentTarget.setPointerCapture?.(e.pointerId); e.preventDefault(); root.current?.focus(); api?.setBoost(true); }}
-      onPointerUp={e => { if (boostPointer.current === e.pointerId) { boostPointer.current = null; api?.setBoost(false); } }}
-      onPointerCancel={() => { boostPointer.current = null; api?.setBoost(false); }}
-      onLostPointerCapture={() => { boostPointer.current = null; api?.setBoost(false); }}
-      onKeyDown={e => { if ([' ', 'Enter', 'Shift'].includes(e.key)) { e.preventDefault(); api?.setBoost(true); } }}
-      onKeyUp={e => { if ([' ', 'Enter', 'Shift'].includes(e.key)) api?.setBoost(false); }}
-      onBlur={() => api?.setBoost(false)}>⚡ Turbo</button>
-    {/* On touch-down: a phone drops the click of a second finger while one holds GO. */}
-    <button className="solar-flight__brake" onPointerDown={e => { e.preventDefault(); release(); root.current?.focus(); }}
-      onClick={() => { release(); root.current?.focus(); }}>Stop</button>
   </section>;
 }

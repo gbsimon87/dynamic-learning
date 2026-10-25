@@ -91,6 +91,12 @@ reorder stretch work from playtests; old calendar estimates were speculative.
 
 ## Idea catalogue
 
+**#38 implemented in part (2026-10-25):** Behind rocket and a light Cockpit view
+are available during manual flight and autopilot/tours. The chase camera now
+follows ship displacement before smoothing its offset, avoiding the speed-driven
+gap. “Watch from outside” remains a later part of #38. See the
+[camera implementation record](solar-system-camera/IMPLEMENTATION_PLAN.md).
+
 Original IDs remain stable. Difficulty is relative: Easy ≲1 day, Medium 2–5
 days, Hard 1–3 weeks, Complex 3+ weeks; these are sizing guides, not schedules.
 🎓 teaching link · ⚙️ infrastructure. Details belong in implementation modules.
@@ -141,7 +147,7 @@ days, Hard 1–3 weeks, Complex 3+ weeks; these are sizing guides, not schedules
 | 35 | **Lift-off from Earth** | "3, 2, 1, lift off!" with smoke and a rumble, then the ship leaves Earth | ◐ Countdown/smoke/lift-off built; rumble awaits audio decision |
 | 36 | **Engine flames and boost** | Glowing exhaust that flares when the ship speeds up | ◐ Exhaust, turbo and streaks built; manual boost flame flare pending |
 | 37 | **Settle into orbit** | On arrival the ship circles the planet so the child watches it turn below | — |
-| 38 | **Camera choices** | Buttons for "behind the ship", "cockpit window" and "watch from outside" | — |
+| 38 | **Camera choices** | Buttons for "behind the ship", "cockpit window" and "watch from outside" | ◐ Behind rocket + cockpit built; outside view pending |
 | 39 | **Gravity slingshot** | Autopilot to Saturn swings past Jupiter and speeds up: "Slingshot!" 🎓 | — |
 | 40 | **Real spacecraft cameos** | Voyager 1 and 2, New Horizons, Juno and Parker Solar Probe sit roughly where they are, each with a card | — |
 | 41 | **Comets with two tails** | Halley's Comet swoops in close; its tails always point away from the Sun 🎓 | ✅ |
@@ -308,8 +314,8 @@ Turbo is **hold to boost**, with **Shift** as the keyboard equivalent. It can
 power the engine alone or with GO, reaching up to three times open-space cruise.
 Automatic slowdown near surfaces/destinations and a near-target speed cap protect
 arrival detection. Pooled tour light streaks respond to manual boost; reduced
-motion suppresses them. Pointer capture loss, blur, page hiding, Stop, arrival
-and exit clear boost. Collision positions are cached once per frame.
+motion suppresses them. Pointer capture loss, blur, page hiding, thrust release,
+arrival and exit clear boost. Collision positions are cached once per frame.
 Tests cover the full clue deck/rewards/replay, moving destinations, belt region,
 wrong/stale/duplicate arrivals, hints/mutes, steering/boost cleanup and camera return.
 Child steering/playtest and physical-device checks remain open.

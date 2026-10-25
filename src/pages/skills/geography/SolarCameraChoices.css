@@ -1,0 +1,8 @@
+.solar-camera-choices { display: flex; gap: 6px; align-items: center; }
+.solar-camera-choices button { min-width: 48px; min-height: 48px; flex: 1; padding: 6px 10px; border: 1px solid color-mix(in srgb, currentColor 24%, transparent); border-radius: 10px; background: var(--light-panel); color: inherit; font: 650 13px/1.15 system-ui, sans-serif; cursor: pointer; }
+body.dark .solar-camera-choices button { background: var(--dark-panel); }
+.solar-camera-choices button[aria-pressed="true"] { border-color: currentColor; box-shadow: inset 0 0 0 1px currentColor; }
+.solar-camera-choices button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.solar-camera-choices--floating { position: absolute; z-index: 68; top: 12px; left: 12px; max-width: min(310px, calc(100% - 24px)); padding: 4px; border: 1px solid #ffffff36; border-radius: 14px; background: #081426d9; color: #f0f7ff; box-shadow: 0 6px 20px #0005; }
+.solar-camera-choices--floating button { background: #14263ceF; }
+@media (max-width: 420px) { .solar-camera-choices button { padding-inline: 6px; font-size: 12px; } }

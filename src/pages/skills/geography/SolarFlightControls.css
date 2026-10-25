@@ -4,13 +4,22 @@ body.dark .solar-flight { color: var(--dark-text); }
 body.dark .solar-flight button, body.dark .solar-flight select { background: var(--dark-panel); }
 .solar-flight button:disabled { opacity: .45; cursor: default; }
 .solar-flight button:focus-visible, .solar-flight select:focus-visible { outline: 2px solid currentColor; outline-offset: -2px; }
-.solar-flight__top { position: absolute; top: 10px; left: 10px; width: min(340px, calc(100% - 20px)); max-height: calc(100% - 180px); padding: 8px; box-sizing: border-box; border: 1px solid color-mix(in srgb, currentColor 20%, transparent); border-radius: 14px; background: var(--light-panel); overflow-y: auto; pointer-events: auto; box-shadow: 0 6px 20px #0003; }
+.solar-flight__top { position: absolute; z-index: 3; top: 10px; left: 10px; width: min(340px, calc(100% - 20px)); max-height: calc(100% - 180px); padding: 8px; box-sizing: border-box; border: 1px solid color-mix(in srgb, currentColor 20%, transparent); border-radius: 14px; background: var(--light-panel); overflow-y: auto; pointer-events: auto; box-shadow: 0 6px 20px #0003; }
+.solar-flight__top.is-collapsed { width: min(320px, calc(100% - 20px)); max-height: none; overflow: visible; }
 body.dark .solar-flight__top { background: var(--dark-panel); }
 .solar-flight__header { display: flex; align-items: center; gap: 4px; }
 .solar-flight__header > div { flex: 1; }
 .solar-flight__header strong { font-size: 15px; }
 .solar-flight__header > div > span { display: block; font-size: 11px; opacity: .75; }
 .solar-flight__header button { border: 0; padding: 4px; }
+.solar-flight__panel-toggle { flex: 0 0 48px; font-size: 22px !important; font-weight: 800 !important; }
+.solar-flight__top.is-collapsed .solar-flight__header > div > span,
+.solar-flight__top.is-collapsed .solar-flight__read-aloud { display: none; }
+.solar-flight__details[hidden] { display: none; }
+.solar-flight .solar-camera-choices { margin: 6px 0; }
+.solar-flight__top.is-collapsed .solar-flight__stars { margin-right: 52px; }
+.solar-flight__top.is-collapsed .solar-camera-choices { position: absolute; top: 8px; right: 60px; margin: 0; }
+.solar-flight__top.is-collapsed .solar-camera-choices button { padding: 4px; font-size: 20px; }
 .solar-flight__stars { font-size: 15px; font-weight: 800; white-space: nowrap; }
 .solar-flight__clue { margin: 6px 2px 8px; font-size: 16px; line-height: 1.35; font-weight: 650; }
 .solar-flight__tools { display: flex; gap: 4px; }
@@ -28,17 +37,28 @@ body.dark .solar-flight__top { background: var(--dark-panel); }
 .solar-flight__reward p { margin: 4px 0; }
 .solar-flight__reward summary { min-height: 48px; display: flex; align-items: center; cursor: pointer; }
 .solar-flight__next { width: 100%; margin-top: 6px; font-weight: 700 !important; }
+.solar-flight__guidance--touch { display: none; }
+.solar-flight__touch-controls { position: absolute; inset: 0; z-index: 2; display: none; pointer-events: none; }
 .solar-flight__stick { position: absolute; bottom: max(16px, env(safe-area-inset-bottom)); left: 16px; width: 128px; height: 128px; border: 2px solid currentColor; background: var(--light-panel); border-radius: 50%; pointer-events: auto; touch-action: none; box-sizing: border-box; }
 body.dark .solar-flight__stick { background: var(--dark-panel); }
 .solar-flight__stick span { position: absolute; left: 34px; top: 34px; width: 56px; height: 56px; background: currentColor; border-radius: 50%; pointer-events: none; }
 .solar-flight .solar-flight__go { position: absolute; bottom: max(16px, env(safe-area-inset-bottom)); right: 16px; width: 88px; height: 88px; border: 3px solid currentColor; border-radius: 50%; font-size: 23px; font-weight: 800; touch-action: none; }
 .solar-flight .solar-flight__turbo { position: absolute; right: 16px; bottom: 116px; min-width: 88px; font-weight: 700; touch-action: none; }
-.solar-flight .is-on { box-shadow: 0 0 12px currentColor; }
-.solar-flight__brake { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); }
+.solar-flight__touch-controls .is-on { box-shadow: 0 0 12px currentColor; }
 @media (orientation: portrait) { .solar-flight__top { max-height: calc(50% - 16px); } }
+@media (pointer: fine) and (min-width: 721px) {
+  .solar-flight__touch-controls { display: none; }
+  .solar-flight__guidance--touch { display: none; }
+  .solar-flight__guidance--keyboard { display: inline; }
+}
+@media (pointer: coarse), (max-width: 720px) {
+  .solar-flight__touch-controls { display: block; }
+  .solar-flight__guidance--keyboard { display: none; }
+  .solar-flight__guidance--touch { display: inline; }
+}
 @media (orientation: landscape) and (max-height: 520px) {
-  .solar-flight__top { width: 280px; max-height: calc(100% - 20px); }
-  .solar-flight__stick { left: auto; right: 122px; width: 108px; height: 108px; }
+  .solar-flight__top { width: 280px; max-height: calc(100% - 150px); }
+  .solar-flight__top.is-collapsed { width: min(280px, calc(100% - 20px)); }
+  .solar-flight__stick { left: 16px; right: auto; width: 108px; height: 108px; }
   .solar-flight__stick span { left: 24px; top: 24px; }
-  .solar-flight__brake { left: auto; right: 122px; bottom: 136px; transform: none; }
 }
