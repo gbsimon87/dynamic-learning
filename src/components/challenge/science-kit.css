@@ -236,3 +236,4 @@ body.dark .science-branch,
 body.dark .science-pod-stalk,
 body.dark .science-ground { stroke: #b48c5c; }
 .science-credit a { color: inherit; text-decoration: underline; display: inline-flex; align-items: center; min-height: 44px; padding: 0 .2rem; }
+.science-source { font-size: .95rem; line-height: 1.6; }

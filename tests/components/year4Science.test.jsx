@@ -6,6 +6,7 @@ import { DataRound } from "../../src/components/challenge/data/DataChallenge";
 import Year4ScienceGame from "../../src/pages/skills/science/challenges/year4/Year4ScienceGame";
 import Year4ScienceVisual from "../../src/pages/skills/science/challenges/year4/Year4ScienceVisual";
 import { isScienceAnswerCorrect } from "../../src/data/challenges/year4Science/engine.js";
+import { before, expectScienceLayout } from "./scienceLayoutHelpers";
 
 vi.mock("../../src/utils/speech", () => ({ speak: () => {}, stopNarration: () => {}, speakAndWait: vi.fn(async () => {}), isNarrationSupported: () => false }));
 vi.mock("../../src/components/celebration/sound/player", () => ({ playCue: () => () => {}, isMuted: () => true, setMuted: () => {}, subscribe: () => () => {} }));
@@ -134,4 +135,31 @@ it("joins the digestive model through the intestines to the waste exit", () => {
   expect(screen.getByText("Waste exit")).toBeTruthy();
   // The same shared DataRound defaults remain usable outside Year 4.
   expect(isScienceAnswerCorrect({ kind: "choice", answer: "Cell" }, "Cell")).toBe(true);
+});
+
+it("all 80 real challenges fill the science layout, with a figure column only when a question has a picture or table", () => {
+  const failures = [];
+  for (const [path, { default: Challenge }] of Object.entries(modules)) {
+    const { container } = render(<Challenge onComplete={vi.fn()} />);
+    try {
+      const { root, prompt, answer } = expectScienceLayout(container, { check: "Check my answer" });
+      expect(screen.getByRole("button", { name: "Check my answer" })).toBeTruthy();
+      const stage = root.querySelector(".science-round-stage");
+      expect(Boolean(stage)).toBe(root.classList.contains("has-figure"));
+      if (stage) expect(before(prompt, stage)).toBe(true);
+      expect(before(prompt, answer)).toBe(true);
+    } catch (error) { failures.push(`${path.split("/").slice(-2).join("/")}: ${error.message.split("\n")[0]}`); }
+    cleanup();
+  }
+  expect(failures).toEqual([]);
+}, 30000);
+
+it("a Year 4 question with a circuit picture puts it in the figure column, before the answers", () => {
+  const q = Array.from({ length: 20 }, (_, seed) => seed + 1).flatMap(seed => Object.values(builders).flatMap(build => [1, 2, 3, 4].flatMap(level => build(level, seededRng(seed))))).find(item => item.visual?.type === "circuit");
+  expect(q, "some circuit question exists").toBeTruthy();
+  const { container } = render(<DataRound layout="science" question={q} submit={() => {}} locked={false} hint={false} feedback={null} renderVisual={renderVisual} checkAnswer={isScienceAnswerCorrect} />);
+  const root = container.querySelector(".science-round");
+  expect(root.classList.contains("has-figure")).toBe(true);
+  expect(root.querySelector(".science-round-stage svg")).toBeTruthy();
+  expect(before(root.querySelector(".science-round-stage"), root.querySelector(".science-round-answer"))).toBe(true);
 });

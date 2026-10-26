@@ -6,5 +6,5 @@ import { isScienceAnswerCorrect } from "../../../../../data/challenges/year4Scie
 const renderVisual = question => <Year4ScienceVisual question={question} />;
 
 export default function Year4ScienceGame({ topicId, level, onComplete }) {
-  return <DataChallenge level={level} build={YEAR4_SCIENCE_BUILDERS[topicId]} titles={YEAR4_SCIENCE_TITLES} renderVisual={renderVisual} checkAnswer={isScienceAnswerCorrect} readAloud onComplete={onComplete} />;
+  return <DataChallenge level={level} build={YEAR4_SCIENCE_BUILDERS[topicId]} titles={YEAR4_SCIENCE_TITLES} renderVisual={renderVisual} checkAnswer={isScienceAnswerCorrect} readAloud layout="science" onComplete={onComplete} />;
 }

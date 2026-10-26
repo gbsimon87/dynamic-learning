@@ -5,6 +5,7 @@ import HintNote from "../HintNote";
 import LetterInput from "../LetterInput";
 import NumberInput from "../NumberInput";
 import ReadingPassage from "../ReadingPassage";
+import ScienceRound from "../ScienceRound";
 import SortBins from "../SortBins";
 import SpeakButton from "../SpeakButton";
 import TileBuilder from "../TileBuilder";
@@ -49,8 +50,11 @@ import {
  * answer control. `checkAnswer` optionally adds subject-specific validation.
  * `readAloud` forces ChallengeShell's "Read it to me" button on or off.
  * `speak(question, { response })` supplies narration of the visible options and current response.
+ * `layout="science"` draws every round as a ScienceRound (wide card; picture or
+ * table left on desktop; prompt, evidence, answer, hint, Check and feedback
+ * right). Absent, the round keeps its flat order, so other subjects are untouched.
  */
-export default function DataChallenge({ level, build, titles, onComplete, renderVisual, readAloud, checkAnswer, speak }) {
+export default function DataChallenge({ level, build, titles, onComplete, renderVisual, readAloud, checkAnswer, speak, layout }) {
   const questions = useMemo(() => build(level, Math.random), [build, level]);
   const title = Array.isArray(titles) ? titles[level - 1] : titles?.[level];
   const currentResponse = useRef(null);
@@ -61,6 +65,7 @@ export default function DataChallenge({ level, build, titles, onComplete, render
   return (
     <ChallengeShell
       title={title}
+      wide={layout === "science"}
       readAloud={readAloud}
       speak={speak ? (q, { misses }) => speak(
         q.options ? { ...q, options: visibleOptions(q, showHint(misses)) } : q,
@@ -68,20 +73,47 @@ export default function DataChallenge({ level, build, titles, onComplete, render
       ) : undefined}
       questions={questions}
       onComplete={onComplete}
-      render={({ question, index, submit, locked, misses }) => (
-        <DataRound key={index} question={question} submit={submit} locked={locked} hint={showHint(misses)} renderVisual={renderVisual} checkAnswer={checkAnswer} onResponseChange={reportResponse} />
+      render={({ question, index, submit, locked, misses, feedback }) => (
+        <DataRound key={index} question={question} submit={submit} locked={locked} hint={showHint(misses)} renderVisual={renderVisual} checkAnswer={checkAnswer} onResponseChange={reportResponse} layout={layout} feedback={feedback} />
       )}
     />
   );
 }
 
 /** One question. checkAnswer optionally supplies subject-specific response validation. */
-export function DataRound({ question: q, submit, locked, hint, renderVisual, checkAnswer = isCorrect, onResponseChange }) {
+export function DataRound({ question: q, submit, locked, hint, renderVisual, checkAnswer = isCorrect, onResponseChange, layout, feedback }) {
   const [response, setResponse] = useState(() => initialResponse(q));
   useLayoutEffect(() => { onResponseChange?.(q, response); }, [q, response, onResponseChange]);
   const ready = isReady(q, response);
   const [before, after] = (q.sentence ?? "").split("___");
   const fill = blankFill(q, response);
+
+  if (layout === "science") {
+    // Everything that is not the prompt, the picture or the answer is evidence,
+    // kept in its flat order. The prompt falls back to the rule when a question has no prompt.
+    const promptText = q.prompt ?? q.rule;
+    const evidence = [
+      q.prompt && q.rule && <p key="rule" className="science-observation"><Rich text={q.rule} /></p>,
+      q.picture && <span key="picture" className="english-picture" role="img" aria-label={q.pictureLabel}>{q.picture}</span>,
+      q.passage && <ReadingPassage key="passage" passage={q.passage} speak={q.readTextAloud !== false} />,
+      q.text && <ReadingPassage key="text" passage={{ blocks: [{ type: "p", text: q.text }] }} speak={q.readTextAloud !== false} />,
+      q.equation && <div key="equation" className="equation-display">{[q.equation].flat().map((line) => <p key={line}>{line}</p>)}</div>,
+      q.sentence && <p key="sentence" className="english-focus">{before}<span className="english-blank">{fill || "?"}</span>{after}</p>,
+    ].filter(Boolean);
+    return (
+      <ScienceRound
+        prompt={promptText && <p className="challenge-prompt"><Rich text={promptText} /></p>}
+        speak={q.speak} speakLabel="Read the question"
+        figure={q.visual || q.table ? renderVisual?.(q) : null}
+        evidence={evidence.length ? evidence : null}
+        hint={hint && q.hint && <HintNote><Rich text={q.hint} /></HintNote>}
+        check={{ label: "Check my answer", disabled: locked || !ready, onClick: () => submit(checkAnswer(q, response)) }}
+        feedback={feedback}
+      >
+        <KindControl q={q} response={response} setResponse={setResponse} locked={locked} hint={hint} />
+      </ScienceRound>
+    );
+  }
 
   return (
     <>

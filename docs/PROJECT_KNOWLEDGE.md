@@ -2900,6 +2900,25 @@ tests render all 80 challenges in both themes and play retry, hint, full-run,
 sorting and sentence-building flows. Browser evidence and review limits are
 recorded in [the Year 4 tracker](science-curriculum/y4-science-tracker.md).
 
+### Science desktop layout, Years 1–4 (2026-10-26)
+
+Every Science challenge (Years 1–4) draws through `ScienceRound`
+(`src/components/challenge/ScienceRound.jsx`). Slots, in DOM order (also the
+phone order): prompt (with a small 🔊 and a "Science words" chip), figure,
+reference, evidence, answer (+ optional `answerLabel`), hint, Check, optional
+`secondary` control, feedback. From 1024px a figure round is two columns: the
+figure stage left (sticky) and one bordered panel right; with no figure, one
+centred 760px column. Rounds whose content changes by stage (level 4
+investigations, plan-then-record) deliberately use the single column.
+
+- `ChallengeShell` takes an optional `wide` (card up to 1120px) and always hands
+  its feedback node to `render` as `feedback`; a wide shell does not draw its own.
+- Years 1, 2 and 4 pass `layout="science"` to `DataChallenge`; a question has a
+  figure column only if it has a `visual` or `table`. Other subjects don't pass it.
+- Year 3 games fill the slots by hand; `ForcesEnquiryRound` is shared by five.
+- Tests: `tests/components/scienceRound.test.jsx`, `year3ScienceLayout.test.jsx`
+  and the per-year tests assert the slot order for every challenge.
+
 ### Curriculum Mode — Year 3 Science (2026-10-03)
 
 **Illustrated diagrams (2026-10-03):** Skeletons, Muscles and Movement, and

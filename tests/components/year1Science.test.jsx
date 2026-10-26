@@ -6,6 +6,7 @@ import { seededRng } from "../../src/data/challenges/questionKinds";
 import { DataRound } from "../../src/components/challenge/data/DataChallenge";
 import Year1ScienceGame from "../../src/pages/skills/science/challenges/year1/Year1ScienceGame";
 import Year1ScienceVisual from "../../src/pages/skills/science/challenges/year1/Year1ScienceVisual";
+import { before, expectScienceLayout } from "./scienceLayoutHelpers";
 
 const voice = vi.hoisted(() => ({ available: false }));
 vi.mock("../../src/utils/speech", () => ({ speak: () => {}, stopNarration: () => {}, speakAndWait: vi.fn(async () => {}), isNarrationSupported: () => voice.available }));
@@ -121,3 +122,19 @@ it("every generated drawing renders, with sun boxes matching the hours", () => {
   }
   expect([...seen].sort()).toEqual(["body", "days", "plant", "tree", "treePair"]);
 }, 20000);
+
+it("all 64 real challenges fill the science layout, with a figure column only when a question has a drawing", () => {
+  const failures = [];
+  for (const [path, { default: Challenge }] of Object.entries(modules)) {
+    const { container } = render(<Challenge onComplete={vi.fn()} />);
+    try {
+      const { root, prompt, answer } = expectScienceLayout(container, { check: "Check my answer" });
+      const stage = root.querySelector(".science-round-stage");
+      expect(Boolean(stage)).toBe(root.classList.contains("has-figure"));
+      if (stage) expect(before(prompt, stage)).toBe(true);
+      expect(before(prompt, answer)).toBe(true);
+    } catch (error) { failures.push(`${path.split("/").slice(-2).join("/")}: ${error.message.split("\n")[0]}`); }
+    cleanup();
+  }
+  expect(failures).toEqual([]);
+}, 30000);

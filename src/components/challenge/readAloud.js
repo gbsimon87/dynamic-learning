@@ -34,6 +34,8 @@ const SKIP = [
   "svg", "img", "canvas", "[role='img']",
   "input", "textarea", "select", "script", "style", "template",
   ".speak-btn", ".keypad", ".submit-btn",
+  // The shell's feedback line (a wide science round draws it inside the answer area).
+  ".challenge-feedback",
   // Scales, rulers, jugs, thermometers and clocks: tick labels and readouts.
   ".scale", ".scale-controls", ".clock-face", ".time-setter",
   // The child's working: blocks, written columns, coins picked, bars built.
@@ -63,6 +65,8 @@ function isInline(style) {
 /** Children of this element sit side by side on screen. */
 function isRow(element) {
   if (!element) return false;
+  // A science round is a grid only to put the figure beside the panel; its children read in order.
+  if (element.matches(".science-round")) return false;
   const style = window.getComputedStyle(element);
   if (style.display === "table-row") return true;
   if (style.display.endsWith("grid")) return true;

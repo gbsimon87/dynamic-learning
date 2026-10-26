@@ -6,5 +6,5 @@ const renderVisual = question => <Year1ScienceVisual visual={question.visual} />
 
 // Year 1 readers are just starting, so "Read it to me" is always offered.
 export default function Year1ScienceGame({ topicId, level, onComplete }) {
-  return <DataChallenge level={level} build={YEAR1_SCIENCE_BUILDERS[topicId]} titles={YEAR1_SCIENCE_TITLES} renderVisual={renderVisual} readAloud onComplete={onComplete} />;
+  return <DataChallenge level={level} build={YEAR1_SCIENCE_BUILDERS[topicId]} titles={YEAR1_SCIENCE_TITLES} renderVisual={renderVisual} readAloud layout="science" onComplete={onComplete} />;
 }

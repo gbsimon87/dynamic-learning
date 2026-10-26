@@ -67,3 +67,16 @@ describe("the Read it to me button", () => {
     expect(screen.queryByRole("button", { name: "Read it to me" })).toBeNull();
   });
 });
+
+describe("reading a science round", () => {
+  it("never reads the feedback line as part of the question", () => {
+    const root = dom(`<p>Which part takes in water?</p><p class="challenge-feedback" role="status">Not quite, have another go.</p>`);
+    expect(readAloudText(root, "Plants")).not.toMatch(/another go/);
+  });
+
+  it("reads a science round's grid children as separate sentences, not one side-by-side row", () => {
+    const flat = dom(`<div><p>Look at the plant.</p><p>Which part is it?</p></div>`);
+    const grid = dom(`<div class="science-round" style="display:grid"><p>Look at the plant.</p><p>Which part is it?</p></div>`);
+    expect(readAloudText(grid, "Plants")).toBe(readAloudText(flat, "Plants"));
+  });
+});

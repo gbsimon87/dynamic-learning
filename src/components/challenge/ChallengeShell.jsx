@@ -44,12 +44,15 @@ import "./challenge-kit.css";
  * app-wide mute exactly as SpeakButton does; absent without a voice.
  *
  * `readAloud`  force the button on or off, whatever the subject
+ * `wide`       science layout opt-in: widens the card and stops the shell
+ *              drawing its own feedback line. `render` always receives
+ *              `feedback` (the node); a wide round places it next to Check.
  * `speak`      (question) => string, for a question the screen alone cannot
  *              say (a picture with no words); it replaces the screen reading
  *              and still goes through `mathToSpeech`
  */
 
-function ChallengeShell({ title, questions, render, onComplete, readAloud, speak }) {
+function ChallengeShell({ title, questions, render, onComplete, readAloud, speak, wide = false }) {
   const challenge = useContext(ChallengeContext);
   const showReadAloud = readAloud ?? challenge?.subject === "math";
   const [index, setIndex] = useState(0);
@@ -152,8 +155,34 @@ function ChallengeShell({ title, questions, render, onComplete, readAloud, speak
     </div>
   );
 
+  // Always rendered, so the live region exists before the first message and
+  // screen readers reliably announce it.
+  const feedbackNode = (
+      <p
+        ref={feedbackRef}
+        className={`feedback challenge-feedback ${feedback ? `challenge-feedback-${feedback.tone}` : ""}`}
+        role="status"
+        aria-live="polite"
+      >
+        {feedback && (
+          <>
+            <span key={feedback.key} className="challenge-feedback-icon" aria-hidden="true">
+              {feedback.tone === "combo" ? "🔥" : feedback.tone === "correct" ? "✓" : "↻"}
+            </span>
+            {feedback.text}
+            {/* Bix pops up to cheer a combo. Decorative: the words say it. */}
+            {feedback.tone === "combo" && (
+              <span className="challenge-feedback-bix">
+                <Mascot className="mascot-small" cheerOn={feedback.key} decorative />
+              </span>
+            )}
+          </>
+        )}
+      </p>
+  );
+
   return (
-    <div className="challenge-container">
+    <div className={`challenge-container${wide ? " is-wide" : ""}`}>
       {showReadAloud ? (
         <div className="challenge-progress-row">
           {counter}
@@ -184,32 +213,10 @@ function ChallengeShell({ title, questions, render, onComplete, readAloud, speak
       {title && <h3 ref={titleRef} className="challenge-title">{title}</h3>}
 
       <div ref={answerRef}>
-        {render({ question: questions[index], submit, locked, index, misses })}
+        {render({ question: questions[index], submit, locked, index, misses, feedback: feedbackNode })}
       </div>
 
-      {/* Always rendered, so the live region exists before the first message
-          and screen readers reliably announce it. */}
-      <p
-        ref={feedbackRef}
-        className={`feedback challenge-feedback ${feedback ? `challenge-feedback-${feedback.tone}` : ""}`}
-        role="status"
-        aria-live="polite"
-      >
-        {feedback && (
-          <>
-            <span key={feedback.key} className="challenge-feedback-icon" aria-hidden="true">
-              {feedback.tone === "combo" ? "🔥" : feedback.tone === "correct" ? "✓" : "↻"}
-            </span>
-            {feedback.text}
-            {/* Bix pops up to cheer a combo. Decorative: the words say it. */}
-            {feedback.tone === "combo" && (
-              <span className="challenge-feedback-bix">
-                <Mascot className="mascot-small" cheerOn={feedback.key} decorative />
-              </span>
-            )}
-          </>
-        )}
-      </p>
+      {!wide && feedbackNode}
     </div>
   );
 }

@@ -24,6 +24,7 @@ body.dark {
   --ck-card-edge: rgba(246, 232, 234, 0.08);
 }
 
+.challenge-container.is-wide { max-width: 1120px; }
 .challenge-container {
   max-width: 760px;
   margin: 0 auto;

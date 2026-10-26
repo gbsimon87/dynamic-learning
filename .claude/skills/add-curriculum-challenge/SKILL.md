@@ -105,6 +105,14 @@ owns progress persistence; the challenge only reports success.
 - Reuse an existing shared component from `src/components/` when the interaction
   already exists rather than reimplementing it.
 
+## Science layout
+
+Science challenges (any year) render through `ScienceRound` so desktop layout and
+question order stay consistent: figure left, then prompt, evidence, answer, hint,
+Check and feedback in one panel. Data-authored science (Years 1, 2, 4) just passes
+`layout="science"` to `DataChallenge`; hand-written games use `ChallengeShell wide`
+and fill the `ScienceRound` slots. See `docs/PROJECT_KNOWLEDGE.md`, "Science desktop layout".
+
 ## Styling
 
 - Plain CSS in the co-located file. No frameworks, no CSS-in-JS.

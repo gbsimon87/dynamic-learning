@@ -6,5 +6,5 @@ const renderVisual = question => <Year2ScienceVisual visual={question.visual} />
 
 // Science prompts are longer than maths ones, so "Read it to me" is always offered.
 export default function Year2ScienceGame({ topicId, level, onComplete }) {
-  return <DataChallenge level={level} build={YEAR2_SCIENCE_BUILDERS[topicId]} titles={YEAR2_SCIENCE_TITLES} renderVisual={renderVisual} readAloud onComplete={onComplete} />;
+  return <DataChallenge level={level} build={YEAR2_SCIENCE_BUILDERS[topicId]} titles={YEAR2_SCIENCE_TITLES} renderVisual={renderVisual} readAloud layout="science" onComplete={onComplete} />;
 }
