@@ -2,19 +2,24 @@ import { useEffect, useId, useReducer, useRef, useState } from 'react';
 import { stickVector } from './flightControls.js';
 import { speak, stopNarration } from '../../../utils/speech.js';
 import { isMuted } from '../../../components/celebration/sound/player.js';
-import { createFlightRound, flightRoundReducer, FLIGHT_BADGES } from './flightClues.js';
+import { createFlightRound, flightRoundReducer } from './flightClues.js';
 import SolarCameraChoices from './SolarCameraChoices.jsx';
 import SolarOrbitControl from './SolarOrbitControl.jsx';
+import SolarTripHud from './SolarTripHud.jsx';
 import './SolarFlightControls.css';
 
-const HELP = 'Use the joystick or arrow keys or W A S D to steer. Hold GO or Space to fly and Turbo or Shift to boost; let go to slow down. Press C to switch camera view. Choose a world and press Point rocket here to face it. Turbo slows near destinations. The sizes and distances in this Solar System are compressed.';
-export default function SolarFlightControls({ api, bodies, view, cameraView = 'behind', onCameraViewChange = () => {}, onClose, onBeyond }) {
+const help = systemPhrase => `Use the joystick or arrow keys or W A S D to steer. Hold GO or Space to fly and Turbo or Shift to boost; let go to slow down. Press C to switch camera view. Choose a world and press Point rocket here to face it. Turbo slows near destinations. The sizes and distances in ${systemPhrase} are compressed.`;
+/** `clues`, `badges`, `startName`, `systemName` and `systemPhrase` come from the system definition. `onHome` (away from home) flies home by autopilot. */
+export default function SolarFlightControls({ api, bodies, view, clues, badges, startName, systemName, systemPhrase, cameraView = 'behind', onCameraViewChange = () => {}, onClose, onHome, homePhrase }) {
   const hud = useRef(null), reward = useRef(null);
   const root = useRef(null), thumb = useRef(null), stickPointer = useRef(null), thrustPointer = useRef(null), boostPointer = useRef(null);
+  // While the next system loads the trip owns the screen: closing would flash the overview.
+  const handingOver = Boolean(view?.trip?.waiting);
   const closeRef = useRef(onClose);
-  closeRef.current = onClose;
+  closeRef.current = handingOver ? () => {} : onClose;
   const [destination, setDestination] = useState('');
-  const [round, dispatch] = useReducer(flightRoundReducer, undefined, createFlightRound);
+  const newRound = () => createFlightRound(Math.random, clues);
+  const [round, dispatch] = useReducer(flightRoundReducer, undefined, newRound);
   const [hint, setHint] = useState(false);
   const [adventure, setAdventure] = useState(0);
   const [panel, setPanel] = useState(null);
@@ -23,8 +28,8 @@ export default function SolarFlightControls({ api, bodies, view, cameraView = 'b
   const flightId = useId();
   const goalToken = `${flightId}:${adventure}:${clue.id}`;
   const stars = round.earned.length;
-  const badges = FLIGHT_BADGES.filter(badge => stars >= badge.stars);
-  const newBadge = FLIGHT_BADGES.find(badge => stars === badge.stars);
+  const earnedBadges = badges.filter(badge => stars >= badge.stars);
+  const newBadge = badges.find(badge => stars === badge.stars);
   const targetName = bodies.find(body => body.id === clue.target)?.name ?? clue.target.split('/').at(-1);
   const changeCameraView = nextView => { onCameraViewChange(nextView); root.current?.focus(); };
   useEffect(() => { api?.setGoal?.(clue.target, goalToken); }, [api, clue, goalToken]);
@@ -67,12 +72,14 @@ export default function SolarFlightControls({ api, bodies, view, cameraView = 'b
     if (thrustPointer.current !== e.pointerId) return;
     thrustPointer.current = null; api?.setThrust(false); setBurning(false);
   };
-  return <section className="solar-flight" ref={root} tabIndex={-1} aria-label="Fly through the Solar System">
+  return <section className="solar-flight" ref={root} tabIndex={-1} aria-label={`Fly through ${systemPhrase}`}>
+    {view?.trip && <SolarTripHud trip={view.trip} onTurnBack={() => { release(); api?.turnBack(); root.current?.focus(); }} />}
     <div className={`solar-flight__top${hudCollapsed ? ' is-collapsed' : ''}`} ref={hud}>
       <header className="solar-flight__header">
-        <button onClick={onClose} aria-label="Back to Solar System">←</button>
+        <button onClick={onClose} disabled={handingOver} aria-label={`Back to ${systemName}`}>←</button>
         <div><strong>Space explorer</strong><span>Clue {round.index + 1} / {round.deck.length}</span></div>
         <span className="solar-flight__stars" aria-label={`${stars} stars earned`}>⭐ {stars}</span>
+        {onHome && !view?.trip && <button className="solar-flight__home" aria-label={`Fly home to ${homePhrase}`} title={`Fly home to ${homePhrase}`} onClick={() => { release(); onHome(); root.current?.focus(); }}>🏠</button>}
         <button className="solar-flight__read-aloud" aria-label="Read clue" title="Read clue" onClick={() => { if (!isMuted()) speak(`${clue.clue}${hint ? ` ${clue.hint}` : ''}`); }}>🔊</button>
         <button className="solar-flight__panel-toggle" aria-label={hudCollapsed ? 'Expand flight panel' : 'Collapse flight panel'} title={hudCollapsed ? 'Expand flight panel' : 'Collapse flight panel'} aria-expanded={!hudCollapsed} aria-controls="solar-flight-details" onClick={() => setHudCollapsed(value => !value)}>{hudCollapsed ? '⌄' : '⌃'}</button>
       </header>
@@ -80,9 +87,6 @@ export default function SolarFlightControls({ api, bodies, view, cameraView = 'b
       <SolarOrbitControl name={view?.orbitPlanet?.name} active={view?.orbiting} reducedMotion={view?.orbitSteady}
         onEnter={() => { release(); api?.enterOrbit(); root.current?.focus(); }}
         onLeave={() => { api?.leaveOrbit(); root.current?.focus(); }} />
-      {view?.atEdge && onBeyond && <div className="solar-orbit-control">
-        <button type="button" onClick={() => { release(); onBeyond(); }}><span aria-hidden="true">🌀</span> Warp to Beyond</button>
-      </div>}
       <div className="solar-flight__details" id="solar-flight-details" hidden={hudCollapsed}>
       {round.solved ? <div className="solar-flight__reward" key={clue.id} role="status" ref={reward} tabIndex={-1}>
         <strong>✅ You found {targetName}!</strong><p>⭐ +1 star</p>
@@ -113,15 +117,15 @@ export default function SolarFlightControls({ api, bodies, view, cameraView = 'b
       </>}
       {panel === 'extras' && <div className="solar-flight__panel" id="flight-extras">
         <strong>My discoveries</strong><p>Stars are for this adventure. Hints cost no stars.</p>
-        {badges.length > 0 && <ul aria-label="Earned badges">{badges.map(badge => <li key={badge.name}>{badge.icon} {badge.name}</li>)}</ul>}
+        {earnedBadges.length > 0 && <ul aria-label="Earned badges">{earnedBadges.map(badge => <li key={badge.name}>{badge.icon} {badge.name}</li>)}</ul>}
         {stars > 0 && <ul aria-label="Discoveries">{round.earned.map(item => <li key={item.id}>✅ {bodies.find(body => body.id === item.target)?.name ?? item.target.split('/').at(-1)}</li>)}</ul>}
-        <button onClick={() => { release(); api?.home(); root.current?.focus(); }}>Back to Earth</button>
-        <button onClick={() => { if (!isMuted()) speak(HELP); }}>Read aloud</button>
+        <button onClick={() => { release(); api?.home(); root.current?.focus(); }}>Back to {startName}</button>
+        <button onClick={() => { if (!isMuted()) speak(help(systemPhrase)); }}>Read aloud</button>
         <p>Desktop: arrows / WASD steer · hold Space to fly · hold Shift to boost · C switches camera view. Touch: joystick steers · hold GO to fly · Turbo boosts. Sizes and distances are compressed; travel speed is pretend.</p>
       </div>}
       {(round.solved || panel === 'extras') && <button className="solar-flight__next" onClick={() => {
         release(); stopNarration(); hud.current?.scrollTo({ top: 0 }); setHint(false); setDestination(''); setPanel(null);
-        if (round.index === round.deck.length - 1) { setAdventure(n => n + 1); dispatch({ type: 'restart', round: createFlightRound() }); }
+        if (round.index === round.deck.length - 1) { setAdventure(n => n + 1); dispatch({ type: 'restart', round: newRound() }); }
         else dispatch({ type: 'next' });
         root.current?.focus();
       }}>{round.index === round.deck.length - 1 ? 'New adventure' : round.solved ? 'Next clue →' : 'Skip clue'}</button>}

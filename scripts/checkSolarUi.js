@@ -5,6 +5,12 @@ import { mkdir } from 'node:fs/promises';
 import { preview } from 'vite';
 import { chromium } from 'playwright-core';
 
+// Star systems, trips and the galaxy map have their own pass (#108/#109).
+if (process.argv.includes('--systems')) {
+  await import('./checkSolarSystems.js');
+  process.exit(process.exitCode ?? 0);
+}
+
 const artifacts = '/tmp/bix-solar-ui';
 await mkdir(artifacts, { recursive: true });
 const server = await preview({ logLevel: 'error', preview: { host: '127.0.0.1', port: 0, open: false } });

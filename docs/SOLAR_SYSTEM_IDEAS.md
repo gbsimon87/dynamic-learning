@@ -13,7 +13,7 @@ Reviewed against source: **2026-10-25**. All 113 idea IDs are retained.
 | 3 — Living Solar System | #48 day/night, #54 Moon phases, #16 tidal-locking core, #55 auroras, #41 comet tails, #57 close-up rings | Optional #16 arrow/label; device checks; original “surprise on every planet” exit is not met |
 | 4 — Missions and stars | #73 mission cards; #67 sky constellations; #68 join the dots | #74 passport (deferred by owner), #75 Golden Record; lensing spike |
 | 5 — Take the controls | #83 free flight in the main Solar System; hold-to-boost turbo with shared light streaks | Child/device steering checks; #84 asteroid run |
-| 6 — Beyond | #113 warp, picker and one destination; #94 space ripples | More destinations (#90 black hole, #91 nebula, #109 systems); flying in Beyond; tablet/device checks |
+| 6 — Beyond | #113 warp, picker and one destination; #94 space ripples; #108 galaxy map; #109 TRAPPIST-1 with trips between systems | More destinations (#90 black hole, #91 nebula, more #109 systems); flying in Beyond; tablet/device checks |
 
 ✅ built · ◐ partial · ⏳ external dependency · — unbuilt. Built means implemented,
 not deployed or physically device-tested. Stretch ideas are not phase blockers.
@@ -57,7 +57,7 @@ not deployed or physically device-tested. Stretch ideas are not phase blockers.
   motion. Dispose owned resources and hide effects in incompatible modes.
 - Stay with Three.js/add-ons and primitives; no R3F rewrite or physics engine
   now. Pool particles. Test phone memory before adding large textures.
-- Toolbar: modes only, at most five buttons. Planet card: local facts/play.
+- Toolbar: modes only (a dropdown is planned as it grows). Planet card: local facts/play.
   My view: preferences and Reset. Secrets need no button. Tweakpane is for adults.
 - Existing navbar mute governs new read-aloud/effects; retain tour narration mute.
 - Curriculum progress is untouched. Read `curriculum-progress` before persistence.
@@ -81,6 +81,14 @@ not deployed or physically device-tested. Stretch ideas are not phase blockers.
 4. **#74 passport** is deferred at the owner's request. Retain mission stamps
    and the explicit Skills-only storage contract when it returns.
 5. **#101 custom constellations** comes later; #68 join the dots is now built.
+6. ✅ **Home onto the shared system scene (#106) — done 2026-10-26.**
+   Home and every other star system must run on one scene, with home-only
+   features (meteor, missions, ISS, Halley's Comet, Earth effects, Moon
+   phases, Pale Blue Dot, line-up, Sun sneeze) as home extras. The
+   [galaxy map / TRAPPIST-1 design](superpowers/specs/2026-10-26-galaxy-map-and-trappist-1-design.md)
+   did this in its first slice: the scene builds from a system definition and
+   is rebuilt when the child changes system. Splitting the scene file into
+   smaller modules remains ordinary #106 work.
 
 Other chains: composer → #5/#90/#92/#113; #34 ship → #35–39/#47/#73;
 #73 missions → #74/#81/#102; #48 + #65 → #98; #66 → #110.
@@ -246,10 +254,10 @@ days, Hard 1–3 weeks, Complex 3+ weeks; these are sizing guides, not schedules
 
 | # | Idea | Experience | Status |
 |---|---|---|---|
-| 106 | **Extract scene modules** ⚙️ | Planets, belt, sky, camera director and UI bridge become separate modules | ◐ Module host built; extraction ongoing |
+| 106 | **Extract scene modules** ⚙️ | Planets, belt, sky, camera director and UI bridge become separate modules; **home moves fully onto the shared system scene** built for TRAPPIST-1 | ◐ Module host built; extraction ongoing. Home runs on the shared system scene (2026-10-26, [galaxy map / TRAPPIST-1 build](superpowers/specs/2026-10-26-galaxy-map-and-trappist-1-design.md)) |
 | 107 | **Quality and performance system** ⚙️ | The page measures its own frame rate and lowers effects to stay smooth | ◐ Two tiers/readout built; adaptive quality pending |
-| 108 | **Galaxy map** | Zoom out to the Milky Way's spiral, see where our Sun is, and pick a destination on it | — |
-| 109 | **Other star systems** | Visit TRAPPIST-1 (seven Earth-sized planets), Alpha Centauri (three suns), Sirius A and B, Kepler-16 (a planet with two suns) | — |
+| 108 | **Galaxy map** | Zoom out to the Milky Way's spiral, see where our Sun is, and pick a destination on it | ✅ Galaxies → Milky Way → neighbourhood; Jump there / Go home; Space ripples |
+| 109 | **Other star systems** | Visit TRAPPIST-1 (seven Earth-sized planets), Alpha Centauri (three suns), Sirius A and B, Kepler-16 (a planet with two suns) | ◐ TRAPPIST-1 built, with trips, signposts and Home; more systems via the `add-star-system` skill |
 | 110 | **Time machine** | Scrub through centuries: watch Halley's Comet return in 2061, see planets line up | — |
 | 111 | **Visit a planet's surface** | Fly low over Mars's Valles Marineris or Titan's lakes | — |
 | 112 | **Move to React Three Fiber** ⚙️ | Rewrite the scene declaratively with R3F and Drei | — |
@@ -311,8 +319,8 @@ and projected framing, including the shared desktop-left layout.
 
 Design: [spec](superpowers/specs/2026-10-25-beyond-warp-and-space-ripples-design.md),
 [plan](superpowers/plans/2026-10-25-beyond-warp-and-space-ripples.md).
-**Beyond** is the fifth launch button, and **Warp to Beyond** appears in the
-flight HUD at the edge past Pluto (never automatic). The picker shows only
+**Beyond** is a launch button (the flight HUD's old edge offer gave way to
+trips between systems in #108/#109). The picker shows only
 destinations that exist. The child holds the engine (button, Space or Shift)
 through a pretend black-hole doorway, a purple-blue swirl and the shared light
 streaks. Letting go drifts slowly and still arrives. The ride home is
@@ -333,6 +341,32 @@ fly-past-Pluto offer is covered by unit/component tests, not the browser pass.
 Physical-device touch, performance and child playtests are open. Lint, build,
 full tests and the batched Chrome pass (1280×900, 390×844, 844×390, both themes,
 zero errors) passed.
+
+### Galaxy map and TRAPPIST-1 — #108 / #109
+
+Design: [spec](superpowers/specs/2026-10-26-galaxy-map-and-trappist-1-design.md),
+[plan](superpowers/plans/2026-10-26-galaxy-map-and-trappist-1.md). One scene
+builds from a **system definition** (`systems/home.js`, `systems/trappist1.js`);
+`SolarSystemPage.jsx` remounts it when the child changes system, and a
+registry lists every system. **TRAPPIST-1**: seven planets with procedural
+looks, a tappable star card, its own tour, clues, badges and space birthdays;
+the honesty line says nobody has seen them up close. **Trips**: flying out past
+the edge warns for 3 seconds ("Turn back" or steering back cancels), then the
+rocket dashes to the other system while the child still steers; Turn back
+works partway; every trip is at most 10 seconds and labelled "Sped up — even
+light takes about 41 years". The leaving scene plays the first half, the
+arriving scene the second. **Home** (toolbar and flight HUD) and the map's
+**Jump there** fly the same trip by autopilot. **Signposts** past each edge
+point the real way to every other system; TRAPPIST-1 shows our Sun as a faint
+star. **Galaxy map** (toolbar): NASA/JPL-Caltech/R. Hurt's Milky Way picture
+in 3D, pannable, over three levels — galaxies near ours (look, don't land;
+Space ripples beyond), the Milky Way with "You are here", and the real
+neighbourhood. Nothing is saved; reload starts home; Reset stays in the
+current system. Launch meteor and mission stamps are home-only.
+Limits: with two systems any direction past the edge goes to the other one;
+choosing by heading (`systemAhead`) is decided when a third system arrives.
+Physical-device and child checks are open; the Sun's spot on the picture was
+placed by eye.
 
 ### Optional planet orbit — #37
 

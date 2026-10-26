@@ -32,7 +32,7 @@ services:
 
     envVars:
       - key: NODE_VERSION
-        value: "22.23.3"
+        value: "22.23.4"
 
       - key: NODE_ENV
         value: production
@@ -83,7 +83,7 @@ services:
     healthCheckPath: /
     envVars:
       - key: NODE_VERSION
-        value: "22.23.3"
+        value: "22.23.4"
       - key: NODE_ENV
         value: production
       - key: PUBLIC_APP_URL

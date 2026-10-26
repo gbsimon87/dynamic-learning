@@ -56,3 +56,12 @@ it("credits the moon and Pluto surface maps, including the share-alike Deimos ma
   const licence = within(card).getByRole("link", { name: LICENCES["CC-BY-SA-3.0"].name });
   expect(licence.getAttribute("href")).toBe("https://creativecommons.org/licenses/by-sa/3.0/");
 });
+
+it("credits the NASA Milky Way illustration used by the galaxy map", () => {
+  const { container } = render(<MemoryRouter><Credits /></MemoryRouter>);
+  const card = container.querySelector('li[id="milky-way-illustration"]');
+  expect(card).not.toBeNull();
+  expect(card.textContent).toContain("Milky Way illustration by NASA/JPL-Caltech/R. Hurt (SSC-Caltech)");
+  expect(within(card).getByRole("link", { name: "Source" }).getAttribute("href")).toBe("https://commons.wikimedia.org/wiki/File:Ssc2008-10a1.tif");
+  expect(within(card).getByRole("link", { name: "JPL image use policy" }).getAttribute("href")).toBe("https://www.jpl.nasa.gov/jpl-image-use-policy/");
+});

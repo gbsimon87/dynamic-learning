@@ -5,7 +5,7 @@ import { isMuted } from '../../../components/celebration/sound/player.js';
 import { speak, stopNarration } from '../../../utils/speech.js';
 import './ConstellationCard.css';
 
-export default function ConstellationCard({ onFindSky, onJoinDots, constellation, index, total, muted, onPrevious, onNext, onToggleMute, onExit }) {
+export default function ConstellationCard({ onFindSky, onJoinDots, constellation, index, total, muted, onPrevious, onNext, onToggleMute, onExit, viewpointNote = false }) {
   const close = useRef(null), exit = useRef(onExit);
   exit.current = onExit;
   const spokenText = `${constellation.narration} ${SKY_LINE}`;
@@ -27,6 +27,7 @@ export default function ConstellationCard({ onFindSky, onJoinDots, constellation
       <button ref={close} aria-label="Close constellations" onClick={onExit}>×</button>
     </header>
     <p className="solar-constellation__hint">Drag the sky to look around.</p>
+    {viewpointNote && <p className="solar-constellation__hint">Star patterns as seen from Earth</p>}
     <div className="solar-constellation__scroll">
       <SolarSections key={constellation.id}>
         <SolarSection section="about" title="✨ About this pattern"><p>{constellation.alsoKnownAs}</p><p>{constellation.description}</p><p>{SKY_LINE}</p></SolarSection>

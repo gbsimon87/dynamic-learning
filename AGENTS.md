@@ -21,6 +21,7 @@ deliberately does not repeat them.**
 | Add or fix a single curriculum challenge | `add-curriculum-challenge` |
 | Add a new year group or subject | `add-curriculum-year` |
 | Add a Skills Mode mini-game | `add-skill-game` |
+| Add another real star system to the Solar System page | `add-star-system` |
 | Touch progress, persistence, or unlock rules | `curriculum-progress` |
 
 Stack, architecture, commands and current state: `docs/PROJECT_KNOWLEDGE.md`.

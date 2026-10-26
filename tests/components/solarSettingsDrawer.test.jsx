@@ -111,3 +111,10 @@ it("Bloom remains a debug-only switch with its own callback", async () => {
   expect(onBloomChange).toHaveBeenCalledWith(true);
   expect(onChange).not.toHaveBeenCalled();
 });
+
+it("drawer hides Moon names when no moons", () => {
+  setup({ hiddenToggles: ["showMoonLabels", "asteroidBelt"] });
+  expect(screen.queryByRole("switch", { name: /Moon names/ })).toBeNull();
+  expect(screen.queryByRole("switch", { name: /Asteroid belt/ })).toBeNull();
+  expect(screen.getByRole("switch", { name: /Planet names/ })).toBeTruthy();
+});

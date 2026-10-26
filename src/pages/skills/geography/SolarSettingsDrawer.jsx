@@ -24,8 +24,9 @@ function CloseGlyph() {
     );
 }
 
-export default function SolarSettingsDrawer({ settings, onChange, speed, onSpeedChange, onReset, open, onOpenChange, bloom, onBloomChange }) {
-    const toggles = bloom === undefined ? VIEW_TOGGLES : [...VIEW_TOGGLES, { key: "bloom", label: "Bloom (test)", icon: "💡" }];
+export default function SolarSettingsDrawer({ settings, onChange, speed, onSpeedChange, onReset, open, onOpenChange, bloom, onBloomChange, hiddenToggles = [] }) {
+    const shown = VIEW_TOGGLES.filter((toggle) => !hiddenToggles.includes(toggle.key));
+    const toggles = bloom === undefined ? shown : [...shown, { key: "bloom", label: "Bloom (test)", icon: "💡" }];
     const triggerRef = useRef(null);
     const firstSwitchRef = useRef(null);
     const wasOpen = useRef(false);

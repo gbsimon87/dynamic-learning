@@ -42,7 +42,7 @@
   top: 1rem;
   left: 1rem;
   display: grid;
-  /* Three a row, so five buttons stay in two rows above the search toggle. */
+  /* Three a row, so six buttons stay in two rows above the search toggle. */
   grid-template-columns: repeat(3, 2.65rem);
   align-items: flex-start;
   gap: 0.5rem;
@@ -558,9 +558,9 @@
 
   .solar-toolbar {
     top: 1rem;
-    /* The five compact launch controls occupy the left edge at tablet widths;
+    /* The six compact launch controls occupy the left edge at tablet widths;
        My view (220px) sits at the right. */
-    left: 18.5rem;
+    left: 22rem;
     right: 15.25rem;
     justify-content: flex-start;
   }
@@ -615,11 +615,12 @@
   }
 }
 
-/* Five fully labelled launch buttons (Beyond, #113, is the fifth) take about
-   49rem; search sits beside them, as a button until 1280px (below). */
-@media (min-width: 1100px) {
+/* Six fully labelled launch buttons (Galaxy map, #108, is the sixth) take
+   about 58rem; search sits beside them, as a button until 1600px (below), and
+   Overview must stay clear of the Fine tuning panel at the top right. */
+@media (min-width: 1440px) {
   .solar-toolbar {
-    left: 50.5rem;
+    left: 59rem;
   }
 
   .solar-action-label {
@@ -629,7 +630,7 @@
 
 /* Too narrow for an open search field beside the launch buttons: search opens
    from its button, as on phones, and spreads over them while in use. */
-@media (min-width: 720px) and (max-width: 767.98px), (min-width: 1100px) and (max-width: 1279.98px) {
+@media (min-width: 720px) and (max-width: 899.98px), (min-width: 1440px) and (max-width: 1599.98px) {
   .solar-search-toggle {
     display: grid;
   }
@@ -820,6 +821,9 @@ body.dark .solar-system .solar-info-card { background: var(--dark-panel); color:
 .solar-system .solar-info-card__body { min-height: 0; overflow-y: auto; padding-right: 2px; overscroll-behavior: contain; }
 .solar-system .solar-info-card__close { min-width: 48px; min-height: 48px; color: inherit; border: 0; background: transparent; }
 .solar-system .solar-info-card__meta { gap: 4px; margin: 0 0 6px; }
+.solar-system .solar-info-card__stats { list-style: none; padding: 0; gap: 4px; margin: 0 0 8px; font-size: 13px; line-height: 1.35; }
+.solar-system .solar-info-card__stats span { opacity: 0.8; }
+.solar-system .solar-info-card__honesty { margin: 0 0 6px; color: inherit; font-size: 12px; font-style: italic; line-height: 1.35; opacity: 0.85; flex: 0 0 auto; }
 .solar-system .solar-info-card__meta span { color: inherit; background: transparent; border: 1px solid color-mix(in srgb, currentColor 22%, transparent); padding: 2px 6px; font-size: 11px; }
 .solar-system .solar-info-card ul { color: inherit; font-size: 13px; line-height: 1.45; gap: 6px; }
 .solar-system .solar-info-card li::marker { color: inherit; }

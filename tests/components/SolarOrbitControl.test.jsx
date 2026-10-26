@@ -3,6 +3,11 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { expect, test, vi } from 'vitest';
 import SolarOrbitControl from '../../src/pages/skills/geography/SolarOrbitControl.jsx';
 import SolarFlightControls from '../../src/pages/skills/geography/SolarFlightControls.jsx';
+import { HOME_SYSTEM } from '../../src/pages/skills/geography/systems/home.js';
+
+// The flight HUD takes its clues, badges and wording from the system definition.
+const HOME_FLIGHT = { clues: HOME_SYSTEM.flight.clues, badges: HOME_SYSTEM.flight.badges, startName: 'Earth', systemName: 'Solar System', systemPhrase: 'the Solar System' };
+
 
 const noop = () => {};
 test('orbit entry is optional, has a labelled exit and communicates reduced motion', () => {
@@ -18,29 +23,14 @@ test('orbit entry is optional, has a labelled exit and communicates reduced moti
 test('manual orbit offer and exit remain accessible with the flight panel collapsed', () => {
   const api = { setGoal: noop, brake: vi.fn(), enterOrbit: vi.fn(), leaveOrbit: vi.fn() };
   const props = { api, bodies: [], onClose: noop };
-  const { rerender } = render(<SolarFlightControls {...props} view={{ orbitPlanet: { name: 'Earth' } }} />);
+  const { rerender } = render(<SolarFlightControls {...HOME_FLIGHT} {...props} view={{ orbitPlanet: { name: 'Earth' } }} />);
   fireEvent.click(screen.getByRole('button', { name: 'Collapse flight panel' }));
   fireEvent.click(screen.getByRole('button', { name: 'Orbit Earth' }));
   expect(api.brake).toHaveBeenCalled(); expect(api.enterOrbit).toHaveBeenCalledOnce();
-  rerender(<SolarFlightControls {...props} view={{ orbitPlanet: { name: 'Earth' }, orbiting: true }} />);
+  rerender(<SolarFlightControls {...HOME_FLIGHT} {...props} view={{ orbitPlanet: { name: 'Earth' }, orbiting: true }} />);
   fireEvent.click(screen.getByRole('button', { name: 'Leave orbit around Earth' })); expect(api.leaveOrbit).toHaveBeenCalledOnce();
-  rerender(<SolarFlightControls {...props} view={{ orbitPlanet: null }} />);
+  rerender(<SolarFlightControls {...HOME_FLIGHT} {...props} view={{ orbitPlanet: null }} />);
   expect(screen.queryByRole('button', { name: /Orbit Earth|Leave orbit/ })).toBeNull();
-});
-
-test('the flight edge past Pluto offers Warp to Beyond, also with the panel collapsed', () => {
-  const api = { setGoal: noop, brake: vi.fn() };
-  const onBeyond = vi.fn();
-  const props = { api, bodies: [], onClose: noop, onBeyond };
-  const { rerender } = render(<SolarFlightControls {...props} view={{ atEdge: false }} />);
-  expect(screen.queryByRole('button', { name: 'Warp to Beyond' })).toBeNull();
-  rerender(<SolarFlightControls {...props} view={{ atEdge: true }} />);
-  fireEvent.click(screen.getByRole('button', { name: 'Collapse flight panel' }));
-  fireEvent.click(screen.getByRole('button', { name: 'Warp to Beyond' }));
-  expect(api.brake).toHaveBeenCalled();
-  expect(onBeyond).toHaveBeenCalledOnce();
-  rerender(<SolarFlightControls {...props} view={{ atEdge: false }} />);
-  expect(screen.queryByRole('button', { name: 'Warp to Beyond' })).toBeNull();
 });
 
 test('Escape closes the Beyond picker without ending the flight underneath', async () => {
@@ -48,7 +38,7 @@ test('Escape closes the Beyond picker without ending the flight underneath', asy
   const { availableDestinations } = await import('../../src/pages/skills/geography/beyondDestinations.js');
   const onFlightClose = vi.fn(), onPickerClose = vi.fn();
   render(<>
-    <SolarFlightControls api={{ setGoal: noop, brake: noop }} bodies={[]} onClose={onFlightClose} view={{ atEdge: true }} onBeyond={noop} />
+    <SolarFlightControls {...HOME_FLIGHT} api={{ setGoal: noop, brake: noop }} bodies={[]} onClose={onFlightClose} view={{}} />
     <BeyondPicker destinations={availableDestinations()} onChoose={noop} onClose={onPickerClose} />
   </>);
   fireEvent.keyDown(document, { key: 'Escape' });

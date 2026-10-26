@@ -1,0 +1,13 @@
+.solar-trip { position: absolute; z-index: 4; top: 12px; left: 50%; transform: translateX(-50%); width: min(420px, calc(100% - 32px)); box-sizing: border-box; padding: 10px 12px; display: grid; gap: 6px; justify-items: center; text-align: center; color: var(--light-text); background: var(--light-panel); border: 1px solid color-mix(in srgb, currentColor 25%, transparent); border-radius: 14px; box-shadow: 0 6px 20px #0004; pointer-events: auto; font-family: system-ui, sans-serif; }
+body.dark .solar-trip { color: var(--dark-text); background: var(--dark-panel); }
+.solar-trip__message { margin: 0; font: 700 17px/1.3 system-ui, sans-serif; }
+.solar-trip__honesty { margin: 0; font: 500 13px/1.3 system-ui, sans-serif; opacity: .85; }
+.solar-trip__progress { width: 100%; height: 10px; border-radius: 5px; overflow: hidden; background: color-mix(in srgb, currentColor 18%, transparent); }
+.solar-trip__progress span { display: block; height: 100%; background: var(--light-accent); }
+body.dark .solar-trip__progress span { background: var(--dark-accent); }
+.solar-trip .solar-trip__turn-back { min-height: 52px; min-width: 160px; padding: 8px 18px; border: 2px solid currentColor; border-radius: 12px; font: 750 17px/1.2 system-ui, sans-serif; }
+.solar-trip .solar-trip__turn-back:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
+/* Phones: leave room for the collapsed flight panel on the left. */
+@media (max-width: 720px) { .solar-trip { top: auto; bottom: 156px; } }
+/* Hides the hand-over between systems under reduced motion (and softens it otherwise). */
+.solar-trip-fade { position: absolute; inset: 0; z-index: 60; background: #000; opacity: 0; pointer-events: none; }

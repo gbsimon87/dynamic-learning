@@ -1,20 +1,23 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import { FLIGHT_EDGE_RADIUS, createSolarFreeFlight, flightSpeed } from './solarFreeFlight.js';
+import { createSolarFreeFlight, flightSpeed } from './solarFreeFlight.js';
 
-function setup({ reduced = true, onCameraViewChange = () => {}, getCameraView = () => 'behind' } = {}) {
+// Home's flight settings, from its system definition.
+const FLIGHT_EDGE_RADIUS = 1350;
+
+function setup({ reduced = true, onCameraViewChange = () => {}, getCameraView = () => 'behind', edgeRadius = FLIGHT_EDGE_RADIUS, startBodyId = 'Earth', bodyList = [['Earth', .45, 0], ['Mars', .23, -35], ['Sun', 5, -70]], ...more } = {}) {
   const oldWindow = globalThis.window, oldDocument = globalThis.document;
   globalThis.window = new EventTarget(); globalThis.document = new EventTarget();
   const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(50, 1, .1, 5000);
   camera.position.set(0, 72, 128); camera.lookAt(0, 0, 0);
   const controls = { target: new THREE.Vector3(), enabled: true };
-  const bodies = [['Earth', .45, 0], ['Mars', .23, -35], ['Sun', 5, -70]].map(([id, radius, z]) => {
+  const bodies = bodyList.map(([id, radius, z]) => {
     const object3d = new THREE.Object3D(); object3d.position.z = z; scene.add(object3d);
     return { id, name: id, radius, object3d, kind: id === 'Sun' ? 'star' : 'planet' };
   });
   const changes = [];
-  const flight = createSolarFreeFlight({ scene, camera, controls, bodies, quality: 'low', reducedMotion: () => reduced, onChange: state => changes.push(state), onCameraViewChange, getCameraView });
+  const flight = createSolarFreeFlight({ scene, camera, controls, bodies, edgeRadius, startBodyId, quality: 'low', reducedMotion: () => reduced, onChange: state => changes.push(state), onCameraViewChange, getCameraView, ...more });
   const ship = scene.getObjectByName('solar-free-flight');
   const tick = (n = 1) => { for (let i = 0; i < n; i++) flight.update(.05); };
   const key = (type, value) => { const event = new Event(type, { cancelable: true }); event.key = value; window.dispatchEvent(event); return event; };
@@ -252,22 +255,20 @@ test('nearby manual orbit tracks a moving world without awarding clues and yield
   } finally { t.clean(); }
 });
 
-test('reaching the flight edge past Pluto offers the warp to Beyond, and flying back in withdraws it', () => {
-  assert.equal(FLIGHT_EDGE_RADIUS, 1350);
+test('without another system to fly to, the edge past Pluto holds the rocket and flying back in works', () => {
   const t = setup({ reduced: false });
   try {
     t.flight.enter(); t.flight.setStick(-1, 0); t.tick(20); t.flight.setStick(0, 0);
     t.flight.setBoost(true);
     for (let i = 0; i < 5000 && t.ship.position.length() < FLIGHT_EDGE_RADIUS - .01; i++) t.flight.update(1 / 60);
-    assert.equal(t.changes.some(c => c.atEdge), false, 'no offer on the way out');
     for (let i = 0; i < 30; i++) t.flight.update(1 / 60);
-    assert.equal(t.changes.at(-1).atEdge, true);
+    assert.ok(t.ship.position.length() <= FLIGHT_EDGE_RADIUS + 1e-6);
+    assert.equal(t.changes.at(-1).trip, null);
     t.flight.setStick(1, 0);
     for (let i = 0; i < Math.ceil(Math.PI / 1.7 * 60); i++) t.flight.update(1 / 60);
     t.flight.setStick(0, 0);
     for (let i = 0; i < 240; i++) t.flight.update(1 / 60);
     assert.ok(t.ship.position.length() < FLIGHT_EDGE_RADIUS - 5);
-    assert.equal(t.changes.at(-1).atEdge, false);
   } finally { t.clean(); }
 });
 
@@ -285,5 +286,242 @@ test('keys pressed inside a dialog over flight, such as the Beyond picker, do no
     assert.equal(press('keydown', 'ArrowLeft').defaultPrevented, false);
     t.tick(20);
     assert.ok(t.ship.position.distanceTo(start) < 1e-6, 'the rocket stays put while the child reads the picker');
+  } finally { t.clean(); }
+});
+
+test('flight starts beside the definition\'s start body and stops at its edge', () => {
+  const t = setup({ reduced: false, edgeRadius: 60, startBodyId: 'test-b', bodyList: [['test-b', .45, -20], ['test-star', 2, 0]] });
+  try {
+    t.flight.enter();
+    const start = t.bodies.find(b => b.id === 'test-b').object3d.position;
+    assert.ok(t.ship.position.distanceTo(start) < 5, 'starts beside test-b');
+    // Turn away from the start world, then fly out to the edge.
+    t.flight.setStick(-1, 0); t.tick(20); t.flight.setStick(0, 0);
+    t.flight.setBoost(true);
+    for (let i = 0; i < 3000 && t.ship.position.length() < 60 - .01; i++) t.flight.update(1 / 60);
+    for (let i = 0; i < 30; i++) t.flight.update(1 / 60);
+    assert.ok(t.ship.position.length() <= 60 + 1e-6, `clamped at 60: ${t.ship.position.length()}`);
+    assert.ok(t.ship.position.length() > 59, 'reached the edge');
+  } finally { t.clean(); }
+});
+
+// Trips between star systems (#108/#109). A tiny system: star at the centre,
+// a beacon far outside the edge to aim the rocket outwards with face().
+const TRIP_EDGE = 100;
+const TRIP_TO = { id: 'trappist-1', phrase: 'TRAPPIST-1', spokenName: 'TRAPPIST one', direction: { x: 0, y: 0, z: -1 }, distanceLy: 40.66, toHome: false };
+function tripSetup(options = {}) {
+  const handoffs = [], done = [];
+  const t = setup({ reduced: false, edgeRadius: TRIP_EDGE, startBodyId: 'Earth', bodyList: [['Earth', .45, 30], ['Sun', 5, 0], ['Beacon', 1, -500]],
+    tripTo: TRIP_TO, systemPhrase: 'the Solar System', onHandoff: request => handoffs.push(request), onTripDone: info => done.push(info), ...options });
+  const trip = () => t.changes.at(-1)?.trip ?? null;
+  const flyOut = () => {
+    // Entering flight is a Back to start, which disarms the warning until the rocket is well inside.
+    t.flight.enter(); t.ship.position.set(0, 0, -20); t.flight.update(1 / 60);
+    t.ship.position.set(0, 0, -(TRIP_EDGE - 10)); t.flight.face('Beacon'); t.flight.setThrust(true);
+    for (let i = 0; i < 200 && trip()?.phase !== 'warning'; i++) t.flight.update(1 / 60);
+  };
+  const run = seconds => { for (let i = 0; i < Math.round(seconds * 60); i++) t.flight.update(1 / 60); };
+  const forward = () => new THREE.Vector3(0, 1, 0).applyQuaternion(t.ship.quaternion);
+  return { ...t, handoffs, done, trip, flyOut, run, forward };
+}
+const warningStarts = changes => changes.filter((c, i) => c.trip?.phase === 'warning' && changes[i - 1]?.trip?.phase !== 'warning').length;
+
+test('crossing the edge outward starts a 3 s warning', () => {
+  const t = tripSetup();
+  try {
+    t.flyOut();
+    assert.equal(t.trip()?.phase, 'warning');
+    assert.ok(t.trip().secondsLeft <= 3 && t.trip().secondsLeft > 2.5, `secondsLeft ${t.trip().secondsLeft}`);
+    assert.equal(t.trip().toPhrase, 'TRAPPIST-1'); assert.equal(t.trip().fromPhrase, 'the Solar System');
+    assert.equal(t.trip().toSpoken, 'TRAPPIST one');
+    assert.equal(t.trip().distanceLy, 40.66);
+    t.run(1.5);
+    assert.equal(t.trip().phase, 'warning');
+    assert.ok(t.ship.position.length() <= TRIP_EDGE + 1e-6, 'held at the edge during the warning');
+    assert.ok(Math.abs(t.trip().secondsLeft - 1.5) < .25);
+    assert.equal(t.handoffs.length, 0);
+  } finally { t.clean(); }
+});
+
+test('recrossing the edge restarts the warning once and never starts two trips', () => {
+  const t = tripSetup();
+  try {
+    t.flyOut();
+    for (let wobble = 0; wobble < 3; wobble++) {
+      t.flight.face('Sun'); t.run(.5);
+      assert.equal(t.trip(), null, 'facing the star cancels');
+      t.flight.face('Beacon'); t.run(.5);
+      assert.equal(t.trip()?.phase, 'warning');
+      assert.ok(t.trip().secondsLeft > 2, 'a fresh countdown');
+    }
+    assert.equal(warningStarts(t.changes), 4, 'one countdown per crossing');
+    t.run(9);
+    assert.equal(t.handoffs.length, 1);
+    t.run(5);
+    assert.equal(t.handoffs.length, 1, 'never a second trip');
+  } finally { t.clean(); }
+});
+
+test('steering back during the warning cancels it', () => {
+  const t = tripSetup();
+  try {
+    t.flyOut();
+    assert.equal(t.trip()?.phase, 'warning');
+    t.flight.setStick(1, 0); t.run(2);
+    assert.equal(t.trip(), null);
+    t.run(5);
+    assert.equal(t.handoffs.length, 0);
+  } finally { t.clean(); }
+});
+
+test('after the warning the ship leaves along the trip direction and onHandoff fires once', () => {
+  const t = tripSetup();
+  try {
+    t.flyOut(); t.flight.setThrust(false);
+    t.run(3.2);
+    assert.equal(t.trip()?.phase, 'departing');
+    const leaving = t.ship.position.clone(); t.run(.5);
+    assert.ok(t.ship.position.length() > TRIP_EDGE, 'the clamp lifts');
+    assert.ok(t.ship.position.clone().sub(leaving).normalize().z < -.99, 'carried outwards');
+    t.flight.setStick(1, 0); const heading = t.forward(); t.run(.2); t.flight.setStick(0, 0);
+    assert.ok(t.forward().angleTo(heading) > .1, 'steering still turns the rocket');
+    t.run(3);
+    assert.equal(t.handoffs.length, 1);
+    assert.deepEqual(t.handoffs[0], { to: 'trappist-1', mode: 'flown', direction: TRIP_TO.direction, turnedBack: false });
+    assert.equal(t.trip()?.waiting, true, 'the view says the next system is loading');
+    t.run(3);
+    assert.equal(t.handoffs.length, 1);
+  } finally { t.clean(); }
+});
+
+test('turnBack during departing returns the ship inside the edge facing the star', () => {
+  const t = tripSetup();
+  try {
+    t.flyOut(); t.flight.setThrust(false); t.run(4);
+    assert.equal(t.trip()?.phase, 'departing');
+    t.flight.turnBack(); t.run(1.5);
+    assert.equal(t.trip(), null);
+    assert.deepEqual(t.done, [{ mode: 'flown', turnedBack: true }], 'the scene hears the trip is over');
+    assert.ok(t.ship.position.length() < TRIP_EDGE - 5, `inside: ${t.ship.position.length()}`);
+    assert.ok(t.forward().dot(t.ship.position.clone().negate().normalize()) > .9, 'facing the star');
+    t.run(8);
+    assert.equal(t.handoffs.length, 0);
+    assert.equal(t.trip(), null, 'no fresh warning while facing in');
+    assert.ok(t.flight.isActive());
+  } finally { t.clean(); }
+});
+
+test('holding a turn-around mid-trip turns back; a wobble does not', () => {
+  const t = tripSetup();
+  try {
+    t.flyOut(); t.flight.setThrust(false); t.run(3.1);
+    t.flight.setStick(1, 0); t.run(.15); t.flight.setStick(-1, 0); t.run(.15); t.flight.setStick(0, 0);
+    assert.equal(t.trip()?.phase, 'departing', 'a wobble keeps going');
+    t.flight.setStick(1, 0); t.run(2.4); t.flight.setStick(0, 0); t.run(1.2);
+    assert.equal(t.trip(), null);
+    assert.equal(t.handoffs.length, 0);
+    assert.ok(t.ship.position.length() < TRIP_EDGE);
+  } finally { t.clean(); }
+});
+
+test('beginArrival places the ship at the arrival pose and ends with onTripDone, still in free flight', () => {
+  const t = tripSetup({ systemPhrase: 'TRAPPIST-1', tripTo: { id: 'solar-system', phrase: 'the Solar System', direction: { x: 0, y: 0, z: 1 }, distanceLy: 40.66, toHome: true } });
+  try {
+    t.flight.beginArrival({ from: 'solar-system', fromDirection: { x: 0, y: 0, z: 1 }, mode: 'flown' });
+    assert.ok(t.flight.isActive());
+    t.run(.1);
+    assert.equal(t.trip()?.phase, 'arriving');
+    assert.equal(t.trip().toPhrase, 'TRAPPIST-1');
+    assert.ok(t.ship.position.z > TRIP_EDGE, 'comes in from outside, on the side it came from');
+    t.run(4);
+    assert.equal(t.trip(), null);
+    assert.deepEqual(t.done, [{ mode: 'flown' }]);
+    assert.ok(t.ship.position.distanceTo(new THREE.Vector3(0, 0, TRIP_EDGE - 20)) < 1, `at the pose: ${t.ship.position.toArray()}`);
+    assert.ok(t.forward().z < -.9, 'facing the star');
+    assert.ok(t.flight.isActive());
+    t.flight.setThrust(true); const before = t.ship.position.clone(); t.run(.5);
+    assert.ok(t.ship.position.distanceTo(before) > 1, 'normal flight afterwards');
+    assert.equal(t.handoffs.length, 0);
+  } finally { t.clean(); }
+});
+
+test('turnBack during arriving fires onHandoff back to the origin', () => {
+  const t = tripSetup({ systemPhrase: 'TRAPPIST-1', tripTo: { id: 'solar-system', phrase: 'the Solar System', direction: { x: 0, y: 0, z: 1 }, distanceLy: 40.66, toHome: true } });
+  try {
+    t.flight.beginArrival({ from: 'solar-system', fromDirection: { x: 0, y: 0, z: 1 }, mode: 'flown' });
+    t.run(1);
+    t.flight.turnBack(); t.run(.1);
+    assert.deepEqual(t.handoffs, [{ to: 'solar-system', mode: 'flown', direction: { x: 0, y: 0, z: 1 }, turnedBack: true }]);
+    assert.equal(t.trip()?.waiting, true);
+    t.run(5);
+    assert.equal(t.handoffs.length, 1);
+    assert.equal(t.done.length, 0);
+  } finally { t.clean(); }
+});
+
+test('an autopilot trip skips the warning, ignores the stick and hands over', () => {
+  const t = tripSetup();
+  try {
+    assert.equal(t.flight.startAutopilotTrip(), true);
+    assert.ok(t.flight.isActive());
+    t.run(.1);
+    assert.equal(t.trip()?.phase, 'departing');
+    const heading = t.forward(); t.flight.setStick(1, 0); t.run(.5); t.flight.setStick(0, 0);
+    assert.ok(t.forward().angleTo(heading) < 1e-6, 'autopilot holds the heading');
+    assert.equal(t.flight.startAutopilotTrip(), false, 'one trip at a time');
+    t.run(3.5);
+    assert.deepEqual(t.handoffs, [{ to: 'trappist-1', mode: 'autopilot', direction: TRIP_TO.direction, turnedBack: false }]);
+  } finally { t.clean(); }
+});
+
+test('no trip without a destination; orbiting never warns', () => {
+  const t = tripSetup({ tripTo: null });
+  try {
+    t.flyOut(); t.run(5);
+    assert.equal(t.trip(), null);
+    assert.equal(t.flight.startAutopilotTrip(), false);
+  } finally { t.clean(); }
+});
+
+test('a signpost is a place to find, not something to bump into', () => {
+  const t = setup({ reduced: false, edgeRadius: 100, bodyList: [['Earth', .45, 30], ['Sun', 5, 80]] });
+  try {
+    const sign = new THREE.Object3D(); sign.position.set(0, 0, -130); t.scene.add(sign);
+    t.flight.dispose();
+    const flight = createSolarFreeFlight({ scene: t.scene, camera: t.camera, controls: t.controls, edgeRadius: 100, startBodyId: 'Earth', quality: 'low',
+      bodies: [...t.bodies, { id: 'sign:home', name: 'Home', radius: 40, object3d: sign, kind: 'sign' }] });
+    flight.enter(); flight.face('sign:home'); flight.setThrust(true);
+    // Pointing at a world slows the rocket as it closes in (0.6 a second at the end).
+    for (let i = 0; i < 1500; i++) flight.update(1 / 60);
+    const ship = t.scene.getObjectByName('solar-free-flight');
+    assert.ok(ship.position.distanceTo(sign.position) < 39, `flies inside the sign's reach: ${ship.position.distanceTo(sign.position)}`);
+    flight.dispose();
+  } finally { globalThis.window = undefined; }
+});
+
+test('letting go at the edge and steering back to the star cancels once, with no flicker', () => {
+  const t = tripSetup();
+  try {
+    t.flyOut();
+    assert.equal(t.trip()?.phase, 'warning');
+    t.flight.setThrust(false); t.flight.setStick(1, 0); t.run(2); t.flight.setStick(0, 0);
+    const before = warningStarts(t.changes);
+    t.run(10);
+    assert.equal(warningStarts(t.changes), before, 'no new countdowns while the rocket coasts facing the star');
+    assert.equal(t.trip(), null);
+    assert.equal(t.handoffs.length, 0);
+  } finally { t.clean(); }
+});
+
+test('every leaving trip tells the page where it is going, so the next system can start loading', () => {
+  const starts = [];
+  const t = tripSetup({ onTripStart: to => starts.push(to.id) });
+  try {
+    t.flyOut();
+    assert.equal(t.trip()?.phase, 'warning');
+    assert.deepEqual(starts, ['trappist-1'], 'at the start of the warning');
+    t.flight.turnBack(); t.run(4);
+    assert.equal(t.flight.startAutopilotTrip(), true);
+    assert.deepEqual(starts, ['trappist-1', 'trappist-1'], 'and for an autopilot trip');
   } finally { t.clean(); }
 });

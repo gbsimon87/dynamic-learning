@@ -35,3 +35,9 @@ test('site mute and explorer mute suppress sky teaching narration', () => {
   rerender(<ConstellationCard {...props} muted />);
   expect(screen.getByRole('button', { name: 'Replay narration' }).disabled).toBe(true);
 });
+test('constellation card shows the Earth-viewpoint note away from home only', () => {
+  const { rerender } = render(<ConstellationCard {...props} />);
+  expect(screen.queryByText('Star patterns as seen from Earth')).toBeNull();
+  rerender(<ConstellationCard {...props} viewpointNote />);
+  expect(screen.getByText('Star patterns as seen from Earth')).toBeTruthy();
+});

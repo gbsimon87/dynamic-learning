@@ -616,8 +616,8 @@ session ended. Local sign-out still requires no API endpoint.
 
 The compatible lockfile update removes 15 npm audit advisories (11 high, 3
 moderate, 1 low); audit reports zero known advisories at review time. Render's
-Node pin is now 22.23.3 LTS, replacing 22.11.0 which did not meet Vite's engine
-requirement. Remaining backend concerns and verification limits are recorded in
+Node pin is now 22.23.4 LTS (2026-10-26: the eMudhra CA-compromise patch; was 22.23.3, before that 22.11.0, which did not meet Vite's engine
+requirement). Remaining backend concerns and verification limits are recorded in
 [the bug/security review](english-curriculum/BUG_SECURITY_REVIEW.md).
 
 **The rules themselves are pure and live outside React** (2026-09-18):
@@ -1120,6 +1120,23 @@ layout remains unverified because browser controls are unavailable.
   `solarRenderPipeline.js` renders either directly (the default) or through
   `EffectComposer` + `UnrealBloomPass` + `OutputPass`; bloom stays off for
   children until a phone baseline decides it (backlog #17).
+- *Star systems (#108/#109, 2026-10-26).* The scene is **definition-driven**:
+  `systems/home.js` and `systems/trappist1.js` hold every body, card, tour,
+  clue and setting; `SolarSystem.jsx` names no system or body
+  (`systems/sceneGuard.test.js`). `systems/registry.js` lists each system with
+  light map data and loads its full definition on demand; the shared suite
+  (`systems/definitions.test.js` + `validateSystem.js`) checks every one.
+  `SolarSystemPage.jsx` holds the current system and **remounts** the scene
+  (`key = id:visit`) when it changes; a failed load lands home with a message,
+  and the page speaks each arrival's welcome. Home-only features are
+  `extras` with quiet stand-ins elsewhere. **Trips** (`systems/tripTimeline.js`,
+  trip mode in `solarFreeFlight.js`, `SolarTripHud.jsx`) are split across the
+  remount: the leaving scene plays the 3 s warning and half the dash, the
+  arriving scene the rest, at most 10 s. Signposts: `systems/signposts.js` +
+  `systemSignposts.js`. Galaxy map: `galaxyMapData.js`, `galaxyMap.js` (its own
+  scene, NASA/JPL-Caltech/R. Hurt picture in `public/static/milky-way-*.jpg`),
+  `GalaxyMapPanel.jsx`. Adult switch `?debug&system=<id>` opens a system
+  directly. Adding a system: the `add-star-system` skill.
 - *Textures.* All planet, Moon and Sun maps, Earth clouds and night lights,
   Saturn's ring map and the Milky Way are Solar System Scope (CC BY 4.0),
   credited on `/credits`. The `cubeMap/` sky still has no recorded source.

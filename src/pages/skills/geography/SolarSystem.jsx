@@ -3,7 +3,6 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Pane } from "tweakpane";
 import { matchBodies } from "./solarSearch.js";
-import { moonFacts } from "./moonFacts.js";
 import { createSolarDefaults, createWorldTime, advanceWorldTime, getBodyPose } from "./solarSimulation.js";
 import { createMeteorExperiment } from "./meteorExperiment.js";
 import { createModuleHost } from "./solarModules.js";
@@ -64,6 +63,16 @@ import BeyondPicker from "./BeyondPicker.jsx";
 import BeyondWarpControls from "./BeyondWarpControls.jsx";
 import SpaceRipplesCard from "./SpaceRipplesCard.jsx";
 import { SPACE_RIPPLES_ARRIVAL_LINE } from "./spaceRipplesFacts.js";
+import { HOME_SYSTEM } from "./systems/home.js";
+import { buildMoonInfo, buildPlanetInfo, buildStarInfo } from "./systems/bodyInfo.js";
+import { proceduralPlanetMaterial } from "./systems/proceduralPlanet.js";
+import { HOME_SYSTEM_ID, SYSTEM_REGISTRY, registryEntry, tripDestination } from "./systems/registry.js";
+import SolarTripHud from "./SolarTripHud.jsx";
+import { SIGN_OFFSET, signpostsFor } from "./systems/signposts.js";
+import { createSystemSignposts } from "./systemSignposts.js";
+import { createGalaxyMap } from "./galaxyMap.js";
+import { mapCatalogue } from "./galaxyMapData.js";
+import GalaxyMapPanel from "./GalaxyMapPanel.jsx";
 import "./SolarSystem.css";
 
 /**
@@ -85,7 +94,40 @@ function SearchGlyph() {
     );
 }
 
-export default function ThreeSolarSystem() {
+// Home-only features (a definition's `extras`). When a system leaves one off,
+// a quiet stand-in answers the same questions, so the code that asks never
+// needs to know which system it is in.
+const NO_COMET = { object3d: { visible: false }, hitTarget: null };
+const NO_ISS = { object3d: null, hitTarget: null };
+const NO_LINE_UP = { isActive: () => false, open() {}, close() {}, render() {} };
+const NO_PALE_BLUE_DOT = { isActive: () => false, hidesScenery: () => false, holdsClock: () => false, begin() {}, look() {}, end() {}, marker: null };
+const NO_LIFT_OFF = { isCounting: () => false, skip() {}, cancel() {}, start() {} };
+const NO_REGION_LABELS = { hitTargets: [], select: () => false };
+const NO_BELT = { enabled: false, count: 0 };
+
+// Every galaxy, event and star system the galaxy map shows (#108).
+const MAP_CATALOGUE = mapCatalogue(SYSTEM_REGISTRY, availableDestinations());
+
+/**
+ * `arrival` (from the page) says how the child got here: a trip arriving
+ * plays its second half here. `onTravel` asks the page for another system at
+ * a trip's hand-over; `onArrived` tells it the child has landed (it speaks
+ * the welcome).
+ */
+export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null, onPrepare = () => {}, onTravel = () => {}, onArrived = () => {} }) {
+    const arrivalRef = useRef(arrival);
+    const onPrepareRef = useRef(onPrepare);
+    const onTravelRef = useRef(onTravel);
+    const onArrivedRef = useRef(onArrived);
+    onPrepareRef.current = onPrepare;
+    onTravelRef.current = onTravel;
+    onArrivedRef.current = onArrived;
+    const homePhrase = registryEntry(HOME_SYSTEM_ID)?.phrase ?? "";
+    // View switches for things this system doesn't have.
+    const hiddenToggles = [
+        ...(system.planets.some((planet) => planet.moons.length > 0) ? [] : ["showMoonLabels"]),
+        ...(system.extras.asteroidBelt ? [] : ["asteroidBelt"]),
+    ];
     const containerRef = useRef(null); // container div we control sizing from
     const canvasRef = useRef(null); // managed <canvas>
     const sceneApiRef = useRef(null);
@@ -104,11 +146,11 @@ export default function ThreeSolarSystem() {
     const [tapMessage, setTapMessage] = useState(null);
     const [selectedPlanet, setSelectedPlanet] = useState(null);
     const [missionArrival, setMissionArrival] = useState(null);
-    const saturnCardOpen = selectedPlanet?.name === "Saturn";
+    const saturnCardOpen = Boolean(selectedPlanet?.sections?.rings);
     useEffect(() => () => { if (saturnCardOpen) stopNarrationOf(SATURN_RING_LINE); }, [saturnCardOpen]);
     const cometCardOpen = selectedPlanet?.kind === "comet";
     useEffect(() => () => { if (cometCardOpen) stopNarrationOf(COMET_LINE); }, [cometCardOpen]);
-    const earthCardOpen = selectedPlanet?.name === "Earth";
+    const earthCardOpen = Boolean(selectedPlanet?.sections?.dayNight);
     useEffect(() => () => { if (earthCardOpen) stopNarrationOf(EARTH_DAY_NIGHT_LINE); }, [earthCardOpen]);
     // While the ship flies to a planet the launch buttons step aside, as they
     // do for its card, so another mode can't start mid-flight.
@@ -131,6 +173,13 @@ export default function ThreeSolarSystem() {
     const [freeFlightView, setFreeFlightView] = useState(null);
     const [orbitOffer, setOrbitOffer] = useState(null);
     const [autopilotOrbit, setAutopilotOrbit] = useState(null);
+    // An autopilot trip (Home, or arriving by autopilot) outside the flight HUD.
+    const [tripMode, setTripMode] = useState(null);
+    const tripModeRef = useRef(null);
+    const tripFadeRef = useRef(null);
+    // The galaxy map (#108): open or not, and which level it shows.
+    const [mapLevel, setMapLevel] = useState(null);
+    const mapButtonRef = useRef(null);
     // Warp to Beyond (#113): nothing here is saved; reloading starts at home.
     const [beyondPickerOpen, setBeyondPickerOpen] = useState(false);
     const [beyondState, setBeyondState] = useState({ phase: "off", destinationId: null, progress: 0, calm: false, stage: null });
@@ -179,8 +228,11 @@ export default function ThreeSolarSystem() {
         const getAspect = () => containerRef.current.clientWidth / containerRef.current.clientHeight;
         const MAX_PIXEL_RATIO = Math.min(window.devicePixelRatio, 2);
         const debugFlags = readDebugFlags(window.location.search);
+        // The scene can be asked for its quality while it is being swapped out
+        // for another system, after the page has taken its container away.
+        let lastWidth = containerRef.current.clientWidth;
         const currentQuality = () => detectQuality({
-            width: containerRef.current.clientWidth,
+            width: (lastWidth = containerRef.current?.clientWidth ?? lastWidth),
             coarsePointer: window.matchMedia("(pointer: coarse)").matches,
             override: debugFlags.quality,
         });
@@ -199,24 +251,20 @@ export default function ThreeSolarSystem() {
         const textureLoader = new THREE.TextureLoader();
         const cubeTextureLoader = new THREE.CubeTextureLoader().setPath("/static/cubeMap/");
 
-        const textures = {
-            sun: textureLoader.load("/static/2k_sun.jpg"),
-            mercury: textureLoader.load("/static/2k_mercury.jpg"),
-            venus: textureLoader.load("/static/2k_venus.jpg"),
-            earth: textureLoader.load("/static/2k_earth.jpg"),
-            moon: textureLoader.load("/static/2k_moon.jpg"),
-            mars: textureLoader.load("/static/2k_mars.jpg"),
-            jupiter: textureLoader.load("/static/2k_jupiter.jpg"),
-            saturn: textureLoader.load("/static/2k_saturn.jpg"),
-            uranus: textureLoader.load("/static/2k_uranus.jpg"),
-            neptune: textureLoader.load("/static/2k_neptune.jpg"),
-        };
+        // Every picture comes from the system definition (systems/home.js).
+        const textures = new Map();
+        function loadTexture(path) {
+            if (!textures.has(path)) {
+                const texture = textureLoader.load(path);
+                texture.colorSpace = THREE.SRGBColorSpace;
+                textures.set(path, texture);
+            }
+            return textures.get(path);
+        }
+        const star = system.stars[0];
+        const extras = system.extras;
 
         const glowSettings = { ...defaults.glow };
-
-        Object.values(textures).forEach((tex) => {
-            if (tex && tex.isTexture) tex.colorSpace = THREE.SRGBColorSpace;
-        });
 
         // Pluto and the featured moons (see worldSurfaces.js).
         function surfaceMaterial(name) {
@@ -242,241 +290,29 @@ export default function ThreeSolarSystem() {
         // ================================================================
         const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
 
+        const starTexture = star.look.texture ? loadTexture(star.look.texture) : null;
         const materials = {
             sun: new THREE.MeshStandardMaterial({
-                map: textures.sun,
-                emissive: new THREE.Color(0xffcc66),
-                emissiveMap: textures.sun,
-                emissiveIntensity: 0.6,
+                ...(starTexture ? { map: starTexture, emissiveMap: starTexture } : { color: new THREE.Color(star.look.color) }),
+                emissive: new THREE.Color(star.look.emissive),
+                emissiveIntensity: star.look.emissiveIntensity,
                 metalness: 0.0,
                 roughness: 1.0,
             }),
-            moon: new THREE.MeshStandardMaterial({ map: textures.moon }),
-            mercury: new THREE.MeshStandardMaterial({ map: textures.mercury }),
-            venus: new THREE.MeshStandardMaterial({ map: textures.venus }),
-            earth: new THREE.MeshStandardMaterial({ map: textures.earth }),
-            mars: new THREE.MeshStandardMaterial({ map: textures.mars }),
-            jupiter: new THREE.MeshStandardMaterial({ map: textures.jupiter }),
-            saturn: new THREE.MeshStandardMaterial({ map: textures.saturn }),
-            uranus: new THREE.MeshStandardMaterial({ map: textures.uranus }),
-            neptune: new THREE.MeshStandardMaterial({ map: textures.neptune }),
+            // Moons without their own map or colour.
+            moon: new THREE.MeshStandardMaterial({ map: loadTexture("/static/2k_moon.jpg"), metalness: 0.0, roughness: 0.5 }),
         };
 
-        [
-            materials.mercury,
-            materials.venus,
-            materials.earth,
-            materials.mars,
-            materials.jupiter,
-            materials.saturn,
-            materials.uranus,
-            materials.neptune,
-            materials.moon,
-        ].forEach((m) => {
-            if (m) {
-                m.metalness = 0.0;
-                m.roughness = 0.5;
-            }
-        });
+        function planetMaterial(look, id) {
+            if (look.surface) return surfaceMaterial(look.surface);
+            if (look.texture) return new THREE.MeshStandardMaterial({ map: loadTexture(look.texture), metalness: 0.0, roughness: 0.5 });
+            return proceduralPlanetMaterial(id, look, { quality: currentQuality() });
+        }
 
         // ================================================================
         // Planet Data
         // ================================================================
-        const planetData = [
-            {
-                name: "Mercury",
-                radius: 0.15,
-                distance: 10,
-                speed: 0.01,
-                orbit: PLANET_ORBITS.Mercury,
-                material: materials.mercury,
-                tilt: "0",
-                moons: [],
-                tourNarration: "Mercury is our first stop and the closest planet to the Sun. It is a small, rocky world with a huge iron core and some of the most extreme temperature changes in the Solar System.",
-                facts: [
-                    "Mercury is the smallest planet in our solar system.",
-                    "A day on Mercury (sunrise to sunrise) lasts about 176 Earth days.",
-                    "It has virtually no atmosphere, so temperatures swing from 430°C (800°F) to -180°C (-290°F).",
-                    "Mercury has a large iron core, making up about 85% of its radius.",
-                    "It’s the closest planet to the Sun, but not the hottest — Venus holds that title.",
-                ],
-            },
-            {
-                name: "Venus",
-                radius: 0.38,
-                distance: 18.46,
-                speed: 0.007,
-                orbit: PLANET_ORBITS.Venus,
-                material: materials.venus,
-                tilt: "177.4",
-                moons: [],
-                tourNarration: "Venus is wrapped in thick clouds that trap heat, making it the hottest planet. It also turns in the opposite direction to most planets, and one Venus day lasts longer than its year.",
-                facts: [
-                    "Venus spins backwards — it has a retrograde rotation compared to most planets.",
-                    "It’s the hottest planet, with surface temperatures around 465°C (869°F).",
-                    "Venus is sometimes called Earth’s twin because of its similar size and mass.",
-                    "The thick atmosphere is mostly carbon dioxide with clouds of sulfuric acid.",
-                    "A day on Venus is longer than its year — it rotates once every 243 Earth days.",
-                ],
-            },
-            {
-                name: "Earth",
-                radius: 0.45,
-                distance: 25.64,
-                speed: 0.005,
-                orbit: PLANET_ORBITS.Earth,
-                material: materials.earth,
-                tilt: "23.44",
-                moons: [{ name: "Moon", radius: 0.12, distance: 3, speed: 0.015, ecliptic: true }],
-                tourNarration: EARTH_DAY_NIGHT_LINE,
-                facts: [
-                    EARTH_DAY_NIGHT_LINE,
-                    "Earth is the only known planet to support life.",
-                    "About 71% of Earth's surface is covered by water.",
-                    "Earth’s atmosphere protects life by blocking harmful solar radiation.",
-                    "Its single moon influences tides and stabilizes Earth’s axial tilt.",
-                    "The planet’s magnetic field is generated by its molten iron core.",
-                ],
-            },
-            {
-                name: "Mars",
-                radius: 0.23,
-                distance: 39.0,
-                speed: 0.003,
-                orbit: PLANET_ORBITS.Mars,
-                material: materials.mars,
-                tilt: "25.19",
-                moons: [
-                    { name: "Phobos", radius: 0.05, distance: 2, speed: 0.02 },
-                    { name: "Deimos", radius: 0.07, distance: 3, speed: 0.015 },
-                ],
-                tourNarration: "Mars is a cold desert world coloured red by rusty iron minerals. It preserves signs of ancient rivers and is home to Olympus Mons, the tallest volcano in the Solar System.",
-                facts: [
-                    "Mars is home to the tallest volcano in the solar system — Olympus Mons.",
-                    "It has a thin atmosphere composed mostly of carbon dioxide.",
-                    "Mars has two small moons: Phobos and Deimos.",
-                    "Scientists believe liquid water once flowed on Mars’ surface.",
-                    "Its red color comes from iron oxide (rust) in the soil.",
-                ],
-            },
-            {
-                name: "Jupiter",
-                radius: 3.75,
-                distance: 133.33,
-                speed: 0.0015,
-                orbit: PLANET_ORBITS.Jupiter,
-                material: materials.jupiter,
-                tilt: "3.13",
-                moons: [
-                    { name: "Io", radius: 0.3, distance: 6.5, speed: 0.02, color: 0xffe4b5 },
-                    { name: "Europa", radius: 0.25, distance: 8.3, speed: 0.018, color: 0xffffff },
-                    { name: "Ganymede", radius: 0.4, distance: 10.5, speed: 0.016, color: 0x999999 },
-                    { name: "Callisto", radius: 0.35, distance: 13, speed: 0.014, color: 0x888888 },
-                    { name: "Amalthea", radius: 0.15, distance: 5.1, speed: 0.022, color: 0xffbb66 },
-                ],
-                tourNarration: "Jupiter is the giant of the Solar System, with enough room for more than a thousand Earths. Its swirling clouds contain enormous storms, including the centuries-old Great Red Spot.",
-                facts: [
-                    "Jupiter is the largest planet in the solar system — over 1,300 Earths could fit inside it.",
-                    "It has a giant storm called the Great Red Spot that has raged for centuries.",
-                    "Jupiter has at least 95 moons — the four largest are Io, Europa, Ganymede, and Callisto.",
-                    "Its strong magnetic field is 20,000 times stronger than Earth’s.",
-                    "Europa, one of its moons, may have a subsurface ocean that could harbor life.",
-                ],
-            },
-            {
-                name: "Saturn",
-                radius: 3.45,
-                distance: 244.62,
-                speed: 0.001,
-                orbit: PLANET_ORBITS.Saturn,
-                material: materials.saturn,
-                tilt: "26.73",
-                hasRings: true,
-                moons: [
-                    { name: "Titan", radius: 0.4, distance: 15, speed: 0.015, color: 0xffd27f },
-                    { name: "Rhea", radius: 0.2, distance: 12, speed: 0.017, color: 0xffffff },
-                    { name: "Enceladus", radius: 0.1, distance: 8, speed: 0.02, color: 0xe0f7fa },
-                    { name: "Mimas", radius: 0.1, distance: 7, speed: 0.021, color: 0xaaaaaa },
-                    { name: "Tethys", radius: 0.12, distance: 9.2, speed: 0.019, color: 0xdddddd },
-                    { name: "Dione", radius: 0.15, distance: 10.5, speed: 0.018, color: 0xcccccc },
-                    { name: "Iapetus", radius: 0.18, distance: 20, speed: 0.013, color: 0xbbbbbb },
-                    { name: "Hyperion", radius: 0.1, distance: 17, speed: 0.017, color: 0x999999, spins: true },
-                    { name: "Phoebe", radius: 0.1, distance: 24, speed: -0.011, color: 0x777777, spins: true, ecliptic: true },
-                ],
-                tourNarration: SATURN_RING_LINE,
-                facts: [
-                    "Saturn is famous for its beautiful ring system, made mostly of ice and rock.",
-                    "It’s the second-largest planet in the solar system.",
-                    "Saturn’s moon Titan has lakes and rivers of liquid methane and ethane.",
-                    "The planet is less dense than water — it would float in a giant bathtub.",
-                    "Its rings stretch out over 280,000 km (175,000 miles) from the planet.",
-                ],
-            },
-            {
-                name: "Uranus",
-                radius: 1.5,
-                distance: 492.31,
-                speed: 0.0008,
-                orbit: PLANET_ORBITS.Uranus,
-                material: materials.uranus,
-                tilt: "97.77",
-                moons: [
-                    { name: "Titania", radius: 0.25, distance: 5, speed: 0.016, color: 0xcfcfcf },
-                    { name: "Oberon", radius: 0.22, distance: 7, speed: 0.014, color: 0xdddddd },
-                    { name: "Umbriel", radius: 0.2, distance: 6, speed: 0.018, color: 0x999999 },
-                    { name: "Ariel", radius: 0.18, distance: 4, speed: 0.02, color: 0xffffff },
-                    { name: "Miranda", radius: 0.12, distance: 3, speed: 0.022, color: 0xeeeeee },
-                ],
-                tourNarration: "Uranus is an ice giant that rolls around the Sun almost on its side. Methane in its atmosphere absorbs red light and gives the planet its pale blue-green colour.",
-                facts: [
-                    "Uranus rotates on its side — its tilt is over 97 degrees.",
-                    "It appears blue due to methane in its atmosphere.",
-                    "Uranus has 13 faint rings and at least 27 known moons.",
-                    "It was the first planet discovered with a telescope (by William Herschel in 1781).",
-                    "Seasons on Uranus last about 21 Earth years each.",
-                ],
-            },
-            {
-                name: "Neptune",
-                radius: 1.5,
-                distance: 770.77,
-                speed: 0.0006,
-                orbit: PLANET_ORBITS.Neptune,
-                material: materials.neptune,
-                tilt: "28.32",
-                moons: [
-                    { name: "Triton", radius: 0.35, distance: 5, speed: -0.018, color: 0xccccff, ecliptic: true },
-                    { name: "Nereid", radius: 0.12, distance: 7, speed: 0.014, color: 0xaaaaff, spins: true, ecliptic: true },
-                ],
-                tourNarration: "Neptune is the distant blue ice giant and the windiest planet we know. Although it receives little sunlight, its atmosphere drives storms with incredibly fast winds.",
-                facts: [
-                    "Neptune is the windiest planet, with storms reaching up to 2,100 km/h (1,300 mph).",
-                    "It has a deep blue color caused by methane absorption and unknown atmospheric particles.",
-                    "Triton, Neptune’s largest moon, orbits backward — a captured Kuiper Belt object.",
-                    "A year on Neptune lasts about 165 Earth years.",
-                    "Voyager 2 is the only spacecraft to have visited Neptune, in 1989.",
-                ],
-            },
-            {
-                name: "Pluto",
-                radius: 0.1,
-                distance: 1000,
-                speed: 0.0004,
-                orbit: PLANET_ORBITS.Pluto,
-                material: surfaceMaterial("Pluto"),
-                tilt: "122.5",
-                moons: [{ name: "Charon", radius: 0.05, distance: 2.5, speed: 0.018, color: 0xffffff }],
-                tourNarration: "Pluto closes our tour at the edge of the planetary neighbourhood. It is a dwarf planet with icy mountains, a heart-shaped plain, and a large companion moon called Charon.",
-                facts: [
-                    "Pluto was reclassified as a dwarf planet in 2006.",
-                    "It orbits the Sun once every 248 Earth years.",
-                    "Pluto's path is a stretched oval, so for 20 years of each trip it is closer to the Sun than Neptune. They never crash: Pluto passes high above Neptune's path.",
-                    "Pluto and its moon Charon are sometimes called a double dwarf planet system.",
-                    "Its surface is made of nitrogen ice, with possible water ice mountains.",
-                    "NASA’s New Horizons spacecraft flew by Pluto in 2015, revealing its heart-shaped region.",
-                ],
-            },
-        ];
+        const planetData = system.planets.map((planet) => ({ ...planet, material: planetMaterial(planet.look, planet.id) }));
 
         // ================================================================
         // Helpers
@@ -628,7 +464,7 @@ export default function ThreeSolarSystem() {
         // ================================================================
         // Asteroid Belt
         // ================================================================
-        const beltSettings = { ...defaults.belt };
+        const beltSettings = { ...defaults.belt, ...(extras.asteroidBelt ? {} : NO_BELT) };
 
         let asteroidBelt = null; // { mesh, angles, radii, speeds, inc, eccPhase, dummy }
 
@@ -723,7 +559,7 @@ export default function ThreeSolarSystem() {
         // ================================================================
         // Scene Objects
         // ================================================================
-        const sun = createMesh(sphereGeometry, materials.sun, 5);
+        const sun = createMesh(sphereGeometry, materials.sun, star.radius);
         scene.add(sun);
 
         const planetSystems = planetData.map((planet) => {
@@ -747,10 +583,10 @@ export default function ThreeSolarSystem() {
             const planet = planetData[planetIndex];
             return [
                 {
-                    id: planet.name,
+                    id: planet.id,
                     name: planet.name,
                     kind: "planet",
-                    kindLabel: planet.name === "Pluto" ? "Dwarf planet" : "Planet",
+                    kindLabel: planet.kindLabel,
                     parentName: null,
                     object3d: system,
                     radius: planet.radius,
@@ -759,7 +595,7 @@ export default function ThreeSolarSystem() {
                     moon: null,
                 },
                 ...system.userData.moons.map(({ mesh, data }) => ({
-                    id: `${planet.name}/${data.name}`,
+                    id: `${planet.id}/${data.name}`,
                     name: data.name,
                     kind: "moon",
                     kindLabel: `Moon · ${planet.name}`,
@@ -772,14 +608,20 @@ export default function ThreeSolarSystem() {
                 })),
             ];
         });
-        const comet = modules.add("halleyComet", createHalleyComet({
+        const comet = extras.comet ? modules.add("halleyComet", createHalleyComet({
             scene, getCamera: () => camera, getOrbitTime: () => worldTime.orbitTime,
             getQuality: currentQuality,
             isHidden: () => lineUp.isActive() || paleBlueDot.hidesScenery() || constellationSky.isActive(),
-        }));
-        searchEntries.push({ id: COMET_ID, name: COMET_NAME, kind: "comet", kindLabel: "Comet · illustrative orbit",
+        })) : NO_COMET;
+        if (extras.comet) searchEntries.push({ id: COMET_ID, name: COMET_NAME, kind: "comet", kindLabel: "Comet · illustrative orbit",
             parentName: null, object3d: comet.object3d, radius: 1.2, planetSystem: null });
+        // A star with a card can be visited and toured like a planet.
+        if (star.card) searchEntries.push({ id: star.id, name: star.name, kind: "star", kindLabel: "Star", parentName: null,
+            object3d: sun, radius: star.radius, planetSystem: null, star });
         const searchEntriesById = new Map(searchEntries.map((entry) => [entry.id, entry]));
+        // A home extra's body (Earth for the meteor, Saturn for its ring detail…).
+        const extraEntry = (key) => searchEntriesById.get(extras[key].body);
+        const tourStops = system.tour.stops.map((id) => searchEntriesById.get(id)).filter(Boolean);
 
         const orbitPaths = planetData.map((planet) => {
             let color = 0x888888;
@@ -890,7 +732,7 @@ export default function ThreeSolarSystem() {
         // ================================================================
         const ambientLight = new THREE.AmbientLight(0xffffff, defaults.lighting.ambient);
         scene.add(ambientLight);
-        const sunLight = new THREE.PointLight(0xffffff, defaults.lighting.sun, 0, 2);
+        const sunLight = new THREE.PointLight(star.light.color, star.light.intensity, 0, 2);
         sunLight.position.set(0, 0, 0);
         sunLight.castShadow = true;
         sunLight.shadow.mapSize.set(2048, 2048);
@@ -902,12 +744,12 @@ export default function ThreeSolarSystem() {
         // Camera & Renderer
         // ================================================================
         const camera = new THREE.PerspectiveCamera(50, getAspect(), 0.1, 5000);
-        camera.position.fromArray(defaults.camera.position);
+        camera.position.fromArray(system.scene.camera.position);
         scene.add(camera);
 
         const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current, antialias: true });
         const maxAniso = renderer.capabilities.getMaxAnisotropy?.() ?? 0;
-        if (maxAniso > 0 && textures.sun) textures.sun.anisotropy = maxAniso;
+        if (maxAniso > 0 && starTexture) starTexture.anisotropy = maxAniso;
         renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
         renderer.setPixelRatio(MAX_PIXEL_RATIO);
         renderer.shadowMap.enabled = true;
@@ -1104,7 +946,7 @@ export default function ThreeSolarSystem() {
 
         function speakPlanet(planet, intro = "") {
             if (tourMuted) return;
-            speak(`${intro}${planet.name}. ${planet.tourNarration}`);
+            speak(`${intro}${planet.spokenName ?? planet.name}. ${planet.tourNarration}`);
         }
 
         function stopTour(hideCard = false) {
@@ -1124,8 +966,8 @@ export default function ThreeSolarSystem() {
             stopFollowing();
             stopTour(true);
             followBlendT = 0;
-            desiredCameraPosition.set(0, 72, 128);
-            desiredControlsTarget.set(0, 0, 0);
+            desiredCameraPosition.fromArray(system.scene.camera.position);
+            desiredControlsTarget.fromArray(system.scene.camera.target);
             zoomAnimating = true;
         }
 
@@ -1162,9 +1004,9 @@ export default function ThreeSolarSystem() {
             applySpeed(DEFAULT_SPEED);
             Object.assign(glowSettings, defaults.glow);
             Object.assign(starSettings, defaults.stars);
-            Object.assign(beltSettings, defaults.belt);
+            Object.assign(beltSettings, defaults.belt, extras.asteroidBelt ? {} : NO_BELT);
             Object.assign(backgroundSettings, defaults.background);
-            sunLight.intensity = defaults.lighting.sun;
+            sunLight.intensity = star.light.intensity;
             ambientLight.intensity = defaults.lighting.ambient;
             applyMyView();
             if (stars.geometry.attributes.position.count !== initialStarPositions.length / 3) createStars();
@@ -1180,14 +1022,14 @@ export default function ThreeSolarSystem() {
             asteroidBelt.settings = { ...beltSettings };
             worldTime = createWorldTime();
             applyWorldPoses();
-            camera.position.fromArray(defaults.camera.position);
+            camera.position.fromArray(system.scene.camera.position);
             camera.up.set(0, 1, 0);
             camera.fov = defaults.camera.fov;
             camera.near = defaults.camera.near;
             camera.far = defaults.camera.far;
             camera.zoom = 1;
             camera.updateProjectionMatrix();
-            controls.target.fromArray(defaults.camera.target);
+            controls.target.fromArray(system.scene.camera.target);
             clearControlDamping();
             controls.enabled = true;
             controls.enableDamping = true;
@@ -1195,7 +1037,7 @@ export default function ThreeSolarSystem() {
             desiredCameraPosition.copy(camera.position);
             desiredControlsTarget.copy(controls.target);
             previousFollowPosition.copy(controls.target);
-            parkShipAtEarth();
+            parkShipAtStart();
             tourMuted = false;
             setTourState({ active: false, index: 0, total: 0, muted: false });
             pane.hidden = false;
@@ -1219,14 +1061,14 @@ export default function ThreeSolarSystem() {
         }
 
         function launchExperiment() {
-            if (disposed || resetting || experiment?.isActive()) return false;
+            if (disposed || resetting || experiment?.isActive() || !extras.meteor) return false;
             warpIn?.skip();
             // The meteor needs Earth at its exact size.
             bounces.settle();
             try {
                 if (!experiment) experiment = createMeteorExperiment({
-                    scene, camera, earthBody: planetSystems.find((system) => system.userData.planet.name === "Earth").userData.body,
-                    earthTexture: textures.earth,
+                    scene, camera, earthBody: extraEntry("meteor").planetSystem.userData.body,
+                    earthTexture: planetData.find((planet) => planet.id === extras.meteor.body).material.map,
                     quality: currentQuality(),
                     onPhaseChange: (phase) => { if (!disposed) setMeteorPhase(phase); },
                 });
@@ -1259,51 +1101,8 @@ export default function ThreeSolarSystem() {
             }
         }
 
-        function createPlanetInfo(planet, planetIndex) {
-            const order = planetIndex + 1;
-            const ordinalSuffix = order % 10 === 1 && order !== 11
-                ? "st"
-                : order % 10 === 2 && order !== 12
-                    ? "nd"
-                    : order % 10 === 3 && order !== 13
-                        ? "rd"
-                        : "th";
-            return {
-                kind: "planet",
-                name: planet.name,
-                classification: planet.name === "Pluto"
-                    ? "Dwarf planet"
-                    : `${order}${ordinalSuffix} planet from the Sun`,
-                moonSummary: planet.moons.length === 0
-                    ? "No featured moons"
-                    : `${planet.moons.length} featured moon${planet.moons.length === 1 ? "" : "s"}`,
-                narration: planet.tourNarration,
-                facts: planet.facts,
-                factsHeading: "Did you know?",
-                summary: null,
-                parentName: null,
-                parentId: null,
-            };
-        }
-
-        function createMoonInfo(entry) {
-            const planet = planetData[entry.planetIndex];
-            // Every moon in planetData has an entry; the fallbacks only guard a
-            // future moon added without one.
-            const details = moonFacts[entry.id];
-            return {
-                kind: "moon",
-                name: entry.moon.name,
-                classification: details?.label ?? "Moon",
-                moonSummary: details?.diameter ?? `${planet.name} system`,
-                narration: details?.summary ?? planet.tourNarration,
-                summary: details?.summary ?? null,
-                facts: details?.facts ?? planet.facts,
-                factsHeading: "Did you know?",
-                parentName: planet.name,
-                parentId: planet.name,
-            };
-        }
+        const createPlanetInfo = (planet, planetIndex) => buildPlanetInfo(system, planet, planetIndex);
+        const createMoonInfo = (entry) => buildMoonInfo(system, planetData[entry.planetIndex], entry.moon);
 
         function createFocusInfo(entry) {
             if (entry.kind === "comet") return {
@@ -1312,6 +1111,7 @@ export default function ThreeSolarSystem() {
                 facts: ["The blue ion tail points away from the Sun.", "The wider dust tail curves as sunlight pushes dust away.", "Halley's real trip around the Sun takes about 76 years."],
                 factsHeading: "Two tails to spot", summary: COMET_LINE,
             };
+            if (entry.kind === "star") return buildStarInfo(system, entry.star);
             return entry.kind === "moon"
                 ? createMoonInfo(entry)
                 : createPlanetInfo(planetData[entry.planetIndex], entry.planetIndex);
@@ -1392,19 +1192,19 @@ export default function ThreeSolarSystem() {
             setFocusedId(entry.id);
         }
 
-        function flyToPlanet(system, fromTour = false) {
-            if (!system) return;
-            focusEntry(searchEntriesById.get(system.userData.planet.name), fromTour);
+        function flyToPlanet(planetSystem, fromTour = false) {
+            if (!planetSystem) return;
+            focusEntry(searchEntriesById.get(planetSystem.userData.planet.id), fromTour);
         }
 
-        // The tour starts with a lift-off from Earth (#35), unless motion is reduced.
+        // At home the tour starts with a lift-off from Earth (#35), unless motion is reduced.
         function startTour() {
             if (experiment?.isActive() || resetting) return;
-            if (tourActive || reducedQuery.matches) {
+            if (tourActive || reducedQuery.matches || !extras.liftOff) {
                 visitTourPlanet(0);
                 return;
             }
-            const earth = searchEntriesById.get("Earth");
+            const earth = extraEntry("liftOff");
             if (!ship.isBeside(earth.object3d)) {
                 ship.park(earth.object3d, { radius: earth.radius, framingDistance: framingDistanceFor(earth) });
             }
@@ -1416,31 +1216,46 @@ export default function ThreeSolarSystem() {
         function visitTourPlanet(nextIndex, intro = "") {
             if (experiment?.isActive() || resetting) return;
             if (!tourActive) pane.expanded = false;
-            const clampedIndex = THREE.MathUtils.clamp(nextIndex, 0, planetSystems.length - 1);
+            const clampedIndex = THREE.MathUtils.clamp(nextIndex, 0, tourStops.length - 1);
             tourActive = true;
             tourIndex = clampedIndex;
             setTourState({
                 active: true,
                 index: clampedIndex,
-                total: planetSystems.length,
+                total: tourStops.length,
                 muted: tourMuted,
+                finish: system.tour.finish,
+                finishLabel: system.tour.finishLabel,
             });
-            flyToPlanet(planetSystems[clampedIndex], true);
-            speakPlanet(planetData[clampedIndex], intro);
+            focusEntry(tourStops[clampedIndex], true);
+            speakPlanet(tourStopData(clampedIndex), intro);
+        }
+
+        // The definition's tour stops are bodies; narration lives on their data.
+        function tourStopData(index) {
+            const stop = tourStops[index];
+            return stop.kind === "star" ? { name: stop.star.name, spokenName: stop.star.spokenName, tourNarration: stop.star.card.tourNarration } : planetData[stop.planetIndex];
+        }
+
+        // After the last stop: Pale Blue Dot at home, otherwise the tour ends.
+        function finishTour() {
+            if (system.tour.finish === "pale-blue-dot" && extras.paleBlueDot) startPaleBlueDot();
+            else stopTour(true);
         }
 
         function toggleTourNarration() {
             tourMuted = !tourMuted;
             setTourState((current) => ({ ...current, muted: tourMuted }));
             if (tourMuted) stopNarration();
-            else if (tourActive) speakPlanet(planetData[tourIndex]);
+            else if (tourActive) speakPlanet(tourStopData(tourIndex));
         }
 
         const phaseEarth = new THREE.Vector3();
         const phaseMoon = new THREE.Vector3();
         sceneApiRef.current = {
             getMoonPhase: () => {
-                const earth = planetSystems.find((system) => system.userData.planet.name === "Earth");
+                if (!extras.moonPhases) return null;
+                const earth = extraEntry("moonPhases").planetSystem;
                 earth.getWorldPosition(phaseEarth);
                 earth.userData.moons[0].mesh.getWorldPosition(phaseMoon);
                 return moonPhase(phaseEarth, phaseMoon);
@@ -1468,6 +1283,32 @@ export default function ThreeSolarSystem() {
                 freeFlight.exit(); ship.setHidden(false); pane.hidden = false;
                 desiredCameraPosition.copy(camera.position); desiredControlsTarget.copy(controls.target);
             },
+            // Home (away from home) and Jump there: the trip by autopilot, from the overview or from flight.
+            travelTo: (id) => {
+                const to = tripDestination(system.id, id);
+                if (!to || freeFlight.isTravelling()) return false;
+                if (freeFlight.isActive()) return freeFlight.startAutopilotTrip(to);
+                setSelectedPlanet(null); setTapMessage(null);
+                sceneApiRef.current.startFreeFlight();
+                tripModeRef.current = "autopilot"; setTripMode("autopilot");
+                return freeFlight.startAutopilotTrip(to);
+            },
+            goHome: () => sceneApiRef.current.travelTo(HOME_SYSTEM_ID),
+            openMap: () => {
+                if (galaxyMap.isActive() || experiment?.isActive() || beyond.isActive()) return false;
+                warpIn?.skip(); stopFollowing(); stopTour(true); zoomAnimating = false;
+                clearControlDamping(); controls.enabled = false; pane.hidden = true;
+                galaxyMap.resize({ width: containerRef.current.clientWidth, height: containerRef.current.clientHeight });
+                galaxyMap.open();
+                return true;
+            },
+            closeMap: () => {
+                if (!galaxyMap.isActive()) return;
+                galaxyMap.close(); controls.enabled = true; pane.hidden = false;
+            },
+            setMapLevel: (level) => galaxyMap.setLevel(level),
+            focusMap: (id) => galaxyMap.focus(id),
+            mapMarkers: () => galaxyMap.projectMarkers(),
             enterOrbit: (id) => {
                 const entry = searchEntriesById.get(id);
                 if (!followActive || followTarget !== entry?.object3d || ship.isFlying()) return false;
@@ -1484,11 +1325,11 @@ export default function ThreeSolarSystem() {
             start: () => startTour(),
             previous: () => visitTourPlanet(tourIndex - 1),
             next: () => {
-                if (tourIndex >= planetSystems.length - 1) startPaleBlueDot();
+                if (tourIndex >= tourStops.length - 1) finishTour();
                 else visitTourPlanet(tourIndex + 1);
             },
             endPaleBlueDot: () => endPaleBlueDot(),
-            replay: () => speakPlanet(planetData[tourIndex]),
+            replay: () => speakPlanet(tourStopData(tourIndex)),
             toggleNarration: toggleTourNarration,
             exit: (hideCard = false) => stopTour(hideCard),
             collapsePane: () => { pane.expanded = false; },
@@ -1521,7 +1362,7 @@ export default function ThreeSolarSystem() {
         setSceneReady(true);
 
         function onClick(event) {
-            if (experiment?.isActive() || lineUp.isActive() || paleBlueDot.isActive() || constellationSky.isActive() || freeFlight.isActive() || beyond.isActive()) return;
+            if (experiment?.isActive() || lineUp.isActive() || paleBlueDot.isActive() || constellationSky.isActive() || freeFlight.isActive() || beyond.isActive() || galaxyMap.isActive()) return;
             if (liftOff.isCounting()) {
                 liftOff.skip();
                 return;
@@ -1538,12 +1379,13 @@ export default function ThreeSolarSystem() {
             const regionHits = clickRaycaster.intersectObjects(regionLabels.hitTargets.filter((target) => target.visible), false);
             if (regionLabels.select(regionHits[0]?.object)) return;
             const visibleLabels = labelSprites.filter((label) => label.visible);
-            const intersects = clickRaycaster.intersectObjects([...visibleLabels, ...planetBodies, sun, ship.hitTarget, iss.hitTarget, ...(comet.object3d.visible ? [comet.hitTarget] : [])], false);
+            const intersects = clickRaycaster.intersectObjects([...visibleLabels, ...planetBodies, sun, ship.hitTarget, ...(iss.hitTarget ? [iss.hitTarget] : []), ...(comet.object3d.visible ? [comet.hitTarget] : [])], false);
             if (intersects[0]?.object === sun) {
-                tapSun();
+                if (extras.sunTaps) tapSun();
+                else if (star.card) focusEntry(searchEntriesById.get(star.id));
             } else if (intersects[0]?.object === comet.hitTarget && comet.object3d.visible) {
                 focusEntry(searchEntriesById.get(COMET_ID));
-            } else if (intersects[0]?.object === ship.hitTarget || intersects[0]?.object === iss.hitTarget) {
+            } else if (intersects[0]?.object === ship.hitTarget || (iss.hitTarget && intersects[0]?.object === iss.hitTarget)) {
                 const [icon, text] = intersects[0].object === iss.hitTarget ? ["🛰️", ISS_LINE] : ["🚀", SHIP_LINE];
                 setTapMessage({ icon, text, id: performance.now() });
                 if (!isMuted()) speak(text);
@@ -1559,8 +1401,8 @@ export default function ThreeSolarSystem() {
 
         function onWheel(event) {
             if (freeFlight.isActive() || beyond.isActive()) { event.preventDefault(); return; }
-            // The line-up has its own controls, which need this event.
-            if (lineUp.isActive()) return;
+            // The line-up and the galaxy map have their own controls, which need this event.
+            if (lineUp.isActive() || galaxyMap.isActive()) return;
             // The sky view does not zoom, but a pinch must not zoom the page either.
             if (constellationSky.isActive()) {
                 event.preventDefault();
@@ -1620,7 +1462,7 @@ export default function ThreeSolarSystem() {
         function onKeyDown(e) {
             if (e.key !== "Escape") return;
             // The steering game is open on top and closes itself on Escape.
-            if (constellationSky.isActive() || freeFlight.isActive() || beyond.isActive()) return;
+            if (constellationSky.isActive() || freeFlight.isActive() || beyond.isActive() || galaxyMap.isActive()) return;
             if (ship.isOrbiting()) { leavePlanetOrbit(); return; }
             if (lineUp.isActive()) {
                 closeLineUp();
@@ -1697,40 +1539,44 @@ export default function ThreeSolarSystem() {
 
         // Tap feedback (#24, #25, #26).
         const bounces = modules.add("bounces", createBounces());
-        const sunSneeze = modules.add("sunSneeze", createSunSneeze({ scene, sun, camera, quality: currentQuality() }));
+        const sunSneeze = extras.sunTaps ? modules.add("sunSneeze", createSunSneeze({ scene, sun, camera, quality: currentQuality() })) : null;
         const sunTaps = createSunTapCounter();
 
-        modules.add("earthDayNight", createEarthDayNight({
-            material: materials.earth,
-            nightTexture: textureLoader.load("/static/2k_earth_nightmap.jpg"),
-        }));
+        if (extras.earthEffects) {
+            modules.add("earthDayNight", createEarthDayNight({
+                material: planetData.find((planet) => planet.id === extras.earthEffects.body).material,
+                nightTexture: textureLoader.load("/static/2k_earth_nightmap.jpg"),
+            }));
 
-        // Earth's clouds (#11) and the glow round Earth, Venus and Mars (#12).
-        modules.add("atmospheres", createPlanetAtmospheres({
-            bodies: Object.fromEntries(planetSystems.map((system) => [system.userData.planet.name, system.userData.body])),
-            cloudTexture: textureLoader.load("/static/2k_earth_clouds.jpg"),
-            getSpinTime: () => worldTime.spinTime,
-        }));
-        modules.add("earthAurora", createEarthAurora({
-            earthBody: planetSystems.find((system) => system.userData.planet.name === "Earth").userData.body,
-            getTime: () => worldTime.elapsed,
-            reducedMotion: () => reducedQuery.matches,
-            getQuality: currentQuality,
-        }));
-        const saturnSystem = planetSystems.find((system) => system.userData.planet.name === "Saturn");
-        modules.add("saturnRingDetail", createSaturnRingDetail({
-            axialGroup: saturnSystem.userData.axialGroup,
-            ringGroup: saturnSystem.userData.axialGroup.children.find((child) => child.userData.isRing),
-            radius: saturnSystem.userData.planet.radius,
-            getCamera: () => camera, getOrbitTime: () => worldTime.orbitTime,
-            getQuality: currentQuality, reducedMotion: () => reducedQuery.matches,
-        }));
+            // Earth's clouds (#11) and the glow round Earth, Venus and Mars (#12).
+            modules.add("atmospheres", createPlanetAtmospheres({
+                bodies: Object.fromEntries(planetSystems.map((planetSystem) => [planetSystem.userData.planet.name, planetSystem.userData.body])),
+                cloudTexture: textureLoader.load("/static/2k_earth_clouds.jpg"),
+                getSpinTime: () => worldTime.spinTime,
+            }));
+            modules.add("earthAurora", createEarthAurora({
+                earthBody: extraEntry("earthEffects").planetSystem.userData.body,
+                getTime: () => worldTime.elapsed,
+                reducedMotion: () => reducedQuery.matches,
+                getQuality: currentQuality,
+            }));
+        }
+        if (extras.saturnRingDetail) {
+            const saturnSystem = extraEntry("saturnRingDetail").planetSystem;
+            modules.add("saturnRingDetail", createSaturnRingDetail({
+                axialGroup: saturnSystem.userData.axialGroup,
+                ringGroup: saturnSystem.userData.axialGroup.children.find((child) => child.userData.isRing),
+                radius: saturnSystem.userData.planet.radius,
+                getCamera: () => camera, getOrbitTime: () => worldTime.orbitTime,
+                getQuality: currentQuality, reducedMotion: () => reducedQuery.matches,
+            }));
+        }
         // The International Space Station (#50) zips round Earth; tap it.
-        const iss = modules.add("iss", createIss({
-            earthRoot: searchEntriesById.get("Earth").object3d,
+        const iss = extras.iss ? modules.add("iss", createIss({
+            earthRoot: extraEntry("iss").object3d,
             getOrbitTime: () => worldTime.orbitTime,
             quality: currentQuality(),
-        }));
+        })) : NO_ISS;
 
         function tapSun() {
             const result = sunTaps.tap(performance.now());
@@ -1749,23 +1595,29 @@ export default function ThreeSolarSystem() {
             isHidden: () => constellationSky.isActive(),
         }));
 
-        // The autopilot ship (#34) starts beside Earth.
+        // The autopilot ship (#34) starts beside the start body (Earth at home).
         const ship = modules.add("ship", createAutopilotShip({
             scene, camera, controls, quality: currentQuality(), reducedMotion: () => reducedQuery.matches,
             getCameraView: () => cameraViewRef.current,
             onOrbitChange: setAutopilotOrbit,
-            obstacles: [...searchEntries, { kind: "star", radius: 5, object3d: sun }],
+            obstacles: [...searchEntries.filter((entry) => entry.id !== star.id), { kind: "star", radius: star.radius, object3d: sun }],
         }));
-        const parkShipAtEarth = () => {
-            const earth = searchEntriesById.get("Earth");
-            ship.park(earth.object3d, { radius: earth.radius, framingDistance: framingDistanceFor(earth) });
+        // The ship waits beside the system's start body (Earth at home).
+        const parkShipAtStart = () => {
+            const start = searchEntriesById.get(system.flight.startBodyId);
+            ship.park(start.object3d, { radius: start.radius, framingDistance: framingDistanceFor(start) });
         };
-        parkShipAtEarth();
+        parkShipAtStart();
 
         // The warp-in's streaks rush past on every flight too, strongest at top speed.
         const flightStreaks = createWarpStreaks({ camera, quality: currentQuality() });
         modules.add("flightStreaks", {
             update(dt, { active }) {
+                // A trip between systems drives the streaks and the hand-over fade.
+                const trip = freeFlight.isActive() ? freeFlight.tripEffects() : null;
+                const fade = trip?.fade ?? 0;
+                if (tripFadeRef.current && tripFadeRef.current.style.opacity !== String(fade)) tripFadeRef.current.style.opacity = String(fade);
+                if (trip) { flightStreaks.update(dt, { speed: trip.streakSpeed, brightness: trip.streakBrightness }); return; }
                 const thrust = active || reducedQuery.matches ? 0 : freeFlight.isActive() ? freeFlight.boostStrength() : ship.thrust();
                 flightStreaks.update(dt, { speed: thrust, brightness: thrust });
             },
@@ -1773,7 +1625,7 @@ export default function ThreeSolarSystem() {
         });
 
         // Lift-off (#35): a countdown at Earth, then the ship leaves for the tour's first stop.
-        const liftOff = modules.add("liftOff", createLiftOff({
+        const liftOff = !extras.liftOff ? NO_LIFT_OFF : modules.add("liftOff", createLiftOff({
             scene,
             ship,
             quality: currentQuality(),
@@ -1787,7 +1639,7 @@ export default function ThreeSolarSystem() {
         }));
 
         // Line-up by size (#62): its own small scene, drawn instead of this one while open.
-        const lineUp = modules.add("lineUp", createLineUp({
+        const lineUp = !extras.lineUp ? NO_LINE_UP : modules.add("lineUp", createLineUp({
             renderer,
             getSky: () => scene,
             names: planetData.map(({ name }) => name),
@@ -1799,7 +1651,7 @@ export default function ThreeSolarSystem() {
         }));
 
         function openLineUp(name) {
-            if (experiment?.isActive() || resetting || lineUp.isActive()) return;
+            if (experiment?.isActive() || resetting || lineUp.isActive() || !extras.lineUp) return;
             warpIn?.skip();
             clearControlDamping();
             controls.enabled = false;
@@ -1869,17 +1721,17 @@ export default function ThreeSolarSystem() {
 
         // The Pale Blue Dot (#47): after the last stop, the ship flies out past
         // Neptune and the camera looks back at home, as Voyager 1 did.
-        const paleBlueDot = modules.add("paleBlueDot", createPaleBlueDot({
+        const paleBlueDot = !extras.paleBlueDot ? NO_PALE_BLUE_DOT : modules.add("paleBlueDot", createPaleBlueDot({
             scene,
             camera,
             controls,
-            getEarthPosition: (out) => searchEntriesById.get("Earth").object3d.getWorldPosition(out),
+            getEarthPosition: (out) => extraEntry("paleBlueDot").object3d.getWorldPosition(out),
             defaultFov: defaults.camera.fov,
             reducedMotion: () => reducedQuery.matches,
         }));
 
         function startPaleBlueDot() {
-            if (experiment?.isActive() || resetting) return;
+            if (experiment?.isActive() || resetting || !extras.paleBlueDot) return;
             stopTour(true);
             stopFollowing();
             clearControlDamping();
@@ -1914,15 +1766,15 @@ export default function ThreeSolarSystem() {
             stopNarration();
             setPaleBlueDotPhase(null);
             if (home) {
-                parkShipAtEarth();
+                parkShipAtStart();
                 resetView();
             }
         }
 
         // Warp-in arrival (#1), once per visit. Anything the child does skips it.
-        const warpIn = shouldPlayWarp({ reducedMotion: reducedQuery.matches }) ? modules.add("warpIn", createWarpIn({
+        const warpIn = extras.warpIn && shouldPlayWarp({ reducedMotion: reducedQuery.matches }) ? modules.add("warpIn", createWarpIn({
             camera,
-            endPosition: new THREE.Vector3().fromArray(defaults.camera.position),
+            endPosition: new THREE.Vector3().fromArray(system.scene.camera.position),
             target: controls.target.clone(),
             quality: currentQuality(),
             onDone: () => markWarpSeen(),
@@ -1940,29 +1792,60 @@ export default function ThreeSolarSystem() {
                 : null),
         }));
 
+        // The galaxy map (#108): its own scene, drawn instead of this one while open.
+        const galaxyMap = modules.add("galaxyMap", createGalaxyMap({
+            renderer, quality: currentQuality(), reducedMotion: () => reducedQuery.matches,
+            catalogue: MAP_CATALOGUE, currentSystemId: system.id,
+        }));
+
+        // Signposts past the edge to every other system, seen in flight (#108/#109).
+        const signList = signpostsFor(system.id, SYSTEM_REGISTRY, system.flight.edgeRadius);
+        const signposts = modules.add("signposts", createSystemSignposts({
+            scene, camera, edgeRadius: system.flight.edgeRadius, quality: currentQuality(),
+            signposts: signList,
+            makeLabel: (text) => createLabel(text, 64, "#fff4d6"),
+            homeStarDot: !system.home,
+            isVisible: () => freeFlight.isActive(),
+        }));
         const freeFlight = modules.add("freeFlight", createSolarFreeFlight({
             scene, camera, controls, quality: currentQuality(), reducedMotion: () => reducedQuery.matches,
             getCameraView: () => cameraViewRef.current,
-            bodies: [...searchEntries,
-                { id: "Sun", name: "Sun", radius: 5, object3d: sun, kind: "star" },
-                { id: "ISS", name: "International Space Station", parentName: "Earth", radius: .12, object3d: iss.object3d, kind: "satellite" },
-                { id: "asteroid-belt", name: "Asteroid belt", radius: 0, kind: "belt",
+            edgeRadius: system.flight.edgeRadius, startBodyId: system.flight.startBodyId,
+            bodies: [...searchEntries.filter((entry) => entry.id !== star.id),
+                { id: star.id, name: star.name, radius: star.radius, object3d: sun, kind: "star" },
+                // A sign's reach starts just inside the edge, so finding one never starts a trip.
+                ...signList.map((sign, i) => ({ id: sign.id, name: sign.label, radius: SIGN_OFFSET + 10, object3d: signposts.signs[i], kind: "sign" })),
+                ...(extras.iss ? [{ id: "ISS", name: "International Space Station", parentName: extras.iss.body, radius: .12, object3d: iss.object3d, kind: "satellite" }] : []),
+                ...(extras.asteroidBelt ? [{ id: "asteroid-belt", name: "Asteroid belt", radius: 0, kind: "belt",
                     getRegion: () => ({ innerRadius: asteroidBelt.settings.innerRadius, outerRadius: asteroidBelt.settings.outerRadius,
-                        halfHeight: asteroidBelt.settings.outerRadius * Math.sin(asteroidBelt.settings.maxInclinationDeg * Math.PI / 180) + .5 }) },
+                        halfHeight: asteroidBelt.settings.outerRadius * Math.sin(asteroidBelt.settings.maxInclinationDeg * Math.PI / 180) + .5 }) }] : []),
             ],
             onChange: setFreeFlightView,
+            tripTo: tripDestination(system.id),
+            systemPhrase: system.phrase, systemSpokenName: system.spokenName ?? system.phrase,
+            onTripStart: (to) => onPrepareRef.current(to.id),
+            onHandoff: (request) => onTravelRef.current(request),
+            onTripDone: ({ mode, turnedBack = false }) => {
+                // An autopilot trip outside the flight HUD ends at the overview.
+                if (mode === "autopilot" && tripModeRef.current) {
+                    tripModeRef.current = null; setTripMode(null);
+                    sceneApiRef.current?.stopFreeFlight(); resetView();
+                }
+                if (!turnedBack) onArrivedRef.current();
+            },
         }));
 
-        const smallBodyRegions = modules.add("smallBodyRegions", createSmallBodyRegions({
+        // The asteroid belt's neighbours: Trojans, Hildas and the Kuiper belt (home extra).
+        const smallBodyRegions = extras.asteroidBelt ? modules.add("smallBodyRegions", createSmallBodyRegions({
             scene,
-            planets: Object.fromEntries(["Mars", "Jupiter", "Neptune", "Pluto"]
+            planets: Object.fromEntries(extras.asteroidBelt.regionPlanets
                 .map((name) => [name.toLowerCase(), planetData.find((planet) => planet.name === name)])),
             mainBeltInnerRadius: defaults.belt.innerRadius,
             getOrbitTime: () => worldTime.orbitTime,
             getQuality: currentQuality,
             isVisible: () => asteroidBelt.mesh.visible,
-        }));
-        const regionLabels = modules.add("regionLabels", createSolarRegionLabels({
+        })) : null;
+        const regionLabels = !smallBodyRegions ? NO_REGION_LABELS : modules.add("regionLabels", createSolarRegionLabels({
             scene, anchors: smallBodyRegions.anchors, camera,
             makeLabel: (name) => createLabel(name, 64, "#dceeff"),
             getViewport: () => viewport,
@@ -1972,8 +1855,9 @@ export default function ThreeSolarSystem() {
                 && !freeFlight.isActive() && !lineUp.isActive(),
             onSelect: (entry) => focusEntry(entry),
         }));
-        SOLAR_REGIONS.forEach((entry) => searchEntriesById.set(entry.id, entry));
-        setSearchBodies([...searchEntries, ...SOLAR_REGIONS].map(({ id, name, kind, kindLabel, parentName }) => ({
+        const regions = smallBodyRegions ? SOLAR_REGIONS : [];
+        regions.forEach((entry) => searchEntriesById.set(entry.id, entry));
+        setSearchBodies([...searchEntries, ...regions].map(({ id, name, kind, kindLabel, parentName }) => ({
             id, name, kind, kindLabel, parentName,
         })));
 
@@ -2014,7 +1898,7 @@ export default function ThreeSolarSystem() {
             // The Pale Blue Dot's zoomed view is just the Sun, Earth and the stars.
             const quiet = active || paleBlueDot.hidesScenery() || constellationSky.isActive();
             orbitPaths.forEach((orbit) => (orbit.visible = !quiet && simulation.showOrbits));
-            asteroidBelt.mesh.visible = !quiet && (beltSettings.enabled || freeFlight.isActive());
+            asteroidBelt.mesh.visible = !quiet && (beltSettings.enabled || (freeFlight.isActive() && Boolean(extras.asteroidBelt)));
 
             // Badges keep one on-screen size and sit just above their body.
             const badgePixels = badgePixelHeight(viewport.width);
@@ -2125,6 +2009,7 @@ export default function ThreeSolarSystem() {
                 scene.background = null;
             }
             if (beyond.isActive()) beyond.render();
+            else if (galaxyMap.isActive()) galaxyMap.render();
             else if (lineUp.isActive()) lineUp.render();
             else pipeline.render();
             if (frameReadout && lastFrameStart > 0 && !document.hidden) {
@@ -2134,6 +2019,20 @@ export default function ThreeSolarSystem() {
             animationFrameId = requestAnimationFrame(animate);
         }
         animate();
+
+        // Arriving by trip: the second half of the dash plays here, in flight
+        // (flown) or on autopilot; otherwise the child has already arrived.
+        const landing = arrivalRef.current;
+        if (landing?.fromDirection) {
+            const origin = registryEntry(landing.from);
+            if (landing.mode === "autopilot") { tripModeRef.current = "autopilot"; setTripMode("autopilot"); }
+            else setFreeFlightOpen(true);
+            sceneApiRef.current.startFreeFlight();
+            freeFlight.beginArrival({
+                from: landing.from, fromDirection: landing.fromDirection, mode: landing.mode,
+                fromPhrase: origin?.phrase, fromSpoken: origin?.spokenName, distanceLy: tripDestination(system.id, landing.from)?.distanceLy,
+            });
+        } else onArrivedRef.current();
 
         // ================================================================
         // Resize Handling (ResizeObserver for container)
@@ -2178,7 +2077,7 @@ export default function ThreeSolarSystem() {
             pipeline.dispose();
             const seenGeometries = new Set();
             const seenMaterials = new Set();
-            const seenTextures = new Set(Object.values(textures));
+            const seenTextures = new Set(textures.values());
             seenTextures.add(backgroundTexture);
             scene.traverse((obj) => {
                 if (obj.geometry) seenGeometries.add(obj.geometry);
@@ -2198,7 +2097,7 @@ export default function ThreeSolarSystem() {
                 if (!canvas.isConnected) renderer.forceContextLoss();
             }, 0);
         };
-    }, []);
+    }, [system]);
 
     useEffect(() => {
         if (searchExpanded) searchInputRef.current?.focus();
@@ -2272,12 +2171,20 @@ export default function ThreeSolarSystem() {
         }
     };
 
+    const closeMap = ({ refocus = true } = {}) => {
+        sceneApiRef.current?.closeMap();
+        setMapLevel(null);
+        if (refocus) window.requestAnimationFrame(() => mapButtonRef.current?.focus());
+    };
+
     const meteorActive = meteorPhase !== "ready";
     // Derived, never stored: meteorPhase, tourState and constellationState are
     // the sources of truth, so these four modes cannot drift out of sync.
     let mode = "idle";
     if (meteorActive) mode = "meteor";
     else if (beyondState.phase !== "off") mode = "beyond";
+    else if (tripMode) mode = "trip";
+    else if (mapLevel) mode = "map";
     else if (freeFlightOpen) mode = "freeflight";
     else if (lineUpName) mode = "lineup";
     else if (paleBlueDotPhase) mode = "palebluedot";
@@ -2320,7 +2227,7 @@ export default function ThreeSolarSystem() {
             <canvas
                 ref={canvasRef}
                 className="solar-system__canvas"
-                aria-label="Interactive model of the Solar System"
+                aria-label={`Interactive model of ${system.phrase}`}
                 style={{ display: "block", width: "100%", height: "100%", cursor: meteorActive ? "default" : "grab" }}
             />
             {cameraView === "cockpit" && (freeFlightOpen || autopilotViewVisible) && <SolarCockpit />}
@@ -2341,7 +2248,7 @@ export default function ThreeSolarSystem() {
                     <button
                         type="button"
                         className="solar-search-toggle"
-                        aria-label="Search the Solar System"
+                        aria-label={`Search ${system.phrase}`}
                         aria-expanded={searchExpanded}
                         onClick={() => setSearchExpanded(true)}
                     >
@@ -2362,7 +2269,7 @@ export default function ThreeSolarSystem() {
                             className="solar-search__input"
                             type="search"
                             role="combobox"
-                            aria-label="Search the Solar System"
+                            aria-label={`Search ${system.phrase}`}
                             aria-expanded={resultsVisible}
                             aria-controls="solar-search-results"
                             aria-autocomplete="list"
@@ -2371,7 +2278,7 @@ export default function ThreeSolarSystem() {
                                     ? `solar-search-option-${highlighted}`
                                     : undefined
                             }
-                            placeholder="Search the Solar System"
+                            placeholder={`Search ${system.phrase}`}
                             value={query}
                             onChange={(event) => {
                                 setQuery(event.target.value);
@@ -2424,19 +2331,19 @@ export default function ThreeSolarSystem() {
                     )}
                 </div>
             )}
-            <SolarMissions enabled={mode === "idle" && !shipFlying} body={missionArrival}
+            {system.extras.missions && <SolarMissions enabled={mode === "idle" && !shipFlying} body={missionArrival}
                 onOpen={() => sceneApiRef.current?.collapsePane?.()}
-                onStart={() => { setMissionArrival(null); setSelectedPlanet(null); sceneApiRef.current?.resetView(); }} />
+                onStart={() => { setMissionArrival(null); setSelectedPlanet(null); sceneApiRef.current?.resetView(); }} />}
             {mode === "idle" && !selectedPlanet && !shipFlying && (
                 <div className="solar-launch-buttons">
                     <button
                         type="button"
                         className="solar-tour-launch"
-                        aria-label="Tour the Solar System"
+                        aria-label={`Tour ${system.phrase}`}
                         onClick={() => sceneApiRef.current?.start()}
                     >
                         <span className="solar-tour-launch__icon" aria-hidden="true">▶</span>
-                        <span className="solar-action-label">Tour the Solar System</span>
+                        <span className="solar-action-label">Tour {system.phrase}</span>
                     </button>
                     <button
                         type="button"
@@ -2466,7 +2373,7 @@ export default function ThreeSolarSystem() {
                         <span className="solar-tour-launch__icon" aria-hidden="true">✦</span>
                         <span className="solar-action-label">Constellations</span>
                     </button>
-                    <button
+                    {system.extras.meteor && <button
                         ref={launchButtonRef}
                         type="button"
                         className="solar-tour-launch"
@@ -2476,7 +2383,7 @@ export default function ThreeSolarSystem() {
                     >
                         <span className="solar-tour-launch__icon" aria-hidden="true">☄</span>
                         <span className="solar-action-label">Launch meteor</span>
-                    </button>
+                    </button>}
                     <button
                         ref={beyondButtonRef}
                         type="button"
@@ -2491,6 +2398,30 @@ export default function ThreeSolarSystem() {
                         <span className="solar-tour-launch__icon" aria-hidden="true">🌀</span>
                         <span className="solar-action-label">Beyond</span>
                     </button>
+                    <button
+                        ref={mapButtonRef}
+                        type="button"
+                        className="solar-tour-launch"
+                        aria-label="Galaxy map"
+                        disabled={!sceneReady}
+                        onClick={() => {
+                            sceneApiRef.current?.collapsePane?.();
+                            if (sceneApiRef.current?.openMap()) setMapLevel("galaxies");
+                        }}
+                    >
+                        <span className="solar-tour-launch__icon" aria-hidden="true">🗺</span>
+                        <span className="solar-action-label">Galaxy map</span>
+                    </button>
+                    {!system.home && <button
+                        type="button"
+                        className="solar-tour-launch"
+                        aria-label={`Fly home to ${homePhrase}`}
+                        disabled={!sceneReady}
+                        onClick={() => sceneApiRef.current?.goHome()}
+                    >
+                        <span className="solar-tour-launch__icon" aria-hidden="true">🏠</span>
+                        <span className="solar-action-label">Home</span>
+                    </button>}
                 </div>
             )}
             {mode === "meteor" && (
@@ -2533,7 +2464,10 @@ export default function ThreeSolarSystem() {
                 </aside>
             )}
             {freeFlightOpen && <SolarFlightControls api={sceneApiRef.current?.freeFlight} bodies={sceneApiRef.current?.freeFlight.getTargets() ?? []} view={freeFlightView}
-                cameraView={cameraView} onCameraViewChange={selectCameraView} onBeyond={() => setBeyondPickerOpen(true)}
+                clues={system.flight.clues} badges={system.flight.badges} systemName={system.name} systemPhrase={system.phrase}
+                startName={system.planets.find((planet) => planet.id === system.flight.startBodyId)?.name ?? system.flight.startBodyId}
+                cameraView={cameraView} onCameraViewChange={selectCameraView}
+                onHome={system.home ? undefined : () => sceneApiRef.current?.goHome()} homePhrase={homePhrase}
                 onClose={() => {
                     sceneApiRef.current?.stopFreeFlight(); focusRequestRef.current = "fly"; setFreeFlightOpen(false);
                 }}
@@ -2581,6 +2515,22 @@ export default function ThreeSolarSystem() {
                     {countdown === 0 ? COUNT_WORDS[0] : countdown}
                 </p>
             )}
+            <div ref={tripFadeRef} className="solar-trip-fade" aria-hidden="true" />
+            {mode === "map" && <GalaxyMapPanel
+                catalogue={MAP_CATALOGUE}
+                level={mapLevel}
+                currentSystemId={system.id}
+                getMarkers={() => sceneApiRef.current?.mapMarkers() ?? []}
+                onLevel={(level) => { sceneApiRef.current?.setMapLevel(level); setMapLevel(level); }}
+                onFocus={(id) => sceneApiRef.current?.focusMap(id)}
+                onClose={closeMap}
+                onJump={(id) => { closeMap({ refocus: false }); sceneApiRef.current?.travelTo(id); }}
+                onGoHome={() => { closeMap({ refocus: false }); sceneApiRef.current?.goHome(); }}
+                onVisitEvent={(id) => { closeMap({ refocus: false }); sceneApiRef.current?.goBeyond(id); }}
+            />}
+            {mode === "trip" && freeFlightView?.trip && <div className="solar-flight">
+                <SolarTripHud trip={freeFlightView.trip} onTurnBack={() => sceneApiRef.current?.freeFlight.turnBack()} />
+            </div>}
             {tapMessage && !meteorActive && (
                 <p key={tapMessage.id} className="solar-meteor-status solar-tap-message" role="status">
                     <span aria-hidden="true">{tapMessage.icon} </span>{tapMessage.text}
@@ -2603,6 +2553,7 @@ export default function ThreeSolarSystem() {
             />}
             {mode === "constellations" && !constellationState.join && (
                 <ConstellationCard
+                    viewpointNote={!system.home}
                     onJoinDots={() => setConstellationState(current => ({ ...current, join: true }))}
                     onFindSky={() => sceneApiRef.current?.showConstellationSky(constellations[constellationState.index].id)}
                     constellation={constellations[constellationState.index]}
@@ -2630,6 +2581,7 @@ export default function ThreeSolarSystem() {
                 <SolarSettingsDrawer
                     settings={viewSettings}
                     bloom={debugLighting?.bloom}
+                    hiddenToggles={hiddenToggles}
                     onBloomChange={(value) => sceneApiRef.current?.setBloom(value)}
                     open={settingsOpen}
                     onOpenChange={(next) => {

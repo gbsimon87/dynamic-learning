@@ -104,7 +104,7 @@ const router = createBrowserRouter([
       { path: "flag-finder", lazy: () => import("./pages/skills/geography/FlagFinder").then((m) => ({ Component: m.default })) },
       { path: "city-spotlight", lazy: () => import("./pages/skills/geography/CitySpotlight").then((m) => ({ Component: m.default })) },
       { path: "find-the-city", lazy: () => import("./pages/skills/geography/FindTheCity").then((m) => ({ Component: m.default })) },
-      { path: "solar-system", lazy: () => import("./pages/skills/geography/SolarSystem").then((m) => ({ Component: m.default })) },
+      { path: "solar-system", lazy: () => import("./pages/skills/geography/SolarSystemPage").then((m) => ({ Component: m.default })) },
 
       // === Daily Bix puzzle: ungated; a signed-in child collects one star a day ===
       { path: "daily-puzzle", lazy: () => import("./pages/puzzle/DailyPuzzle").then((m) => ({ Component: m.default })) },

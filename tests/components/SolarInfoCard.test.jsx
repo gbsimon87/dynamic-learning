@@ -4,12 +4,17 @@ import { afterEach, expect, test, vi } from 'vitest';
 import { PLANET_DETAILS } from '../../src/pages/skills/geography/planetDetails.js';
 import SolarInfoCard from '../../src/pages/skills/geography/SolarInfoCard.jsx';
 import { SOLAR_REGIONS } from '../../src/pages/skills/geography/solarRegionInfo.js';
+import { HOME_SYSTEM } from '../../src/pages/skills/geography/systems/home.js';
+import { TEST_SYSTEM } from '../../src/pages/skills/geography/systems/fixtures/testSystem.js';
+import { buildPlanetInfo } from '../../src/pages/skills/geography/systems/bodyInfo.js';
 vi.mock('../../src/utils/speech.js', () => ({ speak: vi.fn(), stopNarrationOf: vi.fn() }));
 vi.mock('../../src/utils/speech', () => ({ speak: vi.fn(), stopNarrationOf: vi.fn() }));
 vi.mock('../../src/components/celebration/sound/player.js', () => ({ isMuted: () => true }));
 vi.mock('../../src/components/celebration/sound/player', () => ({ isMuted: () => true }));
 afterEach(cleanup);
-const earth = { id: 'Earth', name: 'Earth', kind: 'planet', classification: 'Third planet', moonSummary: 'One Moon', summary: 'Our home planet. There is more to discover.', facts: [PLANET_DETAILS.Earth.facts[0]], narration: 'Welcome to Earth.' };
+// Cards read what the scene's info builder makes from a system definition.
+const homeInfo = name => { const i = HOME_SYSTEM.planets.findIndex(p => p.name === name); return buildPlanetInfo(HOME_SYSTEM, HOME_SYSTEM.planets[i], i); };
+const earth = { ...homeInfo('Earth'), classification: 'Third planet', moonSummary: 'One Moon', summary: 'Our home planet. There is more to discover.', facts: [PLANET_DETAILS.Earth.facts[0]], narration: 'Welcome to Earth.' };
 const tour = { active: false, muted: false, index: 0, total: 9 };
 const api = { next: vi.fn(), previous: vi.fn(), replay: vi.fn(), toggleNarration: vi.fn(), openLineUp: vi.fn(), start: vi.fn() };
 const sceneApiRef = { current: { getMoonPhase: () => null } };
@@ -51,7 +56,7 @@ test('planet sections are compact and exclusive, activities are clear, and chang
   expect(screen.queryByRole('combobox')).toBeNull();
   expect(screen.getByRole('img', { name: /Moon seen from Earth/ })).toBeTruthy();
   expect(screen.queryByRole('button', { name: /See the Moon from Earth/ })).toBeNull();
-  rerender(<SolarInfoCard {...props} body={{ ...earth, id: 'Mars', name: 'Mars', summary: 'The red planet.', facts: [PLANET_DETAILS.Mars.facts[0]] }} />);
+  rerender(<SolarInfoCard {...props} body={{ ...homeInfo('Mars'), summary: 'The red planet.', facts: [PLANET_DETAILS.Mars.facts[0]] }} />);
   expect(screen.getByText(PLANET_DETAILS.Mars.facts[0])).toBeTruthy();
   expect(screen.queryByText(/you'd be/)).toBeNull();
   fireEvent.click(screen.getByRole('button', { name: /Discover/ }));
@@ -81,7 +86,7 @@ test('orbit compacts the facts while preserving tour navigation and optional rea
 test.each(['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto'].flatMap(name => [false, true].map(active => [name, active])))(
   '%s has complete Discover and Look closer content (tour: %s)', (name, active) => {
     const detail = PLANET_DETAILS[name];
-    render(<SolarInfoCard body={{ ...earth, id: name, name, facts: [] }} tour={{ ...tour, active }} api={api} sceneApiRef={sceneApiRef} onClose={vi.fn()} />);
+    render(<SolarInfoCard body={homeInfo(name)} tour={{ ...tour, active }} api={api} sceneApiRef={sceneApiRef} onClose={vi.fn()} />);
     if (active) fireEvent.click(screen.getByRole('button', { name: /Discover/ }));
     detail.facts.slice(0, 2).forEach(fact => expect(screen.getByText(fact)).toBeTruthy());
     fireEvent.click(screen.getByText('More facts'));
@@ -93,7 +98,7 @@ test.each(['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', '
 );
 
 test('moon cards keep their own Discover facts', () => {
-  render(<SolarInfoCard body={{ ...earth, id: 'Mars/Phobos', name: 'Phobos', kind: 'moon', parentName: 'Mars', facts: ['Phobos is a small moon of Mars.'] }} tour={tour} api={api} sceneApiRef={sceneApiRef} onClose={vi.fn()} />);
+  render(<SolarInfoCard body={{ ...earth, id: 'Mars/Phobos', name: 'Phobos', kind: 'moon', parentName: 'Mars', facts: ['Phobos is a small moon of Mars.'], play: undefined, sections: undefined, closer: undefined }} tour={tour} api={api} sceneApiRef={sceneApiRef} onClose={vi.fn()} />);
   expect(screen.getByText('Phobos is a small moon of Mars.')).toBeTruthy();
   fireEvent.click(screen.getByRole('button', { name: /Look closer/ }));
   expect(screen.queryByRole('button', { name: /Read about/ })).toBeNull();
@@ -111,4 +116,33 @@ test('orbiting a moon compacts its own facts and keeps the way back to its plane
   fireEvent.click(screen.getByRole('button', { name: 'Show moon facts' }));
   expect(screen.getByText('Io has over 400 active volcanoes.').closest('[hidden]')).toBeNull();
   expect(screen.getByText('3,643 km across')).toBeTruthy();
+});
+
+test('home cards show their special sections only where the definition asks', () => {
+  render(<SolarInfoCard body={homeInfo('Saturn')} tour={tour} api={api} sceneApiRef={sceneApiRef} onClose={vi.fn()} />);
+  fireEvent.click(screen.getByRole('button', { name: /Look closer/ }));
+  expect(screen.getByRole('button', { name: /Saturn’s rings/ })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: /Moon phases|Day & night|Northern lights/ })).toBeNull();
+});
+
+test('stats show the real numbers with a home comparison', () => {
+  const body = buildPlanetInfo(TEST_SYSTEM, TEST_SYSTEM.planets[0], 0);
+  const { container } = render(<SolarInfoCard body={body} tour={tour} api={api} sceneApiRef={sceneApiRef} onClose={vi.fn()} />);
+  expect(container.querySelector('.solar-info-card__stats').textContent).toContain('Density 5.5 g/cm³ · Earth is 5.5');
+  expect(screen.getByText('1st planet from Test Star', { selector: '.solar-info-card__meta span' })).toBeTruthy();
+});
+
+test('an away system\'s cards carry its honesty line; home cards do not', () => {
+  render(<SolarInfoCard body={buildPlanetInfo(TEST_SYSTEM, TEST_SYSTEM.planets[0], 0)} tour={tour} api={api} sceneApiRef={sceneApiRef} onClose={vi.fn()} />);
+  expect(screen.getByText('This system is pretend.')).toBeTruthy();
+  cleanup();
+  render(<SolarInfoCard body={homeInfo('Mars')} tour={tour} api={api} sceneApiRef={sceneApiRef} onClose={vi.fn()} />);
+  expect(screen.queryByText('This system is pretend.')).toBeNull();
+});
+
+test('the last tour stop uses the system\'s finish label', () => {
+  const last = { ...tour, active: true, index: 2, total: 3, finish: 'end', finishLabel: 'Finish the tour' };
+  render(<SolarInfoCard body={buildPlanetInfo(TEST_SYSTEM, TEST_SYSTEM.planets[1], 1)} tour={last} api={api} sceneApiRef={sceneApiRef} onClose={vi.fn()} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Finish the tour' }));
+  expect(api.next).toHaveBeenCalled();
 });

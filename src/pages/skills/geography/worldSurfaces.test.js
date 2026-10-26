@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { HOME_SYSTEM } from './systems/home.js';
 import { STAND_IN_SURFACES, WORLD_SURFACE_NAMES, worldSurfacePath } from './worldSurfaces.js';
 
 const publicFile = (path) => new URL(`../../../../public${path}`, import.meta.url);
@@ -18,8 +19,7 @@ function jpegSize(bytes) {
 }
 
 test('every featured moon and Pluto has a surface map', () => {
-  const source = readFileSync(new URL('./SolarSystem.jsx', import.meta.url), 'utf8');
-  const moons = [...source.matchAll(/\{ name: "([A-Za-z]+)", radius: [\d.]+, distance:/g)].map((m) => m[1]);
+  const moons = HOME_SYSTEM.planets.flatMap((planet) => planet.moons.map((moon) => moon.name));
   assert.ok(moons.length >= 24, `found ${moons.length} moons`);
   for (const name of [...moons.filter((n) => n !== 'Moon'), 'Pluto']) {
     assert.ok(worldSurfacePath(name), `${name} has no surface map`);

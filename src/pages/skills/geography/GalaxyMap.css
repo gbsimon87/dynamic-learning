@@ -1,0 +1,27 @@
+.galaxy-map { position: absolute; inset: 0; z-index: 66; pointer-events: none; color: var(--light-text); font-family: system-ui, sans-serif; outline: none; }
+body.dark .galaxy-map { color: var(--dark-text); }
+.galaxy-map button { min-height: 48px; min-width: 48px; padding: 6px 12px; border-radius: 10px; border: 1px solid color-mix(in srgb, currentColor 25%, transparent); background: var(--light-panel); color: inherit; font: 650 15px/1.2 system-ui, sans-serif; cursor: pointer; pointer-events: auto; }
+body.dark .galaxy-map button { background: var(--dark-panel); }
+.galaxy-map button:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
+.galaxy-map__header { position: absolute; z-index: 2; top: 10px; left: 10px; right: 10px; display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 14px; background: var(--light-panel); box-shadow: 0 6px 20px #0004; pointer-events: auto; }
+body.dark .galaxy-map__header { background: var(--dark-panel); }
+.galaxy-map__title { flex: 1; min-width: 0; }
+.galaxy-map__title h2 { margin: 0; font: 750 18px/1.2 system-ui, sans-serif; }
+.galaxy-map__title p { margin: 2px 0 0; font: 500 13px/1.3 system-ui, sans-serif; opacity: .85; }
+.galaxy-map__markers { position: absolute; inset: 0; z-index: 1; overflow: hidden; }
+/* Markers sit over the night-time map, so they keep light ink in both themes. */
+.galaxy-map .galaxy-map__marker { position: absolute; transform: translate(-24px, -24px); display: flex; align-items: center; gap: 6px; padding: 0 10px 0 0; border: 0; background: transparent; color: #f4f6ff; }
+body.dark .galaxy-map .galaxy-map__marker { background: transparent; }
+.galaxy-map__marker[hidden] { display: none; }
+.galaxy-map__dot { width: 48px; height: 48px; flex: none; border-radius: 50%; border: 2px solid #ffffffb0; background: radial-gradient(circle, #ffffff55 0 22%, transparent 24%); box-sizing: border-box; }
+.galaxy-map__marker.is-here .galaxy-map__dot { border-color: #9fe8b0; }
+.galaxy-map__marker--event .galaxy-map__dot { border-color: #c89bff; }
+.galaxy-map__marker.is-selected .galaxy-map__dot { border-width: 4px; }
+.galaxy-map__label { padding: 4px 8px; border-radius: 999px; background: #050a18c0; font: 650 14px/1.2 system-ui, sans-serif; white-space: nowrap; }
+.galaxy-map__card { position: absolute; z-index: 3; left: 10px; bottom: 12px; width: min(360px, calc(100% - 20px)); box-sizing: border-box; padding: 10px 12px; border-radius: 14px; background: var(--light-panel); box-shadow: 0 6px 20px #0005; pointer-events: auto; }
+body.dark .galaxy-map__card { background: var(--dark-panel); }
+.galaxy-map__card header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.galaxy-map__card h3 { margin: 0; font: 750 18px/1.2 system-ui, sans-serif; }
+.galaxy-map__card p { margin: 6px 0 0; font: 500 15px/1.35 system-ui, sans-serif; }
+.galaxy-map__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+@media (max-width: 720px) { .galaxy-map__card { left: 8px; right: 8px; width: auto; } .galaxy-map__title p { display: none; } }
