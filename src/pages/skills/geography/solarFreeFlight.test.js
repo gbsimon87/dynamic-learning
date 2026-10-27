@@ -525,3 +525,11 @@ test('every leaving trip tells the page where it is going, so the next system ca
     assert.deepEqual(starts, ['trappist-1', 'trappist-1'], 'and for an autopilot trip');
   } finally { t.clean(); }
 });
+
+test('tearing the scene down mid-arrival does not report an arrival', () => {
+  const t = tripSetup({ systemPhrase: 'TRAPPIST-1', tripTo: { id: 'solar-system', phrase: 'the Solar System', direction: { x: 0, y: 0, z: 1 }, distanceLy: 40.66, toHome: true } });
+  t.flight.beginArrival({ from: 'solar-system', fromDirection: { x: 0, y: 0, z: 1 }, mode: 'flown' });
+  t.run(.5);
+  t.clean();
+  assert.deepEqual(t.done, []);
+});

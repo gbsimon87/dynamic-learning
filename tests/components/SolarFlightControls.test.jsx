@@ -203,3 +203,12 @@ test('while the next system loads, the panel cannot be closed (button or Escape)
   fireEvent.keyDown(window, { key: 'Escape' });
   expect(close).toHaveBeenCalledOnce();
 });
+
+test('during the hand-over wait, Back to start and Turn back are disabled', () => {
+  const trip = { phase: 'departing', mode: 'flown', secondsLeft: 3, progress: .5, calm: false, distanceLy: 40.66, toPhrase: 'TRAPPIST-1', fromPhrase: 'the Solar System', toHome: false, waiting: true };
+  render(<SolarFlightControls {...HOME_FLIGHT} api={api} bodies={bodies} onClose={() => {}} view={{ trip }} />);
+  expect(screen.getByRole('button', { name: /Turn back/ }).disabled).toBe(true);
+  fireEvent.click(screen.getByRole('button', { name: /More/ }));
+  const back = screen.queryByRole('button', { name: 'Back to Earth' });
+  expect(back.disabled).toBe(true);
+});

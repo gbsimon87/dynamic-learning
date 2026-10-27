@@ -111,3 +111,13 @@ test('focusing a system beyond the pan limit glides to the edge and stays put', 
   assert.ok(map.controls.target.distanceTo(LEVEL_CENTRES.neighbourhood) <= 80 + 1e-6);
   map.dispose();
 });
+
+test('focusing a far system keeps the camera at its usual distance from the target', () => {
+  const far = { ...SYSTEM_REGISTRY[1], id: 'far-system', name: 'Far System', position: { raHours: 6, decDeg: 10, distanceLy: 200 } };
+  const map = make({ catalogue: mapCatalogue([...SYSTEM_REGISTRY, far], availableDestinations()) });
+  map.open(); map.setLevel('neighbourhood'); map.update(.016);
+  const before = map.camera.position.distanceTo(map.controls.target);
+  map.focus('far-system'); map.update(.016);
+  assert.ok(Math.abs(map.camera.position.distanceTo(map.controls.target) - before) < 1e-6);
+  map.dispose();
+});

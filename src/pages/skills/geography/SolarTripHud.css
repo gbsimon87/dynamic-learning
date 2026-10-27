@@ -11,3 +11,4 @@ body.dark .solar-trip__progress span { background: var(--dark-accent); }
 @media (max-width: 720px) { .solar-trip { top: auto; bottom: 156px; } }
 /* Hides the hand-over between systems under reduced motion (and softens it otherwise). */
 .solar-trip-fade { position: absolute; inset: 0; z-index: 60; background: #000; opacity: 0; pointer-events: none; }
+.solar-trip__turn-back:disabled { opacity: .45; cursor: default; }

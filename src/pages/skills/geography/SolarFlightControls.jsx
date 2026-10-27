@@ -119,7 +119,7 @@ export default function SolarFlightControls({ api, bodies, view, clues, badges, 
         <strong>My discoveries</strong><p>Stars are for this adventure. Hints cost no stars.</p>
         {earnedBadges.length > 0 && <ul aria-label="Earned badges">{earnedBadges.map(badge => <li key={badge.name}>{badge.icon} {badge.name}</li>)}</ul>}
         {stars > 0 && <ul aria-label="Discoveries">{round.earned.map(item => <li key={item.id}>✅ {bodies.find(body => body.id === item.target)?.name ?? item.target.split('/').at(-1)}</li>)}</ul>}
-        <button onClick={() => { release(); api?.home(); root.current?.focus(); }}>Back to {startName}</button>
+        <button disabled={handingOver} onClick={() => { release(); api?.home(); root.current?.focus(); }}>Back to {startName}</button>
         <button onClick={() => { if (!isMuted()) speak(help(systemPhrase)); }}>Read aloud</button>
         <p>Desktop: arrows / WASD steer · hold Space to fly · hold Shift to boost · C switches camera view. Touch: joystick steers · hold GO to fly · Turbo boosts. Sizes and distances are compressed; travel speed is pretend.</p>
       </div>}

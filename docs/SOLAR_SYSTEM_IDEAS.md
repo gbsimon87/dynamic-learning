@@ -1,7 +1,7 @@
 # Solar System — ideas and roadmap
 
 Skills Mode → Geography · [SolarSystem.jsx](../src/pages/skills/geography/SolarSystem.jsx)
-Reviewed against source: **2026-10-25**. All 113 idea IDs are retained.
+Reviewed against source: **2026-10-27**. All 113 idea IDs are retained.
 
 ## Current position
 
@@ -13,7 +13,7 @@ Reviewed against source: **2026-10-25**. All 113 idea IDs are retained.
 | 3 — Living Solar System | #48 day/night, #54 Moon phases, #16 tidal-locking core, #55 auroras, #41 comet tails, #57 close-up rings | Optional #16 arrow/label; device checks; original “surprise on every planet” exit is not met |
 | 4 — Missions and stars | #73 mission cards; #67 sky constellations; #68 join the dots | #74 passport (deferred by owner), #75 Golden Record; lensing spike |
 | 5 — Take the controls | #83 free flight in the main Solar System; hold-to-boost turbo with shared light streaks | Child/device steering checks; #84 asteroid run |
-| 6 — Beyond | #113 warp, picker and one destination; #94 space ripples; #108 galaxy map; #109 TRAPPIST-1 with trips between systems | More destinations (#90 black hole, #91 nebula, more #109 systems); flying in Beyond; tablet/device checks |
+| 6 — Beyond | #113 warp, picker and one destination; #94 space ripples; #108 galaxy map; #109 TRAPPIST-1 with trips, signposts and Home | More destinations (#90 black hole, #91 nebula); more #109 systems; flying in Beyond; tablet/device checks |
 
 ✅ built · ◐ partial · ⏳ external dependency · — unbuilt. Built means implemented,
 not deployed or physically device-tested. Stretch ideas are not phase blockers.
@@ -41,8 +41,13 @@ not deployed or physically device-tested. Stretch ideas are not phase blockers.
   recent effects. Browser phone-width checks do not close this.
 - **Reported once:** orbit lines switched off and a Sun message appeared without
   a tap; not reproduced. Keep open until evidence identifies a cause.
-- **Delivery:** previous notes record a local merge into `dev`; push/deployment
-  status is unverified. Publishing still requires an explicit instruction.
+- **Review findings (2026-10-27):** fixed — no welcome after teardown
+  mid-arrival; Back to start and Turn back are disabled during the hand-over
+  wait; map focus on a far system keeps the camera distance. A hand-over during
+  another load ends when that load settles (the scene always rebuilds, 20 s cap).
+- **Delivery:** the galaxy map / TRAPPIST-1 work is committed on
+  `feat/galaxy-map-trappist-1`, not merged; earlier work was merged locally into `dev`.
+  Push/deployment status is unverified. Publishing needs an explicit instruction.
 
 ## Build rules
 
@@ -57,7 +62,7 @@ not deployed or physically device-tested. Stretch ideas are not phase blockers.
   motion. Dispose owned resources and hide effects in incompatible modes.
 - Stay with Three.js/add-ons and primitives; no R3F rewrite or physics engine
   now. Pool particles. Test phone memory before adding large textures.
-- Toolbar: modes only (a dropdown is planned as it grows). Planet card: local facts/play.
+- Toolbar: modes only; six buttons now (incl. Galaxy map and, away from home, Home), so labels show only from 1440px and a dropdown is the next step as it grows. Planet card: local facts/play.
   My view: preferences and Reset. Secrets need no button. Tweakpane is for adults.
 - Existing navbar mute governs new read-aloud/effects; retain tour narration mute.
 - Curriculum progress is untouched. Read `curriculum-progress` before persistence.
@@ -76,8 +81,9 @@ not deployed or physically device-tested. Stretch ideas are not phase blockers.
    steering checks remain open. #87 garage depends on stardust and #85 docking on #50 ISS.
 3. **#113 → #90/#91:** warp opens separate Beyond scenes (warp and #94 built
    2026-10-25; flying in Beyond first needs `createSolarFreeFlight` to accept
-   another scene and bodies). #108 galaxy map is
-   optional later navigation; #109 other systems follows warp.
+   another scene and bodies). #108 galaxy map and #109 TRAPPIST-1 are built
+   (2026-10-26); further systems follow the `add-star-system` skill, and the
+   third system forces the `systemAhead` decision (which way leads where).
 4. **#74 passport** is deferred at the owner's request. Retain mission stamps
    and the explicit Skills-only storage contract when it returns.
 5. **#101 custom constellations** comes later; #68 join the dots is now built.
@@ -98,6 +104,28 @@ steering choice (2), living-world coverage and checked Moon/day-night content (3
 repeatable activities and retained stamps (4), independent travel (5), tablet warp
 and unmistakably separate deep space (6). Prioritise visible improvements and
 reorder stretch work from playtests; old calendar estimates were speculative.
+
+## Recommended next five (2026-10-27)
+
+1. **#109 Alpha Centauri** — the nearest star system (three suns, 4.2 ly).
+   Uses the `add-star-system` skill end to end, proves the system definition is
+   reusable, and forces the `systemAhead` rule so heading decides where a trip
+   goes. Medium.
+2. **#91 Nebula clouds** — a second Beyond destination with no lensing risk;
+   reuses the warp, picker and module host. Pairs well with "stars are born
+   here" teaching. Medium–Hard.
+3. **#84 Asteroid-belt run** — the first real game for #83 free flight;
+   builds on bumpers, boost and the existing belt. Gives returning children a
+   reason to fly. Hard.
+4. **#75 Golden Record** — a hidden Voyager near the Pale Blue Dot route;
+   small, delightful, true, and unblocks the "surprise" feel of Phase 4. Easy–Medium
+   (sound clip depends on the #27 audio decision; text and read-aloud first).
+5. **Toolbar dropdown** (⚙️ under the build rules) — six buttons already
+   crowd the toolbar below 1440px; every new mode (Beyond destinations, more
+   systems) makes it worse. Do it before adding more modes. Medium.
+
+Gates that still matter more than features: a real-phone baseline (#5),
+a child playtest of flight and trips, and physical-device touch checks.
 
 ## Idea catalogue
 
@@ -363,10 +391,18 @@ in 3D, pannable, over three levels — galaxies near ours (look, don't land;
 Space ripples beyond), the Milky Way with "You are here", and the real
 neighbourhood. Nothing is saved; reload starts home; Reset stays in the
 current system. Launch meteor and mission stamps are home-only.
+Follow-up fixes (2026-10-26/27): the warning no longer flickers at the edge;
+page messages sit above the trip fade; the next system starts loading at the
+warning, and a load that takes over 20 s lands home with a message that clears
+after 8 s; the flight panel can't be closed during the hand-over wait; markers
+that overlap are spread apart; the map pulls back on tall screens.
 Limits: with two systems any direction past the edge goes to the other one;
 choosing by heading (`systemAhead`) is decided when a third system arrives.
 Physical-device and child checks are open; the Sun's spot on the picture was
-placed by eye.
+placed by eye. Verified: lint, build, 2,429 unit and 581 component tests; two
+batched Chrome passes (both themes, desktop/phone/landscape) with zero errors.
+Not browser-checked: the follow-up fixes after the second pass. Run
+`npm run build && node scripts/checkSolarUi.js --systems` to check them.
 
 ### Optional planet orbit — #37
 
@@ -443,7 +479,8 @@ the main planet search. #16’s optional arrow/label is still pending.
 
 Lint, full tests and production build are required for every implementation pass.
 The local-only `scripts/checkSolarUi.js` checks both themes at 1280×900, 390×844
-and 844×390. Previous batched checks covered mission selection, compact planet
+and 844×390. `node scripts/checkSolarUi.js --systems` adds the galaxy map, TRAPPIST-1
+tour, flying out, Turn back and the trip home. Previous batched checks covered mission selection, compact planet
 activities, embedded Moon phases, main-scene flight, Shift turbo, constellation
 bounds and desktop-left reading/navigation with no page/module errors.
 The latest tracing panel pass completed Ursa Major in all six viewport/theme

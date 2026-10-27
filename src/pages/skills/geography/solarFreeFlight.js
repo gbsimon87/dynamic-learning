@@ -365,7 +365,8 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRad
       }
     },
     dispose() {
-      api.exit(); window.removeEventListener('keydown', keydown); window.removeEventListener('keyup', keyup); window.removeEventListener('blur', clearInput);
+      // Teardown is not an arrival: drop any trip before leaving flight.
+      trip = null; api.exit(); window.removeEventListener('keydown', keydown); window.removeEventListener('keyup', keyup); window.removeEventListener('blur', clearInput);
       document.removeEventListener('visibilitychange', visibility);
       orbit.dispose(); ship.removeFromParent(); model.disposables.forEach(item => item.dispose());
     },

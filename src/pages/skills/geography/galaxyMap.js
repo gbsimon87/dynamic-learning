@@ -197,6 +197,7 @@ export function createGalaxyMap({ renderer, quality = "standard", reducedMotion 
     const api = {
         get scene() { return scene; },
         get controls() { return controls; },
+        get camera() { return camera; },
         get youAreHere() { return youAreHere; },
         isActive: () => active,
         level: () => level,
@@ -230,7 +231,7 @@ export function createGalaxyMap({ renderer, quality = "standard", reducedMotion 
             // A system beyond the pan limit is aimed at from the limit, so the glide can finish.
             const centre = LEVEL_CENTRES[level], pan = LEVEL_VIEW[level].pan;
             desiredTarget.copy(at).sub(centre).clampLength(0, pan).add(centre);
-            desiredCamera.copy(at).add(offset);
+            desiredCamera.copy(desiredTarget).add(offset);
             gliding = true;
             if (reducedMotion()) { controls.target.copy(desiredTarget); camera.position.copy(desiredCamera); gliding = false; }
         },
