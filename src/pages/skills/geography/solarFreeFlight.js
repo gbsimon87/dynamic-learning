@@ -26,7 +26,7 @@ export function flightSpeed(clearance, boost) {
 
 /** Manual flight in the existing scene; no renderer, world clock or storage of its own. */
 export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRadius, startBodyId, quality, reducedMotion = () => false, onChange = () => {}, getCameraView = () => 'behind',
-  tripTo = null, systemPhrase = '', systemSpokenName = systemPhrase, onTripStart = () => {}, onHandoff = () => {}, onTripDone = () => {} }) {
+  tripTo = null, systemPhrase = '', systemSpokenName = systemPhrase, onTripStart = () => {}, onHandoff = () => {}, onTripDone = () => {}, rocks = null }) {
   const model = buildShip(quality);
   const ship = model.ship;
   ship.name = 'solar-free-flight'; ship.visible = false; ship.scale.setScalar(.3); scene.add(ship);
@@ -34,7 +34,7 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRad
   const velocity = new THREE.Vector3(), forward = new THREE.Vector3(), scratch = new THREE.Vector3();
   const center = new THREE.Vector3();
   let active = false, saved = null, yaw = 0, pitch = 0, stickX = 0, stickY = 0, thrust = false, boost = false, boostStrength = 0;
-  let nearest = null, lastName = '', age = 0;
+  let nearest = null, lastName = '', age = 0, engineTime = 0, wobble = 0, bumps = 0;
   let goal = null, goalToken = null, arrival = null, insideSeconds = 0, goalArmed = false, travelled = 0, navigation = null;
   const previous = new THREE.Vector3(), destinationPoint = new THREE.Vector3();
   // The trip between systems: null, or its clock and path. Leaving, it runs the
@@ -56,7 +56,7 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRad
   function gapTo(body) { pointFor(body, destinationPoint); return flightTargetGap(body, ship.position, destinationPoint); }
   function emit() {
     const orbitPlanet = orbit.target() ?? nearestOrbitBody(bodies, ship.position);
-    onChange({ nearest: nearest?.id, name: nearest?.name, speed: Math.round(velocity.length()), arrival, boosting: boostStrength > .1,
+    onChange({ nearest: nearest?.id, name: nearest?.name, speed: Math.round(velocity.length()), arrival, boosting: boostStrength > .1, engineTime, bumps,
       navigationArrived: navigation && navigation.id !== goal?.id && !arrival && gapTo(navigation) <= flightArrivalMargin(navigation) ? navigation.name : null,
       orbitPlanet: orbitPlanet ? { id: orbitPlanet.id, name: orbitPlanet.name } : null, orbiting: orbit.isActive(), orbitSteady: reducedMotion(),
       navigation: navigation?.name ?? null, gap: navigation ? Math.round(gapTo(navigation)) : null, trip: tripView() });
@@ -167,6 +167,11 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRad
   function updateCamera(dt, snap = false) {
     direction();
     ship.quaternion.setFromUnitVectors(UP, forward);
+    // A bumped belt rock wobbles the rocket for a moment (not under reduced motion).
+    if (wobble > 0) {
+      wobble = Math.max(0, wobble - dt);
+      if (!reducedMotion()) ship.rotateY(Math.sin(wobble * 30) * .35 * wobble / .6);
+    }
     flightCamera.update(ship, forward, dt, obstacles, snap);
   }
   function endOrbit(clear = true) {
@@ -204,6 +209,7 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRad
     },
     exit() {
       if (!active) return;
+      rocks?.update({ position: ship.position, forward, steering: false });
       if (trip?.side === 'arriving' && !trip.waiting) { const { mode } = trip; trip = null; onTripDone({ mode }); }
       else if (trip && !trip.waiting) trip = null;
       returning = null;
@@ -279,6 +285,8 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRad
       if (otherMode) { clearInput(); return; }
       ship.visible = getCameraView() === 'behind';
       const rawDt = clamp(dt, 0, .25);
+      // Belt rocks appear only while the child steers (not on trips, warps home or orbit rides).
+      rocks?.update({ position: ship.position, forward, steering: !returning && !(trip && trip.elapsed >= WARNING_SECONDS) && !orbit.isActive() && !arrival, dt: clamp(dt, 0, .05) });
       dt = clamp(dt, 0, .05);
       if (returning) { stepReturn(rawDt); return; }
       if (trip && trip.elapsed >= WARNING_SECONDS) { stepTrip(dt, rawDt); return; }
@@ -315,8 +323,12 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRad
       // Brake before entering the arrival zone, even after a high-speed boost.
       if (clearance < 20 && velocity.length() > speed) velocity.setLength(speed);
       boostStrength = burning && boosting ? boostShare(clearance) * Math.min(1, velocity.length() / speed) : 0;
+      // Seconds of real flying under power: the Space explorer unlocks its aiming help from this.
+      // Real seconds, so a slow phone earns help as fast as a quick computer.
+      if (burning && velocity.length() > .5) engineTime += rawDt;
       // Substeps and surface bumpers keep even tiny moons solid.
       const steps = Math.max(1, Math.ceil(velocity.length() * dt / .15));
+      let bumped = false;
       for (let i = 0; i < steps; i++) {
         ship.position.addScaledVector(velocity, dt / steps);
         for (const { body: b, position } of colliders) {
@@ -329,7 +341,9 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRad
             if (inward < 0) velocity.addScaledVector(scratch, -inward);
           }
         }
+        if (rocks?.collide(ship.position, velocity)) bumped = true;
       }
+      if (bumped) { wobble = .6; bumps += 1; emit(); }
       const distance = ship.position.length();
       if (!armed && distance < edgeRadius - 50) armed = true;
       if (tripTo) {

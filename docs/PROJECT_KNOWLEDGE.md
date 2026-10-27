@@ -1343,6 +1343,17 @@ Subsequent focused Chrome checks verified the panel layout in both themes at
 desktop/phone/landscape sizes; physical touch, performance and speech remain
 unverified. See `SOLAR_SYSTEM_IDEAS.md` for the remaining roadmap.
 
+Space explorer chapters (2026-10-27, #84): `flightClues.js` now holds 29
+clues (with six two-step `then` clues and `question`s) grouped into
+`FLIGHT_CHAPTERS`; `createChapterRound` builds a ~5-find chapter. The flight
+panel shows a chapter picker and chapter card, locks aiming help until
+`helpProgress` unlocks it (20 s of `engineTime` or 10 s after Hint), and keeps
+progress in a `session` object owned by the scene. `namedAsteroids.js` adds
+Ceres, Vesta, Psyche and Bennu (home extra `namedAsteroids`);
+`beltRockField.js` gives free flight (`rocks` option) rocks to weave past in
+the belt. `validateSystem` checks steps, questions and chapters. Details:
+`SOLAR_SYSTEM_IDEAS.md`.
+
 Solar activities second pass (2026-10-23): free flight now has 25 shuffled
 clues in `flightClues.js`, spanning planets, moons, Sun, the ISS, asteroid belt and
 Halley’s Comet. `solarFreeFlight` validates proximity to the exact live target
@@ -1518,10 +1529,13 @@ destination during the warp out; both are disposed once home, so the next trip
 is rebuilt at the current quality. Focus moves to the hold button, the card's
 action, and back to Beyond on return. Keys pressed inside a dialog never steer
 the rocket. Nothing is saved, and no sound effects are added.
-Layout: the phone launch grid is three a row; the ≥720px toolbar starts at
-18.5rem and stops 15.25rem from the right (My view). Labels show from 1100px.
-Search is a button that spreads over the launch row at 720–767px and
-1100–1279px, and an open field of at least 216px otherwise.
+Layout (2026-10-27): the launch row is Tour, Fly the rocket, **More** and,
+away from home, Home — one row at every width. More (`SolarToolbarMenu.jsx`,
+a disclosure list) holds Constellations, Launch meteor, Beyond and Galaxy map;
+focus returns to More when those close. The ≥720px toolbar starts at 15rem
+(38rem from 1280px, where labels show) and stops 15.25rem from the right
+(My view). Search is a button at 720–899px and an open field otherwise. On
+phones the Fine tuning pane leaves 14rem for the row.
 Flying inside Beyond needs `createSolarFreeFlight` to accept another scene and
 bodies first (#109). Validation: lint, build and the full suite pass. The
 batched local Chrome checks (`node scripts/checkSolarUi.js --beyond-only`, plus

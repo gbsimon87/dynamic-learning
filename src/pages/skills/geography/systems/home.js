@@ -8,7 +8,7 @@ import { SATURN_RING_LINE } from "../saturnRingDetail.js";
 import { PLANET_DETAILS } from "../planetDetails.js";
 import { PLANET_PLAY } from "../planetPlay.js";
 import { moonFacts } from "../moonFacts.js";
-import { FLIGHT_BADGES, FLIGHT_CLUES } from "../flightClues.js";
+import { FLIGHT_BADGES, FLIGHT_CHAPTERS, FLIGHT_CLUES } from "../flightClues.js";
 import { TRUE_RADII_KM } from "../lineUpLayout.js";
 
 const SECTIONS = {
@@ -252,7 +252,7 @@ export const HOME_SYSTEM = {
     planets: PLANET_DATA.map(homePlanet),
     moonDetails: moonFacts,
     tour: { stops: PLANET_DATA.map((planet) => planet.name), finish: "pale-blue-dot", finishLabel: "One last look back at Earth" },
-    flight: { edgeRadius: 1350, startBodyId: "Earth", clues: FLIGHT_CLUES, badges: FLIGHT_BADGES },
+    flight: { edgeRadius: 1350, startBodyId: "Earth", clues: FLIGHT_CLUES, chapters: FLIGHT_CHAPTERS, badges: FLIGHT_BADGES },
     scene: { camera: { position: [0, 72, 128], target: [0, 0, 0] }, honesty: null, scaleNote: "The sizes and distances in this Solar System are compressed." },
     welcome: null,
     mapCard: { starType: "Yellow dwarf star (the Sun)", planetCount: 8, fact: "Our home: eight planets, dwarf planets like Pluto, and lots of moons." },
@@ -265,6 +265,7 @@ export const HOME_SYSTEM = {
         earthEffects: { body: "Earth" },
         saturnRingDetail: { body: "Saturn" },
         asteroidBelt: { regionPlanets: ["Mars", "Jupiter", "Neptune", "Pluto"] },
+        namedAsteroids: true,
         moonPhases: { body: "Earth" },
         paleBlueDot: { body: "Earth" },
         lineUp: true,

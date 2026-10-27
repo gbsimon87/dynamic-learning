@@ -51,7 +51,11 @@ All paths below are under `src/pages/skills/geography/`.
      outermost orbit; `flight.startBodyId` is where Fly the rocket starts.
    - `flight.clues` (12 or more) cover the star and every planet; add
      `{ target: "sign:solar-system", … }` for "find the sign pointing home".
-     `flight.badges` reward stars earned.
+     `flight.badges` reward stars earned. A clue may add `then` (a second,
+     nearby find: "Now find its moon…") and `question` { text, options (2–3),
+     answer, why } — the answer must be taught by that clue's `fact`.
+     Optional `flight.chapters` [{ id, name, icon, promise, clueIds }] must use
+     every clue; without them the clues split into "Part 1, Part 2…" of five.
    - `extras: {}` — home-only features (meteor, missions, ISS, comet, belt,
      line-up, warp-in) stay off away from home.
    - `welcome` is read aloud on arrival (the phrase is swapped for

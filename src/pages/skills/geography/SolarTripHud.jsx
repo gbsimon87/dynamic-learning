@@ -39,7 +39,7 @@ export default function SolarTripHud({ trip, onTurnBack }) {
     {trip.calm && !warning && <div className="solar-trip__progress" role="progressbar" aria-label="Trip progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent}>
       <span style={{ width: `${percent}%` }} />
     </div>}
-    <p className="solar-trip__honesty">Sped up — even light takes about {Math.round(trip.distanceLy)} years to make this trip.</p>
+    <p className="solar-trip__honesty">Sped up - even light takes about {Math.round(trip.distanceLy)} years to make this trip.</p>
     <button type="button" className="solar-trip__turn-back" disabled={Boolean(trip.waiting)} onClick={() => onTurnBack()}><span aria-hidden="true">↩</span> Turn back</button>
   </div>;
 }

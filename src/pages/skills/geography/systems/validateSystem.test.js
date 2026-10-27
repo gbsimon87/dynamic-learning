@@ -89,3 +89,30 @@ test("a sign clue counts only when it points to another known system", () => {
     assert.deepEqual(validateSystem(withSign("sign:nowhere")), ["clue sign targets no body: sign:nowhere"]);
     assert.deepEqual(validateSystem(withSign("sign:mini")), ["clue sign targets no body: sign:mini"]);
 });
+
+test("asteroid clue targets need the namedAsteroids extra", () => {
+    const clue = { id: "ceres", target: "Ceres", clue: "c", hint: "h", fact: "f" };
+    const flight = { edgeRadius: 50, startBodyId: "mini-b", clues: [clue], badges: [] };
+    assert.ok(validateSystem(minimalSystem({ flight })).some((p) => p.includes("Ceres")));
+    assert.deepEqual(validateSystem(minimalSystem({ flight, extras: { namedAsteroids: true } })), []);
+});
+
+test("second steps, questions and chapters are checked", () => {
+    const good = { id: "c1", target: "mini-b", clue: "c", hint: "h", fact: "f",
+        question: { text: "q", options: ["A", "B"], answer: "A", why: "w" },
+        then: { id: "c1b", target: "mini-b/Tiny", clue: "c", hint: "h", fact: "f" } };
+    const flight = (clues, chapters) => ({ edgeRadius: 50, startBodyId: "mini-b", clues, badges: [], ...(chapters ? { chapters } : {}) });
+    assert.deepEqual(validateSystem(minimalSystem({ flight: flight([good], [{ id: "all", name: "All", icon: "🚀", promise: "p", clueIds: ["c1"] }]) })), []);
+    const problems = validateSystem(minimalSystem({ flight: flight([
+        { ...good, then: { ...good.then, target: "ghost" } },
+        { ...good, id: "c2", then: undefined, question: { text: "q", options: ["A"], answer: "Z", why: "w" } },
+        { ...good, id: "c3", then: { ...good.then, id: "c1b" } },
+    ], [{ id: "x", name: "X", icon: "🚀", promise: "p", clueIds: ["c1", "nope"] }]) }));
+    const has = (text) => assert.ok(problems.some((p) => p.includes(text)), `${text}\n${problems.join("\n")}`);
+    has("clue c1b targets no body: ghost");
+    has("question on c2 needs 2 or 3 options");
+    has("question on c2: answer Z is not an option");
+    has("duplicate clue id: c1b");
+    has("chapter x lists no clue: nope");
+    has("clue c2 is in no chapter");
+});

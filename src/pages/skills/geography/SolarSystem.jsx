@@ -38,6 +38,7 @@ import JoinDots from "./JoinDots.jsx";
 import SolarFlightControls from "./SolarFlightControls.jsx";
 import SolarCameraChoices from "./SolarCameraChoices.jsx";
 import SolarOrbitControl from "./SolarOrbitControl.jsx";
+import SolarToolbarMenu from "./SolarToolbarMenu.jsx";
 import SolarCockpit from "./SolarCockpit.jsx";
 import { createSolarFreeFlight } from "./solarFreeFlight.js";
 import { applySceneSettings, moonLabelVisible } from "./solarSceneSettings.js";
@@ -45,6 +46,8 @@ import SolarSettingsDrawer from "./SolarSettingsDrawer.jsx";
 import { createSaturnRingDetail, SATURN_RING_BANDS, SATURN_RING_LINE } from "./saturnRingDetail.js";
 import { COMET_HIT_RADIUS, createHalleyComet } from "./halleyComet.js";
 import { COMET_ID, COMET_NAME, COMET_LINE } from "./cometOrbit.js";
+import { asteroidInfo, createNamedAsteroids } from "./namedAsteroids.js";
+import { createBeltRockField } from "./beltRockField.js";
 import { PLANET_ORBITS, orbitPathPoints } from "./planetOrbits.js";
 import { createEarthAurora } from "./earthAurora.js";
 import { moonPhase } from "./moonPhase.js";
@@ -132,11 +135,11 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
     const canvasRef = useRef(null); // managed <canvas>
     const sceneApiRef = useRef(null);
     const searchInputRef = useRef(null);
-    const launchButtonRef = useRef(null);
+    const moreButtonRef = useRef(null);
+    // Space explorer chapters and stars last while the child stays in this system.
+    const flightSessionRef = useRef({});
     const flyButtonRef = useRef(null);
-    const constellationButtonRef = useRef(null);
     const resetButtonRef = useRef(null);
-    const beyondButtonRef = useRef(null);
     const focusRequestRef = useRef(null);
     const [meteorPhase, setMeteorPhase] = useState("ready");
     const [sceneReady, setSceneReady] = useState(false);
@@ -179,7 +182,6 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
     const tripFadeRef = useRef(null);
     // The galaxy map (#108): open or not, and which level it shows.
     const [mapLevel, setMapLevel] = useState(null);
-    const mapButtonRef = useRef(null);
     // Warp to Beyond (#113): nothing here is saved; reloading starts at home.
     const [beyondPickerOpen, setBeyondPickerOpen] = useState(false);
     const [beyondState, setBeyondState] = useState({ phase: "off", destinationId: null, progress: 0, calm: false, stage: null });
@@ -192,7 +194,7 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
         } else sceneApiRef.current?.closeConstellationSky();
     }, [constellationState.active, constellationState.index, sceneReady]);
     useEffect(() => {
-        if (!constellationState.active) constellationButtonRef.current?.focus();
+        if (!constellationState.active) moreButtonRef.current?.focus();
     }, [constellationState.active]);
     // Serialisable mirror of searchable bodies; Object3D refs stay inside the effect.
     const [searchBodies, setSearchBodies] = useState([]);
@@ -615,6 +617,13 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
         })) : NO_COMET;
         if (extras.comet) searchEntries.push({ id: COMET_ID, name: COMET_NAME, kind: "comet", kindLabel: "Comet · illustrative orbit",
             parentName: null, object3d: comet.object3d, radius: 1.2, planetSystem: null });
+        // Real asteroids for the asteroid-belt run (#84), labelled like planets.
+        const namedAsteroids = extras.namedAsteroids ? modules.add("namedAsteroids", createNamedAsteroids({
+            scene, getOrbitTime: () => worldTime.orbitTime, quality: currentQuality(),
+            makeLabel: (name) => createLabel(name, 56, "#efe6d6"),
+            isHidden: () => lineUp.isActive() || paleBlueDot.hidesScenery() || constellationSky.isActive(),
+        })) : null;
+        if (namedAsteroids) { searchEntries.push(...namedAsteroids.entries); labelSprites.push(...namedAsteroids.labels); }
         // A star with a card can be visited and toured like a planet.
         if (star.card) searchEntries.push({ id: star.id, name: star.name, kind: "star", kindLabel: "Star", parentName: null,
             object3d: sun, radius: star.radius, planetSystem: null, star });
@@ -854,14 +863,14 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
         pane.element.style.right = "1rem";
         pane.element.style.zIndex = "100";
 
-        // Narrow screens share the pane's row with the tour button, so the pane
-        // gives up the space that button needs. Set here rather than in CSS
+        // Narrow screens share the pane's row with the four launch buttons, so the pane
+        // gives up the space those buttons need. Set here rather than in CSS
         // because Tweakpane's own injected width rule would otherwise win.
         const wideQuery = window.matchMedia("(min-width: 720px)");
         const applyPaneWidth = () => {
             pane.element.style.width = wideQuery.matches
                 ? "min(220px, calc(100% - 2rem))"
-                : "min(232px, calc(100% - 10.5rem))";
+                : "min(232px, calc(100% - 14rem))";
         };
         applyPaneWidth();
         wideQuery.addEventListener("change", applyPaneWidth);
@@ -1112,6 +1121,7 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
                 factsHeading: "Two tails to spot", summary: COMET_LINE,
             };
             if (entry.kind === "star") return buildStarInfo(system, entry.star);
+            if (entry.kind === "asteroid") return asteroidInfo(entry.asteroid);
             return entry.kind === "moon"
                 ? createMoonInfo(entry)
                 : createPlanetInfo(planetData[entry.planetIndex], entry.planetIndex);
@@ -1121,6 +1131,7 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
         function framingDistanceFor(entry) {
             // Moons are tiny, so frame them tighter — but stay clear of minDistance.
             if (entry.kind === "comet") return 32;
+            if (entry.kind === "asteroid") return Math.max(entry.radius * 8, 3);
             return entry.kind === "moon"
                 ? Math.max(entry.radius * 8, 1.8)
                 : Math.max(entry.radius * 6, 4);
@@ -1379,10 +1390,12 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
             const regionHits = clickRaycaster.intersectObjects(regionLabels.hitTargets.filter((target) => target.visible), false);
             if (regionLabels.select(regionHits[0]?.object)) return;
             const visibleLabels = labelSprites.filter((label) => label.visible);
-            const intersects = clickRaycaster.intersectObjects([...visibleLabels, ...planetBodies, sun, ship.hitTarget, ...(iss.hitTarget ? [iss.hitTarget] : []), ...(comet.object3d.visible ? [comet.hitTarget] : [])], false);
+            const intersects = clickRaycaster.intersectObjects([...visibleLabels, ...planetBodies, sun, ship.hitTarget, ...(iss.hitTarget ? [iss.hitTarget] : []), ...(comet.object3d.visible ? [comet.hitTarget] : []), ...(namedAsteroids?.hitTargets.filter((target) => target.visible) ?? [])], false);
             if (intersects[0]?.object === sun) {
                 if (extras.sunTaps) tapSun();
                 else if (star.card) focusEntry(searchEntriesById.get(star.id));
+            } else if (intersects[0]?.object.userData.asteroidId) {
+                focusEntry(searchEntriesById.get(intersects[0].object.userData.asteroidId));
             } else if (intersects[0]?.object === comet.hitTarget && comet.object3d.visible) {
                 focusEntry(searchEntriesById.get(COMET_ID));
             } else if (intersects[0]?.object === ship.hitTarget || (iss.hitTarget && intersects[0]?.object === iss.hitTarget)) {
@@ -1460,7 +1473,7 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
         }
 
         function onKeyDown(e) {
-            if (e.key !== "Escape") return;
+            if (e.key !== "Escape" || e.defaultPrevented) return;
             // The steering game is open on top and closes itself on Escape.
             if (constellationSky.isActive() || freeFlight.isActive() || beyond.isActive() || galaxyMap.isActive()) return;
             if (ship.isOrbiting()) { leavePlanetOrbit(); return; }
@@ -1807,6 +1820,12 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
             homeStarDot: !system.home,
             isVisible: () => freeFlight.isActive(),
         }));
+        // The belt's region, for clue arrivals and the rocks to weave past (#84).
+        const beltRegion = () => asteroidBelt && ({ innerRadius: asteroidBelt.settings.innerRadius, outerRadius: asteroidBelt.settings.outerRadius,
+            halfHeight: asteroidBelt.settings.outerRadius * Math.sin(asteroidBelt.settings.maxInclinationDeg * Math.PI / 180) + .5 });
+        // Free flight drives the rocks each frame; the module host only frees them.
+        const beltRocks = extras.asteroidBelt ? createBeltRockField({ scene, getRegion: beltRegion, quality: currentQuality() }) : null;
+        if (beltRocks) modules.add("beltRocks", { dispose: () => beltRocks.dispose() });
         const freeFlight = modules.add("freeFlight", createSolarFreeFlight({
             scene, camera, controls, quality: currentQuality(), reducedMotion: () => reducedQuery.matches,
             getCameraView: () => cameraViewRef.current,
@@ -1816,14 +1835,13 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
                 // A sign's reach starts just inside the edge, so finding one never starts a trip.
                 ...signList.map((sign, i) => ({ id: sign.id, name: sign.label, radius: SIGN_OFFSET + 10, object3d: signposts.signs[i], kind: "sign" })),
                 ...(extras.iss ? [{ id: "ISS", name: "International Space Station", parentName: extras.iss.body, radius: .12, object3d: iss.object3d, kind: "satellite" }] : []),
-                ...(extras.asteroidBelt ? [{ id: "asteroid-belt", name: "Asteroid belt", radius: 0, kind: "belt",
-                    getRegion: () => ({ innerRadius: asteroidBelt.settings.innerRadius, outerRadius: asteroidBelt.settings.outerRadius,
-                        halfHeight: asteroidBelt.settings.outerRadius * Math.sin(asteroidBelt.settings.maxInclinationDeg * Math.PI / 180) + .5 }) }] : []),
+                ...(extras.asteroidBelt ? [{ id: "asteroid-belt", name: "Asteroid belt", radius: 0, kind: "belt", getRegion: beltRegion }] : []),
             ],
             onChange: setFreeFlightView,
             tripTo: tripDestination(system.id),
             systemPhrase: system.phrase, systemSpokenName: system.spokenName ?? system.phrase,
             onTripStart: (to) => onPrepareRef.current(to.id),
+            rocks: beltRocks,
             onHandoff: (request) => onTravelRef.current(request),
             onTripDone: ({ mode, turnedBack = false }) => {
                 // An autopilot trip outside the flight HUD ends at the overview.
@@ -2105,7 +2123,7 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
 
     useEffect(() => {
         if (!sceneReady) return;
-        if (focusRequestRef.current === "launch" && meteorPhase === "ready") launchButtonRef.current?.focus();
+        if (focusRequestRef.current === "launch" && meteorPhase === "ready") moreButtonRef.current?.focus();
         else if (focusRequestRef.current === "reset" && meteorPhase !== "ready") resetButtonRef.current?.focus();
         else return;
         focusRequestRef.current = null;
@@ -2123,7 +2141,7 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
     useEffect(() => {
         if (beyondState.phase !== "off" || focusRequestRef.current !== "beyond") return;
         focusRequestRef.current = null;
-        beyondButtonRef.current?.focus();
+        moreButtonRef.current?.focus();
     }, [beyondState.phase]);
 
     // Closing the rocket game hands focus back to the button that opened it.
@@ -2174,7 +2192,7 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
     const closeMap = ({ refocus = true } = {}) => {
         sceneApiRef.current?.closeMap();
         setMapLevel(null);
-        if (refocus) window.requestAnimationFrame(() => mapButtonRef.current?.focus());
+        if (refocus) window.requestAnimationFrame(() => moreButtonRef.current?.focus());
     };
 
     const meteorActive = meteorPhase !== "ready";
@@ -2359,59 +2377,25 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
                         <span className="solar-tour-launch__icon" aria-hidden="true">🕹</span>
                         <span className="solar-action-label">Fly the rocket</span>
                     </button>
-                    <button
-                        type="button"
-                        className="solar-tour-launch"
-                        aria-label="Explore constellations"
-                        ref={constellationButtonRef}
+                    <SolarToolbarMenu
+                        buttonRef={moreButtonRef}
                         disabled={!sceneReady}
-                        onClick={() => {
-                            sceneApiRef.current?.collapsePane?.();
-                            setConstellationState({ active: true, index: 0, muted: false });
-                        }}
-                    >
-                        <span className="solar-tour-launch__icon" aria-hidden="true">✦</span>
-                        <span className="solar-action-label">Constellations</span>
-                    </button>
-                    {system.extras.meteor && <button
-                        ref={launchButtonRef}
-                        type="button"
-                        className="solar-tour-launch"
-                        aria-label="Launch meteor"
-                        disabled={!sceneReady}
-                        onClick={() => sceneApiRef.current?.launchMeteor()}
-                    >
-                        <span className="solar-tour-launch__icon" aria-hidden="true">☄</span>
-                        <span className="solar-action-label">Launch meteor</span>
-                    </button>}
-                    <button
-                        ref={beyondButtonRef}
-                        type="button"
-                        className="solar-tour-launch"
-                        aria-label="Warp to Beyond"
-                        disabled={!sceneReady}
-                        onClick={() => {
-                            sceneApiRef.current?.collapsePane?.();
-                            setBeyondPickerOpen(true);
-                        }}
-                    >
-                        <span className="solar-tour-launch__icon" aria-hidden="true">🌀</span>
-                        <span className="solar-action-label">Beyond</span>
-                    </button>
-                    <button
-                        ref={mapButtonRef}
-                        type="button"
-                        className="solar-tour-launch"
-                        aria-label="Galaxy map"
-                        disabled={!sceneReady}
-                        onClick={() => {
-                            sceneApiRef.current?.collapsePane?.();
-                            if (sceneApiRef.current?.openMap()) setMapLevel("galaxies");
-                        }}
-                    >
-                        <span className="solar-tour-launch__icon" aria-hidden="true">🗺</span>
-                        <span className="solar-action-label">Galaxy map</span>
-                    </button>
+                        items={[
+                            { id: "constellations", icon: "✦", label: "Constellations", ariaLabel: "Explore constellations", onSelect: () => {
+                                sceneApiRef.current?.collapsePane?.();
+                                setConstellationState({ active: true, index: 0, muted: false });
+                            } },
+                            ...(system.extras.meteor ? [{ id: "meteor", icon: "☄", label: "Launch meteor", onSelect: () => sceneApiRef.current?.launchMeteor() }] : []),
+                            { id: "beyond", icon: "🌀", label: "Beyond", ariaLabel: "Warp to Beyond", onSelect: () => {
+                                sceneApiRef.current?.collapsePane?.();
+                                setBeyondPickerOpen(true);
+                            } },
+                            { id: "map", icon: "🗺", label: "Galaxy map", onSelect: () => {
+                                sceneApiRef.current?.collapsePane?.();
+                                if (sceneApiRef.current?.openMap()) setMapLevel("galaxies");
+                            } },
+                        ]}
+                    />
                     {!system.home && <button
                         type="button"
                         className="solar-tour-launch"
@@ -2464,7 +2448,7 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
                 </aside>
             )}
             {freeFlightOpen && <SolarFlightControls api={sceneApiRef.current?.freeFlight} bodies={sceneApiRef.current?.freeFlight.getTargets() ?? []} view={freeFlightView}
-                clues={system.flight.clues} badges={system.flight.badges} systemName={system.name} systemPhrase={system.phrase}
+                clues={system.flight.clues} chapters={system.flight.chapters} badges={system.flight.badges} session={flightSessionRef.current} systemName={system.name} systemPhrase={system.phrase}
                 startName={system.planets.find((planet) => planet.id === system.flight.startBodyId)?.name ?? system.flight.startBodyId}
                 cameraView={cameraView} onCameraViewChange={selectCameraView}
                 onHome={system.home ? undefined : () => sceneApiRef.current?.goHome()} homePhrase={homePhrase}

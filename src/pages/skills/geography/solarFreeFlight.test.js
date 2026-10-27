@@ -533,3 +533,51 @@ test('tearing the scene down mid-arrival does not report an arrival', () => {
   t.clean();
   assert.deepEqual(t.done, []);
 });
+
+test('engineTime counts only seconds spent flying under power', () => {
+  const t = setup();
+  try {
+    t.flight.enter(); t.tick(5);
+    const view = () => t.changes.at(-1);
+    t.flight.update(.05); assert.equal(view().engineTime ?? 0, 0, 'sitting still does not count');
+    t.flight.face('Mars'); t.flight.setThrust(true); t.tick(40);
+    t.flight.setThrust(false);
+    const flown = view().engineTime;
+    assert.ok(flown > 1.5 && flown <= 2.05, `about two seconds: ${flown}`);
+    t.tick(40);
+    assert.ok(view().engineTime - flown < .3, 'coasting to a stop adds next to nothing');
+  } finally { t.clean(); }
+});
+
+test('belt rocks: shown only while steering, a bump wobbles and slows the rocket but never awards', () => {
+  const calls = [];
+  let bumpNext = false;
+  const rocks = {
+    update: state => calls.push(state.steering),
+    collide: (position, velocity) => { if (!bumpNext) return false; bumpNext = false; velocity.multiplyScalar(.5); return true; },
+  };
+  const t = setup({ rocks, reduced: false });
+  try {
+    t.flight.enter(); t.tick(2);
+    assert.equal(calls.at(-1), true, 'steering');
+    t.flight.face('Mars'); t.flight.setThrust(true); t.tick(20);
+    const before = t.ship.quaternion.clone();
+    bumpNext = true; t.tick(1);
+    assert.equal(t.changes.at(-1).bumps, 1);
+    t.tick(2);
+    assert.ok(t.ship.quaternion.angleTo(before) > .02, 'the rocket wobbles');
+    assert.equal(t.changes.at(-1).arrival, null);
+    t.flight.exit(); t.flight.update(.05);
+    assert.equal(calls.at(-1), false, 'not steering once flight ends');
+  } finally { t.clean(); }
+});
+
+test('engineTime counts real seconds even when frames are slow', () => {
+  const t = setup();
+  try {
+    t.flight.enter(); t.tick(5); t.flight.face('Mars'); t.flight.setThrust(true);
+    for (let i = 0; i < 10; i++) t.flight.update(.2);
+    const flown = t.changes.at(-1).engineTime;
+    assert.ok(flown > 1.5, `slow frames still count: ${flown}`);
+  } finally { t.clean(); }
+});

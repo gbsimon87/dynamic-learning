@@ -72,6 +72,8 @@ async function capture(dir) {
       await shot('my-view');
       await page.getByRole('button', { name: 'Close my view settings' }).click();
 
+      await page.getByRole('button', { name: 'More things to do' }).click();
+
       await page.getByRole('button', { name: 'Warp to Beyond' }).click();
       await page.getByRole('dialog', { name: 'Where to?' }).waitFor();
       await shot('beyond-picker');

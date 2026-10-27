@@ -19,7 +19,7 @@ test('warning counts down and speaks once when unmuted', () => {
   rerender(<SolarTripHud trip={trip({ secondsLeft: .2 })} onTurnBack={() => {}} />);
   expect(speak).toHaveBeenCalledTimes(1);
   expect(speak).toHaveBeenCalledWith('Leaving the Solar System, heading for TRAPPIST one in 3, 2, 1.');
-  expect(screen.getByText('Sped up — even light takes about 41 years to make this trip.')).toBeTruthy();
+  expect(screen.getByText('Sped up - even light takes about 41 years to make this trip.')).toBeTruthy();
   cleanup(); vi.clearAllMocks(); isMuted.mockReturnValue(true);
   render(<SolarTripHud trip={trip({ toPhrase: 'the Solar System', toSpoken: 'the Solar System', fromPhrase: 'TRAPPIST-1', toHome: true })} onTurnBack={() => {}} />);
   expect(screen.getByRole('status').textContent).toBe('Leaving TRAPPIST-1 — heading home to the Solar System in 3…');

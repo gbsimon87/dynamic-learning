@@ -7,7 +7,9 @@ import { HOME_SYSTEM } from '../../src/pages/skills/geography/systems/home.js';
 import { TEST_SYSTEM } from '../../src/pages/skills/geography/systems/fixtures/testSystem.js';
 
 // The HUD takes its clues, badges and wording from the system definition.
-const HOME_FLIGHT = { clues: HOME_SYSTEM.flight.clues, badges: HOME_SYSTEM.flight.badges, startName: 'Earth', systemName: 'Solar System', systemPhrase: 'the Solar System' };
+// One chapter starts at once; chapter choosing has its own tests below.
+const ONE_CHAPTER = [{ id: 'all', name: 'All', icon: '🚀', promise: 'Everything', clueIds: FLIGHT_CLUES.map(c => c.id) }];
+const HOME_FLIGHT = { clues: HOME_SYSTEM.flight.clues, chapters: ONE_CHAPTER, badges: HOME_SYSTEM.flight.badges, startName: 'Earth', systemName: 'Solar System', systemPhrase: 'the Solar System' };
 import { isMuted } from '../../src/components/celebration/sound/player.js';
 import { speak } from '../../src/utils/speech.js';
 vi.mock('../../src/utils/speech.js', () => ({ speak: vi.fn(), stopNarration: vi.fn() }));
@@ -31,7 +33,7 @@ test('touch steering and thrust release on cancellation; navigation and cleanup 
   fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Earth' } });
   // Live speed updates must not steal focus from the destination select.
   screen.getByRole('combobox').focus();
-  rerender(<SolarFlightControls {...HOME_FLIGHT} api={api} bodies={bodies} view={{ name: 'Earth', speed: 3 }} onClose={() => close()} onPractice={practice} />);
+  rerender(<SolarFlightControls {...HOME_FLIGHT} api={api} bodies={bodies} view={{ name: 'Earth', speed: 3, engineTime: 30 }} onClose={() => close()} onPractice={practice} />);
   expect(document.activeElement).toBe(screen.getByRole('combobox'));
   fireEvent.click(screen.getByText('Point rocket here')); expect(api.face).toHaveBeenCalledWith('Earth');
   fireEvent.click(screen.getByRole('button', { name: /More/ }));
@@ -51,6 +53,7 @@ test('hints are free, wrong arrivals do not award stars, and duplicate/stale arr
   expect(screen.getByText(/what people call the red planet/)).toBeTruthy();
   const token = goalToken();
   fireEvent.click(screen.getByRole('button', { name: /Hint/ })); expect(screen.getByText('Look for Mars.')).toBeTruthy();
+  rerender(<SolarFlightControls {...HOME_FLIGHT} {...props} view={{ engineTime: 30 }} />);
   fireEvent.click(screen.getByText('Help me steer')); expect(api.face).toHaveBeenLastCalledWith('Mars');
   rerender(<SolarFlightControls {...HOME_FLIGHT} {...props} view={{ arrival: { target: 'Venus', token }, navigationArrived: 'Venus' }} />);
   expect(screen.getByText('You reached Venus. Keep following the clue!')).toBeTruthy();
@@ -62,8 +65,8 @@ test('hints are free, wrong arrivals do not award stars, and duplicate/stale arr
   expect(screen.getByRole('button', { name: 'Thrust' }).disabled).toBe(true);
   rerender(<SolarFlightControls {...HOME_FLIGHT} {...props} view={{ arrival: { target: 'Mars', token } }} />);
   expect(screen.getByLabelText('1 stars earned')).toBeTruthy();
-  fireEvent.click(screen.getByText('Next clue →'));
-  expect(screen.getByText(/our home planet/)).toBeTruthy();
+  fireEvent.click(screen.getByText('Keep going →'));
+  expect(screen.getByText(/Now find Phobos/)).toBeTruthy();
   expect(screen.queryByText('Look for Mars.')).toBeNull();
   expect(screen.getByRole('button', { name: 'Thrust' }).disabled).toBe(false);
   rerender(<SolarFlightControls {...HOME_FLIGHT} {...props} view={{ arrival: { target: 'Mars', token } }} />);
@@ -75,23 +78,27 @@ test('hints are free, wrong arrivals do not award stars, and duplicate/stale arr
   expect(screen.getByLabelText('0 stars earned')).toBeTruthy();
 });
 
-test('a full clue adventure earns 25 stars, milestone badges and a fresh replay', () => {
+test('a chapter of about five finds ends with its card; playing again keeps the stars and starts fresh', () => {
   const props = { api, bodies: allBodies, onClose: noop, onPractice: noop };
   const { rerender } = render(<SolarFlightControls {...HOME_FLIGHT} {...props} />);
-  for (let i = 0; i < FLIGHT_CLUES.length; i++) {
-    const clue = FLIGHT_CLUES[i];
-    rerender(<SolarFlightControls {...HOME_FLIGHT} {...props} view={{ arrival: { target: clue.target, token: goalToken() } }} />);
+  const labels = [];
+  for (let i = 0; i < 5; i++) {
+    const target = api.setGoal.mock.calls.at(-1)[0];
+    rerender(<SolarFlightControls {...HOME_FLIGHT} {...props} view={{ arrival: { target, token: goalToken() } }} />);
     expect(screen.getByLabelText(`${i + 1} stars earned`)).toBeTruthy();
-    expect(screen.getByRole('status').textContent).toContain('You found');
-    if (i < FLIGHT_CLUES.length - 1) fireEvent.click(screen.getByText('Next clue →'));
+    if (i === 4) expect(screen.getByText('Space Scout')).toBeTruthy();
+    const next = screen.getByRole('button', { name: /Keep going|Next clue|Finish adventure/ });
+    labels.push(next.textContent); fireEvent.click(next);
   }
-  expect(screen.getByText('Star Pilot')).toBeTruthy();
-  expect(screen.getByText(/Adventure finished! You earned 25 stars/)).toBeTruthy();
+  expect(labels).toEqual(['Keep going →', 'Next clue →', 'Keep going →', 'Next clue →', 'Finish adventure']);
+  expect(screen.getByText('🎉 All complete!')).toBeTruthy();
+  expect(screen.getByRole('list', { name: 'What you found' }).children).toHaveLength(5);
+  expect(api.setGoal).toHaveBeenLastCalledWith(null, null);
   const lastToken = goalToken();
-  fireEvent.click(screen.getByText('New adventure'));
+  fireEvent.click(screen.getByText('Play All again'));
   expect(goalToken()).not.toBe(lastToken);
-  expect(screen.getByLabelText('0 stars earned')).toBeTruthy();
-  expect(screen.getByText('Clue 1 / 25')).toBeTruthy();
+  expect(screen.getByLabelText('5 stars earned')).toBeTruthy();
+  expect(screen.getByText(/Clue 1 \/ 5/)).toBeTruthy();
 });
 
 test('choosing a camera returns desktop keyboard focus to the flight surface', () => {

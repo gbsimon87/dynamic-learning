@@ -49,7 +49,11 @@ test("home's card labels and special sections are unchanged", () => {
 });
 
 test("home's flight, tour, camera and Sun are unchanged", () => {
-    assert.deepEqual(HOME_SYSTEM.flight.clues, SNAPSHOT.FLIGHT_CLUES);
+    // Space explorer chapters (2026-10-27) added clues, steps and questions; the original clues stay.
+    for (const before of SNAPSHOT.FLIGHT_CLUES) {
+        const after = HOME_SYSTEM.flight.clues.find((clue) => clue.id === before.id);
+        assert.deepEqual({ target: after.target, clue: after.clue, hint: after.hint }, { target: before.target, clue: before.clue, hint: before.hint }, before.id);
+    }
     assert.deepEqual(HOME_SYSTEM.flight.badges, SNAPSHOT.FLIGHT_BADGES);
     assert.equal(HOME_SYSTEM.flight.edgeRadius, SNAPSHOT.edgeRadius);
     assert.equal(HOME_SYSTEM.flight.startBodyId, "Earth");
@@ -63,7 +67,7 @@ test("home's flight, tour, camera and Sun are unchanged", () => {
 test("home is a valid definition with every home extra switched on", () => {
     assert.deepEqual(validateSystem(HOME_SYSTEM), []);
     assert.equal(HOME_SYSTEM.home, true);
-    for (const extra of ["meteor", "missions", "iss", "comet", "earthEffects", "saturnRingDetail", "asteroidBelt", "moonPhases", "paleBlueDot", "lineUp", "sunTaps", "liftOff", "warpIn"]) {
+    for (const extra of ["meteor", "missions", "iss", "comet", "earthEffects", "saturnRingDetail", "asteroidBelt", "moonPhases", "paleBlueDot", "lineUp", "sunTaps", "liftOff", "warpIn", "namedAsteroids"]) {
         assert.ok(HOME_SYSTEM.extras[extra], extra);
     }
 });

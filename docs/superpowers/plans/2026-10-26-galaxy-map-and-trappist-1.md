@@ -14,34 +14,34 @@
 
 Branch `feat/galaxy-map-trappist-1` (from `dev`), nothing committed (owner rule). Executed natively, one slice at a time. Detailed record and every ruling: `.superpowers/sdd/2026-10-26-galaxy-map-and-trappist-1/progress.md` (git-ignored).
 
-| Task | Status | Notes |
-|---|---|---|
-| 0 Baseline | ✅ done | `scripts/checkSolarBaseline.js --capture/--compare` (new script, not a flag on `checkSolarUi.js`); 36 screenshots in `/tmp/bix-solar-baseline`, zero errors |
-| 1 System maths + validation | ✅ done | 10 tests pass. TRAPPIST-1 b density is 5.45 → **5.5** (plan's 5.4 was a rounding slip; Task 11 list corrected) |
-| 2 Home definition | ✅ done | `systems/home.js`; snapshot generated mechanically into `systems/fixtures/homeSnapshot.json`; planetData's unseen tour-fact lists dropped (card facts kept) |
-| 3 Registry + shared suite | ✅ done | `systems/registry.js`, test-only `fixtures/testSystem.js`; density stats carry numeric `densityGcm3` |
-| 4 Scene reads the definition | ✅ done | Textures/materials/planets/Sun/camera from `HOME_SYSTEM`; `sceneGuard.test.js` started; `worldSurfaces.test.js` now reads moons from the definition. Earth-specific lookups remain until Task 7 |
-| 5 Cards + birthday | ✅ done | Play/card read body data; `systems/bodyInfo.js` pulled forward from Task 13; stats + honesty line + tour finish label; short years read in Earth days |
-| 6 Flight settings | ✅ done | `edgeRadius`/`startBodyId` passed to free flight (`FLIGHT_EDGE_RADIUS` export removed); HUD takes `clues, badges, startName, systemName, systemPhrase` |
-| 7 Home extras gated | ✅ done | Off extras use stand-in objects; off belt = zero-count belt; tour reads `tour.stops`; guard test passes (no body names in shared files) |
-| 8 Page wrapper + toolbar | ✅ done | `SolarSystemPage.jsx` (route), remount by `key`, adult `?debug&system=`; toolbar/search/canvas labels use `system.phrase`; meteor + missions gated |
-| 9 Home comparison gate | ✅ done | 36 pairs reviewed by eye: only random asteroids/stars and clock-moved planets differ; zero errors. **Slice 1 complete** |
-| 10 Fact check | ✅ done | Haiku helper vs NASA archive. Corrected: periods b 1.510826, c 2.421937, g 12.352446; RA 23.1084 h, Dec −5.0435°. Dropped "d at inner edge of water zone" (no source); water zone = e, f, g. JWST: b ≈230 °C, c ≈107 °C |
-| 11 TRAPPIST-1 definition | ✅ done | `systems/trappist1.js` + registry entry + tests; validator now requires list-shaped `closer`/`facts` and numeric `orbit` elements |
-| 12 Scene support | ✅ done | `proceduralPlanet.js`; star card (`buildStarInfo`, tap/tour/search); drawer `hiddenToggles`; constellation `viewpointNote`; welcome spoken once; quality guard for remount. One batched browser pass: renders at 3 sizes × 2 themes, no errors |
-| 13 Card tests | ✅ done | `tests/components/trappist1Cards.test.jsx` (incl. 300-shuffle clue deck). **Slice 2 complete** — next: Slice 3 (Travel), switch to **Opus** |
-| 14 Trip timeline | ✅ done | `systems/tripTimeline.js`, 8 tests; `tripFrame` takes `previous` so the hand-over fires on one frame |
-| 15 Trip mode in free flight | ✅ done | Warning, dash, hand-over, turn back (button or held turn-around), arrival, autopilot trips; flown trips leave straight out from where they crossed the edge |
-| 16 Trip HUD | ✅ done | `SolarTripHud.jsx/.css`: countdown read once, Turn back (B/Backspace), "Sped up" label, progress bar under reduced motion; Warp to Beyond edge offer and `atEdge` removed |
-| 17 Hand-over + Home | ✅ done | Page loads one system at a time, remounts by `id:visit`, failed load → home + alert, page speaks the welcome (once, not muted, not after turn back); Home on toolbar and flight HUD (autopilot); scene mode `trip` for autopilot trips |
-| 18 Signposts | ✅ done | `systems/signposts.js` + `systemSignposts.js` (arrow, ring, label; faint home star away from home); signs are flight targets, not obstacles; TRAPPIST-1 clue "Find the sign pointing home"; validator accepts `sign:<id>`. **Slice 3 complete** |
-| 19 Map catalogue | ✅ done | `galaxyMapData.js`: galaxies (look-don't-land), Space ripples event, registry systems at real positions; `spreadMarkers` keeps close markers tappable |
-| 20 Milky Way image | ✅ done | Gate passed (JPL image use policy; Commons: public domain). ssc2008-10a1 → `public/static/milky-way-4096.jpg` (2.47 MB) / `-2048.jpg` (0.68 MB); credits entry |
-| 21 Map scene | ✅ done | `galaxyMap.js`: three levels as groups, picture disc + star layer + bulge, You are here, pan held per level, camera pulls back on portrait |
-| 22 Map panel + button | ✅ done | `GalaxyMapPanel.jsx/GalaxyMap.css`; Galaxy map button in both systems; Jump there / Go home fly the autopilot trip; Space ripples visits Beyond. **Slice 4 complete** (its Opus review folded into the final review) |
-| 23 add-star-system skill | ✅ done | `.claude/skills/add-star-system/SKILL.md`, dry-run against the test system |
-| 24 Docs | ✅ done | IDEAS (#108 ✅, #109 ◐, toolbar rule, item 6 ✅, new section), PROJECT_KNOWLEDGE, AGENTS skills row |
-| 25 Final verification | ✅ done | Lint/test/build pass (2425 unit, 576 component). `checkSolarUi.js --systems`; two batched browser passes, zero errors. Final Opus review: 1 critical + 1 important fixed with tests; marker overlap and 1280 toolbar fixed after the confirm pass (not re-checked in a browser). **Slice 5 complete — nothing committed** |
+| Task                         | Status  | Notes                                                                                                                                                                                                                                                                                                                     |
+| ---------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0 Baseline                   | ✅ done | `scripts/checkSolarBaseline.js --capture/--compare` (new script, not a flag on `checkSolarUi.js`); 36 screenshots in `/tmp/bix-solar-baseline`, zero errors                                                                                                                                                               |
+| 1 System maths + validation  | ✅ done | 10 tests pass. TRAPPIST-1 b density is 5.45 → **5.5** (plan's 5.4 was a rounding slip; Task 11 list corrected)                                                                                                                                                                                                            |
+| 2 Home definition            | ✅ done | `systems/home.js`; snapshot generated mechanically into `systems/fixtures/homeSnapshot.json`; planetData's unseen tour-fact lists dropped (card facts kept)                                                                                                                                                               |
+| 3 Registry + shared suite    | ✅ done | `systems/registry.js`, test-only `fixtures/testSystem.js`; density stats carry numeric `densityGcm3`                                                                                                                                                                                                                      |
+| 4 Scene reads the definition | ✅ done | Textures/materials/planets/Sun/camera from `HOME_SYSTEM`; `sceneGuard.test.js` started; `worldSurfaces.test.js` now reads moons from the definition. Earth-specific lookups remain until Task 7                                                                                                                           |
+| 5 Cards + birthday           | ✅ done | Play/card read body data; `systems/bodyInfo.js` pulled forward from Task 13; stats + honesty line + tour finish label; short years read in Earth days                                                                                                                                                                     |
+| 6 Flight settings            | ✅ done | `edgeRadius`/`startBodyId` passed to free flight (`FLIGHT_EDGE_RADIUS` export removed); HUD takes `clues, badges, startName, systemName, systemPhrase`                                                                                                                                                                    |
+| 7 Home extras gated          | ✅ done | Off extras use stand-in objects; off belt = zero-count belt; tour reads `tour.stops`; guard test passes (no body names in shared files)                                                                                                                                                                                   |
+| 8 Page wrapper + toolbar     | ✅ done | `SolarSystemPage.jsx` (route), remount by `key`, adult `?debug&system=`; toolbar/search/canvas labels use `system.phrase`; meteor + missions gated                                                                                                                                                                        |
+| 9 Home comparison gate       | ✅ done | 36 pairs reviewed by eye: only random asteroids/stars and clock-moved planets differ; zero errors. **Slice 1 complete**                                                                                                                                                                                                   |
+| 10 Fact check                | ✅ done | Haiku helper vs NASA archive. Corrected: periods b 1.510826, c 2.421937, g 12.352446; RA 23.1084 h, Dec −5.0435°. Dropped "d at inner edge of water zone" (no source); water zone = e, f, g. JWST: b ≈230 °C, c ≈107 °C                                                                                                   |
+| 11 TRAPPIST-1 definition     | ✅ done | `systems/trappist1.js` + registry entry + tests; validator now requires list-shaped `closer`/`facts` and numeric `orbit` elements                                                                                                                                                                                         |
+| 12 Scene support             | ✅ done | `proceduralPlanet.js`; star card (`buildStarInfo`, tap/tour/search); drawer `hiddenToggles`; constellation `viewpointNote`; welcome spoken once; quality guard for remount. One batched browser pass: renders at 3 sizes × 2 themes, no errors                                                                            |
+| 13 Card tests                | ✅ done | `tests/components/trappist1Cards.test.jsx` (incl. 300-shuffle clue deck). **Slice 2 complete** — next: Slice 3 (Travel), switch to **Opus**                                                                                                                                                                               |
+| 14 Trip timeline             | ✅ done | `systems/tripTimeline.js`, 8 tests; `tripFrame` takes `previous` so the hand-over fires on one frame                                                                                                                                                                                                                      |
+| 15 Trip mode in free flight  | ✅ done | Warning, dash, hand-over, turn back (button or held turn-around), arrival, autopilot trips; flown trips leave straight out from where they crossed the edge                                                                                                                                                               |
+| 16 Trip HUD                  | ✅ done | `SolarTripHud.jsx/.css`: countdown read once, Turn back (B/Backspace), "Sped up" label, progress bar under reduced motion; Warp to Beyond edge offer and `atEdge` removed                                                                                                                                                 |
+| 17 Hand-over + Home          | ✅ done | Page loads one system at a time, remounts by `id:visit`, failed load → home + alert, page speaks the welcome (once, not muted, not after turn back); Home on toolbar and flight HUD (autopilot); scene mode `trip` for autopilot trips                                                                                    |
+| 18 Signposts                 | ✅ done | `systems/signposts.js` + `systemSignposts.js` (arrow, ring, label; faint home star away from home); signs are flight targets, not obstacles; TRAPPIST-1 clue "Find the sign pointing home"; validator accepts `sign:<id>`. **Slice 3 complete**                                                                           |
+| 19 Map catalogue             | ✅ done | `galaxyMapData.js`: galaxies (look-don't-land), Space ripples event, registry systems at real positions; `spreadMarkers` keeps close markers tappable                                                                                                                                                                     |
+| 20 Milky Way image           | ✅ done | Gate passed (JPL image use policy; Commons: public domain). ssc2008-10a1 → `public/static/milky-way-4096.jpg` (2.47 MB) / `-2048.jpg` (0.68 MB); credits entry                                                                                                                                                            |
+| 21 Map scene                 | ✅ done | `galaxyMap.js`: three levels as groups, picture disc + star layer + bulge, You are here, pan held per level, camera pulls back on portrait                                                                                                                                                                                |
+| 22 Map panel + button        | ✅ done | `GalaxyMapPanel.jsx/GalaxyMap.css`; Galaxy map button in both systems; Jump there / Go home fly the autopilot trip; Space ripples visits Beyond. **Slice 4 complete** (its Opus review folded into the final review)                                                                                                      |
+| 23 add-star-system skill     | ✅ done | `.claude/skills/add-star-system/SKILL.md`, dry-run against the test system                                                                                                                                                                                                                                                |
+| 24 Docs                      | ✅ done | IDEAS (#108 ✅, #109 ◐, toolbar rule, item 6 ✅, new section), PROJECT_KNOWLEDGE, AGENTS skills row                                                                                                                                                                                                                       |
+| 25 Final verification        | ✅ done | Lint/test/build pass (2425 unit, 576 component). `checkSolarUi.js --systems`; two batched browser passes, zero errors. Final Opus review: 1 critical + 1 important fixed with tests; marker overlap and 1280 toolbar fixed after the confirm pass (not re-checked in a browser). **Slice 5 complete — nothing committed** |
 
 ## Global Constraints
 
@@ -50,7 +50,7 @@ Branch `feat/galaxy-map-trappist-1` (from `dev`), nothing committed (owner rule)
 - Home must behave exactly as today. Home's data moves byte-for-byte; any visible home change is a bug.
 - Shared code never names a system or body: no `"Earth"`, `"Saturn"`, `"Pluto"`, `"Sun"`, `"trappist-1"`-style literals in `SolarSystem.jsx`, `SolarInfoCard.jsx`, `SolarFlightControls.jsx`, `PlanetPlayCard.jsx`, `solarFreeFlight.js`, `planetPlay.js`. Names live in definitions.
 - Ages 6–8: 48px targets, read-aloud through `speak()` only when `!isMuted()`, both themes for overlays via `--light-*`/`--dark-*` tokens in `App.css`; the scene stays night.
-- True science, labelled: "Sped up — even light takes about {N} years to make this trip."; TRAPPIST-1 honesty line "Nobody has seen these planets up close. This is a picture to help us imagine."; "scientists think" for tidal locking.
+- True science, labelled: "Sped up - even light takes about {N} years to make this trip."; TRAPPIST-1 honesty line "Nobody has seen these planets up close. This is a picture to help us imagine."; "scientists think" for tidal locking.
 - Nothing new is stored. `dl.solarMissions`, `dl.solarView` and curriculum progress are untouched.
 - Three.js and its add-ons only; no new npm dependencies; no R3F; no physics engine.
 - Effects use `solarModules.js` (`update`, `resize`, `dispose`), the shared clock, low tier at width <720 or coarse pointer, calm reduced motion.
@@ -75,6 +75,7 @@ Ends with home running from its definition, every home extra gated, and a before
 ### Task 0: Capture the home baseline
 
 **Files:**
+
 - Modify: `scripts/checkSolarUi.js` (add a `--baseline <dir>` flag)
 
 - [x] **Step 1:** Add `--baseline <dir>`: for each of 1280×900, 390×844, 844×390 × light/dark, open `/skills/geography/solar-system` (warp-in skipped as the script already does), screenshot: overview; Earth card (search "Earth", choose it); tour stop 1; Fly the rocket HUD; My view drawer open; Beyond picker. Save as `<dir>/<w>x<h>-<theme>-<view>.png`. Record page errors.
@@ -84,11 +85,13 @@ Ends with home running from its definition, every home extra gated, and a before
 ### Task 1: System maths and validation
 
 **Files:**
+
 - Create: `src/pages/skills/geography/systems/systemMath.js`
 - Create: `src/pages/skills/geography/systems/validateSystem.js`
 - Test: `src/pages/skills/geography/systems/systemMath.test.js`, `src/pages/skills/geography/systems/validateSystem.test.js`
 
 **Interfaces:**
+
 - Produces:
   - `densityGcm3(massEarth: number, radiusEarth: number): number` — `5.514 * mass / radius³`
   - `surfaceGravity(massEarth, radiusEarth): number` — `mass / radius²` (Earth = 1)
@@ -152,10 +155,12 @@ test("validateSystem reports a missing startBodyId, a clue target that is no bod
 ### Task 2: Home definition (data moved byte-for-byte)
 
 **Files:**
+
 - Create: `src/pages/skills/geography/systems/home.js`
 - Test: `src/pages/skills/geography/systems/homeSnapshot.test.js`
 
 **Interfaces:**
+
 - Consumes: Task 1 shape.
 - Produces: `export const HOME_SYSTEM` (definition, `id: "solar-system"`, `name: "Solar System"`, `phrase: "the Solar System"`, `spokenName: "the Solar System"`, `starPhrase: "the Sun"`, `home: true`).
 
@@ -168,11 +173,13 @@ test("validateSystem reports a missing startBodyId, a clue target that is no bod
 ### Task 3: Registry, test-only system and the shared definition suite
 
 **Files:**
+
 - Create: `src/pages/skills/geography/systems/registry.js`
 - Create: `src/pages/skills/geography/systems/fixtures/testSystem.js` (test-only; never imported by app code)
 - Test: `src/pages/skills/geography/systems/definitions.test.js`
 
 **Interfaces:**
+
 - Produces:
   - `HOME_SYSTEM_ID = "solar-system"`
   - `SYSTEM_REGISTRY: RegistryEntry[]` where `RegistryEntry = { id, name, phrase, home, place, position, mapCard, load: () => Promise<definition> }` — home only in this task; TRAPPIST-1 added in Task 11
@@ -188,9 +195,11 @@ test("validateSystem reports a missing startBodyId, a clue target that is no bod
 ### Task 4: Scene reads bodies from the definition
 
 **Files:**
+
 - Modify: `src/pages/skills/geography/SolarSystem.jsx` (planet data block `:285-479`, materials `:202-280`, `createPlanetSystem` `:578`, `createPlanetInfo`/`createMoonInfo` `:1262-1306`, search entries `:746-774`, `applyWorldPoses` `:1681`)
 
 **Interfaces:**
+
 - Consumes: `HOME_SYSTEM`.
 - Produces: `ThreeSolarSystem({ system })` — the scene component takes a definition (default `HOME_SYSTEM` until Task 8).
 
@@ -203,10 +212,12 @@ test("validateSystem reports a missing startBodyId, a clue target that is no bod
 ### Task 5: Cards and space birthday read the body, not the name
 
 **Files:**
+
 - Modify: `src/pages/skills/geography/planetPlay.js`, `PlanetPlayCard.jsx`, `SolarInfoCard.jsx`
 - Test: `tests/components/planetPlayCard.test.jsx`, `tests/components/SolarInfoCard.test.jsx`, `src/pages/skills/geography/planetPlay.test.js` (existing — update)
 
 **Interfaces:**
+
 - Produces:
   - `playFor(play)`, `ageOn(play, earthAge)`, `ageSentence(name, play, earthAge, { isHome })`, `weightOn(play)`, `weightSentence(name, play, { isHome })` — `isHome` true only for the definition's home planet (`startBodyId` of the home system) so "On Earth you're 7, of course!" stays.
   - `<PlanetPlayCard name play isHome onLineUp />`
@@ -221,10 +232,12 @@ test("validateSystem reports a missing startBodyId, a clue target that is no bod
 ### Task 6: Free flight and the flight HUD take the definition's flight settings
 
 **Files:**
+
 - Modify: `src/pages/skills/geography/solarFreeFlight.js`, `SolarFlightControls.jsx`, `flightClues.js`
 - Test: `src/pages/skills/geography/solarFreeFlight.test.js`, `tests/components/SolarFlightControls.test.jsx`
 
 **Interfaces:**
+
 - Produces:
   - `createSolarFreeFlight({ ..., edgeRadius, startBodyId })`; `FLIGHT_EDGE_RADIUS` export removed (home passes 1350). `home()` uses `startBodyId`.
   - `<SolarFlightControls ... clues badges startName systemPhrase />` — "Back to {startName}" (home: "Back to Earth"), section label "Fly through {systemPhrase}", help text "...The sizes and distances in {systemPhrase} are compressed."
@@ -239,14 +252,16 @@ test("validateSystem reports a missing startBodyId, a clue target that is no bod
 ### Task 7: Home extras gated by the definition (scene)
 
 **Files:**
+
 - Modify: `src/pages/skills/geography/SolarSystem.jsx` (modules `:1698-1979`, asteroid belt `:635-721`, reset `:1144-1219`, tour `:1400-1437`, sun taps, warp-in, lift-off)
 - Test: `src/pages/skills/geography/systems/sceneGuard.test.js`
 
 **Interfaces:**
+
 - Consumes: `system.extras`, `system.tour`.
 - Produces: none new; each extra is created only when on, and every use is null-safe (`iss?.`, `comet?.`, …).
 
-- [x] **Step 1: Write the guard test.** Read the source of the files listed in Global Constraints; assert no match for `/["'`](Mercury|Venus|Earth|Mars|Jupiter|Saturn|Uranus|Neptune|Pluto|Sun|Moon)["'`]/` and no `/trappist/i`. Expected now: FAIL (lists offending lines).
+- [x] **Step 1: Write the guard test.** Read the source of the files listed in Global Constraints; assert no match for `/["'`](Mercury|Venus|Earth|Mars|Jupiter|Saturn|Uranus|Neptune|Pluto|Sun|Moon)["'`]/`and no`/trappist/i`. Expected now: FAIL (lists offending lines).
 - [x] **Step 2:** Gate one extra at a time, running `npm test` after each: `meteor`, `missions`, `iss`, `comet`, `earthEffects` (day/night, atmospheres, aurora), `saturnRingDetail`, `asteroidBelt` (+ small-body regions, region labels, belt flight body, Tweakpane belt folder), `moonPhases` (`getMoonPhase`), `paleBlueDot`, `lineUp`, `sunTaps` (sneeze/safety; otherwise a star with `card` opens its card — Task 12), `liftOff` (tour starts at the first stop when off), `warpIn`. Body lookups that need a home body take its id from the extra's config: e.g. `extras: { iss: { body: "Earth" }, saturnRingDetail: { body: "Saturn" }, earthEffects: { body: "Earth" }, meteor: { body: "Earth" }, paleBlueDot: { body: "Earth" } }` — update `home.js` and the Task 2 snapshot accordingly (truthy objects instead of `true`).
 - [x] **Step 3:** Tour uses `system.tour.stops` (ids → search entries) and ends with `finish`: `"pale-blue-dot"` keeps today's behaviour; `"end"` exits the tour.
 - [x] **Step 4:** Run `npm run lint && npm test && npm run build`. Expected: PASS including the guard test.
@@ -255,11 +270,13 @@ test("validateSystem reports a missing startBodyId, a clue target that is no bod
 ### Task 8: Page wrapper and toolbar from the definition
 
 **Files:**
+
 - Create: `src/pages/skills/geography/SolarSystemPage.jsx` (new default export used by the route)
 - Modify: `src/main.jsx:107` (lazy import `SolarSystemPage`), `SolarSystem.jsx` (toolbar `:2431-2495`, missions, hint text, search placeholder, `aria-label`s)
 - Test: `tests/components/solarSystemPage.test.jsx`
 
 **Interfaces:**
+
 - Produces:
   - `SolarSystemPage()` — state `{ systemId: HOME_SYSTEM_ID, arrival: null }`; renders `<ThreeSolarSystem key={systemId} system={definition} arrival={arrival} onTravel={travel} />`. `travel({ to, mode: "flown"|"autopilot", direction })` loads the target via `loadSystem`, then sets state (Task 17 fills the trip parts). While loading, a `role="status"` "Getting {phrase} ready…" message shows.
   - Adult-only switch: `?system=<id>` read once on mount, honoured only when `readDebugFlags(location.search).debug` is true (removed in Task 17).
@@ -290,14 +307,17 @@ test("validateSystem reports a missing startBodyId, a clue target that is no bod
 ### Task 11: TRAPPIST-1 definition
 
 **Files:**
+
 - Create: `src/pages/skills/geography/systems/trappist1.js`
 - Modify: `src/pages/skills/geography/systems/registry.js` (add entry with `load: () => import("./trappist1.js").then(m => m.TRAPPIST_1)`)
 - Test: `src/pages/skills/geography/systems/trappist1.test.js`
 
 **Interfaces:**
+
 - Produces: `export const TRAPPIST_1` — `id: "trappist-1"`, `name: "TRAPPIST-1"`, `phrase: "TRAPPIST-1"`, `spokenName: "TRAPPIST one"`, `home: false`, `starPhrase: "TRAPPIST-1"`, `place: { galaxy: "milky-way", galaxyLabel: "Milky Way" }`, `position: { raHours: 23.1082, decDeg: -5.0414, distanceLy: 40.66 }`.
 
 Pinned values:
+
 - Planet ids `trappist-1b` … `trappist-1h`; names `TRAPPIST-1 b` …; spoken `TRAPPIST one B` …; `kindLabel: "Planet"`.
 - Scene `radius = round(0.45 × width, 2)`; `distance = round(a_AU × 1000, 1)`; `speed = round(0.02 × 1.51088 / periodDays, 5)`; `tilt: 0`; `tidallyLocked: true`; `moons: []`.
 - `play: { yearInEarthYears: periodDays / 365.25, gravity: round(surfaceGravity, 2), hasSurface: true }`; keep `periodDays`, `massEarth`, `radiusEarth` on each planet for the suite.
@@ -321,11 +341,13 @@ Pinned values:
 ### Task 12: Scene support for TRAPPIST-1 features
 
 **Files:**
+
 - Create: `src/pages/skills/geography/systems/proceduralPlanet.js` (canvas-texture or shader material from `look.procedural`; small, ≤512px canvas)
 - Modify: `SolarSystem.jsx`, `ConstellationCard.jsx`, `SolarSettingsDrawer.jsx`, `solarViewSettings.js`
 - Test: `src/pages/skills/geography/systems/proceduralPlanet.test.js`, `tests/components/ConstellationCard.test.jsx`, `tests/components/solarSettingsDrawer.test.jsx`
 
 **Interfaces:**
+
 - Produces: `proceduralPlanetMaterial(look, { quality }): THREE.Material` (seeded by planet id so it never changes between visits); star `card` → tapping the star or a tour stop on it opens `SolarInfoCard` with `kind: "star"`; `<ConstellationCard viewpointNote />` showing "Star patterns as seen from Earth" when `!system.home`; drawer hides toggles whose extra is off (`moonLabels` when no planet has moons, belt toggle without `asteroidBelt`).
 
 - [x] **Step 1: Failing tests:** `same id gives the same texture colours`; `constellation card shows the Earth-viewpoint note`; `drawer hides Moon names when no moons`.
@@ -339,6 +361,7 @@ Pinned values:
 > Progress note: `systems/bodyInfo.js` already exists (built in Task 5); this task adds only the TRAPPIST-1 tests.
 
 **Files:**
+
 - Test: `tests/components/trappist1Cards.test.jsx`
 
 - [x] **Step 1:** Write tests driving `SolarInfoCard` with TRAPPIST-1 bodies built by the scene's info builder (export `buildPlanetInfo(system, planet, index)` and `buildStarInfo(system, star)` from a new `src/pages/skills/geography/systems/bodyInfo.js`, moving the logic out of `SolarSystem.jsx`): `b card says "1st planet from TRAPPIST-1"`; `space birthday choice of 7 reads "On TRAPPIST-1 b you'd be 1692!"`; `Bix on the scales is offered when gravity is present`; `star card shows the honesty line`; `tour card's last button reads Finish the tour`. And `SolarFlightControls` with TRAPPIST-1's clues: a full clue deck has no two identical targets in a row (seeded random).
@@ -350,10 +373,12 @@ Pinned values:
 ### Task 14: Trip timeline (pure)
 
 **Files:**
+
 - Create: `src/pages/skills/geography/systems/tripTimeline.js`
 - Test: `src/pages/skills/geography/systems/tripTimeline.test.js`
 
 **Interfaces:**
+
 - Produces:
   - `WARNING_SECONDS = 3`, `MAX_TRIP_SECONDS = 10`, `EDGE_OFFER_MARGIN = 5`, `ARRIVE_INSET = 20`, `TURN_BACK_ALIGNMENT = -0.5`, `TURN_BACK_HOLD = 0.6`
   - `dashSecondsFor(distanceLy) = Math.min(7, 5 + 0.75 * Math.log10(Math.max(distanceLy, 1)))`
@@ -370,10 +395,12 @@ Pinned values:
 ### Task 15: Trip mode in free flight
 
 **Files:**
+
 - Modify: `src/pages/skills/geography/solarFreeFlight.js`
 - Test: `src/pages/skills/geography/solarFreeFlight.test.js`
 
 **Interfaces:**
+
 - Consumes: Task 14; `SolarSystem.jsx` builds `tripTo` from `otherSystems(system.id)[0]` and `directionBetween(positionLy(current), positionLy(target))` (Task 1/3).
 - Produces on the free-flight API:
   - option `tripTo: { id, phrase, direction, distanceLy } | null` (the other system; with two systems it is always set; Task 18 adds signposts, not selection)
@@ -387,12 +414,14 @@ Pinned values:
 ### Task 16: Trip HUD
 
 **Files:**
+
 - Create: `src/pages/skills/geography/SolarTripHud.jsx`, `SolarTripHud.css`
 - Modify: `SolarFlightControls.jsx` (render the HUD when `view.trip`; remove the "Warp to Beyond" edge offer and `onBeyond` prop)
 - Test: `tests/components/SolarTripHud.test.jsx`, `tests/components/SolarFlightControls.test.jsx`
 
 **Interfaces:**
-- Produces: `<SolarTripHud trip onTurnBack />` — warning: "Leaving {fromPhrase} — heading for {toPhrase} in 3… 2… 1…" (live region), big **Turn back** button (48px+, keyboard `B` and `Backspace` outside inputs), honesty label "Sped up — even light takes about {Math.round(distanceLy)} years to make this trip."; `calm` shows a `role="progressbar"` with `aria-valuenow`.
+
+- Produces: `<SolarTripHud trip onTurnBack />` — warning: "Leaving {fromPhrase} — heading for {toPhrase} in 3… 2… 1…" (live region), big **Turn back** button (48px+, keyboard `B` and `Backspace` outside inputs), honesty label "Sped up - even light takes about {Math.round(distanceLy)} years to make this trip."; `calm` shows a `role="progressbar"` with `aria-valuenow`.
 - [x] **Step 1: Failing tests:** `warning counts down and speaks once when unmuted`; `Turn back button and B key call onTurnBack`; `switching to reduced motion mid-trip keeps the trip and shows progress`; `no Warp to Beyond button at the edge any more`.
 - [x] **Step 2:** FAIL. **Step 3:** Implement with theme tokens. **Step 4:** PASS.
 - [ ] **Step 5:** Commit `feat(travel): trip warning and turn back`.
@@ -400,10 +429,12 @@ Pinned values:
 ### Task 17: Hand-over, autopilot trips and Home
 
 **Files:**
+
 - Modify: `SolarSystemPage.jsx`, `SolarSystem.jsx` (accept `arrival`, `onTravel`; Home button in toolbar and flight HUD; autopilot trip for Home; remove the `?system=` switch), `SolarFlightControls.jsx` (Home button when away)
 - Test: `tests/components/solarSystemPage.test.jsx`
 
 **Interfaces:**
+
 - Consumes: Tasks 8, 15, 16.
 - Produces: `arrival = { from: id, mode: "flown"|"autopilot", fromDirection, elapsedAtHandoff }` passed to the new scene; the scene calls `freeFlight.beginArrival` (flown) or runs the autopilot arrival then `resetView()` (autopilot). `onTravel` is ignored while a load or trip is in flight.
 
@@ -414,11 +445,13 @@ Pinned values:
 ### Task 18: Signposts and our Sun from TRAPPIST-1
 
 **Files:**
+
 - Create: `src/pages/skills/geography/systems/signposts.js` (pure), `src/pages/skills/geography/systemSignposts.js` (scene module)
 - Modify: `SolarSystem.jsx` (add module; add signpost bodies to free-flight targets), `trappist1.js` (add the "find the sign pointing home" clue, target `sign:solar-system`)
 - Test: `src/pages/skills/geography/systems/signposts.test.js`
 
 **Interfaces:**
+
 - Produces:
   - `signpostsFor(currentId, entries, edgeRadius) → [{ id: "sign:<id>", targetId, label, position, direction }]` — position `direction × (edgeRadius + 30)`; label `"{name} — {Math.round(distanceLy)} light-years this way"`, home's label `"Home — the Solar System"`.
   - `createSystemSignposts({ scene, camera, signposts, makeLabel, homeStarDot: boolean, quality })` module (`update`, `dispose`); away from home it also draws a faint star dot for our Sun on the sky sphere in home's direction.
@@ -431,11 +464,13 @@ Pinned values:
 ### Task 19: Map catalogue (pure)
 
 **Files:**
+
 - Create: `src/pages/skills/geography/galaxyMapData.js`
 - Modify: `beyondDestinations.js` (export unchanged; catalogue reads it)
 - Test: `src/pages/skills/geography/galaxyMapData.test.js`
 
 **Interfaces:**
+
 - Produces:
   - `MAP_LEVELS = ["galaxies", "milky-way", "neighbourhood"]`
   - `GALAXIES` — Milky Way (enterable), Andromeda (2.5 million ly; RA 0.712 h, Dec +41.27), Triangulum (2.7 million ly; 1.564 h, +30.66), Large Magellanic Cloud (160,000 ly; 5.392 h, −69.76), Small Magellanic Cloud (200,000 ly; 0.877 h, −72.83); each `{ id, name, distanceLy, look: "dont-land", card: { what, fact } }` except the Milky Way.
@@ -448,6 +483,7 @@ Pinned values:
 ### Task 20: Milky Way image (owner gate on usage terms)
 
 **Files:**
+
 - Create: `public/static/milky-way-4096.jpg`, `public/static/milky-way-2048.jpg`
 - Modify: `src/pages/credits/Credits.jsx`, `tests/components/credits.test.jsx`
 
@@ -460,10 +496,12 @@ Pinned values:
 ### Task 21: Map scene
 
 **Files:**
+
 - Create: `src/pages/skills/geography/galaxyMap.js`
 - Test: `src/pages/skills/geography/galaxyMap.test.js`
 
 **Interfaces:**
+
 - Produces: `createGalaxyMap({ renderer, quality, reducedMotion, catalogue, currentSystemId, createControls })` returning `{ open(), close(), isActive(), level(), setLevel(level), focus(markerId), projectMarkers(): [{ id, x, y, visible }], update(dt), render(), resize(size), dispose() }`. Drawn instead of the system scene (like `lineUp`). Milky Way texture `milky-way-4096.jpg` (`-2048` on low tier) on a disc with a star-particle layer and raised bulge; loaded on `open`, freed on `close`. OrbitControls allow rotate, tilt (polar 0.2–1.4 rad), pan and zoom within each level's bounds. `SUN_ON_IMAGE = { u, v }` measured from the image (Orion Spur, ≈26,000 ly from the centre).
 - [x] **Step 1: Failing tests (node, no renderer: inject `createControls` and a fake renderer like `spaceRipples.test.js` does):** `opening builds the scene and closing frees the texture`; `setLevel moves the camera target to each level's centre`; `projectMarkers returns one entry per marker on the current level`; `You are here follows currentSystemId`.
 - [x] **Step 2–4:** FAIL → implement → PASS.
@@ -472,11 +510,13 @@ Pinned values:
 ### Task 22: Map panel and toolbar button
 
 **Files:**
+
 - Create: `src/pages/skills/geography/GalaxyMapPanel.jsx`, `GalaxyMap.css`
 - Modify: `SolarSystem.jsx` (Galaxy map button in both systems; open/close the map module; marker positions; Jump there/Go home call `onTravel({ mode: "autopilot" })`; Space ripples calls `goBeyond("space-ripples")`)
 - Test: `tests/components/GalaxyMapPanel.test.jsx`
 
 **Interfaces:**
+
 - Produces: `<GalaxyMapPanel level markers card currentSystemId onLevel onMarker onClose onJump onGoHome onVisitEvent />` — DOM marker buttons (48px, labelled) positioned from `projectMarkers()` each animation frame; header with level title and Back; cards: system (name, distance "about 40 light-years from home", star type, planet count, fact, **Jump there** / **Go home** / closes if current); galaxy (look-don't-land text, no jump); event (Space ripples, "Visit"). Read-aloud button on each card.
 - [x] **Step 1: Failing tests:** `galaxies level shows Andromeda with no jump button`; `tapping the Milky Way goes to its level and Back returns`; `neighbourhood shows home and TRAPPIST-1; TRAPPIST-1 card offers Jump there`; `the current system's card closes the map instead of jumping`; `away from home the Solar System card says Go home`; `Space ripples card visits Beyond`.
 - [x] **Step 2–4:** FAIL → implement → PASS; full checks. The toolbar (now six buttons at home) must fit at 390px without covering the My view button or search — e.g. icon-only labels below a width the builder picks; add a component test `toolbar labels collapse on narrow screens` if the choice is CSS-class driven.
@@ -487,6 +527,7 @@ Pinned values:
 ### Task 23: The add-star-system skill
 
 **Files:**
+
 - Create: `.claude/skills/add-star-system/SKILL.md` (frontmatter `name`, `description`, `model: sonnet`, like `add-skill-game`)
 
 - [x] **Step 1:** Write the guide: where definitions live (`systems/`), the definition shape (link Task 1's block via `validateSystem.js`), registry entry, values to take from the NASA Exoplanet Archive and how to cite them in `sources`, honesty labels, writing rules (6–8 year olds, home comparisons, spoken names, "scientists think"), procedural looks and phone memory, credits, the shared suite (`node --test src/pages/skills/geography/systems/`), what the map/signposts/trip pick up automatically, and the batched browser check. Mention the open decision: choosing a destination by heading when a third system arrives (`systemAhead`).
@@ -496,6 +537,7 @@ Pinned values:
 ### Task 24: Docs
 
 **Files:**
+
 - Modify: `docs/SOLAR_SYSTEM_IDEAS.md`, `docs/PROJECT_KNOWLEDGE.md`, `AGENTS.md` (skills table row for `add-star-system`)
 
 - [x] **Step 1:** IDEAS: #108 and #109 statuses (◐: TRAPPIST-1 built, more systems pending), Phase 6 row, remove the five-button toolbar rule from "Build rules", mark Upcoming sequence item 6 done, add a "Galaxy map and TRAPPIST-1" implementation section with limits (device/child checks open; destination-by-heading decided at the third system).

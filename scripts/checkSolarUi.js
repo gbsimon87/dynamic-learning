@@ -88,13 +88,14 @@ try {
       assert.ok(!cameras || cameras.x + cameras.width <= chosen.toggle.left - 4, `camera buttons clear of search: ${JSON.stringify(cameras)}`);
       await shot('toolbar-1100-chosen');
       await page.getByRole('button', { name: /Overview/ }).click();
-      await page.getByRole('button', { name: 'Warp to Beyond' }).waitFor();
+      await page.getByRole('button', { name: 'More things to do' }).waitFor();
       await page.setViewportSize({ width, height });
       await page.waitForTimeout(300);
     }
 
     if (beyondOnly) {
       // Warp to Beyond (#113) → Space ripples (#94) → home, in one pass.
+      await page.getByRole('button', { name: 'More things to do' }).click();
       await page.getByRole('button', { name: 'Warp to Beyond' }).click();
       await page.getByRole('dialog', { name: 'Where to?' }).waitFor();
       await inside('.beyond-picker', { maxWidth: 440 });
@@ -131,11 +132,12 @@ try {
       await page.waitForTimeout(600);
       await shot('beyond-settled-tap');
       await page.getByRole('button', { name: 'Back to the Solar System' }).click();
-      await page.getByRole('button', { name: 'Warp to Beyond' }).waitFor({ timeout: 10000 });
+      await page.getByRole('button', { name: 'More things to do' }).waitFor({ timeout: 10000 });
       assert.equal(await page.locator('.beyond-ripples-card, .beyond-warp, .beyond-picker').count(), 0, 'Beyond UI cleared on return');
       await page.waitForTimeout(1500);
-      assert.equal(await page.getByRole('button', { name: 'Warp to Beyond' }).evaluate(el => el === document.activeElement), true, 'focus returns to Beyond');
+      assert.equal(await page.getByRole('button', { name: 'More things to do' }).evaluate(el => el === document.activeElement), true, 'focus returns to More');
       // A second trip builds everything afresh (the first trip's warp was freed).
+      await page.getByRole('button', { name: 'More things to do' }).click();
       await page.getByRole('button', { name: 'Warp to Beyond' }).click();
       await page.getByRole('button', { name: /Space ripples/ }).click();
       await hold.waitFor();
@@ -146,7 +148,7 @@ try {
       await page.mouse.up();
       await shot('beyond-second-trip');
       await page.getByRole('button', { name: 'Back to the Solar System' }).click();
-      await page.getByRole('button', { name: 'Warp to Beyond' }).waitFor({ timeout: 10000 });
+      await page.getByRole('button', { name: 'More things to do' }).waitFor({ timeout: 10000 });
       await page.waitForTimeout(800);
       await shot('beyond-home');
       assert.equal(await page.locator('canvas').count(), 1, 'Beyond draws on the main renderer');
@@ -204,6 +206,8 @@ try {
     await shot('missions');
     await page.getByRole('button', { name: 'Close', exact: true }).click();
     }
+
+    await page.getByRole('button', { name: 'More things to do' }).click();
 
     await page.getByRole('button', { name: 'Explore constellations' }).click();
     await page.locator('.solar-constellation').waitFor();

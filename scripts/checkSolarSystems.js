@@ -19,7 +19,7 @@ const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH 
 const errors = [], failures = [];
 const overlap = (a, b) => a && b && a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
 try {
-  for (const [width, height] of [[1280, 900], [390, 844], [844, 390]]) for (const theme of ['light', 'dark']) {
+  for (const [width, height] of [[1280, 900], [1024, 768], [390, 844], [844, 390]]) for (const theme of ['light', 'dark']) {
     const tag = `${width}x${height}-${theme}`;
     const context = await browser.newContext({ viewport: { width, height }, hasTouch: width < 1000, reducedMotion: theme === 'dark' ? 'reduce' : 'no-preference' });
     await context.addInitScript(t => { localStorage.setItem('theme', t); sessionStorage.setItem('dl.solarWarpSeen', '1'); }, theme);
@@ -40,18 +40,31 @@ try {
     const release = async () => { await page.keyboard.up(' '); await page.keyboard.up('Shift'); };
 
     await page.goto(`${base}/solar-system`);
-    await page.waitForFunction(() => document.querySelector('[aria-label="Galaxy map"]')?.disabled === false);
+    await page.waitForFunction(() => document.querySelector('[aria-label="More things to do"]')?.disabled === false);
     await step('toolbar fits', async () => {
-      const buttons = await page.locator('.solar-launch-buttons > button').evaluateAll(list => list.map(b => b.getBoundingClientRect().toJSON()));
-      assert.equal(buttons.length, 6, 'six launch buttons at home');
+      const buttons = await page.locator('.solar-launch-buttons button').evaluateAll(list => list.map(b => b.getBoundingClientRect().toJSON()));
+      assert.equal(buttons.length, 3, 'Tour, Fly and More at home');
       const search = await page.locator('.solar-toolbar').boundingBox();
       for (const box of buttons) {
         assert.ok(box.x >= 0 && box.x + box.width <= width && box.y >= 0, 'on screen');
         assert.ok(!overlap(box, search), 'clear of search');
       }
+      // The More list opens on screen, above the search row, with 48px choices.
+      await page.getByRole('button', { name: 'More things to do' }).click();
+      const list = await page.locator('.solar-toolbar-menu__list').boundingBox();
+      assert.ok(list.x >= 0 && list.x + list.width <= width && list.y + list.height <= height, `More list on screen: ${JSON.stringify(list)}`);
+      const heights = await page.locator('.solar-toolbar-menu__item').evaluateAll(items => items.map(i => i.getBoundingClientRect().height));
+      assert.equal(heights.length, 4, 'constellations, meteor, Beyond, galaxy map');
+      assert.ok(heights.every(h => h >= 48), `48px choices: ${heights}`);
+      const top = await page.evaluate(() => { const r = document.querySelector('.solar-toolbar-menu__item:last-child').getBoundingClientRect(); return document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2)?.closest('.solar-toolbar-menu__item') !== null; });
+      assert.ok(top, 'the list is not covered');
+      await shot('01b-more-open');
+      await page.keyboard.press('Escape');
+      assert.equal(await page.locator('.solar-toolbar-menu__list').count(), 0, 'Escape closes More');
     });
     await shot('01-home');
     await step('map to TRAPPIST-1', async () => {
+      await page.getByRole('button', { name: 'More things to do' }).click();
       await page.getByRole('button', { name: 'Galaxy map' }).click();
       await shot('02-map-galaxies', 2500);
       await page.getByRole('button', { name: 'Andromeda' }).click();
@@ -101,6 +114,44 @@ try {
       await shot('15-home-trip', 1500);
       await page.locator('[aria-label="Tour the Solar System"]').waitFor({ timeout: 20000 });
       await shot('16-home', 1500);
+    });
+    await step('Space explorer chapters and the belt run', async () => {
+      await page.goto(`${base}/solar-system`);
+      await page.waitForFunction(() => document.querySelector('[aria-label="Fly the rocket"]')?.disabled === false);
+      await page.getByRole('button', { name: 'Fly the rocket' }).click();
+      const panel = page.locator('.solar-flight__top');
+      if (await page.getByRole('button', { name: 'Expand flight panel' }).count()) await page.getByRole('button', { name: 'Expand flight panel' }).click();
+      await page.getByText('Choose an adventure').first().waitFor();
+      const box = await panel.boundingBox();
+      assert.ok(box.x >= 0 && box.x + box.width <= width, `panel on screen: ${JSON.stringify(box)}`);
+      const sizes = await page.locator('.solar-flight__chapter-list button').evaluateAll(list => list.map(b => b.getBoundingClientRect().height));
+      assert.equal(sizes.length, 5, 'five chapters'); assert.ok(sizes.every(h => h >= 48), `48px chapters: ${sizes}`);
+      await shot('17-chapter-picker');
+      await page.getByRole('button', { name: /Asteroid-belt run/ }).click();
+      await page.getByText(/mostly empty space/).waitFor();
+      await page.getByRole('button', { name: /Where to/ }).click();
+      await page.getByText(/Read the clue and try first/).waitFor();
+      await shot('18-belt-chapter-locked');
+      if (!(width === 1280 && theme === 'light') && !(width === 390 && theme === 'dark')) return;
+      // Fly for 24 s to earn the 20 s help, then aim at Ceres and boost into the belt.
+      await page.locator('.solar-flight').focus();
+      await page.keyboard.down(' '); await page.waitForTimeout(24000); await page.keyboard.up(' ');
+      await page.getByRole('combobox').selectOption('Ceres');
+      const point = page.getByRole('button', { name: 'Point rocket here' });
+      assert.equal(await point.isDisabled(), false, 'help unlocked after flying');
+      await point.click();
+      await page.keyboard.down('Shift'); await page.keyboard.down(' ');
+      await page.waitForTimeout(9000);
+      await shot('19-belt-rocks', 0);
+      await page.keyboard.up(' '); await page.keyboard.up('Shift');
+      await page.getByRole('button', { name: /Back to Solar System/ }).click();
+      await page.getByRole('combobox', { name: /Search/ }).fill('Ceres').catch(async () => {
+        await page.getByRole('button', { name: /Search the Solar System/ }).click();
+        await page.getByRole('combobox', { name: /Search/ }).fill('Ceres');
+      });
+      await page.getByRole('option', { name: /Ceres/ }).click();
+      await page.getByText(/largest object in the asteroid belt/).first().waitFor({ timeout: 15000 });
+      await shot('20-ceres-card', 800);
     });
     await context.close();
   }

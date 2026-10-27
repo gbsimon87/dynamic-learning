@@ -12,7 +12,9 @@
  *     facts, closer?, play?, stats?, sections?, lineUp? }],
  *   moonDetails { "<planetId>/<moonName>": {...} },
  *   tour { stops, finish, finishLabel },
- *   flight { edgeRadius, startBodyId, clues, badges },
+ *   flight { edgeRadius, startBodyId, clues, chapters?, badges }: a clue may have
+ *     `then` (a second step) and `question` { text, options (2–3), answer, why };
+ *     chapters [{ id, name, icon, promise, clueIds }] must use every clue.
  *   scene { camera, honesty, scaleNote }, welcome, mapCard, extras, sources.
  */
 
@@ -22,7 +24,8 @@ const REQUIRED = ["id", "name", "phrase", "spokenName", "home", "place", "positi
     "moonDetails", "tour", "flight", "scene", "welcome", "mapCard", "extras", "sources"];
 
 // Flight targets that only exist when a home extra builds them.
-const EXTRA_TARGETS = { ISS: "iss", "asteroid-belt": "asteroidBelt", "halleys-comet": "comet" };
+const EXTRA_TARGETS = { ISS: "iss", "asteroid-belt": "asteroidBelt", "halleys-comet": "comet",
+    Ceres: "namedAsteroids", Vesta: "namedAsteroids", Psyche: "namedAsteroids", Bennu: "namedAsteroids" };
 
 export function validateSystem(system) {
     const problems = [];
@@ -68,8 +71,25 @@ export function validateSystem(system) {
 
     const flight = system.flight ?? {};
     if (!seen.has(flight.startBodyId)) problems.push(`flight.startBodyId is no body: ${flight.startBodyId}`);
+    const clueIds = new Set();
     for (const clue of flight.clues ?? []) {
-        if (!isTarget(clue.target)) problems.push(`clue ${clue.id} targets no body: ${clue.target}`);
+        for (const step of clue.then ? [clue, clue.then] : [clue]) {
+            if (clueIds.has(step.id)) problems.push(`duplicate clue id: ${step.id}`);
+            clueIds.add(step.id);
+            if (!isTarget(step.target)) problems.push(`clue ${step.id} targets no body: ${step.target}`);
+            const question = step.question;
+            if (!question) continue;
+            if (!Array.isArray(question.options) || question.options.length < 2 || question.options.length > 3) problems.push(`question on ${step.id} needs 2 or 3 options`);
+            if (!question.options?.includes(question.answer)) problems.push(`question on ${step.id}: answer ${question.answer} is not an option`);
+            if (!question.text || !question.why) problems.push(`question on ${step.id} needs text and why`);
+        }
+    }
+    if (flight.chapters) {
+        const inChapter = new Set(flight.chapters.flatMap((chapter) => chapter.clueIds));
+        for (const chapter of flight.chapters) {
+            for (const id of chapter.clueIds) if (!flight.clues.some((clue) => clue.id === id)) problems.push(`chapter ${chapter.id} lists no clue: ${id}`);
+        }
+        for (const clue of flight.clues ?? []) if (!inChapter.has(clue.id)) problems.push(`clue ${clue.id} is in no chapter`);
     }
     for (const stop of system.tour?.stops ?? []) {
         if (!seen.has(stop)) problems.push(`tour stop is no body: ${stop}`);

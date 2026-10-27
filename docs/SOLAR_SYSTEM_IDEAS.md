@@ -12,7 +12,7 @@ Reviewed against source: **2026-10-27**. All 113 idea IDs are retained.
 | 2 — Meet your ship | #34 autopilot, #50 ISS, #35 tour lift-off, #62 size line-up, #47 Pale Blue Dot; integrated flight | Integrated-flight child checks; rumble depends on audio decision |
 | 3 — Living Solar System | #48 day/night, #54 Moon phases, #16 tidal-locking core, #55 auroras, #41 comet tails, #57 close-up rings | Optional #16 arrow/label; device checks; original “surprise on every planet” exit is not met |
 | 4 — Missions and stars | #73 mission cards; #67 sky constellations; #68 join the dots | #74 passport (deferred by owner), #75 Golden Record; lensing spike |
-| 5 — Take the controls | #83 free flight in the main Solar System; hold-to-boost turbo with shared light streaks | Child/device steering checks; #84 asteroid run |
+| 5 — Take the controls | #83 free flight in the main Solar System; hold-to-boost turbo with shared light streaks; #84 Space explorer chapters with the asteroid-belt run | Child/device steering checks; playtest the help-unlock timing |
 | 6 — Beyond | #113 warp, picker and one destination; #94 space ripples; #108 galaxy map; #109 TRAPPIST-1 with trips, signposts and Home | More destinations (#90 black hole, #91 nebula); more #109 systems; flying in Beyond; tablet/device checks |
 
 ✅ built · ◐ partial · ⏳ external dependency · — unbuilt. Built means implemented,
@@ -62,7 +62,7 @@ not deployed or physically device-tested. Stretch ideas are not phase blockers.
   motion. Dispose owned resources and hide effects in incompatible modes.
 - Stay with Three.js/add-ons and primitives; no R3F rewrite or physics engine
   now. Pool particles. Test phone memory before adding large textures.
-- Toolbar: modes only; six buttons now (incl. Galaxy map and, away from home, Home), so labels show only from 1440px and a dropdown is the next step as it grows. Planet card: local facts/play.
+- Toolbar: Tour, Fly the rocket, **More** and (away from home) Home; every other mode goes in the More list (`SolarToolbarMenu.jsx`). Labels show from 1280px. Planet card: local facts/play.
   My view: preferences and Reset. Secrets need no button. Tweakpane is for adults.
 - Existing navbar mute governs new read-aloud/effects; retain tour narration mute.
 - Curriculum progress is untouched. Read `curriculum-progress` before persistence.
@@ -77,8 +77,8 @@ not deployed or physically device-tested. Stretch ideas are not phase blockers.
 ## Upcoming sequence and dependencies
 
 1. **#75 Golden Record**, then a tablet lensing spike before #90.
-2. **#84 asteroid run:** builds on #83 main-scene free flight; child/device
-   steering checks remain open. #87 garage depends on stardust and #85 docking on #50 ISS.
+2. ✅ **#84 asteroid run — built 2026-10-27** as a Space explorer chapter
+   (see below). #87 garage depends on stardust and #85 docking on #50 ISS.
 3. **#113 → #90/#91:** warp opens separate Beyond scenes (warp and #94 built
    2026-10-25; flying in Beyond first needs `createSolarFreeFlight` to accept
    another scene and bodies). #108 galaxy map and #109 TRAPPIST-1 are built
@@ -114,15 +114,16 @@ reorder stretch work from playtests; old calendar estimates were speculative.
 2. **#91 Nebula clouds** — a second Beyond destination with no lensing risk;
    reuses the warp, picker and module host. Pairs well with "stars are born
    here" teaching. Medium–Hard.
-3. **#84 Asteroid-belt run** — the first real game for #83 free flight;
-   builds on bumpers, boost and the existing belt. Gives returning children a
-   reason to fly. Hard.
+3. ✅ **#84 Asteroid-belt run — built 2026-10-27**, folded into Space
+   explorer chapters with earned help, two-step clues and questions.
 4. **#75 Golden Record** — a hidden Voyager near the Pale Blue Dot route;
    small, delightful, true, and unblocks the "surprise" feel of Phase 4. Easy–Medium
    (sound clip depends on the #27 audio decision; text and read-aloud first).
-5. **Toolbar dropdown** (⚙️ under the build rules) — six buttons already
-   crowd the toolbar below 1440px; every new mode (Beyond destinations, more
-   systems) makes it worse. Do it before adding more modes. Medium.
+5. ✅ **Toolbar dropdown — built 2026-10-27.** A **More** list now holds
+   Constellations, Launch meteor, Beyond and Galaxy map; the toolbar keeps
+   Tour, Fly and Home in one row. Next pick in its place: **#3 "Light
+   takes…" badge** (Easy, 🎓) — flying to a planet says how long sunlight
+   takes to get there, reusing the trip line's honesty style.
 
 Gates that still matter more than features: a real-phone baseline (#5),
 a child playtest of flight and trips, and physical-device touch checks.
@@ -246,7 +247,7 @@ days, Hard 1–3 weeks, Complex 3+ weeks; these are sizing guides, not schedules
 | 78 | **Design an alien** | Pick a planet and build a creature that could live there (thick fur for Neptune, heat shield for Venus) 🎓 | — |
 | 79 | **Movie mode** | Black bars slide in and the camera films a cinematic flyby with music | — |
 | 80 | **Light race** | A light pulse leaves the Sun and races outward, ticking off each planet's arrival time 🎓 | — |
-| 81 | **Badges with confetti** | Badges for "Visited all moons of Mars" and similar, with confetti | ◐ Session flight stars/milestone badges built; broader goals/confetti pending |
+| 81 | **Badges with confetti** | Badges for "Visited all moons of Mars" and similar, with confetti | ◐ Flight stars, milestone and chapter badges built; confetti pending |
 | 82 | **Child control panel** | A drawer with big toggles for orbits, names, speed and the visual extras ⚙️ | ✅ |
 
 ### Hard
@@ -254,7 +255,7 @@ days, Hard 1–3 weeks, Complex 3+ weeks; these are sizing guides, not schedules
 | # | Idea | Experience | Status |
 |---|---|---|---|
 | 83 | **Free-flight spaceship** | Steer through the main Solar System; 25 shuffled clues validate arrivals and earn stars/badges; hold-to-boost turbo and light streaks | ✅ Device/playtest checks pending |
-| 84 | **Asteroid-belt run** | Weave through the belt collecting crystals; bumping a rock just wobbles you | — |
+| 84 | **Asteroid-belt run** | Weave through the belt to real asteroids (Ceres, Vesta, Psyche, Bennu); bumping a rock just wobbles you | ✅ A Space explorer chapter; crystals dropped. Device/playtest checks pending |
 | 85 | **Dock with the ISS** | Line up rings and drift in slowly; Bix cheers when it clicks | — |
 | 86 | **Land on the Moon** | Switch to a Moon surface, steer the lander down gently, Bix plants a flag | — |
 | 87 | **Ship garage** | Spend stardust on paint colours, trail effects and stickers | — |
@@ -427,6 +428,33 @@ pass. The local Chrome matrix (1280×900, 619×756, 390×844, 844×390; both the
 checks all three orbit entry contexts, exits, tour Next, manual override, C and
 compact facts with zero page/module errors; screenshots were reviewed.
 
+### Space explorer chapters and the asteroid-belt run — #84
+
+Design: [spec](superpowers/specs/2026-10-27-space-explorer-chapters-design.md).
+Owner aim: children sometimes finished too fast and it could be more exciting,
+and it must teach. **Chapters** (`FLIGHT_CHAPTERS`): Rocky planets, Giant
+planets, Moon hunters, Asteroid-belt run, Icy edge — about five finds each,
+picked in the flight panel, ending with a chapter card (what you found, a
+chapter badge, play again or another). Systems without chapters split into
+"Part 1, Part 2…". **Earned help:** Point rocket here and Help me steer unlock
+after 20 s of powered flying (free flight's `engineTime`) or 10 s after opening
+the hint; Skip always works. **Two-step clues** (six at home) continue to a
+nearby moon. **Questions** on about two-thirds of clues and the end of every
+chapter: 2–3 big buttons, gentle correction, no stars won or lost.
+**Asteroid-belt run:** Ceres, Vesta, Psyche and Bennu (`namedAsteroids.js`)
+are tappable, searchable, labelled bodies with cards; sizes exaggerated and
+said so. While steering in the belt band, `beltRockField.js` keeps a pool of
+rocks (24, or 12 on low quality) ahead of the rocket; bumping one wobbles and
+slows it (no shake under reduced motion) and shows "Bump! Rocks only wobble
+you". The chapter says the real belt is mostly empty space. Progress lasts
+while the child stays in the system (closing the panel keeps it); nothing is
+saved. Facts: [Ceres](https://science.nasa.gov/dwarf-planets/ceres/facts/),
+[Vesta](https://science.nasa.gov/solar-system/asteroids/4-vesta/),
+[Psyche](https://science.nasa.gov/solar-system/asteroids/16-psyche/),
+[Bennu](https://science.nasa.gov/solar-system/asteroids/101955-bennu/).
+Open: child playtest of the unlock timing and question tone; phone
+performance with the rock pool.
+
 ### Spaceship adventure and rewards — #83 / partial #81
 
 `solarFreeFlight.js` reuses the scene, clock and rocket. `flightControls.js`
@@ -479,8 +507,10 @@ the main planet search. #16’s optional arrow/label is still pending.
 
 Lint, full tests and production build are required for every implementation pass.
 The local-only `scripts/checkSolarUi.js` checks both themes at 1280×900, 390×844
-and 844×390. `node scripts/checkSolarUi.js --systems` adds the galaxy map, TRAPPIST-1
-tour, flying out, Turn back and the trip home. Previous batched checks covered mission selection, compact planet
+and 844×390. `node scripts/checkSolarUi.js --systems` adds the More list (on screen,
+uncovered, 48px choices, Escape), the galaxy map, TRAPPIST-1 tour, flying
+out, Turn back and the trip home at 1280, 1024, 390 and 844 wide in both
+themes — zero errors on 2026-10-27. Previous batched checks covered mission selection, compact planet
 activities, embedded Moon phases, main-scene flight, Shift turbo, constellation
 bounds and desktop-left reading/navigation with no page/module errors.
 The latest tracing panel pass completed Ursa Major in all six viewport/theme

@@ -41,11 +41,66 @@
   z-index: 45;
   top: 1rem;
   left: 1rem;
-  display: grid;
-  /* Three a row, so six buttons stay in two rows above the search toggle. */
-  grid-template-columns: repeat(3, 2.65rem);
+  /* Tour, Fly, More and (away from home) Home: one row at every width. */
+  display: flex;
   align-items: flex-start;
   gap: 0.5rem;
+}
+
+.solar-toolbar-menu {
+  position: relative;
+}
+
+/* An open list must cover the search row below it. */
+.solar-launch-buttons:has(.solar-toolbar-menu__list) {
+  z-index: 48;
+}
+
+.solar-toolbar-menu__list {
+  position: absolute;
+  z-index: 47;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 13rem;
+  padding: 0.5rem;
+  border: 1px solid rgba(255, 205, 117, 0.42);
+  border-radius: 1.1rem;
+  background: rgba(13, 18, 34, 0.96);
+  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.solar-toolbar-menu__item {
+  display: flex;
+  min-height: 3rem;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.6rem 0.9rem;
+  border: 0;
+  border-radius: 0.8rem;
+  background: transparent;
+  color: #fff;
+  font: 700 0.9rem/1.2 system-ui, sans-serif;
+  text-align: left;
+  cursor: pointer;
+}
+
+.solar-toolbar-menu__item:hover:not(:disabled) {
+  background: rgba(246, 189, 104, 0.16);
+}
+
+.solar-toolbar-menu__item:focus-visible {
+  outline: 2px solid #f6bd68;
+  outline-offset: -2px;
+}
+
+.solar-toolbar-menu__item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .solar-tour-launch {
@@ -123,7 +178,7 @@
 .solar-toolbar {
   position: absolute;
   z-index: 46;
-  top: 7.5rem;
+  top: 4.25rem;
   left: 1rem;
   right: 1rem;
   display: flex;
@@ -552,15 +607,11 @@
 }
 
 @media (min-width: 720px) {
-  .solar-launch-buttons {
-    display: flex;
-  }
-
   .solar-toolbar {
     top: 1rem;
-    /* The six compact launch controls occupy the left edge at tablet widths;
+    /* The four compact launch controls occupy the left edge at tablet widths;
        My view (220px) sits at the right. */
-    left: 22rem;
+    left: 15rem;
     right: 15.25rem;
     justify-content: flex-start;
   }
@@ -615,12 +666,11 @@
   }
 }
 
-/* Six fully labelled launch buttons (Galaxy map, #108, is the sixth) take
-   about 58rem; search sits beside them, as a button until 1600px (below), and
-   Overview must stay clear of the Fine tuning panel at the top right. */
-@media (min-width: 1440px) {
+/* Four labelled launch buttons (the rest live in More) take about 36rem;
+   search stays open beside them and Overview clear of the Fine tuning panel. */
+@media (min-width: 1280px) {
   .solar-toolbar {
-    left: 59rem;
+    left: 38rem;
   }
 
   .solar-action-label {
@@ -630,7 +680,7 @@
 
 /* Too narrow for an open search field beside the launch buttons: search opens
    from its button, as on phones, and spreads over them while in use. */
-@media (min-width: 720px) and (max-width: 899.98px), (min-width: 1440px) and (max-width: 1599.98px) {
+@media (min-width: 720px) and (max-width: 899.98px) {
   .solar-search-toggle {
     display: grid;
   }

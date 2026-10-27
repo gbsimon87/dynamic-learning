@@ -8,7 +8,7 @@ Status: design, awaiting owner approval. Date: 2026-10-26.
 ## Intent
 
 Children can already leave the Solar System through Beyond, but only to watch
-one event (Space ripples). The owner wants real places to *go*: a second star
+one event (Space ripples). The owner wants real places to _go_: a second star
 system the child can explore exactly as they explore ours — touring it,
 flying the rocket around it, tapping planets for facts, chasing flight clues —
 and a galaxy map that shows where it is.
@@ -106,12 +106,12 @@ water could stay liquid, and a dim red star that looks unmistakably not-home.
 
 All travel between systems uses **one interstellar trip** — the rocket
 dashing through space, light streaks rushing past (`warpStreaks.js`), the
-star behind shrinking and the star ahead growing, with the label "Sped up —
+star behind shrinking and the star ahead growing, with the label "Sped up -
 even light takes about 40 years to make this trip." It is not the pretend
 black-hole doorway Beyond uses, because these are real places reached by
-flying. *(My call: using Beyond's hold-to-ride warp for map jumps would mean
+flying. _(My call: using Beyond's hold-to-ride warp for map jumps would mean
 a pretend shortcut to a real place, and its drift can take about 20 seconds,
-over the owner's limit.)*
+over the owner's limit.)_
 
 1. **Flying out** (Fly the rocket): the child flies the trip themselves —
    see "Flying between systems".
@@ -163,15 +163,15 @@ in real life; a gentle occasional flare is a welcome extra (builder's call).
 **The planets** — values to check against the NASA Exoplanet Archive
 (Agol et al. 2021) before writing any card:
 
-| Planet | Width (Earth = 1) | Mass (Earth = 1) | Year (Earth days) | Density g/cm³ | Notes for cards |
-|---|---|---|---|---|---|
-| b | 1.12 | 1.37 | 1.51 | ≈5.4 | JWST: hot dayside, likely no thick air |
-| c | 1.10 | 1.31 | 2.42 | ≈5.4 | JWST: no thick carbon-dioxide air |
-| d | 0.79 | 0.39 | 4.05 | ≈4.4 | Inner edge of the water zone |
-| e | 0.92 | 0.69 | 6.10 | ≈4.9 | In the water zone |
-| f | 1.05 | 1.04 | 9.21 | ≈5.0 | In the water zone |
-| g | 1.13 | 1.32 | 12.35 | ≈5.0 | In the water zone |
-| h | 0.76 | 0.33 | 18.77 | ≈4.1 | Coldest, outermost |
+| Planet | Width (Earth = 1) | Mass (Earth = 1) | Year (Earth days) | Density g/cm³ | Notes for cards                        |
+| ------ | ----------------- | ---------------- | ----------------- | ------------- | -------------------------------------- |
+| b      | 1.12              | 1.37             | 1.51              | ≈5.4          | JWST: hot dayside, likely no thick air |
+| c      | 1.10              | 1.31             | 2.42              | ≈5.4          | JWST: no thick carbon-dioxide air      |
+| d      | 0.79              | 0.39             | 4.05              | ≈4.4          | Inner edge of the water zone           |
+| e      | 0.92              | 0.69             | 6.10              | ≈4.9          | In the water zone                      |
+| f      | 1.05              | 1.04             | 9.21              | ≈5.0          | In the water zone                      |
+| g      | 1.13              | 1.32             | 12.35             | ≈5.0          | In the water zone                      |
+| h      | 0.76              | 0.33             | 18.77             | ≈4.1          | Coldest, outermost                     |
 
 **Teaching points** (verify each before use):
 
@@ -225,7 +225,7 @@ controls as the home tour (Next/Previous, narration mute).
 
 **Fly the rocket.** Same controls, turbo, orbit a planet, both camera views
 and **C**, surface bumpers and boundary. The flight starts beside a chosen
-body — **TRAPPIST-1 e** *(my call: the most Earth-like, in the water zone)* —
+body — **TRAPPIST-1 e** _(my call: the most Earth-like, in the water zone)_ —
 and "Back to Earth" becomes **Back to start**, naming that body.
 
 **Flight clues.** A new TRAPPIST-1 deck covering the star and all seven
@@ -261,12 +261,12 @@ system to the other.** It is a flight, not a cutscene.
   flight HUD: "Leaving the Solar System — heading for TRAPPIST-1 in 3… 2… 1…"
   with a big **Turn back** button (and a keyboard equivalent). Turning back —
   the button, or steering back towards the star — cancels it. The warning is
-  read aloud unless muted. *(My call: about 3 seconds.)*
+  read aloud unless muted. _(My call: about 3 seconds.)_
 - **The trip.** Then the rocket dashes to the other system while the child
   keeps flying it: steering, the camera views and **C** still work. It
   arrives at the other system's edge, still in Fly the rocket, facing
-  inwards, then the arrival welcome plays. *(My call: warning plus dash at
-  most 10 seconds, so the dash is about 7.)*
+  inwards, then the arrival welcome plays. _(My call: warning plus dash at
+  most 10 seconds, so the dash is about 7.)_
 - **Turn back partway.** **Turn back** stays available during the trip. It
   returns the rocket quickly to just inside the edge of the system it left,
   facing its star — never stranded between systems. Steering must not cancel
@@ -292,7 +292,7 @@ In this build, any direction past the edge still goes to the other system
 (owner) — the sign shows the way but isn't required. When a third system
 arrives, the signs become the rule: fly out past a sign to go there. What
 happens when no sign lies ahead is decided then.
-*(Owner left signs to me if they help the future; they do, and are cheap.)*
+_(Owner left signs to me if they help the future; they do, and are cheap.)_
 
 ### Getting home
 
@@ -300,7 +300,7 @@ happens when no sign lies ahead is decided then.
   in the flight HUD. It flies the trip home by autopilot and lands at the
   home overview.
 - On the galaxy map, the Solar System's card says **Go home**.
-- *(My call.)* Beyond and Space ripples return the child to **the system they
+- _(My call.)_ Beyond and Space ripples return the child to **the system they
   left**, not always home. Home is one tap away from there.
 - Reset and page reload always start at home (nothing is saved).
 
@@ -317,7 +317,7 @@ testable in node. Roughly — field names are the builder's:
 - **real position**: right ascension, declination and distance from the
   Sun (NASA Exoplanet Archive), converted to one shared light-year frame with
   home at the origin — used by the map, signposts and travel;
-- **stars** — a *list*, even though TRAPPIST-1 has one, because later systems
+- **stars** — a _list_, even though TRAPPIST-1 has one, because later systems
   have two or three. Each: size, colour/temperature, facts, optional extras
   (flares);
 - **planets** (and moons when a system has them): scene size and distance,
@@ -405,14 +405,14 @@ names), textures and phone memory, credits, the tests, and the browser check.
 - Effects use `solarModules.js` (`update`, `resize`, `dispose`), the shared
   clock, the low tier at width <720 or coarse pointer, and calm reduced motion.
 - Three.js and its add-ons only; no R3F, no physics engine.
-- *(My call.)* **Changing system resets session play** — flight-clue run and
+- _(My call.)_ **Changing system resets session play** — flight-clue run and
   badges, tour position, orbit. Page-level preferences (My view settings,
   mutes, camera view) carry over.
-- *(My call.)* **Safety net for home:** before moving any home code, add
+- _(My call.)_ **Safety net for home:** before moving any home code, add
   characterisation tests around what moves (planet data, free flight against
   home bodies, tour order, clue deck, toolbar contents). One batched browser
   comparison of home before/after is the acceptance gate.
-- *(My call.)* The galaxy art is NASA/JPL-Caltech/R. Hurt (SSC-Caltech)'s
+- _(My call.)_ The galaxy art is NASA/JPL-Caltech/R. Hurt (SSC-Caltech)'s
   Milky Way illustration as a texture of at most 4096px (2048px on the low
   tier). If its usage terms don't allow this, stop and ask the owner before
   substituting anything.
@@ -445,14 +445,14 @@ helper agents follow it. The step-by-step plan itself: **Opus, high effort**
 (a planning miss carries into every slice; max effort adds cost without much
 gain because the design settles the hard decisions).
 
-| Work | Model |
-|---|---|
-| Slice 1, foundations (moving home's data out, shared features reading a definition) | Opus: highest risk to home |
-| Slice 3, travel (trip, turn back, signposts, Home button) | Opus: tricky timing and state |
-| Slice 2, TRAPPIST-1 content (facts, cards, clues, tour, looks) | Sonnet |
-| Slice 4, galaxy map | Sonnet, with an Opus review |
-| Slice 5, the guide and docs | Sonnet |
-| Checking facts against the NASA Exoplanet Archive, searching the code | Haiku |
+| Work                                                                                | Model                         |
+| ----------------------------------------------------------------------------------- | ----------------------------- |
+| Slice 1, foundations (moving home's data out, shared features reading a definition) | Opus: highest risk to home    |
+| Slice 3, travel (trip, turn back, signposts, Home button)                           | Opus: tricky timing and state |
+| Slice 2, TRAPPIST-1 content (facts, cards, clues, tour, looks)                      | Sonnet                        |
+| Slice 4, galaxy map                                                                 | Sonnet, with an Opus review   |
+| Slice 5, the guide and docs                                                         | Sonnet                        |
+| Checking facts against the NASA Exoplanet Archive, searching the code               | Haiku                         |
 
 A session cannot switch its own model; the owner changes it with `/model`.
 At most two helper agents at once (project rule).
