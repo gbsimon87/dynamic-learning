@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import DualLabelClock from './DualLabelClock';
 import SpeakButton from './challenge/SpeakButton';
+import './ClockPanel.css';
 
 function ClockPanel({ theme }) {
   console.log(`ClockPanel is running with theme: ${theme}`);
@@ -60,58 +61,71 @@ function ClockPanel({ theme }) {
 
   console.log(`ClockPanel has run resulting in a final calculated value of ${clockTime}`);
 
+  const hands = [
+    { label: 'Hour hand', checked: showHour, set: setShowHour },
+    { label: 'Minute hand', checked: showMinute, set: setShowMinute },
+    { label: 'Second hand', checked: showSecond, set: setShowSecond },
+  ];
+  const extras = [
+    { label: 'Hour numbers', checked: showLabels, set: setShowLabels },
+    { label: 'Digital time', checked: showDigital, set: setShowDigital },
+  ];
+
+  const renderSwitch = ({ label, checked, set }) => (
+    <label key={label} className="clock-switch">
+      <span className="clock-switch-text">{label}</span>
+      <input type="checkbox" role="switch" checked={checked} onChange={() => set(!checked)} />
+      <span className="clock-switch-track" aria-hidden="true" />
+    </label>
+  );
+
   return (
     <div className="clock-panel">
-      <DualLabelClock
-        value={clockTime}
-        showHourHand={showHour}
-        showMinuteHand={showMinute}
-        showSecondHand={showSecond}
-        showLabels={showLabels}
-        theme={theme}
-      />
+      <header className="clock-header">
+        <h1 className="clock-title">Clock Generator</h1>
+        <p className="clock-intro">Make a time, then switch the clock parts on and off.</p>
+      </header>
 
-      {showDigital && (
-        <div className="digital-time">
-          {formatTime(clockTime)}
-        </div>
-      )}
-      <SpeakButton text={clockTime.toLocaleTimeString('en-GB', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: false })} label="Hear the time" compact />
+      <div className="clock-card">
+        <section className="clock-stage" aria-label="Clock">
+          <div className="clock-face-frame">
+            <DualLabelClock
+              value={clockTime}
+              showHourHand={showHour}
+              showMinuteHand={showMinute}
+              showSecondHand={showSecond}
+              showLabels={showLabels}
+              theme={theme}
+            />
+          </div>
 
-      <div className="option-list">
-        <label>
-          <input type="checkbox" checked={showHour} onChange={() => setShowHour(!showHour)} />
-          <span>Show Hour Hand</span>
-        </label>
-        <label>
-          <input type="checkbox" checked={showMinute} onChange={() => setShowMinute(!showMinute)} />
-          <span>Show Minute Hand</span>
-        </label>
-        <label>
-          <input type="checkbox" checked={showSecond} onChange={() => setShowSecond(!showSecond)} />
-          <span>Show Second Hand</span>
-        </label>
-        <label>
-          <input type="checkbox" checked={showLabels} onChange={() => setShowLabels(!showLabels)} />
-          <span>Show Hour Labels</span>
-        </label>
-        <label>
-          <input type="checkbox" checked={showDigital} onChange={() => setShowDigital(!showDigital)} />
-          <span>Show Digital Time</span>
-        </label>
-        <label>
-          <input type="checkbox" checked={showLive} onChange={handleLiveToggle} />
-          <span>Live Mode</span>
-        </label>
+          <div className="digital-time" aria-live="off" hidden={!showDigital}>
+            {formatTime(clockTime)}
+          </div>
+
+          <div className="clock-actions">
+            <button className="clock-btn" onClick={handleNewTime} disabled={showLive}>
+              New random time
+            </button>
+            <SpeakButton text={clockTime.toLocaleTimeString('en-GB', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: false })} label="Hear the time" compact />
+          </div>
+        </section>
+
+        <section className="clock-settings" aria-label="Clock settings">
+          <fieldset className="clock-group">
+            <legend>Hands</legend>
+            {hands.map(renderSwitch)}
+          </fieldset>
+          <fieldset className="clock-group">
+            <legend>Show</legend>
+            {extras.map(renderSwitch)}
+          </fieldset>
+          <fieldset className="clock-group">
+            <legend>Time</legend>
+            {renderSwitch({ label: 'Live mode', checked: showLive, set: handleLiveToggle })}
+          </fieldset>
+        </section>
       </div>
-
-      <button
-        className="clock-btn"
-        onClick={handleNewTime}
-        disabled={showLive}
-      >
-        New Random Time
-      </button>
     </div>
   );
 }

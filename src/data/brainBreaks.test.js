@@ -37,7 +37,7 @@ test("every activity uses a move BrainBreak.css animates", () => {
 });
 
 test("only play pages count towards a break", () => {
-  for (const path of ["/", "/skills", "/daily-puzzle", "/curriculum/year/3/math", "/trophies", "/solar-system"]) {
+  for (const path of ["/", "/skills", "/daily-puzzle", "/curriculum/year/3/math", "/trophies", "/skills/solar-system"]) {
     assert.equal(countsTowardsBreak(path), true, path);
   }
   for (const path of ["/parent", "/parent/trophies/abc", "/login", "/signup", "/profiles", "/hello", "/privacy"]) {

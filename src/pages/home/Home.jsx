@@ -38,7 +38,7 @@ const FEATURED_SKILLS = [
     icon: "🪐",
     title: "Solar System",
     blurb: "Blast off and meet the planets!",
-    to: "/solar-system",
+    to: "/skills/solar-system",
     action: "Explore space",
   },
   {
@@ -47,7 +47,7 @@ const FEATURED_SKILLS = [
     icon: "⚡",
     title: "Speed Reader",
     blurb: "Read a story, one flash at a time.",
-    to: "/speed-reader",
+    to: "/skills/speed-reader",
     action: "Read a story",
   },
   {

@@ -2,24 +2,83 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
-  padding: 2rem;
+  gap: 1.1rem;
+  padding: 1.5rem 1rem 2rem;
   width: 100%;
-  max-width: 600px;
+  max-width: 640px;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .fraction-title {
   font-size: 1.6rem;
   font-weight: 700;
   color: var(--light-text);
+  margin: 0;
 }
 body.dark .fraction-title {
   color: var(--dark-text);
 }
 
+.fraction-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+}
+
+.fraction-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.fraction-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  min-width: 48px;
+  padding: 0.35rem 1rem;
+  border: 2px solid var(--light-accent);
+  border-radius: 12px;
+  background: var(--light-panel);
+  color: var(--light-text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.fraction-tab small {
+  font-size: 0.7rem;
+  font-weight: 500;
+  opacity: 0.8;
+}
+.fraction-tab.active {
+  background: var(--light-accent);
+  color: var(--on-light-accent);
+}
+body.dark .fraction-tab {
+  border-color: var(--dark-accent);
+  background: var(--dark-panel);
+  color: var(--dark-text);
+}
+body.dark .fraction-tab.active {
+  background: var(--dark-accent);
+  color: var(--on-dark-accent);
+}
+
 .fraction-prompt {
-  font-size: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0;
+  text-align: center;
+  font-size: 1.3rem;
   font-weight: 500;
   color: var(--light-text);
 }
@@ -27,64 +86,108 @@ body.dark .fraction-prompt {
   color: var(--dark-text);
 }
 
-.fraction-bar {
-  display: flex;
-  justify-content: stretch;
-  align-items: stretch;
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-  flex-wrap: wrap;
-  overflow: hidden;
-  border-radius: 8px;
-  box-sizing: border-box;
-  padding: 0;
-  gap: 4px;
-  padding: 0 1rem;
-}
-
-.fraction-segment {
-  flex: 1;
-  min-width: 0;
-  min-height: 60px;
+.fraction-hint,
+.fraction-count {
   margin: 0;
-  border: 2px solid var(--light-accent);
-  border-radius: 4px;
-  background: var(--light-panel);
+  text-align: center;
+  font-size: 1rem;
+  color: var(--light-text);
+}
+body.dark .fraction-hint,
+body.dark .fraction-count {
+  color: var(--dark-text);
+}
+
+/* A stacked fraction: numerator over a bar over denominator. */
+.frac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.1;
+  font-weight: 700;
+  vertical-align: middle;
+}
+.frac-top {
+  padding: 0 0.3em 0.05em;
+  border-bottom: 2px solid currentColor;
+}
+.frac-bottom {
+  padding: 0.05em 0.3em 0;
+}
+
+.fraction-shape {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  overflow: visible;
+}
+.fraction-shape.shape-bar {
+  max-width: 100%;
+}
+
+.fraction-part {
+  fill: var(--light-panel);
+  stroke: var(--light-text);
+  stroke-width: 3;
+  stroke-linejoin: round;
+  transition: fill 0.15s ease;
+}
+.fraction-part.filled {
+  fill: var(--light-accent);
+}
+.fraction-part.tappable {
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-sizing: border-box;
+}
+.fraction-part.tappable:hover {
+  fill: color-mix(in srgb, var(--light-accent) 35%, var(--light-panel));
+}
+.fraction-part.tappable.filled:hover {
+  fill: var(--light-accent);
+}
+.fraction-part:focus-visible {
+  outline: 3px solid var(--light-text);
+  outline-offset: 2px;
+}
+body.dark .fraction-part {
+  fill: var(--dark-panel);
+  stroke: var(--dark-text);
+}
+body.dark .fraction-part.filled {
+  fill: var(--dark-accent);
+}
+body.dark .fraction-part.tappable:hover {
+  fill: color-mix(in srgb, var(--dark-accent) 35%, var(--dark-panel));
+}
+body.dark .fraction-part.tappable.filled:hover {
+  fill: var(--dark-accent);
+}
+body.dark .fraction-part:focus-visible {
+  outline-color: var(--dark-text);
 }
 
-.fraction-segment:hover {
-  transform: scale(1.05);
-}
-
-.fraction-segment.filled {
-  background: var(--light-accent);
-}
-
-body.dark .fraction-segment {
-  border-color: var(--dark-accent);
-  background: var(--dark-panel);
-}
-
-body.dark .fraction-segment.filled {
-  background: var(--dark-accent);
+.fraction-actions {
+  display: flex;
+  gap: 0.75rem;
 }
 
 .fraction-btn {
+  min-height: 48px;
+  min-width: 96px;
   background-color: var(--light-accent);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 0.5rem 1rem;
-  font-weight: 600;
+  color: var(--on-light-accent);
+  border: 2px solid var(--light-accent);
+  border-radius: 12px;
+  padding: 0.5rem 1.4rem;
+  font-weight: 700;
   cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.2s;
+  font-size: 1.05rem;
+  transition: transform 0.2s;
 }
-.fraction-btn:hover {
+.fraction-btn.secondary {
+  background: var(--light-panel);
+  color: var(--light-text);
+}
+.fraction-btn:hover:not(:disabled) {
   transform: translateY(-1px);
 }
 .fraction-btn:disabled {
@@ -93,33 +196,54 @@ body.dark .fraction-segment.filled {
 }
 body.dark .fraction-btn {
   background-color: var(--dark-accent);
-  color: var(--dark-bg);
+  border-color: var(--dark-accent);
+  color: var(--on-dark-accent);
+}
+body.dark .fraction-btn.secondary {
+  background: var(--dark-panel);
+  color: var(--dark-text);
 }
 
-.fraction-feedback {
-  font-size: 1.25rem;
-  font-weight: 600;
+.fraction-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 360px;
 }
-.fraction-feedback.correct {
-  color: var(--light-accent);
+.fraction-option {
+  min-height: 72px;
+  border: 2px solid var(--light-accent);
+  border-radius: 14px;
+  background: var(--light-panel);
+  color: var(--light-text);
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: transform 0.2s;
 }
-.fraction-feedback.wrong {
-  color: #888;
+.fraction-option:hover:not(:disabled) {
+  transform: translateY(-2px);
 }
-body.dark .fraction-feedback.correct {
-  color: var(--dark-accent);
+.fraction-option:disabled {
+  cursor: default;
 }
-body.dark .fraction-feedback.wrong {
-  color: #aaa;
+body.dark .fraction-option {
+  border-color: var(--dark-accent);
+  background: var(--dark-panel);
+  color: var(--dark-text);
 }
 
-/* 📱 Mobile optimization */
-@media (max-width: 600px) {
-  .fraction-bar {
-    gap: 2px;
+@media (prefers-reduced-motion: reduce) {
+  .fraction-part,
+  .fraction-btn,
+  .fraction-option {
+    transition: none;
   }
-  
-  .fraction-segment {
-    min-height: 45px;
+}
+
+/* 📱 Small screens */
+@media (max-width: 480px) {
+  .fraction-wrapper {
+    padding: 1rem 0.75rem 1.5rem;
   }
 }

@@ -50,8 +50,10 @@ body.dark .word-bank {
   border-radius: 8px;
   padding: 0.5rem 1rem;
   font-weight: 600;
-  cursor: grab;
-  transition: all 0.2s;
+  cursor: pointer;
+  font-size: 1.1rem;
+  min-height: 48px;
+  font-family: inherit;
   color: var(--light-text);
   transition: all 0.2s;
   display: flex;
@@ -71,7 +73,18 @@ body.dark .word-tile {
 
 .word-tile.small {
   font-size: 0.9rem;
-  cursor: default;
+  min-height: 44px;
+}
+
+.word-tile.selected {
+  background-color: var(--light-accent);
+  color: white;
+  transform: scale(1.08);
+}
+
+body.dark .word-tile.selected {
+  background-color: var(--dark-accent);
+  color: var(--dark-bg);
 }
 
 .bucket-area {
@@ -101,7 +114,16 @@ body.dark .bucket {
   border-color: var(--dark-accent);
 }
 
+.bucket.ready {
+  cursor: pointer;
+  border-style: solid;
+}
+
 .bucket-title {
+  background: none;
+  border: 0;
+  font: inherit;
+  font-size: 1.1rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
   color: var(--light-text);

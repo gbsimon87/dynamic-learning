@@ -29,7 +29,7 @@ function Navbar() {
   // subtract it instead of hardcoding a guess - the bar is ~56px on desktop but
   // wraps taller on a phone.
   useEffect(() => {
-    if (location.pathname === '/solar-system') return;
+    if (location.pathname === '/skills/solar-system') return;
     const el = navRef.current;
     if (!el) return;
     const publish = () =>
@@ -70,7 +70,7 @@ function Navbar() {
             the link for screen readers and as a pointer tooltip. */}
         <Link
           to="/skills"
-          className={`navbar-link ${location.pathname === '/skills' ? 'active' : ''}`}
+          className={`navbar-link ${location.pathname.startsWith('/skills') ? 'active' : ''}`}
           title="Skills"
         >
           <span aria-hidden="true">🎯</span>

@@ -43,7 +43,7 @@ try {
       return box;
     };
     const shot = name => page.screenshot({ path: `${artifacts}/${width}-${theme}-${name}.png` });
-    await page.goto(`${base}/solar-system${settingsOnly ? "?debug" : ""}`);
+    await page.goto(`${base}/skills/solar-system${settingsOnly ? "?debug" : ""}`);
     assert.equal(await page.locator('nav.navbar').isVisible(), false, 'global navigation is hidden in the Solar System');
     const sceneBox = await page.locator('.solar-system').boundingBox();
     assert.ok(sceneBox && sceneBox.y <= 1 && sceneBox.height >= height - 2, `Solar System uses the full viewport: ${JSON.stringify(sceneBox)}`);

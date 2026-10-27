@@ -5,7 +5,7 @@
   width: clamp(250px, 60vmin, 420px);
   aspect-ratio: 1;
   height: auto;
-  margin: 2rem auto;
+  margin: 0 auto;
 }
 
 .dual-label {

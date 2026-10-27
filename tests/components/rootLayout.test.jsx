@@ -32,7 +32,7 @@ it.each(["/", "/curriculum", "/skills", "/trophies", "/profiles", "/parent", "/l
   },
 );
 
-it.each(["/privacy", "/credits", "/forgot-password", "/arithmetic-practice", "/year/1/math"])(
+it.each(["/privacy", "/credits", "/forgot-password", "/skills/arithmetic-practice", "/year/1/math"])(
   "does not show the hub footer on %s",
   (path) => {
     mount(path);

@@ -34,7 +34,7 @@ const { default: SolarSystemPage } = await import('../../src/pages/skills/geogra
 const { speak } = await import('../../src/utils/speech.js');
 const { isMuted } = await import('../../src/components/celebration/sound/player.js');
 
-beforeEach(() => { sceneProps.length = 0; mounts.length = 0; pending.length = 0; vi.clearAllMocks(); window.history.replaceState(null, '', '/solar-system'); });
+beforeEach(() => { sceneProps.length = 0; mounts.length = 0; pending.length = 0; vi.clearAllMocks(); window.history.replaceState(null, '', '/skills/solar-system'); });
 const finishLoads = async () => { await act(async () => { while (pending.length) pending.shift()(); }); };
 const travel = async (request) => { await act(async () => { sceneProps.at(-1).onTravel(request); }); await finishLoads(); };
 const TO_TEST = { to: 'test-system', mode: 'flown', direction: { x: 1, y: 0, z: 0 }, turnedBack: false };
@@ -48,14 +48,14 @@ test('renders the home system by default', () => {
 });
 
 test('the ?system= switch is ignored without the adult debug flag', async () => {
-  window.history.replaceState(null, '', '/solar-system?system=test-system');
+  window.history.replaceState(null, '', '/skills/solar-system?system=test-system');
   render(<SolarSystemPage />);
   await act(async () => {});
   expect(sceneProps.at(-1).system).toBe(HOME_SYSTEM);
 });
 
 test('with the debug flag, ?system= opens that system', async () => {
-  window.history.replaceState(null, '', '/solar-system?debug&system=test-system');
+  window.history.replaceState(null, '', '/skills/solar-system?debug&system=test-system');
   render(<SolarSystemPage />);
   await finishLoads();
   expect(sceneProps.at(-1).system).toBe(TEST_SYSTEM);

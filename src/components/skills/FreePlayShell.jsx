@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router";
 import { createSubmissionGate } from "../../data/submissionGate";
 import { MILESTONE_EVERY } from "../../data/freePlay/feedback";
 import SpeakButton from "../challenge/SpeakButton";
@@ -23,6 +22,13 @@ import "./FreePlayShell.css";
  *                             the interaction. Call `submit(isCorrect)` for
  *                             every attempt, like ChallengeShell's children.
  * `title`, `icon`, `intro`    the page heading.
+ * `levels`                    [{ id, label }] to replace Easier / Medium /
+ *                             Harder (Reading Numbers picks a number range);
+ *                             the ids are what makeQuestion receives.
+ * `onLevelChange(id)`         told when the child picks a level, so a page with
+ *                             several modes can keep the same one.
+ * `beforeGame`                 a node between the heading and the game, e.g. a
+ *                             mode switch.
  *
  * Feedback, combos, sounds and particles come from useAnswerFeedback; the
  * free-play game event is a milestone every five right answers. The level
@@ -50,7 +56,7 @@ function freshQuestion(makeQuestion, level, previous) {
   return question;
 }
 
-function FreePlayShell({ title, icon, intro, makeQuestion, render, initialLevel = 1 }) {
+function FreePlayShell({ title, icon, intro, makeQuestion, render, initialLevel = 1, levels = LEVELS, beforeGame, onLevelChange }) {
   const [level, setLevel] = useState(initialLevel);
   const [round, setRound] = useState(() => ({ n: 0, question: makeQuestion(Math.random, initialLevel) }));
   const [locked, setLocked] = useState(false);
@@ -107,6 +113,7 @@ function FreePlayShell({ title, icon, intro, makeQuestion, render, initialLevel 
     if (nextLevel === level) return;
     fb.reset();
     setLevel(nextLevel);
+    onLevelChange?.(nextLevel);
     deal(nextLevel, null, round.n);
   };
 
@@ -120,9 +127,6 @@ function FreePlayShell({ title, icon, intro, makeQuestion, render, initialLevel 
   return (
     <div className="free-play-page">
       <header className="free-play-header">
-        <Link to="/skills" className="free-play-back">
-          <span aria-hidden="true">←</span> All games
-        </Link>
         <h1 className="free-play-title">
           {icon && <span aria-hidden="true">{icon} </span>}
           {title}
@@ -130,10 +134,12 @@ function FreePlayShell({ title, icon, intro, makeQuestion, render, initialLevel 
         {intro && <p className="free-play-intro">{intro}</p>}
       </header>
 
+      {beforeGame}
+
       <div className="challenge-container free-play">
         <div className="free-play-toolbar">
           <div className="free-play-levels" role="group" aria-label="Choose a level">
-            {LEVELS.map((option) => (
+            {levels.map((option) => (
               <button
                 key={option.id}
                 type="button"

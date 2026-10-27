@@ -1,6 +1,7 @@
 import { NOTICES } from "../../data/thirdPartyNotices";
 import historyManifest from "../../assets/history/manifest.json";
 import geographyManifest from "../../assets/geography/manifest.json";
+import cityPhotoCredits from "../../data/cityPhotoCredits.json";
 import { LICENCES } from "../../data/licences";
 import InfoPage from "../../components/ui/InfoPage";
 import "./Credits.css";
@@ -70,6 +71,10 @@ export default function Credits() {
         <li id="solar-system-worlds" className="info-section credits-item"><h3>Moon and Pluto pictures</h3><p>Surface maps of Pluto and the featured moons of Mars, Jupiter, Saturn, Uranus, Neptune and Pluto, resized for the app. Areas no spacecraft photographed are filled in with smooth colour and surface texture borrowed from mapped areas, and colours are evened out so each moon shows its real overall shade. Public-domain NASA, JPL-Caltech, USGS, Space Science Institute, Lunar and Planetary Institute and Johns Hopkins APL/SwRI mosaics from Viking, Voyager, Galileo, Cassini and New Horizons, via <a href="https://commons.wikimedia.org/wiki/Category:Maps_of_moons">Wikimedia Commons</a> and <a href="https://astrogeology.usgs.gov/search">USGS Astrogeology</a>. Ganymede and Callisto maps created by <a href="https://bjj.mmedia.is/data/planetary_maps.html">Björn Jónsson</a> from NASA images. Titan is coloured orange to show its hazy sky. Amalthea, Hyperion and Nereid have never been fully mapped, so their pictures are stand-ins recoloured from the Phobos and Phoebe maps.</p><p>Deimos map by Askaniy Anpilogov and John van Vliet, modified: <a href="https://commons.wikimedia.org/wiki/File:Deimos_map_by_Askaniy.png">Source</a> · <a href={LICENCES["CC-BY-SA-3.0"].url}>{LICENCES["CC-BY-SA-3.0"].name}</a></p></li>
         <li className="info-section credits-item"><h3>Year 4 river lines</h3><p>Selected rivers from public-domain Natural Earth v5.1.2 (rivers and lake centerlines), simplified for teaching.</p><p><a href="https://www.naturalearthdata.com/downloads/10m-physical-vectors/10m-rivers-lake-centerlines/">Source data</a></p></li>
         {Object.entries(geographyManifest.images).map(([id, asset]) => <li key={id} id={`geography-${id}`} className="info-section credits-item"><h3>{asset.title}</h3><p>{asset.attribution} {asset.place}, {asset.date}.</p><p>{asset.adapted}</p><p><a href={asset.sourceUrl}>Source</a> · <a href={asset.licenceUrl}>{asset.licence}</a></p></li>)}
+      </ul>
+      <h2 className="credits-heading">City Spotlight photos</h2>
+      <ul className="credits-list">
+        {Object.entries(cityPhotoCredits).map(([id, photo]) => <li key={id} id={`city-photo-${id}`} className="info-section credits-item"><h3>{photo.city}</h3><p>“{photo.title}” by {photo.author}. Resized for the app.</p><p><a href={photo.sourceUrl}>Source</a> · {photo.licenceUrl ? <a href={photo.licenceUrl}>{photo.licence}</a> : photo.licence}</p></li>)}
       </ul>
     </InfoPage>
   );

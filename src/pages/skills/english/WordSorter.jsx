@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext, useCallback } from 'react';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { ThemeContext } from '../../../context/theme-context';
 import './WordSorter.css';
 import SpeakButton from '../../../components/challenge/SpeakButton';
@@ -86,6 +85,7 @@ export default function WordSorter() {
   const [total, setTotal] = useState(0);
   const [completed, setCompleted] = useState(false);
   const [roundKey, setRoundKey] = useState(0);
+  const [selected, setSelected] = useState(null);
   const fb = useAnswerFeedback();
   const clearFeedback = fb.clear;
   const answerFeedback = fb.answer;
@@ -96,46 +96,33 @@ export default function WordSorter() {
     setWords(generateSet());
     setBuckets({ noun: [], verb: [], adjective: [] });
     setCompleted(false);
+    setSelected(null);
     clearFeedback();
   }, [clearFeedback]);
 
-  // Handle drag end logic
-  function handleDragEnd(result) {
-    if (!result.destination) return;
+  // Tap a bank word to pick it up, then tap a box to drop it in.
+  function handleBankClick(item) {
+    if (completed) return;
+    setSelected((prev) => (prev === item.word ? null : item.word));
+  }
 
-    const source = result.source.droppableId;
-    const dest = result.destination.droppableId;
+  function handleBucketClick(type) {
+    if (completed || !selected) return;
+    const item = words.find((w) => w.word === selected);
+    if (!item) return;
+    setBuckets((prev) => ({ ...prev, [type]: [...prev[type], item] }));
+    setWords((prev) => prev.filter((w) => w.word !== selected));
+    setSelected(null);
+  }
 
-    // same bucket/bank reorder
-    if (source === dest) return;
-
-    const draggableId = result.draggableId;
-
-    if (source === 'words') {
-      // word bank → bucket
-      const draggedWord = words.find((w) => w.word === draggableId);
-      if (!draggedWord) return;
-
-      setBuckets((prev) => ({
-        ...prev,
-        [dest]: [...prev[dest], draggedWord],
-      }));
-      setWords((prev) => prev.filter((w) => w.word !== draggedWord.word));
-    } else {
-      // bucket → word bank, or bucket → bucket
-      const draggedWord = buckets[source].find((w) => w.word === draggableId);
-      if (!draggedWord) return;
-
-      setBuckets((prev) => ({
-        ...prev,
-        [source]: prev[source].filter((w) => w.word !== draggableId),
-        ...(dest !== 'words' ? { [dest]: [...prev[dest], draggedWord] } : {}),
-      }));
-
-      if (dest === 'words') {
-        setWords((prev) => [...prev, draggedWord]);
-      }
-    }
+  // Tapping a placed word sends it back to the bank.
+  function handlePlacedClick(type, item) {
+    if (completed) return;
+    setBuckets((prev) => ({
+      ...prev,
+      [type]: prev[type].filter((w) => w.word !== item.word),
+    }));
+    setWords((prev) => [...prev, item]);
   }
 
   // Check if all sorted → give feedback
@@ -172,81 +159,62 @@ export default function WordSorter() {
   return (
     <div className={`sorter-wrapper ${theme}`}>
       <div className="sorter-score">Score: {score} / {total}</div>
-      <h2 className="sorter-prompt">Drag each word into the correct category</h2>
+      <h2 className="sorter-prompt">Tap a word, then tap the box it belongs in</h2>
       <SpeakButton getText={() => `Sort each word into nouns, verbs, and adjectives. Words: ${[...words, ...TYPES.flatMap((type) => buckets[type])].map((item) => item.word).join(', ')}`} resetKey={roundKey} label="Hear the words" compact />
 
-      <div ref={fb.answerRef}><DragDropContext onDragEnd={handleDragEnd}>
-        {/* Unsorted Words */}
-        <Droppable droppableId="words" direction="horizontal">
-          {(provided) => (
-            <div
-              className="word-bank"
-              ref={provided.innerRef}
-              {...provided.droppableProps}
+      <div ref={fb.answerRef}>
+        <div className="word-bank">
+          {words.map((item) => (
+            <button
+              type="button"
+              key={item.word}
+              className={`word-tile${selected === item.word ? ' selected' : ''}`}
+              aria-pressed={selected === item.word}
+              disabled={completed}
+              onClick={() => handleBankClick(item)}
             >
-              {words.map((item, index) => (
-                <Draggable
-                  key={item.word}
-                  draggableId={item.word}
-                  index={index}
-                  isDragDisabled={completed}
-                >
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className="word-tile"
-                    >
-                      {item.word}
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-
-        {/* Buckets */}
-        <div className="bucket-area">
-          {['noun', 'verb', 'adjective'].map((type) => (
-            <Droppable droppableId={type} key={type}>
-              {(provided) => (
-                <div
-                  className={`bucket ${type}`}
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                >
-                  <h3 className="bucket-title">
-                    {type.charAt(0).toUpperCase() + type.slice(1)}s
-                  </h3>
-                  {buckets[type].map((item, index) => (
-                    <Draggable
-                      key={item.word}
-                      draggableId={item.word}
-                      index={index}
-                      isDragDisabled={completed}
-                    >
-                      {(provided) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          className="word-tile small"
-                        >
-                          {item.word}
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
+              {item.word}
+            </button>
           ))}
         </div>
-      </DragDropContext></div>
+
+        <div className="bucket-area">
+          {TYPES.map((type) => (
+            <div
+              key={type}
+              className={`bucket ${type}${selected ? ' ready' : ''}`}
+              onClick={() => handleBucketClick(type)}
+            >
+              <button
+                type="button"
+                className="bucket-title"
+                disabled={completed || !selected}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleBucketClick(type);
+                }}
+              >
+                {type.charAt(0).toUpperCase() + type.slice(1)}s
+              </button>
+              {buckets[type].map((item) => (
+                <button
+                  type="button"
+                  key={item.word}
+                  className="word-tile small"
+                  aria-label={`${item.word}, tap to move back`}
+                  disabled={completed}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePlacedClick(type, item);
+                  }}
+                >
+                  {item.word}
+                </button>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
 
       <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
 

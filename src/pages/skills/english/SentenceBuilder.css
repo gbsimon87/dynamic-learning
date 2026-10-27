@@ -54,9 +54,11 @@ body.dark .sentence-area {
   border: 2px solid var(--light-accent);
   border-radius: 8px;
   padding: 0.5rem 1rem;
-  cursor: grab;
+  cursor: pointer;
   user-select: none;
-  font-size: 1.1rem;
+  font-family: inherit;
+  min-height: 48px;
+  font-size: 1.2rem;
   font-weight: 600;
   transition: all 0.2s ease;
   color: var(--light-text);
@@ -65,6 +67,26 @@ body.dark .word-chip {
   background-color: var(--dark-panel);
   border-color: var(--dark-accent);
   color: var(--dark-text);
+}
+
+.word-bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  min-height: 48px;
+}
+
+.sentence-hint {
+  opacity: 0.7;
+  color: var(--light-text);
+}
+body.dark .sentence-hint {
+  color: var(--dark-text);
+}
+
+.word-chip:disabled {
+  cursor: default;
 }
 
 .word-chip.correct {

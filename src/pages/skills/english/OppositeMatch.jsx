@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext, useRef } from 'react';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { ThemeContext } from '../../../context/theme-context';
 import './OppositeMatch.css';
 import SpeakButton from '../../../components/challenge/SpeakButton';
@@ -75,8 +74,7 @@ function shuffle(list) {
  *
  * `old` is the right-hand word of both ['young','old'] and ['new','old']. When a
  * round drew both, `rightWords` contained "old" twice - and that word is used as
- * the React key AND the dnd `droppableId`, which must be globally unique. One
- * drop zone went inert, matching was done by value so dropping onto either
+ * the React key, which must be unique. Matching was done by value so tapping either
  * marked BOTH as matched, and the round could never reach completion: a dead end
  * with no restart control. Deduping the round makes it structurally impossible
  * while keeping both (individually correct) pairs in the bank.
@@ -105,6 +103,7 @@ export default function OppositeMatch() {
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
   const [feedback, setFeedback] = useState(null);
+  const [selected, setSelected] = useState(null);
   const [roundKey, setRoundKey] = useState(0);
   const fb = useAnswerFeedback();
   const missedWordsRef = useRef(new Set());
@@ -117,25 +116,29 @@ export default function OppositeMatch() {
     setRightWords(shuffle(pairs.map((p) => p[1])));
   }, [pairs]);
 
-  // Handle drag end
-  function handleDragEnd(result) {
-    if (!result.destination) return;
+  // Tap a word, then tap its opposite
+  function handleWordClick(word) {
+    if (matchedWordsRef.current.has(word)) return;
+    setSelected((current) => (current === word ? null : word));
+  }
 
-    const dragged = result.draggableId;       // left word
-    if (matchedWordsRef.current.has(dragged)) return;
-    const target = result.destination.droppableId; // right word
+  function handleTargetClick(target) {
+    if (!selected) return;
+    const word = selected;
+    if (matchedWordsRef.current.has(word)) return;
 
-    const pair = pairs.find(([a]) => a === dragged);
+    const pair = pairs.find(([a]) => a === word);
     const correct = pair && pair[1] === target;
-    fb.answer(Boolean(correct), { firstTry: !missedWordsRef.current.has(dragged) });
-    if (!correct) missedWordsRef.current.add(dragged);
+    fb.answer(Boolean(correct), { firstTry: !missedWordsRef.current.has(word) });
+    if (!correct) missedWordsRef.current.add(word);
 
     setTotal(prev => prev + 1);
 
     if (correct) {
-      matchedWordsRef.current.add(dragged);
+      matchedWordsRef.current.add(word);
       setScore(prev => prev + 1);
-      setMatches(prev => ({ ...prev, [dragged]: target }));
+      setMatches(prev => ({ ...prev, [word]: target }));
+      setSelected(null);
     }
   }
 
@@ -147,6 +150,7 @@ export default function OppositeMatch() {
         setPairs(getRandomPairs());
         setRoundKey((key) => key + 1);
         setMatches({});
+        setSelected(null);
         setFeedback(null);
         missedWordsRef.current.clear();
         matchedWordsRef.current.clear();
@@ -159,75 +163,41 @@ export default function OppositeMatch() {
   return (
     <div className={`match-wrapper ${theme}`}>
       <div className="match-score">Score: {score} / {total}</div>
-      <h2 className="match-prompt">Drag each word to its opposite</h2>
-      <SpeakButton getText={() => `Drag each word to its opposite. Words: ${leftWords.join(', ')}. Opposites: ${rightWords.join(', ')}.`} resetKey={roundKey} label="Hear the words" compact />
+      <h2 className="match-prompt">Tap a word, then tap its opposite</h2>
+      <SpeakButton getText={() => `Tap a word, then tap its opposite. Words: ${leftWords.join(', ')}. Opposites: ${rightWords.join(', ')}.`} resetKey={roundKey} label="Hear the words" compact />
 
       <div className="match-area" ref={fb.answerRef}>
-        <DragDropContext onDragEnd={handleDragEnd}>
-          {/* Left column: Draggable words */}
-          <Droppable droppableId="left-column" isDropDisabled={true}>
-            {(provided) => (
-              <div className="left-column" ref={provided.innerRef}>
-                {leftWords.map((word, index) => (
-                  <Draggable
-                    key={word}
-                    draggableId={word}
-                    index={index}
-                    isDragDisabled={!!matches[word]}
-                  >
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className={`word-chip ${
-                          matches[word] ? 'matched' : ''
-                        }`}
-                      >
-                        {word}
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
+        <div className="left-column">
+          {leftWords.map((word) => (
+            <button
+              type="button"
+              key={word}
+              className={`word-chip ${matches[word] ? 'matched' : ''} ${selected === word ? 'selected' : ''}`}
+              aria-pressed={selected === word}
+              disabled={Boolean(matches[word])}
+              onClick={() => handleWordClick(word)}
+            >
+              {word}
+            </button>
+          ))}
+        </div>
 
-          {/* Right column: Drop targets */}
-          <div className="right-column">
-            {rightWords.map((target) => (
-              <Droppable droppableId={target} key={target}>
-                {(provided, snapshot) => {
-                  // Find if any left word matched this right word
-                  const matchedLeft = Object.entries(matches).find(
-                    ([, val]) => val === target
-                  );
-                  const isMatched = Boolean(matchedLeft);
-
-                  return (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      className={`drop-zone ${
-                        isMatched ? 'matched' : snapshot.isDraggingOver ? 'hover' : ''
-                      }`}
-                    >
-                      {isMatched ? (
-                        <span className="locked">
-                          {target}
-                        </span>
-                      ) : (
-                        <span>{target}</span>
-                      )}
-                      {provided.placeholder}
-                    </div>
-                  );
-                }}
-              </Droppable>
-            ))}
-          </div>
-        </DragDropContext>
+        <div className="right-column">
+          {rightWords.map((target) => {
+            const isMatched = Object.values(matches).includes(target);
+            return (
+              <button
+                type="button"
+                key={target}
+                className={`drop-zone ${isMatched ? 'matched' : ''}`}
+                disabled={isMatched || !selected}
+                onClick={() => handleTargetClick(target)}
+              >
+                {target}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />

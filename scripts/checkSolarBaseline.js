@@ -44,7 +44,7 @@ async function capture(dir) {
       page.setDefaultTimeout(15000);
       const shot = async name => { await page.waitForTimeout(1500); await page.screenshot({ path: join(dir, `${width}x${height}-${theme}-${name}.png`) }); shots++; };
 
-      await page.goto(`${base}/solar-system`);
+      await page.goto(`${base}/skills/solar-system`);
       await page.waitForFunction(() => document.querySelector('[aria-label="Fly the rocket"]')?.disabled === false);
       await shot('overview');
 

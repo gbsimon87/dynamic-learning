@@ -2,6 +2,8 @@
 body.dark .solar-flight { color: var(--dark-text); }
 .solar-flight button, .solar-flight select { min-height: 48px; min-width: 48px; border-radius: 9px; border: 1px solid color-mix(in srgb, currentColor 20%, transparent); background: var(--light-panel); color: inherit; font: inherit; padding: 6px 10px; pointer-events: auto; cursor: pointer; }
 body.dark .solar-flight button, body.dark .solar-flight select { background: var(--dark-panel); }
+/* Flying: no pressed, selected or long-press visuals on any control. */
+.solar-flight button, .solar-flight__stick { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
 .solar-flight button:disabled { opacity: .45; cursor: default; }
 .solar-flight button:focus-visible, .solar-flight select:focus-visible { outline: 2px solid currentColor; outline-offset: -2px; }
 .solar-flight__top { position: absolute; z-index: 3; top: 10px; left: 10px; width: min(340px, calc(100% - 20px)); max-height: calc(100% - 180px); padding: 8px; box-sizing: border-box; border: 1px solid color-mix(in srgb, currentColor 20%, transparent); border-radius: 14px; background: var(--light-panel); overflow-y: auto; pointer-events: auto; box-shadow: 0 6px 20px #0003; }
@@ -44,7 +46,6 @@ body.dark .solar-flight__stick { background: var(--dark-panel); }
 .solar-flight__stick span { position: absolute; left: 34px; top: 34px; width: 56px; height: 56px; background: currentColor; border-radius: 50%; pointer-events: none; }
 .solar-flight .solar-flight__go { position: absolute; bottom: max(16px, env(safe-area-inset-bottom)); right: 16px; width: 88px; height: 88px; border: 3px solid currentColor; border-radius: 50%; font-size: 23px; font-weight: 800; touch-action: none; }
 .solar-flight .solar-flight__turbo { position: absolute; right: 16px; bottom: 116px; min-width: 88px; font-weight: 700; touch-action: none; }
-.solar-flight__touch-controls .is-on { box-shadow: 0 0 12px currentColor; }
 @media (orientation: portrait) { .solar-flight__top { max-height: calc(50% - 16px); } }
 @media (pointer: fine) and (min-width: 721px) {
   .solar-flight__touch-controls { display: none; }

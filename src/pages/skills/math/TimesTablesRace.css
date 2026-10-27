@@ -1,0 +1,205 @@
+/* Times Tables Race. The page frame, segmented pickers and keypad come from
+   FreePlayShell.css and challenge-kit.css; colours are the kit's --ck-* tokens,
+   so both themes work. Every rule is scoped under .ttr. */
+
+/* Buttons that share a screen never share a colour: the accent fills Start,
+   Check and Practise; the chosen option is inverted ink; Play again is
+   purple; Stop and Change tables are outlines. */
+.ttr {
+  --ttr-again: var(--light-home-reading-ink);
+  --ttr-on-again: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: center;
+}
+
+body.dark .ttr {
+  --ttr-again: var(--dark-home-reading-edge);
+  --ttr-on-again: var(--dark-bg);
+}
+
+.ttr .free-play-levels .free-play-level.is-active {
+  color: var(--ck-panel);
+  background: var(--ck-text);
+}
+
+.ttr .ttr-again {
+  color: var(--ttr-on-again);
+  background: var(--ttr-again);
+}
+
+.ttr .ttr-group {
+  padding: 0.4rem 0;
+}
+
+/* The grey tray is what wraps on a phone: give the buttons room inside it. */
+.ttr .ttr-group .free-play-levels {
+  gap: 0.5rem;
+  padding: 0.8rem 0.9rem;
+  border-radius: 24px;
+}
+
+.ttr .ttr-heading {
+  font-size: 1.3rem;
+  margin-top: 0.4rem;
+}
+
+.ttr .ttr-setup,
+.ttr .ttr-play,
+.ttr .ttr-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ttr .ttr-range {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.9rem;
+}
+
+.ttr .ttr-pick {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-weight: 700;
+}
+
+.ttr .ttr-pick select {
+  min-height: 56px;
+  min-width: 5.5rem;
+  padding: 0 0.8rem;
+  font: inherit;
+  font-size: 1.4rem;
+  font-weight: 800;
+  text-align: center;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  border: 2px solid var(--ck-border);
+  border-radius: 12px;
+}
+
+.ttr .ttr-times {
+  padding-bottom: 1rem;
+  font-weight: 700;
+}
+
+.ttr .ttr-note {
+  margin: 0;
+  opacity: 0.85;
+}
+
+.ttr .ttr-start {
+  min-width: 12rem;
+  margin-top: 0.4rem;
+  font-size: 1.3rem;
+}
+
+/* --- playing --- */
+.ttr .ttr-hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.ttr .ttr-clock {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.ttr .ttr-progress {
+  margin: 0;
+  font-weight: 700;
+}
+
+.ttr .ttr-stop,
+.ttr .ttr-secondary {
+  min-height: 48px;
+  padding: 0 1.2rem;
+  font: inherit;
+  font-weight: 700;
+  color: var(--ck-text);
+  background: transparent;
+  border: 2px solid var(--ck-border);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.ttr .ttr-question {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.ttr .ttr-prompt {
+  margin: 0 0 0.6rem;
+  font-size: clamp(2.4rem, 11vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+/* --- results --- */
+.ttr .ttr-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+  margin: 0;
+}
+
+.ttr .ttr-stats div {
+  min-width: 7.5rem;
+  padding: 0.7rem 1rem;
+  background: var(--ck-muted);
+  border-radius: 14px;
+}
+
+.ttr .ttr-stats dt {
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+.ttr .ttr-stats dd {
+  margin: 0;
+  font-size: 1.7rem;
+  font-weight: 800;
+}
+
+.ttr .ttr-lists {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+  width: 100%;
+  text-align: left;
+}
+
+.ttr .ttr-lists h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.1rem;
+}
+
+.ttr .ttr-lists ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  line-height: 1.7;
+}
+
+.ttr .ttr-lists p {
+  margin: 0;
+}
+
+.ttr .ttr-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+}

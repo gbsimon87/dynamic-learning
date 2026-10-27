@@ -103,5 +103,313 @@
     "coordinates": [-22.9068, -43.1729],
     "image": "/images/landmarks/landmark_rio_christ.jpg",
     "hint": "Open-armed statue looking over the beach"
+  },
+  {
+    "name": "Berlin",
+    "country": "Germany",
+    "coordinates": [52.52, 13.405],
+    "image": "/images/landmarks/city_berlin.jpg",
+    "hint": "A big gate with chariot statues on top"
+  },
+  {
+    "name": "Madrid",
+    "country": "Spain",
+    "coordinates": [40.4168, -3.7038],
+    "image": "/images/landmarks/city_madrid.jpg",
+    "hint": "A huge royal palace in Spain's capital"
+  },
+  {
+    "name": "Barcelona",
+    "country": "Spain",
+    "coordinates": [41.3851, 2.1734],
+    "image": "/images/landmarks/city_barcelona.jpg",
+    "hint": "A church with tall, bumpy towers still being built"
+  },
+  {
+    "name": "Amsterdam",
+    "country": "Netherlands",
+    "coordinates": [52.3676, 4.9041],
+    "image": "/images/landmarks/city_amsterdam.jpg",
+    "hint": "Narrow houses beside watery canals"
+  },
+  {
+    "name": "Venice",
+    "country": "Italy",
+    "coordinates": [45.4408, 12.3155],
+    "image": "/images/landmarks/city_venice.jpg",
+    "hint": "A stone bridge over a watery street"
+  },
+  {
+    "name": "Vienna",
+    "country": "Austria",
+    "coordinates": [48.2082, 16.3738],
+    "image": "/images/landmarks/city_vienna.jpg",
+    "hint": "A yellow palace with a big garden"
+  },
+  {
+    "name": "Prague",
+    "country": "Czech Republic",
+    "coordinates": [50.0755, 14.4378],
+    "image": "/images/landmarks/city_prague.jpg",
+    "hint": "An old stone bridge lined with statues"
+  },
+  {
+    "name": "Budapest",
+    "country": "Hungary",
+    "coordinates": [47.4979, 19.0402],
+    "image": "/images/landmarks/city_budapest.jpg",
+    "hint": "A parliament with pointy spires beside the Danube"
+  },
+  {
+    "name": "Lisbon",
+    "country": "Portugal",
+    "coordinates": [38.7223, -9.1393],
+    "image": "/images/landmarks/city_lisbon.jpg",
+    "hint": "A small stone tower beside the river"
+  },
+  {
+    "name": "Edinburgh",
+    "country": "United Kingdom",
+    "coordinates": [55.9533, -3.1883],
+    "image": "/images/landmarks/city_edinburgh.jpg",
+    "hint": "A castle on top of an old volcano"
+  },
+  {
+    "name": "Dublin",
+    "country": "Ireland",
+    "coordinates": [53.3498, -6.2603],
+    "image": "/images/landmarks/city_dublin.jpg",
+    "hint": "A white iron footbridge over the River Liffey"
+  },
+  {
+    "name": "Stockholm",
+    "country": "Sweden",
+    "coordinates": [59.3293, 18.0686],
+    "image": "/images/landmarks/city_stockholm.jpg",
+    "hint": "A palace in a city built on islands"
+  },
+  {
+    "name": "Copenhagen",
+    "country": "Denmark",
+    "coordinates": [55.6761, 12.5683],
+    "image": "/images/landmarks/city_copenhagen.jpg",
+    "hint": "Colourful houses along a harbour canal"
+  },
+  {
+    "name": "Oslo",
+    "country": "Norway",
+    "coordinates": [59.9139, 10.7522],
+    "image": "/images/landmarks/city_oslo.jpg",
+    "hint": "A white building you can walk up like a mountain"
+  },
+  {
+    "name": "Florence",
+    "country": "Italy",
+    "coordinates": [43.7696, 11.2558],
+    "image": "/images/landmarks/city_florence.jpg",
+    "hint": "A church with a giant red dome"
+  },
+  {
+    "name": "Brussels",
+    "country": "Belgium",
+    "coordinates": [50.8503, 4.3517],
+    "image": "/images/landmarks/city_brussels.jpg",
+    "hint": "A grand square with golden-trimmed buildings"
+  },
+  {
+    "name": "Munich",
+    "country": "Germany",
+    "coordinates": [48.1351, 11.582],
+    "image": "/images/landmarks/city_munich.jpg",
+    "hint": "A town hall with a tall clock tower"
+  },
+  {
+    "name": "Reykjavik",
+    "country": "Iceland",
+    "coordinates": [64.1466, -21.9426],
+    "image": "/images/landmarks/city_reykjavik.jpg",
+    "hint": "A tall church shaped like lava columns"
+  },
+  {
+    "name": "Saint Petersburg",
+    "country": "Russia",
+    "coordinates": [59.9311, 30.3609],
+    "image": "/images/landmarks/city_saint_petersburg.jpg",
+    "hint": "A church with swirly colourful domes"
+  },
+  {
+    "name": "Delhi",
+    "country": "India",
+    "coordinates": [28.6139, 77.209],
+    "image": "/images/landmarks/city_delhi.jpg",
+    "hint": "A huge arch honouring brave soldiers"
+  },
+  {
+    "name": "Mumbai",
+    "country": "India",
+    "coordinates": [19.076, 72.8777],
+    "image": "/images/landmarks/city_mumbai.jpg",
+    "hint": "A stone arch beside the sea"
+  },
+  {
+    "name": "Bangkok",
+    "country": "Thailand",
+    "coordinates": [13.7563, 100.5018],
+    "image": "/images/landmarks/city_bangkok.jpg",
+    "hint": "A temple with a tall spiky tower beside the river"
+  },
+  {
+    "name": "Singapore",
+    "country": "Singapore",
+    "coordinates": [1.3521, 103.8198],
+    "image": "/images/landmarks/city_singapore.jpg",
+    "hint": "Three towers with a ship on top"
+  },
+  {
+    "name": "Seoul",
+    "country": "South Korea",
+    "coordinates": [37.5665, 126.978],
+    "image": "/images/landmarks/city_seoul.jpg",
+    "hint": "An old palace with curved roofs"
+  },
+  {
+    "name": "Shanghai",
+    "country": "China",
+    "coordinates": [31.2304, 121.4737],
+    "image": "/images/landmarks/city_shanghai.jpg",
+    "hint": "A tower with big pink balls"
+  },
+  {
+    "name": "Kyoto",
+    "country": "Japan",
+    "coordinates": [35.0116, 135.7681],
+    "image": "/images/landmarks/city_kyoto.jpg",
+    "hint": "A temple covered in gold by a pond"
+  },
+  {
+    "name": "Jerusalem",
+    "country": "Israel",
+    "coordinates": [31.7683, 35.2137],
+    "image": "/images/landmarks/city_jerusalem.jpg",
+    "hint": "A shining golden dome on an old hill"
+  },
+  {
+    "name": "Marrakesh",
+    "country": "Morocco",
+    "coordinates": [31.6295, -7.9811],
+    "image": "/images/landmarks/city_marrakesh.jpg",
+    "hint": "A tall red tower near a busy market"
+  },
+  {
+    "name": "Abu Dhabi",
+    "country": "UAE",
+    "coordinates": [24.4539, 54.3773],
+    "image": "/images/landmarks/city_abu_dhabi.jpg",
+    "hint": "A giant white mosque with many domes"
+  },
+  {
+    "name": "Kuala Lumpur",
+    "country": "Malaysia",
+    "coordinates": [3.139, 101.6869],
+    "image": "/images/landmarks/city_kuala_lumpur.jpg",
+    "hint": "Two silver twin towers joined by a bridge"
+  },
+  {
+    "name": "Jakarta",
+    "country": "Indonesia",
+    "coordinates": [-6.2088, 106.8456],
+    "image": "/images/landmarks/city_jakarta.jpg",
+    "hint": "A tall tower topped with a golden flame"
+  },
+  {
+    "name": "Toronto",
+    "country": "Canada",
+    "coordinates": [43.6532, -79.3832],
+    "image": "/images/landmarks/city_toronto.jpg",
+    "hint": "A very tall tower beside a lake"
+  },
+  {
+    "name": "Chicago",
+    "country": "USA",
+    "coordinates": [41.8781, -87.6298],
+    "image": "/images/landmarks/city_chicago.jpg",
+    "hint": "A super tall black skyscraper"
+  },
+  {
+    "name": "Washington, D.C.",
+    "country": "USA",
+    "coordinates": [38.9072, -77.0369],
+    "image": "/images/landmarks/city_washington_d_c.jpg",
+    "hint": "A tall white needle near the president's house"
+  },
+  {
+    "name": "Los Angeles",
+    "country": "USA",
+    "coordinates": [34.0522, -118.2437],
+    "image": "/images/landmarks/city_los_angeles.jpg",
+    "hint": "Giant white letters on a hill"
+  },
+  {
+    "name": "Mexico City",
+    "country": "Mexico",
+    "coordinates": [19.4326, -99.1332],
+    "image": "/images/landmarks/city_mexico_city.jpg",
+    "hint": "A white marble theatre with a colourful dome"
+  },
+  {
+    "name": "Havana",
+    "country": "Cuba",
+    "coordinates": [23.1136, -82.3666],
+    "image": "/images/landmarks/city_havana.jpg",
+    "hint": "A grand domed building and old cars"
+  },
+  {
+    "name": "Buenos Aires",
+    "country": "Argentina",
+    "coordinates": [-34.6037, -58.3816],
+    "image": "/images/landmarks/city_buenos_aires.jpg",
+    "hint": "A tall white obelisk on a very wide street"
+  },
+  {
+    "name": "Auckland",
+    "country": "New Zealand",
+    "coordinates": [-36.8485, 174.7633],
+    "image": "/images/landmarks/city_auckland.jpg",
+    "hint": "A tall needle-shaped tower"
+  },
+  {
+    "name": "Melbourne",
+    "country": "Australia",
+    "coordinates": [-37.8136, 144.9631],
+    "image": "/images/landmarks/city_melbourne.jpg",
+    "hint": "A yellow railway station with a dome"
+  },
+  {
+    "name": "Rotterdam",
+    "country": "Netherlands",
+    "coordinates": [51.9244, 4.4777],
+    "image": "/images/landmarks/city_rotterdam.jpg",
+    "hint": "A white bridge shaped like a swan"
+  },
+  {
+    "name": "Seville",
+    "country": "Spain",
+    "coordinates": [37.3891, -5.9845],
+    "image": "/images/landmarks/city_seville.jpg",
+    "hint": "A curved palace with a little canal"
+  },
+  {
+    "name": "Quebec City",
+    "country": "Canada",
+    "coordinates": [46.8139, -71.208],
+    "image": "/images/landmarks/city_quebec_city.jpg",
+    "hint": "A castle-like hotel above the river"
+  },
+  {
+    "name": "Petra",
+    "country": "Jordan",
+    "coordinates": [30.3285, 35.4444],
+    "image": "/images/landmarks/city_petra.jpg",
+    "hint": "A giant building carved into pink rock"
   }
 ]

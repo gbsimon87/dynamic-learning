@@ -1,0 +1,354 @@
+{
+  "berlin": {
+    "city": "Berlin",
+    "title": "Brandenburger Tor abends",
+    "author": "Thomas Wolf, www.foto-tw.de",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Brandenburger_Tor_abends.jpg"
+  },
+  "madrid": {
+    "city": "Madrid",
+    "title": "Palacio Real de Madrid Julio 2016 (cropped)",
+    "author": "Tim Adams",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Palacio_Real_de_Madrid_Julio_2016_(cropped).jpg"
+  },
+  "barcelona": {
+    "city": "Barcelona",
+    "title": "Sagrada Familia 8-12-21 (4)",
+    "author": "Canaan",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Sagrada_Familia_8-12-21_(4).jpg"
+  },
+  "amsterdam": {
+    "city": "Amsterdam",
+    "title": "Amsterdam Canal Houses (Unsplash)",
+    "author": "Kaci Baum kacibaum",
+    "licence": "CC0",
+    "licenceUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Amsterdam_Canal_Houses_(Unsplash).jpg"
+  },
+  "venice": {
+    "city": "Venice",
+    "title": "Rialto 2025 4",
+    "author": "kallerna",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Rialto_2025_4.jpg"
+  },
+  "vienna": {
+    "city": "Vienna",
+    "title": "Wien - Schloss Schönbrunn",
+    "author": "C.Stadler/Bwag",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Wien_-_Schloss_Sch%C3%B6nbrunn.JPG"
+  },
+  "prague": {
+    "city": "Prague",
+    "title": "Prague Charles Bridge 2021 12",
+    "author": "Scotch Mist",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Prague_Charles_Bridge_2021_12.jpg"
+  },
+  "budapest": {
+    "city": "Budapest",
+    "title": "Hungarian Parliament Building from across the Danube, 2025-01-11",
+    "author": "Kilyann Le Hen",
+    "licence": "CC BY 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hungarian_Parliament_Building_from_across_the_Danube,_2025-01-11.jpg"
+  },
+  "lisbon": {
+    "city": "Lisbon",
+    "title": "Torre Belém April 2009-4a",
+    "author": "Alvesgaspar",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Torre_Bel%C3%A9m_April_2009-4a.jpg"
+  },
+  "edinburgh": {
+    "city": "Edinburgh",
+    "title": "City of Edinburgh - Edinburgh Castle - 20140421004403",
+    "author": "Enric",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:City_of_Edinburgh_-_Edinburgh_Castle_-_20140421004403.jpg"
+  },
+  "dublin": {
+    "city": "Dublin",
+    "title": "HalfPennyBridge",
+    "author": "Unknown",
+    "licence": "Public domain",
+    "licenceUrl": null,
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:HalfPennyBridge.jpg"
+  },
+  "stockholm": {
+    "city": "Stockholm",
+    "title": "The Royal Palace (15891592359)",
+    "author": "Magnus Johansson",
+    "licence": "CC BY-SA 2.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Royal_Palace_(15891592359).jpg"
+  },
+  "copenhagen": {
+    "city": "Copenhagen",
+    "title": "The Nyhavn Canal 3",
+    "author": "European Commission",
+    "licence": "CC BY 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_Nyhavn_Canal_3.jpg"
+  },
+  "oslo": {
+    "city": "Oslo",
+    "title": "Oslo Opera House - 2025",
+    "author": "Pierre Blaché",
+    "licence": "CC0",
+    "licenceUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Oslo_Opera_House_-_2025.jpg"
+  },
+  "florence": {
+    "city": "Florence",
+    "title": "Cattedrale di Santa Maria del Fiore – Il Duomo di Firenze",
+    "author": "Gary Campbell-Hall",
+    "licence": "CC BY 2.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by/2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cattedrale_di_Santa_Maria_del_Fiore_%E2%80%93_Il_Duomo_di_Firenze.jpg"
+  },
+  "brussels": {
+    "city": "Brussels",
+    "title": "Grand-Place, Brussels - panorama, June 2018",
+    "author": "Celuici",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Grand-Place,_Brussels_-_panorama,_June_2018.jpg"
+  },
+  "munich": {
+    "city": "Munich",
+    "title": "Rathaus and Marienplatz from Peterskirche - August 2006",
+    "author": "Diliff",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Rathaus_and_Marienplatz_from_Peterskirche_-_August_2006.jpg"
+  },
+  "reykjavik": {
+    "city": "Reykjavik",
+    "title": "Hallgrimskirkja mai 2026",
+    "author": "Steinninn",
+    "licence": "CC BY 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hallgrimskirkja_mai_2026.jpg"
+  },
+  "saint_petersburg": {
+    "city": "Saint Petersburg",
+    "title": "Auferstehungskirche (Sankt Petersburg)",
+    "author": "Je-str",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Auferstehungskirche_(Sankt_Petersburg).JPG"
+  },
+  "delhi": {
+    "city": "Delhi",
+    "title": "India Gate, New Delhi from West",
+    "author": "Nikhilb239",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:India_Gate,_New_Delhi_from_West.jpg"
+  },
+  "mumbai": {
+    "city": "Mumbai",
+    "title": "Gateway of India Port Mumbai 2",
+    "author": "Gannu03",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Gateway_of_India_Port_Mumbai_2.jpg"
+  },
+  "bangkok": {
+    "city": "Bangkok",
+    "title": "เจดีย์ประธานทรงปรางค์วัดอรุณ2",
+    "author": "Mastertongapollo",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:%E0%B9%80%E0%B8%88%E0%B8%94%E0%B8%B5%E0%B8%A2%E0%B9%8C%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%98%E0%B8%B2%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B8%87%E0%B8%9B%E0%B8%A3%E0%B8%B2%E0%B8%87%E0%B8%84%E0%B9%8C%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%AD%E0%B8%A3%E0%B8%B8%E0%B8%932.jpg"
+  },
+  "singapore": {
+    "city": "Singapore",
+    "title": "Marina Bay Sands (I)",
+    "author": "This Photo was taken by Supanut Arunoprayote. Feel free to use any of my images, but please mention me as the author and may send me a message. (สามารถใช้ภาพได้อิสระ แต่กรุณาใส่เครดิตผู้ถ่ายและอาจส่งข้อความบอกกล่าวด้วย) Please do not upload an updated image here without consultation with the Author. The author would like to make corrections only at his own source. This ensures that the changes are preserved.Please if you think that any changes should be required, please inform the author.Otherwise you can upload a new image with a new name. Please use one of the templates derivative or extract.",
+    "licence": "CC BY 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Marina_Bay_Sands_(I).jpg"
+  },
+  "seoul": {
+    "city": "Seoul",
+    "title": "Gyeongbokgung(palace) Geunjeongjeon(hall)",
+    "author": "Brady Bellini",
+    "licence": "CC0",
+    "licenceUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Gyeongbokgung(palace)_Geunjeongjeon(hall).jpg"
+  },
+  "shanghai": {
+    "city": "Shanghai",
+    "title": "Shanghai Oriental Pearl Tower-20150516-RM-123453",
+    "author": "Ermell",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Shanghai_Oriental_Pearl_Tower-20150516-RM-123453.jpg"
+  },
+  "kyoto": {
+    "city": "Kyoto",
+    "title": "Water reflection of Kinkaku-ji Temple a sunny day, Kyoto, Japan",
+    "author": "Basile Morin",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Water_reflection_of_Kinkaku-ji_Temple_a_sunny_day,_Kyoto,_Japan.jpg"
+  },
+  "jerusalem": {
+    "city": "Jerusalem",
+    "title": "Jerusalem DomeoftheRock J65 (cropped)",
+    "author": "Ludvig14",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jerusalem_DomeoftheRock_J65_(cropped).JPG"
+  },
+  "marrakesh": {
+    "city": "Marrakesh",
+    "title": "Mosquée de la Koutoubia - marakesh",
+    "author": "Baca12",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mosqu%C3%A9e_de_la_Koutoubia_-_marakesh.jpg"
+  },
+  "abu_dhabi": {
+    "city": "Abu Dhabi",
+    "title": "Sheikh Zayed Grand Mosque @ Abu Dhabi (15856602738)",
+    "author": "Guilhem Vellut from Annecy, France",
+    "licence": "CC BY 2.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by/2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Sheikh_Zayed_Grand_Mosque_@_Abu_Dhabi_(15856602738).jpg"
+  },
+  "kuala_lumpur": {
+    "city": "Kuala Lumpur",
+    "title": "Kuala Lumpur Malaysia Petronas-Twin-Towers-01",
+    "author": "CEphoto, Uwe Aranas",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kuala_Lumpur_Malaysia_Petronas-Twin-Towers-01.jpg"
+  },
+  "jakarta": {
+    "city": "Jakarta",
+    "title": "Monumen Nasional, Jakarta, Indonesia",
+    "author": "Ramayoni",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Monumen_Nasional,_Jakarta,_Indonesia.jpg"
+  },
+  "toronto": {
+    "city": "Toronto",
+    "title": "CN Tower, Toronto, Canada (Unsplash DJ kOgH5u0o)",
+    "author": "Scott Webb scottwebb",
+    "licence": "CC0",
+    "licenceUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:CN_Tower,_Toronto,_Canada_(Unsplash_DJ_kOgH5u0o).jpg"
+  },
+  "chicago": {
+    "city": "Chicago",
+    "title": "Sears Tower, Wacker Drive and Jackson Boulevard, Chicago, IL - 54189600901",
+    "author": "w_lemay",
+    "licence": "CC BY-SA 2.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Sears_Tower,_Wacker_Drive_and_Jackson_Boulevard,_Chicago,_IL_-_54189600901.jpg"
+  },
+  "washington_d_c": {
+    "city": "Washington, D.C.",
+    "title": "Washington Monument 2022",
+    "author": "Greyfiveys",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Washington_Monument_2022.jpg"
+  },
+  "los_angeles": {
+    "city": "Los Angeles",
+    "title": "Hollywood sign (8485145044)",
+    "author": "Gnaphron",
+    "licence": "CC BY-SA 2.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hollywood_sign_(8485145044).jpg"
+  },
+  "mexico_city": {
+    "city": "Mexico City",
+    "title": "Bellas Artes 01",
+    "author": "Xavier Quetzalcoatl Contreras Castillo",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bellas_Artes_01.jpg"
+  },
+  "havana": {
+    "city": "Havana",
+    "title": "El Capitolio Havana Cuba",
+    "author": "Nigel Pacquette",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:El_Capitolio_Havana_Cuba.jpg"
+  },
+  "buenos_aires": {
+    "city": "Buenos Aires",
+    "title": "Panorama Obelisco de Buenos Aires 2019",
+    "author": "Luis Santos",
+    "licence": "CC BY-SA 2.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Panorama_Obelisco_de_Buenos_Aires_2019.jpg"
+  },
+  "auckland": {
+    "city": "Auckland",
+    "title": "Auckland skyline (24045221962)",
+    "author": "Marco Klapper",
+    "licence": "CC BY 2.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by/2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Auckland_skyline_(24045221962).jpg"
+  },
+  "melbourne": {
+    "city": "Melbourne",
+    "title": "Flinders Station and trams",
+    "author": "Created by Philip Mallis in 2021; cropped by HappyWaldo",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Flinders_Station_and_trams.jpg"
+  },
+  "rotterdam": {
+    "city": "Rotterdam",
+    "title": "Erasmusbrug, September 2019",
+    "author": "Martin Falbisoner",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Erasmusbrug,_September_2019.jpg"
+  },
+  "seville": {
+    "city": "Seville",
+    "title": "Plaza de España (Sevilla) - 01",
+    "author": "Carlos Delgado",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Plaza_de_Espa%C3%B1a_(Sevilla)_-_01.jpg"
+  },
+  "quebec_city": {
+    "city": "Quebec City",
+    "title": "Château Frontenac 02",
+    "author": "Bernard Gagnon",
+    "licence": "CC BY-SA 4.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ch%C3%A2teau_Frontenac_02.jpg"
+  },
+  "petra": {
+    "city": "Petra",
+    "title": "Al khazneh",
+    "author": "Susanahajer",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Al_khazneh.jpg"
+  }
+}

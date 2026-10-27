@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router";
 import Mascot from "../../../components/mascot/Mascot";
 import SpeakButton from "../../../components/challenge/SpeakButton";
 import AnswerFeedbackLine from "../../../components/skills/AnswerFeedbackLine";
@@ -182,9 +181,6 @@ function RuleZoo() {
     return (
         <div className="free-play-page rule-zoo">
             <header className="free-play-header">
-                <Link to="/skills" className="free-play-back">
-                    <span aria-hidden="true">←</span> All games
-                </Link>
                 <h1 className="free-play-title">
                     <span aria-hidden="true">🦓 </span>
                     Secret Rule Zoo

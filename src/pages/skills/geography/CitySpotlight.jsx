@@ -24,6 +24,7 @@ export default function CitySpotlight() {
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
   const fb = useAnswerFeedback();
+  const clearFeedback = fb.clear;
   const selectedRef = useRef(false);
 
   // ---- Hooks ----
@@ -45,8 +46,6 @@ export default function CitySpotlight() {
     setScore(0);
     setTotal(0);
     setSelected(null);
-    fb.clear();
-    selectedRef.current = false;
     loadNext();
   }
 
@@ -58,9 +57,10 @@ export default function CitySpotlight() {
     const [next, ...rest] = pool;
     setCurrent(next);
     setPool(rest);
+    selectedRef.current = false;
     setSelected(null);
-    setTotal(t => t + 1);
-  }, [pool]);
+    clearFeedback();
+  }, [pool, clearFeedback]);
 
   useEffect(() => {
     if (started && current && selected !== null) {
@@ -74,6 +74,7 @@ export default function CitySpotlight() {
     selectedRef.current = true;
     setSelected(answerName);
     fb.answer(answerName === current.name);
+    setTotal(t => t + 1);
     if (answerName === current.name) setScore(s => s + 1);
   }
 
@@ -121,8 +122,9 @@ export default function CitySpotlight() {
     return (
       <img
         className="cityImage"
+        key={current.name}
         src={current.image}
-        alt={current.name}
+        alt="A famous place in the city"
         loading="lazy"
         onError={handleError}
       />

@@ -1,0 +1,242 @@
+/* Clock Generator. Colours come from the --ck-* tokens (challenge-kit.css),
+   which already swap with the theme. */
+.clock-panel {
+  --clock-ink: var(--ck-text);
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: clamp(1rem, 4vw, 2rem) clamp(1rem, 4vw, 2rem) 2.5rem;
+  color: var(--ck-text);
+}
+
+.clock-header {
+  text-align: center;
+  margin-bottom: clamp(1rem, 3vw, 1.75rem);
+}
+
+.clock-title {
+  margin: 0;
+  font-size: clamp(1.9rem, 5vw, 2.6rem);
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.clock-intro {
+  margin: 0.5rem auto 0;
+  max-width: 34rem;
+  font-size: clamp(1rem, 2.4vw, 1.15rem);
+  opacity: 0.8;
+  text-wrap: balance;
+}
+
+.clock-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  align-items: center;
+  padding: clamp(1.25rem, 4vw, 2.25rem);
+  border-radius: 24px;
+  background: var(--ck-panel);
+  box-shadow:
+    0 0 0 1px var(--ck-card-edge),
+    0 2px 4px var(--panel-shadow),
+    0 16px 36px -12px var(--panel-shadow);
+}
+
+/* --- clock stage --- */
+.clock-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.clock-face-frame {
+  width: min(100%, 440px);
+  padding: clamp(0.5rem, 2vw, 0.9rem);
+  border-radius: 50%;
+  background: var(--ck-muted);
+  box-shadow: inset 0 0 0 2px var(--ck-border);
+}
+
+.clock-face-frame .clock-wrapper {
+  width: 100%;
+  margin: 0;
+  border-radius: 50%;
+  background: var(--ck-panel);
+  box-shadow: 0 6px 18px -6px var(--panel-shadow);
+}
+
+/* react-clock draws in black by default; tie it to the theme. */
+.clock-face-frame .react-clock__face {
+  border: 0;
+}
+.clock-face-frame .react-clock__hand__body,
+.clock-face-frame .react-clock__mark__body {
+  background-color: var(--ck-text);
+}
+.clock-face-frame .react-clock__hand__body {
+  border-radius: 999px;
+}
+.clock-face-frame .react-clock__second-hand__body {
+  background-color: var(--ck-accent);
+}
+.clock-face-frame .dual-label {
+  font-weight: 700;
+}
+.clock-face-frame .dual-label div + div {
+  font-size: 0.82em;
+  opacity: 0.65;
+}
+
+.digital-time {
+  padding: 0.35rem 1.1rem;
+  border-radius: 14px;
+  background: var(--ck-muted);
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+.digital-time[hidden] {
+  display: none;
+}
+
+.clock-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.clock-actions .speak-btn {
+  margin: 0;
+}
+
+.clock-btn {
+  min-height: 48px;
+  padding: 0.5rem 1.5rem;
+  font: inherit;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ck-on-accent);
+  background: var(--ck-accent);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 3px 8px -2px var(--panel-shadow);
+  transition: transform 0.15s ease-out, filter 0.15s ease-out;
+}
+.clock-btn:hover:not(:disabled) {
+  filter: brightness(0.93);
+  transform: translateY(-1px);
+}
+.clock-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.clock-btn:focus-visible,
+.clock-switch input:focus-visible + .clock-switch-track {
+  outline: 3px solid var(--ck-text);
+  outline-offset: 2px;
+}
+.clock-btn:disabled {
+  background: var(--ck-muted);
+  color: var(--ck-text);
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* --- settings --- */
+.clock-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.clock-group {
+  margin: 0;
+  padding: 0.25rem 1rem 0.5rem;
+  border: 2px solid var(--ck-card-edge);
+  border-radius: 18px;
+  background: var(--ck-muted);
+}
+
+.clock-group legend {
+  padding: 0 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.clock-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 48px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.clock-switch + .clock-switch {
+  border-top: 1px solid var(--ck-border);
+}
+
+.clock-switch-text {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.clock-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.clock-switch-track {
+  position: relative;
+  flex: none;
+  width: 52px;
+  height: 30px;
+  border-radius: 999px;
+  background: var(--ck-border);
+  transition: background-color 0.2s ease-out;
+}
+.clock-switch-track::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--ck-panel);
+  box-shadow: 0 1px 3px var(--panel-shadow);
+  transition: transform 0.2s ease-out;
+}
+.clock-switch input:checked + .clock-switch-track {
+  background: var(--ck-accent);
+}
+.clock-switch input:checked + .clock-switch-track::after {
+  transform: translateX(22px);
+}
+
+@media (max-width: 800px) {
+  .clock-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clock-btn,
+  .clock-switch-track,
+  .clock-switch-track::after {
+    transition: none;
+  }
+}

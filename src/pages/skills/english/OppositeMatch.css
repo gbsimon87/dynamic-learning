@@ -48,18 +48,23 @@ body.dark .match-prompt {
   border-radius: 8px;
   padding: 0.6rem 1.2rem;
   font-weight: 600;
-  cursor: grab;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1.2rem;
+  color: var(--light-text);
+  min-height: 48px;
   text-align: center;
   transition: all 0.2s ease;
-  min-width: 100px;
+  min-width: 120px;
 }
 
 .word-chip:hover {
   transform: scale(1.05);
 }
 
-.drop-zone {
+.drop-zone:disabled:not(.matched) {
   cursor: default;
+  opacity: 0.7;
 }
 
 body.dark .word-chip,
@@ -83,12 +88,14 @@ body.dark .drop-zone.matched {
   color: var(--dark-bg);
 }
 
-.drop-zone.hover {
+.word-chip.selected {
   background-color: rgba(239,98,108,0.2);
   border-color: var(--light-accent);
+  transform: scale(1.05);
 }
-body.dark .drop-zone.hover {
+body.dark .word-chip.selected {
   background-color: rgba(132,220,207,0.2);
+  border-color: var(--dark-accent);
 }
 
 .locked {

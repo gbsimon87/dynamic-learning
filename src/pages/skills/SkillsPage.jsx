@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SKILL_GROUPS as GROUPS } from "../../../shared/skillsCatalog.js";
+import { SKILL_GROUPS as GROUPS, FEATURED_GAMES } from "../../../shared/skillsCatalog.js";
 import { Link } from "react-router";
 import { useReveal } from "../home/useReveal";
 import "./SkillsPage.css";
@@ -17,6 +17,11 @@ const GLYPHS = [
   { char: "▲", left: 90, top: 58, size: 1.7, duration: 18, delay: 1 },
 ];
 
+const FEATURED = FEATURED_GAMES.map((to) => {
+  const group = GROUPS.find((g) => g.games.some((game) => game.to === to));
+  return { ...group.games.find((game) => game.to === to), group };
+});
+
 const TOTAL_GAMES = GROUPS.reduce((sum, group) => sum + group.games.length, 0);
 
 function SkillsPage() {
@@ -26,6 +31,7 @@ function SkillsPage() {
   // "the flag one" shouldn't have to. Filtering keeps the page one screen.
   const [filter, setFilter] = useState("all");
   const shown = GROUPS.filter((group) => filter === "all" || group.id === filter);
+  const showFeatured = filter === "all" || filter === "featured";
 
   return (
     <div className="skills-page" ref={revealRef}>
@@ -77,6 +83,16 @@ function SkillsPage() {
           <span aria-hidden="true">✨</span> All
         </button>
 
+        <button
+          type="button"
+          className={`sk-filter ${filter === "featured" ? "is-active" : ""}`}
+          style={{ "--group-hue": "var(--sk-hue-math)", "--group-deep": "var(--sk-deep-math)" }}
+          aria-pressed={filter === "featured"}
+          onClick={() => setFilter("featured")}
+        >
+          <span aria-hidden="true">⭐</span> Featured
+        </button>
+
         {GROUPS.map((group) => (
           <button
             key={group.id}
@@ -93,6 +109,30 @@ function SkillsPage() {
           </button>
         ))}
       </div>
+
+      {/* ===== FEATURED ===== */}
+      {showFeatured && (
+        <section className="sk-featured" aria-labelledby="sk-featured-title" data-reveal>
+          <h2 className="sk-featured-title" id="sk-featured-title">
+            <span aria-hidden="true">⭐</span> Featured games
+          </h2>
+          <div className="sk-featured-grid">
+            {FEATURED.map((game) => (
+              <Link
+                key={game.to}
+                className="sk-featured-game"
+                to={game.to}
+                aria-label={`Featured game: ${game.label}`}
+                style={{ "--group-deep": `var(${game.group.deep})` }}
+              >
+                <span className="sk-featured-icon" aria-hidden="true">{game.icon}</span>
+                <span className="sk-featured-label">{game.label}</span>
+                <span className="sk-featured-subject">{game.group.name}</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ===== GAMES ===== */}
       <div className="sk-grid">
@@ -135,7 +175,7 @@ function SkillsPage() {
                       ▶
                     </span>
                   </Link>
-                  <Link className="sk-guide-link" to={`/learn${game.to}`} aria-label={`About ${game.label}`} title={`About ${game.label}`}>
+                  <Link className="sk-guide-link" to={`/learn/${game.to.replace("/skills/", "")}`} aria-label={`About ${game.label}`} title={`About ${game.label}`}>
                     <span aria-hidden="true">ⓘ</span>
                   </Link>
                 </div>

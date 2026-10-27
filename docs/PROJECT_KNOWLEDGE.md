@@ -356,7 +356,7 @@ src/
 │   │                         #   readAloud.js + challenge-context.js: Maths "Read it to me" (§5)
 │   │                         #   data/DataChallenge.jsx: draws questions authored as data (§5)
 │   ├── ui/Navbar.jsx, ui/useModalDialog.js, ui/Dialog.jsx   # the one modal behaviour + a ready-made dialog (§7)
-│   ├── ClockPanel.jsx, ReadingNumbersPanel.jsx, DualLabelClock.jsx,
+│   ├── ClockPanel.jsx, DualLabelClock.jsx,
 │   ├── MapGame.jsx, MultiplicationGrid.jsx, ShapeQuiz.jsx
 ├── data/
 │   ├── year1MathCurriculum.js    # 32 topics / 128 challenges; data questions + practical pictures
@@ -938,10 +938,12 @@ compatibility, browser checks and the optional database-test permission limits.
 ## 5. What Currently Exists
 
 ### Skills Mode — built games
-**Maths:** Clock Generator, Reading Numbers, Multiplication Grid, Arithmetic
+**Maths:** Clock Generator, Reading Numbers, Multiplication Grid, Times Tables Race, Arithmetic
 Practice, Find the Missing Number, Number Bonds, Fraction Fun
 **Geometry:** Shape Explorer
-**English:** Word Builder, Word Sorter, Sentence Builder, Opposite Match,
+**English:** Word Builder (Easier/Medium/Harder tricky words: missing letter,
+spelling and homophone questions; `src/data/freePlay/wordBuilder.js`), Word
+Sorter, Sentence Builder, Opposite Match,
 Synonym Safari, Sight Word Pop, Speed Reader
 **Geography:** Solar System (3D), World Map, Flag Finder, City Spotlight
 (match a landmark picture to its city), Find the City (tap the city on a map;
@@ -3669,6 +3671,19 @@ Screenshots were reviewed. Live Flag Finder API availability and physical-device
 voice quality were not established. The existing large-chunk build warning
 remains.
 
+### Times Tables Race (`/skills/times-tables`, 2026-10-27)
+
+Own loop (FreePlayShell is endless), on `NumberInput` plus
+`useAnswerFeedback`. Pure logic in `data/freePlay/timesTables.js`: pick tables
+from..to (0-20); each is dealt in both orders against 1-12, shuffled with no
+repeat until the pool is used. A round of 10/20/30 adds 3s per wrong try; the
+countdown (30/60/90s) scores right answers. Results list the slowest and
+missed facts and "Practise my tricky ones" replays them. Each game is a freshly
+mounted `<Play>`, so nothing leaks between games. Untracked: no storage, no
+personal best. Typing works from the keypad, the answer box, or any key on the
+page. `scripts/checkSeo.js` counts guide links on /skills: raise it with each
+new game.
+
 ### Free-play Skills games on the challenge kit (#5, 2026-10-10)
 
 Five ungated Skills Mode games reuse the curriculum kit: **Money Match**
@@ -3676,6 +3691,18 @@ Five ungated Skills Mode games reuse the curriculum kit: **Money Match**
 **Robot Moves** (`/robot-moves`, RobotGrid / PositionBoard), **Chart
 Detective** (`/charts`, tally / pictogram / bar) and **Place Value Blocks**
 (`/place-value`). Registered in `main.jsx` and `SkillsPage.jsx` as usual.
+- **Reading Numbers** (`/reading-numbers`, rebuilt 2026-10-27; it was a
+  min/max number generator). Three modes on one page: Mixed (digits → words,
+  words → digits, listen → digits; tap an answer, wrong tiles cross out),
+  Build (a ▲/▼ dial per digit) and Explore (dials plus place-value chips and
+  the words; "Test me" starts Mixed). The level picker is the number range:
+  to 20, 100, 1,000, 10,000, 100,000 (`LEVELS` in
+  `data/freePlay/readingNumbers.js`, which caps at 100,000 because
+  `written-number` is unreliable past ~775,000). Mode switches remount the
+  shell; the range is kept across modes. "Listen" is never dealt on a device
+  with no speech voice. Wrong options are real slips (swapped digits, a missing
+  zero, 13 vs 30). `FreePlayShell` gained optional `levels`, `beforeGame` and
+  `onLevelChange` props for this.
 - `components/skills/FreePlayShell.jsx` is the loop: endless questions from a
   pure `makeQuestion(rng, level)`, Easier / Medium / Harder (a level change
   starts a fresh game), the same question never twice running, a submission
@@ -4067,12 +4094,14 @@ without a changelog note or the report was inaccurate.
 13. **localStorage mode: a corrupt collection reads as empty and the next save
    replaces it** (2026-09-30 note). Existing behaviour for every collection
    (`dl.parents`, `dl.children`, `dl.progress`, `dl.rewards`), unchanged.
-14. **Fraction Fun accepts any N segments** (2026-08-21 audit, needs a
-   decision). `FractionFun.jsx` checks only how many segments are shaded, not
-   which, so scattered shading passes "Shade 3/8 of the bar". This is a
-   teaching call: for *fractions of a set* the check is already right and only
-   the prompt wording changes; for a *bar model* (the usual Year 2 picture) the
-   shading must run contiguously from one end and the check must require it.
+14. **Fraction Fun accepts any N shaded parts** (resolved 2026-10-27). It is
+   now a model of *equal parts* on six shapes (bar, pizza, tray, triangle,
+   square, hexagon), so which parts are shaded does not matter and the check is
+   a count. Polygons are cut into equal-area wedges by sharing each edge equally
+   (equal angles are not equal areas); `fractionShapes.test`-style area tests
+   in `src/data/freePlay/fractionFun.test.js` guard it. Three levels (ages 6-7,
+   8-10, 11+) and two kinds (Shade it, Name it); level 3 adds equivalent
+   fractions and simplest form.
 15. **Global CSS collisions, partly fixed** (2026-08-21 audit). `.wrapper`,
    `.score`, `.prompt`, `.optionBtn` and `.startBtn` are still global in
    `MathPractice.css`, `FindTheMissingNumber.css`, `WordBuilder.css` and

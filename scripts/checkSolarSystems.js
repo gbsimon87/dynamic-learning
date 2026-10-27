@@ -39,7 +39,7 @@ try {
     };
     const release = async () => { await page.keyboard.up(' '); await page.keyboard.up('Shift'); };
 
-    await page.goto(`${base}/solar-system`);
+    await page.goto(`${base}/skills/solar-system`);
     await page.waitForFunction(() => document.querySelector('[aria-label="More things to do"]')?.disabled === false);
     await step('toolbar fits', async () => {
       const buttons = await page.locator('.solar-launch-buttons button').evaluateAll(list => list.map(b => b.getBoundingClientRect().toJSON()));
@@ -108,7 +108,7 @@ try {
       await shot('14-arrived-home', 800);
     });
     await step('Home button from TRAPPIST-1', async () => {
-      await page.goto(`${base}/solar-system?debug&system=trappist-1`);
+      await page.goto(`${base}/skills/solar-system?debug&system=trappist-1`);
       await page.locator('[aria-label="Tour TRAPPIST-1"]').waitFor();
       await page.getByRole('button', { name: 'Fly home to the Solar System' }).click();
       await shot('15-home-trip', 1500);
@@ -116,7 +116,7 @@ try {
       await shot('16-home', 1500);
     });
     await step('Space explorer chapters and the belt run', async () => {
-      await page.goto(`${base}/solar-system`);
+      await page.goto(`${base}/skills/solar-system`);
       await page.waitForFunction(() => document.querySelector('[aria-label="Fly the rocket"]')?.disabled === false);
       await page.getByRole('button', { name: 'Fly the rocket' }).click();
       const panel = page.locator('.solar-flight__top');

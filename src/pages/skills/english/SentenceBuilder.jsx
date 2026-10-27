@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext, useMemo, useRef } from 'react';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { ThemeContext } from '../../../context/theme-context';
 import './SentenceBuilder.css';
 import SpeakButton from '../../../components/challenge/SpeakButton';
@@ -98,6 +97,9 @@ function generateQuestion(pool) {
   return { correct: words, scrambled };
 }
 
+// Ids keep repeated words ("the") apart when they move between bank and sentence.
+const toTiles = (words) => words.map((word, i) => ({ id: i, word }));
+
 export default function SentenceBuilder() {
   const { theme } = useContext(ThemeContext);
 
@@ -106,7 +108,8 @@ export default function SentenceBuilder() {
   const [maxWords, setMaxWords] = useState(6);
 
   const [question, setQuestion] = useState(null);
-  const [words, setWords] = useState([]);
+  const [bank, setBank] = useState([]);
+  const [built, setBuilt] = useState([]);
   const [selected, setSelected] = useState(false);
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
@@ -143,27 +146,31 @@ export default function SentenceBuilder() {
     setTotal(0);
     setSelected(false);
     setQuestion(next);
-    setWords(next.scrambled);
+    setBank(toTiles(next.scrambled));
+    setBuilt([]);
     setStarted(true);
   }
 
-  // Handle drag and drop reorder
-  function handleDragEnd(result) {
-    if (!result.destination || selected) return;
+  // Tap a word to add it to the sentence; tap it in the sentence to take it back.
+  function addWord(tile) {
+    if (selected) return;
+    setBank((prev) => prev.filter((t) => t.id !== tile.id));
+    setBuilt((prev) => [...prev, tile]);
+  }
 
-    const newOrder = Array.from(words);
-    const [moved] = newOrder.splice(result.source.index, 1);
-    newOrder.splice(result.destination.index, 0, moved);
-    setWords(newOrder);
+  function removeWord(tile) {
+    if (selected) return;
+    setBuilt((prev) => prev.filter((t) => t.id !== tile.id));
+    setBank((prev) => [...prev, tile]);
   }
 
   // Handle "Check" button
   function handleCheck() {
-    if (selectedRef.current || selected) return;
+    if (selectedRef.current || selected || bank.length > 0) return;
     selectedRef.current = true;
     setSelected(true);
     setTotal((prev) => prev + 1);
-    const isCorrect = words.join(' ') === question.correct.join(' ');
+    const isCorrect = built.map((t) => t.word).join(' ') === question.correct.join(' ');
     fb.answer(isCorrect);
     if (isCorrect) setScore((prev) => prev + 1);
   }
@@ -175,7 +182,8 @@ export default function SentenceBuilder() {
         const next = generateQuestion(pool);
         if (!next) return;
         setQuestion(next);
-        setWords(next.scrambled);
+        setBank(toTiles(next.scrambled));
+        setBuilt([]);
         setSelected(false);
         selectedRef.current = false;
         clearFeedback();
@@ -232,53 +240,40 @@ export default function SentenceBuilder() {
       <div className="sentence-score">
         Score: {score} / {total}
       </div>
-      <h2 className="sentence-prompt">Arrange the words to make a correct sentence</h2>
-      <SpeakButton text={`Arrange these words to make a sentence. ${words.join(', ')}`} label="Hear the words" compact />
+      <h2 className="sentence-prompt">Tap the words in order to make a sentence</h2>
+      <SpeakButton text={`Make a sentence with these words. ${question.scrambled.join(', ')}`} label="Hear the words" compact />
 
-      <div className="sentence-area" ref={fb.answerRef}>
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="sentence" direction="horizontal">
-            {(provided) => (
-              <div
-                className="word-container"
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-              >
-                {words.map((word, index) => (
-                  <Draggable key={word + index} draggableId={word + index} index={index}>
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className={`word-chip ${
-                          selected
-                            ? question.correct[index] === word
-                              ? 'correct'
-                              : 'wrong'
-                            : ''
-                        }`}
-                        style={{
-                          ...provided.draggableProps.style,
-                          opacity: snapshot.isDragging ? 0.8 : 1
-                        }}
-                      >
-                        {word}
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
+      <div className="sentence-area" ref={fb.answerRef} aria-label="Your sentence">
+        <div className="word-container">
+          {built.length === 0 && <span className="sentence-hint">Tap a word to start your sentence</span>}
+          {built.map((tile, index) => (
+            <button
+              key={tile.id}
+              type="button"
+              className={`word-chip ${
+                selected ? (question.correct[index] === tile.word ? 'correct' : 'wrong') : ''
+              }`}
+              onClick={() => removeWord(tile)}
+              disabled={selected}
+            >
+              {tile.word}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="word-bank" aria-label="Word bank">
+        {bank.map((tile) => (
+          <button key={tile.id} type="button" className="word-chip" onClick={() => addWord(tile)} disabled={selected}>
+            {tile.word}
+          </button>
+        ))}
       </div>
 
       <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
 
       <div className="sentence-actions">
-        <button className="check-btn" onClick={handleCheck} disabled={selected}>
+        <button className="check-btn" onClick={handleCheck} disabled={selected || bank.length > 0}>
           Check
         </button>
         <button className="check-btn" onClick={() => { fb.reset(); setStarted(false); }}>

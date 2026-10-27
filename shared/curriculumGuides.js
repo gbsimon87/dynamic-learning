@@ -117,19 +117,19 @@ export const CURRICULUM_GUIDES = [
     ],
     "games": [
       {
-        "to": "/number-bonds",
+        "to": "/skills/number-bonds",
         "icon": "🔗",
         "label": "Number Bonds",
         "description": "Find pairs that make a total"
       },
       {
-        "to": "/reading-numbers",
+        "to": "/skills/reading-numbers",
         "icon": "🔢",
         "label": "Reading Numbers",
         "description": "Match numbers and words"
       },
       {
-        "to": "/clock-generator",
+        "to": "/skills/clock-generator",
         "icon": "⏰",
         "label": "Clock Generator",
         "description": "Explore clock faces"
@@ -213,19 +213,19 @@ export const CURRICULUM_GUIDES = [
     ],
     "games": [
       {
-        "to": "/word-builder",
+        "to": "/skills/word-builder",
         "icon": "🔤",
         "label": "Word Builder",
         "description": "Put letters together"
       },
       {
-        "to": "/sight-word-pop",
+        "to": "/skills/sight-word-pop",
         "icon": "🎈",
         "label": "Sight Word Pop",
         "description": "Spot familiar words"
       },
       {
-        "to": "/sentence-builder",
+        "to": "/skills/sentence-builder",
         "icon": "📝",
         "label": "Sentence Builder",
         "description": "Make a sentence"
@@ -277,19 +277,19 @@ export const CURRICULUM_GUIDES = [
     ],
     "games": [
       {
-        "to": "/world-map",
+        "to": "/skills/world-map",
         "icon": "🗺️",
         "label": "World Map",
         "description": "Explore countries and places"
       },
       {
-        "to": "/city-spotlight",
+        "to": "/skills/city-spotlight",
         "icon": "🏙️",
         "label": "City Spotlight",
         "description": "Take a closer look at a city"
       },
       {
-        "to": "/find-the-city",
+        "to": "/skills/find-the-city",
         "icon": "📍",
         "label": "Find the City",
         "description": "Put places on the map"
@@ -503,19 +503,19 @@ export const CURRICULUM_GUIDES = [
     ],
     "games": [
       {
-        "to": "/money",
+        "to": "/skills/money",
         "icon": "🪙",
         "label": "Money Match",
         "description": "Explore coins and amounts"
       },
       {
-        "to": "/multiplication-table",
+        "to": "/skills/multiplication-table",
         "icon": "✖️",
         "label": "Multiplication Grid",
         "description": "Explore equal groups"
       },
       {
-        "to": "/charts",
+        "to": "/skills/charts",
         "icon": "📊",
         "label": "Chart Detective",
         "description": "Find clues in the data"
@@ -607,19 +607,19 @@ export const CURRICULUM_GUIDES = [
     ],
     "games": [
       {
-        "to": "/word-sorter",
+        "to": "/skills/word-sorter",
         "icon": "🗂️",
         "label": "Word Sorter",
         "description": "Explore kinds of words"
       },
       {
-        "to": "/sentence-builder",
+        "to": "/skills/sentence-builder",
         "icon": "📝",
         "label": "Sentence Builder",
         "description": "Build a sentence"
       },
       {
-        "to": "/opposite-match",
+        "to": "/skills/opposite-match",
         "icon": "↔️",
         "label": "Opposite Match",
         "description": "Find words with opposite meanings"
@@ -679,19 +679,19 @@ export const CURRICULUM_GUIDES = [
     ],
     "games": [
       {
-        "to": "/world-map",
+        "to": "/skills/world-map",
         "icon": "🗺️",
         "label": "World Map",
         "description": "Explore countries and places"
       },
       {
-        "to": "/city-spotlight",
+        "to": "/skills/city-spotlight",
         "icon": "🏙️",
         "label": "City Spotlight",
         "description": "Take a closer look at a city"
       },
       {
-        "to": "/find-the-city",
+        "to": "/skills/find-the-city",
         "icon": "📍",
         "label": "Find the City",
         "description": "Put places on the map"
@@ -905,19 +905,19 @@ export const CURRICULUM_GUIDES = [
     ],
     "games": [
       {
-        "to": "/multiplication-table",
+        "to": "/skills/multiplication-table",
         "icon": "✖️",
         "label": "Multiplication Grid",
         "description": "Explore times tables"
       },
       {
-        "to": "/clock-generator",
+        "to": "/skills/clock-generator",
         "icon": "⏰",
         "label": "Clock Generator",
         "description": "Get to know the clock"
       },
       {
-        "to": "/charts",
+        "to": "/skills/charts",
         "icon": "📊",
         "label": "Chart Detective",
         "description": "Find clues in the data"
@@ -1002,19 +1002,19 @@ export const CURRICULUM_GUIDES = [
     "introStep": "Short lessons from Bix introduce word, reading and writing ideas before practice.",
     "games": [
       {
-        "to": "/word-builder",
+        "to": "/skills/word-builder",
         "icon": "🔤",
         "label": "Word Builder",
         "description": "Put letters together"
       },
       {
-        "to": "/sentence-builder",
+        "to": "/skills/sentence-builder",
         "icon": "📝",
         "label": "Sentence Builder",
         "description": "Make a sentence"
       },
       {
-        "to": "/synonym-match",
+        "to": "/skills/synonym-match",
         "icon": "🦁",
         "label": "Synonym Safari",
         "description": "Explore similar meanings"
@@ -1074,19 +1074,19 @@ export const CURRICULUM_GUIDES = [
     ],
     "games": [
       {
-        "to": "/world-map",
+        "to": "/skills/world-map",
         "icon": "🗺️",
         "label": "World Map",
         "description": "Explore countries and places"
       },
       {
-        "to": "/city-spotlight",
+        "to": "/skills/city-spotlight",
         "icon": "🏙️",
         "label": "City Spotlight",
         "description": "Take a closer look at a city"
       },
       {
-        "to": "/find-the-city",
+        "to": "/skills/find-the-city",
         "icon": "📍",
         "label": "Find the City",
         "description": "Put places on the map"
@@ -1292,19 +1292,19 @@ export const CURRICULUM_GUIDES = [
     ],
     "games": [
       {
-        "to": "/fraction-fun",
+        "to": "/skills/fraction-fun",
         "icon": "🍕",
         "label": "Fraction Fun",
         "description": "Explore parts of a whole"
       },
       {
-        "to": "/multiplication-table",
+        "to": "/skills/multiplication-table",
         "icon": "✖️",
         "label": "Multiplication Grid",
         "description": "Practise multiplication facts"
       },
       {
-        "to": "/charts",
+        "to": "/skills/charts",
         "icon": "📊",
         "label": "Chart Detective",
         "description": "Compare data"
@@ -1388,19 +1388,19 @@ export const CURRICULUM_GUIDES = [
     ],
     "games": [
       {
-        "to": "/word-builder",
+        "to": "/skills/word-builder",
         "icon": "🔤",
         "label": "Word Builder",
         "description": "Put letters together"
       },
       {
-        "to": "/sentence-builder",
+        "to": "/skills/sentence-builder",
         "icon": "📝",
         "label": "Sentence Builder",
         "description": "Make a sentence"
       },
       {
-        "to": "/synonym-match",
+        "to": "/skills/synonym-match",
         "icon": "🦁",
         "label": "Synonym Safari",
         "description": "Explore similar meanings"
@@ -1460,19 +1460,19 @@ export const CURRICULUM_GUIDES = [
     ],
     "games": [
       {
-        "to": "/world-map",
+        "to": "/skills/world-map",
         "icon": "🗺️",
         "label": "World Map",
         "description": "Explore countries and places"
       },
       {
-        "to": "/city-spotlight",
+        "to": "/skills/city-spotlight",
         "icon": "🏙️",
         "label": "City Spotlight",
         "description": "Take a closer look at a city"
       },
       {
-        "to": "/find-the-city",
+        "to": "/skills/find-the-city",
         "icon": "📍",
         "label": "Find the City",
         "description": "Put places on the map"

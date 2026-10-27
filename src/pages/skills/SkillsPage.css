@@ -239,6 +239,72 @@ body.dark .skills-page {
 }
 
 /* ===========================================================
+   FEATURED
+=========================================================== */
+.sk-featured {
+  margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
+  padding: clamp(1rem, 3vw, 1.4rem);
+  border: 3px solid var(--sk-deep-math);
+  border-radius: 26px;
+  background: var(--sk-card);
+  box-shadow: 0 16px 30px var(--panel-shadow);
+}
+
+.sk-featured-title {
+  margin: 0 0 0.9rem;
+  font-size: clamp(1.3rem, 3vw, 1.6rem);
+}
+
+.sk-featured-grid {
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.sk-featured-game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 1rem 0.8rem;
+  border-radius: 20px;
+  background: var(--group-deep);
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.22);
+  color: var(--sk-on-deep);
+  text-align: center;
+  text-decoration: none;
+  transition:
+    transform 160ms cubic-bezier(0.22, 1.2, 0.36, 1),
+    box-shadow 160ms ease-out;
+}
+
+.sk-featured-game:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.22);
+}
+
+.sk-featured-game:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.22);
+}
+
+.sk-featured-icon {
+  font-size: 2.4rem;
+  line-height: 1.1;
+}
+
+.sk-featured-label {
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.sk-featured-subject {
+  font-size: 0.85rem;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+/* ===========================================================
    SUBJECT CARDS
 =========================================================== */
 .sk-grid {
@@ -399,6 +465,7 @@ body.dark .skills-page {
 
 /* ===== FOCUS ===== */
 .sk-filter:focus-visible,
+.sk-featured-game:focus-visible,
 .sk-game:focus-visible {
   outline: 3px solid var(--sk-focus);
   outline-offset: 3px;
@@ -493,6 +560,7 @@ body.dark .skills-page {
   }
 
   .sk-filter,
+  .sk-featured-game,
   .sk-game,
   .sk-game-go,
   .sk-card,
@@ -501,6 +569,7 @@ body.dark .skills-page {
   }
 
   .sk-filter:hover,
+  .sk-featured-game:hover,
   .sk-card:hover,
   .sk-game:hover,
   .sk-game:hover .sk-game-go {

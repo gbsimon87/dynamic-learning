@@ -1,125 +1,71 @@
-import { useState, useEffect, useRef } from 'react';
-import './WordBuilder.css';
-import SpeakButton from '../../../components/challenge/SpeakButton';
-import AnswerFeedbackLine from '../../../components/skills/AnswerFeedbackLine';
-import { useAnswerFeedback } from '../../../components/skills/useAnswerFeedback';
+import { useState } from "react";
+import FreePlayShell from "../../../components/skills/FreePlayShell";
+import { LEVELS, makeWordBuilderQuestion } from "../../../data/freePlay/wordBuilder";
+import "./WordBuilder.css";
 
-const WORDS = ['cat', 'bat', 'mat', 'rat', 'hat', 'man', 'fan', 'can', 'pan', 'cap'];
-
-function shuffleArray(array) {
-  const newArray = [...array];
-  for (let i = newArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-  }
-  return newArray;
-}
-
-// Returns a complete question object with word, missing index, and options synchronized
-function generateQuestion() {
-  const word = WORDS[Math.floor(Math.random() * WORDS.length)];
-  const missingIndex = Math.floor(Math.random() * word.length);
-  const correctLetter = word[missingIndex];
-  
-  const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('').filter(l => l !== correctLetter);
-  const shuffledAlphabet = shuffleArray(alphabet);
-  const incorrectLetters = shuffledAlphabet.slice(0, 3);
-  
-  const allOptions = shuffleArray([...incorrectLetters, correctLetter]);
-  
-  return {
-    word,
-    missingIndex,
-    correctLetter,
-    options: allOptions
-  };
-}
-
+/**
+ * Word Builder — free play on tricky words: fill the missing letter, pick the
+ * right spelling, or choose the homophone that fits the sentence. A wrong
+ * choice is crossed out and the child tries again.
+ */
 function WordBuilder() {
-  const [question, setQuestion] = useState(() => generateQuestion());
-  const [selected, setSelected] = useState(null);
-  const [score, setScore] = useState(0);
-  const [total, setTotal] = useState(0);
-  const fb = useAnswerFeedback();
-  const selectedRef = useRef(false);
-  const clearFeedback = fb.clear;
+  return (
+    <FreePlayShell
+      title="Word Builder"
+      icon="🔤"
+      intro="Tricky words: fill the gap, pick the right spelling, or choose the word that fits."
+      makeQuestion={makeWordBuilderQuestion}
+      levels={LEVELS}
+      render={(props) => <Question {...props} />}
+    />
+  );
+}
 
-  useEffect(() => {
-    if (selected !== null) {
-      const timer = setTimeout(() => {
-        setQuestion(generateQuestion());
-        setSelected(null);
-        selectedRef.current = false;
-        clearFeedback();
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [selected, clearFeedback]);
+function Question({ question, submit, locked }) {
+  const [tried, setTried] = useState([]);
+  const [right, setRight] = useState(null);
 
-  function handleSelect(letter) {
-    if (selectedRef.current || selected !== null) return;
-    selectedRef.current = true;
-    
-    setSelected(letter);
-    fb.answer(letter === question.correctLetter);
-    setTotal(total + 1);
-    if (letter === question.correctLetter) {
-      setScore(score + 1);
-    }
-  }
-
-  const displayWord = question.word
-    .split('')
-    .map((ch, i) => (i === question.missingIndex ? '_' : ch))
-    .join('');
-
-  const isCorrect = selected === question.correctLetter;
+  const choose = (option) => {
+    if (locked || tried.includes(option)) return;
+    const correct = option === question.answer;
+    if (correct) setRight(option);
+    else setTried((prev) => [...prev, option]);
+    submit(correct);
+  };
 
   return (
-    <div className="wrapper">
-      <div className="score">
-        Score: {score} / {total}
+    <>
+      <div className="wb-display" aria-live="polite">
+        {question.kind === "missing" && (
+          <span className="wb-word" aria-label={`The word with a letter missing: ${question.shown.replace("_", "blank")}`}>
+            {question.shown.split("").map((ch, i) => (
+              <span key={i} className={`wb-letter ${ch === "_" ? (right ? "is-filled" : "is-gap") : ""}`}>
+                {ch === "_" ? (right ?? "") : ch}
+              </span>
+            ))}
+          </span>
+        )}
+        {question.kind === "homophone" && <p className="wb-sentence">{question.sentence}</p>}
       </div>
 
-      <h2 className="prompt">What letter is missing?</h2>
-      
-      <div className="word" ref={fb.answerRef}>
-        {displayWord}
-        <SpeakButton text={`What letter is missing? ${displayWord.split('').map((letter) => letter === '_' ? 'blank' : letter).join(', ')}. Choose from ${question.options.join(', ')}`} label="Hear the letters" compact />
-      </div>
-
-      {selected !== null && !isCorrect && <p className="answer-reveal">The missing letter was {question.correctLetter}.</p>}
-      <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
-
-      <div className="options">
-        {question.options.map((letter) => {
-          const isThisCorrect = letter === question.correctLetter;
-          const isThisSelected = letter === selected;
-          
-          let className = 'optionBtn';
-          if (selected !== null) {
-            if (isThisCorrect) {
-              className += ' correct';
-            } else if (isThisSelected) {
-              className += ' wrong';
-            } else {
-              className += ' dimmed';
-            }
-          }
-          
+      <div className={`wb-options ${question.kind === "missing" ? "is-letters" : ""}`} role="group">
+        {question.options.map((option) => {
+          const wrong = tried.includes(option);
+          const isRight = right === option;
           return (
             <button
-              key={letter}
-              onClick={() => handleSelect(letter)}
-              className={className}
-              disabled={selected !== null}
+              key={option}
+              type="button"
+              className={`wb-option ${wrong ? "is-wrong" : ""} ${isRight ? "is-right" : ""}`}
+              disabled={locked || wrong}
+              onClick={() => choose(option)}
             >
-              {letter}
+              {option}
             </button>
           );
         })}
       </div>
-    </div>
+    </>
   );
 }
 
