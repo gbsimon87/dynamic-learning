@@ -15,26 +15,35 @@ const words = () => [...document.querySelectorAll(".word-chip")];
 const targets = () => [...document.querySelectorAll(".drop-zone")];
 const score = () => document.querySelector(".match-score").textContent;
 
-it("tap a word then its opposite to match; a wrong tap scores nothing", async () => {
+it.each([
+  { random: 0, word: "warm", opposite: "cool" },
+  { random: 0.999999, word: "hot", opposite: "cold" },
+])("wrong taps score nothing before matching $word with $opposite", async ({ random, word, opposite }) => {
+  // Exercise two reproducible shuffle orders, including the correct target first.
+  vi.spyOn(Math, "random").mockReturnValue(random);
   render_();
   await screen.findByText(/Score/);
   expect(targets().every((t) => t.disabled)).toBe(true);
 
-  const first = words()[0];
-  fireEvent.click(first);
-  expect(first.getAttribute("aria-pressed")).toBe("true");
+  const selected = words().find((button) => button.textContent === word);
+  const correct = targets().find((button) => button.textContent === opposite);
+  fireEvent.click(selected);
+  expect(selected.getAttribute("aria-pressed")).toBe("true");
 
-  const wrong = targets()[0];
-  fireEvent.click(wrong);
-  fireEvent.click(targets()[1]);
-  expect(score()).toMatch(/\/ 2$/);
-
-  let matched = 0;
-  for (const t of targets()) {
-    if (t.disabled) continue;
-    fireEvent.click(t);
-    if (first.disabled) { matched = 1; break; }
+  for (const [index, wrongWord] of ["dry", "rainy"].entries()) {
+    const wrong = targets().find((button) => button.textContent === wrongWord);
+    fireEvent.click(wrong);
+    expect(score()).toBe(`Score: 0 / ${index + 1}`);
+    expect(selected.disabled).toBe(false);
+    expect(selected.getAttribute("aria-pressed")).toBe("true");
   }
-  expect(matched).toBe(1);
-  expect(score()).toMatch(/^Score: 1 /);
+
+  fireEvent.click(correct);
+  expect(score()).toBe("Score: 1 / 3");
+  expect(selected.disabled).toBe(true);
+  expect(selected.getAttribute("aria-pressed")).toBe("false");
+  expect(targets().every((target) => target.disabled)).toBe(true);
+
+  fireEvent.click(correct);
+  expect(score()).toBe("Score: 1 / 3");
 });
