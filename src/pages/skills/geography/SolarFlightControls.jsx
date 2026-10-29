@@ -4,7 +4,7 @@ import { speak, stopNarration } from '../../../utils/speech.js';
 import { isMuted } from '../../../components/celebration/sound/player.js';
 import { createChapterRound, flightChapters, flightRoundReducer, helpProgress, shuffledOptions } from './flightClues.js';
 import SolarCameraChoices from './SolarCameraChoices.jsx';
-import SolarOrbitControl from './SolarOrbitControl.jsx';
+import SolarOrbitControl from '../../../components/worlds/WorldOrbitControl.jsx';
 import SolarTripHud from './SolarTripHud.jsx';
 import './SolarFlightControls.css';
 

@@ -107,6 +107,7 @@ const router = createBrowserRouter([
           { path: "skills/city-spotlight", lazy: () => import("./pages/skills/geography/CitySpotlight").then((m) => ({ Component: m.default })) },
           { path: "skills/find-the-city", lazy: () => import("./pages/skills/geography/FindTheCity").then((m) => ({ Component: m.default })) },
           { path: "skills/solar-system", lazy: () => import("./pages/skills/geography/SolarSystemPage").then((m) => ({ Component: m.default })) },
+          { path: "skills/ocean-explorer", lazy: () => import("./pages/skills/geography/OceanExplorer").then((m) => ({ Component: m.default })) },
         ],
       },
       // Old flat game URLs.

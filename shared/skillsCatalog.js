@@ -55,6 +55,7 @@ export const SKILL_GROUPS = [
     deep: "--sk-deep-geography",
     games: [
       { to: "/skills/solar-system", icon: "🪐", label: "Solar System" },
+      { to: "/skills/ocean-explorer", icon: "🌊", label: "Ocean Explorer (preview)", preview: true },
       { to: "/skills/world-map", icon: "🗺️", label: "World Map" },
       { to: "/skills/flag-finder", icon: "🚩", label: "Flag Finder" },
       { to: "/skills/city-spotlight", icon: "🏙️", label: "City Spotlight" },

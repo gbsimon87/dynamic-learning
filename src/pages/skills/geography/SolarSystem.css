@@ -888,3 +888,4 @@ body.dark .solar-system .solar-info-card { background: var(--dark-panel); color:
 @media (max-width: 719px) { .solar-system .solar-info-card { max-height: min(420px, 54%); } }
 
 .solar-info-card__more-facts summary { min-height: 48px; display: flex; align-items: center; cursor: pointer; font-weight: 700; }
+.solar-system .solar-info-card__body[hidden] { display: none; }

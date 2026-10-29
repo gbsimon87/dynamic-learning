@@ -1,23 +1,23 @@
 import { createContext, useContext, useId, useState } from 'react';
-import './SolarSections.css';
+import './WorldSections.css';
 
 const SectionsContext = createContext(null);
 
 /** Compact, exclusive sections. Closed content unmounts its speech/canvas timers. */
-export default function SolarSections({ children, defaultOpen = null }) {
+export default function WorldSections({ children, defaultOpen = null }) {
   const [open, setOpen] = useState(defaultOpen);
-  return <SectionsContext.Provider value={{ open, setOpen }}><div className="solar-sections">{children}</div></SectionsContext.Provider>;
+  return <SectionsContext.Provider value={{ open, setOpen }}><div className="world-sections">{children}</div></SectionsContext.Provider>;
 }
 
-export function SolarSection({ section, title, children }) {
+export function WorldSection({ section, title, children }) {
   const { open, setOpen } = useContext(SectionsContext);
   const id = useId();
   const expanded = open === section;
-  return <section className="solar-section">
-    <button type="button" className="solar-section__toggle" aria-expanded={expanded} aria-controls={id}
+  return <section className="world-section">
+    <button type="button" className="world-section__toggle" aria-expanded={expanded} aria-controls={id}
       onClick={() => setOpen(expanded ? null : section)}>
       <span>{title}</span><span aria-hidden="true">{expanded ? '−' : '+'}</span>
     </button>
-    {expanded && <div className="solar-section__content" id={id}>{children}</div>}
+    {expanded && <div className="world-section__content" id={id}>{children}</div>}
   </section>;
 }

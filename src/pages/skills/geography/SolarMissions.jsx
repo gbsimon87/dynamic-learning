@@ -3,7 +3,7 @@ import Dialog from '../../../components/ui/Dialog.jsx';
 import { speak, stopNarrationOf } from '../../../utils/speech.js';
 import { isMuted } from '../../../components/celebration/sound/player.js';
 import { MISSIONS, missionMatches, loadMissionStamps, saveMissionStamps } from './solarMissions.js';
-import SolarSections, { SolarSection } from './SolarSections.jsx';
+import WorldSections, { WorldSection } from '../../../components/worlds/WorldSections.jsx';
 import './SolarMissions.css';
 
 export default function SolarMissions({ enabled, body, onStart, onOpen }) {
@@ -47,17 +47,17 @@ export default function SolarMissions({ enabled, body, onStart, onOpen }) {
       <div className="solar-missions-dialog__progress"><progress value={completed.length} max={MISSIONS.length} aria-label="Mission stamps" /><span>{completed.length} / {MISSIONS.length} stamps</span></div>
       {!saved && <p role="status">Your browser cannot save stamps right now. You can still play.</p>}
       <div className="solar-missions-dialog__list">
-        <SolarSections defaultOpen={MISSIONS.find(mission => !completed.includes(mission.id))?.id}>
-          {MISSIONS.map((mission, index) => <SolarSection key={mission.id} section={mission.id}
+        <WorldSections defaultOpen={MISSIONS.find(mission => !completed.includes(mission.id))?.id}>
+          {MISSIONS.map((mission, index) => <WorldSection key={mission.id} section={mission.id}
             title={`${completed.includes(mission.id) ? '✅' : '🌟'} ${['Red planet', 'Bright rings', 'Our home', 'A giant planet', 'Icy geysers', 'Earth’s companion'][index]}`}>
             <p>{mission.clue}</p>
             <div className="solar-missions-dialog__actions">
               <button type="button" onClick={() => read(mission.clue)} aria-label={`Read ${mission.id} clue aloud`}>🔊</button>
               <button type="button" onClick={() => { close(); onStart(); setFound(false); setActive(mission); }}>{completed.includes(mission.id) ? 'Explore again' : 'Try this mission'}</button>
             </div>
-          </SolarSection>)}
-          <SolarSection section="stamps" title="About your stamps"><p>Saved in this browser, shared by everyone using it. Replay a mission whenever you like.</p></SolarSection>
-        </SolarSections>
+          </WorldSection>)}
+          <WorldSection section="stamps" title="About your stamps"><p>Saved in this browser, shared by everyone using it. Replay a mission whenever you like.</p></WorldSection>
+        </WorldSections>
       </div>
     </Dialog>}
   </div>;
