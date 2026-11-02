@@ -60,26 +60,9 @@ export function isTopicComplete(
   return completable.every((challenge) => done.has(Number(challenge.id)));
 }
 
-/**
- * Unlocks when everything before it is done. Gap-tolerant by design: a
- * count-based rule bricked the curriculum permanently on any gap.
- *
- * `skipChallenge` excludes challenges with no component file — an unbuilt
- * challenge can never be completed, so it must not block the ones after it.
- */
-export function isChallengeUnlocked(
-  progress,
-  categoryId,
-  topicId,
-  topic,
-  challengeIndex,
-  skipChallenge
-) {
-  const done = completedIds(progress, categoryId, topicId);
-  return topic.challenges
-    .slice(0, challengeIndex)
-    .filter((challenge) => !(skipChallenge && skipChallenge(challenge)))
-    .every((challenge) => done.has(Number(challenge.id)));
+/** All challenges are open; availability is checked separately by callers. */
+export function isChallengeUnlocked() {
+  return true;
 }
 
 /**

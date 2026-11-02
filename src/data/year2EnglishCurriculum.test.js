@@ -130,10 +130,10 @@ test("Year 2 English: fresh locks, next challenge, replay and topic/category cas
   const locks = progress => buildLockState({ curriculum, progress, isBuilt: () => true });
   let progress = {};
   const fresh = locks(progress);
-  assert.deepEqual(fresh.map(c => c.locked), [false, true, true, true, true, true, true, true, true]);
-  assert.deepEqual(fresh[0].topics[0].challenges.map(c => c.locked), [false, true, true, true]);
+  assert.deepEqual(fresh.map(c => c.locked), [false, false, false, false, false, false, false, false, false]);
+  assert.deepEqual(fresh[0].topics[0].challenges.map(c => c.locked), [false, false, false, false]);
   progress = completeChallenge(progress, category.id, topic.id, 1);
-  assert.deepEqual(locks(progress)[0].topics[0].challenges.map(c => c.locked), [false, false, true, true]);
+  assert.deepEqual(locks(progress)[0].topics[0].challenges.map(c => c.locked), [false, false, false, false]);
   const saved = JSON.stringify(progress);
   assert.deepEqual(completeChallenge(progress, category.id, topic.id, 1), progress);
   for (const t of category.topics) for (const c of t.challenges) {
@@ -142,7 +142,7 @@ test("Year 2 English: fresh locks, next challenge, replay and topic/category cas
   assert.equal(locks(progress)[0].complete, true);
   assert.equal(locks(progress)[1].locked, false);
   assert.equal(locks(progress)[0].topics[0].challenges[0].locked, false);
-  assert.deepEqual(locks(JSON.parse(saved))[0].topics[0].challenges.map(c => c.locked), [false, false, true, true]);
+  assert.deepEqual(locks(JSON.parse(saved))[0].topics[0].challenges.map(c => c.locked), [false, false, false, false]);
 });
 
 test("Year 2 English: every topic is mapped without altering statutory text", () => {

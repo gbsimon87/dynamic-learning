@@ -45,18 +45,18 @@ test("Year 3 History: all 88 wrappers are built, unlock in order and remain repl
   const locks = (progress) => buildLockState({ curriculum, progress, isBuilt });
   const first = curriculum[0], pilot = first.topics[0];
   let progress = {};
-  assert.deepEqual(locks(progress)[0].topics[0].challenges.map((q) => q.locked), [false, true, true, true]);
+  assert.deepEqual(locks(progress)[0].topics[0].challenges.map((q) => q.locked), [false, false, false, false]);
   for (const t of locks(progress).flatMap((c) => c.topics).slice(1)) {
     assert.equal(t.challenges.every((q) => !q.missing), true);
-    assert.equal(t.locked, true);
+    assert.equal(t.locked, false);
   }
   progress = completeChallenge(progress, first.id, pilot.id, "1");
   const restored = JSON.parse(JSON.stringify(progress));
-  assert.deepEqual(locks(restored)[0].topics[0].challenges.map((q) => q.locked), [false, false, true, true]);
+  assert.deepEqual(locks(restored)[0].topics[0].challenges.map((q) => q.locked), [false, false, false, false]);
   for (const id of [2, 3, 4]) progress = completeChallenge(progress, first.id, pilot.id, id);
   assert.equal(locks(progress)[0].topics[0].complete, true);
   assert.equal(locks(progress)[0].topics[1].locked, false);
-  assert.equal(locks(progress)[1].locked, true);
+  assert.equal(locks(progress)[1].locked, false);
   for (const category of curriculum) for (const topic of category.topics) {
     assert.equal(locks(progress).find((c) => c.id === category.id).topics.find((t) => t.id === topic.id).locked, false);
     for (const level of [1, 2, 3, 4]) progress = completeChallenge(progress, category.id, topic.id, level);

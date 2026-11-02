@@ -41,14 +41,14 @@ it("main production retains earned-only avatar access despite the local unlock f
   expect(screen.getAllByRole("img")).toHaveLength(AVATARS_UNLOCKABLE.length - 1);
 });
 
-it("hosted review opens built challenges without completing or exposing missing content", () => {
+it("production and hosted review open built challenges without completing or exposing missing content", () => {
   const curriculum = [{ id: "category", topics: [{ id: "topic", challenges: [1, 2, 3, 4].map(id => ({ id })) }] }];
   const progress = {};
   const isBuilt = (_, id) => id !== 4;
   const state = hostname => buildLockState({ curriculum, progress, isBuilt,
     bypassLocks: shouldBypassLocks({ DEV: false }, hostname) });
   expect(state(HOSTED_DEV_HOSTNAME)[0].topics[0].challenges[2].locked).toBe(false);
-  expect(state("learnwithbix.com")[0].topics[0].challenges[2].locked).toBe(true);
+  expect(state("learnwithbix.com")[0].topics[0].challenges[2].locked).toBe(false);
   expect(state(HOSTED_DEV_HOSTNAME)[0].topics[0].challenges[3].missing).toBe(true);
   expect(progress).toEqual({});
 });

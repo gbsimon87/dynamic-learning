@@ -85,7 +85,7 @@ test("the first challenge is always unlocked", () => {
   assert.equal(isChallengeUnlocked({}, "number", "counting", topic, 0), true);
 });
 
-test("a challenge unlocks once everything before it is done", () => {
+test("all challenges are open regardless of earlier completions", () => {
   const progress = progressWith([1]);
   assert.equal(
     isChallengeUnlocked(progress, "number", "counting", topic, 1),
@@ -93,7 +93,7 @@ test("a challenge unlocks once everything before it is done", () => {
   );
   assert.equal(
     isChallengeUnlocked(progress, "number", "counting", topic, 2),
-    false
+    true
   );
 });
 

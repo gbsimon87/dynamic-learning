@@ -54,12 +54,12 @@ test("Year 4 Science locks its stable IDs and implements all 80 mapped slots", (
 test("all 80 completions unlock sequentially, replay once and award Science only at the end", () => {
   let progress = {};
   const fresh = buildLockState({ curriculum, progress, isBuilt });
-  assert.deepEqual(fresh.map(c => c.locked), [false, true, true, true, true]);
+  assert.deepEqual(fresh.map(c => c.locked), [false, false, false, false, false]);
   for (const [ci, category] of curriculum.entries()) for (const [ti, topic] of category.topics.entries()) for (const slot of topic.challenges) {
     const before = structuredClone(progress);
     const locks = buildLockState({ curriculum, progress, isBuilt });
     assert.equal(locks[ci].topics[ti].challenges[slot.id - 1].locked, false);
-    if (slot.id < 4) assert.equal(locks[ci].topics[ti].challenges[slot.id].locked, true);
+    if (slot.id < 4) assert.equal(locks[ci].topics[ti].challenges[slot.id].locked, false);
     const final = ci === 4 && ti === 4 && slot.id === 4;
     const args = { curriculum, progress, isBuilt, categoryId: category.id, topicId: topic.id, challengeId: slot.id };
     const earned = getCompletionMilestones(args).earned;

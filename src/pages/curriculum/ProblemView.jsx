@@ -25,7 +25,6 @@ import { topicSticker, wonSticker } from "../../data/stickers";
 import { preloadSounds } from "../../components/celebration/sound/player";
 import { localDay, weekDots } from "../../data/streak";
 import { stickerKey } from "../../data/news";
-import { shouldBypassLocks } from "../../data/devUnlock";
 import ProgressError from "../../components/ProgressError";
 import "./ProblemView.css";
 
@@ -81,7 +80,6 @@ function ProblemView() {
     curriculum,
     progress,
     isBuilt,
-    bypassLocks: shouldBypassLocks(import.meta.env),
   }) : null;
   const currentChallenge = lockState?.find((category) => category.id === categoryId)
     ?.topics.find((topic) => topic.id === topicId)
@@ -168,7 +166,7 @@ function ProblemView() {
 
   // Where to go next. Computed from the SAME lock state the curriculum screen
   // renders, and read after `completeChallenge` has updated `progress` — so the
-  // challenge just finished counts towards unlocking the one being offered.
+  // challenge just finished is reflected in completion indicators.
   // Un-hydrated progress would read as "nothing completed" and resolve to no
   // next challenge, so don't offer a destination until the real document is in.
   const next = lockState

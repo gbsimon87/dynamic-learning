@@ -60,8 +60,8 @@ test("Year 1 English is registered and opens its existing progression path", asy
   assert.equal(isCurriculumAvailable(1, "english"), true);
   const locks = (progress) => buildLockState({ curriculum: year1EnglishCurriculum, progress, isBuilt: () => true });
   const fresh = locks({});
-  assert.deepEqual(fresh.map((c) => c.locked), [false, true, true, true, true, true, true, true]);
-  assert.deepEqual(fresh[0].topics[0].challenges.map((c) => c.locked), [false, true, true, true]);
+  assert.deepEqual(fresh.map((c) => c.locked), [false, false, false, false, false, false, false, false]);
+  assert.deepEqual(fresh[0].topics[0].challenges.map((c) => c.locked), [false, false, false, false]);
   let progress = {};
   const [category] = year1EnglishCurriculum;
   for (const topic of category.topics) for (const challenge of topic.challenges) {

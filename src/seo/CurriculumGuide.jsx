@@ -164,7 +164,7 @@ export default function CurriculumGuide({ slug: suppliedSlug }) {
         <ol className="curriculum-guide-steps">
           <li><span aria-hidden="true">💬</span><h3>A little help from Bix</h3><p>{guide.introStep ?? subject.introStep}</p></li>
           <li><span aria-hidden="true">🧩</span><h3>Have a go</h3><p>Four challenges per topic, with pictures, puzzles and interactive activities.</p></li>
-          <li><span aria-hidden="true">🌟</span><h3>See progress grow</h3><p>Completed steps unlock the next. Progress stays with your child’s profile.</p></li>
+          <li><span aria-hidden="true">🌟</span><h3>See progress grow</h3><p>Choose any challenge. Completed steps are saved to your child’s profile.</p></li>
         </ol>
       </section>
       <Practice guide={guide} />

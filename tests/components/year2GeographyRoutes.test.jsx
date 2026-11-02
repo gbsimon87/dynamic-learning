@@ -14,7 +14,7 @@ vi.mock("../../src/utils/speech", () => ({ speak: () => {}, stopNarration: () =>
 vi.mock("../../src/components/celebration/sound/player", () => ({ preloadSounds: () => {}, playCue: () => () => {}, isMuted: () => true, setMuted: () => {}, subscribe: () => () => {} }));
 vi.mock("../../src/components/celebration/fx/effects", () => ({ playEffect: () => {} }));
 beforeEach(() => {
-  // Exercise normal learner gates, independently of the owner's opt-in local review setting.
+  // Open access must work without the local review setting.
   vi.stubEnv("VITE_UNLOCK_ALL", "false");
   fake.getProgress.mockReset().mockResolvedValue(null);
   fake.saveProgress.mockReset().mockImplementation(async (childId, year, subject, data) => ({ childId, year, subject, data }));
@@ -29,9 +29,9 @@ const showRoute = (tail, childId) => render(<AuthContext.Provider value={{ child
   </Routes></MemoryRouter>
 </AuthContext.Provider>);
 
-it("Year 2 locked, missing and inherited route identifiers never open a run or award progress", async () => {
+it("Year 2 missing and inherited route identifiers never open a run or award progress", async () => {
   for (const [index, tail] of [
-    `${category.id}/${topic.id}/2`, `${category.id}/${topic.id}/99`,
+    `${category.id}/${topic.id}/99`,
     `${category.id}/constructor/1`, `__proto__/${topic.id}/1`,
   ].entries()) {
     const { unmount } = showRoute(tail, `y2-route-denied-${index}`);
@@ -40,6 +40,16 @@ it("Year 2 locked, missing and inherited route identifiers never open a run or a
     expect(fake.saveProgress).not.toHaveBeenCalled();
     expect(fake.award).not.toHaveBeenCalled(); unmount();
   }
+});
+
+it.each([
+  [category, topic],
+  [year2GeographyCurriculum.at(-1), year2GeographyCurriculum.at(-1).topics.at(-1)],
+])("a fresh learner can open challenge 4 in any category directly without awarding progress", async (selectedCategory, selectedTopic) => {
+  showRoute(`${selectedCategory.id}/${selectedTopic.id}/4`, "y2-route-open");
+  await screen.findByRole("button", { name: "Let's explore!" }, { timeout: 10000 });
+  expect(fake.saveProgress).not.toHaveBeenCalled();
+  expect(fake.award).not.toHaveBeenCalled();
 });
 
 it("a real Year 2 route saves once after all five answers and opens the next slot", async () => {

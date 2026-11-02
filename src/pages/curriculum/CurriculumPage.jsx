@@ -18,7 +18,6 @@ import {
   getTopicStats,
   getYearStats,
 } from "../../data/curriculumProgressStats";
-import { shouldBypassLocks } from "../../data/devUnlock";
 import { useReveal } from "../home/useReveal";
 import ProgressRing from "../../components/ProgressRing";
 import ProgressError from "../../components/ProgressError";
@@ -336,7 +335,6 @@ function CurriculumPage() {
 
   // Review access opens every built challenge on hosted dev or opted-in local dev.
   // `import.meta.env` is undefined outside Vite, hence the optional chain.
-  const bypassLocks = shouldBypassLocks(import.meta.env);
 
   // Every lock decision on this screen comes from here. The same structure
   // drives the next-challenge resolver in ProblemView, so what a learner is
@@ -345,7 +343,6 @@ function CurriculumPage() {
     curriculum,
     progress,
     isBuilt,
-    bypassLocks,
   });
 
   const nextUp = findNextUp(lockState);
@@ -442,13 +439,6 @@ function CurriculumPage() {
           )}
         </div>
 
-        {/* Say so loudly: without this a real gating bug looks exactly like
-            the flag working. */}
-        {bypassLocks && (
-          <p className="dev-unlock-banner">
-            🔓 Dev review — every built challenge is unlocked
-          </p>
-        )}
       </section>
 
       <CoachMark id={TIPS.map}>
@@ -625,7 +615,7 @@ function CurriculumPage() {
                                 className="is-locked"
                                 label={challenge.title}
                                 icon="🔒"
-                                hint="Finish the challenge before this one to unlock it"
+                                hint="This challenge is currently unavailable"
                               />
                             );
                           }

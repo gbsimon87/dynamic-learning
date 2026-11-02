@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { completeChallenge } from "./progressRules.js";
 import { allSubjectsComplete, getCompletionMilestones } from "./completionMilestones.js";
 
 const curriculum = [
@@ -111,4 +112,21 @@ test("one finished and one unfinished other subject still blocks the year", () =
     { curriculum, progress: done, isBuilt: built },
     { curriculum, progress: {}, isBuilt: built },
   ]), false);
+});
+
+test("reverse-order completion awards milestones only when their members are done", () => {
+  let progress = {};
+  const positions = curriculum.flatMap(category => category.topics.flatMap(topic =>
+    topic.challenges.map(challenge => [category.id, topic.id, challenge.id]))).reverse();
+  for (const [index, [categoryId, topicId, challengeId]] of positions.entries()) {
+    const milestone = result(progress, categoryId, topicId, challengeId, { othersDone: true });
+    assert.equal(milestone.earned.includes("subject"), index === positions.length - 1);
+    assert.equal(milestone.earned.includes("year"), index === positions.length - 1);
+    if (topicId === "counting") {
+      assert.equal(milestone.earned.includes("topic"), challengeId === 1);
+      assert.equal(milestone.earned.includes("category"), challengeId === 1);
+    }
+    progress = completeChallenge(progress, categoryId, topicId, challengeId);
+    assert.deepEqual(result(progress, categoryId, topicId, challengeId).earned, []);
+  }
 });

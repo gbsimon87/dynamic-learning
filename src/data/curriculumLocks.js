@@ -13,10 +13,7 @@
  */
 import {
   isCategoryComplete,
-  isCategoryPassable,
   isChallengeComplete,
-  isChallengeUnlocked,
-  isFirstTimeUser,
   isTopicComplete,
 } from "./progressRules.js";
 
@@ -32,7 +29,6 @@ function topicIsUnbuilt(topic, isBuilt) {
  * @param {Array}    args.curriculum  category list, in display order
  * @param {object}   args.progress    stored progress document
  * @param {Function} args.isBuilt     (topicId, challengeId) => boolean
- * @param {boolean}  [args.bypassLocks] dev flag: open every built challenge
  *
  * @returns {Array} categories in curriculum order, each:
  *   { id, title, locked, complete, topics: [
@@ -43,50 +39,22 @@ export function buildLockState({
   curriculum,
   progress,
   isBuilt,
-  bypassLocks = false,
 }) {
-  const firstTimeUser = isFirstTimeUser(progress);
 
   // Unbuilt topics must not count against their category, and unbuilt
   // challenges must not count against their topic.
   const skipTopic = (topic) => topicIsUnbuilt(topic, isBuilt);
   const skipIn = (topic) => (challenge) => !isBuilt(topic.id, challenge.id);
 
-  return curriculum.map((category, categoryIndex) => {
-    // Every EARLIER category must be passable, not just the previous one: an
-    // empty category reports passable, which would otherwise reopen the chain.
-    const categoryLocked =
-      !bypassLocks &&
-      ((firstTimeUser && categoryIndex > 0) ||
-        curriculum
-          .slice(0, categoryIndex)
-          .some(
-            (earlier) =>
-              !isCategoryPassable(progress, earlier, skipTopic, skipIn)
-          ));
-
-    const topics = category.topics.map((topic, topicIndex) => {
-      const previousTopic =
-        topicIndex > 0 ? category.topics[topicIndex - 1] : null;
-
-      // An unbuilt topic can't be completed, so it must not gate the next one.
-      const previousBlocks =
-        previousTopic &&
-        !topicIsUnbuilt(previousTopic, isBuilt) &&
-        !isTopicComplete(
-          progress,
-          category.id,
-          previousTopic.id,
-          previousTopic,
-          skipIn(previousTopic)
-        );
-
-      const topicLocked =
-        !bypassLocks && (categoryLocked || Boolean(previousBlocks));
+  return curriculum.map((category) => {
+    // Access is independent of progress; completion still uses the saved tree.
+    const categoryLocked = false;
+    const topics = category.topics.map((topic) => {
+      const topicLocked = false;
 
       const skipChallenge = skipIn(topic);
 
-      const challenges = topic.challenges.map((challenge, challengeIndex) => {
+      const challenges = topic.challenges.map((challenge) => {
         const completed = isChallengeComplete(
           progress,
           category.id,
@@ -99,22 +67,7 @@ export function buildLockState({
           title: challenge.title,
           completed,
           missing: !isBuilt(topic.id, challenge.id),
-          // Open once everything before it is done, or if already done itself.
-          locked:
-            !bypassLocks &&
-            (categoryLocked ||
-              topicLocked ||
-              !(
-                completed ||
-                isChallengeUnlocked(
-                  progress,
-                  category.id,
-                  topic.id,
-                  topic,
-                  challengeIndex,
-                  skipChallenge
-                )
-              )),
+          locked: false,
         };
       });
 

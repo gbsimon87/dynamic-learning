@@ -107,13 +107,13 @@ test('Roman numerals round-trip all values from I to C including subtractive not
   assert.equal(roman(99),'XCIX');
 });
 
-test('new pathway gates in sequence, completes, reloads and replays without duplicates',()=>{
+test('new pathway opens all challenges, completes, reloads and replays without duplicates',()=>{
   const curriculum=year4MathCurriculum, isBuilt=()=>true;
   let progress={};
   let locks=buildLockState({curriculum,progress,isBuilt});
-  assert.equal(locks.filter(c=>!c.locked).length,1);
-  assert.equal(locks[0].topics.filter(t=>!t.locked).length,1);
-  assert.equal(locks[0].topics[0].challenges.filter(c=>!c.locked).length,1);
+  assert.equal(locks.filter(c=>!c.locked).length,curriculum.length);
+  assert.equal(locks[0].topics.filter(t=>!t.locked).length,curriculum[0].topics.length);
+  assert.equal(locks[0].topics[0].challenges.filter(c=>!c.locked).length,curriculum[0].topics[0].challenges.length);
   for(const category of curriculum) for(const topic of category.topics) for(const challenge of topic.challenges){
     locks=buildLockState({curriculum,progress,isBuilt});
     assert.equal(locks.find(c=>c.id===category.id).topics.find(t=>t.id===topic.id).challenges.find(c=>c.id===challenge.id).locked,false);

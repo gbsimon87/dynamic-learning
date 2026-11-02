@@ -20,6 +20,8 @@ it('offers all twenty guides from an anonymous, year-grouped hub', () => {
 it.each(CURRICULUM_GUIDES)('renders the full $label topic inventory without an auth provider', (guide) => {
   render(<MemoryRouter initialEntries={[guide.path]}><Routes><Route path="/curriculum-guide/:slug" element={<CurriculumGuide />} /></Routes></MemoryRouter>);
   expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(`${guide.label} with Bix`);
+  expect(screen.getByText('Choose any challenge. Completed steps are saved to your child’s profile.')).toBeTruthy();
+  expect(screen.queryByText(/Completed steps unlock/)).toBeNull();
   const curriculum = loadCurriculum(guide.year, guide.subject);
   for (const category of curriculum) for (const topic of category.topics) {
     expect(screen.getByText(topic.name, { selector: 'li' })).toBeTruthy();

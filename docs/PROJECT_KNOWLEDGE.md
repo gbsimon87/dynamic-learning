@@ -255,7 +255,7 @@ decision made in this codebase:
 | Mode | Purpose | Structure | Progress tracked? |
 |---|---|---|---|
 | **Skills Mode** | Free, unstructured practice. Pick any game, play anytime. | Flat list of standalone games | No |
-| **Curriculum Mode** | Structured, sequential learning following the UK National Curriculum. | Category → Topic → Challenge, each unlocked in order | Yes, in `localStorage` |
+| **Curriculum Mode** | Progress-tracked learning following the UK National Curriculum. | Category → Topic → Challenge, all implemented challenges open | Yes, in `localStorage` |
 
 ---
 
@@ -637,19 +637,16 @@ Unlock rules (computed by `buildLockState`, consumed by both
 [CurriculumPage.jsx](../src/pages/curriculum/CurriculumPage.jsx) and
 [ProblemView.jsx](../src/pages/curriculum/ProblemView.jsx) — a second copy is how
 a learner silently gets sent to a locked challenge):
-- **Category** unlocks when every earlier category is passable. (Passable, not
-  complete: a category with nothing built must not block the chain, but must not
-  be badged finished either.)
-- **Topic** unlocks when the previous topic in the same category is complete,
-  where "complete" counts only *built* challenges. A fully unbuilt topic is
-  skipped entirely, since it can never be completed. Before 2026-09-18 a topic
-  holding even one unbuilt challenge could never complete and so gated the next
-  topic forever — while the screen showed the learner "2/2 done", because the
-  progress count already ignored unbuilt challenges. The two now agree.
-- **Challenge** unlocks when it is the next uncompleted challenge in its topic;
-  completed challenges stay replayable. Unbuilt challenges don't block the ones
-  after them.
-- A brand-new user has only the first category unlocked.
+The homepage and public curriculum guides explain that learners can choose any challenge; completion
+is saved to the child’s profile. Regression coverage checks all 20 pathways, direct
+later-category routes and milestone awards from reverse-order completions.
+
+- **All categories, topics and implemented challenges are open immediately**
+  (2026-11-02), for fresh and existing learners. No prior completion is required.
+- Missing challenge modules remain unavailable. Suggested next challenges follow
+  curriculum order and skip missing modules, without imposing an access gate.
+- Completion badges, awards and numeric completion records retain their existing
+  rules. Saved progress shapes, document keys and persistence guards are unchanged.
 
 Challenges are **lazy-loaded on demand** by
 [Challenge.jsx](../src/pages/curriculum/Challenge.jsx), which distinguishes two
@@ -1758,19 +1755,14 @@ single-page sign-up wizard and its `POST /api/auth/signup` route were removed
 (2026-10-07); `POST /api/auth/signup/complete` is the only way to create an
 account over HTTP.
 
-### Curriculum Mode — dev unlock switch
-The hosted dev site (`dynamic-learning-dev-zkww.onrender.com`) automatically
-opens every built curriculum challenge and all profile avatar choices for
-review, including in production-mode Vite builds. `src/data/devUnlock.js`
-checks that exact hostname; `learnwithbix.com`, the production Render hostname
-and other hosts retain normal restrictions. Local Vite development can still
-opt in with `VITE_UNLOCK_ALL=true`. That flag alone cannot unlock a hosted
-production build, and no Render environment-variable change is required.
-
-Both the picker and direct challenge routes use the same bypass. Completion,
-earned badges, certificates, saved progress and account protections retain
-their normal behaviour. Unbuilt content stays unavailable. A curriculum banner
-marks review access so it is visible while testing.
+### Curriculum Mode — open access and dev avatar switch
+As of 2026-11-02 every implemented curriculum challenge is open on every host,
+including production, without a flag or sequential prerequisites. The old
+curriculum review banner and caller bypass flags have been removed.
+`src/data/devUnlock.js` still controls review access to profile avatars on the
+hosted dev site and via local `VITE_UNLOCK_ALL=true`; earned avatars on production
+retain their existing requirements. Completion, certificates, saved progress and
+account protections retain their normal behaviour. Unbuilt content stays unavailable.
 
 ### Curriculum Mode — the source material
 `docs/curriculum/` holds the National Curriculum programmes of study verbatim,
@@ -4061,7 +4053,8 @@ without a changelog note or the report was inaccurate.
    and `ProblemView.jsx`; extracted into [useProgress](../src/hooks/useProgress.js)
    (§4.5). Stored shape, hydration guard, merge-not-replace writes, and all
    unlock rules verified unchanged via the `curriculum-progress` skill's full
-   manual checklist.
+   manual checklist. As of 2026-11-02, access no longer depends on completion;
+   shared completion and persistence rules remain in place (§4.5).
 7. **Local mode has no security boundary** — with `VITE_USE_API` unset (the default),
    accounts live in `localStorage` and the PBKDF2 hashing runs client-side. It protects
    nothing against anyone holding the device, and progress neither syncs nor survives

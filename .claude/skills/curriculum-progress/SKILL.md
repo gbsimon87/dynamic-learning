@@ -71,15 +71,10 @@ both curriculum screens. Any change must preserve all of these:
   topic. Unbuilt challenges are excluded — counting them made a partially-built
   topic impossible to finish and so a permanent wall.
 - **Category complete** ⟺ every topic in it with something built is complete.
-- **Category unlocked** ⟺ every earlier category is *passable*. Passable and
-  complete deliberately differ on an empty category: it must not block the
-  chain, but must not be badged finished either.
-- **Topic unlocked** ⟺ its category is unlocked, and it is the first topic or the
-  previous topic in that category is complete.
-- **Challenge unlocked** ⟺ its topic is unlocked, and it is either already
-  completed (replayable) or the next uncompleted one in sequence.
-- **A brand-new user** (empty progress object) sees only the first category
-  unlocked.
+- **All categories, topics and built challenges are unlocked**, independently of
+  saved progress. Missing modules remain unavailable. Completion still controls
+  badges and awards, never access.
+- **A brand-new user** can choose any built challenge in any category/topic.
 
 Completed content stays **replayable** — never re-lock something a learner has
 finished.
@@ -114,7 +109,7 @@ Do not remove it.
 
 `npm test` covers the pure rules, lock state and navigation, and
 `tests/components/progress.test.jsx` covers hydration, persistence across a
-remount, unlock order and sibling isolation. Extend those tests for any change
+remount, open access, out-of-order completion and sibling isolation. Extend those tests for any change
 here.
 
 A browser pass is still required when a change touches the **stored shape or
@@ -123,15 +118,11 @@ Follow "Browser checks and subagents" in `AGENTS.md` and make it one scripted
 pass (one `browser_evaluate` that seeds, plays and reads back storage), not
 click by click. Confirm:
 
-1. **Fresh user:** clear the key → only the first category is unlocked, only the
-   first topic within it, only Challenge 1 within that.
-2. **Single completion:** complete Challenge 1 → it shows ✅, Challenge 2 unlocks,
-   Challenge 3 stays locked.
+1. **Fresh user:** use an empty progress fixture → all built challenges are open.
+2. **Single completion:** complete any challenge → it shows ✅; all others stay open.
 3. **Persistence:** hard-reload → all of the above survives.
-4. **Topic cascade:** complete all 4 → the topic shows complete and the next
-   topic unlocks.
-5. **Category cascade:** complete every topic in a category → the next category
-   unlocks.
+4. **Topic cascade:** complete all 4 → the topic shows complete and other topics stay open.
+5. **Category cascade:** complete every topic in a category → other categories stay open.
 6. **Replay:** re-open a completed challenge → it plays, shows the
    already-completed notice, and does not duplicate its entry in storage.
 7. **Inspect the raw object** in devtools and confirm the shape and numeric types

@@ -62,11 +62,11 @@ test("Year 1 Science: every computed loader path exists and forwards completion"
 test("Year 1 Science: fresh locks, completion, reload, replay and category cascade", () => {
   const [category] = curriculum, [topic] = category.topics;
   let progress = {};
-  assert.deepEqual(locks(progress).map((c) => c.locked), [false, true, true, true]);
-  assert.deepEqual(locks(progress)[0].topics[0].challenges.map((c) => c.locked), [false, true, true, true]);
+  assert.deepEqual(locks(progress).map((c) => c.locked), [false, false, false, false]);
+  assert.deepEqual(locks(progress)[0].topics[0].challenges.map((c) => c.locked), [false, false, false, false]);
   progress = completeChallenge(progress, category.id, topic.id, 1);
   const restored = JSON.parse(JSON.stringify(progress));
-  assert.deepEqual(locks(restored)[0].topics[0].challenges.map((c) => c.locked), [false, false, true, true]);
+  assert.deepEqual(locks(restored)[0].topics[0].challenges.map((c) => c.locked), [false, false, false, false]);
   assert.equal(findNextChallenge(locks(restored), { categoryId: category.id, topicId: topic.id, challengeId: 1 }).challengeId, 2);
   for (const t of category.topics) for (const q of t.challenges) progress = completeChallenge(progress, category.id, t.id, q.id);
   assert.equal(locks(progress)[0].complete, true);

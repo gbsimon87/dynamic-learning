@@ -156,13 +156,11 @@ test("skips an entirely unbuilt topic", () => {
 });
 
 // Replaying an old challenge must not hand back something still locked.
-test("never returns a locked challenge", () => {
+test("replaying can continue into an unfinished topic", () => {
   const state = stateAfter({
     number: { topics: { counting: { completedChallenges: [1, 2] } } },
   });
 
-  // place-value/1 is unlocked; place-value/2 is not. Replaying counting/1
-  // should land on the first PLAYABLE item after it, not simply the next one.
   const next = findNextChallenge(state, {
     categoryId: "number",
     topicId: "counting",
@@ -180,7 +178,7 @@ test("never returns a locked challenge", () => {
     topicId: "place-value",
     challengeId: 1,
   });
-  assert.equal(afterTopic, null);
+  assert.deepEqual(afterTopic, { categoryId: "number", topicId: "place-value", challengeId: 2 });
 });
 
 test("returns null when the current position is not in the curriculum", () => {

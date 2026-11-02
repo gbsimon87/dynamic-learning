@@ -27,6 +27,9 @@ it.each([
   { status: "ready", child: { name: "Ada", avatar: "🐱", colour: "sky" } },
 ])("keeps signed-in curriculum calls to action on the curriculum", (auth) => {
   mount(auth);
+  expect(screen.getByText("Explore the topics for your year. Choose any challenge and save your progress as you learn.")).toBeTruthy();
+  expect(screen.queryByText(/unlock the next/)).toBeNull();
+  if (auth.child) expect(screen.getByText("Choose any challenge to start your learning adventure.")).toBeTruthy();
   expect(screen.getByRole("link", { name: /Start my adventure/ }).getAttribute("href")).toBe("/curriculum");
   expect(screen.getByRole("link", { name: /Explore the curriculum/ }).getAttribute("href")).toBe("/curriculum");
 });

@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { CURRICULUM_YEARS, CURRICULUM_SUBJECTS, loadCurriculum } from "./curriculumRegistry.js";
 import { buildLockState } from "./curriculumLocks.js";
 
 // Two categories. Everything is built except geometry/shapes/4, plus an
@@ -48,30 +49,30 @@ const DONE_NUMBER = {
   },
 };
 
-test("a fresh learner gets only the first challenge of the first topic", () => {
+test("a fresh learner can access every category, topic and built challenge", () => {
   const state = build({});
 
   assert.equal(category(state, "number").locked, false);
-  assert.equal(category(state, "geometry").locked, true);
+  assert.equal(category(state, "geometry").locked, false);
 
   assert.equal(topic(state, "number", "counting").locked, false);
-  assert.equal(topic(state, "number", "place-value").locked, true);
+  assert.equal(topic(state, "number", "place-value").locked, false);
 
   assert.equal(challenge(state, "number", "counting", 1).locked, false);
-  assert.equal(challenge(state, "number", "counting", 2).locked, true);
+  assert.equal(challenge(state, "number", "counting", 2).locked, false);
 });
 
-test("completing a challenge unlocks the next one and nothing further", () => {
+test("completing a challenge records completion and leaves later topics open", () => {
   const state = build({
     number: { topics: { counting: { completedChallenges: [1] } } },
   });
 
   assert.equal(challenge(state, "number", "counting", 1).completed, true);
   assert.equal(challenge(state, "number", "counting", 2).locked, false);
-  assert.equal(topic(state, "number", "place-value").locked, true);
+  assert.equal(topic(state, "number", "place-value").locked, false);
 });
 
-test("completing a topic unlocks the next topic in the category", () => {
+test("completing a topic records completion with other topics already open", () => {
   const state = build({
     number: { topics: { counting: { completedChallenges: [1, 2] } } },
   });
@@ -79,10 +80,10 @@ test("completing a topic unlocks the next topic in the category", () => {
   assert.equal(topic(state, "number", "counting").complete, true);
   assert.equal(topic(state, "number", "place-value").locked, false);
   assert.equal(challenge(state, "number", "place-value", 1).locked, false);
-  assert.equal(category(state, "geometry").locked, true);
+  assert.equal(category(state, "geometry").locked, false);
 });
 
-test("completing a category unlocks the next category", () => {
+test("completing a category records completion with other categories already open", () => {
   const state = build(DONE_NUMBER);
 
   assert.equal(category(state, "number").complete, true);
@@ -152,3 +153,49 @@ test("lock state preserves curriculum order", () => {
     ["counting", "place-value"]
   );
 });
+
+// Access must never rewrite existing learning or manufacture completion.
+test("all access is open for fresh, partial and out-of-order saved progress", () => {
+  for (const progress of [{}, DONE_NUMBER, {
+    geometry: { topics: { shapes: { completedChallenges: [1] } } },
+    number: { topics: { counting: { completedChallenges: [2] } } },
+  }]) {
+    const snapshot = structuredClone(progress);
+    const state = build(progress);
+    for (const category of state) {
+      assert.equal(category.locked, false);
+      for (const topic of category.topics) {
+        assert.equal(topic.locked, false);
+        for (const challenge of topic.challenges) {
+          assert.equal(challenge.locked, false);
+          assert.equal(challenge.missing, !isBuilt(topic.id, challenge.id));
+        }
+      }
+    }
+    assert.deepEqual(progress, snapshot);
+  }
+  assert.ok(build({}).every(c => !c.complete && c.topics.every(t => !t.complete)));
+});
+
+for (const year of CURRICULUM_YEARS) {
+  for (const { id: subject } of CURRICULUM_SUBJECTS) {
+    test(`Year ${year} ${subject}: all registered categories, topics and challenges are open`, () => {
+      const curriculum = loadCurriculum(year, subject);
+      assert.ok(curriculum?.length);
+      const lastCategory = curriculum.at(-1);
+      const lastTopic = lastCategory.topics.at(-1);
+      for (const progress of [{}, {
+        [lastCategory.id]: { topics: {
+          [lastTopic.id]: { completedChallenges: [4] },
+        } },
+      }]) {
+        const snapshot = structuredClone(progress);
+        const state = buildLockState({ curriculum, progress, isBuilt: () => true });
+        assert.ok(state.every(c => !c.locked && c.topics.every(t =>
+          !t.locked && t.challenges.every(ch => !ch.locked && !ch.missing))));
+        assert.deepEqual(progress, snapshot);
+        assert.ok(state.every(c => !c.complete));
+      }
+    });
+  }
+}

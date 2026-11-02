@@ -52,7 +52,7 @@ describe("progress hydration and profile isolation", () => {
     expect(result.current.progress).toEqual(tree(1));
     expect(fake.saveProgress).not.toHaveBeenCalled();
   });
-  it("completions persist across remount, unlock in sequence, and keep a sibling's existing work", async () => {
+  it("completions persist across remount, allow any challenge order, and keep a sibling's existing work", async () => {
     let stored = { ...tree(1), other: { topics: { saved: { completedChallenges: [1, 2] } } } };
     fake.getProgress.mockImplementation(async () => ({ schemaVersion: 1, data: stored }));
     fake.saveProgress.mockImplementation(async (_child, _year, _subject, data) => { stored = data; return { data }; });
@@ -61,9 +61,9 @@ describe("progress hydration and profile isolation", () => {
     const first = renderHook(() => useProgress(2, "math"), { wrapper: Wrapper });
     await waitFor(() => expect(first.result.current.hydrated).toBe(true));
     expect(first.result.current.isChallengeUnlocked("numbers", "counting", topic, 1)).toBe(true);
-    expect(first.result.current.isChallengeUnlocked("numbers", "counting", topic, 2)).toBe(false);
-    for (const id of [2, 3, 4]) act(() => first.result.current.completeChallenge("numbers", "counting", id));
-    await waitFor(() => expect(stored.numbers.topics.counting.completedChallenges).toEqual([1, 2, 3, 4]));
+    expect(first.result.current.isChallengeUnlocked("numbers", "counting", topic, 2)).toBe(true);
+    for (const id of [4, 2, 3]) act(() => first.result.current.completeChallenge("numbers", "counting", id));
+    await waitFor(() => expect(stored.numbers.topics.counting.completedChallenges).toEqual([1, 4, 2, 3]));
     first.unmount();
     const second = renderHook(() => useProgress(2, "math"), { wrapper: Wrapper });
     await waitFor(() => expect(second.result.current.hydrated).toBe(true));

@@ -47,8 +47,8 @@ test("Year 2 Geography preserves all prior year award requirements", () => {
 test("Year 2 Geography cascades through all topics, reloads numeric completions and permits replay", () => {
   let progress = {};
   const locks = () => buildLockState({ curriculum, progress, isBuilt });
-  assert.deepEqual(locks()[0].topics[0].challenges.map(c => c.locked), [false, true, true, true]);
-  assert.ok(locks().slice(1).every(c => c.locked));
+  assert.deepEqual(locks()[0].topics[0].challenges.map(c => c.locked), [false, false, false, false]);
+  assert.ok(locks().slice(1).every(c => !c.locked));
   for (const category of curriculum) for (const topic of category.topics) {
     assert.equal(locks().find(c => c.id === category.id).topics.find(t => t.id === topic.id).locked, false);
     for (const { id } of topic.challenges) {

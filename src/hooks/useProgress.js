@@ -9,8 +9,8 @@ import { mergeProgress } from "../../shared/progressDocument.js";
  * Shared curriculum-progress hook — now account-aware.
  *
  * Progress belongs to the ACTIVE CHILD PROFILE, not to the browser. The
- * signature, existing return fields and every unlock rule below are unchanged from
- * the localStorage-only version. Retry/error fields expose storage failures;
+ * signature and existing return fields are preserved from the localStorage-only
+ * version. Challenge access is now independent of completion. Retry/error fields expose storage failures;
  * the read/write path moved:
  *
  *   read   localStorage[`${subject}Progress_year${year}`]

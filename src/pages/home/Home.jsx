@@ -95,7 +95,7 @@ function heroState({ child, resume }) {
   if (child) {
     return {
       title: "Ready to play and learn?",
-      subtitle: "Your journey starts with one challenge. Finish it to unlock the next.",
+      subtitle: "Choose any challenge to start your learning adventure.",
       cta: { label: "Start my adventure", href: "/curriculum" },
     };
   }
@@ -131,7 +131,7 @@ function CurriculumAdventure({ overviewHref }) {
       <div className="home-section-heading" data-reveal>
         <p className="home-section-label"><span aria-hidden="true">{CURRICULUM_ICON}</span> Curriculum adventure</p>
         <h2 className="home-section-title" id="home-curriculum-title">Little steps. Big discoveries!</h2>
-        <p className="home-section-intro">Follow a path for your year. Finish curriculum challenges to save your progress and unlock the next step.</p>
+        <p className="home-section-intro">Explore the topics for your year. Choose any challenge and save your progress as you learn.</p>
       </div>
 
       <HomeCurriculumOverview />
