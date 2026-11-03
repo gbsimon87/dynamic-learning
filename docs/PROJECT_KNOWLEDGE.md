@@ -50,7 +50,7 @@ Health (`wellbeing`). The new subjects exist for Year 5 only and are registered
 with `countsTowardYear: false`, as is Year 5 Geography, so the Year 5 award
 waits for Maths, English, Science and History. See "Curriculum Mode — Year 5"
 below. Year 5 has no Bix lesson screens yet.
-History: Years 1–4 are complete (see
+History: Years 1–5 are complete (see
 `docs/history-curriculum/HISTORY_TRACKER.md`).
 Geography's standalone Skills Mode games and saved programmes in
 `docs/curriculum/` do not count as curriculum implementations.
@@ -140,7 +140,8 @@ The existing curriculum questions, progress contracts and unlock rules remain.
 Second-pass audit: all live column-entry renderers route through this shared
 control; Year 3 column challenges 1–2 use multiple choice, and Year 4 written
 multiplication challenge 3 uses partitioned expression tiles. Years 1–2 have no
-formal column-entry screens, and Year 5 has no implemented maths pathway.
+formal column-entry screens. Year 5 Maths (2026-11-03) uses the same
+`ColumnAnswer`, extended to millions and hundred thousands.
 Generated banks across 20 seeds confirm the seven Year 4 column-entry slots.
 The wrong-answer regression derives a different value from each generated
 answer, avoiding accidental correct guesses such as 99.
@@ -176,8 +177,9 @@ show “Explore the curriculum” for signed-in users and hide the sign-in promp
 The guides’ final call to action also offers a next learning step instead of
 asking existing accounts to finish account setup.
 
-Public curriculum overviews (2026-10-15): `/what-we-teach` groups all 20
-Years 1–4 Maths, English, Geography, Science and History guides by year.
+Public curriculum overviews (2026-10-15): `/what-we-teach` groups the public
+guides by year: 20 for Years 1–4 Maths, English, Geography, Science and
+History, plus 12 Year 5 guides added 2026-11-03 (32 in all).
 Each `/curriculum-guide/year-<year>-<subject>` page uses the approved colourful,
 spacious Year 3 Maths design. The public subject slug is `maths`; the curriculum
 registry keeps its existing `math` ID. `shared/curriculumGuides.js` contains
@@ -263,7 +265,8 @@ states; changing instructions remain polite live announcements.
 
 **Learn with Bix** (formerly Dynamic Learning) is an interactive web learning platform for primary-school
 children (built first for ~6-year-olds / **UK Year 2**; Curriculum Mode now
-also covers Years 1–4 Maths, English, Science and History). It teaches Maths, English,
+also covers Years 1–4 Maths, English, Science and History, and Year 5 across
+twelve subjects). It teaches Maths, English,
 Geometry and Geography through browser-based mini-games.
 
 There are two distinct learning modes, and the distinction matters for every
@@ -386,7 +389,7 @@ src/
 │   ├── year3MathCurriculum.js
 │   ├── year3EnglishCurriculum.js, year4EnglishCurriculum.js
 │   ├── year4HistoryCurriculum.js # 18 topics / 72 challenges; Anglo-Saxons, Scots and Vikings
-│   ├── curriculumRegistry.js    # Which curricula exist — the one source (years 1–4)
+│   ├── curriculumRegistry.js    # Which curricula exist — the one source (years 1–5)
 │   ├── english/                 # English content shared across topics: appendix1.js (statutory word lists,
 │   │                            #   our Y3/Y4 split), cast.js, passages*.js, textChecks.js (British spelling)
 │   ├── avatars.js               # Starter profile emoji + colour tokens
@@ -4320,7 +4323,7 @@ not by itself deliver a standalone game or its proposed reward flow.
 | #12 Phonics/rhyming | [Skills routes](../src/main.jsx), English banks, [speech utility](../src/utils/speech.js). | No standalone sound-it-out, rhyming-match or syllable-splitter pack or dedicated phoneme audio. Syllables in suffix questions are different content. |
 | #13 Story games | [SettingsCharactersAndPlotGame](../src/pages/skills/english/challenges/year3/SettingsCharactersAndPlotGame.jsx), [stories.json](../src/data/stories.json), [Skills routes](../src/main.jsx). | Curriculum plot-sentence ordering and guided story planning exist; free-choice generation and standalone picture sequencing do not. |
 | #14 Offline/PWA | [Dependencies](../package.json), [entry HTML](../index.html), `public/`, store drivers. | No web-app manifest/service-worker registration/PWA plugin or offline API write/conflict flow. The Science asset manifest is unrelated. |
-| #15 Geography curriculum | [Specs and embedded trackers](geography-curriculum/README.md), [curriculum registry](../src/data/curriculumRegistry.js). | Years 1–4 specs drafted 2026-10-13: 58 proposed topics / 232 briefs and KS1/KS2 crosswalks. Years 2–4 implemented: Year 2 has 14 topics / 56 slots; Years 3–4 have 16 / 64 each. Year 1 and browser/device review remain. Skills games remain standalone; Geography is excluded from overall year awards. |
+| #15 Geography curriculum | [Specs and embedded trackers](geography-curriculum/README.md), [curriculum registry](../src/data/curriculumRegistry.js). | Years 1–4 specs drafted 2026-10-13: 58 proposed topics / 232 briefs and KS1/KS2 crosswalks. Years 2–4 implemented: Year 2 has 14 topics / 56 slots; Years 3–4 have 16 / 64 each. Year 5 (16 / 64) added 2026-11-03. Year 1 and browser/device review remain. Skills games remain standalone; Geography is excluded from overall year awards. |
 | #16 Year 1–2 English | [Curriculum registry](../src/data/curriculumRegistry.js), English datasets/challenge directories. | Completed 2026-10-11: Year 1 has 38 topics / 152 challenges and Year 2 has 39 / 156. Years 1–4 English are registered and implemented. |
 | #17 Meteor benchmark | [Meteor controller](../src/pages/skills/geography/meteorExperiment.js), [tracker](solar-system-meteor/IMPLEMENTATION_TRACKER.md). | Feature exists; the required physical phone/tablet timing evidence is explicitly outstanding. |
 | #18 Science diagrams | [Follow-up checklist](science-curriculum/DIAGRAM_REVIEW_FOLLOWUPS.md), diagram components and `scripts/science-assets/`. | All 11 checklist items remain open in source: dog skeleton, leaf water, muscle geometry/titles, labels/Plants, renderer sandboxing, checksums, cache path validation, SVG stripping and built licence notices. |
