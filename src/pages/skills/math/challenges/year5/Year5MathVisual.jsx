@@ -1,5 +1,6 @@
 import ScrollableTable from '../../../../../components/ui/ScrollableTable';
 import Year4MathVisual from '../year4/Year4MathVisual';
+import MathQuestionVisual from '../../../../../components/challenge/visual/MathQuestionVisual';
 import { AngleDiagram, CellsEstimate, Cuboid, FractionBars, GridDiagram, HundredGrid, LineGraph, Net, NumberLine5, RectDiagonal, RectDiagram, Rectilinear, SharedAngles, Solid } from './Year5Diagrams';
 
 const PLACE_HEADS = ['Millions', 'Hundred thousands', 'Ten thousands', 'Thousands', 'Hundreds', 'Tens', 'Ones'];
@@ -8,7 +9,7 @@ const COLUMN_HEADS = ['M', 'HTh', 'TTh', 'Th', 'H', 'T', 'O'];
 /** Anything Year 4 can draw (shapes, clocks, and so on) is drawn by Year 4; everything new is drawn here. */
 export default function Year5MathVisual({ question: q, selected, onPoint, disabled }) {
   const v = q.visual;
-  if (!v) return null;
+  if (!v) return <MathQuestionVisual question={q} />;
   switch (v.type) {
     case 'place':
       return <ScrollableTable><table className="year5-table"><thead><tr>{PLACE_HEADS.slice(-v.digits.length).map(h => <th key={h} scope="col">{h}</th>)}</tr></thead>

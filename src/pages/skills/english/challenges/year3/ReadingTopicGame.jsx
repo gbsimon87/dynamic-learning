@@ -10,6 +10,7 @@ import WordPicker from "../../../../../components/challenge/WordPicker";
 import { showHint } from "../../../../../components/challenge/hints";
 import { isOrderCorrect, isSortCorrect } from "../../../../../data/challenges/english/readingKit";
 import "./ReadingTopicGame.css";
+import EnglishQuestionVisual from "../../../../../components/challenge/visual/EnglishQuestionVisual";
 
 /**
  * The game the Year 3 reading topics share (Does It Make Sense?, Predicting,
@@ -18,7 +19,7 @@ import "./ReadingTopicGame.css";
  * returns questions in the shapes described in readingKit.js; each topic's
  * Game passes its builder and its four titles.
  */
-function ReadingTopicGame({ level, titles, build, onComplete }) {
+function ReadingTopicGame({ level, titles, build, onComplete, illustrate = false }) {
   const questions = useMemo(() => build(level, Math.random), [build, level]);
 
   return (
@@ -28,7 +29,10 @@ function ReadingTopicGame({ level, titles, build, onComplete }) {
       onComplete={onComplete}
       render={({ question, submit, locked, index, misses }) => {
         const Round = ROUNDS[question.kind];
-        return <Round key={index} question={question} submit={submit} locked={locked} hint={showHint(misses)} />;
+        return <div key={index}>
+          {illustrate && <EnglishQuestionVisual question={question} />}
+          <Round question={question} submit={submit} locked={locked} hint={showHint(misses)} />
+        </div>;
       }}
     />
   );

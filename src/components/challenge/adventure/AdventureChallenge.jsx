@@ -32,7 +32,7 @@ function BixNotes({ lines, figure }) {
 }
 
 /**
- * The Year 5 frame for subjects authored as data (Science, Art, Music, D&T, PE,
+ * The frame for subjects authored as data (Science in Years 4–5, Art, Music, D&T, PE,
  * Relationships and health, French, Computing): a start banner with Bix's notes
  * and the topic picture, then every round as a wide picture card. Same rounds,
  * answers and single onComplete as DataChallenge; only the frame is new.
@@ -74,9 +74,9 @@ export default function AdventureChallenge({ subject, subjectLabel, topic, build
     {lines.length > 0 && <button className="adv-notes-toggle" type="button" ref={notesToggle} aria-expanded={notesOpen}
       onClick={() => { setNotesOpen((open) => !open); if (notesOpen) notesToggle.current?.focus(); }}>📖 Bix's notes</button>}
     {notesOpen && <div ref={notes} tabIndex="-1" className="adv-notes-reopened">
-      <BixNotes lines={lines} />
+      <BixNotes lines={lines} figure={figure} />
       <button type="button" onClick={() => { setNotesOpen(false); notesToggle.current?.focus(); }}>Back to my question</button>
     </div>}
-    <DataChallenge level={level} build={build} titles={titles} renderVisual={visual} checkAnswer={checkAnswer} readAloud={readAloud} layout="science" onComplete={onComplete} />
+    <DataChallenge level={level} build={build} titles={titles} renderVisual={visual} checkAnswer={checkAnswer} readAloud={readAloud} layout="science" illustrate={subject === "science"} onComplete={onComplete} />
   </div>;
 }

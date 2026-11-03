@@ -16,12 +16,15 @@ const modules = import.meta.glob("../../src/pages/skills/science/challenges/year
 const renderVisual = question => <Year4ScienceVisual question={question} />;
 afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.useRealTimers(); document.body.classList.remove("dark"); });
 
-it("loads all 80 real challenges with answer controls in both themes", () => {
+it("loads all 80 real challenges with illustrated notes and answer controls in both themes", () => {
   expect(Object.keys(modules)).toHaveLength(80);
   for (const theme of ["light", "dark"]) {
     document.body.classList.toggle("dark", theme === "dark");
     for (const { default: Challenge } of Object.values(modules)) {
       render(<Challenge onComplete={vi.fn()} />);
+      expect(screen.getByRole("region", { name: "Bix's notes" })).toBeTruthy();
+      expect(document.querySelector(".y4-science-concept")).toBeTruthy();
+      fireEvent.click(screen.getByRole("button", { name: "Let's go!" }));
       expect(screen.getByText("Question 1 of 5")).toBeTruthy();
       expect(screen.getByRole("button", { name: "Check my answer" })).toBeTruthy();
       cleanup();
@@ -34,6 +37,7 @@ it("plays circuit predictions from visible connections, retries twice, hints and
   vi.spyOn(Math, "random").mockImplementation(seededRng(7));
   const done = vi.fn();
   render(<Year4ScienceGame topicId="complete-and-incomplete-circuits" level={1} onComplete={done} />);
+  fireEvent.click(screen.getByRole("button", { name: "Let's go!" }));
   const questions = builders["complete-and-incomplete-circuits"](1, seededRng(7));
   questions.forEach((q, index) => {
     let answer = q.answer;
@@ -109,6 +113,7 @@ it("accepts a scientifically equivalent sentence through the actual Year 4 game"
   const questions = builders["switches"](3, seededRng(3));
   expect(questions[2].answer).toBe("A switch opens and closes the circuit.");
   render(<Year4ScienceGame topicId="switches" level={3} onComplete={vi.fn()} />);
+  fireEvent.click(screen.getByRole("button", { name: "Let's go!" }));
   for (const q of questions.slice(0, 2)) {
     for (const card of q.cards) {
       fireEvent.click(screen.getByRole("button", { name: card.label, exact: true }));
@@ -142,6 +147,7 @@ it("all 80 real challenges fill the science layout, with a figure column only wh
   for (const [path, { default: Challenge }] of Object.entries(modules)) {
     const { container } = render(<Challenge onComplete={vi.fn()} />);
     try {
+      fireEvent.click(screen.getByRole("button", { name: "Let's go!" }));
       const { root, prompt, answer } = expectScienceLayout(container, { check: "Check my answer" });
       expect(screen.getByRole("button", { name: "Check my answer" })).toBeTruthy();
       const stage = root.querySelector(".science-round-stage");
@@ -153,6 +159,17 @@ it("all 80 real challenges fill the science layout, with a figure column only wh
   }
   expect(failures).toEqual([]);
 }, 30000);
+
+it("reopens the teaching picture without replacing the current question", () => {
+  render(<Year4ScienceGame topicId="changing-pitch" level={1} onComplete={vi.fn()} />);
+  expect(screen.getByText("Shorter vibrating string")).toBeTruthy();
+  fireEvent.click(screen.getByRole("button", { name: "Let's go!" }));
+  const question = screen.getByText("Question 1 of 5");
+  fireEvent.click(screen.getByRole("button", { name: /Bix's notes/ }));
+  expect(screen.getByText("Shorter vibrating string")).toBeTruthy();
+  fireEvent.click(screen.getByRole("button", { name: "Back to my question" }));
+  expect(screen.getByText("Question 1 of 5")).toBe(question);
+});
 
 it("a Year 4 question with a circuit picture puts it in the figure column, before the answers", () => {
   const q = Array.from({ length: 20 }, (_, seed) => seed + 1).flatMap(seed => Object.values(builders).flatMap(build => [1, 2, 3, 4].flatMap(level => build(level, seededRng(seed))))).find(item => item.visual?.type === "circuit");

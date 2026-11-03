@@ -66,6 +66,17 @@ body.dark .lesson-start[data-slot="4"], body.dark .lesson-rounds[data-slot="4"] 
 }
 
 /* Worked example card */
+.lesson-diagram { display: block; width: min(100%, 440px); height: auto; margin: auto; overflow: visible; }
+.lesson-diagram text { fill: var(--lesson-ink); font-family: inherit; font-size: 14px; font-weight: 600; text-anchor: middle; }
+.lesson-diagram text[text-anchor="start"] { text-anchor: start; }
+.lesson-diagram-shape { fill: color-mix(in srgb, var(--lesson-slot) 25%, var(--lesson-card)); stroke: var(--lesson-slot); stroke-width: 2; }
+.lesson-diagram-empty { fill: var(--lesson-card); stroke: var(--lesson-ink); stroke-width: 1; }
+.lesson-diagram-line, .lesson-diagram-accent { fill: none; stroke: var(--lesson-ink); stroke-width: 3; }
+.lesson-diagram-accent { stroke: var(--lesson-slot); }
+.lesson-diagram-dot { fill: var(--lesson-ink); }
+.lesson-diagram-grid { fill: none; stroke: var(--lesson-soft-ink); stroke-width: 1; }
+.lesson-diagram-grid text { stroke: none; }
+.lesson-diagram-dashed { stroke-dasharray: 5 4; }
 .lesson-example {
   min-width: 0;
   margin: 1.25rem 0 0; padding: 1rem; border-radius: 24px; background: var(--lesson-card); text-align: center;
@@ -123,12 +134,12 @@ body.dark .lesson-example-note { background: color-mix(in srgb, var(--lesson-slo
 }
 
 .lesson-bars { display: grid; gap: .7rem; }
-.lesson-bar-row { display: flex; align-items: center; gap: .8rem; }
-.lesson-bar { flex: 1; display: flex; height: 2.6rem; border: 3px solid var(--lesson-ink); border-radius: 10px; overflow: hidden; }
+.lesson-bar-row { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem; }
+.lesson-bar { flex: 1; min-width: 80px; display: flex; height: 2.6rem; border: 3px solid var(--lesson-ink); border-radius: 10px; overflow: hidden; }
 .lesson-bar span { flex: 1; border-left: 2px solid var(--lesson-ink); background: var(--lesson-card); }
 .lesson-bar span:first-child { border-left: 0; }
 .lesson-bar span.is-shaded { background: var(--lesson-slot); }
-.lesson-bar-label { min-width: 3.5rem; font-size: 1.4rem; font-weight: 900; }
+.lesson-bar-label { min-width: 3.5rem; font-size: 1.4rem; font-weight: 900; overflow-wrap: anywhere; }
 
 .lesson-groups { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; font-size: 1.8rem; line-height: 1.3; }
 .lesson-group {

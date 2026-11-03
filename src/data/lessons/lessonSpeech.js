@@ -13,6 +13,7 @@ export function exampleSpeech(example) {
       case "table": return example.rows.map((row) => row.join(" ")).join(". ");
       case "sentence": return example.text.replaceAll("**", "");
       case "fix": return `Not this: ${example.wrong}. Write this: ${example.right}`;
+      case "diagram": return example.label;
       default: return "";
     }
   })();

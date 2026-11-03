@@ -1,4 +1,5 @@
 import ScrollableTable from "../../ui/ScrollableTable";
+import LessonDiagram from "./LessonDiagram";
 /**
  * A worked example on the lesson screen. Every shape is drawn from data in
  * src/data/lessons (see lintLessons.js for the fields), and every picture
@@ -73,7 +74,7 @@ function Fix({ wrong, right }) {
   </div>;
 }
 
-const SHAPES = { equation: Equation, column: Column, steps: Steps, jumps: Jumps, bar: Bars, groups: Groups, table: Table, sentence: Sentence, fix: Fix };
+const SHAPES = { equation: Equation, column: Column, steps: Steps, jumps: Jumps, bar: Bars, groups: Groups, table: Table, sentence: Sentence, fix: Fix, diagram: LessonDiagram };
 
 export default function LessonExample({ example }) {
   const Shape = SHAPES[example.type];

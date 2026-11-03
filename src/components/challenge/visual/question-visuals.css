@@ -1,0 +1,46 @@
+.question-visual {
+  --qv-ink: var(--light-text); --qv-card: var(--light-panel); --qv-accent: var(--light-lesson-slot-1); --qv-soft: var(--light-geo-sky);
+  min-width: 0; margin: 1rem auto; padding: 1rem; border: 2px solid color-mix(in srgb, var(--qv-accent) 55%, var(--qv-card));
+  border-radius: 22px; color: var(--qv-ink); background: color-mix(in srgb, var(--qv-soft) 30%, var(--qv-card));
+  width: min(100%, 700px); box-sizing: border-box;
+}
+body.dark .question-visual { --qv-ink: var(--dark-text); --qv-card: var(--dark-panel); --qv-accent: var(--dark-lesson-slot-1); --qv-soft: var(--dark-geo-sky); }
+.question-visual figcaption { font-size: 1rem; font-weight: 800; margin-bottom: .9rem; text-align: left; }
+.qv-fractions { display: grid; gap: 1rem; }
+.qv-fractions b { display: block; margin-bottom: .4rem; }
+.qv-fraction { display: flex; height: 30px; border: 2px solid var(--qv-ink); border-radius: 6px; overflow: hidden; margin: .25rem 0; }
+.qv-fraction span { flex: 1; background: var(--qv-card); border-left: 1px solid var(--qv-ink); }
+.qv-fraction span:first-child { border-left: 0; }
+.qv-fraction .is-filled { background: var(--qv-accent); }
+.qv-array { display: grid; gap: 5px; width: min(100%, 310px); margin: auto; }
+.qv-array span { aspect-ratio: 1; border-radius: 50%; background: var(--qv-accent); border: 1px solid var(--qv-ink); }
+.qv-place-table { border-collapse: collapse; width: 100%; font-size: 1rem; }
+.qv-place-table th, .qv-place-table td { padding: .6rem; border: 1px solid var(--qv-ink); text-align: center; }
+.qv-place-table td { font-size: 1.3rem; font-weight: 800; }
+.qv-parts { max-width: 550px; margin: auto; }
+.qv-whole, .qv-part-row span { border: 2px solid var(--qv-ink); border-radius: 8px; padding: .75rem .35rem; font-size: 1.3rem; font-weight: 800; background: var(--qv-card); }
+.qv-part-row { display: flex; gap: 5px; margin-top: 5px; }
+.qv-part-row span { min-width: 3rem; overflow-wrap: anywhere; background: color-mix(in srgb, var(--qv-accent) 24%, var(--qv-card)); }
+.qv-part-row .is-removed { border-style: dashed; background: var(--qv-card); }
+.qv-parts p { font-size: .85rem; }
+.qv-groups { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; }
+.qv-groups span { display: grid; place-items: center; width: 50px; height: 50px; border: 2px dashed var(--qv-ink); border-radius: 50%; font-size: 1.4rem; }
+.qv-number-line { width: 100%; height: auto; overflow: visible; }
+.qv-number-line path { fill: none; stroke: var(--qv-ink); stroke-width: 2; }
+.qv-number-line circle { fill: var(--qv-accent); stroke: var(--qv-ink); stroke-width: 1; }
+.qv-number-line text { fill: var(--qv-ink); text-anchor: middle; font-family: inherit; font-size: 17px; font-weight: 700; }
+.qv-word-parts { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .6rem; }
+.qv-word-parts span { padding: .7rem 1rem; border-radius: 12px; background: var(--qv-card); border: 2px solid var(--qv-accent); font-size: 1.4rem; font-weight: 800; }
+.qv-word-parts .qv-unknown { border-style: dashed; }
+.qv-reference { width: min(100%, 330px); }
+.qv-reference figcaption { margin: .25rem 0 0; text-align: center; }
+.qv-object { width: 100%; height: auto; fill: none; stroke: var(--qv-ink, currentColor); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.qv-object-fill { fill: color-mix(in srgb, var(--qv-accent, currentColor) 24%, var(--qv-card, transparent)); }
+.qv-thumbnail { display: block; width: 100px; max-width: 100%; margin: 0 auto .3rem; color: inherit; pointer-events: none; }
+.qv-key ol { list-style: none; padding: 0; margin: 0; }
+.qv-key li { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .6rem; text-align: center; }
+.qv-key-question, .qv-key-yes, .qv-key-no span { padding: .75rem; border-radius: 14px; background: var(--qv-card); border: 2px solid var(--qv-accent); }
+.qv-key-no { display: flex; flex-direction: column; grid-column: 1; padding-bottom: .6rem; line-height: 1.8; }
+.qv-key-yes { border-style: dashed; }
+.qv-key-no span { margin-top: .5rem; }
+.qv-results-chart .bar-chart { width: 100%; max-width: 100%; }

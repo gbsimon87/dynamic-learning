@@ -1,4 +1,6 @@
 import DataTable from "../../../../../components/challenge/DataTable";
+import ScienceQuestionVisual from "../../../../../components/challenge/visual/ScienceQuestionVisual";
+import ResultsChart from "../../../../../components/challenge/visual/ResultsChart";
 import "./Year4ScienceVisual.css";
 
 // Pictorial components, rather than Year 6 circuit symbols. The bulb is always
@@ -59,8 +61,10 @@ function Digestion() {
 
 export default function Year4ScienceVisual({ question: q }) {
   const v = q.visual;
+  if (v?.type === "classificationKey" || v?.type === "literal") return <ScienceQuestionVisual visual={v} />;
   return <div className="y4-sci-visual">
     {q.table && <DataTable caption={`Supplied example results — ${q.table.headings[0]}`} columns={q.table.headings.slice(1).map((label, i) => ({ key: `c${i}`, label }))} rows={q.table.rows.map(([label, ...cells]) => ({ label, cells: Object.fromEntries(cells.map((value, i) => [`c${i}`, value])) }))} />}
+    {q.table && <ResultsChart table={q.table} />}
     {v?.type === "circuit" && <Circuit {...v} />}
     {v?.type === "cycle" && <Cycle />}
     {v?.type === "digestion" && <Digestion />}

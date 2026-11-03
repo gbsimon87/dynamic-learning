@@ -7,5 +7,5 @@ const TITLES = [
   "Read the whole text and apply what you know."
 ];
 export default function MythsAndLegendsFromAroundTheWorldGame({ level, onComplete }) {
-  return <ReadingTopicGame level={level} build={buildMythsAndLegendsFromAroundTheWorldQuestions} titles={TITLES} onComplete={onComplete} />;
+  return <ReadingTopicGame illustrate level={level} build={buildMythsAndLegendsFromAroundTheWorldQuestions} titles={TITLES} onComplete={onComplete} />;
 }

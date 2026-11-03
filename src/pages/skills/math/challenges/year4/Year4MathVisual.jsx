@@ -1,5 +1,6 @@
 import ScrollableTable from "../../../../../components/ui/ScrollableTable";
 import ClockFace from '../../../../../components/challenge/ClockFace';
+import MathQuestionVisual from '../../../../../components/challenge/visual/MathQuestionVisual';
 
 const shapePoints = {
   equilateral:'150,35 60,190.884572681 240,190.884572681', isosceles:'150,35 90,191 210,191',
@@ -24,7 +25,7 @@ function Angle({ degrees, x=150, y=170, length=100 }) {
 }
 export default function Year4MathVisual({ question:q, selected, onPoint, coloured={}, onSquare, disabled }) {
   const v=q.visual;
-  if(!v) return null;
+  if(!v) return <MathQuestionVisual question={q} />;
   if(v.type==='clock') return <ClockFace hour={v.hour} minute={v.minute} />;
   if(v.type==='column') return <div className="year4-column" aria-label={`${v.a} ${v.op} ${v.b}, aligned in place-value columns`}>
     <div className="year4-column-labels">{['Th','H','T','O'].map(label=><span key={label}>{label}</span>)}</div>

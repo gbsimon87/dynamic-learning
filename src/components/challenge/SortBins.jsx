@@ -14,7 +14,7 @@ import "./english-kit.css";
  * `placement`  { [cardId]: binId } (the caller's state)
  * `onPlace`    (cardId, binId | null), null returning it to the pile
  */
-function SortBins({ bins, cards, placement, onPlace, disabled }) {
+function SortBins({ bins, cards, placement, onPlace, disabled, renderPicture }) {
   const [held, setHeld] = useState(null);
   const pile = cards.filter((card) => !placement[card.id]);
 
@@ -40,7 +40,7 @@ function SortBins({ bins, cards, placement, onPlace, disabled }) {
               disabled={disabled}
               onClick={() => pick(card.id)}
             >
-              {card.label}
+              {renderPicture?.(card.label)}{card.label}
             </button>
           ))
         )}
@@ -77,7 +77,7 @@ function SortBins({ bins, cards, placement, onPlace, disabled }) {
                     onClick={() => onPlace(card.id, null)}
                     aria-label={`${card.label}, in ${bin.label}. Tap to take it out`}
                   >
-                    {card.label}
+                    {renderPicture?.(card.label)}{card.label}
                   </button>
                 ))}
             </div>

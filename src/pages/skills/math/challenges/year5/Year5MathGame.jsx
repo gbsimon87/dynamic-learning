@@ -21,7 +21,7 @@ export default function Year5MathGame({ topic, level, onComplete }) {
       if (question.interaction === 'plot') return <PlotRound key={index} question={question} submit={submit} locked={locked} hint={hint} />;
       if (question.interaction === 'setAngle') return <AngleRound key={index} question={question} submit={submit} locked={locked} hint={hint} />;
       if (question.visual?.type === 'column' && question.kind === 'number') return <WrittenRound key={index} question={question} submit={submit} locked={locked} hint={hint} />;
-      return <DataRound key={index} checkAnswer={isYear5MathCorrect} question={question} submit={submit} locked={locked} hint={hint} renderVisual={q => <Year5MathVisual question={q} />} />;
+      return <DataRound key={index} checkAnswer={isYear5MathCorrect} question={question} submit={submit} locked={locked} hint={hint} renderVisual={q => <Year5MathVisual question={q} />} illustrate />;
     }} />;
 }
 

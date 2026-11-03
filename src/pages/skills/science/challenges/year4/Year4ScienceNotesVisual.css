@@ -1,0 +1,8 @@
+.y4-science-concept { color: var(--adv-ink); text-align: left; }
+.y4-science-concept figcaption { font-weight: 800; font-size: 1.2rem; margin-bottom: 1rem; }
+.y4-science-concept ol { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 1.5rem; list-style: none; margin: 0; padding: 0; }
+.y4-science-concept li { position: relative; display: flex; flex-direction: column; align-items: center; gap: .5rem; padding: 1rem; text-align: center; line-height: 1.5; border: 2px solid var(--adv-slot); border-radius: 20px; background: color-mix(in srgb, var(--adv-sky) 35%, var(--adv-card)); }
+.y4-concept-icon { font-size: 2.5rem; line-height: 1.2; }
+.y4-science-concept p { margin: 1rem 0 0; line-height: 1.5; }
+.y4-science-concept .is-flow { grid-template-columns: 1fr; }
+.y4-science-concept .is-flow li:not(:last-child)::after { content: "↓"; position: absolute; bottom: -1.8rem; left: calc(50% - .75rem); width: 1.5rem; font-size: 1.5rem; font-weight: 800; }

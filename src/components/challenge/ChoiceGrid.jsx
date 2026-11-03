@@ -8,7 +8,7 @@ import "./challenge-kit.css";
  * hundred and six" at the numeric size gives four buttons that fill the screen
  * and can no longer be compared at a glance.
  */
-function ChoiceGrid({ options, selected, onSelect, disabled, variant = "" }) {
+function ChoiceGrid({ options, selected, onSelect, disabled, variant = "", renderPicture }) {
   return (
     <div className={`choice-grid ${variant}`} role="group">
       {options.map((option) => (
@@ -20,7 +20,7 @@ function ChoiceGrid({ options, selected, onSelect, disabled, variant = "" }) {
           disabled={disabled}
           onClick={() => onSelect(option)}
         >
-          {option}
+          {renderPicture?.(option)}{option}
         </button>
       ))}
     </div>

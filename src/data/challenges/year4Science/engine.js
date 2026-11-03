@@ -1,6 +1,8 @@
 import { shuffle, tiles, order } from "../year1Math/shared.js";
 import { isCorrect } from "../questionKinds.js";
 import { normaliseAnswer } from "../english/shared.js";
+import { classificationKeyModel } from "../questionVisuals.js";
+import { questionPicture } from "../literalPictures.js";
 
 // Authored scientific content, randomised only by an injected RNG. No storage.
 export const fact = (prompt, answer, ...wrong) => ({ kind: "choice", prompt, answer, wrong });
@@ -46,7 +48,7 @@ function prepare(template, rng) {
 }
 
 export const TITLES = ["Explore the idea", "Compare and classify", "Build the science", "Use the evidence"];
-export function buildTopic(topic) {
+export function buildTopic(topic, { questionPictures = false } = {}) {
   return (level, rng = Math.random) => {
     if (![1, 2, 3, 4].includes(level)) throw new RangeError("Science level must be 1–4");
     const draw = (bank, count) => shuffle(rng, bank).slice(0, count).map(t => prepare(t, rng));
@@ -55,11 +57,16 @@ export function buildTopic(topic) {
       : level === 3 ? [...draw(topic.sorts, 2), ...draw(topic.structures, 3)]
       : [...draw(topic.enquiries.filter(q => q.kind === "choice" || q.kind === "number"), 3),
         ...draw(topic.enquiries.filter(q => q.kind !== "choice" && q.kind !== "number"), 2)];
-    return questions.map(q => ({ ...q,
-      ...(level === 1 ? { rule: topic.rule } : {}),
-      ...(level === 1 && topic.visual && !q.visual ? { visual: topic.visual } : {}),
-      hint: q.hint ?? topic.hint,
-      speak: q.prompt,
-    }));
+    return questions.map(q => {
+      const existing = q.visual ?? (level === 1 ? topic.visual : undefined);
+      const key = questionPictures && !existing && !q.table ? classificationKeyModel(q.text) : null;
+      const picture = questionPictures && !existing && !q.table && !key ? questionPicture(q) : null;
+      return { ...q,
+        ...(level === 1 ? { rule: topic.rule } : {}),
+        ...(existing || key || picture ? { visual: existing ?? (key ? { type: "classificationKey", key } : { type: "literal", picture }) } : {}),
+        hint: q.hint ?? topic.hint,
+        speak: q.prompt,
+      };
+    });
   };
 }

@@ -19,7 +19,7 @@ export default function Year4MathGame({ topic, level, onComplete }) {
       ? question.interaction==='chartBuild'
         ? <ChartBuildRound key={index} question={question} submit={submit} locked={locked} />
         : <SpatialRound key={index} question={question} submit={submit} locked={locked} hint={misses>=2} />
-      : <DataRound checkAnswer={isYear4MathCorrect} key={index} question={question} submit={submit} locked={locked} hint={misses>=2} renderVisual={q => <Year4MathVisual question={q} />} />
+      : <DataRound checkAnswer={isYear4MathCorrect} key={index} question={question} submit={submit} locked={locked} hint={misses>=2} renderVisual={q => <Year4MathVisual question={q} />} illustrate />
     } />;
 }
 
