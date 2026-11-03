@@ -16,12 +16,15 @@ import "./english-kit.css";
  * On a device with no speech voice it renders nothing, so a challenge must
  * never depend on it alone (see `isNarrationSupported`).
  *
+ * `lang` speaks `text` in another language's voice (a BCP 47 tag such as
+ * "fr-FR"); absent, the app's British English voice.
+ *
  * `getText` instead of `text` works the words out at the moment of the tap
  * (Maths "Read it to me" reads the question off the screen). Pass `resetKey`
  * with it, e.g. the question index: changing it stops the voice, as a new
  * `text` does. `className` adds to the button's own classes.
  */
-function SpeakButton({ text, getText, resetKey, label = "Hear it", compact = false, className = "" }) {
+function SpeakButton({ text, getText, resetKey, label = "Hear it", compact = false, className = "", lang }) {
   const [muted, toggleMuted] = useSoundMuted();
   const [speaking, setSpeaking] = useState(false);
   const requestRef = useRef(0);
@@ -45,7 +48,7 @@ function SpeakButton({ text, getText, resetKey, label = "Hear it", compact = fal
     const words = getText ? getText() : text;
     const request = ++requestRef.current;
     setSpeaking(true);
-    await speakAndWait(words);
+    await (lang ? speakAndWait(words, { lang }) : speakAndWait(words));
     if (request === requestRef.current) setSpeaking(false);
   };
 

@@ -9,7 +9,7 @@ import CurriculumGuide, { CurriculumOverview } from '../../src/seo/CurriculumGui
 
 vi.mock('../../src/components/mascot/Mascot', () => ({ default: () => null }));
 
-it('offers all twenty guides from an anonymous, year-grouped hub', () => {
+it('offers all thirty-two guides from an anonymous, year-grouped hub', () => {
   render(<MemoryRouter><CurriculumOverview /></MemoryRouter>);
   for (const guide of CURRICULUM_GUIDES) {
     expect(screen.getByRole('link', { name: new RegExp(guide.label) }).getAttribute('href')).toBe(guide.path);
@@ -28,13 +28,13 @@ it.each(CURRICULUM_GUIDES)('renders the full $label topic inventory without an a
     for (const challenge of topic.challenges) expect(isChallengeImplemented(guide.subject, guide.year, topic.id, challenge.id)).toBe(true);
   }
   expect(screen.getAllByRole('link', { name: /Create an account/ }).every(link => link.getAttribute('href') === '/signup')).toBe(true);
-  expect(screen.getByRole('navigation', { name: `More Year ${guide.year} subjects` }).querySelectorAll('a')).toHaveLength(4);
+  expect(screen.getByRole('navigation', { name: `More Year ${guide.year} subjects` }).querySelectorAll('a')).toHaveLength(CURRICULUM_GUIDES.filter(item => item.year === guide.year).length - 1);
   if (guide.games) expect(screen.getByRole('heading', { name: 'Try a game. No signup needed.' })).toBeTruthy();
   else expect(screen.getByRole('heading', { name: 'Little ideas to try together' })).toBeTruthy();
 });
 
 it('does not turn an unknown curriculum guide into another year’s content', () => {
-  render(<RouterProvider router={createMemoryRouter([{ path: "*", element: <CurriculumGuide slug="year-5-maths" /> }])} />);
+  render(<RouterProvider router={createMemoryRouter([{ path: "*", element: <CurriculumGuide slug="year-6-maths" /> }])} />);
   expect(screen.getByRole('heading', { level: 1 }).textContent).toBe("We can't find that page");
 });
 

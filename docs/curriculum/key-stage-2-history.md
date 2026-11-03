@@ -124,7 +124,8 @@ Years 3–6 allocation is recorded here; it is a project choice, not a DfE year 
 |---|---|---|
 | 3 | Stone Age to Iron Age; Roman Empire and its impact on Britain; earliest civilisations overview with Ancient Egypt depth study | All 22 topics / 88 challenges built |
 | 4 | Anglo-Saxons and Scots; Viking and Anglo-Saxon struggle to Edward the Confessor | All 18 topics / 72 challenges built |
-| 5–6 | Local study; a British theme beyond 1066; Ancient Greece; a contrasting non-European society | Reserved; no specs or implementations |
+| 5 | Ancient Greece (depth study); a non-European society (Mayan civilization c. AD 900); chronology and enquiry skills linking Years 3–5 | All 22 topics / 88 challenges built |
+| 6 | Local history study; a theme in British history beyond 1066 | Reserved; no specs or implementations |
 
 Year 3 therefore does **not** cover the whole KS2 programme. The local study,
 beyond-1066 theme, Greece and non-European comparison remain for later years.
@@ -187,6 +188,42 @@ IDs are permanent URL and progress keys. Years 5–6 allocations remain unbuilt.
 | Anglo-Saxon Laws and Justice | `anglo-saxon-laws-and-justice` | the Viking and Anglo-Saxon struggle for the Kingdom of England to the time of Edward the Confessor | Laws, wergild, oaths, moots and gentle ordeal explanation |
 | Edward the Confessor | `edward-the-confessor` | the Viking and Anglo-Saxon struggle for the Kingdom of England to the time of Edward the Confessor | Westminster, succession and death in AD 1066 |
 | From Romans to 1066 | `from-romans-to-1066` | the Viking and Anglo-Saxon struggle for the Kingdom of England to the time of Edward the Confessor | Chronology, change, continuity and source comparison |
+
+## Year 5 topic crosswalk
+
+Dataset: `src/data/year5HistoryCurriculum.js`. Titles approved 2026-11-02; IDs are
+permanent URL and progress keys. Year 5 teaches **Ancient Greece** as a depth study
+and **Mayan civilization c. AD 900** as the one non-European society, then links
+them to Years 3–4 with chronology and enquiry topics. Mayan civilization was chosen
+because its evidence (stelae, codices, archaeology and laser scanning) gives a clear
+"how do we know?" story and a strong contrast with Britain c. AD 900. Early Islamic
+civilization (Baghdad) and Benin are not taught. The **local history study** and the
+**theme in British history beyond 1066** are left for Year 6.
+
+| Topic | ID | Statutory requirement | Focus / non-statutory example |
+|---|---|---|---|
+| Where Ancient Greece Was | `where-ancient-greece-was` | Ancient Greece – a study of Greek life and achievements and their influence on the western world | Geography, city-states, shared language and festivals; dates in BC |
+| Athens and Sparta | `athens-and-sparta` | Ancient Greece – a study of Greek life and achievements and their influence on the western world | Two contrasting city-states; the Peloponnesian War; Thucydides as a source |
+| Everyday Life in Athens | `everyday-life-in-athens` | Ancient Greece – a study of Greek life and achievements and their influence on the western world | Homes, food, school, work, enslaved people; vase painting as evidence |
+| Democracy in Athens | `democracy-in-athens` | Ancient Greece – a study of Greek life and achievements and their influence on the western world | Citizens, the Assembly, juries and ostracism; who was left out |
+| Greek Gods and Myths | `greek-gods-and-myths` | Ancient Greece – a study of Greek life and achievements and their influence on the western world | Olympian gods, myths and worship; myths as evidence of belief |
+| The Parthenon and Greek Temples | `the-parthenon-and-greek-temples` | Ancient Greece – a study of Greek life and achievements and their influence on the western world | Building the Parthenon, 447–432 BC; power and belief |
+| The Olympic Games | `the-olympic-games` | Ancient Greece – a study of Greek life and achievements and their influence on the western world | Olympia, 776 BC, events and who took part; a link to the modern Games |
+| Greeks and Persians | `greeks-and-persians` | Ancient Greece – a study of Greek life and achievements and their influence on the western world | Marathon, Thermopylae and Salamis; Herodotus and viewpoint |
+| Alexander the Great | `alexander-the-great` | Ancient Greece – a study of Greek life and achievements and their influence on the western world | Conquests, the spread of Greek culture and a contested legacy |
+| Greek Thinkers and Theatre | `greek-thinkers-and-theatre` | Ancient Greece – a study of Greek life and achievements and their influence on the western world | Socrates, Plato, Aristotle, Hippocrates, Euclid and Greek theatre |
+| Greek Ideas We Still Use | `greek-ideas-we-still-use` | Ancient Greece – a study of Greek life and achievements and their influence on the western world | Influence on the western world: democracy, words, Games and buildings |
+| Where the Maya Lived | `where-the-maya-lived` | a non-European society that provides contrasts with British history – one study chosen from: early Islamic civilization, including a study of Baghdad c. AD 900; Mayan civilization c. AD 900; Benin (West Africa) c. AD 900-1300 | Maya lands, rainforest, cenotes and LiDAR evidence |
+| Maya Farming and Food | `maya-farming-and-food` | a non-European society that provides contrasts with British history – one study chosen from: early Islamic civilization, including a study of Baghdad c. AD 900; Mayan civilization c. AD 900; Benin (West Africa) c. AD 900-1300 | Maize, milpa farming, cacao and what archaeology shows |
+| Maya Cities and Kings | `maya-cities-and-kings` | a non-European society that provides contrasts with British history – one study chosen from: early Islamic civilization, including a study of Baghdad c. AD 900; Mayan civilization c. AD 900; Benin (West Africa) c. AD 900-1300 | City-states, holy lords, Palenque, Tikal and stelae |
+| Chichen Itza and Maya Pyramids | `chichen-itza-and-maya-pyramids` | a non-European society that provides contrasts with British history – one study chosen from: early Islamic civilization, including a study of Baghdad c. AD 900; Mayan civilization c. AD 900; Benin (West Africa) c. AD 900-1300 | Chichen Itza c. AD 900: El Castillo, ball court and Maya building |
+| Maya Writing and Books | `maya-writing-and-books` | a non-European society that provides contrasts with British history – one study chosen from: early Islamic civilization, including a study of Baghdad c. AD 900; Mayan civilization c. AD 900; Benin (West Africa) c. AD 900-1300 | Glyphs, bark-paper books, losses and decipherment |
+| Maya Numbers and the Calendar | `maya-numbers-and-the-calendar` | a non-European society that provides contrasts with British history – one study chosen from: early Islamic civilization, including a study of Baghdad c. AD 900; Mayan civilization c. AD 900; Benin (West Africa) c. AD 900-1300 | Dots, bars and the shell zero; the 260-day and 365-day calendars |
+| Maya Gods and the Ball Game | `maya-gods-and-the-ball-game` | a non-European society that provides contrasts with British history – one study chosen from: early Islamic civilization, including a study of Baghdad c. AD 900; Mayan civilization c. AD 900; Benin (West Africa) c. AD 900-1300 | Gods, rituals (stated soberly) and the ball game |
+| The Classic Maya Collapse | `the-classic-maya-collapse` | a non-European society that provides contrasts with British history – one study chosen from: early Islamic civilization, including a study of Baghdad c. AD 900; Mayan civilization c. AD 900; Benin (West Africa) c. AD 900-1300 | Decline of southern cities c. AD 800–900; competing explanations |
+| One Long Timeline | `one-long-timeline` | the aims: understand the methods of historical enquiry, and note connections, contrasts and trends over time | BC and AD, ordering Years 3–5 events and parallel histories |
+| Sources and Interpretations | `sources-and-interpretations` | the aims: understand the methods of historical enquiry, and note connections, contrasts and trends over time | Primary and secondary sources, bias, new evidence and interpretations |
+| Comparing Past Societies | `comparing-past-societies` | the aims: understand the methods of historical enquiry, and note connections, contrasts and trends over time | Similarity and difference: Greece, the Maya and Britain c. AD 900 |
 
 ---
 

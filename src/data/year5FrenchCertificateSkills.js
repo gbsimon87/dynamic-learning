@@ -1,0 +1,20 @@
+// Read-only topic certificate lines for Year 5 French, keyed "5/french/<topicId>".
+export const YEAR5_FRENCH_TOPIC_SKILLS = {
+  "5/french/silent-letters-and-liaison": "I can tell which French letters are silent and hear when words link.",
+  "5/french/nasal-sounds": "I can hear and spell the French on, an and in sounds.",
+  "5/french/accents-and-sound-patterns": "I can read French accents and sound patterns like é, ç, ou, ch and oi.",
+  "5/french/greetings-and-family": "I can greet people, say my name and name my family in French.",
+  "5/french/numbers-to-100": "I can say and read French numbers up to 100.",
+  "5/french/days-months-and-weather": "I can name the days, months, seasons and weather in French.",
+  "5/french/food-and-ordering": "I can name foods and order politely in French.",
+  "5/french/school-and-town": "I can name school things and ask for and follow directions.",
+  "5/french/hobbies-and-opinions": "I can say what I like and dislike doing in French.",
+  "5/french/clothes-and-colours": "I can name clothes and colours in French.",
+  "5/french/gender-articles-and-plurals": "I can use le, la, un, une, les and des with French nouns.",
+  "5/french/adjectives-agreement-and-position": "I can make French adjectives agree and put them in the right place.",
+  "5/french/be-have-go-and-do": "I can use être, avoir, aller and faire in the present tense.",
+  "5/french/verbs-ending-in-er": "I can use regular -er verbs in the present tense.",
+  "5/french/saying-no-and-asking-questions": "I can say no with ne … pas and ask questions in French.",
+  "5/french/reading-short-texts": "I can read short French texts and answer questions about them.",
+  "5/french/building-and-translating-sentences": "I can build French sentences and translate them both ways.",
+};

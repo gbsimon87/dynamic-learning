@@ -119,6 +119,20 @@ body.dark .curriculum-guide {
 .curriculum-overview-grid .curriculum-subject-science strong { color: var(--cg-gold-ink); }
 .curriculum-overview-grid .curriculum-subject-history { background: var(--cg-rose); }
 .curriculum-overview-grid .curriculum-subject-history strong { color: var(--cg-rose-ink); }
+.curriculum-overview-grid .curriculum-subject-art { background: var(--cg-rose); }
+.curriculum-overview-grid .curriculum-subject-art strong { color: var(--cg-rose-ink); }
+.curriculum-overview-grid .curriculum-subject-computing { background: var(--cg-mint); }
+.curriculum-overview-grid .curriculum-subject-computing strong { color: var(--cg-mint-ink); }
+.curriculum-overview-grid .curriculum-subject-design { background: var(--cg-gold); }
+.curriculum-overview-grid .curriculum-subject-design strong { color: var(--cg-gold-ink); }
+.curriculum-overview-grid .curriculum-subject-french { background: var(--cg-lilac); }
+.curriculum-overview-grid .curriculum-subject-french strong { color: var(--cg-lilac-ink); }
+.curriculum-overview-grid .curriculum-subject-music { background: var(--cg-lilac); }
+.curriculum-overview-grid .curriculum-subject-music strong { color: var(--cg-lilac-ink); }
+.curriculum-overview-grid .curriculum-subject-pe { background: var(--cg-mint); }
+.curriculum-overview-grid .curriculum-subject-pe strong { color: var(--cg-mint-ink); }
+.curriculum-overview-grid .curriculum-subject-wellbeing { background: var(--cg-rose); }
+.curriculum-overview-grid .curriculum-subject-wellbeing strong { color: var(--cg-rose-ink); }
 .curriculum-guide-activity { display: flex; flex-direction: column; gap: 0.75rem; padding: 1.5rem; background: var(--guide-panel); border-radius: 1.25rem; }
 .curriculum-guide-activity > span { font-size: 2rem; }
 .curriculum-guide-activity p { margin: 0; }

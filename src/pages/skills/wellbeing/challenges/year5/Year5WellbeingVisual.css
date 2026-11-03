@@ -1,0 +1,4 @@
+/* Year 5 Relationships and health figures: the drawing kit is in year5Pictures/pictures.css. */
+.y5-well-visual { display: grid; gap: .25rem; }
+.y5-well-visual .y5v-meter-on { fill: var(--v-leaf); stroke: var(--v-ink); stroke-width: 2.5; }
+.y5-well-visual .y5v-meter-off { fill: var(--v-paper); stroke: var(--v-ink); stroke-width: 2; stroke-dasharray: 4 3; }

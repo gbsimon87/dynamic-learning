@@ -20,7 +20,7 @@ export const EDITABLE_CHILD_FIELDS = ["name", "avatar", "colour", "yearGroup", "
  * holds the two together) without importing the registry, which would drag the
  * curriculum datasets into the server.
  */
-export const CHILD_SUBJECTS = ["math", "english", "geography", "science", "history"];
+export const CHILD_SUBJECTS = ["math", "english", "geography", "science", "history", "art", "computing", "design", "french", "music", "pe", "wellbeing"];
 
 /** Longest nickname a NEW profile may have, in characters. Existing names are left alone. */
 export const CHILD_NAME_MAX = 20;
@@ -48,7 +48,7 @@ function normaliseSubjects(value) {
  * rather than the whole of primary: offering Year 6 would promise a curriculum
  * that does not exist.
  */
-export const CHILD_YEAR_GROUPS = [1, 2, 3, 4];
+export const CHILD_YEAR_GROUPS = [1, 2, 3, 4, 5];
 
 /**
  * A profile created before `yearGroup` existed simply has none, which is the

@@ -1,0 +1,20 @@
+// Read-only topic certificate lines for Year 5 Computing, keyed "5/computing/<topicId>".
+export const YEAR5_COMPUTING_TOPIC_SKILLS = {
+  "5/computing/sequences-of-instructions": "I can follow and order instructions to predict what a program does.",
+  "5/computing/repeat-loops": "I can use repeat loops to predict what a program does.",
+  "5/computing/if-and-else-decisions": "I can use if and else to make a program choose what to do.",
+  "5/computing/variables": "I can follow how variables change as a program runs.",
+  "5/computing/inputs-and-outputs": "I can tell inputs from outputs and use them in a program.",
+  "5/computing/finding-and-fixing-bugs": "I can find and fix mistakes in a program.",
+  "5/computing/breaking-problems-into-parts": "I can break a big problem into smaller parts.",
+  "5/computing/how-algorithms-work": "I can follow and explain how simple algorithms work.",
+  "5/computing/logic-with-and-or-and-not": "I can use and, or and not to work out if a condition is true.",
+  "5/computing/computer-networks": "I can explain how computers join together in a network.",
+  "5/computing/how-data-travels": "I can explain how data travels across a network in packets.",
+  "5/computing/the-internet-and-the-web": "I can tell the internet from the World Wide Web and name its services.",
+  "5/computing/using-search-engines": "I can choose good keywords and use a search engine well.",
+  "5/computing/how-results-are-ranked": "I can explain how search engines rank their results.",
+  "5/computing/judging-websites": "I can judge whether a website can be trusted.",
+  "5/computing/keeping-information-safe": "I can keep my personal information and passwords safe online.",
+  "5/computing/kind-and-responsible-online": "I can be kind and responsible online and know how to report concerns.",
+};

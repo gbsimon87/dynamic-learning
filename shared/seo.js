@@ -35,7 +35,7 @@ export function getPageSeo(pathname, { origin = PUBLIC_ORIGIN, indexable = true 
     description = 'Explore Maths, English, Science, History and Geography with Learn with Bix. Play skill games or follow a UK primary curriculum learning path.';
   } else if (path === '/what-we-teach') {
     name = 'What We Teach';
-    description = 'Explore Years 1–4 Maths, English, Geography, Science and History with Bix. See each learning path’s topics and find out how to get started.';
+    description = 'Explore Years 1–5 Maths, English, Geography, Science, History and more with Bix. See each learning path’s topics and find out how to get started.';
   } else if (curriculumGuide) {
     name = `${curriculumGuide.label}: Topics & Learning Path`;
     description = `${curriculumGuide.intro} Explore ${curriculumGuide.label} with Bix before signing up.`;

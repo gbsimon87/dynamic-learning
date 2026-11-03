@@ -1,3 +1,15 @@
+import { year5ArtCurriculum } from "./year5ArtCurriculum.js";
+import { year5ComputingCurriculum } from "./year5ComputingCurriculum.js";
+import { year5DesignCurriculum } from "./year5DesignCurriculum.js";
+import { year5FrenchCurriculum } from "./year5FrenchCurriculum.js";
+import { year5MusicCurriculum } from "./year5MusicCurriculum.js";
+import { year5PeCurriculum } from "./year5PeCurriculum.js";
+import { year5WellbeingCurriculum } from "./year5WellbeingCurriculum.js";
+import { year5MathCurriculum } from "./year5MathCurriculum.js";
+import { year5EnglishCurriculum } from "./year5EnglishCurriculum.js";
+import { year5ScienceCurriculum } from "./year5ScienceCurriculum.js";
+import { year5HistoryCurriculum } from "./year5HistoryCurriculum.js";
+import { year5GeographyCurriculum } from "./year5GeographyCurriculum.js";
 import { year3GeographyCurriculum } from "./year3GeographyCurriculum.js";
 import { year1GeographyCurriculum } from "./year1GeographyCurriculum.js";
 import { year2GeographyCurriculum } from "./year2GeographyCurriculum.js";
@@ -35,7 +47,7 @@ import { year3HistoryCurriculum } from "./year3HistoryCurriculum.js";
  */
 export const CURRICULUM_ICON = "🎒";
 
-export const CURRICULUM_YEARS = [1, 2, 3, 4];
+export const CURRICULUM_YEARS = [1, 2, 3, 4, 5];
 
 export const CURRICULUM_SUBJECTS = [
   { id: "math", name: "Maths", icon: "🧮" },
@@ -43,9 +55,31 @@ export const CURRICULUM_SUBJECTS = [
   { id: "geography", name: "Geography", icon: "🌍" },
   { id: "science", name: "Science", icon: "🔬" },
   { id: "history", name: "History", icon: "🏛️" },
+  { id: "art", name: "Art & Design", icon: "🎨" },
+  { id: "computing", name: "Computing", icon: "💻" },
+  { id: "design", name: "Design & Technology", icon: "🛠️" },
+  { id: "french", name: "French", icon: "🥖" },
+  { id: "music", name: "Music", icon: "🎵" },
+  { id: "pe", name: "PE", icon: "⚽" },
+  { id: "wellbeing", name: "Relationships & Health", icon: "💛" },
 ];
 
 const CURRICULA = [
+  // Year 5 (docs/curriculum/year-5-*.md, key-stage-2-*.md), built 2026-11.
+  { year: 5, subject: "math", available: true, load: () => year5MathCurriculum },
+  { year: 5, subject: "english", available: true, load: () => year5EnglishCurriculum },
+  { year: 5, subject: "science", available: true, load: () => year5ScienceCurriculum },
+  { year: 5, subject: "history", available: true, load: () => year5HistoryCurriculum },
+  { year: 5, subject: "geography", available: true, countsTowardYear: false, load: () => year5GeographyCurriculum },
+  // The other compulsory KS2 subjects (docs/curriculum/key-stage-2-*.md and
+  // primary-relationships-and-health-education.md) stay outside year awards.
+  { year: 5, subject: "art", available: true, countsTowardYear: false, load: () => year5ArtCurriculum },
+  { year: 5, subject: "computing", available: true, countsTowardYear: false, load: () => year5ComputingCurriculum },
+  { year: 5, subject: "design", available: true, countsTowardYear: false, load: () => year5DesignCurriculum },
+  { year: 5, subject: "french", available: true, countsTowardYear: false, load: () => year5FrenchCurriculum },
+  { year: 5, subject: "music", available: true, countsTowardYear: false, load: () => year5MusicCurriculum },
+  { year: 5, subject: "pe", available: true, countsTowardYear: false, load: () => year5PeCurriculum },
+  { year: 5, subject: "wellbeing", available: true, countsTowardYear: false, load: () => year5WellbeingCurriculum },
   // Geography is excluded from existing overall year awards.
   { year: 1, subject: "geography", available: true, countsTowardYear: false, load: () => year1GeographyCurriculum },
   { year: 2, subject: "geography", available: true, countsTowardYear: false, load: () => year2GeographyCurriculum },

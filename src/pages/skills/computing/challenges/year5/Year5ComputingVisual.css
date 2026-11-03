@@ -1,0 +1,22 @@
+/* Year 5 Computing figures: the drawing kit is in year5Pictures/pictures.css. */
+.y5-comp-visual { display: grid; gap: .25rem; }
+.y5-comp-visual .y5v-block { stroke: var(--v-ink); stroke-width: 2.5; }
+.y5-comp-visual .y5v-block-data { fill: color-mix(in srgb, var(--v-autumn) 62%, var(--v-paper)); }
+.y5-comp-visual .y5v-block-say { fill: color-mix(in srgb, var(--v-connect) 62%, var(--v-paper)); }
+.y5-comp-visual .y5v-block-loop { fill: color-mix(in srgb, var(--v-wall-2) 62%, var(--v-paper)); }
+.y5-comp-visual .y5v-block-choice { fill: color-mix(in srgb, var(--v-leaf-light) 62%, var(--v-paper)); }
+.y5-comp-visual .y5v-block-move { fill: color-mix(in srgb, var(--v-locate) 62%, var(--v-paper)); }
+.y5-comp-visual .y5v-block-input { fill: color-mix(in srgb, var(--v-blossom) 62%, var(--v-paper)); }
+.y5-comp-visual .y5v-block-other { fill: color-mix(in srgb, var(--v-stone) 62%, var(--v-paper)); }
+.y5-comp-visual .y5v-bar { fill: var(--v-ink); opacity: .55; }
+.y5-comp-visual .y5v-block-text { fill: var(--v-ink); stroke: none; font-weight: 800; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+body.dark .y5-comp-visual .y5v-block-text { fill: var(--dark-bg); }
+body.dark .y5-comp-visual .y5v-block-say { fill: color-mix(in srgb, var(--v-connect) 62%, var(--v-paper)); }
+.y5-comp-visual .y5v-cell { fill: var(--v-leaf-light); stroke: var(--v-ink); stroke-width: 1.5; opacity: .9; }
+.y5-comp-visual .y5v-cell-start { fill: var(--v-wall-2); stroke: var(--v-ink); stroke-width: 3; }
+.y5-comp-visual .y5v-zone { fill: var(--v-sky); stroke: var(--v-ink); stroke-width: 2; stroke-dasharray: 8 6; }
+.y5-comp-visual .y5v-port { fill: var(--v-paper); stroke: var(--v-ink); stroke-width: 2.5; }
+.y5-comp-visual .y5v-port-on { fill: var(--v-leaf-light); stroke: var(--v-ink); stroke-width: 2.5; }
+.y5-comp-visual .y5v-link { fill: var(--v-roof-2); text-decoration: underline; }
+body.dark .y5-comp-visual .y5v-link { fill: var(--v-locate); }
+.y5-comp-visual .y5v-snippet { opacity: .85; font-weight: 600; }

@@ -1,17 +1,18 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { CURRICULUM_GUIDES, GUIDE_SUBJECTS, curriculumGuideFor, findCurriculumGuide } from './curriculumGuides.js';
-import { CURRICULUM_YEARS, CURRICULUM_SUBJECTS, loadCurriculum } from '../src/data/curriculumRegistry.js';
+import { CURRICULUM_YEARS, CURRICULUM_SUBJECTS, isCurriculumAvailable, loadCurriculum } from '../src/data/curriculumRegistry.js';
 import { SKILL_GROUPS } from './skillsCatalog.js';
 import { getPageSeo, PUBLIC_PATHS } from './seo.js';
 
 // Public descriptions must follow actual content, including category identity,
 // rather than silently dropping topics or publishing an unimplemented path.
-test('all twenty public guides cover every category of their implemented pathway', () => {
-  assert.equal(CURRICULUM_GUIDES.length, 20);
-  assert.equal(new Set(CURRICULUM_GUIDES.map(guide => guide.path)).size, 20);
-  assert.equal(new Set(CURRICULUM_GUIDES.map(guide => guide.intro)).size, 20);
+test('all thirty-two public guides cover every category of their implemented pathway', () => {
+  assert.equal(CURRICULUM_GUIDES.length, 32);
+  assert.equal(new Set(CURRICULUM_GUIDES.map(guide => guide.path)).size, 32);
+  assert.equal(new Set(CURRICULUM_GUIDES.map(guide => guide.intro)).size, 32);
   for (const year of CURRICULUM_YEARS) for (const subject of CURRICULUM_SUBJECTS) {
+    if (!isCurriculumAvailable(year, subject.id)) continue;
     const guide = curriculumGuideFor(year, subject.id);
     assert.ok(guide, `missing Year ${year} ${subject.name}`);
     assert.equal(findCurriculumGuide(guide.slug), guide);
@@ -23,7 +24,8 @@ test('all twenty public guides cover every category of their implemented pathway
     }
     assert.ok(GUIDE_SUBJECTS[subject.id].practical);
   }
-  assert.equal(findCurriculumGuide('year-5-maths'), undefined);
+  assert.equal(CURRICULUM_GUIDES.length, CURRICULUM_YEARS.reduce((sum, year) => sum + CURRICULUM_SUBJECTS.filter(subject => isCurriculumAvailable(year, subject.id)).length, 0));
+  assert.equal(findCurriculumGuide('year-6-maths'), undefined);
   assert.equal(curriculumGuideFor(4, 'music'), undefined);
 });
 
@@ -46,10 +48,10 @@ test('free practice only links to existing standalone games and practical gaps s
       assert.equal(guide.games.length, 3);
       for (const game of guide.games) assert.ok(gamePaths.has(game.to), game.to);
     } else {
-      assert.ok(['science', 'history'].includes(guide.subject));
+      assert.ok(['science', 'history', 'art', 'computing', 'design', 'french', 'music', 'pe', 'wellbeing'].includes(guide.subject));
       assert.equal(guide.activities.length, 3);
     }
     if (['geography', 'history'].includes(guide.subject)) assert.ok(guide.alignment.includes('does not cover the whole key stage'));
-    if (guide.subject === 'english' && guide.year >= 3) assert.ok(guide.alignment.includes('shared Years 3–4'));
+    if (guide.subject === 'english' && guide.year >= 3) assert.ok(guide.alignment.includes(guide.year >= 5 ? 'shared Years 5–6' : 'shared Years 3–4'));
   }
 });

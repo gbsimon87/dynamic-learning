@@ -131,10 +131,8 @@ Pupils might work scientifically by: exploring falling paper cones or cup-cake c
 
 # Mapping to our curriculum dataset
 
-> **No Year 5 Science dataset yet.** The app's registered curricula stop at Year 4. When one is built, map each topic
-> here to the statutory bullet it serves, as
-> [year-3-science.md](year-3-science.md) does, and list anything
-> deliberately not covered.
+> Each Year 5 Science topic is mapped to the statutory bullet it serves in the
+> table at the end of this file.
 
 ---
 
@@ -145,3 +143,40 @@ in 2015. This file follows the PDF. Of the differences, 24 are only punctuation,
 (the web page writes “4” where the PDF writes “four”). The others:
 
 - …explanations of and — PDF: *(nothing)*; web page: “a”
+
+## Topics mapped to statutory requirements
+
+Every Year 5 statutory bullet in the four content strands has at least one topic. *Working scientifically* is not a topic of its own: challenge 4 of every topic is an applied enquiry (fair tests and variables, supplied results tables, repeat readings, conclusions, evidence versus opinion, secondary sources).
+
+| Category | Topic (stable ID) | Statutory requirement served |
+|---|---|---|
+| Living things and their habitats | Mammal and Bird Life Cycles (`mammal-and-bird-life-cycles`) | describe the differences in the life cycles of a mammal, an amphibian, an insect and a bird |
+| Living things and their habitats | Amphibian and Insect Life Cycles (`amphibian-and-insect-life-cycles`) | describe the differences in the life cycles of a mammal, an amphibian, an insect and a bird |
+| Living things and their habitats | Comparing Life Cycles (`comparing-life-cycles`) | describe the differences in the life cycles of a mammal, an amphibian, an insect and a bird |
+| Living things and their habitats | Reproduction in Plants (`reproduction-in-plants`) | describe the life process of reproduction in some plants and animals |
+| Living things and their habitats | Reproduction in Animals (`reproduction-in-animals`) | describe the life process of reproduction in some plants and animals |
+| Animals, including humans | Stages of Human Growth (`stages-of-human-growth`) | describe the changes as humans develop to old age |
+| Animals, including humans | Changes During Puberty (`changes-during-puberty`) | describe the changes as humans develop to old age |
+| Animals, including humans | Growing Older (`growing-older`) | describe the changes as humans develop to old age |
+| Properties and changes of materials | Properties of Materials (`properties-of-materials`) | compare and group together everyday materials on the basis of their properties, including their hardness, solubility, transparency, conductivity (electrical and thermal), and response to magnets |
+| Properties and changes of materials | Conductors of Heat and Electricity (`conductors-of-heat-and-electricity`) | compare and group together everyday materials on the basis of their properties, including their hardness, solubility, transparency, conductivity (electrical and thermal), and response to magnets |
+| Properties and changes of materials | Choosing Materials for a Job (`choosing-materials-for-a-job`) | give reasons, based on evidence from comparative and fair tests, for the particular uses of everyday materials, including metals, wood and plastic |
+| Properties and changes of materials | Dissolving and Solutions (`dissolving-and-solutions`) | know that some materials will dissolve in liquid to form a solution, and describe how to recover a substance from a solution |
+| Properties and changes of materials | Separating Mixtures (`separating-mixtures`) | use knowledge of solids, liquids and gases to decide how mixtures might be separated, including through filtering, sieving and evaporating |
+| Properties and changes of materials | Reversible Changes (`reversible-changes`) | demonstrate that dissolving, mixing and changes of state are reversible changes |
+| Properties and changes of materials | Irreversible Changes (`irreversible-changes`) | explain that some changes result in the formation of new materials, and that this kind of change is not usually reversible, including changes associated with burning and the action of acid on bicarbonate of soda |
+| Earth and space | The Solar System (`the-solar-system`) | describe the movement of the Earth, and other planets, relative to the Sun in the solar system (the Sun, its eight planets and moons, from the non-statutory notes) |
+| Earth and space | Planets and Orbits (`planets-and-orbits`) | describe the movement of the Earth, and other planets, relative to the Sun in the solar system |
+| Earth and space | Sun, Earth and Moon (`sun-earth-and-moon`) | describe the Sun, Earth and Moon as approximately spherical bodies; describe the movement of the Moon relative to the Earth |
+| Earth and space | Day and Night (`day-and-night`) | use the idea of the Earth’s rotation to explain day and night and the apparent movement of the sun across the sky |
+| Earth and space | Phases of the Moon (`phases-of-the-moon`) | describe the movement of the Moon relative to the Earth |
+| Forces | Gravity (`gravity`) | explain that unsupported objects fall towards the Earth because of the force of gravity acting between the Earth and the falling object |
+| Forces | Air and Water Resistance (`air-and-water-resistance`) | identify the effects of air resistance, water resistance and friction, that act between moving surfaces |
+| Forces | Friction (`friction`) | identify the effects of air resistance, water resistance and friction, that act between moving surfaces |
+| Forces | Levers, Pulleys and Gears (`levers-pulleys-and-gears`) | recognise that some mechanisms, including levers, pulleys and gears, allow a smaller force to have a greater effect |
+
+Not covered, deliberately:
+
+- *Working scientifically*: recording data as scatter graphs and line graphs (challenges use supplied tables and diagrams only), and using classification keys (taught in Year 4); no practical measuring or making is possible in the app.
+- Non-statutory notes that need real-world activity: studying the local environment through the year, growing plants from cuttings, hatching chicks, building shadow clocks and sundials, and visiting Stonehenge. The ideas behind them (cuttings, shadows over a day, life-cycle observation) are asked about in challenges.
+- Puberty is covered factually (growth, hygiene, moods and the order and timing of changes) and does not extend to sex education; see [primary-relationships-and-health-education.md](primary-relationships-and-health-education.md).

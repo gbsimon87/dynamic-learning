@@ -1,0 +1,5 @@
+/* Year 5 Science figures: the drawing kit is in year5Pictures/pictures.css. */
+.y5-sci-visual { display: grid; gap: .25rem; }
+.y5-sci-visual .y5v-thick { stroke-width: 6; }
+.y5-sci-visual .y5v-light-arrow { stroke: var(--v-on-night); }
+.y5-sci-visual .y5v-light-arrow + .y5v-arrow-head { fill: var(--v-on-night); }

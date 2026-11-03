@@ -37,7 +37,7 @@ test("Year 3 Geography locks all 16 topic IDs, 64 wrapper paths, four slots and 
 test("Geography preserves Year 3 award requirements and rejects an unknown year", () => {
   assert.equal(countsTowardYear(3,"geography"),false);
   assert.deepEqual(yearAwardSubjectIds(3),["math","english","science","history"]);
-  assert.equal(loadCurriculum(5,"geography"),null);
+  assert.equal(loadCurriculum(6,"geography"),null);
 });
 
 test("all geography challenges cascade through topics/categories, survive reload, and remain replayable", () => {

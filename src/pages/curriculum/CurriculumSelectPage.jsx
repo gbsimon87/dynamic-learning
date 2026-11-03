@@ -34,6 +34,13 @@ const SUBJECT_LOOKS = {
   geography: { hue: "--cs-hue-geography", deep: "--cs-deep-geography" },
   science: { hue: "--cs-hue-science", deep: "--cs-deep-science" },
   history: { hue: "--cs-hue-history", deep: "--cs-deep-history" },
+  art: { hue: "--cs-hue-art", deep: "--cs-deep-art" },
+  computing: { hue: "--cs-hue-computing", deep: "--cs-deep-computing" },
+  design: { hue: "--cs-hue-design", deep: "--cs-deep-design" },
+  french: { hue: "--cs-hue-french", deep: "--cs-deep-french" },
+  music: { hue: "--cs-hue-music", deep: "--cs-deep-music" },
+  pe: { hue: "--cs-hue-pe", deep: "--cs-deep-pe" },
+  wellbeing: { hue: "--cs-hue-wellbeing", deep: "--cs-deep-wellbeing" },
 };
 
 const FALLBACK_LOOK = { hue: "--cs-hue-math", deep: "--cs-deep-math" };

@@ -46,6 +46,8 @@ import {
  *     return <DataChallenge level={2} build={buildMyTopic} titles={TITLES} onComplete={onComplete} />;
  *   }
  *
+ * A question may carry `speakLang` ("fr-FR") and `speakLabel` so its 🔊 button speaks
+ * in another language, for example French.
  * `renderVisual(question)` optionally supplies a read-only diagram before the
  * answer control. `checkAnswer` optionally adds subject-specific validation.
  * `readAloud` forces ChallengeShell's "Read it to me" button on or off.
@@ -103,7 +105,7 @@ export function DataRound({ question: q, submit, locked, hint, renderVisual, che
     return (
       <ScienceRound
         prompt={promptText && <p className="challenge-prompt"><Rich text={promptText} /></p>}
-        speak={q.speak} speakLabel="Read the question"
+        speak={q.speak} speakLabel={q.speakLabel ?? "Read the question"} speakLang={q.speakLang}
         figure={q.visual || q.table ? renderVisual?.(q) : null}
         evidence={evidence.length ? evidence : null}
         hint={hint && q.hint && <HintNote><Rich text={q.hint} /></HintNote>}
@@ -125,7 +127,7 @@ export function DataRound({ question: q, submit, locked, hint, renderVisual, che
       {(q.prompt || q.speak) && (
         <div className="english-prompt-row">
           {q.prompt && <p className="challenge-prompt"><Rich text={q.prompt} /></p>}
-          {q.speak && <SpeakButton text={q.speak} compact label="Read the question" />}
+          {q.speak && <SpeakButton text={q.speak} compact label={q.speakLabel ?? "Read the question"} lang={q.speakLang} />}
         </div>
       )}
 

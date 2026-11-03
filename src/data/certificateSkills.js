@@ -31,9 +31,34 @@ import { YEAR2_HISTORY_TOPIC_SKILLS } from "./year2HistoryCertificateSkills.js";
 import { YEAR1_HISTORY_TOPIC_SKILLS } from "./year1HistoryCertificateSkills.js";
 import { YEAR3_HISTORY_TOPIC_SKILLS } from "./year3HistoryCertificateSkills.js";
 
+import { YEAR5_MATH_TOPIC_SKILLS } from "./year5MathCertificateSkills.js";
+import { YEAR5_ENGLISH_TOPIC_SKILLS } from "./year5EnglishCertificateSkills.js";
+import { YEAR5_SCIENCE_TOPIC_SKILLS } from "./year5ScienceCertificateSkills.js";
+import { YEAR5_HISTORY_TOPIC_SKILLS } from "./year5HistoryCertificateSkills.js";
+import { YEAR5_GEOGRAPHY_TOPIC_SKILLS } from "./year5GeographyCertificateSkills.js";
+import { YEAR5_ART_TOPIC_SKILLS } from "./year5ArtCertificateSkills.js";
+import { YEAR5_COMPUTING_TOPIC_SKILLS } from "./year5ComputingCertificateSkills.js";
+import { YEAR5_DESIGN_TOPIC_SKILLS } from "./year5DesignCertificateSkills.js";
+import { YEAR5_FRENCH_TOPIC_SKILLS } from "./year5FrenchCertificateSkills.js";
+import { YEAR5_MUSIC_TOPIC_SKILLS } from "./year5MusicCertificateSkills.js";
+import { YEAR5_PE_TOPIC_SKILLS } from "./year5PeCertificateSkills.js";
+import { YEAR5_WELLBEING_TOPIC_SKILLS } from "./year5WellbeingCertificateSkills.js";
+
 export const SKILL_STATEMENT_MAX = 80;
 
 export const TOPIC_SKILLS = {
+  ...YEAR5_MATH_TOPIC_SKILLS,
+  ...YEAR5_ENGLISH_TOPIC_SKILLS,
+  ...YEAR5_SCIENCE_TOPIC_SKILLS,
+  ...YEAR5_HISTORY_TOPIC_SKILLS,
+  ...YEAR5_GEOGRAPHY_TOPIC_SKILLS,
+  ...YEAR5_ART_TOPIC_SKILLS,
+  ...YEAR5_COMPUTING_TOPIC_SKILLS,
+  ...YEAR5_DESIGN_TOPIC_SKILLS,
+  ...YEAR5_FRENCH_TOPIC_SKILLS,
+  ...YEAR5_MUSIC_TOPIC_SKILLS,
+  ...YEAR5_PE_TOPIC_SKILLS,
+  ...YEAR5_WELLBEING_TOPIC_SKILLS,
   ...YEAR3_GEOGRAPHY_TOPIC_SKILLS,
   ...YEAR1_GEOGRAPHY_TOPIC_SKILLS,
   ...YEAR2_GEOGRAPHY_TOPIC_SKILLS,

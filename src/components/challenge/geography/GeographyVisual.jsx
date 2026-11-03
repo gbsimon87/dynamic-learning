@@ -217,6 +217,53 @@ function RiverDrawing({ visual: v }) {
   </svg>;
 }
 
+// Contour map (original drawing): nested rings, one per height. Rings sit close together on the steep side.
+function ContourDrawing({ visual: v }) {
+  const n = v.rings, steep = v.steep;
+  const opposite = { north: "south", south: "north", east: "west", west: "east" };
+  const gap = (side) => (steep === side ? 12 : steep === opposite[side] ? 40 : side === "north" || side === "south" ? 26 : 34);
+  const g = { west: gap("west"), east: gap("east"), north: gap("north"), south: gap("south") };
+  const ring = (i) => { const w = 30 + i * g.west, e = 450 - i * g.east, t = 20 + i * g.north, b = 280 - i * g.south; return { w, e, t, b, cx: (w + e) / 2, cy: (t + b) / 2 }; };
+  const labelSide = steep === "north" ? "south" : "north";
+  // A point on a ring's ellipse. Spots on one side are staggered so close rings never hide a marker.
+  const edge = (r, side, i = 0) => { const t = ({ east: 0, north: 90, west: 180, south: 270 }[side] + (side === "east" || side === "west" ? (i % 2 ? 1 : -1) * 28 : (i % 2 ? 1 : -1) * 0)) * Math.PI / 180; return [r.cx + (r.e - r.w) / 2 * Math.cos(t), r.cy - (r.b - r.t) / 2 * Math.sin(t)]; };
+  const inner = ring(n - 1);
+  return <>
+    <svg viewBox="0 0 480 300" role="img" aria-label={v.alt}>
+      <rect className="geo-land" width="480" height="300" />
+      {Array.from({ length: n }, (_, i) => { const r = ring(i); return <ellipse className="geo-outline" key={i} cx={r.cx} cy={r.cy} rx={(r.e - r.w) / 2} ry={(r.b - r.t) / 2} />; })}
+      {Array.from({ length: n }, (_, i) => { const [x, y] = edge(ring(i), labelSide); return <text className="geo-label geo-small-label geo-halo" key={`h${i}`} x={x} y={y + 5} textAnchor="middle">{v.base + i * v.interval} m</text>; })}
+      <g transform={`translate(${inner.cx},${inner.cy})`}><path className="geo-marker" d="M0,-12 L11,8 L-11,8 Z" /><text className="geo-label geo-small-label geo-halo" y={labelSide === "north" ? 28 : -18} textAnchor="middle">{v.summit} m</text></g>
+      {(v.spots ?? []).map((s) => { const a = ring(s.ring), b = ring(s.ring + (s.between ? 1 : 0)); const [x1, y1] = edge(a, s.side, s.ring), [x2, y2] = edge(b, s.side, s.ring); const x = (x1 + x2) / 2, y = (y1 + y2) / 2; return <g key={s.id} transform={`translate(${x},${y})`}><circle className="geo-marker" r="13" /><text className="geo-marker-text" y="7" textAnchor="middle">{s.id}</text></g>; })}
+      <g className="geo-north" transform="translate(452,30)"><path d="M0,22 L0,0 M-6,8 L0,0 L6,8" /><text x="-5" y="-9">N</text></g>
+    </svg>
+    <p className="geo-small">Each ring joins places at the same height. The triangle is the top. Heights are in metres above sea level.</p>
+    {v.spots?.length > 0 && <ul className="geo-key" aria-label="Contour key">{v.spots.map((s) => <li key={s.id}><b>{s.id}</b> {s.label}</li>)}</ul>}
+  </>;
+}
+
+// Coast drawings (original): a cliff cross-section and a plan view with a headland and a bay.
+function CoastDrawing({ visual: v }) {
+  const letters = v.letters ?? false;
+  const spots = v.variant === "plan"
+    ? [[100, 105, "Headland"], [240, 172, "Bay"], [240, 40, "Sea"]]
+    : [[218, 135, "Cliff"], [244, 196, "Wave-cut notch", 224, 222, "end"], [340, 218, "Wave-cut platform", 340, 258, "middle"], [420, 130, "Waves"]];
+  return <svg viewBox="0 0 480 300" role="img" aria-label={v.alt}>
+    <rect className="geo-sky" width="480" height="300" />
+    {v.variant === "plan" ? <>
+      <rect className="geo-water" width="480" height="300" />
+      <path className="geo-land" d="M0,300 L0,160 C30,160 50,70 100,70 C150,70 170,190 240,190 C310,190 330,70 380,70 C430,70 450,160 480,160 L480,300 Z" />
+      <path className="geo-outline" d="M40,22 L40,48 M32,40 L40,48 L48,40 M440,22 L440,48 M432,40 L440,48 L448,40" />
+    </> : <>
+      <rect className="geo-water" x="230" y="190" width="250" height="110" />
+      <path className="geo-land" d="M0,300 L0,85 L232,85 L232,185 Q222,196 240,203 L400,225 L480,228 L480,300 Z" />
+      <path className="geo-outline" d="M232,85 L232,185 Q222,196 240,203 L400,225" />
+      <path className="geo-outline" d="M300,175 Q330,165 360,175 T420,175 M300,160 Q330,150 360,160 T420,160" />
+    </>}
+    {spots.map(([x, y, w, lx, ly, anchor], i) => <g key={w + i}><circle className="geo-marker" cx={x} cy={y} r="13" /><text className="geo-marker-text" x={x} y={y + 7} textAnchor="middle">{letters ? "ABCD"[i] : i + 1}</text>{!letters && <text className="geo-label geo-small-label geo-halo" x={lx ?? (x > 330 ? x - 18 : x + 18)} y={ly ?? y - 14} textAnchor={anchor ?? (x > 330 ? "end" : "start")}>{w}</text>}</g>)}
+  </svg>;
+}
+
 function DayNightDrawing({ visual: v }) {
   // Earth seen from above the North Pole: the Sun is on the left, Earth turns anticlockwise (east is anticlockwise).
   const at = (lon, r = 140) => { const a = (200 + lon) * Math.PI / 180; return [240 + r * Math.cos(a), 175 - r * Math.sin(a)]; };
@@ -314,6 +361,8 @@ function Drawing({ visual: v }) {
     {v.type === "table" && <TableDrawing visual={v} />}
     {v.type === "river" && <RiverDrawing visual={v} />}
     {v.type === "daynight" && <DayNightDrawing visual={v} />}
+    {v.type === "contour" && <ContourDrawing visual={v} />}
+    {v.type === "coast" && <CoastDrawing visual={v} />}
     {v.type === "landuse" && <LandUseDrawing visual={v} />}
     {v.type === "explorer" && <MapExplorer key={v.alt} visual={v} />}
     {v.type === "coordinates" && <CoordinateDrawing visual={v} />}

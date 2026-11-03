@@ -3,7 +3,7 @@ import { shuffle, order } from "../year1Math/shared.js";
 export const GEOGRAPHY_TITLES = ["Explore", "Locate and read", "Use evidence", "Connect and explain"];
 export const GEOGRAPHY_AGE = { notesWords: 60, sentenceWords: 16, rounds: 5, minBank: 7 };
 /** Per-year limits from shared spec §3. Year 4 allows slightly longer notes and sentences. */
-export const GEOGRAPHY_AGES = { 1: { notesWords: 30, sentenceWords: 10, rounds: 4, minBank: 6 }, 2: { notesWords: 45, sentenceWords: 12, rounds: 5, minBank: 7 }, 3: GEOGRAPHY_AGE, 4: { notesWords: 70, sentenceWords: 18, rounds: 5, minBank: 7 } };
+export const GEOGRAPHY_AGES = { 1: { notesWords: 30, sentenceWords: 10, rounds: 4, minBank: 6 }, 2: { notesWords: 45, sentenceWords: 12, rounds: 5, minBank: 7 }, 3: GEOGRAPHY_AGE, 4: { notesWords: 70, sentenceWords: 18, rounds: 5, minBank: 7 }, 5: { notesWords: 70, sentenceWords: 18, rounds: 5, minBank: 7 } };
 
 /** Evidence is kept with its question, including the exact supporting lines and source IDs. */
 export function buildGeographyTopic(topic) {
@@ -29,7 +29,7 @@ const list = (value) => Array.isArray(value) ? value : [];
 const text = (value) => typeof value === "string" && value.trim().length > 0;
 const pair = (value) => Array.isArray(value) && value.length === 2 && value.every(Number.isFinite);
 const owns = (registry, id) => typeof id === "string" && registry != null && Object.hasOwn(registry, id);
-const visualTypes = new Set(["record", "photo", "map", "globe", "grid", "plan", "coordinates", "flow", "mountain", "volcano", "fault", "compass", "climate", "table", "river", "daynight", "landuse", "explorer", "ks1", "y1"]);
+const visualTypes = new Set(["record", "photo", "map", "globe", "grid", "plan", "coordinates", "flow", "mountain", "volcano", "fault", "compass", "climate", "table", "river", "daynight", "landuse", "explorer", "ks1", "y1", "contour", "coast"]);
 const Y1_ARTS = new Set(["cards", "scene", "uk", "world", "globe", "views", "grid", "compass", "viewpoint", "weather", "outside", "seasons"]);
 const mapViews = new Set(["world", "uk", "europe", "italy", "campania", "lake", "northAmerica", "southAmerica", "washington"]);
 export function lintGeographyTopic(topic, sources, assets) {
@@ -103,6 +103,13 @@ export function lintGeographyTopic(topic, sources, assets) {
     if (v.type === "globe") {
       for (const p of [...list(v.referenceLines), ...list(v.points)]) need(Number.isFinite(p?.lat) && Math.abs(p.lat) <= 90, `${at}: invalid latitude`);
     }
+    if (v.type === "contour") {
+      need(Number.isInteger(v.rings) && v.rings >= 2 && v.rings <= 5 && Number.isFinite(v.interval) && v.interval > 0 && Number.isFinite(v.base), `${at}: contour needs rings 2 to 5, an interval and a base height`);
+      need([undefined, "north", "south", "east", "west"].includes(v.steep), `${at}: unknown steep side`);
+      need(Number.isFinite(v.summit) && v.summit > v.base + (v.rings - 1) * v.interval, `${at}: summit must be above the highest contour`);
+      for (const m of list(v.spots)) need(text(m?.id) && text(m?.label) && ["north", "south", "east", "west"].includes(m?.side) && Number.isInteger(m?.ring) && m.ring >= 0 && m.ring < v.rings - (m?.between ? 1 : 0), `${at}: invalid contour spot`);
+    }
+    if (v.type === "coast") need(["profile", "plan"].includes(v.variant), `${at}: unknown coast variant`);
     if (v.type === "flow") need(list(v.steps).length > 0 && v.steps.every(text), `${at}: flow needs steps`);
     if (v.type === "climate") {
       need(list(v.rows).length > 0, `${at}: climate needs rows`);

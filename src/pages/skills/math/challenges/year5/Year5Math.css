@@ -1,0 +1,81 @@
+/* Year 5 Maths drawings. Colours come only from the theme tokens in App.css, in both themes. */
+.year5-diagram, .year5-table, .year5-column, .year5-busstop, .year5-figure, .year5-grid-wrap {
+  --y5-ink: var(--light-text);
+  --y5-panel: var(--light-panel);
+  --y5-accent: var(--light-accent);
+  color: var(--y5-ink);
+}
+.dark .year5-diagram, .dark .year5-table, .dark .year5-column, .dark .year5-busstop, .dark .year5-figure, .dark .year5-grid-wrap {
+  --y5-ink: var(--dark-text);
+  --y5-panel: var(--dark-panel);
+  --y5-accent: var(--dark-accent);
+}
+.year5-diagram { display: block; width: 100%; max-width: 420px; max-height: 380px; margin: 1rem auto; overflow: visible; }
+.year5-diagram text { fill: var(--y5-ink); font-size: 17px; text-anchor: middle; }
+.year5-diagram .year5-small { font-size: 13px; }
+.year5-diagram .year5-left { text-anchor: start; }
+.year5-diagram .year5-tick { font-size: 10px; }
+.year5-diagram .year5-tick-inner { font-size: 9px; opacity: .8; }
+.year5-diagram .year5-unknown { font-weight: 700; fill: var(--y5-accent); font-size: 24px; }
+.year5-diagram .year5-point-label { text-anchor: start; font-weight: 700; font-size: 16px; }
+.year5-diagram .year5-mirror-label { font-weight: 700; fill: var(--y5-accent); font-size: 15px; }
+.year5-wide { max-width: 100%; }
+.year5-square { max-width: 260px; }
+.year5-stroke { fill: none; stroke: var(--y5-ink); stroke-width: 3; }
+.year5-thin { fill: none; stroke: var(--y5-ink); stroke-width: 1.2; }
+.year5-accent-stroke { fill: none; stroke: var(--y5-accent); stroke-width: 3; }
+.year5-accent-fill { fill: var(--y5-accent); }
+.year5-fill { fill: var(--y5-ink); }
+.year5-dashed { fill: none; stroke: var(--y5-ink); stroke-width: 2; stroke-dasharray: 6 5; opacity: .7; }
+.year5-dashed-line { stroke-dasharray: 7 5; }
+.year5-gridline { fill: none; stroke: var(--y5-ink); opacity: .22; stroke-width: 1; }
+.year5-grid { fill: none; stroke: var(--y5-ink); opacity: .5; stroke-width: 1; }
+.year5-filled { fill: var(--y5-accent); stroke: var(--y5-ink); stroke-width: 1.2; }
+.year5-part { fill: var(--y5-accent); fill-opacity: .35; stroke: var(--y5-ink); stroke-width: 1.2; }
+.year5-empty { fill: var(--y5-panel); stroke: var(--y5-ink); stroke-width: 1.5; }
+.year5-face-top { fill: var(--y5-panel); stroke: var(--y5-ink); stroke-width: 2; }
+.year5-face-left { fill: var(--y5-accent); fill-opacity: .25; stroke: var(--y5-ink); stroke-width: 2; }
+.year5-face-right { fill: var(--y5-accent); fill-opacity: .5; stroke: var(--y5-ink); stroke-width: 2; }
+.year5-protractor { fill: var(--y5-panel); fill-opacity: .55; stroke: var(--y5-ink); stroke-width: 1.5; }
+.year5-shape { fill: var(--y5-accent); fill-opacity: .4; stroke: var(--y5-ink); stroke-width: 2.5; }
+.year5-shape-image { fill: var(--y5-accent); fill-opacity: .15; stroke: var(--y5-ink); stroke-width: 2.5; stroke-dasharray: 6 4; }
+.year5-mirror { fill: none; stroke: var(--y5-accent); stroke-width: 3; stroke-dasharray: 9 6; }
+.year5-figure { margin: 1rem 0; }
+.year5-figure figcaption { text-align: center; max-width: 440px; margin: 0 auto; overflow-wrap: anywhere; }
+.year5-scroll { max-width: 100%; overflow-x: auto; }
+.year5-scroll .year5-wide { min-width: 420px; }
+.year5-linegraph { max-height: none; max-width: 520px; }
+.year5-angle { max-width: 380px; }
+
+.year5-table { border-collapse: collapse; margin: 1rem auto; width: 100%; max-width: 560px; }
+.year5-table caption { padding: .4rem; font-weight: 700; }
+.year5-table th, .year5-table td { border: 1px solid currentColor; padding: .6rem .45rem; text-align: center; font-size: 1.05rem; }
+.year5-table th { overflow-wrap: normal; word-break: keep-all; hyphens: none; }
+.year5-table td { overflow-wrap: anywhere; }
+.year5-table td { font-size: 1.3rem; font-weight: 700; }
+.year5-table .year5-dot { border-style: none; width: .6rem; padding: 0; font-size: 1.6rem; }
+
+.year5-column { width: min(100%, calc(var(--n, 4) * 3.2rem + 3rem)); box-sizing: border-box; padding-left: 2rem; margin: 1rem auto; font-family: monospace; font-size: 1.9rem; text-align: center; }
+.year5-column-row { display: grid; grid-template-columns: repeat(var(--n, 4), 1fr); }
+.year5-column-labels { font-size: .85rem; }
+.year5-column-second { position: relative; border-bottom: 3px solid currentColor; }
+.year5-column-op { position: absolute; left: -1.5rem; }
+
+.year5-busstop { display: flex; justify-content: center; align-items: stretch; margin: 1.25rem auto; font-family: monospace; font-size: 2.2rem; }
+.year5-busstop-divisor { padding: .35rem .8rem .2rem .2rem; align-self: flex-end; }
+.year5-busstop-dividend { display: flex; gap: .55rem; border-left: 3px solid currentColor; border-top: 3px solid currentColor; padding: .35rem .8rem .2rem .8rem; border-top-left-radius: 10px; }
+
+.year5-grid-wrap { position: relative; width: 100%; min-width: 400px; max-width: 480px; margin: 0 auto; }
+.year5-grid-wrap .year5-diagram { margin: 0; max-width: none; max-height: none; width: 100%; height: auto; }
+.year5-lattice { position: absolute; display: grid; }
+.year5-lattice button { color: var(--y5-ink); background: transparent; border: 0; padding: 0; margin: 0; min-width: 44px; min-height: 44px; font-size: 1.4rem; cursor: pointer; border-radius: 50%; }
+.year5-lattice button[aria-pressed='true'] { background: var(--y5-accent); outline: 2px solid var(--y5-ink); }
+.year5-lattice button:focus-visible { outline: 3px solid var(--y5-ink); outline-offset: -3px; }
+
+.year5-angle-controls { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; margin: .5rem 0 1rem; }
+.year5-angle-controls button { min-width: 64px; min-height: 48px; margin: 0; font-size: 1.15rem; border-radius: 12px; cursor: pointer; border: 2px solid var(--light-text); background: var(--light-panel); color: var(--light-text); }
+.dark .year5-angle-controls button { border-color: var(--dark-text); background: var(--dark-panel); color: var(--dark-text); }
+.year5-angle-controls button:focus-visible { outline: 3px solid var(--light-accent); outline-offset: 2px; }
+.year5-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.year5-hint { margin: .7rem 0; }
+@media (max-width: 380px) { .year5-table th, .year5-table td { font-size: .85rem; } }

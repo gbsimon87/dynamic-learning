@@ -1,0 +1,11 @@
+import ReadingTopicGame from "../year3/ReadingTopicGame";
+import { buildSimilesAndMetaphorsQuestions } from "../../../../../data/challenges/english/year5SimilesAndMetaphors";
+const TITLES = [
+  "Read the short extract.",
+  "Sort the details.",
+  "Tap the evidence in the text.",
+  "Read the whole text and apply what you know."
+];
+export default function SimilesAndMetaphorsGame({ level, onComplete }) {
+  return <ReadingTopicGame level={level} build={buildSimilesAndMetaphorsQuestions} titles={TITLES} onComplete={onComplete} />;
+}

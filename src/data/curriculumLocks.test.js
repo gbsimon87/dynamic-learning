@@ -179,6 +179,8 @@ test("all access is open for fresh, partial and out-of-order saved progress", ()
 
 for (const year of CURRICULUM_YEARS) {
   for (const { id: subject } of CURRICULUM_SUBJECTS) {
+    // Newer subjects start in Year 5, so only registered pairs are checked.
+    if (!loadCurriculum(year, subject)) continue;
     test(`Year ${year} ${subject}: all registered categories, topics and challenges are open`, () => {
       const curriculum = loadCurriculum(year, subject);
       assert.ok(curriculum?.length);

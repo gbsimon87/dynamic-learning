@@ -1,0 +1,96 @@
+/* Shared drawing kit for the Year 5 Science, French, Computing and Wellbeing figures.
+   Every hue is a --light-geo-* / --dark-geo-* token from App.css. Meaning always stays in
+   words, shapes and ticks; colour only adds life. */
+.y5v {
+  --v-sky: var(--light-geo-sky); --v-sea: var(--light-geo-sea); --v-sea-deep: var(--light-geo-sea-deep); --v-foam: var(--light-geo-foam);
+  --v-grass: var(--light-geo-grass); --v-leaf: var(--light-geo-leaf); --v-leaf-dark: var(--light-geo-leaf-dark); --v-leaf-light: var(--light-geo-leaf-light);
+  --v-sun: var(--light-geo-sun); --v-roof: var(--light-geo-roof); --v-roof-2: var(--light-geo-roof-2); --v-wall: var(--light-geo-wall); --v-wall-2: var(--light-geo-wall-2);
+  --v-trunk: var(--light-geo-trunk); --v-soil: var(--light-geo-soil); --v-rock: var(--light-geo-rock); --v-stone: var(--light-geo-stone); --v-stone-dark: var(--light-geo-stone-dark);
+  --v-cloud: var(--light-geo-cloud); --v-cloud-grey: var(--light-geo-cloud-grey); --v-night: var(--light-geo-night); --v-autumn: var(--light-geo-autumn);
+  --v-blossom: var(--light-geo-blossom); --v-mountain: var(--light-geo-mountain); --v-window: var(--light-geo-window); --v-door: var(--light-geo-door);
+  --v-road: var(--light-geo-road); --v-sand: var(--light-geo-sand); --v-path: var(--light-geo-path);
+  --v-explore: var(--light-geo-explore); --v-locate: var(--light-geo-locate); --v-evidence: var(--light-geo-evidence); --v-connect: var(--light-geo-connect);
+  --v-ink: var(--light-geo-ink); --v-paper: var(--light-geo-paper); --v-label: var(--light-geo-ink); --v-halo: var(--light-geo-paper);
+  --v-star: var(--light-geo-sun); --v-on-night: var(--light-geo-paper);
+  color: var(--v-label);
+  width: 100%;
+}
+body.dark .y5v {
+  --v-sky: var(--dark-geo-sky); --v-sea: var(--dark-geo-sea); --v-sea-deep: var(--dark-geo-sea-deep); --v-foam: var(--dark-geo-foam);
+  --v-grass: var(--dark-geo-grass); --v-leaf: var(--dark-geo-leaf); --v-leaf-dark: var(--dark-geo-leaf-dark); --v-leaf-light: var(--dark-geo-leaf-light);
+  --v-sun: var(--dark-geo-sun); --v-roof: var(--dark-geo-roof); --v-roof-2: var(--dark-geo-roof-2); --v-wall: var(--dark-geo-wall); --v-wall-2: var(--dark-geo-wall-2);
+  --v-trunk: var(--dark-geo-trunk); --v-soil: var(--dark-geo-soil); --v-rock: var(--dark-geo-rock); --v-stone: var(--dark-geo-stone); --v-stone-dark: var(--dark-geo-stone-dark);
+  --v-cloud: var(--dark-geo-cloud); --v-cloud-grey: var(--dark-geo-cloud-grey); --v-night: var(--dark-geo-night); --v-autumn: var(--dark-geo-autumn);
+  --v-blossom: var(--dark-geo-blossom); --v-mountain: var(--dark-geo-mountain); --v-window: var(--dark-geo-window); --v-door: var(--dark-geo-door);
+  --v-road: var(--dark-geo-road); --v-sand: var(--dark-geo-sand); --v-path: var(--dark-geo-path);
+  --v-explore: var(--dark-geo-explore); --v-locate: var(--dark-geo-locate); --v-evidence: var(--dark-geo-evidence); --v-connect: var(--dark-geo-connect);
+  --v-ink: var(--dark-text); --v-paper: var(--dark-geo-paper); --v-label: var(--dark-text); --v-halo: var(--dark-bg);
+  --v-star: var(--dark-geo-sun); --v-on-night: var(--dark-text);
+}
+
+.y5v-figure { margin: .5rem auto 1rem; max-width: 460px; width: 100%; }
+.y5v-figure svg { display: block; width: 100%; height: auto; border-radius: 18px; }
+.y5v-figure figcaption { margin-top: .35rem; font-size: .92rem; line-height: 1.45; text-align: center; }
+.y5v-figure svg :is(path, line, circle, rect, ellipse, polygon) { stroke-linejoin: round; stroke-linecap: round; }
+.y5v-figure text { fill: var(--v-label); font-family: inherit; font-size: 20px; font-weight: 800; paint-order: stroke; stroke: var(--v-halo); stroke-width: 5px; stroke-linejoin: round; }
+.y5v-figure text.y5v-emoji { stroke: none; font-weight: 400; }
+.y5v-figure text.y5v-small { font-size: 19px; }
+.y5v-figure text.y5v-on-night { fill: var(--v-on-night); stroke: var(--v-night); }
+.y5v-figure text.y5v-on-ink { fill: var(--v-paper); stroke: var(--v-ink); stroke-width: 4px; }
+
+/* Backdrops */
+.y5v-sky { fill: var(--v-sky); }
+.y5v-grass { fill: var(--v-grass); }
+.y5v-hill { fill: var(--v-leaf-light); }
+.y5v-sun { fill: var(--v-sun); stroke: var(--v-autumn); stroke-width: 3; }
+.y5v-cloud { fill: var(--v-cloud); }
+.y5v-night { fill: var(--v-night); }
+.y5v-star { fill: var(--v-star); }
+.y5v-water { fill: var(--v-sea); stroke: var(--v-sea-deep); stroke-width: 3; }
+.y5v-room-wall { fill: var(--v-wall); }
+.y5v-floor { fill: var(--v-wall-2); }
+.y5v-road { fill: var(--v-road); }
+.y5v-road-line { stroke: var(--v-paper); stroke-width: 4; stroke-dasharray: 14 10; }
+.y5v-house { fill: var(--v-wall); stroke: var(--v-ink); stroke-width: 2.5; }
+.y5v-roof { fill: var(--v-roof); stroke: var(--v-ink); stroke-width: 2.5; }
+.y5v-roof-2 { fill: var(--v-roof-2); stroke: var(--v-ink); stroke-width: 2.5; }
+.y5v-window { fill: var(--v-window); stroke: var(--v-ink); stroke-width: 2; }
+.y5v-door { fill: var(--v-door); stroke: var(--v-ink); stroke-width: 2; }
+.y5v-paper { fill: var(--v-paper); }
+.y5v-bench { fill: var(--v-stone); stroke: var(--v-stone-dark); stroke-width: 3; }
+
+/* Shapes */
+.y5v-ink { fill: none; stroke: var(--v-ink); stroke-width: 3.5; }
+.y5v-ink-thin { fill: none; stroke: var(--v-ink); stroke-width: 2; }
+.y5v-fill-ink { fill: var(--v-ink); stroke: none; }
+.y5v-bubble { fill: var(--v-paper); stroke: var(--v-ink); stroke-width: 3; }
+.y5v-card { fill: var(--v-paper); stroke: var(--v-ink); stroke-width: 3; }
+.y5v-card-hi { fill: color-mix(in srgb, var(--v-wall-2) 55%, var(--v-paper)); stroke: var(--v-ink); stroke-width: 3; }
+.y5v-card-ask { fill: var(--v-paper); stroke: var(--v-ink); stroke-width: 3; stroke-dasharray: 8 6; }
+.y5v-arrow { fill: none; stroke: var(--v-ink); stroke-width: 4; }
+.y5v-arrow-head { fill: var(--v-ink); stroke: none; }
+.y5v-dot { fill: var(--v-ink); }
+.y5v-dot-ring { fill: var(--v-paper); stroke: var(--v-ink); stroke-width: 3; }
+.y5v-tick { fill: none; stroke: var(--v-evidence); stroke-width: 5; }
+.y5v-mark-ring { fill: color-mix(in srgb, var(--v-wall-2) 55%, var(--v-paper)); stroke: var(--v-ink); stroke-width: 2.5; }
+.y5v-earth { fill: var(--v-sea); stroke: var(--v-ink); stroke-width: 3; }
+.y5v-land { fill: var(--v-leaf); }
+.y5v-moon { fill: var(--v-paper); stroke: var(--v-ink); stroke-width: 3; }
+.y5v-moon-dark { fill: var(--v-night); stroke: var(--v-ink); stroke-width: 3; }
+.y5v-orbit { fill: none; stroke: var(--v-ink); stroke-width: 2; stroke-dasharray: 6 6; opacity: .75; }
+.y5v-pivot { fill: var(--v-roof); stroke: var(--v-ink); stroke-width: 3; }
+.y5v-plank { fill: var(--v-trunk); stroke: var(--v-ink); stroke-width: 3; }
+.y5v-metal { fill: var(--v-stone); stroke: var(--v-ink); stroke-width: 3; }
+.y5v-glass { fill: var(--v-foam); fill-opacity: .55; stroke: var(--v-ink); stroke-width: 3; }
+.y5v-liquid { fill: var(--v-sea); fill-opacity: .75; }
+.y5v-solid { fill: var(--v-sand); stroke: var(--v-ink); stroke-width: 1.5; }
+.y5v-rope { fill: none; stroke: var(--v-soil); stroke-width: 4; }
+.y5v-explore { fill: var(--v-explore); stroke: var(--v-ink); stroke-width: 3; }
+.y5v-locate { fill: var(--v-locate); stroke: var(--v-ink); stroke-width: 3; }
+.y5v-evidence { fill: var(--v-evidence); stroke: var(--v-ink); stroke-width: 3; }
+.y5v-connect { fill: var(--v-connect); stroke: var(--v-ink); stroke-width: 3; }
+.y5v-sunny { fill: var(--v-sun); stroke: var(--v-ink); stroke-width: 3; }
+.y5v-on-colour { fill: var(--v-paper); stroke: var(--v-ink); stroke-width: 4px; }
+.y5v-figure .y5v-light-arrow { stroke: var(--v-on-night); }
+.y5v-figure .y5v-light-arrow + .y5v-arrow-head { fill: var(--v-on-night); }
+.y5v-figure .y5v-thick { stroke-width: 6; }

@@ -72,6 +72,62 @@ Set out per key stage, not per year, like Geography.
 | [key-stage-2-history.md](key-stage-2-history.md) | Key stage 2 (years 3 to 6), with the purpose of study and aims |
 | [key-stage-3-history.md](key-stage-3-history.md) | Key stage 3 (years 7 to 9), kept for reference only: beyond the app's years, it shows where key stage 2 periods lead |
 
+### Other foundation subjects (key stage 2)
+
+Set out per key stage, like Geography and History, so years 5 and 6 share the
+key stage 2 programme with years 3 and 4. Only key stage 2 is saved. Each
+follows its subject's DfE PDF, retrieved 2026-11-02. Year 5 topics exist for
+all of them (2026-11-03), mapped at the end of each file.
+
+| File | Covers |
+|---|---|
+| [key-stage-2-art-and-design.md](key-stage-2-art-and-design.md) | Key stage 2, with the purpose of study and aims |
+| [key-stage-2-computing.md](key-stage-2-computing.md) | Key stage 2, with the purpose of study and aims |
+| [key-stage-2-design-and-technology.md](key-stage-2-design-and-technology.md) | Key stage 2, with the purpose of study and aims, and key stage 2 *Cooking and nutrition* |
+| [key-stage-2-languages.md](key-stage-2-languages.md) | Key stage 2 (‘foreign language’), the only primary key stage it is statutory in |
+| [key-stage-2-music.md](key-stage-2-music.md) | Key stage 2, with the purpose of study and aims |
+| [key-stage-2-physical-education.md](key-stage-2-physical-education.md) | Key stage 2, with the purpose of study and aims, and *Swimming and water safety* |
+
+With these, every national curriculum subject that is compulsory at key stage 2
+is saved (Figure 1 of the [primary framework](https://assets.publishing.service.gov.uk/media/5a81a9abe5274a2e8ab55319/PRIMARY_national_curriculum.pdf); Citizenship starts at key stage 3).
+Religious education is also compulsory, but it has no national programme of
+study: it follows a locally agreed syllabus, so there is nothing here to save.
+
+**Our language is French** (decided 2026-11-02). The statute lets schools
+choose; see the mapping in [key-stage-2-languages.md](key-stage-2-languages.md).
+
+### Relationships and health education (statutory guidance)
+
+Compulsory in primary but not a national curriculum subject. It is set by DfE
+statutory guidance, and its content is set "by the end of primary". Year 5
+topics (subject id `wellbeing`) are mapped at the end of the file.
+
+| File | Covers |
+|---|---|
+| [primary-relationships-and-health-education.md](primary-relationships-and-health-education.md) | Primary relationships education and health education content, from the guidance in force from 1 September 2026, with the safeguarding limits for an app |
+
+### Non-statutory official guidance (years 5 and 6)
+
+These are not the specification. Use them for question ideas, sequencing and
+what the Year 6 tests look like, and keep each topic inside the statutory file
+it maps to.
+
+| File | Covers |
+|---|---|
+| [year-5-maths-guidance.md](year-5-maths-guidance.md) | DfE mathematics guidance (2020): Year 5 ready-to-progress criteria and *Making connections* |
+| [year-6-maths-guidance.md](year-6-maths-guidance.md) | DfE mathematics guidance (2020): Year 6 ready-to-progress criteria and *Making connections* |
+| [key-stage-2-maths-test-framework.md](key-stage-2-maths-test-framework.md) | STA key stage 2 maths test framework: test format, content domain codes, cognitive domain, performance descriptor |
+| [key-stage-2-english-reading-test-framework.md](key-stage-2-english-reading-test-framework.md) | STA key stage 2 reading test framework: content domain 2a–2h, cognitive domain, performance descriptor |
+| [key-stage-2-english-gps-test-framework.md](key-stage-2-english-gps-test-framework.md) | STA key stage 2 grammar, punctuation and spelling test framework: content domain, spelling task, performance descriptor |
+| [key-stage-2-music-model-curriculum.md](key-stage-2-music-model-curriculum.md) | DfE Model Music Curriculum (2021): the key stage 2 introduction, then Years 5 and 6 in full |
+| [key-stage-2-languages-french-guidance.md](key-stage-2-languages-french-guidance.md) | Ofsted languages research review (2021): primary context and the features of high-quality phonics, vocabulary and grammar teaching |
+
+### Coming changes
+
+| File | Covers |
+|---|---|
+| [national-curriculum-review-2028.md](national-curriculum-review-2028.md) | Government response to the Curriculum and Assessment Review: a revised national curriculum due spring 2027 for first teaching in September 2028, French core content, primary grammar review, citizenship in primary |
+
 ## How to use these
 
 **Before building a topic**, open the file for its year and find the statutory

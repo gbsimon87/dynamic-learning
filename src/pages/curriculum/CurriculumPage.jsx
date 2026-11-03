@@ -58,7 +58,20 @@ const GEOGRAPHY_GLYPHS = MATHS_GLYPHS.map((glyph, index) => ({
   ...glyph,
   char: ["🌍", "✦", "🧭", "⛰️", "💧", "●", "🗺️", "★", "🌋"][index],
 }));
-const GLYPHS_BY_SUBJECT = { english: ENGLISH_GLYPHS, science: SCIENCE_GLYPHS, history: HISTORY_GLYPHS, geography: GEOGRAPHY_GLYPHS };
+const glyphsOf = (chars) => MATHS_GLYPHS.map((glyph, index) => ({ ...glyph, char: chars[index] }));
+const GLYPHS_BY_SUBJECT = {
+  english: ENGLISH_GLYPHS,
+  science: SCIENCE_GLYPHS,
+  history: HISTORY_GLYPHS,
+  geography: GEOGRAPHY_GLYPHS,
+  art: glyphsOf(["🎨", "✦", "🖌️", "🖼️", "✏️", "●", "🗿", "★", "🌈"]),
+  computing: glyphsOf(["💻", "✦", "🔁", "🌐", "🐞", "●", "🖱️", "★", "🔍"]),
+  design: glyphsOf(["🛠️", "✦", "⚙️", "🔩", "💡", "●", "🍎", "★", "📐"]),
+  french: glyphsOf(["🥖", "✦", "🇫🇷", "💬", "🥐", "●", "🗼", "★", "📖"]),
+  music: glyphsOf(["🎵", "✦", "🥁", "🎹", "🎻", "●", "🎺", "★", "🎼"]),
+  pe: glyphsOf(["⚽", "✦", "🏃", "🏊", "🤸", "●", "🏀", "★", "🏅"]),
+  wellbeing: glyphsOf(["💛", "✦", "🍎", "😴", "🪥", "●", "🤝", "★", "☀️"]),
+};
 
 /* ===== CATEGORY LOOKS =====
    An icon and a colour per category so a child can tell the sections apart at

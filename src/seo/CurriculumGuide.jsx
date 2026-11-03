@@ -34,7 +34,7 @@ function Hero({ guide, curriculum = [] }) {
         <h1>{guide ? `${guide.label} with Bix` : 'What we teach'}</h1>
         <p className="skill-guide-intro">{guide?.intro ?? 'Find your child’s next learning adventure. Take a look around before signing up.'}</p>
         <div className="curriculum-guide-badges">
-          <span>{guide ? `Usually ages ${guide.year + 4}–${guide.year + 5}` : 'Years 1–4 · 5 subjects'}</span>
+          <span>{guide ? `Usually ages ${guide.year + 4}–${guide.year + 5}` : 'Years 1–5 · Maths, English, Science and more'}</span>
           <span>{guide ? `${topicCount} topics · ${curriculum.length} areas` : 'Explore before signing up'}</span>
         </div>
         <Actions />
@@ -60,7 +60,7 @@ export function CurriculumOverview() {
       </nav>
       {CURRICULUM_YEARS.map(year => (
         <section id={`year-${year}`} aria-labelledby={`overview-year-${year}`} key={year}>
-          <p className="curriculum-guide-eyebrow">{year < 3 ? 'First discoveries · Key stage 1' : 'Growing connections · Lower key stage 2'}</p>
+          <p className="curriculum-guide-eyebrow">{year < 3 ? 'First discoveries · Key stage 1' : year < 5 ? 'Growing connections · Lower key stage 2' : 'Bigger ideas · Upper key stage 2'}</p>
           <h2 id={`overview-year-${year}`}>Explore Year {year}</h2>
           <p>Usually ages {year + 4}–{year + 5}. Choose a subject to see what’s inside.</p>
           <div className="curriculum-overview-grid">

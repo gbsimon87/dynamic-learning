@@ -45,6 +45,69 @@ export const GUIDE_SUBJECTS = {
     "eyebrow": "The past has a story to tell",
     "practical": "Timelines and sources build historical understanding. Talk through different viewpoints together and explore real local history with a grown-up; pictured examples are not a study of your child’s own locality.",
     "introStep": "Explore pictures, short accounts and source clues about the past."
+  },
+  "art": {
+    "name": "Art & Design",
+    "icon": "🎨",
+    "doodle": "Splash!",
+    "caption": "Let’s make something wonderful.",
+    "eyebrow": "Colour, line and a world of makers",
+    "practical": "Bix introduces techniques, vocabulary and famous artists. It cannot assess your child’s own making. Real drawing, painting, printing and modelling, with a grown-up to help with materials, still matter most.",
+    "introStep": "Look closely at artworks, techniques and short explanations."
+  },
+  "computing": {
+    "name": "Computing",
+    "icon": "💻",
+    "doodle": "if … then",
+    "caption": "Let’s think it through.",
+    "eyebrow": "How computers and the web work",
+    "practical": "Pictures and puzzles help rehearse computing ideas, but the app cannot assess your child writing and testing real programs. Make time to build programs, and talk about the sites and apps your family actually uses.",
+    "introStep": "Follow short explanations and worked examples of how computers work."
+  },
+  "design": {
+    "name": "Design & Technology",
+    "icon": "🛠️",
+    "doodle": "Plan · make",
+    "caption": "Let’s work out how it works.",
+    "eyebrow": "Ideas, making and how things work",
+    "practical": "Bix teaches the ideas, safety and vocabulary behind design and making. It cannot show that your child can make, cook or use tools. A grown-up should supervise knives, heat and tools.",
+    "introStep": "Explore pictures, diagrams and short explanations of how things are designed."
+  },
+  "french": {
+    "name": "French",
+    "icon": "🥖",
+    "doodle": "Bonjour!",
+    "caption": "Let’s try some French.",
+    "eyebrow": "New words, new sounds",
+    "practical": "Bix supports vocabulary, grammar and reading. Speaking and listening need real practice with a grown-up or recordings. The app does not assess your child’s pronunciation.",
+    "introStep": "Meet new words and short phrases, with pictures and examples to help."
+  },
+  "music": {
+    "name": "Music",
+    "icon": "🎵",
+    "doodle": "♪ ♫ ♪",
+    "caption": "Can you hear the beat?",
+    "eyebrow": "Rhythm, notes and listening",
+    "practical": "Bix teaches the ideas and vocabulary of music. It cannot assess singing, playing, composing or performing. Sing, clap, play and listen to real music together.",
+    "introStep": "Look at notation and rhythm patterns, with short explanations and examples."
+  },
+  "pe": {
+    "name": "PE",
+    "icon": "⚽",
+    "doodle": "Ready, steady…",
+    "caption": "Let’s get moving!",
+    "eyebrow": "Moving well and playing fair",
+    "practical": "Bix teaches the rules, vocabulary and ideas behind PE. It does not assess movement, fitness or swimming, and it does not replace school PE, clubs or swimming lessons. Keep a grown-up close for equipment or anything near water.",
+    "introStep": "Explore pictures, rules and short explanations of sports and movement."
+  },
+  "wellbeing": {
+    "name": "Relationships & Health",
+    "icon": "💛",
+    "doodle": "Be kind",
+    "caption": "Let’s talk it through.",
+    "eyebrow": "Friendships, feelings and healthy habits",
+    "practical": "Bix covers a gentle, age-appropriate part of relationships and health education. Sensitive conversations are best shared at home or school, at a pace that suits your child. Bix cannot replace those conversations.",
+    "introStep": "Read short, calm explanations and think about what you would do."
   }
 };
 
@@ -1594,6 +1657,867 @@ export const CURRICULUM_GUIDES = [
       }
     ],
     "alignment": "Topics are mapped to the National Curriculum in England for key stage 2 (Years 3–6). The year-by-year allocation is Bix’s choice; this path does not cover the whole key stage."
+  },
+  {
+    "year": 5,
+    "subject": "math",
+    "slug": "year-5-maths",
+    "path": "/curriculum-guide/year-5-maths",
+    "label": "Year 5 Maths",
+    "intro": "Millions, fractions and angles. Take a bigger step with numbers, measures and shapes.",
+    "fit": "For children ready for numbers to a million, long multiplication, equivalent fractions and measuring angles.",
+    "areas": [
+      {
+        "categoryId": "number---number-and-place-value",
+        "title": "Number and Place Value",
+        "icon": "🔢",
+        "description": "Read, order, round and count with numbers to a million, including negative numbers and Roman numerals.",
+        "example": "Is 408,215 or 480,125 greater?",
+        "colour": "mint"
+      },
+      {
+        "categoryId": "number---addition-and-subtraction",
+        "title": "Addition and Subtraction",
+        "icon": "➕",
+        "description": "Use column and mental methods with large numbers. Round to check answers and solve multi-step problems.",
+        "example": "Does your answer look sensible when rounded?",
+        "colour": "rose"
+      },
+      {
+        "categoryId": "number---multiplication-and-division",
+        "title": "Multiplication and Division",
+        "icon": "✖️",
+        "description": "Explore factors, multiples, primes, squares and cubes. Use written methods and solve scaling and rate problems.",
+        "example": "Which numbers divide exactly into 36?",
+        "colour": "gold"
+      },
+      {
+        "categoryId": "number---fractions-including-decimals-and-percentages",
+        "title": "Fractions, Decimals and Percentages",
+        "icon": "🍕",
+        "description": "Compare and add fractions, work with mixed numbers and link decimals, thousandths and percentages.",
+        "example": "Is 3/4 the same as 0.75?",
+        "colour": "lilac"
+      },
+      {
+        "categoryId": "measurement",
+        "title": "Measurement",
+        "icon": "📏",
+        "description": "Convert metric units and time, compare metric and imperial measures and find perimeter and area.",
+        "example": "How many millilitres are in 2.5 litres?",
+        "colour": "mint"
+      },
+      {
+        "categoryId": "geometry-properties-of-shapes",
+        "title": "Properties of Shapes",
+        "icon": "📐",
+        "description": "Estimate, measure and draw angles. Explore angles on lines and at a point, and regular and irregular polygons.",
+        "example": "Do these angles make a straight line?",
+        "colour": "rose"
+      },
+      {
+        "categoryId": "geometry-position-and-direction",
+        "title": "Position and Direction",
+        "icon": "🔁",
+        "description": "Reflect and translate shapes and describe how they move.",
+        "example": "Slide the shape 3 right and 2 up.",
+        "colour": "gold"
+      },
+      {
+        "categoryId": "statistics",
+        "title": "Statistics",
+        "icon": "📊",
+        "description": "Read line graphs, tables and timetables and use them to solve problems.",
+        "example": "What does the steepest part of the line show?",
+        "colour": "lilac"
+      }
+    ],
+    "games": [
+      {
+        "to": "/skills/fraction-fun",
+        "icon": "🍕",
+        "label": "Fraction Fun",
+        "description": "Explore parts of a whole"
+      },
+      {
+        "to": "/skills/arithmetic-practice",
+        "icon": "➕",
+        "label": "Arithmetic Practice",
+        "description": "Warm up with calculations"
+      },
+      {
+        "to": "/skills/measure",
+        "icon": "📏",
+        "label": "Measure It",
+        "description": "Read scales and measures"
+      }
+    ],
+    "alignment": "Topics are mapped to the Year 5 mathematics programme of study for England."
+  },
+  {
+    "year": 5,
+    "subject": "english",
+    "slug": "year-5-english",
+    "path": "/curriculum-guide/year-5-english",
+    "label": "Year 5 English",
+    "intro": "Roots, relative clauses and reasons for your views. Notice how writers choose their words.",
+    "fit": "For children building on paragraphs and story inference, ready for word origins, relative clauses and giving reasons for their opinions.",
+    "areas": [
+      {
+        "categoryId": "spelling---word-endings",
+        "title": "Spelling · Word Endings",
+        "icon": "🔚",
+        "description": "Explore -cious, -tious, -cial, -tial, -ant, -ance, -ent, -ence, -able and -ible.",
+        "example": "Does this word end in -cial or -tial?",
+        "colour": "mint"
+      },
+      {
+        "categoryId": "reading---words-and-meanings",
+        "title": "Reading · Words and Meanings",
+        "icon": "🔍",
+        "description": "Look at word roots and origins, use a dictionary and thesaurus and explore similes and metaphors.",
+        "example": "What is the writer comparing?",
+        "colour": "rose"
+      },
+      {
+        "categoryId": "grammar---verbs-and-possibility",
+        "title": "Grammar · Verbs and Possibility",
+        "icon": "🔧",
+        "description": "Make verbs with -ate, -ise and -ify, add verb prefixes and use modal verbs such as might and must.",
+        "example": "Might or must: which is more certain?",
+        "colour": "gold"
+      },
+      {
+        "categoryId": "spelling---silent-letters-and-tricky-words",
+        "title": "Spelling · Silent Letters and Tricky Words",
+        "icon": "🤫",
+        "description": "Spot silent letters and the ei after c pattern. Practise homophones and words that are often misspelt.",
+        "example": "Is it “receive” or “recieve”?",
+        "colour": "lilac"
+      },
+      {
+        "categoryId": "reading---understanding-texts",
+        "title": "Reading · Understanding Texts",
+        "icon": "📖",
+        "description": "Explore thoughts and motives, compare characters and settings, tell fact from opinion and read play scripts.",
+        "example": "Is this a fact or an opinion?",
+        "colour": "mint"
+      },
+      {
+        "categoryId": "grammar---clauses-and-punctuation",
+        "title": "Grammar · Clauses and Punctuation",
+        "icon": "✏️",
+        "description": "Use relative pronouns and relative clauses. Punctuate with brackets, dashes and commas.",
+        "example": "Which word begins the clause?",
+        "colour": "rose"
+      },
+      {
+        "categoryId": "grammar---cohesion-and-tense",
+        "title": "Grammar · Cohesion and Tense",
+        "icon": "🔗",
+        "description": "Link ideas within and between paragraphs and explore the past perfect.",
+        "example": "Which word links these paragraphs?",
+        "colour": "gold"
+      },
+      {
+        "categoryId": "writing---composition-and-editing",
+        "title": "Writing · Composition and Editing",
+        "icon": "🖊️",
+        "description": "Think about audience and purpose, summarise, use headings and bullet points, then proofread and practise dictation.",
+        "example": "Who is this writing for?",
+        "colour": "lilac"
+      },
+      {
+        "categoryId": "reading---discussion-and-debate",
+        "title": "Reading · Discussion and Debate",
+        "icon": "💬",
+        "description": "Explore how to give reasons for a view and challenge a view courteously.",
+        "example": "How could you disagree politely?",
+        "colour": "mint"
+      }
+    ],
+    "games": [
+      {
+        "to": "/skills/word-builder",
+        "icon": "🔤",
+        "label": "Word Builder",
+        "description": "Put letters together"
+      },
+      {
+        "to": "/skills/sentence-builder",
+        "icon": "📝",
+        "label": "Sentence Builder",
+        "description": "Make a sentence"
+      },
+      {
+        "to": "/skills/synonym-match",
+        "icon": "🦁",
+        "label": "Synonym Safari",
+        "description": "Explore similar meanings"
+      }
+    ],
+    "alignment": "Topics draw on the shared Years 5–6 English programme for England. The reading and spelling split between these years is Bix’s choice; grammar follows the year-specific appendix."
+  },
+  {
+    "year": 5,
+    "subject": "geography",
+    "slug": "year-5-geography",
+    "path": "/curriculum-guide/year-5-geography",
+    "label": "Year 5 Geography",
+    "intro": "From the Highlands to the Amazon. Explore coasts, climates, trade and the maps that connect them.",
+    "fit": "For children ready to compare regions, read climate graphs, use latitude and longitude and plan a simple fieldwork enquiry.",
+    "areas": [
+      {
+        "categoryId": "regions-in-depth",
+        "title": "Regions in Depth",
+        "icon": "🗺️",
+        "description": "Compare Scotland and the Highlands, Andalusia in Spain and the Amazon region of Brazil.",
+        "example": "How is the Amazon region different from the Highlands?",
+        "colour": "mint"
+      },
+      {
+        "categoryId": "coasts-rivers-and-hazards",
+        "title": "Coasts, Rivers and Hazards",
+        "icon": "🌊",
+        "description": "Explore coasts and coastal landforms, rivers in flood and how people live with natural hazards.",
+        "example": "What could happen when a river floods?",
+        "colour": "rose"
+      },
+      {
+        "categoryId": "climate-and-environments",
+        "title": "Climate and Environments",
+        "icon": "🌦️",
+        "description": "Read climate graphs and patterns, then explore biomes and sustainability.",
+        "example": "Which month is the wettest?",
+        "colour": "gold"
+      },
+      {
+        "categoryId": "resources-trade-and-settlement",
+        "title": "Resources, Trade and Settlement",
+        "icon": "🚢",
+        "description": "Explore natural resources, trade links, how settlements grow and change, and economic activity and jobs.",
+        "example": "Where might this product have travelled from?",
+        "colour": "lilac"
+      },
+      {
+        "categoryId": "coordinates-time-and-maps",
+        "title": "Coordinates, Time and Maps",
+        "icon": "🧭",
+        "description": "Use latitude and longitude, time zones, contours, scale and OS maps, then design a fieldwork enquiry.",
+        "example": "What do close-together contour lines show?",
+        "colour": "mint"
+      }
+    ],
+    "games": [
+      {
+        "to": "/skills/world-map",
+        "icon": "🗺️",
+        "label": "World Map",
+        "description": "Explore countries and places"
+      },
+      {
+        "to": "/skills/city-spotlight",
+        "icon": "🏙️",
+        "label": "City Spotlight",
+        "description": "Take a closer look at a city"
+      },
+      {
+        "to": "/skills/find-the-city",
+        "icon": "📍",
+        "label": "Find the City",
+        "description": "Put places on the map"
+      }
+    ],
+    "alignment": "Topics are mapped to the National Curriculum in England for key stage 2 (Years 3–6). The year-by-year allocation is Bix’s choice; this path does not cover the whole key stage."
+  },
+  {
+    "year": 5,
+    "subject": "science",
+    "slug": "year-5-science",
+    "path": "/curriculum-guide/year-5-science",
+    "label": "Year 5 Science",
+    "intro": "Life cycles, mixtures and the Moon. Explore forces and how the world changes.",
+    "fit": "For children ready to use diagrams and supplied results to explain changes, forces and patterns in the world around them.",
+    "areas": [
+      {
+        "categoryId": "living-things-and-their-habitats",
+        "title": "Living things and their habitats",
+        "icon": "🦋",
+        "description": "Compare the life cycles of mammals, birds, amphibians and insects. Explore reproduction in plants and animals.",
+        "example": "Which stage comes after the caterpillar?",
+        "colour": "mint"
+      },
+      {
+        "categoryId": "animals-including-humans",
+        "title": "Animals, including humans",
+        "icon": "🧒",
+        "description": "Explore the stages of human growth, how bodies change during puberty and what happens as people grow older.",
+        "example": "Which stage comes between a baby and an adult?",
+        "colour": "rose"
+      },
+      {
+        "categoryId": "properties-and-changes-of-materials",
+        "title": "Properties and changes of materials",
+        "icon": "🧪",
+        "description": "Compare materials, explore dissolving and separating mixtures, and sort reversible from irreversible changes.",
+        "example": "Could you get the salt back?",
+        "colour": "gold"
+      },
+      {
+        "categoryId": "earth-and-space",
+        "title": "Earth and space",
+        "icon": "🌙",
+        "description": "Explore the Solar System, orbits, the Sun, Earth and Moon, day and night and the phases of the Moon.",
+        "example": "Why does the Moon seem to change shape?",
+        "colour": "lilac"
+      },
+      {
+        "categoryId": "forces",
+        "title": "Forces",
+        "icon": "🧲",
+        "description": "Explore gravity, air and water resistance, friction, and levers, pulleys and gears.",
+        "example": "Which surface gives more friction?",
+        "colour": "mint"
+      }
+    ],
+    "activities": [
+      {
+        "icon": "🌙",
+        "title": "Keep a Moon diary",
+        "description": "Draw the Moon on a few clear evenings and look for a pattern."
+      },
+      {
+        "icon": "🥄",
+        "title": "Stir and separate",
+        "description": "With a grown-up, stir salt into water and talk about how you could get it back."
+      },
+      {
+        "icon": "🚗",
+        "title": "Slide and compare",
+        "description": "Push a toy car across different surfaces and explain which one grips most."
+      }
+    ],
+    "practical": "Diagrams and supplied results rehearse scientific enquiry. They do not show that your child has performed an experiment. Real observation, measurement and practical enquiry need grown-up support. Some topics, such as puberty, are best talked through together at a pace that suits your family.",
+    "alignment": "Topics are mapped to the Year 5 science programme of study for England."
+  },
+  {
+    "year": 5,
+    "subject": "history",
+    "slug": "year-5-history",
+    "path": "/curriculum-guide/year-5-history",
+    "label": "Year 5 History",
+    "intro": "Athens, Sparta and the Maya. Follow the clues left by ancient civilisations.",
+    "fit": "For children ready to compare societies, read sources and place ancient civilisations on one long timeline.",
+    "areas": [
+      {
+        "categoryId": "ancient-greece---land-and-cities",
+        "title": "Ancient Greece · Land and Cities",
+        "icon": "🏺",
+        "description": "Find where Ancient Greece was. Compare Athens and Sparta, everyday life in Athens and the beginnings of democracy.",
+        "example": "How did Athenians make decisions?",
+        "colour": "mint"
+      },
+      {
+        "categoryId": "ancient-greece---beliefs-and-games",
+        "title": "Ancient Greece · Beliefs and Games",
+        "icon": "🏛️",
+        "description": "Explore Greek gods and myths, the Parthenon and temples and the Olympic Games.",
+        "example": "Which god is in this story?",
+        "colour": "rose"
+      },
+      {
+        "categoryId": "ancient-greece---wars-ideas-and-legacy",
+        "title": "Ancient Greece · Wars, Ideas and Legacy",
+        "icon": "⚔️",
+        "description": "Follow the Greeks and Persians and Alexander the Great. Explore Greek thinkers, theatre and the ideas we still use.",
+        "example": "Which Greek idea do we still use today?",
+        "colour": "gold"
+      },
+      {
+        "categoryId": "the-maya---land-and-cities",
+        "title": "The Maya · Land and Cities",
+        "icon": "🌴",
+        "description": "Find where the Maya lived. Explore farming and food, cities and kings, Chichen Itza and Maya pyramids.",
+        "example": "How did the Maya grow their food?",
+        "colour": "lilac"
+      },
+      {
+        "categoryId": "the-maya---ideas-and-change",
+        "title": "The Maya · Ideas and Change",
+        "icon": "📜",
+        "description": "Explore Maya writing and books, numbers and the calendar, gods and the ball game, and the Classic Maya collapse.",
+        "example": "What can a carved symbol tell us?",
+        "colour": "mint"
+      },
+      {
+        "categoryId": "connections-and-chronology",
+        "title": "Connections and Chronology",
+        "icon": "⏳",
+        "description": "Place periods on one long timeline, compare sources and interpretations and compare past societies.",
+        "example": "Which came first, and how do you know?",
+        "colour": "rose"
+      }
+    ],
+    "activities": [
+      {
+        "icon": "⏳",
+        "title": "Draw a timeline",
+        "description": "Mark Ancient Greece, the Maya and today, then add what you have learned."
+      },
+      {
+        "icon": "🔎",
+        "title": "Spot Greek ideas",
+        "description": "Look for words and ideas we still use, such as democracy, theatre and the Olympics."
+      },
+      {
+        "icon": "⚖️",
+        "title": "Compare two societies",
+        "description": "Talk about what Athens and a Maya city had in common and how they differed."
+      }
+    ],
+    "practical": "Timelines, pictured sources and short accounts build historical understanding. Talk through different viewpoints together, and visit museums or explore books and real objects with a grown-up when you can.",
+    "alignment": "Topics are mapped to the National Curriculum in England for key stage 2 (Years 3–6). The year-by-year allocation is Bix’s choice; this path does not cover the whole key stage."
+  },
+  {
+    "year": 5,
+    "subject": "art",
+    "slug": "year-5-art-and-design",
+    "path": "/curriculum-guide/year-5-art-and-design",
+    "label": "Year 5 Art & Design",
+    "intro": "Draw, mix and print. Meet artists, makers and architects and see through their eyes.",
+    "fit": "For children who like looking closely, trying colours and patterns and talking about how artists make their work.",
+    "areas": [
+      {
+        "categoryId": "sketchbooks-and-drawing",
+        "title": "Sketchbooks and drawing",
+        "icon": "✏️",
+        "description": "Observe closely and explore line, tone, perspective and proportion. Practise talking about art.",
+        "example": "Where is the light coming from?",
+        "colour": "mint"
+      },
+      {
+        "categoryId": "colour-and-painting",
+        "title": "Colour and painting",
+        "icon": "🎨",
+        "description": "Explore the colour wheel, colour mood and mixing, and different painting techniques.",
+        "example": "Which colours would make this feel calm?",
+        "colour": "rose"
+      },
+      {
+        "categoryId": "printing-sculpture-and-pattern",
+        "title": "Printing, sculpture and pattern",
+        "icon": "🏺",
+        "description": "Explore printmaking, sculpture and clay, and pattern and texture.",
+        "example": "What texture could you press into clay?",
+        "colour": "gold"
+      },
+      {
+        "categoryId": "artists-architects-and-designers",
+        "title": "Artists, architects and designers",
+        "icon": "🏛️",
+        "description": "Meet famous artists, sculptors, craft makers, designers and architects and their buildings.",
+        "example": "What do you notice in this artwork?",
+        "colour": "lilac"
+      }
+    ],
+    "activities": [
+      {
+        "icon": "✏️",
+        "title": "Draw from life",
+        "description": "Sketch one everyday object from two different viewpoints."
+      },
+      {
+        "icon": "🎨",
+        "title": "Mix a colour wheel",
+        "description": "Use a few paints to mix new colours and name what you made."
+      },
+      {
+        "icon": "🖐️",
+        "title": "Press a pattern",
+        "description": "Dab a clean household object in a little paint and print a repeating pattern."
+      }
+    ],
+    "practical": "Bix introduces techniques, vocabulary and famous artists. It cannot assess your child’s own making. Real paper, paint, clay and time to create matter most, and a grown-up should help with materials and tools.",
+    "alignment": "Topics are mapped to the National Curriculum in England for key stage 2 (Years 3–6). The year-by-year allocation is Bix’s choice; this path does not cover the whole key stage."
+  },
+  {
+    "year": 5,
+    "subject": "computing",
+    "slug": "year-5-computing",
+    "path": "/curriculum-guide/year-5-computing",
+    "label": "Year 5 Computing",
+    "intro": "Loops, logic and how the web works. Think like a computer scientist and stay safe online.",
+    "fit": "For children ready to follow and debug instructions, use simple logic and talk about how information travels online.",
+    "areas": [
+      {
+        "categoryId": "programming-basics",
+        "title": "Programming Basics",
+        "icon": "🧩",
+        "description": "Explore sequences, repeat loops, if and else decisions, variables, inputs and outputs, and finding and fixing bugs.",
+        "example": "Where is the bug in this sequence?",
+        "colour": "mint"
+      },
+      {
+        "categoryId": "algorithms-and-logic",
+        "title": "Algorithms and Logic",
+        "icon": "⚙️",
+        "description": "Break problems into parts, follow how algorithms work and use and, or and not.",
+        "example": "Is this true when both conditions are met?",
+        "colour": "rose"
+      },
+      {
+        "categoryId": "networks-and-the-web",
+        "title": "Networks and the Web",
+        "icon": "🌐",
+        "description": "Explore computer networks, how data travels and the difference between the internet and the web.",
+        "example": "How could a message travel between computers?",
+        "colour": "gold"
+      },
+      {
+        "categoryId": "search-and-information",
+        "title": "Search and Information",
+        "icon": "🔎",
+        "description": "Use search engines, see how results are ranked and judge websites.",
+        "example": "Who made this website, and why?",
+        "colour": "lilac"
+      },
+      {
+        "categoryId": "safe-and-responsible-use",
+        "title": "Safe and Responsible Use",
+        "icon": "🔒",
+        "description": "Talk about keeping information safe and being kind and responsible online.",
+        "example": "Is this safe to share?",
+        "colour": "mint"
+      }
+    ],
+    "activities": [
+      {
+        "icon": "🥪",
+        "title": "Write a sandwich algorithm",
+        "description": "Give a grown-up step-by-step instructions to make a snack, exactly as written."
+      },
+      {
+        "icon": "🐛",
+        "title": "Hunt the bug",
+        "description": "Ask a grown-up to hide a mistake in some instructions, then find and fix it."
+      },
+      {
+        "icon": "🔍",
+        "title": "Compare two websites",
+        "description": "Search for the same question together and discuss which source you would trust."
+      }
+    ],
+    "practical": "Pictures and puzzles help rehearse computing ideas, but the app cannot assess your child writing and testing real programs. Make time to build programs in a block-based or text-based language, and talk about the sites and apps your family actually uses.",
+    "alignment": "Topics are mapped to the National Curriculum in England for key stage 2 (Years 3–6). The year-by-year allocation is Bix’s choice; this path does not cover the whole key stage."
+  },
+  {
+    "year": 5,
+    "subject": "design",
+    "slug": "year-5-design-and-technology",
+    "path": "/curriculum-guide/year-5-design-and-technology",
+    "label": "Year 5 Design & Technology",
+    "intro": "Design it, test it, make it. Explore structures, gears, circuits and healthy cooking.",
+    "fit": "For children who like working out how things work and are ready to think about criteria, materials and safe making.",
+    "areas": [
+      {
+        "categoryId": "designing-and-evaluating",
+        "title": "Designing and evaluating",
+        "icon": "📝",
+        "description": "Explore design criteria and research, sketches and models, evaluating products and famous inventors and designers.",
+        "example": "What must your design do?",
+        "colour": "mint"
+      },
+      {
+        "categoryId": "making",
+        "title": "Making",
+        "icon": "🔨",
+        "description": "Learn about tools and safety, materials and ways of joining them.",
+        "example": "Which way of joining suits this material?",
+        "colour": "rose"
+      },
+      {
+        "categoryId": "technical-knowledge",
+        "title": "Technical knowledge",
+        "icon": "⚙️",
+        "description": "Explore strong structures, levers and linkages, gears, pulleys and cams, electrical systems and using computing to monitor and control.",
+        "example": "How could a lever help?",
+        "colour": "gold"
+      },
+      {
+        "categoryId": "cooking-and-nutrition",
+        "title": "Cooking and nutrition",
+        "icon": "🍳",
+        "description": "Explore a healthy and varied diet, seasonality and food sources, cooking skills and kitchen hygiene.",
+        "example": "Which foods are in season?",
+        "colour": "lilac"
+      }
+    ],
+    "activities": [
+      {
+        "icon": "📝",
+        "title": "Design for someone",
+        "description": "Sketch a better lunchbox for a friend, with three things it must do."
+      },
+      {
+        "icon": "🏗️",
+        "title": "Test a structure",
+        "description": "Build a tower from paper or card, then test it and make it stronger."
+      },
+      {
+        "icon": "🥗",
+        "title": "Cook together",
+        "description": "Prepare something simple with a grown-up, starting with clean hands and a tidy workspace."
+      }
+    ],
+    "practical": "Bix teaches the ideas, safety and vocabulary behind design and making. It cannot show that your child can make, cook or use tools. A grown-up should supervise knives, heat and tools. Any electrical project must use low-voltage cells, never mains electricity.",
+    "alignment": "Topics are mapped to the National Curriculum in England for key stage 2 (Years 3–6). The year-by-year allocation is Bix’s choice; this path does not cover the whole key stage."
+  },
+  {
+    "year": 5,
+    "subject": "french",
+    "slug": "year-5-french",
+    "path": "/curriculum-guide/year-5-french",
+    "label": "Year 5 French",
+    "intro": "Bonjour! Say hello, count, order food and start building French sentences.",
+    "fit": "For children who enjoy words and patterns and are ready to meet French sounds, vocabulary and simple grammar.",
+    "areas": [
+      {
+        "categoryId": "sounds-and-spelling",
+        "title": "Sounds and Spelling",
+        "icon": "🔊",
+        "description": "Explore silent letters, liaison, nasal sounds, accents and sound patterns.",
+        "example": "Is this letter pronounced or silent?",
+        "colour": "mint"
+      },
+      {
+        "categoryId": "everyday-words",
+        "title": "Everyday Words",
+        "icon": "💬",
+        "description": "Learn greetings and family words, numbers to 100, days, months and weather, food, school and town, hobbies, clothes and colours.",
+        "example": "How would you order a drink?",
+        "colour": "rose"
+      },
+      {
+        "categoryId": "grammar",
+        "title": "Grammar",
+        "icon": "🧱",
+        "description": "Explore gender, articles and plurals, adjectives, the verbs to be, to have, to go and to do, -er verbs, saying no and asking questions.",
+        "example": "Does this word need le or la?",
+        "colour": "gold"
+      },
+      {
+        "categoryId": "reading-and-writing",
+        "title": "Reading and Writing",
+        "icon": "📖",
+        "description": "Read short texts, build sentences and translate.",
+        "example": "Can you build this sentence in French?",
+        "colour": "lilac"
+      }
+    ],
+    "activities": [
+      {
+        "icon": "🏷️",
+        "title": "Label the room",
+        "description": "Write French labels for things around the house and say each word aloud."
+      },
+      {
+        "icon": "👋",
+        "title": "Greet in French",
+        "description": "Start each day with a French greeting and a number or colour of the day."
+      },
+      {
+        "icon": "🎧",
+        "title": "Listen and repeat",
+        "description": "Listen to a French song or recording with a grown-up and copy the sounds."
+      }
+    ],
+    "practical": "Bix supports vocabulary, grammar and reading. Speaking and listening need real practice: say words aloud, listen to French speakers or recordings and try short conversations. The app does not assess your child’s pronunciation.",
+    "alignment": "Topics are mapped to the National Curriculum in England for key stage 2 (Years 3–6). The year-by-year allocation is Bix’s choice; this path does not cover the whole key stage."
+  },
+  {
+    "year": 5,
+    "subject": "music",
+    "slug": "year-5-music",
+    "path": "/curriculum-guide/year-5-music",
+    "label": "Year 5 Music",
+    "intro": "Beats, notes and the orchestra. Learn the language of music and listen in new ways.",
+    "fit": "For children who like listening, counting beats and reading the first steps of music notation.",
+    "areas": [
+      {
+        "categoryId": "rhythm-and-metre",
+        "title": "Rhythm and metre",
+        "icon": "🥁",
+        "description": "Explore note values and rests, time signatures, counting beats in a bar, tempo and rhythm words.",
+        "example": "How many beats are in this bar?",
+        "colour": "mint"
+      },
+      {
+        "categoryId": "pitch-and-notation",
+        "title": "Pitch and notation",
+        "icon": "🎼",
+        "description": "Read the stave and treble clef, notes in an octave, scales and tonality, and chords and triads.",
+        "example": "Which note sits on this line?",
+        "colour": "rose"
+      },
+      {
+        "categoryId": "dynamics-and-structure",
+        "title": "Dynamics and structure",
+        "icon": "🔈",
+        "description": "Explore dynamics and articulation, musical structure and texture.",
+        "example": "Is this part loud or soft?",
+        "colour": "gold"
+      },
+      {
+        "categoryId": "instruments-and-listening",
+        "title": "Instruments and listening",
+        "icon": "🎻",
+        "description": "Meet instruments of the orchestra, composers and periods, musical traditions of the world and popular music styles.",
+        "example": "Which family does this instrument belong to?",
+        "colour": "lilac"
+      }
+    ],
+    "activities": [
+      {
+        "icon": "👏",
+        "title": "Clap the beat",
+        "description": "Clap along to a favourite song and count the beats in a bar."
+      },
+      {
+        "icon": "🎧",
+        "title": "Listen like a conductor",
+        "description": "Play a short piece and notice loud and quiet parts and which instruments you hear."
+      },
+      {
+        "icon": "🥄",
+        "title": "Tap a rhythm",
+        "description": "Tap a short rhythm on a cushion and write it down using note values."
+      }
+    ],
+    "practical": "Bix teaches the ideas and vocabulary of music. It cannot assess singing, playing, composing or performing. Sing, clap, play and listen to real music together, ideally with an instrument or a music teacher.",
+    "alignment": "Topics are mapped to the National Curriculum in England for key stage 2 (Years 3–6). The year-by-year allocation is Bix’s choice; this path does not cover the whole key stage."
+  },
+  {
+    "year": 5,
+    "subject": "pe",
+    "slug": "year-5-pe",
+    "path": "/curriculum-guide/year-5-pe",
+    "label": "Year 5 PE",
+    "intro": "Teamwork, track and field, and fair play. Learn the ideas behind moving well and staying active.",
+    "fit": "For children who enjoy sport and movement and want to learn the rules, vocabulary and ideas behind them.",
+    "areas": [
+      {
+        "categoryId": "team-games",
+        "title": "Team games",
+        "icon": "⚽",
+        "description": "Explore football, hockey, rugby tag, netball, basketball, attacking and defending, net and wall games, cricket and rounders.",
+        "example": "Where could you move to receive a pass?",
+        "colour": "mint"
+      },
+      {
+        "categoryId": "athletics-gymnastics-and-dance",
+        "title": "Athletics, gymnastics and dance",
+        "icon": "🏃",
+        "description": "Explore track and field events, times and distances, gymnastics and dance.",
+        "example": "Which event measures distance?",
+        "colour": "rose"
+      },
+      {
+        "categoryId": "outdoors-and-swimming",
+        "title": "Outdoors and swimming",
+        "icon": "🧭",
+        "description": "Explore orienteering and teamwork, swimming and water safety.",
+        "example": "Who should be with you near water?",
+        "colour": "gold"
+      },
+      {
+        "categoryId": "fitness-and-fair-play",
+        "title": "Fitness and fair play",
+        "icon": "💪",
+        "description": "Explore warming up, fitness, fair play and beating your own personal best.",
+        "example": "Why do we warm up first?",
+        "colour": "lilac"
+      }
+    ],
+    "activities": [
+      {
+        "icon": "🤸",
+        "title": "Warm up together",
+        "description": "March on the spot and stretch gently for a few minutes in a clear space."
+      },
+      {
+        "icon": "⏱️",
+        "title": "Beat your own best",
+        "description": "Count how many catches or skips you can do, then try to beat your own score."
+      },
+      {
+        "icon": "🧭",
+        "title": "Follow a map",
+        "description": "Draw a simple map of a garden or park and follow it with a grown-up."
+      }
+    ],
+    "practical": "Bix teaches the rules, vocabulary and ideas behind PE. It does not assess movement, fitness or swimming, and it does not replace school PE, clubs or swimming lessons. Move in a clear space, keep a grown-up close for equipment or anything near water, and choose activities that suit your child’s health and confidence.",
+    "alignment": "Topics are mapped to the National Curriculum in England for key stage 2 (Years 3–6). The year-by-year allocation is Bix’s choice; this path does not cover the whole key stage."
+  },
+  {
+    "year": 5,
+    "subject": "wellbeing",
+    "slug": "year-5-relationships-and-health",
+    "path": "/curriculum-guide/year-5-relationships-and-health",
+    "label": "Year 5 Relationships & Health",
+    "intro": "Kind friends, calm feelings and healthy habits. Think about how to look after yourself and others.",
+    "fit": "For children ready to talk about friendships, feelings, staying safe and everyday healthy habits, ideally with a grown-up nearby.",
+    "areas": [
+      {
+        "categoryId": "friends-and-families",
+        "title": "Friends and families",
+        "icon": "🤝",
+        "description": "Explore families who care, good friends, sorting out a falling out, and courtesy and respect.",
+        "example": "How could you help two friends make up?",
+        "colour": "mint"
+      },
+      {
+        "categoryId": "feelings-and-wellbeing",
+        "title": "Feelings and wellbeing",
+        "icon": "😊",
+        "description": "Name feelings, find ways to calm down and talk, and enjoy being active outdoors and having hobbies.",
+        "example": "What could help when you feel worried?",
+        "colour": "rose"
+      },
+      {
+        "categoryId": "staying-safe",
+        "title": "Staying safe",
+        "icon": "🚦",
+        "description": "Explore online safety and screen time, staying safe near roads, water and sun, and first aid and calling 999.",
+        "example": "What would you do if something online felt wrong?",
+        "colour": "gold"
+      },
+      {
+        "categoryId": "healthy-habits",
+        "title": "Healthy habits",
+        "icon": "🥦",
+        "description": "Explore healthy eating, sleep and rest, and looking after teeth and hands to keep germs away.",
+        "example": "Why does your body need sleep?",
+        "colour": "lilac"
+      }
+    ],
+    "activities": [
+      {
+        "icon": "💬",
+        "title": "Feelings check-in",
+        "description": "Share one feeling from the day, if you want to, and what helped."
+      },
+      {
+        "icon": "🛡️",
+        "title": "Make a safety plan",
+        "description": "Talk about who you would tell if something online or out and about felt wrong."
+      },
+      {
+        "icon": "🌳",
+        "title": "Go outside together",
+        "description": "Take a walk or play outdoors, then talk about how it made you feel."
+      }
+    ],
+    "alignment": "Topics are mapped to the Department for Education’s statutory relationships and health education guidance for primary schools in England. They cover a safe, age-appropriate part of it. Sensitive topics are best shared by school and home, and Bix does not replace those conversations."
   }
 ];
 

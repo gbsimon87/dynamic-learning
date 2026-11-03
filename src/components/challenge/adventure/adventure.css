@@ -1,0 +1,143 @@
+/* Year 5 adventure frame: start banner, Bix's notes bubble, friendly round cards.
+   Every hue is a --light-geo-* / --dark-geo-* token from App.css. Each challenge
+   slot (data-slot 1–4) has its own colour, always paired with words. */
+.adv-start, .adv-challenge {
+  --adv-slot: var(--light-geo-explore); --adv-sky: var(--light-geo-sky); --adv-sun: var(--light-geo-sun);
+  --adv-sea: var(--light-geo-sea); --adv-grass: var(--light-geo-grass); --adv-hill: var(--light-geo-hill);
+  --adv-leaf: var(--light-geo-leaf); --adv-roof: var(--light-geo-roof); --adv-wall: var(--light-geo-wall-2);
+  --adv-trunk: var(--light-geo-trunk); --adv-night: var(--light-geo-night); --adv-paper: var(--light-geo-paper);
+  --adv-ink: var(--light-text); --adv-card: var(--light-panel);
+  --adv-soft-ink: color-mix(in srgb, var(--light-text) 14%, transparent);
+  color: var(--adv-ink);
+}
+:is(.adv-start, .adv-challenge)[data-slot="2"] { --adv-slot: var(--light-geo-locate); }
+:is(.adv-start, .adv-challenge)[data-slot="3"] { --adv-slot: var(--light-geo-evidence); }
+:is(.adv-start, .adv-challenge)[data-slot="4"] { --adv-slot: var(--light-geo-connect); }
+body.dark :is(.adv-start, .adv-challenge) {
+  --adv-slot: var(--dark-geo-explore); --adv-sky: var(--dark-geo-sky); --adv-sun: var(--dark-geo-sun);
+  --adv-sea: var(--dark-geo-sea); --adv-grass: var(--dark-geo-grass); --adv-hill: var(--dark-geo-hill);
+  --adv-leaf: var(--dark-geo-leaf); --adv-roof: var(--dark-geo-roof); --adv-wall: var(--dark-geo-wall-2);
+  --adv-trunk: var(--dark-geo-trunk); --adv-night: var(--dark-geo-night); --adv-paper: var(--dark-geo-paper);
+  --adv-ink: var(--dark-text); --adv-card: var(--dark-panel);
+  --adv-soft-ink: color-mix(in srgb, var(--dark-text) 16%, transparent);
+}
+body.dark :is(.adv-start, .adv-challenge)[data-slot="2"] { --adv-slot: var(--dark-geo-locate); }
+body.dark :is(.adv-start, .adv-challenge)[data-slot="3"] { --adv-slot: var(--dark-geo-evidence); }
+body.dark :is(.adv-start, .adv-challenge)[data-slot="4"] { --adv-slot: var(--dark-geo-connect); }
+
+.adv-start.challenge-container {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--adv-sky) 75%, var(--adv-card)) 0, var(--adv-card) 230px);
+  border-radius: 28px; overflow: hidden; text-align: left;
+}
+
+/* Banner */
+.adv-hero { position: relative; display: flex; align-items: center; gap: 1rem; min-height: 132px; padding: .5rem 0 1.25rem; }
+.adv-hero-stamp {
+  flex: none; display: grid; place-items: center; width: 72px; height: 72px; font-size: 2.2rem;
+  border-radius: 22px; transform: rotate(-6deg);
+  background: color-mix(in srgb, var(--adv-slot) 22%, var(--adv-card)); border: 3px solid var(--adv-slot);
+  box-shadow: 0 5px 0 color-mix(in srgb, var(--adv-slot) 45%, transparent);
+}
+.adv-hero-words { position: relative; z-index: 1; }
+.adv-hero-kicker { margin: 0 0 .15rem; font-size: .85rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; opacity: .8; }
+.adv-start .adv-hero .challenge-title { margin: 0; font-size: clamp(1.7rem, 5vw, 2.3rem); font-weight: 900; text-align: left; line-height: 1.1; }
+.adv-hero-scene { position: absolute; right: -8px; bottom: 0; width: min(46%, 320px); height: auto; pointer-events: none; }
+.adv-c-sun { fill: var(--adv-sun); } .adv-c-sea { fill: var(--adv-sea); } .adv-c-grass { fill: var(--adv-grass); }
+.adv-c-hill { fill: var(--adv-hill); } .adv-c-leaf { fill: var(--adv-leaf); } .adv-c-roof { fill: var(--adv-roof); }
+.adv-c-wall { fill: var(--adv-wall); } .adv-c-night { fill: var(--adv-night); } .adv-c-paper { fill: var(--adv-paper); }
+.adv-c-trunk { fill: var(--adv-trunk); stroke: var(--adv-trunk); stroke-width: 6; stroke-linecap: round; }
+.adv-line, .adv-stem, .adv-lane, .adv-code-a, .adv-code-b { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.adv-line { stroke: var(--adv-ink); stroke-width: 3; stroke-opacity: .75; }
+.adv-stem { stroke: currentColor; stroke-width: 4; }
+.adv-c-roof .adv-stem { stroke: var(--adv-roof); } .adv-c-sea .adv-stem { stroke: var(--adv-sea); } .adv-c-grass .adv-stem { stroke: var(--adv-grass); }
+.adv-lane { stroke: var(--adv-paper); stroke-width: 3; stroke-dasharray: 10 8; }
+.adv-code-a { stroke: var(--adv-sun); stroke-width: 6; } .adv-code-b { stroke: var(--adv-grass); stroke-width: 6; }
+
+/* Bix's notes: a speech bubble, numbered, big readable lines */
+.adv-notes-talk { display: flex; align-items: flex-start; gap: .5rem; }
+.mascot.adv-notes-bix { flex: none; width: 150px; zoom: .55; margin-top: 1.5rem; }
+.adv-notes-bubble {
+  position: relative; flex: 1; min-width: 0; padding: 1rem 1.15rem 1.1rem;
+  background: var(--adv-card); border: 3px solid color-mix(in srgb, var(--adv-slot) 55%, var(--adv-card)); border-radius: 24px;
+  box-shadow: 0 6px 0 color-mix(in srgb, var(--adv-slot) 25%, transparent);
+}
+.adv-notes-bubble::before {
+  content: ""; position: absolute; left: -14px; top: 34px; width: 22px; height: 22px; background: var(--adv-card);
+  border-left: 3px solid color-mix(in srgb, var(--adv-slot) 55%, var(--adv-card)); border-bottom: 3px solid color-mix(in srgb, var(--adv-slot) 55%, var(--adv-card));
+  transform: rotate(45deg); border-radius: 0 0 0 6px;
+}
+.adv-notes-heading { display: flex; align-items: center; gap: .75rem; }
+.adv-notes-heading h4 { flex: 1; margin: 0 0 .5rem; font-size: 1.05rem; font-weight: 900; letter-spacing: .02em; }
+.adv-notes-lines { list-style: none; counter-reset: adv-note; margin: 0; padding: 0; display: grid; gap: .55rem; }
+.adv-notes-lines li { counter-increment: adv-note; display: grid; grid-template-columns: 2.1rem 1fr; align-items: start; gap: .6rem; font-size: 1.2rem; font-weight: 600; line-height: 1.45; }
+.adv-notes-lines li::before {
+  content: counter(adv-note); display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border-radius: 50%;
+  background: color-mix(in srgb, var(--adv-slot) 22%, var(--adv-card)); border: 2px solid var(--adv-slot); font-weight: 900; font-size: 1rem;
+}
+.adv-notes-figure { margin-top: 1.25rem; padding: 1rem; border-radius: 24px; background: var(--adv-card); box-shadow: 0 0 0 2px var(--adv-soft-ink), 0 6px 0 var(--adv-soft-ink); }
+.adv-notes-figure figure { margin: 0 auto; }
+
+/* Big friendly start button */
+.adv-start .submit-btn.adv-go {
+  display: flex; align-items: center; justify-content: center; gap: .6rem; margin: 1.5rem auto .5rem; min-height: 60px; padding: 0 2.2rem;
+  font-size: 1.35rem; font-weight: 900; border-radius: 999px;
+  box-shadow: 0 6px 0 color-mix(in srgb, var(--adv-ink) 35%, transparent); transition: transform .15s ease, box-shadow .15s ease;
+}
+.adv-start .submit-btn.adv-go:hover, .adv-start .submit-btn.adv-go:focus-visible { transform: translateY(-2px); box-shadow: 0 8px 0 color-mix(in srgb, var(--adv-ink) 35%, transparent); }
+.adv-start .submit-btn.adv-go:active { transform: translateY(4px); box-shadow: 0 2px 0 color-mix(in srgb, var(--adv-ink) 35%, transparent); }
+.adv-go-icon { display: inline-block; animation: adv-hop 1.6s ease-in-out infinite; }
+@keyframes adv-hop { 0%, 60%, 100% { transform: translateY(0) rotate(0); } 30% { transform: translateY(-5px) rotate(-8deg); } }
+
+/* During rounds: notes pill and reopened notes, lined up with the wide card */
+.adv-challenge { max-width: 1120px; margin: 0 auto; }
+.adv-challenge .adv-notes-toggle, .adv-notes-reopened > button {
+  display: inline-flex; align-items: center; gap: .4rem; margin: .5rem 0; min-height: 48px; padding: .6rem 1.2rem;
+  border-radius: 999px; font: inherit; font-weight: 800; color: var(--adv-ink); cursor: pointer;
+  border: 3px solid var(--adv-slot); background: color-mix(in srgb, var(--adv-slot) 14%, var(--adv-card));
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--adv-slot) 30%, transparent);
+}
+.adv-notes-reopened { margin: .5rem auto 1rem; max-width: 760px; text-align: left; }
+:is(.adv-start, .adv-challenge) button:focus-visible { outline: 3px solid var(--adv-ink); outline-offset: 4px; }
+
+/* Round card: a tinted sky header, chunky answer tiles, clue cards and a framed picture */
+.adv-challenge .challenge-container {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--adv-sky) 45%, var(--adv-card)) 0, var(--adv-card) 180px);
+  border-radius: 28px;
+}
+.adv-challenge .challenge-title { font-weight: 900; }
+.adv-challenge .science-round-prompt .challenge-prompt { font-size: 1.25rem; font-weight: 700; line-height: 1.4; }
+.adv-challenge .science-observation {
+  margin: 0; padding: .6rem .9rem .6rem 2.6rem; position: relative; border-radius: 16px; text-align: left; font-weight: 600; line-height: 1.5;
+  background: color-mix(in srgb, var(--adv-sun) 16%, var(--adv-card)); border-left: 6px solid var(--adv-slot);
+}
+.adv-challenge .science-observation::before { content: "💡"; position: absolute; left: .7rem; top: .55rem; }
+body.dark .adv-challenge .science-observation { background: color-mix(in srgb, var(--adv-slot) 12%, var(--adv-card)); }
+.adv-challenge .science-round-figure {
+  padding: 1rem; border-radius: 24px; background: var(--adv-card);
+  box-shadow: 0 0 0 2px var(--adv-soft-ink), 0 6px 0 var(--adv-soft-ink);
+}
+.adv-challenge .science-round-figure figure { margin: 0 auto; }
+.adv-challenge .choice-btn {
+  border-radius: 18px; border: 3px solid color-mix(in srgb, var(--adv-slot) 45%, transparent);
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--adv-slot) 30%, transparent); font-weight: 700;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.adv-challenge .choice-btn:hover:not(:disabled) { transform: translateY(-2px); }
+.adv-challenge .choice-btn.selected { border-color: var(--adv-slot); background: color-mix(in srgb, var(--adv-slot) 22%, var(--adv-card)); color: var(--adv-ink); }
+.adv-challenge .science-round > .submit-btn { border-radius: 999px; min-height: 54px; padding: 0 2rem; font-weight: 900; box-shadow: 0 5px 0 color-mix(in srgb, var(--adv-ink) 30%, transparent); }
+
+@media (max-width: 560px) {
+  .adv-hero { flex-wrap: wrap; padding-bottom: 76px; }
+  .adv-hero-scene { width: 100%; max-height: 80px; right: 0; }
+  .adv-notes-talk { flex-direction: column; gap: .25rem; }
+  .mascot.adv-notes-bix { zoom: .36; margin: 0 0 0 1rem; }
+  .adv-notes-bubble { width: 100%; box-sizing: border-box; }
+  .adv-notes-bubble::before { left: 28px; top: -14px; transform: rotate(135deg); }
+  .adv-notes-lines li { font-size: 1.1rem; }
+  .adv-notes-bubble { padding: .85rem .9rem; }
+  .adv-notes-figure { padding: .6rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .adv-go-icon { animation: none; }
+  .adv-start .submit-btn.adv-go, .adv-challenge .choice-btn { transition: none; }
+}

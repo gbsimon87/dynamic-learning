@@ -33,7 +33,7 @@ test("subjects come from the registry for the year", () => {
   assert.deepEqual(subjectsForYear(null), []);
   assert.deepEqual([...subjectsForYear(1)].sort(), ["english", "geography", "history", "math", "science"]);
   assert.deepEqual([...subjectsForYear(2)].sort(), ["english", "geography", "history", "math", "science"]);
-  assert.deepEqual(subjectsForYear(5), []);
+  assert.deepEqual(subjectsForYear(6), []);
   assert.deepEqual([...subjectsForYear(3)].sort(), ["english", "geography", "history", "math", "science"]);
   assert.deepEqual(subjectsForYear(4), ["math", "english", "geography", "science", "history"]);
 });
@@ -60,7 +60,7 @@ test("a grown-up path: who → count → each learner → summary → account �
 });
 
 test("subjects are skipped for a year with no curriculum or 'Not sure'", () => {
-  const draft = { ...parentDraft(), learners: [{ ...maya, yearGroup: 5 }, { ...leo, yearGroup: null }] };
+  const draft = { ...parentDraft(), learners: [{ ...maya, yearGroup: 6 }, { ...leo, yearGroup: null }] };
   assert.equal(stepsFor(draft).some((c) => c.step === STEP.subjects), false);
 });
 
@@ -121,14 +121,14 @@ test("changing a year drops subjects that year doesn't have (Review Focus 1)", (
   assert.deepEqual(withLearner(draft, 0, { yearGroup: 2 }).learners[0].subjects, ["science", "math"]);
   assert.deepEqual(withLearner(draft, 0, { yearGroup: 4 }).learners[0].subjects, ["science", "math"]);
   assert.deepEqual(withLearner(draft, 0, { yearGroup: 1 }).learners[0].subjects, ["science", "math"]);
-  assert.deepEqual(withLearner(draft, 0, { yearGroup: 5 }).learners[0].subjects, []);
+  assert.deepEqual(withLearner(draft, 0, { yearGroup: 6 }).learners[0].subjects, []);
 });
 
 test("a year change that empties the picks asks the subjects again", () => {
   const draft = { ...parentDraft(), learners: [{ ...leo, subjects: ["science"] }] };
   assert.deepEqual(withLearner(draft, 0, { yearGroup: 2 }).learners[0].subjects, ["science"]);
   assert.deepEqual(withLearner(draft, 0, { yearGroup: 4 }).learners[0].subjects, ["science"]);
-  assert.deepEqual(withLearner(draft, 0, { yearGroup: 5 }).learners[0].subjects, [], "no subjects offered: keep []");
+  assert.deepEqual(withLearner(draft, 0, { yearGroup: 6 }).learners[0].subjects, [], "no subjects offered: keep []");
   const exploring = { ...parentDraft(), learners: [{ ...leo, subjects: [] }] };
   assert.deepEqual(withLearner(exploring, 0, { yearGroup: 2 }).learners[0].subjects, [], "Just exploring is kept");
 });

@@ -421,6 +421,17 @@
   box-shadow: 0 0 0 3px var(--ck-accent);
 }
 
+.reading-passage.is-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 1.05rem;
+}
+
+.reading-passage.is-code .reading-passage-line {
+  margin-bottom: 0.2rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 .reading-passage.is-letter .reading-passage-body,
 .reading-passage.is-diary .reading-passage-body {
   font-style: normal;

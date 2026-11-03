@@ -1,0 +1,208 @@
+import { rule } from "../figures.js";
+
+// Pictures for Year 5 Science. A topic visual shows on the start screen and on level 1, so it
+// only sets the scene: it never labels or shows an answer to a level 1 question. Question
+// rules draw only what the question text itself says, so a picture never contradicts it.
+const scene = (backdrop, alt, items, extra = {}) => ({ type: "scene", backdrop, alt, items, ...extra });
+const one = (backdrop, alt, emoji, size = 90) => scene(backdrop, alt, [[emoji, 200, 130, size]]);
+const ANIMAL = { chicken: "🐔", dog: "🐕", frog: "🐸", butterfly: "🦋", grasshopper: "🦗", dolphin: "🐬" };
+const lifeOf = rule(/^Order the life cycle of a (chicken|dog|frog|butterfly|grasshopper|dolphin)/, (q, m) => one(m[1] === "dolphin" ? "pond" : "meadow", `A ${m[1]}.`, ANIMAL[m[1]]), [3]);
+const cups = (alt, list) => ({ type: "cups", alt, cups: list });
+
+export const TOPIC_VISUALS = {
+  "mammal-and-bird-life-cycles": scene("meadow", "A cat with a kitten, and a hen with a chick, on a sunny meadow.", [["🐈", 90, 150, 70], ["🐱", 150, 170, 40], ["🐔", 260, 150, 70], ["🐥", 320, 172, 40]]),
+  "amphibian-and-insect-life-cycles": scene("pond", "A frog by a pond and a butterfly in the sky.", [["🐸", 130, 150, 70], ["🦋", 285, 80, 60], ["🌿", 330, 160, 50]]),
+  "comparing-life-cycles": scene("meadow", "A magnifying glass and notebook beside a frog, a penguin and a butterfly.", [["🔍", 75, 140, 60], ["🐸", 160, 160, 54], ["🐧", 235, 150, 58], ["🦋", 305, 100, 54], ["📓", 345, 175, 44]]),
+  "reproduction-in-plants": scene("meadow", "Flowers in a garden with a bee.", [["🌼", 100, 150, 60], ["🌻", 200, 140, 72], ["🌷", 300, 152, 60], ["🐝", 245, 70, 44]]),
+  "reproduction-in-animals": scene("meadow", "A cow, a sheep and a hen on a farm.", [["🐄", 105, 150, 70], ["🐑", 215, 160, 62], ["🐔", 310, 160, 58]]),
+  "stages-of-human-growth": scene("meadow", "A family out for a walk in a park.", [["🌳", 70, 130, 80], ["👨‍👩‍👧‍👦", 205, 150, 88], ["🌳", 340, 135, 74]]),
+  "changes-during-puberty": scene("meadow", "A seedling growing taller over time.", [["🌱", 90, 168, 44], ["🌿", 200, 150, 64], ["🌳", 315, 128, 94]]),
+  "growing-older": scene("meadow", "A grandparent and a child walking together in a park.", [["🌳", 60, 130, 76], ["👴", 170, 150, 76], ["🧒", 260, 165, 56], ["🌳", 345, 135, 70]]),
+  "properties-of-materials": scene("lab", "A bench of everyday things: a wooden block, a stone, a spoon, a glass and a plastic bottle.", [["🪵", 60, 140, 52], ["🪨", 140, 150, 52], ["🥄", 215, 140, 52], ["🥛", 290, 140, 52], ["🧴", 350, 140, 52]]),
+  "conductors-of-heat-and-electricity": scene("room", "A kitchen with a frying pan and spoon, and a plug on a cable.", [["🍳", 95, 140, 72], ["🥄", 190, 135, 60], ["🔌", 295, 140, 66]]),
+  "choosing-materials-for-a-job": scene("street", "A coat, a window and a bike helmet.", [["🧥", 80, 120, 66], ["🪟", 200, 110, 70], ["⛑️", 320, 120, 62]]),
+  "dissolving-and-solutions": scene("lab", "A spoon, a pot of sugar and a pot of salt on a bench.", [["🥄", 95, 140, 60], ["🍬", 200, 140, 56], ["🧂", 305, 140, 60]]),
+  "separating-mixtures": scene("lab", "A bowl of mixture, some water and a stone on a bench.", [["🥣", 105, 140, 66], ["💧", 205, 140, 54], ["🪨", 300, 150, 56]]),
+  "reversible-changes": scene("lab", "A thermometer, a tube of liquid and a spoon on a bench.", [["🌡️", 110, 135, 62], ["🧪", 205, 135, 62], ["🥄", 300, 140, 56]]),
+  "irreversible-changes": scene("lab", "A scientist with a bottle of liquid and a mixing bowl.", [["🧑‍🔬", 110, 130, 74], ["🧪", 220, 140, 58], ["🥣", 310, 145, 58]]),
+  "the-solar-system": { type: "solarSystem", alt: "The Sun at the left edge, with eight planets of different sizes in a row on their paths around it.", caption: "The Sun and the planets that travel around it." },
+  "planets-and-orbits": scene("night", "A telescope pointing at a starry sky.", [["🔭", 140, 130, 84], ["🌌", 290, 110, 70]]),
+  "sun-earth-and-moon": scene("night", "A starry night sky with a Moon.", [["🌙", 200, 110, 90], ["⭐", 90, 60, 30], ["✨", 320, 170, 38]]),
+  "day-and-night": { type: "dayNight", alt: "A model Earth with sunlight shining on one half. The other half is dark.", caption: "Sunlight shines on one half of the Earth at a time." },
+  "phases-of-the-moon": scene("night", "The Moon and stars in a night sky.", [["🌙", 200, 108, 92], ["⭐", 90, 70, 30], ["⭐", 320, 60, 28]]),
+  gravity: scene("meadow", "An apple tree with apples hanging from it.", [["🌳", 200, 120, 130], ["🍎", 155, 100, 26], ["🍎", 245, 90, 26]]),
+  "air-and-water-resistance": scene("sky", "A parachute in the sky.", [["🪂", 200, 100, 100]]),
+  friction: { type: "ramp", alt: "A toy car at the top of a ramp, ready to roll down onto a flat surface.", caption: "A toy car and a ramp." },
+  "levers-pulleys-and-gears": { type: "lever", pivotAt: 0.35, pushAt: 0.92, load: "📦", alt: "A plank resting on a pivot with a box on one end and a downward push on the other.", caption: "A plank on a pivot, with a load and a push." },
+};
+
+export const FIGURE_RULES = {
+  "mammal-and-bird-life-cycles": [
+    rule(/Ellie watches a hen sit on her eggs/, scene("meadow", "A hen sitting on three eggs in a nest.", [["🐔", 200, 120, 86], ["🥚", 130, 185, 36], ["🥚", 200, 195, 36], ["🥚", 270, 185, 36]])),
+    rule(/newborn kittens drinking from their mother/, scene("room", "A cat with two newborn kittens beside her.", [["🐈", 150, 130, 86], ["🐱", 250, 160, 44], ["🐱", 310, 170, 44]])),
+    rule(/A penguin cannot fly/, scene("sky", "A penguin standing on the ice.", [["🐧", 200, 120, 90], ["🧊", 110, 180, 44], ["🧊", 300, 185, 44]])),
+    rule(/Maya photographs a nest/, scene("meadow", "A tree with a nest, and a camera.", [["🌳", 160, 120, 120], ["📷", 310, 150, 60]]), [4]),
+    lifeOf,
+  ],
+  "amphibian-and-insect-life-cycles": [
+    rule(/Leo finds a caterpillar eating a cabbage leaf/, scene("meadow", "A caterpillar on a cabbage leaf.", [["🥬", 200, 130, 92], ["🐛", 270, 150, 50]])),
+    rule(/Insects have six legs\. A spider has eight legs/, scene("plain", "An ant with six legs and a spider with eight legs.", [["🐜", 120, 110, 70, "6 legs"], ["🕷️", 280, 110, 70, "8 legs"]])),
+    rule(/Leo's classroom has a butterfly kit/, scene("room", "A butterfly with a camera in a classroom.", [["🦋", 150, 120, 80], ["📷", 280, 130, 64]])),
+    rule(/Maya studies her pond tank/, scene("lab", "A tank of pond water with a frog and a leaf.", [["🐸", 160, 140, 68], ["🌿", 250, 150, 56]])),
+    lifeOf,
+  ],
+  "comparing-life-cycles": [
+    rule(/rainforest documentary, a sloth baby/, scene("meadow", "A sloth with a baby hanging from a tree in the rainforest.", [["🌴", 110, 120, 90], ["🦥", 250, 120, 84]])),
+    rule(/Whales live in the sea but are not fish/, scene("pond", "A whale swimming in the sea.", [["🐋", 200, 130, 96]])),
+    rule(/David Attenborough documentary/, scene("room", "A television showing an emperor penguin.", [["📺", 200, 120, 100], ["🐧", 200, 118, 38]])),
+    rule(/Jane Goodall watched chimpanzee mothers/, scene("meadow", "A chimpanzee mother with her baby.", [["🐒", 160, 130, 84], ["🐵", 270, 160, 46]])),
+    rule(/Leo studies a newt/, scene("pond", "A newt by a pond.", [["🦎", 200, 130, 90]])),
+    lifeOf,
+  ],
+  "reproduction-in-plants": [
+    rule(/Maya tests whether cress seeds need light/, scene("room", "Cress seeds on a sunny windowsill and cress seeds in a dark cupboard.", [["🌱", 110, 120, 60, "Windowsill"], ["🌱", 290, 120, 60, "Dark cupboard"]])),
+    rule(/Leo tests whether cuttings grow roots faster in water or in compost/, scene("room", "A cutting in a glass of water and a cutting in a pot of compost.", [["🥤", 110, 120, 62, "Water"], ["🪴", 290, 120, 62, "Compost"]])),
+    rule(/Ellie grows new potato plants/, scene("meadow", "A potato and a young potato plant.", [["🥔", 130, 150, 70], ["🌱", 270, 140, 76]])),
+    rule(/Leo measures a strawberry runner/, scene("meadow", "A strawberry plant with strawberries and a ruler.", [["🍓", 130, 130, 76], ["📏", 280, 140, 70]])),
+    rule(/Leo watches the garden/, scene("meadow", "A bee on a flower, a squirrel and a gust of wind.", [["🐝", 100, 100, 54], ["🌸", 100, 160, 60], ["🐿️", 210, 150, 60], ["💨", 310, 110, 54]])),
+  ],
+  "reproduction-in-animals": [
+    rule(/Maya wants to find the gestation period of a giraffe/, scene("meadow", "A giraffe with a book beside it.", [["🦒", 140, 120, 100], ["📚", 300, 150, 60]])),
+    rule(/Ellie watches eggs hatch in an incubator/, scene("room", "Eggs and a chick in a warm box.", [["🥚", 140, 150, 58], ["🥚", 210, 155, 58], ["🐣", 285, 145, 66]])),
+    rule(/Maya compares photos of a lamb and its parents/, scene("meadow", "A lamb standing beside two adult sheep.", [["🐑", 110, 140, 78], ["🐑", 210, 140, 78], ["🐏", 315, 165, 46]])),
+    rule(/Ellie reads that a hen sits on her eggs for 21 days/, scene("meadow", "A hen sitting on her eggs.", [["🐔", 200, 120, 90], ["🥚", 150, 190, 34], ["🥚", 250, 190, 34]])),
+    rule(/Ellie watches chicks hatch/, scene("room", "A chick hatching from an egg.", [["🐣", 200, 130, 96]])),
+  ],
+  "stages-of-human-growth": [
+    rule(/Ellie's baby cousin was 50 cm long at birth/, scene("room", "A baby and a ruler.", [["👶", 140, 130, 80], ["📏", 280, 130, 74]])),
+    rule(/Leo measures his height on each birthday/, scene("room", "A child standing next to a ruler on the wall.", [["🧒", 150, 130, 84], ["📏", 260, 130, 90], ["🎂", 335, 175, 50]])),
+    rule(/Ellie reads that a baby grows about 25 cm/, scene("room", "A baby lying beside a book.", [["👶", 150, 140, 80], ["📖", 270, 140, 66]])),
+    rule(/Leo's family photo album is out of order/, scene("room", "A photo album and a camera.", [["📸", 150, 130, 74], ["📔", 270, 135, 74]])),
+    rule(/Why do scientists measure many babies/, scene("room", "Three babies in a row.", [["👶", 100, 130, 72], ["👶", 200, 130, 72], ["👶", 300, 130, 72]])),
+    rule(/Maya's growth chart shows one person's height/, scene("plain", "A chart and a ruler.", [["📈", 150, 120, 80], ["📏", 270, 125, 70]])),
+  ],
+  "changes-during-puberty": [
+    rule(/Leo reads a website that says all children start puberty/, scene("room", "A child reading a website on a laptop.", [["💻", 200, 125, 90], ["🧒", 100, 150, 56]])),
+    rule(/Leo uses a health leaflet written by experts and a rumour/, scene("plain", "A health leaflet and a whispered rumour.", [["📄", 120, 120, 74, "Health leaflet"], ["🗣️", 290, 120, 74, "Rumour"]])),
+    rule(/Maya plans her research|Order Leo's steps to find out/, scene("room", "A notebook and a pencil for planning.", [["📓", 150, 130, 76], ["✏️", 270, 130, 66]])),
+    rule(/Using the leaflet table/, scene("plain", "A health leaflet with a table.", [["📄", 200, 125, 90]])),
+  ],
+  "growing-older": [
+    rule(/Ellie's grandad says he cannot hear the television/, scene("room", "A grandad sitting in front of a television.", [["👴", 140, 130, 84], ["📺", 280, 120, 80]])),
+    rule(/Maya's grandma runs a half marathon/, scene("street", "A grandma running a race.", [["🏃‍♀️", 200, 120, 90], ["🏅", 320, 80, 40]])),
+    rule(/A mouse lives about 2 years but a tortoise/, scene("meadow", "A mouse that lives about 2 years and a tortoise that can live over 100 years.", [["🐭", 110, 130, 62, "about 2 years"], ["🐢", 290, 130, 74, "over 100 years"]])),
+    rule(/Ellie wants to find out how long a horse lives/, scene("meadow", "A horse and some books.", [["🐴", 140, 130, 88], ["📚", 290, 150, 62]])),
+    rule(/Ellie interviews her grandmother/, scene("room", "A girl with a microphone interviewing her grandmother.", [["👵", 280, 130, 84], ["🧒", 130, 140, 64], ["🎙️", 200, 150, 44]])),
+  ],
+  "properties-of-materials": [
+    rule(/Maya puts a spoonful of sugar in a large cup of water and a spoonful of sand in a small cup/, cups("A large cup of water with a spoonful of sugar added, and a small cup of water with a spoonful of sand added.", [{ title: "Large cup", note: "sugar", add: true }, { title: "Small cup", size: "small", note: "sand", add: true }])),
+    rule(/Leo scratches a plastic spoon with a steel nail/, scene("lab", "A plastic spoon and a steel nail.", [["🥄", 120, 130, 70, "Plastic spoon"], ["🔩", 290, 130, 66, "Steel nail"]])),
+    rule(/Ellie says that all shiny metals are magnetic|Why should Ellie use the same magnet/, scene("lab", "A magnet and some shiny metal objects.", [["🧲", 110, 130, 72], ["🥫", 220, 135, 60], ["🔩", 310, 135, 56]])),
+    rule(/Shine a torch on each material/, scene("lab", "A torch shining on a sheet of material.", [["🔦", 120, 130, 78], ["🪟", 290, 120, 72]])),
+    rule(/Test each object with a magnet/, scene("lab", "A magnet being held near some objects.", [["🧲", 110, 120, 74], ["📎", 230, 140, 52], ["🥫", 310, 140, 52]])),
+    rule(/Stir each one in water/, scene("lab", "A spoon stirring a glass of water.", [["🥄", 140, 120, 72], ["🥛", 270, 130, 72]])),
+  ],
+  "conductors-of-heat-and-electricity": [
+    rule(/Both spoons have been in the same room all day/, scene("room", "A metal spoon and a wooden spoon side by side.", [["🥄", 130, 130, 76, "Metal spoon"], ["🥢", 290, 130, 76, "Wooden spoon"]])),
+    rule(/Ellie's safe spoon test/, scene("room", "Three cups of warm water, each with a different spoon standing in it.", [["🥤", 100, 130, 60], ["🥤", 200, 130, 60], ["🥤", 300, 130, 60]]), [3]),
+    rule(/butter take to melt on the wooden spoon/, scene("room", "A spoon with a blob of butter on it.", [["🥄", 170, 120, 80], ["🧈", 280, 130, 66]])),
+    rule(/How many of the five materials made the bulb light|from the brightest bulb to the dimmest/, scene("lab", "A bulb in a test circuit with a battery.", [["💡", 150, 120, 80], ["🔋", 270, 130, 66]])),
+    rule(/Which spoon was the best thermal conductor/, scene("room", "Three spoons with a blob of butter on each.", [["🥄", 100, 120, 60], ["🥄", 200, 120, 60], ["🥄", 300, 120, 60], ["🧈", 100, 175, 36], ["🧈", 200, 175, 36], ["🧈", 300, 175, 36]])),
+  ],
+  "choosing-materials-for-a-job": [
+    rule(/Leo tests three jackets, but one is much thicker/, scene("room", "Three jackets in a row, labelled A, B and C.", [["🧥", 90, 120, 64, "Jacket A"], ["🧥", 200, 120, 64, "Jacket B"], ["🧥", 310, 120, 64, "Jacket C"]])),
+    rule(/Which fabric would make the best blackout curtain/, scene("room", "A window with a curtain.", [["🪟", 200, 120, 100]])),
+    rule(/A company wants a plastic that makes a cable safe to touch/, scene("lab", "A plastic-coated cable and a plug.", [["🔌", 200, 125, 96]])),
+    rule(/Which wrapping was the best insulator in Ellie's results/, scene("lab", "An ice cube wrapped in material.", [["🧊", 160, 130, 76], ["🎁", 280, 130, 70]])),
+    rule(/Maya's test shows that foam kept ice cold longest/, scene("lab", "An ice cube and a lunch box.", [["🧊", 140, 130, 70], ["🍱", 270, 130, 70]])),
+  ],
+  "dissolving-and-solutions": [
+    rule(/Maya weighs a cup of salt and water before and after/, scene("lab", "A set of scales with a cup of salt water.", [["⚖️", 150, 125, 84], ["🥛", 290, 130, 66]])),
+    rule(/Ellie stirs chalk powder into water/, cups("A cup of water with chalk powder stirred in. It stays cloudy.", [{ title: "Chalk powder in water", add: true }])),
+    rule(/Leo compares stirring with not stirring/, cups("Two cups of water with sugar added. One is stirred and one is not.", [{ title: "Stirred", note: "sugar", add: true }, { title: "Not stirred", note: "sugar", add: true }])),
+    rule(/Ellie compares warm and cold water\. Is each part/, cups("Two cups of water, one warm and one cold.", [{ title: "Warm water" }, { title: "Cold water" }])),
+    rule(/Some sugar sank to the bottom/, cups("A cup of water with some sugar lying at the bottom.", [{ title: "Sugar at the bottom", add: true }])),
+  ],
+  "separating-mixtures": [
+    rule(/Leo pours salty water through filter paper/, { type: "filter", mixture: "salty water", alt: "Salty water being poured through filter paper in a funnel above a beaker." }),
+    rule(/cold damp cupboard|In which place would Ellie get her salt back/, scene("room", "A sunny windowsill and a cold damp cupboard.", [["🪟", 110, 120, 70, "Sunny windowsill"], ["🚪", 290, 120, 70, "Cold damp cupboard"]])),
+    rule(/Why might salty water take longer to dry up on a cool, damp day/, scene("sky", "A dish of salty water on a rainy, cool day.", [["🌧️", 200, 70, 70], ["🥣", 200, 160, 64]])),
+    rule(/What was the total mass of the mixture/, scene("lab", "A set of scales weighing a bowl of mixture.", [["⚖️", 150, 125, 84], ["🥣", 290, 135, 66]])),
+    rule(/Maya has a dry mixture of tiny iron filings and flour/, scene("lab", "A bowl holding a dry mixture of iron filings and flour.", [["🥣", 200, 130, 100]])),
+  ],
+  "reversible-changes": [
+    rule(/Leo melts chocolate and lets it set again/, scene("room", "A bar of chocolate.", [["🍫", 200, 130, 96]])),
+    rule(/A melted ice lolly is put back in the freezer/, scene("room", "An ice lolly and a freezer.", [["🍧", 130, 130, 76], ["🧊", 290, 130, 70]])),
+    rule(/Ellie says that frying an egg is reversible/, scene("room", "An egg frying in a pan.", [["🍳", 200, 130, 96]])),
+    rule(/Maya watches a pan of water being heated/, scene("room", "A pan of water with steam rising.", [["🍲", 200, 140, 90], ["💨", 200, 60, 40]])),
+    rule(/Put Leo's observations of an ice cube in order|ice cube take to melt/, scene("room", "An ice cube on a tray.", [["🧊", 200, 130, 96]])),
+  ],
+  "irreversible-changes": [
+    rule(/Maya fixes a balloon over a bottle of vinegar and bicarbonate of soda/, { type: "balloon", alt: "A balloon fixed over the neck of a bottle. The balloon is blown up and there are bubbles in the bottle." }),
+    rule(/In the rust test, why does Leo use nails of the same type and size/, scene("lab", "Three nails of the same type and size.", [["🔩", 100, 130, 66, "Nail A"], ["🔩", 200, 130, 66, "Nail B"], ["🔩", 300, 130, 66, "Nail C"]])),
+    rule(/A teacher burns a piece of paper in a safe tray/, scene("lab", "A teacher watching a piece of paper in a metal tray.", [["🧑‍🏫", 140, 130, 78], ["📄", 290, 150, 60]])),
+    rule(/Spencer Silver made a new kind of glue/, scene("room", "A pad of sticky notes.", [["📝", 200, 130, 96]])),
+    rule(/Put the steps of baking a cake in order/, scene("room", "A mixing bowl and a whisk.", [["🥣", 140, 130, 76], ["🥚", 270, 140, 60]])),
+  ],
+  "the-solar-system": [
+    rule(/A pupil says that the Moon is a planet/, scene("night", "The Moon in a night sky.", [["🌙", 200, 120, 100]])),
+    rule(/A book says that Jupiter has many moons/, scene("night", "A book open beside a planet with moons.", [["🪐", 130, 120, 84], ["📖", 290, 130, 74]])),
+    rule(/Which source would be best to find the number of planets/, scene("room", "A science book and a museum.", [["📚", 130, 130, 76], ["🏛️", 290, 130, 76]])),
+    rule(/Leo makes a model with the Sun in the middle/, scene("room", "A model of the Sun with balls around it.", [["☀️", 200, 120, 90], ["⚪", 90, 160, 30], ["⚪", 320, 100, 30]])),
+  ],
+  "planets-and-orbits": [
+    rule(/A scientist saw four moons moving around Jupiter/, scene("night", "A telescope looking at Jupiter.", [["🔭", 130, 130, 84], ["🪐", 290, 110, 80]])),
+    rule(/Ellie builds a model solar system on the playground/, scene("meadow", "Children setting out a model solar system on a playground.", [["🧒", 100, 160, 56], ["☀️", 220, 130, 56], ["⚪", 300, 175, 34]])),
+    rule(/Maya reads that the planets were once thought to move in perfect circles/, scene("room", "A girl reading a book about planets.", [["📖", 150, 130, 80], ["🪐", 290, 120, 70]])),
+    rule(/supplied table/, scene("night", "A planet in space.", [["🪐", 200, 120, 100]])),
+    rule(/Leo says that the Sun moves around the Earth/, scene("sky", "The Sun crossing the sky above a field.", [["☀️", 120, 70, 70], ["🌳", 290, 150, 80]])),
+  ],
+  "sun-earth-and-moon": [
+    rule(/Ellie holds a ball in a dark room with a torch/, scene("night", "A torch lighting up a ball in a dark room.", [["🔦", 100, 130, 74], ["⚽", 290, 130, 70]])),
+    rule(/In Maya's model, a torch is the Sun and a ball is the Moon/, scene("night", "A torch standing for the Sun and a ball standing for the Moon.", [["🔦", 100, 130, 74, "Torch"], ["⚽", 290, 130, 64, "Ball"]])),
+    rule(/The Moon takes about 27 days to orbit the Earth/, { type: "orbit", bodies: "earth-moon", labels: true, alt: "The Moon travelling in a circle around the Earth." }),
+    rule(/Leo says the Moon is a star because it shines/, scene("night", "The Moon glowing in the night sky.", [["🌙", 200, 120, 100]])),
+  ],
+  "day-and-night": [
+    rule(/Maya shines a torch on a globe and turns the globe/, { type: "dayNight", torch: true, alt: "A torch shining on a model globe. One half of the globe is lit and the other half is dark." }),
+    rule(/supplied clock record/, scene("room", "A clock and a globe.", [["🕐", 140, 130, 84], ["🌍", 280, 130, 84]])),
+    rule(/Ellie measures a stick's shadow every hour/, scene("meadow", "A stick in the ground with the Sun above it and a ruler.", [["☀️", 110, 60, 66], ["🪧", 220, 140, 70], ["📏", 320, 185, 50]])),
+    rule(/Why do people in different countries have different times/, scene("room", "A globe and two clocks.", [["🌍", 200, 120, 90], ["🕐", 80, 150, 52], ["🕘", 320, 150, 52]])),
+  ],
+  "phases-of-the-moon": [
+    rule(/Maya has a lamp as the Sun and a ball as the Moon/, scene("night", "A lamp standing for the Sun and a ball standing for the Moon held by a girl.", [["💡", 90, 130, 70, "Lamp"], ["🧒", 220, 150, 60], ["⚽", 310, 100, 46, "Ball"]])),
+    rule(/Ellie draws the Moon every night for a week and sees it growing/, { type: "moonPhases", phases: [1, 2, "?"], alt: "Two Moons she has already drawn, a thin crescent then a half Moon, and a dotted circle with a question mark for the next one." }),
+    rule(/A calendar says there is a full Moon today|A full Moon is seen on Monday 1st/, scene("night", "A calendar and a full Moon.", [["📅", 130, 130, 84], ["🌕", 290, 120, 84]])),
+    rule(/Maya records the Moon each night for a month/, scene("night", "A notebook and the Moon.", [["📓", 130, 130, 76], ["🌙", 290, 120, 80]])),
+  ],
+  gravity: [
+    rule(/Ellie drops a heavy book and a light book/, scene("room", "A heavy book and a light book held up ready to drop.", [["📕", 120, 90, 72, "Heavy book"], ["📗", 290, 90, 46, "Light book"]])),
+    rule(/Leo holds a stone in his hand/, scene("meadow", "A boy holding a stone in his hand.", [["🧒", 150, 140, 80], ["🪨", 235, 130, 40]])),
+    rule(/Ellie drops a ball from 1 m, 2 m and 3 m/, scene("room", "A ball held at three heights above the floor: 1 m, 2 m and 3 m.", [["⚽", 90, 160, 40, "1 m"], ["⚽", 200, 110, 40, "2 m"], ["⚽", 310, 60, 40, "3 m"]])),
+    rule(/A scientist drops a ball from three heights/, scene("room", "A ball held at three different heights above the floor.", [["⚽", 90, 160, 40], ["⚽", 200, 110, 40], ["⚽", 310, 60, 40]])),
+    rule(/On the Moon, gravity is weaker than on Earth/, scene("night", "A bag on the Moon.", [["🌙", 140, 120, 90], ["🎒", 290, 140, 64]])),
+    rule(/A forcemeter reads 5 N when it holds an apple/, scene("room", "A forcemeter holding an apple. It reads 5 N.", [["🍎", 200, 160, 56, "5 N"]])),
+  ],
+  "air-and-water-resistance": [
+    rule(/Ellie tests parachutes of different sizes/, scene("sky", "Three parachutes of different sizes: small, medium and large.", [["🪂", 90, 120, 44, "Small"], ["🪂", 200, 100, 64, "Medium"], ["🪂", 315, 85, 88, "Large"]])),
+    rule(/Leo changes the canopy size and the weight of the load/, scene("sky", "A parachute with a bigger canopy and a heavier load.", [["🪂", 200, 100, 90]])),
+    rule(/Maya wants more accurate times for her parachutes/, scene("sky", "A parachute and a stopwatch.", [["🪂", 140, 100, 76], ["⏱️", 300, 130, 64]])),
+    rule(/Maya finds a large flat boat is slower than a pointed boat/, scene("pond", "A large flat boat and a pointed boat on the water.", [["🛶", 120, 150, 64, "Large flat boat"], ["⛵", 295, 140, 64, "Pointed boat"]])),
+    rule(/Leo times 4 drops of a medium parachute/, { type: "counters", icon: "🪂", total: 4, label: "4 drops of the medium parachute", alt: "Four parachutes in a row, one for each drop." }),
+    rule(/Ellie explains why her paper cone falls slowly/, scene("room", "A paper cone falling through the air.", [["🔻", 200, 130, 86], ["💨", 290, 100, 44]])),
+  ],
+  friction: [
+    rule(/Ellie wants a fair test of different surfaces on a ramp/, { type: "ramp", surfaces: [], alt: "A toy car at the top of a ramp. It will roll down onto a flat surface." }),
+    rule(/Leo uses a heavy car on carpet and a light car on plastic/, { type: "ramp", surfaces: ["Carpet", "Plastic"], alt: "A ramp with a flat surface at the bottom. One half of it is carpet and the other half is plastic." }),
+    rule(/Maya wants better data from her ramp test|Which question can Maya test fairly/, { type: "ramp", surfaces: [], alt: "A toy car at the top of a ramp ready to roll down onto a flat surface." }),
+    rule(/Looking at the supplied results, which surface gave the most friction/, { type: "ramp", surfaces: ["Carpet", "Cardboard", "Plastic"], alt: "A ramp with three flat surfaces at the bottom: carpet, cardboard and smooth plastic." }),
+    rule(/Ellie rolls the car on one surface three times/, { type: "ramp", surfaces: [], alt: "A toy car on a ramp, rolling down onto a flat surface." }),
+  ],
+  "levers-pulleys-and-gears": [
+    rule(/Maya has a stiff paint-tin lid/, scene("lab", "A tin of paint with a screwdriver beside it.", [["🥫", 130, 130, 76, "Paint tin"], ["🪛", 290, 130, 70, "Screwdriver"]])),
+    rule(/A small gear with 10 teeth turns a large gear with 20 teeth|A gear with 10 teeth drives a gear with 20 teeth/, { type: "gears", small: 10, large: 20, alt: "A small gear with 10 teeth meshed with a large gear with 20 teeth." }),
+    rule(/A pulley changes the direction of the force/, { type: "pulley", load: "🚩", alt: "A rope over a pulley wheel. A flag is on one end of the rope and a hand pulls down on the other end." }),
+    rule(/A load needs 40 N to lift directly/, { type: "pulley", load: "📦", alt: "A pulley wheel with a rope. A box hangs from one end and a hand pulls the other end down." }),
+    rule(/Looking at the supplied results, where was the least force needed/, { type: "lever", pivotAt: 0.3, pushAt: 0.9, load: "📦", alt: "A plank on a pivot with a load box on one end. A push can be made at different distances from the pivot." }),
+  ],
+};

@@ -11,19 +11,20 @@ import "./science-round.css";
  * `reference`  standing material to look at (a parts table)
  * `evidence`   what the child must read to answer (an observation card)
  * `answerLabel` visible label for the answer area (the old instruction line)
- * `speak`      words for the small 🔊 beside the prompt; `gloss` fills the
+ * `speak`      words for the small 🔊 beside the prompt (`speakLang`, e.g. "fr-FR",
+ *              picks its voice); `gloss` fills the
  *              "Science words" chip
  * `check`      { label, disabled, onClick }, or null when a stage has no button yet
  * `secondary`  optional extra control after Check (e.g. "Restart")
  * `feedback`   the shell's feedback node (ChallengeShell `wide` hands it over)
  */
-export default function ScienceRound({ prompt, speak, speakLabel = "Hear the question", gloss, figure, reference, evidence, answerLabel, children, hint, check, secondary, feedback }) {
+export default function ScienceRound({ prompt, speak, speakLabel = "Hear the question", speakLang, gloss, figure, reference, evidence, answerLabel, children, hint, check, secondary, feedback }) {
   const hasFigure = Boolean(figure);
   return (
     <div className={`science-round ${hasFigure ? "has-figure" : "is-single"}`}>
       <div className="science-round-prompt">
         <div className="science-round-prompt-text">{prompt}</div>
-        {speak && <SpeakButton text={speak} compact label={speakLabel} />}
+        {speak && <SpeakButton text={speak} compact label={speakLabel} lang={speakLang} />}
         {gloss && (
           <details className="science-round-words">
             <summary>Science words</summary>

@@ -41,7 +41,7 @@ try {
   assert.equal(xml.querySelectorAll('url > loc').length, PUBLIC_PATHS.length);
   for (const loc of xml.querySelectorAll('loc')) assert.ok(PUBLIC_PATHS.includes(new URL(loc.textContent).pathname));
   assert.equal((await fetch(`${base}/social-card.png`)).headers.get('content-type'), 'image/png');
-  for (const pathname of ['/missing', '/learn/missing', '/assets/missing.js', '/year/2/math/problem/missing/missing/999', '/curriculum-guide/year-5-maths', '/curriculum-guide/year-1-music']) assert.equal((await fetch(`${base}${pathname}`)).status, 404);
+  for (const pathname of ['/missing', '/learn/missing', '/assets/missing.js', '/year/2/math/problem/missing/missing/999', '/curriculum-guide/year-6-maths', '/curriculum-guide/year-1-music']) assert.equal((await fetch(`${base}${pathname}`)).status, 404);
   for (const pathname of ['/login', '/parent', '/profiles', '/reset-password?token=example', '/number-bonds']) {
     const response = await fetch(`${base}${pathname}`);
     assert.equal(response.headers.get('x-robots-tag'), 'noindex, follow');

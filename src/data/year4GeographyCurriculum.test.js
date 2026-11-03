@@ -39,7 +39,7 @@ test("Year 4 Geography locks all 16 topic IDs, 64 wrapper paths, four slots, cer
 test("Geography stays outside Year 4 awards and rejects an unknown year", () => {
   assert.equal(countsTowardYear(4, "geography"), false);
   assert.ok(!yearAwardSubjectIds(4).includes("geography"));
-  assert.equal(loadCurriculum(5, "geography"), null);
+  assert.equal(loadCurriculum(6, "geography"), null);
 });
 
 test("all Year 4 geography challenges cascade through topics/categories, survive reload, and remain replayable", () => {

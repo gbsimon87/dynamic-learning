@@ -11,6 +11,8 @@ import "./english-kit.css";
  *            on its own line), "item" a numbered step. A "p" may carry a
  *            `label` ("Paragraph 1") shown above it, for questions that
  *            name paragraphs.
+ * `lang`     optional BCP 47 tag ("fr-FR") the 🔊 button speaks in.
+ *            `kind: "code"` shows lines in monospace with their spaces kept.
  * `speak`    shows a 🔊 "Read it to me" button. It is never automatic: the
  *            reading is the skill, and listening is the child's choice.
  * `highlight` optional Set of block indices to mark, for a hint.
@@ -29,7 +31,7 @@ function ReadingPassage({ passage, speak = true, highlight }) {
       {(passage.title || speak) && (
         <header className="reading-passage-head">
           {passage.title && <h4 className="reading-passage-title">{passage.title}</h4>}
-          {speak && <SpeakButton text={spoken} label="Read it to me" />}
+          {speak && <SpeakButton text={spoken} label="Read it to me" lang={passage.lang} />}
         </header>
       )}
       <div className="reading-passage-body">

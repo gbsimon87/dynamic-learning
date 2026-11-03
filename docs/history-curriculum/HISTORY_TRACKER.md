@@ -5,6 +5,10 @@
 **Current milestone:** Years 1–4 complete; Year 3 bug/security review applied.
 **Built:** Year 1: 14/14 topics, 56/56 challenges. Year 2: 17/17 topics, 68/68
 challenges. Year 3: 22/22 topics, 88/88 challenges. Year 4: 18/18 topics, 72/72 challenges.
+**Year 5 (2026-11-03, branch `feat/year-5`):** 22/22 topics, 88/88 challenges.
+Ancient Greece and the Maya c. AD 900; the crosswalk is in
+`docs/curriculum/key-stage-2-history.md`. Not yet owner-reviewed, and its
+reference URLs need checking.
 
 ## Resume point
 

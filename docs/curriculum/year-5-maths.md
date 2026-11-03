@@ -220,3 +220,106 @@ in 2015. This file follows the PDF. Of the differences, 51 are only punctuation,
 - …as a decimal — PDF: *(nothing)*; web page: “fraction”
 - …rectangles (including squares), — PDF: “and”; web page: *(nothing)*
 - …straight line and — PDF: “1/2”; web page: “half”
+
+
+---
+
+## Topics mapped to statutory requirements
+
+Year 5 Maths in the app: 46 topics in 8 categories, each with four challenges (`src/data/year5MathCurriculum.js`). Bullets below are quoted from the statutory text above; some topics serve a bullet only in part, as noted in brackets. The category titles and topic ids are permanent.
+
+
+### Number - Number and Place Value
+
+| Topic | Id | Statutory bullet it serves |
+|---|---|---|
+| Place Value to a Million | `place-value-to-a-million` | read, write, order and compare numbers to at least 1 000 000 and determine the value of each digit |
+| Ordering and Comparing Numbers to a Million | `ordering-and-comparing-numbers-to-a-million` | read, write, order and compare numbers to at least 1 000 000 and determine the value of each digit |
+| Counting in Steps and Number Sequences | `counting-in-steps-and-number-sequences` | count forwards or backwards in steps of powers of 10 for any given number up to 1 000 000 (and the non-statutory linear sequences with fractions and decimals, term-to-term rule) |
+| Negative Numbers and Counting Through Zero | `negative-numbers-and-counting-through-zero` | interpret negative numbers in context, count forwards and backwards with positive and negative whole numbers, including through zero |
+| Rounding Large Numbers | `rounding-large-numbers` | round any number up to 1 000 000 to the nearest 10, 100, 1000, 10 000 and 100 000 |
+| Roman Numerals to 1000 | `roman-numerals-to-1000` | read Roman numerals to 1000 (M) and recognise years written in Roman numerals |
+| Large Number Problems | `large-number-problems` | solve number problems and practical problems that involve all of the above |
+
+### Number - Addition and Subtraction
+
+| Topic | Id | Statutory bullet it serves |
+|---|---|---|
+| Column Addition and Subtraction with Large Numbers | `column-addition-and-subtraction-with-large-numbers` | add and subtract whole numbers with more than 4 digits, including using formal written methods (columnar addition and subtraction) |
+| Mental Addition and Subtraction with Large Numbers | `mental-addition-and-subtraction-with-large-numbers` | add and subtract numbers mentally with increasingly large numbers |
+| Rounding to Check Answers | `rounding-to-check-answers` | use rounding to check answers to calculations and determine, in the context of a problem, levels of accuracy |
+| Multi-Step Addition and Subtraction Problems | `multi-step-addition-and-subtraction-problems` | solve addition and subtraction multi-step problems in contexts, deciding which operations and methods to use and why |
+
+### Number - Multiplication and Division
+
+| Topic | Id | Statutory bullet it serves |
+|---|---|---|
+| Multiples and Factors | `multiples-and-factors` | identify multiples and factors, including finding all factor pairs of a number, and common factors of two numbers |
+| Prime and Composite Numbers | `prime-and-composite-numbers` | know and use the vocabulary of prime numbers, prime factors and composite (non-prime) numbers; establish whether a number up to 100 is prime and recall prime numbers up to 19 |
+| Written Multiplication | `written-multiplication` | multiply numbers up to 4 digits by a one- or two-digit number using a formal written method (the one-digit part) |
+| Long Multiplication | `long-multiplication` | multiply numbers up to 4 digits by a one- or two-digit number using a formal written method, including long multiplication for two-digit numbers |
+| Mental Multiplication and Division | `mental-multiplication-and-division` | multiply and divide numbers mentally drawing upon known facts |
+| Short Division and Remainders | `short-division-and-remainders` | divide numbers up to 4 digits by a one-digit number using the formal written method of short division and interpret remainders appropriately for the context |
+| Multiplying and Dividing by 10, 100 and 1000 | `multiplying-and-dividing-by-10-100-and-1000` | multiply and divide whole numbers and those involving decimals by 10, 100 and 1000 |
+| Square and Cube Numbers | `square-and-cube-numbers` | recognise and use square numbers and cube numbers, and the notation for squared (²) and cubed (³) |
+| Scaling and Rate Problems | `scaling-and-rate-problems` | solve problems involving multiplication and division, including scaling by simple fractions and problems involving simple rates |
+| Four Operations and the Equals Sign | `four-operations-and-the-equals-sign` | solve problems involving addition, subtraction, multiplication and division and a combination of these, including understanding the meaning of the equals sign; solve problems involving multiplication and division including using their knowledge of factors and multiples, squares and cubes |
+
+### Number - Fractions (including Decimals and Percentages)
+
+| Topic | Id | Statutory bullet it serves |
+|---|---|---|
+| Comparing and Ordering Fractions | `comparing-and-ordering-fractions` | compare and order fractions whose denominators are all multiples of the same number |
+| Equivalent Fractions | `equivalent-fractions` | identify, name and write equivalent fractions of a given fraction, represented visually, including tenths and hundredths |
+| Mixed Numbers and Improper Fractions | `mixed-numbers-and-improper-fractions` | recognise mixed numbers and improper fractions and convert from one form to the other and write mathematical statements > 1 as a mixed number |
+| Adding and Subtracting Fractions | `adding-and-subtracting-fractions` | add and subtract fractions with the same denominator and denominators that are multiples of the same number |
+| Multiplying Fractions by Whole Numbers | `multiplying-fractions-by-whole-numbers` | multiply proper fractions and mixed numbers by whole numbers, supported by materials and diagrams |
+| Decimals as Fractions and Thousandths | `decimals-as-fractions-and-thousandths` | read and write decimal numbers as fractions; recognise and use thousandths and relate them to tenths, hundredths and decimal equivalents |
+| Rounding, Ordering and Comparing Decimals | `rounding-ordering-and-comparing-decimals` | round decimals with two decimal places to the nearest whole number and to one decimal place; read, write, order and compare numbers with up to three decimal places |
+| Adding and Subtracting Decimals | `adding-and-subtracting-decimals` | solve problems involving number up to three decimal places (including complements of 1 and decimals with different numbers of places, from the non-statutory notes) |
+| Percentages, Fractions and Decimals | `percentages-fractions-and-decimals` | recognise the per cent symbol (%) and understand that per cent relates to ‘number of parts per hundred’, and write percentages as a fraction with denominator 100, and as a decimal; solve problems which require knowing percentage and decimal equivalents of 1/2, 1/4, 1/5, 2/5, 4/5 and those fractions with a denominator of a multiple of 10 or 25 |
+
+### Measurement
+
+| Topic | Id | Statutory bullet it serves |
+|---|---|---|
+| Converting Metric Units | `converting-metric-units` | convert between different units of metric measure |
+| Metric and Imperial Equivalents | `metric-and-imperial-equivalents` | understand and use approximate equivalences between metric units and common imperial units such as inches, pounds and pints |
+| Perimeter of Composite Rectilinear Shapes | `perimeter-of-composite-rectilinear-shapes` | measure and calculate the perimeter of composite rectilinear shapes in centimetres and metres |
+| Area of Rectangles | `area-of-rectangles` | calculate and compare the area of rectangles (including squares), and including using standard units, square centimetres (cm²) and square metres (m²) |
+| Estimating Area, Volume and Capacity | `estimating-area-volume-and-capacity` | estimate the area of irregular shapes; estimate volume [for example, using 1 cm³ blocks to build cuboids (including cubes)] and capacity |
+| Converting Units of Time | `converting-units-of-time` | solve problems involving converting between units of time |
+| Measurement Problems | `measurement-problems` | use all four operations to solve problems involving measure [for example, length, mass, volume, money] using decimal notation, including scaling |
+
+### Geometry – Properties of Shapes
+
+| Topic | Id | Statutory bullet it serves |
+|---|---|---|
+| 3-D Shapes from 2-D Drawings | `3-d-shapes-from-2-d-drawings` | identify 3-D shapes, including cubes and other cuboids, from 2-D representations |
+| Estimating, Measuring and Drawing Angles | `estimating-measuring-and-drawing-angles` | know angles are measured in degrees: estimate and compare acute, obtuse and reflex angles; draw given angles, and measure them in degrees (°) |
+| Angles at a Point and on a Straight Line | `angles-at-a-point-and-on-a-straight-line` | identify angles at a point and one whole turn (total 360°); angles at a point on a straight line and 1/2 a turn (total 180°); other multiples of 90° |
+| Properties of Rectangles | `properties-of-rectangles` | use the properties of rectangles to deduce related facts and find missing lengths and angles |
+| Regular and Irregular Polygons | `regular-and-irregular-polygons` | distinguish between regular and irregular polygons based on reasoning about equal sides and angles |
+
+### Geometry – Position and Direction
+
+| Topic | Id | Statutory bullet it serves |
+|---|---|---|
+| Reflecting Shapes | `reflecting-shapes` | identify, describe and represent the position of a shape following a reflection or translation, using the appropriate language, and know that the shape has not changed (reflection) |
+| Translating Shapes | `translating-shapes` | identify, describe and represent the position of a shape following a reflection or translation, using the appropriate language, and know that the shape has not changed (translation) |
+
+### Statistics
+
+| Topic | Id | Statutory bullet it serves |
+|---|---|---|
+| Reading Line Graphs | `reading-line-graphs` | solve comparison, sum and difference problems using information presented in a line graph |
+| Tables and Timetables | `tables-and-timetables` | complete, read and interpret information in tables, including timetables |
+
+### Coverage notes
+
+- Every statutory Year 5 bullet has at least one topic; none is without one.
+- The statutory bullet on forming a combination of operations and the one on factors, multiples, squares and cubes are both served by *Four Operations and the Equals Sign*, with *Scaling and Rate Problems* serving the scaling and rates bullet.
+- Bullets that name several skills are split across topics: reflection and translation (*Reflecting Shapes*, *Translating Shapes*), long and short multiplication (*Written Multiplication*, *Long Multiplication*), estimating area (*Estimating Area, Volume and Capacity*) and calculating area (*Area of Rectangles*).
+- "Other multiples of 90°" is practised inside *Estimating, Measuring and Drawing Angles* (turns, right angles) as well as *Angles at a Point and on a Straight Line*.
+- Fraction and decimal sequences from the non-statutory notes appear in the second challenge of *Counting in Steps and Number Sequences*, as a choice of rule (decimals cannot be typed on the keypad).
+- Nothing from Year 6 is taught: no common multiples, no percentages of amounts beyond the 1/2, 1/4, 1/5, 2/5, 4/5 and tenths equivalents, no negative answers to typed questions, no ratio and no algebra beyond the missing-number sentences named in the notes.

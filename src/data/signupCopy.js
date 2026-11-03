@@ -9,6 +9,14 @@ const SUBJECT_CHEERS = {
   english: "I love stories!",
   science: "Ooh, I love magnets!",
   geography: "Let's explore the world!",
+  history: "Tell me a story from long ago!",
+  art: "Let's paint something bright!",
+  computing: "Beep boop, let's code!",
+  design: "Let's build and invent!",
+  french: "Bonjour! Let's speak French!",
+  music: "La la la, I love a tune!",
+  pe: "Ready, steady, go!",
+  wellbeing: "Let's look after ourselves!",
 };
 
 const ORDINALS = ["first", "second", "third", "fourth", "fifth", "sixth"];

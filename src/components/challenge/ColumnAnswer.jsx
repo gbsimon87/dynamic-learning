@@ -2,7 +2,7 @@ import { useLayoutEffect, useReducer } from "react";
 import ColumnBuilder from "./ColumnBuilder";
 import NumberInput from "./NumberInput";
 
-const PLACES = ["ten thousands", "thousands", "hundreds", "tens", "ones"];
+const PLACES = ["millions", "hundred thousands", "ten thousands", "thousands", "hundreds", "tens", "ones"];
 
 /** One digit per column, entered from ones towards the left. */
 export default function ColumnAnswer({ top, bottom, operation, columns = 3, onChange, disabled }) {

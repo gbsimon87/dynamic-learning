@@ -102,12 +102,12 @@ cross-reference labels for the verbatim bullets above, not DfE identifiers.
 
 ## Proposed year split
 
-| Strand | Year 3 | Year 4 |
-|---|---|---|
-| Locational knowledge | Selected UK counties/cities/regions; Europe including Russia; latitude/longitude, hemispheres, tropics and circles | North/South American countries/cities/environmental regions; UK landscape change; Meridian, day/night and time zones |
-| Place knowledge | Lake District National Park (UK) and Campania (Italy) regional studies | Washington State (USA) and comparison of all three bounded regions |
-| Human and physical geography | Mountains, volcanoes, earthquakes, water cycle; introductory regional settlements/land use | Rivers, climate zones, biomes/vegetation; settlements, food/trade and energy/minerals/water distribution |
-| Skills and fieldwork | Eight-point compass, four-figure references, OS key/extract and local land-use survey | Six-figure references, digital mapping/scale/layers and measured local enquiry/presentation |
+| Strand | Year 3 | Year 4 | Year 5 | Year 6 (proposed, not built) |
+|---|---|---|---|---|
+| Locational knowledge | Selected UK counties/cities/regions; Europe including Russia; latitude/longitude, hemispheres, tropics and circles | North/South American countries/cities/environmental regions; UK landscape change; Meridian, day/night and time zones | Scottish Highlands (UK region) located with cities, mountains, lochs and islands; Andalusia (Spain) and the Amazon region of Brazil placed in Europe and South America; real latitude/longitude coordinates and hemispheres; whole-hour time-zone journeys and the date line | Widen and revisit countries, capitals and environmental regions across Europe and the Americas, including more of Russia and Central America and the Caribbean; UK counties and cities revisited with dated change |
+| Place knowledge | Lake District National Park (UK) and Campania (Italy) regional studies | Washington State (USA) and comparison of all three bounded regions | Three further regions studied in more depth: the Scottish Highlands, Andalusia and the Amazon region, with within-region and Highlands-Andalusia comparisons | A fourth UK-Europe-Americas comparison chosen by the learner's evidence, including a Caribbean or Central American region, ending in an evidence-based decision |
+| Human and physical geography | Mountains, volcanoes, earthquakes, water cycle; introductory regional settlements/land use | Rivers, climate zones, biomes/vegetation; settlements, food/trade and energy/minerals/water distribution | Coasts and coastal landforms; rivers in flood; living with volcanoes and earthquakes; climate records and graphs; pressures on biomes and sustainability; global distribution of natural resources; trade links; settlement growth; economic sectors and change in jobs | Glaciers and mountain environments; river and coast management case studies; climate change responses; energy decisions with trade-offs; migration and population; a connected global trade network case study; changing UK land use over time |
+| Skills and fieldwork | Eight-point compass, four-figure references, OS key/extract and local land-use survey | Six-figure references, digital mapping/scale/layers and measured local enquiry/presentation | Contour lines, spot heights and OS map scale; grid distance; enquiry design, primary/secondary data, graphs, anomalies and evaluation | Independent six-figure references on 1:25 000 and 1:50 000 extracts; GIS-style layered digital mapping; a full learner-led fieldwork enquiry with original graphs, digital presentation and written conclusions |
 
 ## Topics mapped to statutory requirements (Years 3 and 4 implemented)
 
@@ -150,6 +150,35 @@ and briefs are in those specs. Title-derived IDs for both years are now permanen
 | 4 | Mapping and Fieldwork Enquiries | [Maps Atlases and Digital Mapping](../geography-curriculum/year-4-design-spec.md#mapping-and-fieldwork-enquiries) | `maps-atlases-and-digital-mapping` | K2-S1, K2-S2, K2-L1, K2-L2 |
 | 4 | Mapping and Fieldwork Enquiries | [Local Fieldwork Enquiry](../geography-curriculum/year-4-design-spec.md#mapping-and-fieldwork-enquiries) | `local-fieldwork-enquiry` | K2-S3, K2-Hh, K2-L2, K2-S1 |
 
+## Year 5 topics mapped to statutory requirements
+
+**Implementation status (2026-11-03):** Year 5 Geography is built: 16 topics / 64 challenges, in
+`src/data/challenges/geography/year5/`. The topic names below are permanent title-derived ids. Year 5 deepens
+Years 3 and 4 rather than repeating them: new regions (a Scottish Highlands study, Andalusia, the Amazon
+region), processes at greater depth (coasts, floods, hazards), real coordinates and time-zone journeys,
+contours and scale, and enquiry design. Requirement codes are the same app cross-reference labels as above.
+Practice data is labelled example data; real climate records are NASA POWER model grid-cell summaries
+(2001–2025). As in Years 3 and 4, digital completion does not certify outdoor fieldwork.
+
+| Year | Category | Topic | Topic ID | Requirement codes |
+|---|---|---|---|---|
+| 5 | Regions in Depth | Scotland and the Highlands | `scotland-and-the-highlands` | K2-P1, K2-L2, K2-Hp, K2-Hh, K2-S1 |
+| 5 | Regions in Depth | Andalusia in Spain | `andalusia-in-spain` | K2-P1, K2-L1, K2-Hp, K2-Hh, K2-S1 |
+| 5 | Regions in Depth | The Amazon Region of Brazil | `the-amazon-region-of-brazil` | K2-P1, K2-L1, K2-Hp, K2-Hh, K2-S1 |
+| 5 | Coasts Rivers and Hazards | Coasts and Coastal Landforms | `coasts-and-coastal-landforms` | K2-Hp, K2-L2, K2-S1 |
+| 5 | Coasts Rivers and Hazards | Rivers in Flood | `rivers-in-flood` | K2-Hp, K2-Hh, K2-L2 |
+| 5 | Coasts Rivers and Hazards | Living with Natural Hazards | `living-with-natural-hazards` | K2-Hp, K2-Hh, K2-L1, K2-S1 |
+| 5 | Climate and Environments | Climate Graphs and Patterns | `climate-graphs-and-patterns` | K2-Hp, K2-L3, K2-S1 |
+| 5 | Climate and Environments | Biomes and Sustainability | `biomes-and-sustainability` | K2-Hp, K2-Hh, K2-L1 |
+| 5 | Resources Trade and Settlement | Natural Resources Around the World | `natural-resources-around-the-world` | K2-Hh, K2-L1, K2-S1 |
+| 5 | Resources Trade and Settlement | Trade Links and Global Connections | `trade-links-and-global-connections` | K2-Hh, K2-L1, K2-S1 |
+| 5 | Resources Trade and Settlement | Settlement Growth and Change | `settlement-growth-and-change` | K2-Hh, K2-L2 |
+| 5 | Resources Trade and Settlement | Economic Activity and Jobs | `economic-activity-and-jobs` | K2-Hh, K2-L2 |
+| 5 | Coordinates Time and Maps | Latitude and Longitude in Practice | `latitude-and-longitude-in-practice` | K2-L3, K2-S1 |
+| 5 | Coordinates Time and Maps | Time Zones and Journeys | `time-zones-and-journeys` | K2-L3, K2-S1 |
+| 5 | Coordinates Time and Maps | Contours Scale and OS Maps | `contours-scale-and-os-maps` | K2-S2, K2-S1 |
+| 5 | Coordinates Time and Maps | Designing a Fieldwork Enquiry | `designing-a-fieldwork-enquiry` | K2-S3, K2-Hh, K2-Hp, K2-S1 |
+
 ## Coverage limits and follow-on work
 
 Years 3–4 represent each KS2 strand at an introductory level. **This does
@@ -176,9 +205,10 @@ digital presentation made by the learner. Example graphs cannot count as
 collected fieldwork data. Grown-up activity cards support those practical
 requirements without adding tracked outdoor completion.
 
-No Years 5–6 build is implied. Year 3 has 64 implemented challenges; Year 4
-has 64 unbuilt proposed challenges. Remaining stage work must be reviewed
-when those later years are specified. Physical-device review remains pending.
+Year 5 is implemented (16 topics, 64 challenges; see the Year 5 table above). Year 6 is
+proposed in the year split only and remains unbuilt. Years 3 and 4 have 64
+implemented challenges each. Remaining stage work must be reviewed when Year 6
+is specified. Physical-device review remains pending.
 
 ---
 

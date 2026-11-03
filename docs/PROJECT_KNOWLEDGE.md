@@ -28,11 +28,28 @@ inventory for each pathway.
 | 4 | [Science](../src/data/year4ScienceCurriculum.js) | 20 | 80 | Complete |
 | 4 | [Geography](../src/data/year4GeographyCurriculum.js) | 16 | 64 | Complete |
 | 4 | [History](../src/data/year4HistoryCurriculum.js) | 18 | 72 | Complete |
-| 5 | All subjects | 0 | 0 | Not implemented |
+| 5 | [Maths](../src/data/year5MathCurriculum.js) | 46 | 184 | Complete |
+| 5 | [English](../src/data/year5EnglishCurriculum.js) | 36 | 144 | Complete |
+| 5 | [Science](../src/data/year5ScienceCurriculum.js) | 24 | 96 | Complete |
+| 5 | [History](../src/data/year5HistoryCurriculum.js) | 22 | 88 | Complete |
+| 5 | [Geography](../src/data/year5GeographyCurriculum.js) | 16 | 64 | Complete |
+| 5 | [Art & Design](../src/data/year5ArtCurriculum.js) | 14 | 56 | Complete |
+| 5 | [Computing](../src/data/year5ComputingCurriculum.js) | 17 | 68 | Complete |
+| 5 | [Design & Technology](../src/data/year5DesignCurriculum.js) | 14 | 56 | Complete |
+| 5 | [French](../src/data/year5FrenchCurriculum.js) | 17 | 68 | Complete |
+| 5 | [Music](../src/data/year5MusicCurriculum.js) | 14 | 56 | Complete |
+| 5 | [PE](../src/data/year5PeCurriculum.js) | 12 | 48 | Complete |
+| 5 | [Relationships & Health](../src/data/year5WellbeingCurriculum.js) | 13 | 52 | Complete |
 | 6 | All subjects | 0 | 0 | Not implemented |
-| **Total** | **20 complete pathways** | **504 built** | **2,016 built** | |
+| **Total** | **32 complete pathways** | **749 built** | **2,996 built** | |
 
 Other year/subject combinations have no implemented Curriculum Mode pathway.
+Year 5 (2026-11-03) adds the five existing subjects and seven new ones: Art &
+Design, Computing, Design & Technology, French, Music, PE and Relationships &
+Health (`wellbeing`). The new subjects exist for Year 5 only and are registered
+with `countsTowardYear: false`, as is Year 5 Geography, so the Year 5 award
+waits for Maths, English, Science and History. See "Curriculum Mode — Year 5"
+below. Year 5 has no Bix lesson screens yet.
 History: Years 1–4 are complete (see
 `docs/history-curriculum/HISTORY_TRACKER.md`).
 Geography's standalone Skills Mode games and saved programmes in
@@ -1829,6 +1846,47 @@ digits, some reworded or dropped phrases); each file lists those differences at
 the end. Each file's text was rebuilt with the web page's headings and lists
 and the PDF's wording, then checked word and punctuation for word against the
 PDF, with stacked fractions and superscripts (cm², 360°) restored.
+
+### Curriculum Mode — Year 5 (2026-11-03)
+
+All twelve Year 5 pathways are built: **245 topics / 980 challenges**. Ids are
+locked in `curriculumIds.test.js`. Each subject maps its topics to the
+statutory text in its `docs/curriculum/` file ("Year 5 topics mapped to
+statutory requirements"), with a Year 6 remainder noted.
+
+| Subject | Banks | Wrappers | Notes |
+|---|---|---|---|
+| Maths | `src/data/challenges/year5Math/` | `math/challenges/year5/` | `ColumnAnswer` gained millions and hundred thousands |
+| English | `src/data/challenges/english/year5*.js`, `src/data/english/appendix1Years5And6.js` | `english/challenges/year5/` | |
+| Science | `src/data/challenges/year5Science/` (reuses the Year 4 engine) | `science/challenges/year5/` | |
+| History | `src/data/challenges/history/year5/` | `history/challenges/year5/` | Ancient Greece and the Maya; `Year5Illustration.jsx` SVGs |
+| Geography | `src/data/challenges/geography/year5/` | `geography/challenges/year5/` | New `contour` and `coast` visuals |
+| Art, Music, D&T | `year5Art/`, `year5Music/`, `year5Design/` | `<id>/challenges/year5/` | Shared helper `year5Creative/shared.js` |
+| PE, Wellbeing | `year5Pe/`, `year5Wellbeing/` | `<id>/challenges/year5/` | Use `year5Creative/shared.js` |
+| French, Computing | `year5French/`, `year5Computing/` | `<id>/challenges/year5/` | Shared helper `challenges/topicBank.js` |
+
+French audio passes `lang: "fr-FR"` through `SpeakButton`, `ReadingPassage`
+and `DataChallenge` (`speakLang`), and no question depends on audio. Computing
+listings use `.reading-passage.is-code`. Wellbeing stays inside the safe
+subset in `primary-relationships-and-health-education.md`, and its test scans
+banks for excluded topics. Each subject has a public guide in
+`shared/curriculumGuides.js` (32 guides).
+
+**Adventure frame.** Science, Art, Music, D&T, PE, Wellbeing, French and
+Computing render through `src/components/challenge/adventure/AdventureChallenge.jsx`,
+the Year 4 Geography look generalised: a start banner (slot stamp, "Subject ·
+Challenge n of 4", a decorative `SubjectScene`), Bix's notes (the topic `rule`,
+one sentence per line, plus `topic.visual`), "Let's go!", then every round as a
+wide `ScienceRound` card with a "📖 Bix's notes" pill. Colours come from the
+`--light-geo-*` / `--dark-geo-*` tokens. Each subject draws its own figures in
+`<id>/challenges/year5/Year5<Subject>Visual.jsx`; types are listed in the bank's
+`visualTypes.js`. A figure must agree with its question and never give away
+the answer. `tests/components/year5Adventure.test.jsx` opens every topic.
+French keeps "Read it to me" off (an English voice would read the French).
+
+Known gaps, left for the owner review: no Bix lessons for Year 5; content is
+not yet fact-checked by a second reader; nothing was played in a browser or on
+a device; French audio depends on a fr-FR voice being installed.
 
 ### Curriculum Mode — Year 1 History (2026-10-12)
 
@@ -4395,6 +4453,15 @@ uses `countsTowardYear: false`; existing Year 3 certificates remain available.
 Year 2 Geography (2026-10-13) reuses that engine with KS1 compass/landmark
 visuals, shorter age limits, bounded place studies and read-only grown-up cards.
 Its 56 wrappers, exact outcomes and registry entry preserve existing year awards.
+Year 5 (2026-11-03) is the worked example of adding a year together with seven
+new subjects (art, computing, design, french, music, pe, wellbeing). The new
+subjects need `CURRICULUM_SUBJECTS` entries, `CHILD_SUBJECTS`, a
+`SUBJECT_LOOKS` colour pair (deep colour ≥4.5:1 on white), a
+`.curriculum-subject-<id>` tone in `src/seo/CurriculumGuide.css`, hero glyphs,
+and an optional `SUBJECT_CHEERS` line in `signupCopy.js`. They are registered
+for Year 5 only, with `countsTowardYear: false`. `curriculumLocks.test.js`
+skips unregistered year/subject pairs, so registering a placeholder dataset
+makes its lock test fail until the subject is filled in.
 
 1. Save the programme of study verbatim from the DfE PDF in `docs/curriculum/`, with a mapping
    section, and get the topic titles signed off. Titles are ids.
