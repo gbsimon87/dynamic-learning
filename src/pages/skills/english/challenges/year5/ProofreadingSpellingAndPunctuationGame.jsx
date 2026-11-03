@@ -7,5 +7,5 @@ const TITLES = [
   "Proofread the longer text."
 ];
 export default function ProofreadingSpellingAndPunctuationGame({ level, onComplete }) {
-  return <ReadingTopicGame level={level} build={buildProofreadingSpellingAndPunctuationQuestions} titles={TITLES} onComplete={onComplete} />;
+  return <ReadingTopicGame illustrate level={level} build={buildProofreadingSpellingAndPunctuationQuestions} titles={TITLES} onComplete={onComplete} />;
 }

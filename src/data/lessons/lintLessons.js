@@ -1,9 +1,9 @@
 import { findUsSpellings, wordCount } from "../english/textChecks.js";
 
 /** Per-year reading limits, matching Geography's (docs/geography-curriculum/shared-design-spec.md §3). */
-export const LESSON_AGES = { 1: { lineWords: 10 }, 2: { lineWords: 12 }, 3: { lineWords: 16 }, 4: { lineWords: 18 } };
+export const LESSON_AGES = { 1: { lineWords: 10 }, 2: { lineWords: 12 }, 3: { lineWords: 16 }, 4: { lineWords: 18 }, 5: { lineWords: 20 } };
 
-const TYPES = new Set(["equation", "column", "steps", "jumps", "bar", "groups", "table", "sentence", "fix"]);
+const TYPES = new Set(["equation", "column", "steps", "jumps", "bar", "groups", "table", "sentence", "fix", "diagram"]);
 const text = (value) => typeof value === "string" && value.trim().length > 0;
 const number = (token) => {
   const m = /^(\d+(?:\.\d+)?)(?:\/(\d+))?$/.exec(token);
@@ -91,6 +91,21 @@ export function lintLessons(lessons, { year, topicIds }) {
       // The wrong side is meant to be wrong, so only the right side is spell-checked.
       if (ex.type === "fix") { need(text(ex.wrong) && ex.wrong !== ex.right, `${at}: fix needs a different wrong version`); words(ex.right, `${at} fix right`); }
       if (ex.type === "table") need(Array.isArray(ex.headers) && Array.isArray(ex.rows) && ex.rows.every((r) => r.length === ex.headers.length), `${at}: table rows must match headers`);
+      if (ex.type === "diagram") {
+        need(text(ex.label), `${at}: diagram needs a text description`);
+        const positive = v => Number.isFinite(v) && v > 0;
+        const points = value => Array.isArray(value) && value.length >= 3 && value.every(p => Array.isArray(p) && p.length === 2 && p.every(Number.isFinite));
+        const valid = {
+          rectangle: () => positive(ex.width) && positive(ex.height) && (!ex.cells || Number.isInteger(ex.width) && Number.isInteger(ex.height)),
+          angle: () => positive(ex.degrees) && ex.degrees < 360,
+          polygon: () => points(ex.points) && text(ex.caption),
+          coordinates: () => points(ex.before) && points(ex.after) && [...ex.before, ...ex.after].flat().every(n => n >= 0 && n <= 5),
+          graph: () => Array.isArray(ex.values) && ex.values.length >= 2 && ex.values.some(positive) && ex.values.every(v => Number.isFinite(v) && v >= 0) && ex.labels?.length === ex.values.length && positive(ex.step) && text(ex.unit),
+          cuboid: () => [ex.length, ex.width, ex.height].every(positive),
+          grid: () => [ex.columns, ex.rows].every(v => Number.isInteger(v) && v > 0 && v <= 10) && Number.isInteger(ex.shaded) && ex.shaded >= 0 && ex.shaded <= ex.columns * ex.rows,
+        };
+        need(Boolean(valid[ex.kind]?.()), `${at}: invalid diagram ${ex.kind}`);
+      }
     });
   }
   return errors;

@@ -7,5 +7,5 @@ const TITLES = [
   "Read the whole text and apply what you know."
 ];
 export default function SimilesAndMetaphorsGame({ level, onComplete }) {
-  return <ReadingTopicGame level={level} build={buildSimilesAndMetaphorsQuestions} titles={TITLES} onComplete={onComplete} />;
+  return <ReadingTopicGame illustrate level={level} build={buildSimilesAndMetaphorsQuestions} titles={TITLES} onComplete={onComplete} />;
 }

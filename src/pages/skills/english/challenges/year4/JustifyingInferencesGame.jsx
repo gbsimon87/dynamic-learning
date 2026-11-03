@@ -7,5 +7,5 @@ const TITLES = [
   "Read the whole text and apply what you know."
 ];
 export default function JustifyingInferencesGame({ level, onComplete }) {
-  return <ReadingTopicGame level={level} build={buildJustifyingInferencesQuestions} titles={TITLES} onComplete={onComplete} />;
+  return <ReadingTopicGame illustrate level={level} build={buildJustifyingInferencesQuestions} titles={TITLES} onComplete={onComplete} />;
 }

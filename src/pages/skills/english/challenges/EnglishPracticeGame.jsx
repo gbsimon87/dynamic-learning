@@ -9,6 +9,7 @@ import SpeakButton from "../../../../components/challenge/SpeakButton";
 import TileBuilder from "../../../../components/challenge/TileBuilder";
 import { showHint } from "../../../../components/challenge/hints";
 import { isSameAnswer } from "../../../../data/challenges/english/shared";
+import EnglishQuestionVisual from "../../../../components/challenge/visual/EnglishQuestionVisual";
 
 /** Shared rendering only; each topic supplies its own authored bank and progression. */
 export default function EnglishPracticeGame({ level, build, titles, onComplete }) {
@@ -40,6 +41,7 @@ function Round({ question: q, submit, locked, hint }) {
   const correct = q.kind === "sort" ? q.cards.every((c) => placement[c.id] === c.bin)
     : isSameAnswer(q.kind === "build" ? built : q.kind === "type" ? value : selected, q.answer);
   return <>
+    <EnglishQuestionVisual question={q} />
     {q.rule && <p className="challenge-prompt">{q.rule}</p>}
     {q.passage && <ReadingPassage passage={q.passage} />}
     {q.text && <ReadingPassage passage={{ blocks: [{ type: "p", text: q.text }] }} />}

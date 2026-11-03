@@ -21,6 +21,7 @@ import CoinTray from "../CoinTray";
 import FractionBar from "../FractionBar";
 import FractionShadeBoard from "../FractionShadeBoard";
 import PlaceValueBlocks from "../PlaceValueBlocks";
+import ItemPicture from "../visual/ItemPicture";
 import { showHint } from "../hints";
 import { formatMoney } from "../../../data/challenges/measurement";
 import {
@@ -56,7 +57,7 @@ import {
  * table left on desktop; prompt, evidence, answer, hint, Check and feedback
  * right). Absent, the round keeps its flat order, so other subjects are untouched.
  */
-export default function DataChallenge({ level, build, titles, onComplete, renderVisual, readAloud, checkAnswer, speak, layout }) {
+export default function DataChallenge({ level, build, titles, onComplete, renderVisual, readAloud, checkAnswer, speak, layout, illustrate = false }) {
   const questions = useMemo(() => build(level, Math.random), [build, level]);
   const title = Array.isArray(titles) ? titles[level - 1] : titles?.[level];
   const currentResponse = useRef(null);
@@ -76,14 +77,14 @@ export default function DataChallenge({ level, build, titles, onComplete, render
       questions={questions}
       onComplete={onComplete}
       render={({ question, index, submit, locked, misses, feedback }) => (
-        <DataRound key={index} question={question} submit={submit} locked={locked} hint={showHint(misses)} renderVisual={renderVisual} checkAnswer={checkAnswer} onResponseChange={reportResponse} layout={layout} feedback={feedback} />
+        <DataRound key={index} question={question} submit={submit} locked={locked} hint={showHint(misses)} renderVisual={renderVisual} checkAnswer={checkAnswer} onResponseChange={reportResponse} layout={layout} feedback={feedback} illustrate={illustrate} />
       )}
     />
   );
 }
 
 /** One question. checkAnswer optionally supplies subject-specific response validation. */
-export function DataRound({ question: q, submit, locked, hint, renderVisual, checkAnswer = isCorrect, onResponseChange, layout, feedback }) {
+export function DataRound({ question: q, submit, locked, hint, renderVisual, checkAnswer = isCorrect, onResponseChange, layout, feedback, illustrate = false }) {
   const [response, setResponse] = useState(() => initialResponse(q));
   useLayoutEffect(() => { onResponseChange?.(q, response); }, [q, response, onResponseChange]);
   const ready = isReady(q, response);
@@ -112,7 +113,7 @@ export function DataRound({ question: q, submit, locked, hint, renderVisual, che
         check={{ label: "Check my answer", disabled: locked || !ready, onClick: () => submit(checkAnswer(q, response)) }}
         feedback={feedback}
       >
-        <KindControl q={q} response={response} setResponse={setResponse} locked={locked} hint={hint} />
+        <KindControl q={q} response={response} setResponse={setResponse} locked={locked} hint={hint} illustrate={illustrate} />
       </ScienceRound>
     );
   }
@@ -147,7 +148,7 @@ export function DataRound({ question: q, submit, locked, hint, renderVisual, che
 
       {renderVisual?.(q)}
 
-      <KindControl q={q} response={response} setResponse={setResponse} locked={locked} hint={hint} />
+      <KindControl q={q} response={response} setResponse={setResponse} locked={locked} hint={hint} illustrate={illustrate} />
 
       <button
         type="button"
@@ -182,7 +183,7 @@ function ReadAnswer({ q, response, setResponse, locked, hint }) {
   return <NumberInput value={response} onChange={setResponse} disabled={locked} label={q.label ?? "My answer"} maxDigits={q.maxDigits} />;
 }
 
-function KindControl({ q, response, setResponse, locked, hint }) {
+function KindControl({ q, response, setResponse, locked, hint, illustrate }) {
   const read = <ReadAnswer q={q} response={response} setResponse={setResponse} locked={locked} hint={hint} />;
 
   switch (q.kind) {
@@ -194,6 +195,7 @@ function KindControl({ q, response, setResponse, locked, hint }) {
           onSelect={setResponse}
           disabled={locked}
           variant={q.variant ?? ""}
+          renderPicture={illustrate ? itemPicture : undefined}
         />
       );
 
@@ -240,6 +242,7 @@ function KindControl({ q, response, setResponse, locked, hint }) {
             })
           }
           disabled={locked}
+          renderPicture={illustrate ? itemPicture : undefined}
         />
       );
 
@@ -394,6 +397,8 @@ function KindControl({ q, response, setResponse, locked, hint }) {
       return null;
   }
 }
+
+const itemPicture = label => <ItemPicture label={label} />;
 
 function shadedParts(q) {
   const shaded = Array.isArray(q.shaded)

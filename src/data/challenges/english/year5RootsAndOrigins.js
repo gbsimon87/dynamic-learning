@@ -357,5 +357,5 @@ export const BANK = [
   }
 ];
 export function buildRootsAndOriginsQuestions(level, rng) {
-  return sentenceQuestions(BANK, RULE, level, rng, DEFAULT_HINT);
+  return sentenceQuestions(BANK, RULE, level, rng, DEFAULT_HINT).map(question => ({ ...question, visualKind: "wordParts" }));
 }

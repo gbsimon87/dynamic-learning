@@ -74,6 +74,13 @@ Item-by-item source evidence: [backlog audit in PROJECT_KNOWLEDGE.md](PROJECT_KN
   PROJECT_KNOWLEDGE on 2026-10-09. The sending-domain prerequisite is closed;
   sign-up fixes and their interactive checks are done (2026-10-10). The app was renamed
   **Learn with Bix** on 2026-10-10.
+- **Shipped 2026-11-03:** illustrated Bix lessons now fill Years 4–5's missing
+  teaching introductions: 460 worked examples across English Years 4–5 and
+  Maths Year 5, plus visual notes for all 20 Year 4 Science topics. Playable
+  questions also have source-based Maths models, English word-part and object
+  references, Science classification diagrams, results charts and pictured cards. Existing
+  illustrated subjects retain their introductions. Browser/device review remains
+  pending; see PROJECT_KNOWLEDGE, "Illustrated teaching across Years 4–5".
 - **Shipped 2026-10-10:** the first-play kit (Bix's intro at `/hello`,
   first-visit coach marks, the Daily Bix puzzle, brain breaks), Maths
   read-aloud, Bix's jokes, certificates, questions as data and five free-play

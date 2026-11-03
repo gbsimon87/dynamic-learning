@@ -7,5 +7,5 @@ const TITLES = [
   "Read the whole text and apply what you know."
 ];
 export default function ComparingCharactersAndSettingsGame({ level, onComplete }) {
-  return <ReadingTopicGame level={level} build={buildComparingCharactersAndSettingsQuestions} titles={TITLES} onComplete={onComplete} />;
+  return <ReadingTopicGame illustrate level={level} build={buildComparingCharactersAndSettingsQuestions} titles={TITLES} onComplete={onComplete} />;
 }

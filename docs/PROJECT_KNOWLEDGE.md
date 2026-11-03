@@ -49,7 +49,8 @@ Design, Computing, Design & Technology, French, Music, PE and Relationships &
 Health (`wellbeing`). The new subjects exist for Year 5 only and are registered
 with `countsTowardYear: false`, as is Year 5 Geography, so the Year 5 award
 waits for Maths, English, Science and History. See "Curriculum Mode — Year 5"
-below. Year 5 has no Bix lesson screens yet.
+below. Year 5 Maths and English now have Bix lesson screens; the other subjects
+use their existing illustrated notes or story introductions.
 History: Years 1–5 are complete (see
 `docs/history-curriculum/HISTORY_TRACKER.md`).
 Geography's standalone Skills Mode games and saved programmes in
@@ -1887,9 +1888,66 @@ wide `ScienceRound` card with a "📖 Bix's notes" pill. Colours come from the
 the answer. `tests/components/year5Adventure.test.jsx` opens every topic.
 French keeps "Read it to me" off (an English voice would read the French).
 
-Known gaps, left for the owner review: no Bix lessons for Year 5; content is
+Known gaps, left for the owner review: content is
 not yet fact-checked by a second reader; nothing was played in a browser or on
 a device; French audio depends on a fr-FR voice being installed.
+
+### Illustrated teaching across Years 4–5 (2026-11-03)
+
+The Year 3 English root-words lesson is the presentation reference: a coloured
+banner, Bix's short tips, a worked example and a large start button. The same
+`LessonFrame` now covers every slot of Year 4 English (33 topics), Year 5 English
+(36) and Year 5 Maths (46): **460 new worked examples**. Each topic has four
+separately authored examples, stored under `src/data/lessons/english/year4/`,
+`english/year5/` and `math/year5/`. `topicLessons.js` assembles the shared shape;
+examples never come from the currently generated question or its answer.
+
+English uses marked sentences, word-building tiles, comparisons and corrections.
+Maths uses place-value charts, fraction bars, columns, equations and labelled
+SVG diagrams. `LessonDiagram.jsx` adds rectangles, angles, polygons, coordinate
+transformations, graphs, cuboids and hundred-square grids. Every diagram has a
+text equivalent included in read-aloud. `lintLessons` validates their data and
+adds a Year 5 limit of 20 words per tip. Diagrams use the existing paired lesson
+theme tokens; tables keep the shared horizontal-scroll container.
+
+All 80 Year 4 Science challenges now use `AdventureChallenge`, with a pictorial
+teaching summary for each of the 20 topics in `lessons/science/year4.js`.
+The existing circuit, digestion, cycle and evidence diagrams remain in the
+questions. Reopened adventure notes now include their teaching picture too.
+Year 4 Maths already had lesson screens. History, Geography and the other
+Year 5 subjects retain their existing illustrated story or notes introductions.
+Question banks, completion payloads and progress storage are unchanged.
+
+**Question visuals (2026-11-03).** Years 4–5 Maths also draw source quantities
+inside playable rounds: fraction bars, arrays, part–whole and sharing models,
+place-value charts and rounding number lines. Existing authored diagrams take
+precedence. `questionVisuals.js` reads the visible prompt, equation and unordered
+items; it never reads the correct answer, hints or expected response. Pictures
+of named fractions and polygons also accompany sorting cards.
+
+English practice and the 20 Year 4–5 reading-topic games show literal object
+references when the visible text supplies a supported noun. Captions identify
+these as picture references. Year 5 Roots and Origins additionally diagrams
+quoted word parts with the new word or meaning left unknown. Hidden dictation
+text is excluded. `literalPictures.js` avoids ambiguous uses such as biological
+cells and classification keys, and gives no inferred actions or emotions.
+
+Year 4 Science draws supplied classification keys as labelled branches and can
+add literal object references to rounds without an existing figure. This is an
+explicit Year 4 builder option, preserving Year 5's authored figure rules.
+Both Science years can plot two-column numeric evidence on a bounded bar-chart
+scale beside the original table. Matching picture choices and sorting cards use
+only their displayed labels; images stay with moved cards and preserve the
+existing accessible button names. All controls retain their retry, success-lock
+and completion behaviour.
+
+Validation covers all new examples in both theme states, real routed English
+and Maths playthroughs with retries and completion, and all 80 Year 4 Science
+introductions and question layouts in both themes. Additional tests check source
+quantities, independence from hidden answers, chart units, classification routes,
+pictured sorting and locked answer buttons. Browser controls were
+unavailable: responsive layout, overlap and rendered colours still need a
+browser/device review.
 
 ### Curriculum Mode — Year 1 History (2026-10-12)
 
@@ -2958,7 +3016,8 @@ animals, matter, sound and electricity, with a pure seeded recipe engine. Five
 questions per challenge: supported recognition; comparison with sorting;
 whole-structure sorting/building/ordering; evidence-based application with
 three scenario or measurement questions and two constructed responses.
-`Year4ScienceGame` renders through the shared `DataChallenge` kit and passes
+`Year4ScienceGame` opens with illustrated Bix notes through `AdventureChallenge`,
+then renders through the shared `DataChallenge` kit and passes
 completion/combo data through unchanged. All 80 wrappers use the loader's
 computed paths. Certificate statements have their own Year 4 Science module.
 The optional `DataChallenge.checkAnswer` hook forwards to `DataRound`;
@@ -3344,6 +3403,12 @@ skip needs an escape hatch: leaving a curriculum **remounts** the picker, so
 component state cannot remember "I came to change it", and the back arrow
 bounced straight back in with the picker unreachable. `CurriculumPage`'s back
 link is therefore `/curriculum?pick=1`; every other link still wants the skip.
+
+The picker filters subject cards by the selected year's registry availability
+(2026-11-03), including a year pre-selected from the child profile. Switching
+years immediately updates the list: Years 1–4 show their five available subjects,
+and Year 5 also shows its seven additional subjects. Before any year is chosen,
+all subject cards retain the “Pick a year first” prompt.
 
 ### Renaming a child profile (2026-09-19)
 
