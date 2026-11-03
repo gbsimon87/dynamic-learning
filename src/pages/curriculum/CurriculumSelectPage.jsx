@@ -184,6 +184,9 @@ function CurriculumSelectPage() {
   const readySubjects = CURRICULUM_SUBJECTS.filter((subject) =>
     savedYear === null ? false : isCurriculumAvailable(savedYear, subject.id)
   );
+  const visibleSubjects = CURRICULUM_SUBJECTS.filter((subject) =>
+    selectedYear === null || isCurriculumAvailable(selectedYear, subject.id)
+  );
 
   if (!forcePicker && !chosenByHand && savedYear !== null && readySubjects.length === 1) {
     return (
@@ -292,7 +295,7 @@ function CurriculumSelectPage() {
         </h2>
 
         <div className="cs-subjects">
-          {CURRICULUM_SUBJECTS.map((subject) => (
+          {visibleSubjects.map((subject) => (
             <SubjectCard
               key={subject.id}
               subject={subject}
