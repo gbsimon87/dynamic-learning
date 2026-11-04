@@ -7,37 +7,86 @@ AI coding tool. The AI takes it from there using the docs, scripts and
 
 ## The prompt
 
-Change only `YEAR` and `SUBJECT` (for example `6` and `Maths`).
+Change only `YEAR` and `SUBJECT` (for example `6` and `Maths`). The prompt
+carries everything a fresh session needs; the files it names hold the detail.
 
 ```text
-Build YEAR SUBJECT for Learn with Bix.
+Build Year YEAR SUBJECT for Learn with Bix.
 
-Everything you need is in this repository. Read AGENTS.md, then follow
-docs/AUTHORING.md: "New course integration", "Course builds with content agents"
-and, if this year already has other subjects, "Adding another subject to a
-registered year". Read the add-curriculum-year skill in .claude/skills/ as plain Markdown if
-your tool does not load skills. Find the statutory text through
-docs/curriculum/README.md and the award rules in
-docs/CURRICULUM_INVENTORY.md ("Awards and introductions").
+== What this is ==
+Learn with Bix is a React + Vite learning app (repository: the current working
+directory). Curriculum Mode teaches the UK National Curriculum, year by year and
+subject by subject. A "subject" here is one year/subject pathway: categories
+(strands), each with topics, each topic with exactly four challenges. Write for
+children of that year group (Year 6 is ages 10–11), in British English.
 
-1. Create a branch for this build, then start the course timer:
-   npm run course:timer -- start yearYEAR-SUBJECT (lower case).
-   Pause it whenever you stop to wait for me, and resume it when I reply.
-2. Propose the categories and topic titles, each mapped to its statutory
-   requirement. Titles become permanent IDs. Stop and wait for my approval.
-3. After approval, integrate the subject and build one strand completely as the
-   model. Stop and tell me how to open it in the app so I can try it.
-4. Write the remaining strands. If you can run subagents, use at most two,
-   briefed with docs/superpowers/templates/strand-agent-brief.md. If you cannot,
-   write them yourself one strand at a time.
-5. Review the content, then run check:course, lint, the full tests and the
-   build. Use one batched browser pass only for new hand-drawn figures.
-6. Fill in docs/superpowers/templates/course-build.md as the course record, and
-   update the inventory, changelog and Measured builds table. Stop the timer and
-   add its report to the record.
+== Read first, in this order (read by line range; do not dump whole files) ==
+1. AGENTS.md: the non-negotiables and the rules for browser checks and subagents.
+2. docs/AUTHORING.md, sections "New course integration", "Course builds with
+   content agents" and "Adding another subject to a registered year".
+3. .claude/skills/add-curriculum-year/SKILL.md (plain Markdown if your tool does
+   not load skills), and .claude/skills/curriculum-progress/SKILL.md before
+   touching IDs, the registry's award flags or anything stored.
+4. docs/curriculum/README.md, to find this subject's statutory file(s).
+5. docs/CURRICULUM_INVENTORY.md, "Awards and introductions".
+6. The worked example of a whole build: the Year 6 Science course record
+   docs/superpowers/2026-11-04-year6-science-course-build.md, its bank files in
+   src/data/challenges/year6Science/ and its test src/data/year6ScienceCurriculum.test.js.
 
-Do not commit. Finish by telling me what to check by hand and asking me for the
-token usage.
+== Facts to get right ==
+- Subject IDs: math, english, science, history, geography, art, computing,
+  design (Design & Technology), french, music, pe, wellbeing (Relationships &
+  Health). Use the ID in file names, the registry and the timer.
+- Statutory text in docs/curriculum/ is the teaching boundary. Quote it
+  verbatim in the mapping; never paraphrase it. Key stage files cover several
+  years: follow any year split they record. If none is recorded for this year,
+  propose one with the topic list.
+- Model the build on this subject's nearest built year (usually Year YEAR-1):
+  its dataset, game or engine, picture renderer, lessons and tests. Maths and
+  English also have separate Bix lesson screens in src/data/lessons/<subject>/.
+  Aim for a similar number of topics to that year unless the statutory text
+  needs more or fewer.
+- Topic and category titles become permanent URL and progress IDs.
+- Learner progress is irreplaceable: never reset, migrate or rewrite stored data.
+- Year awards: Years 5 and 6 count Maths, English and Science only. Register
+  this subject with countsTowardYear: false. If it completes Maths, English and
+  Science for this year, stop and ask me before switching those three to count.
+- Subagents: at most two at once, on a cheaper capable model for writing banks;
+  keep the stronger model for review. Browser checks only for what tests cannot
+  show, in one batched pass.
+
+== Steps ==
+1. Create a branch from the current one: feat/yearYEAR-<subject id>. Start the
+   timer: npm run course:timer -- start yearYEAR-<subject id>. Pause it
+   (npm run course:timer -- pause <timer id>) whenever you stop to wait for me,
+   and resume it when I reply.
+2. Propose the categories and topic titles, each with its statutory
+   requirement, and anything you will deliberately leave out. Stop for my
+   approval.
+3. Integrate the subject (dataset, registry, the lists in "Adding another
+   subject to a registered year", certificate lines, public guide, ID test) and
+   build one strand completely, with its pictures, lessons where the subject
+   uses them, bank tests and a playthrough test. Stop and tell me the exact
+   steps to try it with npm run dev.
+4. Write the remaining strands, one bank file per strand. If you can run
+   subagents, brief them with docs/superpowers/templates/strand-agent-brief.md.
+   If you cannot, write the strands yourself one at a time.
+5. Review every bank: facts, one defensible answer, safeguarding for sensitive
+   topics, and the answer-length cue described in docs/AUTHORING.md.
+6. Verify: npm run check:course -- --year YEAR --subject <subject id>, then
+   npm run lint, npm test and npm run build. Report any unsupported checker
+   adapter as a gap, not a pass. Use one batched browser pass only for new
+   hand-drawn figures.
+7. Record: fill in docs/superpowers/templates/course-build.md as
+   docs/superpowers/<date>-yearYEAR-<subject id>-course-build.md. Add the
+   statutory mapping table, and update docs/CURRICULUM_INVENTORY.md,
+   docs/CHANGELOG.md and the inventory counts the docs quote. Stop the timer and
+   paste its report into the record.
+
+Do not commit. Finish with: what was built, the check results, what I must
+check by hand, and a request for the token usage so you can add it to the
+course record and the Measured builds table in docs/BUILD_MEASUREMENT.md.
+Never estimate token usage.
 ```
 
 ## Your steps
@@ -83,10 +132,14 @@ token usage.
 Use this shorter prompt instead:
 
 ```text
-Build (or fix) the Learn with Bix topic TOPIC-ID in Year YEAR SUBJECT.
-Read AGENTS.md and follow the building-curriculum-topics skill in .claude/skills/
+Build (or fix) the Learn with Bix topic TOPIC-ID in Year YEAR SUBJECT
+(SUBJECT as its ID: math, english, science, history, geography, art, computing,
+design, french, music, pe or wellbeing).
+Read AGENTS.md and follow .claude/skills/building-curriculum-topics/SKILL.md
 (as plain Markdown if your tool does not load skills). Start with
-npm run topic:context -- --year YEAR --subject SUBJECT --topic TOPIC-ID.
-Run check:topic, lint, the full tests and the build. Do not commit; tell me
-what to check by hand.
+npm run topic:context -- --year YEAR --subject SUBJECT --topic TOPIC-ID and keep
+inside the statutory requirement it shows. Never change the topic's ID or any
+stored progress. Run npm run check:topic -- --year YEAR --subject SUBJECT
+--topic TOPIC-ID, then npm run lint, npm test and npm run build. Do not commit;
+tell me what changed, the check results and what to check by hand.
 ```
