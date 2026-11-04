@@ -1,29 +1,32 @@
 ---
 name: add-skill-game
-description: Use when adding a new standalone Skills Mode mini-game (math, english, geometry, or geography) to the Learn with Bix app - covers the two required registration points, folder placement, and the conventions that keep games consistent.
+description: Add a standalone Learn with Bix Skills Mode game, including its shared loop, visual interaction, route, hub entry, public guide and verification.
 model: sonnet
 ---
 
 # Adding a Skills Mode Game
 
-Skills Mode games are standalone, unlocked, untracked practice — the opposite of
-Curriculum Mode. A learner reaches them from the Skills hub and can play any of
-them at any time.
+Skills Mode games are standalone practice without curriculum-completion tracking.
+A learner reaches them from the Skills hub and can play any of them at any time.
+
+The maintained project workflow is `docs/SKILLS_AUTHORING.md`; it can be read by
+any AI tool or developer. This checklist complements that project guide.
 
 ## The failure mode this prevents
 
-A new game must be registered in **two separate files**. Miss the second and the
-game works at its URL but is invisible to every learner:
+A new game needs **three registrations**. A working direct URL alone does not
+establish hub or public-guide integration:
 
 1. `src/main.jsx` — the lazy route
 2. `shared/skillsCatalog.js` — the game in the right subject group (the hub renders its `<Link>`)
+3. `shared/skillGuides.js` — its public guide, metadata and sitemap entry
 
 Also add its public description, instructions and skill list to
 `shared/skillGuides.js`. This creates `/learn/<game-slug>`, its metadata and its
 sitemap entry through the shared SEO catalogue; the build rejects missing guide
 content. See `docs/SEO_AUDIT.md` for public-page delivery and indexing policy.
 
-Always do both, in the same change.
+Keep all three in the same change.
 
 ## Steps
 
@@ -44,8 +47,10 @@ co-located CSS with the identical base name.
 ### 2. Register the route
 
 In `src/main.jsx`, add a lazy import route inside the correct Skills group, e.g.
-`{ path: "new-game", lazy: () => import("./pages/skills/math/NewGame").then(m => ({ Component: m.default })) }`.
-Routes are **flat and kebab-case** — `/word-builder`, not `/skills/english/word-builder`.
+`{ path: "skills/new-game", lazy: () => import("./pages/skills/math/NewGame").then(m => ({ Component: m.default })) }`.
+Current canonical routes are **`/skills/<kebab-case-name>`**, for example
+`/skills/word-builder`. Older flat URLs redirect to these routes. Follow the
+current `SkillGameLayout` route group in `src/main.jsx`.
 
 Keep the route short and child-guessable. Match the route to the name where
 reasonable, and check `docs/PROJECT_IDEAS.md` (row 20 and `docs/notes_geography.md`) —
@@ -68,15 +73,14 @@ statutory curriculum coverage.
 - Function component, default export, hooks only.
 - **No `onComplete` prop** — that contract belongs to Curriculum challenges only.
 - **No `localStorage` progress writes.** Skills Mode is deliberately untracked;
-  don't add persistence without an explicit decision recorded in
-  `docs/PROJECT_KNOWLEDGE.md`.
+  don't add persistence without an explicit in-scope decision recorded in the
+  feature brief/current architecture and `docs/CHANGELOG.md`.
 - Self-contained state, including its own randomisation and score/streak display
   if the game has one.
 - Feedback pattern matches the rest of the app: ✅ correct, ❌ retry.
 - If the game has modes (practice / multiple-choice / timed), make the mode
   switch **fully reset game state** — stale state across mode switches is the
-  single most common bug in this codebase (see the Number Bonds and Counting
-  Numbers entries in `docs/PROJECT_KNOWLEDGE.md` §6).
+  recurring regression in this codebase (see `docs/ENGINEERING_RULES.md`).
 
 ## Styling
 
@@ -114,6 +118,9 @@ only when a test cannot show it.
 1. `npm run lint && npm test && npm run build && npm run check:seo`. check:seo
    already loads the public guide and sitemap in Chrome (it needs local
    Chrome/CHROME_PATH), so don't re-check those by hand.
+   If required Chrome/browser tooling is unavailable, finish the other checks
+   and report that explicit verification gap under `AGENTS.md`; do not change
+   the app to work around missing AI/browser tooling.
 2. A component test in `tests/components/` covers the core loop: a correct
    answer, a wrong answer, and a mode switch that fully resets state if the game
    has modes. Render it through its route to prove the route and the `/skills`
@@ -126,5 +133,7 @@ only when a test cannot show it.
 
 ## Finally
 
-Add the game to the built-games list in §5 of `docs/PROJECT_KNOWLEDGE.md` and
-update its row in `docs/PROJECT_IDEAS.md`.
+Keep the source catalogue and guide current, record delivered scope/verification
+in `docs/CHANGELOG.md`, and remove finished work from `docs/PROJECT_IDEAS.md`.
+Update the short `docs/PROJECT_KNOWLEDGE.md` entry point or focused references
+only when current contracts change.

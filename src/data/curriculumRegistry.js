@@ -1,3 +1,4 @@
+import { year6ScienceCurriculum } from "./year6ScienceCurriculum.js";
 import { year5ArtCurriculum } from "./year5ArtCurriculum.js";
 import { year5ComputingCurriculum } from "./year5ComputingCurriculum.js";
 import { year5DesignCurriculum } from "./year5DesignCurriculum.js";
@@ -47,7 +48,7 @@ import { year3HistoryCurriculum } from "./year3HistoryCurriculum.js";
  */
 export const CURRICULUM_ICON = "🎒";
 
-export const CURRICULUM_YEARS = [1, 2, 3, 4, 5];
+export const CURRICULUM_YEARS = [1, 2, 3, 4, 5, 6];
 
 export const CURRICULUM_SUBJECTS = [
   { id: "math", name: "Maths", icon: "🧮" },
@@ -65,11 +66,17 @@ export const CURRICULUM_SUBJECTS = [
 ];
 
 const CURRICULA = [
+  // Year 6 (docs/curriculum/year-6-*.md), being built one subject at a time from 2026-11.
+  // The Year 6 award will be Maths, English and Science (owner decision 2026-11-04). Science
+  // stays out of it until all three exist, so a Science-only award is never earned and later
+  // taken away.
+  { year: 6, subject: "science", available: true, countsTowardYear: false, load: () => year6ScienceCurriculum },
   // Year 5 (docs/curriculum/year-5-*.md, key-stage-2-*.md), built 2026-11.
   { year: 5, subject: "math", available: true, load: () => year5MathCurriculum },
   { year: 5, subject: "english", available: true, load: () => year5EnglishCurriculum },
   { year: 5, subject: "science", available: true, load: () => year5ScienceCurriculum },
-  { year: 5, subject: "history", available: true, load: () => year5HistoryCurriculum },
+  // The Year 5 award is Maths, English and Science (owner decision 2026-11-04).
+  { year: 5, subject: "history", available: true, countsTowardYear: false, load: () => year5HistoryCurriculum },
   { year: 5, subject: "geography", available: true, countsTowardYear: false, load: () => year5GeographyCurriculum },
   // The other compulsory KS2 subjects (docs/curriculum/key-stage-2-*.md and
   // primary-relationships-and-health-education.md) stay outside year awards.

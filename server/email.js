@@ -1,7 +1,7 @@
 /**
  * Outgoing signup codes and password-reset links share the same transport.
  *
- * Modes (PROJECT_KNOWLEDGE §6 item 17):
+ * Modes (docs/OPERATIONS.md, Environment and email):
  *   send — RESEND_API_KEY and EMAIL_FROM both set: Resend's HTTP API.
  *   log  — neither set, not production: the code is printed to the terminal.
  *   off  — anything else: verification is skipped and accounts are stored

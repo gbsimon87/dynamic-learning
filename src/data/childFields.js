@@ -48,7 +48,7 @@ function normaliseSubjects(value) {
  * rather than the whole of primary: offering Year 6 would promise a curriculum
  * that does not exist.
  */
-export const CHILD_YEAR_GROUPS = [1, 2, 3, 4, 5];
+export const CHILD_YEAR_GROUPS = [1, 2, 3, 4, 5, 6];
 
 /**
  * A profile created before `yearGroup` existed simply has none, which is the

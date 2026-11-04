@@ -86,3 +86,6 @@ desktop.ini
 
 # Written by `npm run seed` — a local test account, never committed or shipped.
 dev-seed.json
+
+# === Course build timer records (local only) ===
+docs/authoring/timings/

@@ -1,0 +1,18 @@
+/* Year 6 Science figures: the drawing kit and its colour tokens are in year5Pictures/pictures.css. */
+.y6-sci-visual { display: grid; gap: .25rem; }
+.y6-sci-visual .y6v-wire { fill: none; stroke: var(--v-ink); stroke-width: 4; }
+.y6-sci-visual .y6v-cell-short { stroke: var(--v-ink); stroke-width: 9; }
+.y6-sci-visual .y6v-part { fill: var(--v-paper); stroke: var(--v-ink); stroke-width: 4; }
+.y6-sci-visual .y6v-contact { fill: var(--v-paper); stroke: var(--v-ink); stroke-width: 3; }
+.y6-sci-visual .y6v-ray { stroke: var(--v-autumn); stroke-width: 5; }
+.y6-sci-visual .y6v-ray + .y5v-arrow-head, .y6-sci-visual .y6v-ray-head { fill: var(--v-autumn); }
+.y6-sci-visual .y6v-mirror { fill: var(--v-window); stroke: var(--v-ink); stroke-width: 3; }
+.y6-sci-visual .y6v-mirror-line { stroke: var(--v-sea-deep); stroke-width: 8; }
+.y6-sci-visual .y6v-tube { fill: none; stroke: var(--v-ink); stroke-width: 4; }
+.y6-sci-visual .y6v-beam { fill: none; stroke: var(--v-sun); stroke-width: 3; stroke-dasharray: 8 7; }
+.y6-sci-visual .y6v-object { fill: var(--v-roof); stroke: var(--v-ink); stroke-width: 3; }
+.y6-sci-visual .y6v-shadow { fill: var(--v-ink); stroke: var(--v-ink); stroke-width: 2; }
+body.dark .y6-sci-visual .y6v-shadow { fill: var(--v-stone-dark); }
+.y6-sci-visual .y6v-screen { fill: var(--v-wall); stroke: var(--v-ink); stroke-width: 3; }
+.y6-sci-visual .y6v-blood-high { stroke: var(--v-roof); }
+.y6-sci-visual .y6v-blood-low { stroke: var(--v-sea-deep); }

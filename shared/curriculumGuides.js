@@ -2518,6 +2518,76 @@ export const CURRICULUM_GUIDES = [
       }
     ],
     "alignment": "Topics are mapped to the Department for Education’s statutory relationships and health education guidance for primary schools in England. They cover a safe, age-appropriate part of it. Sensitive topics are best shared by school and home, and Bix does not replace those conversations."
+  },
+  {
+    "year": 6,
+    "subject": "science",
+    "slug": "year-6-science",
+    "path": "/curriculum-guide/year-6-science",
+    "label": "Year 6 Science",
+    "intro": "Classify living things, follow blood round the body and trace light and electricity in straight lines and loops.",
+    "fit": "For children ready to read diagrams, keys and supplied results, and to explain how living things, light and circuits work.",
+    "areas": [
+      {
+        "categoryId": "living-things-and-their-habitats",
+        "title": "Living things and their habitats",
+        "icon": "🔑",
+        "description": "Classify plants, animals and micro-organisms, sort vertebrates and invertebrates, and use classification keys.",
+        "example": "Is a snail a vertebrate or an invertebrate?",
+        "colour": "mint"
+      },
+      {
+        "categoryId": "animals-including-humans",
+        "title": "Animals, including humans",
+        "icon": "🫀",
+        "description": "Explore the heart, blood and blood vessels, and how diet, exercise, drugs and lifestyle affect the body.",
+        "example": "Why does your pulse rise when you run?",
+        "colour": "rose"
+      },
+      {
+        "categoryId": "evolution-and-inheritance",
+        "title": "Evolution and inheritance",
+        "icon": "🦴",
+        "description": "Use fossils as evidence, compare offspring with their parents, and explore adaptation and evolution.",
+        "example": "How does a camel survive in the desert?",
+        "colour": "gold"
+      },
+      {
+        "categoryId": "light",
+        "title": "Light",
+        "icon": "🔦",
+        "description": "Use the idea that light travels in straight lines to explain how we see, how mirrors work and why shadows match their objects.",
+        "example": "Which way does the light travel when you see a book?",
+        "colour": "lilac"
+      },
+      {
+        "categoryId": "electricity",
+        "title": "Electricity",
+        "icon": "⚡",
+        "description": "Read and draw circuit diagrams with symbols, and explain why bulbs, buzzers and motors change with more cells.",
+        "example": "What happens to a bulb when you add another cell?",
+        "colour": "mint"
+      }
+    ],
+    "activities": [
+      {
+        "icon": "💓",
+        "title": "Count your pulse",
+        "description": "Count your pulse for a minute while resting, then after a short jog on the spot, and compare."
+      },
+      {
+        "icon": "🔦",
+        "title": "Shadow puppets",
+        "description": "With a torch, move a puppet closer to and further from a wall and watch its shadow change size but not shape."
+      },
+      {
+        "icon": "🔋",
+        "title": "Spot the cells",
+        "description": "With a grown-up, look at a torch or toy and find how many cells it uses and their voltage."
+      }
+    ],
+    "practical": "Diagrams and supplied results rehearse scientific enquiry. They do not show that your child has performed an experiment. Circuits should use suitable low-voltage cells with a grown-up, never mains electricity. Topics about medicines, drugs and health are kept factual and simple; talk them through together.",
+    "alignment": "Topics are mapped to the Year 6 science programme of study for England."
   }
 ];
 

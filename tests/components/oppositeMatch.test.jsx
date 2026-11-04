@@ -16,25 +16,21 @@ const targets = () => [...document.querySelectorAll(".drop-zone")];
 const score = () => document.querySelector(".match-score").textContent;
 
 it("tap a word then its opposite to match; a wrong tap scores nothing", async () => {
+  // Keep warm/cool in the round; choose targets by meaning, not shuffled position.
+  vi.spyOn(Math, "random").mockReturnValue(0);
   render_();
   await screen.findByText(/Score/);
   expect(targets().every((t) => t.disabled)).toBe(true);
 
-  const first = words()[0];
+  const first = words().find((word) => word.textContent === "warm");
   fireEvent.click(first);
   expect(first.getAttribute("aria-pressed")).toBe("true");
 
-  const wrong = targets()[0];
-  fireEvent.click(wrong);
-  fireEvent.click(targets()[1]);
-  expect(score()).toMatch(/\/ 2$/);
-
-  let matched = 0;
-  for (const t of targets()) {
-    if (t.disabled) continue;
-    fireEvent.click(t);
-    if (first.disabled) { matched = 1; break; }
-  }
-  expect(matched).toBe(1);
-  expect(score()).toMatch(/^Score: 1 /);
+  fireEvent.click(screen.getByRole("button", { name: "dry", exact: true }));
+  fireEvent.click(screen.getByRole("button", { name: "rainy", exact: true }));
+  expect(score()).toBe("Score: 0 / 2");
+  expect(first.disabled).toBe(false);
+  fireEvent.click(screen.getByRole("button", { name: "cool", exact: true }));
+  expect(first.disabled).toBe(true);
+  expect(score()).toBe("Score: 1 / 3");
 });
