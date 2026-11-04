@@ -23,6 +23,7 @@ export function visualRecipe({ root, year, subject }) {
   }
   const tests = ["tests/components/questionVisuals.test.jsx", "tests/components/lessonFrame.test.jsx"];
   if (subject === "science" || !shared[subject]) tests.push("tests/components/year5Adventure.test.jsx");
+  if (subject === "science" && referenceYear === 6) tests.push("tests/components/year6Science.test.jsx");
   return {
     referenceYear,
     paths: [...new Set([...paths, ...tests])].filter((file) => existsSync(repoPath(root, file))),

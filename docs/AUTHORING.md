@@ -1,6 +1,6 @@
 # Curriculum authoring
 
-Start with the requested year, subject and topic ID. The current registry covers years 1–5 and 12 subjects; check availability rather than assuming a registered course has every challenge. All built challenges are open. Completion tracks learning and awards; it does not gate access.
+Start with the requested year, subject and topic ID. The current registry covers years 1–6 (Year 6: Science only so far) and 12 subjects; check availability rather than assuming a registered course has every challenge. All built challenges are open. Completion tracks learning and awards; it does not gate access.
 
 This is the project workflow for Curriculum Mode, readable by any AI tool or
 developer. For standalone Skills Mode games use [SKILLS_AUTHORING.md](SKILLS_AUTHORING.md).
@@ -23,8 +23,9 @@ invent an unregistered dataset or its teaching boundary.
    build to reveal spelling or missing-module mistakes.
 3. Register the combination in [curriculumRegistry.js](../src/data/curriculumRegistry.js).
    Update year/subject definitions there and the accepted profile fields in
-   [childFields.js](../src/data/childFields.js) when needed: currently both year
-   lists stop at 5, so Year 6 needs both. A new subject also needs its child
+   [childFields.js](../src/data/childFields.js) when needed: both year lists now
+   include 6, so another Year 6 subject needs only its registry entry. A Year 7
+   would need both lists and the tests that use 7 as the unavailable year. A new subject also needs its child
    whitelist, selector look/tokens in
    [CurriculumSelectPage](../src/pages/curriculum/CurriculumSelectPage.jsx), and
    hero/category visuals in [CurriculumPage](../src/pages/curriculum/CurriculumPage.jsx).
@@ -51,6 +52,67 @@ The [course record](superpowers/templates/course-build.md) tracks scope, permane
 IDs, visual baseline, pilot and technical/content/device evidence. Use current
 source tests such as [year5ScienceCurriculum.test.js](../src/data/year5ScienceCurriculum.test.js)
 and [curriculumIds.test.js](../src/data/curriculumIds.test.js) as integration models.
+
+## Course builds with content agents
+
+This is the recipe that built Year 6 Science (24 topics) in 23 minutes of
+recorded work; see the [baseline](BUILD_MEASUREMENT.md#measured-builds). The
+coordinator's own turns cost far more per topic than the content agents', so
+the coordinator integrates, pilots and reviews, and the agents write the banks.
+
+1. **Start the course in a fresh session** with the
+   [start prompt](superpowers/templates/course-start-prompt.md), with the course timer running. A
+   session carrying earlier work re-sends that context on every turn.
+2. **Integrate and pilot first** (coordinator): dataset, registry, wrappers,
+   certificate lines, the visual renderer and any new figure types, the subject
+   test, and one complete strand as the model. Give each strand its own bank
+   file exporting `<strand>`, `<strand>Visuals` and `<strand>Rules`, merged by
+   `index.js` and `figures.js`, as `src/data/challenges/year6Science/` does. Two
+   agents then never edit the same file.
+3. **Brief at most two content agents** with the
+   [strand agent brief](superpowers/templates/strand-agent-brief.md): the model
+   strand, the exact topic IDs, the statutory bullets with their line range, the
+   figure types, the content rules and the test to run. Sonnet was enough for
+   bank writing; keep the coordinator on the stronger model for review.
+4. **Keep the coordinator's context small while they work**: read files by line
+   range, avoid commands that print whole files or long test logs, batch
+   independent calls, and run the full suite once at the end rather than after
+   every edit.
+5. **Review what comes back** before the full suite:
+   - safeguarding-sensitive topics in full;
+   - the facts each agent says it was unsure of;
+   - the answer-length cue: the share of choice questions whose answer is
+     clearly the longest option. Year 5 Science was 28% and Year 6 Science 30%;
+     a topic far above that needs rewording.
+6. **Check new hand-drawn figures in one batched browser pass**: render every
+   new figure type and topic picture to one static page, at desktop and phone
+   widths in both themes. This found crowded labels, a dark-theme colour and a
+   misdrawn diagram that jsdom tests could not show.
+
+Content slips the checks caught in the Year 6 build, so put them in every brief:
+
+- Prompts must be unique within each pool (facts, sorts, structures,
+  enquiries); a run of five must not repeat a task.
+- The US-spelling check flags "meter" even for an instrument; say "sensor".
+- An order task needs one defensible order; drop steps whose order is a matter
+  of taste.
+- A sort's cards must fit its prompt's starting point. "Start with one bulb"
+  cannot include "remove the second bulb".
+
+### Adding another Year 6 subject
+
+Year 6 is registered, so a further Year 6 subject needs:
+
+- its dataset and registry entry, with `countsTowardYear: false` until Year 6
+  Maths, English and Science all exist;
+- certificate lines and the public guide;
+- its permanent IDs in `curriculumIds.test.js`;
+- the counts that list every pathway: the guide totals in
+  `shared/curriculumGuides.test.js`, the Year 6 subjects in
+  `tests/components/curriculumSelect.test.jsx` and `subjectsForYear(6)` in
+  `src/data/signupFlow.test.js`.
+
+Tests that need a year with no curriculum use Year 7.
 
 ## Find just enough context
 

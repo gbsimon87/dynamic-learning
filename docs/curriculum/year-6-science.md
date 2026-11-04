@@ -132,7 +132,49 @@ Pupils might work scientifically by: systematically identifying the effect of ch
 
 # Mapping to our curriculum dataset
 
-> **No Year 6 Science dataset yet.** The app's registered curricula stop at Year 4. When one is built, map each topic
-> here to the statutory bullet it serves, as
-> [year-3-science.md](year-3-science.md) does, and list anything
-> deliberately not covered.
+Dataset: [`src/data/year6ScienceCurriculum.js`](../../src/data/year6ScienceCurriculum.js), built
+2026-11-04. Titles are permanent URL and progress IDs. Every Year 6 statutory bullet
+in the five content strands has at least one topic. *Working scientifically* is not
+a topic of its own: challenge 4 of every topic is an applied enquiry (variables and
+fair tests, supplied results tables, conclusions, evidence versus opinion, and
+scientists such as Linnaeus, Anning, Darwin and Wallace).
+
+| Category | Topic (stable ID) | Statutory requirement served |
+|---|---|---|
+| Living things and their habitats | Classifying Living Things (`classifying-living-things`) | describe how living things are classified into broad groups according to common observable characteristics and based on similarities and differences, including micro-organisms, plants and animals |
+| Living things and their habitats | Vertebrate Groups (`vertebrate-groups`) | describe how living things are classified into broad groups according to common observable characteristics and based on similarities and differences, including micro-organisms, plants and animals; give reasons for classifying plants and animals based on specific characteristics |
+| Living things and their habitats | Invertebrate Groups (`invertebrate-groups`) | describe how living things are classified into broad groups according to common observable characteristics and based on similarities and differences, including micro-organisms, plants and animals; give reasons for classifying plants and animals based on specific characteristics |
+| Living things and their habitats | Micro-organisms (`micro-organisms`) | describe how living things are classified into broad groups according to common observable characteristics and based on similarities and differences, including micro-organisms, plants and animals |
+| Living things and their habitats | Classification Keys (`classification-keys`) | give reasons for classifying plants and animals based on specific characteristics |
+| Animals, including humans | The Circulatory System (`the-circulatory-system`) | identify and name the main parts of the human circulatory system, and describe the functions of the heart, blood vessels and blood |
+| Animals, including humans | The Heart and Pulse (`the-heart-and-pulse`) | identify and name the main parts of the human circulatory system, and describe the functions of the heart, blood vessels and blood; recognise the impact of diet, exercise, drugs and lifestyle on the way their bodies function |
+| Animals, including humans | Blood and Blood Vessels (`blood-and-blood-vessels`) | identify and name the main parts of the human circulatory system, and describe the functions of the heart, blood vessels and blood |
+| Animals, including humans | Diet, Exercise and Health (`diet-exercise-and-health`) | recognise the impact of diet, exercise, drugs and lifestyle on the way their bodies function |
+| Animals, including humans | Drugs, Medicines and Lifestyle (`drugs-medicines-and-lifestyle`) | recognise the impact of diet, exercise, drugs and lifestyle on the way their bodies function |
+| Animals, including humans | Transporting Nutrients and Water (`transporting-nutrients-and-water`) | describe the ways in which nutrients and water are transported within animals, including humans |
+| Evolution and inheritance | Fossils as Evidence (`fossils-as-evidence`) | recognise that living things have changed over time and that fossils provide information about living things that inhabited the Earth millions of years ago |
+| Evolution and inheritance | Inheritance and Variation (`inheritance-and-variation`) | recognise that living things produce offspring of the same kind, but normally offspring vary and are not identical to their parents |
+| Evolution and inheritance | Adaptation (`adaptation`) | identify how animals and plants are adapted to suit their environment in different ways and that adaptation may lead to evolution |
+| Evolution and inheritance | Adapting to Extreme Places (`adapting-to-extreme-places`) | identify how animals and plants are adapted to suit their environment in different ways and that adaptation may lead to evolution |
+| Evolution and inheritance | Evolution (`evolution`) | identify how animals and plants are adapted to suit their environment in different ways and that adaptation may lead to evolution; recognise that living things have changed over time and that fossils provide information about living things that inhabited the Earth millions of years ago |
+| Light | How Light Travels (`how-light-travels`) | recognise that light appears to travel in straight lines |
+| Light | How We See Things (`how-we-see-things`) | use the idea that light travels in straight lines to explain that objects are seen because they give out or reflect light into the eye; explain that we see things because light travels from light sources to our eyes or from light sources to objects and then to our eyes |
+| Light | Mirrors and Periscopes (`mirrors-and-periscopes`) | recognise that light appears to travel in straight lines; use the idea that light travels in straight lines to explain that objects are seen because they give out or reflect light into the eye |
+| Light | Shadow Shapes (`shadow-shapes`) | use the idea that light travels in straight lines to explain why shadows have the same shape as the objects that cast them |
+| Electricity | Circuit Symbols (`circuit-symbols`) | use recognised symbols when representing a simple circuit in a diagram |
+| Electricity | Cells and Brightness (`cells-and-brightness`) | associate the brightness of a lamp or the volume of a buzzer with the number and voltage of cells used in the circuit |
+| Electricity | Comparing Components (`comparing-components`) | compare and give reasons for variations in how components function, including the brightness of bulbs, the loudness of buzzers and the on/off position of switches |
+| Electricity | Switches and Circuit Faults (`switches-and-circuit-faults`) | compare and give reasons for variations in how components function, including the brightness of bulbs, the loudness of buzzers and the on/off position of switches; use recognised symbols when representing a simple circuit in a diagram |
+
+Not covered, deliberately:
+
+- *Working scientifically*: recording data as scatter graphs, line graphs and
+  bar charts (challenges use supplied tables and diagrams only); no practical
+  measuring, building circuits, periscopes or shadow puppets is possible in the app.
+- Parallel circuits, which the statutory note excludes; genes and chromosomes,
+  which the evolution note excludes; why rainbows, bent straws and coloured
+  filters happen, which the light note says pupils need not explain.
+- *Drugs, Medicines and Lifestyle* stays general (medicines used as directed by
+  a trusted adult, and the harm smoking and alcohol do to the body). It names no
+  illegal drugs, doses or methods, because the app is used alone; see
+  [primary-relationships-and-health-education.md](primary-relationships-and-health-education.md).

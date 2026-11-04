@@ -6,6 +6,29 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-04 — Year 6 Science, and Years 5–6 award membership
+
+- Registered Year 6 (Science only so far): 5 strands, 24 topics, 96 challenges
+  in the Science adventure frame, mapped verbatim in
+  [year-6-science.md](curriculum/year-6-science.md). New figures: circuit
+  diagrams with standard symbols, light paths, a periscope, shadows and the
+  circulatory system. Year 6 is offered in profiles, signup and the picker, with
+  a public guide. [Course record](superpowers/2026-11-04-year6-science-course-build.md).
+- Year awards (owner decision): Years 5 and 6 count Maths, English and Science.
+  Year 5 History no longer counts, which removes a requirement and revokes
+  nothing. Year 6 Science stays excluded until Year 6 Maths and English exist.
+- Lint, full tests (2,634 unit/API and 662 component passes; four existing
+  skips), build and `check:course --year 6 --subject science` (24/24) passed.
+  The new figures had one batched browser pass, at desktop and phone widths in
+  both themes. No teacher content review, safeguarding read or device review yet.
+- Token usage was counted from the session logs, one entry per message. It is
+  recorded in the course record and as the first row of
+  [Measured builds](BUILD_MEASUREMENT.md#measured-builds). From it,
+  [AUTHORING.md](AUTHORING.md#course-builds-with-content-agents) gained a
+  recipe for building a course with content agents and a checklist for adding
+  another Year 6 subject. There is also a reusable
+  [strand agent brief](superpowers/templates/strand-agent-brief.md).
+
 ## 2026-11-04 — Authoring follow-ups
 
 - `BUILD_MEASUREMENT.md` now gives tool-neutral token-recording rules instead

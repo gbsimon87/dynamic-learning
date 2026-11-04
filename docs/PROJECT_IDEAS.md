@@ -14,8 +14,8 @@ retain their recorded review dates.
 Delivered outcomes: [CHANGELOG.md](CHANGELOG.md).
 
 ## Context for prioritisation
-- Curriculum Mode implements **32 pathways across Years 1–5: 749 topics /
-  2,996 challenge slots**, plus standalone Skills Mode games. The current
+- Curriculum Mode implements **33 pathways across Years 1–6: 773 topics /
+  3,092 challenge slots** (Year 6: Science only so far), plus standalone Skills Mode games. The current
   subject/year inventory is in [CURRICULUM_INVENTORY.md](CURRICULUM_INVENTORY.md).
   Implementation does not certify statutory coverage or content/device review.
   English and Science still have outstanding owner's interactive review;
@@ -93,7 +93,7 @@ Delivered outcomes: [CHANGELOG.md](CHANGELOG.md).
   [the architecture](ARCHITECTURE.md#progress-stores-and-server). New per-child flags belong in the rewards document the
   same way; a new modal uses `src/components/ui/Dialog.jsx` (or the
   `useModalDialog` hook).
-- Ideas should serve the **registered curricula (Years 1–5)** and both account
+- Ideas should serve the **registered curricula (Years 1–6)** and both account
   types where relevant, while keeping the core experience suitable for 6–8 year olds.
 
 ## What 6–8 year olds enjoy (the lens for #22 onwards)

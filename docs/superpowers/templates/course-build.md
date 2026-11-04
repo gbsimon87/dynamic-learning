@@ -1,7 +1,8 @@
 # Course build: Year <N> <subject>
 
 - Request and deliverable: <new course, rollout, or revision>
-- Timing record: <timer ID, recorded work/paused/elapsed time from `npm run course:timer -- report ID`; observed token usage/source if available, otherwise unknown>
+- Timing record: <timer ID, recorded work/paused/elapsed time from `npm run course:timer -- report ID`>
+- Token usage: <per model and role (coordinator, content agents): messages, input, cache write, cache read, output; source and counting rule from BUILD_MEASUREMENT.md, otherwise unknown. Add the totals to its Measured builds table>
 - Statutory source: <verbatim programme file and topic mapping>
 - Registry/entry points: <current combination or explicit additions>
 - Permanent IDs: <chosen before shipping; existing IDs preserved>

@@ -1,3 +1,4 @@
+import { year6ScienceCurriculum } from "./year6ScienceCurriculum.js";
 import { year5MathCurriculum } from "./year5MathCurriculum.js";
 import { year5EnglishCurriculum } from "./year5EnglishCurriculum.js";
 import { year5ScienceCurriculum } from "./year5ScienceCurriculum.js";
@@ -1110,3 +1111,16 @@ for (const [subject, curriculum] of Object.entries(YEAR5_DATASETS)) {
     assert.deepEqual(ids(curriculum), YEAR5_IDS[subject]);
   });
 }
+
+// Year 6 Science, built 2026-11-04. These ids are now URL and progress keys.
+const YEAR6_SCIENCE_IDS = [
+  ["living-things-and-their-habitats", ["classifying-living-things", "vertebrate-groups", "invertebrate-groups", "micro-organisms", "classification-keys"]],
+  ["animals-including-humans", ["the-circulatory-system", "the-heart-and-pulse", "blood-and-blood-vessels", "diet-exercise-and-health", "drugs-medicines-and-lifestyle", "transporting-nutrients-and-water"]],
+  ["evolution-and-inheritance", ["fossils-as-evidence", "inheritance-and-variation", "adaptation", "adapting-to-extreme-places", "evolution"]],
+  ["light", ["how-light-travels", "how-we-see-things", "mirrors-and-periscopes", "shadow-shapes"]],
+  ["electricity", ["circuit-symbols", "cells-and-brightness", "comparing-components", "switches-and-circuit-faults"]],
+];
+
+test("Year 6 Science category and topic ids are unchanged", () => {
+  assert.deepEqual(ids(year6ScienceCurriculum), YEAR6_SCIENCE_IDS);
+});

@@ -12,7 +12,7 @@ Skills Mode is standalone and ungated at `/skills` and `/skills/<game>`. Curricu
 
 ## Registry, datasets and implementation availability
 
-[curriculumRegistry.js](../src/data/curriculumRegistry.js) is the registry for years 1–5, 12 subjects and 32 available year/subject pathways. It is not a promise that every possible year/subject pairing exists or that every registered challenge has a component. Use `findCurriculum` / `loadCurriculum` and inspect the target dataset.
+[curriculumRegistry.js](../src/data/curriculumRegistry.js) is the registry for years 1–6, 12 subjects and 33 available year/subject pathways. It is not a promise that every possible year/subject pairing exists or that every registered challenge has a component. Use `findCurriculum` / `loadCurriculum` and inspect the target dataset.
 
 Datasets under `src/data/` define categories, topics and challenge titles/IDs. Category/topic IDs derived from titles are permanent URL and progress keys. Renaming a title that generates an ID requires a deliberate migration; it is not a cosmetic edit. The statutory boundary and topic mappings live in [curriculum/](curriculum/): read the target mapping row and referenced requirement before authoring questions, and preserve statutory text verbatim.
 

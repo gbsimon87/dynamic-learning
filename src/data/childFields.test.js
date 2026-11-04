@@ -42,8 +42,9 @@ test("a valid yearGroup reads back, however it was stored", () => {
 });
 
 test("a yearGroup outside the offered list is treated as unset", () => {
-  // Year 6 would promise a curriculum that does not exist.
-  assert.equal(readYearGroup({ yearGroup: 6 }), null);
+  // Year 7 would promise a curriculum that does not exist.
+  assert.equal(readYearGroup({ yearGroup: 6 }), 6);
+  assert.equal(readYearGroup({ yearGroup: 7 }), null);
   assert.equal(readYearGroup({ yearGroup: 0 }), null);
 });
 

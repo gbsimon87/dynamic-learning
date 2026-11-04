@@ -47,6 +47,44 @@ tool, model and report the numbers came from.
 - Token counts alone do not establish cost or equal work across models.
 - Keep raw transcripts outside the public repository.
 
+### Counting from a session log
+
+When the only source is a per-message log, apply these rules. The Year 6
+Science count followed them.
+
+- **Count each message once.** A log may write one reply as several entries
+  that repeat the same usage. Group by the message's ID and keep one entry; a
+  raw sum over entries counted the Year 6 Science build almost twice.
+- **Use the build's window.** Keep messages from the build's branch between
+  the timer's start and stop. Leave out earlier unrelated work in the same
+  session and questions asked after the timer stopped.
+- **Add subagent logs separately.** Check they do not repeat the coordinator's
+  messages, then report coordinator and subagent rows by model.
+- **Record the source, not the transcript.** Name the log files, the window and
+  the counting rule in the course record.
+
+## Measured builds
+
+The first measured build is the baseline; compare only builds of similar scope.
+Per-topic figures divide the totals by verified topics. Tools report usage
+differently: leave a column blank or write "unknown" when a tool does not report
+it, and never convert one tool's figures into another's.
+
+| Build | Tool and models | Topics | Work time | Messages | Input | Cache write | Cache read | Output | Record |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---|
+| Year 6 Science (2026-11-04) | Claude Code: Opus 5.5 coordinator, two Sonnet 5.5 content agents | 24 | 23 min 21 s | 121 | 242 | 710,510 | 21,519,577 | 257,420 | [course record](superpowers/2026-11-04-year6-science-course-build.md) |
+
+What the baseline showed:
+
+| | Topics | Output per topic | Cache read per topic | Context re-sent per turn |
+|---|---:|---:|---:|---|
+| Coordinator (pilot strand, figures, integration, review, docs) | 4 | about 22k | about 4.7M | 206k on average, rising from 81k to 289k |
+| Two content agents (one strand pair each) | 20 | about 8k | about 128k | 39k at the start, about 170k at the end |
+
+Most of the cost was the coordinator re-sending a large context on every turn.
+[Course builds with content agents](AUTHORING.md#course-builds-with-content-agents)
+turns this into practice.
+
 ## Build record
 
 Use the [course template](superpowers/templates/course-build.md). Record timer

@@ -1,6 +1,6 @@
 # Implemented curriculum inventory
 
-Snapshot checked **2026-11-03**. The source is [curriculumRegistry.js](../src/data/curriculumRegistry.js),
+Snapshot checked **2026-11-04**. The source is [curriculumRegistry.js](../src/data/curriculumRegistry.js),
 its datasets and the challenge files. Update this table when implementations change.
 “Complete” means all four planned challenge files exist for each listed topic;
 it does not certify full statutory coverage, teaching accuracy or device review.
@@ -39,20 +39,25 @@ it does not certify full statutory coverage, teaching accuracy or device review.
 | 5 | [Music](../src/data/year5MusicCurriculum.js) | 14 | 56 | Complete |
 | 5 | [PE](../src/data/year5PeCurriculum.js) | 12 | 48 | Complete |
 | 5 | [Relationships & Health](../src/data/year5WellbeingCurriculum.js) | 13 | 52 | Complete |
-| 6 | All subjects | 0 | 0 | Not implemented |
-| **Total** | **32 complete pathways** | **749 built** | **2,996 built** | |
+| 6 | [Science](../src/data/year6ScienceCurriculum.js) | 24 | 96 | Complete |
+| 6 | Other subjects | 0 | 0 | Not registered yet |
+| **Total** | **33 complete pathways** | **773 built** | **3,092 built** | |
 
 Years 1–4 have Maths, English, Science, History and Geography. Year 5 adds Art &
 Design, Computing, Design & Technology, French, Music, PE and Relationships &
-Health (`wellbeing`). Year 6 is not registered or implemented yet. Saved statutory
+Health (`wellbeing`). Year 6 has Science only so far; its other subjects are
+built one at a time and stay unregistered until built. Saved statutory
 programmes and subject specs do not establish playable implementation.
 
 ## Awards and introductions
 
 [The registry](../src/data/curriculumRegistry.js) decides `countsTowardYear` independently
 of playability. Geography stays outside overall year awards; Years 2 and 4 History
-also remain excluded. The seven new Year 5 subjects are excluded, so the Year 5
-award uses Maths, English, Science and History. Preserve existing awards when adding pathways.
+also remain excluded. The Year 5 award uses Maths, English and Science (owner
+decision 2026-11-04: Year 5 History and the other Year 5 subjects are excluded).
+The Year 6 award will use Maths, English and Science; Year 6 Science stays
+excluded until Year 6 Maths and English exist, so a Science-only award is never
+earned and later taken away. Preserve existing awards when adding pathways.
 
 Maths Years 1–5 and English Years 3–5 use separately registered Bix lesson screens.
 Other pathways can have illustrated introductions inside their subject games:

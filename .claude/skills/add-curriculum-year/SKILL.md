@@ -5,7 +5,7 @@ description: Add or extend a Learn with Bix curriculum year or subject through t
 
 # Add a curriculum year or subject
 
-The registry already exists in `src/data/curriculumRegistry.js`: years 1–5 and 12 subject definitions. Availability varies by combination; inspect the requested entry instead of rebuilding the registry or assuming every topic has challenges.
+The registry already exists in `src/data/curriculumRegistry.js`: years 1–6 (Year 6 has Science only so far) and 12 subject definitions. Availability varies by combination; inspect the requested entry instead of rebuilding the registry or assuming every topic has challenges.
 
 Use `docs/AUTHORING.md` and the course record in `docs/superpowers/templates/course-build.md`. Read `../curriculum-progress/SKILL.md` before changing persistence, identifiers, completion or award rules.
 
@@ -16,7 +16,7 @@ Use `docs/AUTHORING.md` and the course record in `docs/superpowers/templates/cou
 3. Settle category titles and topic names before shipping: exports commonly recompute IDs with `toKebabCase`, ignoring handwritten raw IDs. Those IDs become URL and persisted progress keys. Treat shipped IDs as permanent; a rename is a migration task.
 4. Register the dataset with exactly four challenge slots per topic, following current dataset conventions. Add the appropriate data/registry tests and update year/profile/subject entry points only where the requested new combination needs it.
 5. Make year-award participation explicit. A registered curriculum defaults to counting unless `countsTowardYear: false`; adding unfinished subjects must not revoke an earned year certificate or milestone. Use `false` for staged rollout and preserve existing award membership until the product decision to include it is in scope. Building a topic never implies changing this flag.
-6. Build one representative topic using `../building-curriculum-topics/SKILL.md`, review its content and interaction, then apply the proven recipe to remaining topics. No-file topics can remain unavailable during incremental rollout; report this honestly.
+6. For a whole subject, follow "Course builds with content agents" in `docs/AUTHORING.md`: integrate and pilot one strand, then brief at most two content agents with `docs/superpowers/templates/strand-agent-brief.md`. Build one representative topic using `../building-curriculum-topics/SKILL.md`, review its content and interaction, then apply the proven recipe to remaining topics. No-file topics can remain unavailable during incremental rollout; report this honestly.
 
 ## Preserve progress and verify
 

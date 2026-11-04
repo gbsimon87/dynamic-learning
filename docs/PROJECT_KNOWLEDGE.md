@@ -160,8 +160,8 @@ See [architecture](ARCHITECTURE.md) and [operations](OPERATIONS.md) before chang
 
 ## 5. What Currently Exists
 
-**32 pathways, 749 topics and 2,996 implemented slots across Years 1–5.** Year 6
-is not implemented. See the [full inventory](CURRICULUM_INVENTORY.md) for subject
+**33 pathways, 773 topics and 3,092 implemented slots across Years 1–6.** Year 6
+has Science only so far. See the [full inventory](CURRICULUM_INVENTORY.md) for subject
 coverage, award exclusions, introductions and review trackers. “Implemented”
 means files exist; it does not certify statutory coverage or content/device review.
 
