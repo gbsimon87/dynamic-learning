@@ -71,4 +71,4 @@ physical-device, speech or browser-layout checks.
 - [Science tracker](science-curriculum/IMPLEMENTATION_PLAN.md)
 - [History tracker](history-curriculum/HISTORY_TRACKER.md)
 - [Geography specs and source packs](geography-curriculum/README.md)
-- [Detailed implementation history](history/PROJECT_KNOWLEDGE_2026-11-03.md#5-what-currently-exists)
+- [Current architecture](ARCHITECTURE.md) and [changelog](CHANGELOG.md)

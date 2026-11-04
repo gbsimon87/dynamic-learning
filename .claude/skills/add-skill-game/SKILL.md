@@ -80,8 +80,7 @@ statutory curriculum coverage.
 - Feedback pattern matches the rest of the app: ✅ correct, ❌ retry.
 - If the game has modes (practice / multiple-choice / timed), make the mode
   switch **fully reset game state** — stale state across mode switches is the
-  recurring regression in this codebase (see the dated audit history under
-  `docs/history/`, only when investigating that failure).
+  recurring regression in this codebase (see `docs/ENGINEERING_RULES.md`).
 
 ## Styling
 
@@ -137,4 +136,4 @@ only when a test cannot show it.
 Keep the source catalogue and guide current, record delivered scope/verification
 in `docs/CHANGELOG.md`, and remove finished work from `docs/PROJECT_IDEAS.md`.
 Update the short `docs/PROJECT_KNOWLEDGE.md` entry point or focused references
-only when current contracts change; leave dated archives unchanged.
+only when current contracts change.

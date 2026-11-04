@@ -31,8 +31,7 @@ Start with `docs/PROJECT_KNOWLEDGE.md`, the short current guide. It links to
 architecture, commands, inventory, maintained examples and task-specific sources;
 load only the references needed. Delivered outcomes go in `docs/CHANGELOG.md`,
 upcoming work in `docs/PROJECT_IDEAS.md`. Deployment: `render.yaml` and
-`docs/OPERATIONS.md`. The dated `docs/history/` snapshot is historical, not
-required background for ordinary builds; do not append new work there.
+`docs/OPERATIONS.md`. Coding rules from past bugs: `docs/ENGINEERING_RULES.md`.
 
 ## Non-negotiables
 

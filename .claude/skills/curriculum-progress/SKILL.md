@@ -157,4 +157,4 @@ year awards must remain earned. Test membership changes independently of open ac
 If you change the shape, keys, access or award rules, update current contracts
 in `docs/ARCHITECTURE.md`, the §4.5 summary in `docs/PROJECT_KNOWLEDGE.md` and
 relevant limitations in `docs/OPERATIONS.md`. Record delivered migrations and
-verification in `docs/CHANGELOG.md`; leave dated archives unchanged.
+verification in `docs/CHANGELOG.md`.

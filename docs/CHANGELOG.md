@@ -3,9 +3,8 @@
 Record delivered outcomes here, newest first, with useful verification and
 remaining review limits. Keep current architecture/scope in
 [PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md) and its focused references; upcoming
-work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Older implementation history
-is preserved in the [2026-11-03 archive](history/PROJECT_KNOWLEDGE_2026-11-03.md).
-Do not append new work to that dated snapshot.
+work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
+2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
 ## 2026-11-04 — Authoring follow-ups
 
@@ -16,6 +15,10 @@ Do not append new work to that dated snapshot.
 - Removed the skill's `references/visual-recipes.md` pointer; links now go
   straight to `docs/VISUAL_RECIPES.md`.
 - Backlog #44 tracks bank-checker adapters for the 140 structure-only topics.
+- Removed the dated `docs/history/` project-knowledge archive and the branch
+  review record; links now point to current docs. The archive's still-current
+  coding rules moved to `ENGINEERING_RULES.md`. Earlier detail remains in git
+  history (`docs/PROJECT_KNOWLEDGE.md` at `fd4bc37`).
 
 ## 2026-11-03 — Full course-building branch review
 
@@ -78,5 +81,4 @@ lint, build and the full suite passed: 2,625 unit/API checks, four existing skip
 and 655 component checks. All 749 topic mappings were found, representative
 Year 5 checks covered twelve subjects, and a full Year 5 Science check passed.
 No browser pass was needed for tooling/docs; course device/content review is
-separate. Detailed preceding work remains in the archive's
-[authoring record](history/PROJECT_KNOWLEDGE_2026-11-03.md#questions-as-data-6-2026-10-10).
+separate. The current workflow is in [AUTHORING.md](AUTHORING.md).

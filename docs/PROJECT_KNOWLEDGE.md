@@ -3,8 +3,7 @@
 **Current builder entry point · reviewed 2026-11-03.** Start here with any AI
 tool or developer, read [AGENTS.md](../AGENTS.md) for repository rules, then
 choose the project mode below. Source code and `package.json` decide
-current behaviour. The former detailed document is preserved in a
-[dated archive](history/PROJECT_KNOWLEDGE_2026-11-03.md).
+current behaviour.
 
 | Need | Read |
 |---|---|
@@ -16,7 +15,8 @@ current behaviour. The former detailed document is preserved in a
 | Deployment or outstanding review | [Operations](OPERATIONS.md), [SEO follow-up](SEO_NEXT_STEPS.md) |
 | Time and token measurement | [Build measurement](BUILD_MEASUREMENT.md) |
 | Upcoming work | [Project ideas](PROJECT_IDEAS.md), [Solar System roadmap](SOLAR_SYSTEM_IDEAS.md) |
-| Delivered changes or an old decision | [Changelog](CHANGELOG.md), then a specific archived heading if needed |
+| Delivered changes | [Changelog](CHANGELOG.md) |
+| Coding rules learned from past bugs | [Engineering rules](ENGINEERING_RULES.md) |
 
 ## 1. What This Project Is
 
@@ -172,9 +172,8 @@ subjects reuse their own illustrated shared games and challenge kit. Rewards,
 XP/streaks, badges, certificates and progress summaries have existing shared
 rules: extend those layers instead of creating another store or counter.
 
-For feature detail, search a specific heading in the
-[implementation archive](history/PROJECT_KNOWLEDGE_2026-11-03.md#5-what-currently-exists).
-Recent delivered outcomes belong in [CHANGELOG.md](CHANGELOG.md).
+For feature detail, read the [architecture](ARCHITECTURE.md) and the source it
+links. Delivered outcomes belong in [CHANGELOG.md](CHANGELOG.md).
 
 ## 6. Known Issues / Debt
 
@@ -183,9 +182,7 @@ hosting records, unrechecked reports and superseded issues. [PROJECT_IDEAS.md](P
 tracks upcoming work. Physical-device, child/owner, accessibility and external
 rollout checks need their own evidence; passing tests does not close them.
 
-The former §6 item 17 hosting record is preserved in the
-[archive](history/PROJECT_KNOWLEDGE_2026-11-03.md#6-known-issues--debt);
-current configuration and deployment safeguards are in [operations](OPERATIONS.md).
+Hosting configuration and deployment safeguards are in [operations](OPERATIONS.md).
 
 ## 7. How To Add Things (playbooks)
 
@@ -216,10 +213,9 @@ browser checks; report technical/content/device review separately.
 
 ## 9. Hard-Won Rules (from the 2026-08-21 audit)
 
-The [original audit rules](history/PROJECT_KNOWLEDGE_2026-11-03.md#9-hard-won-rules-from-the-2026-08-21-audit)
-remain available for a specific investigation. Apply current code, skills and
-[AGENTS.md](../AGENTS.md) when dated guidance conflicts with today's behaviour;
-for example, open curriculum access supersedes historic gating assumptions.
+Read [ENGINEERING_RULES.md](ENGINEERING_RULES.md): bounded sampling, answer
+ranges, timers, theme tokens, contrast, scoped CSS and more. Apply current code,
+skills and [AGENTS.md](../AGENTS.md) where they differ.
 
 ## Keeping this guide short
 
@@ -228,6 +224,4 @@ focused reference. Update this page only when current architecture, commands, sc
 references changes. Update the relevant focused reference and inventory with it.
 Record delivered outcomes and verification in [CHANGELOG.md](CHANGELOG.md),
 upcoming work in [PROJECT_IDEAS.md](PROJECT_IDEAS.md), and detailed feature evidence
-in its tracker/brief. The dated archive is historical; do not append current work
-or restore obsolete instructions from it. Ordinary builds must not load the archive
-or every reference by default.
+in its tracker/brief. Ordinary builds must not load every reference by default.

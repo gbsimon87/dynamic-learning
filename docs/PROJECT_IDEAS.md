@@ -11,7 +11,7 @@
 Curriculum scope and authoring workflow refreshed 2026-11-03; other ideas
 retain their recorded review dates.
 
-Item-by-item historical source evidence: [backlog audit](history/PROJECT_KNOWLEDGE_2026-11-03.md#backlog-source-audit-2026-10-09).
+Delivered outcomes: [CHANGELOG.md](CHANGELOG.md).
 
 ## Context for prioritisation
 - Curriculum Mode implements **32 pathways across Years 1–5: 749 topics /
@@ -63,7 +63,7 @@ Item-by-item historical source evidence: [backlog audit](history/PROJECT_KNOWLED
   Badges hang off `completionMilestones` and live in a rewards document per
   child (`src/data/badges.js`). Streaks did not need the per-attempt write path
   after all: the day stamps live in that same rewards document (v2), so
-  progress was not touched. See the [rewards implementation record](history/PROJECT_KNOWLEDGE_2026-11-03.md#badges-xp--streaks-badges-2026-09-19-xp-streaks-and-news-2026-09-30).
+  progress was not touched. See [rewards in the architecture](ARCHITECTURE.md#progress-stores-and-server).
 - **`npm run seed` exists** (2026-09-19) and creates a test parent with two
   children who have different progress through both years. Use it rather than
   clicking through the curriculum by hand to reach a state worth looking at.
@@ -84,12 +84,13 @@ Item-by-item historical source evidence: [backlog audit](history/PROJECT_KNOWLED
   questions also have source-based Maths models, English word-part and object
   references, Science classification diagrams, results charts and pictured cards. Existing
   illustrated subjects retain their introductions. Browser/device review remains
-  pending; see the [illustrated-teaching record](history/PROJECT_KNOWLEDGE_2026-11-03.md#illustrated-teaching-across-years-45-2026-11-03).
+  pending; see [visual recipes](VISUAL_RECIPES.md) and the
+  [inventory](CURRICULUM_INVENTORY.md#awards-and-introductions).
 - **Shipped 2026-10-10:** the first-play kit (Bix's intro at `/hello`,
   first-visit coach marks, the Daily Bix puzzle, brain breaks), Maths
   read-aloud, Bix's jokes, certificates, questions as data and five free-play
   games. Rewards are now **v3** (`intro`, `tips`, `puzzles`); see
-  the [first-play record](history/PROJECT_KNOWLEDGE_2026-11-03.md#first-play-bixs-intro-coach-marks-daily-puzzle--brain-breaks-2026-10-10). New per-child flags belong in the rewards document the
+  [the architecture](ARCHITECTURE.md#progress-stores-and-server). New per-child flags belong in the rewards document the
   same way; a new modal uses `src/components/ui/Dialog.jsx` (or the
   `useModalDialog` hook).
 - Ideas should serve the **registered curricula (Years 1–5)** and both account
@@ -215,8 +216,7 @@ The detail behind the rows above, for whoever picks one up.
   handles from `@hello-pangea/dnd` in `DragToOrder`. Counting `onKeyDown`
   handlers is not an audit; play each interaction end to end.
 - **#8** Speech: `src/utils/speech.js`, `SpeakButton`; Maths readings go through
-  `data/mathSpeech.js` and `components/challenge/readAloud.js` (see the
-  [Maths read-aloud record](history/PROJECT_KNOWLEDGE_2026-11-03.md#maths-read-aloud-8-2026-10-10)). Always keep the visible text and a sound-off path.
+  `data/mathSpeech.js` and `components/challenge/readAloud.js`. Always keep the visible text and a sound-off path.
 - **#9 / #10** Progress stores completions only: no per-challenge timestamps,
   attempt counts or wrong answers. Record attempts during the run in
   `ChallengeShell` (or the game), in a new store kept separate from

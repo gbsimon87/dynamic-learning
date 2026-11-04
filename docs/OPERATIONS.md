@@ -148,6 +148,5 @@ subject trackers before treating implementation or automated checks as closure.
 The historical “account-protection rollout pending” item was superseded by a
 **2026-10-10 deployed** record confirming unique indexes and valid progress.
 That is historical deployment evidence, not a fresh live audit. Closed bugs
-and obsolete audit findings remain in the
-[archived detailed record](history/PROJECT_KNOWLEDGE_2026-11-03.md#6-known-issues--debt);
-do not restore them as open issues without checking current source.
+and obsolete audit findings are in git history; do not reopen them without
+checking current source.

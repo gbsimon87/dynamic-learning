@@ -434,8 +434,8 @@ another production release; a local pass alone does not close a hosting issue.
 
 **Update (2026-10-15):** the public year/subject overviews proposed in item 1
 below are now implemented for all 20 Years 1–4 subject combinations, with a
-`/what-we-teach` hub. See “Public curriculum overviews (2026-10-15)” in
-[PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md) and the updated
+`/what-we-teach` hub. See the public guide catalogue
+[curriculumGuides.js](../shared/curriculumGuides.js) and the updated
 [follow-up checklist](SEO_NEXT_STEPS.md). The audit and verification counts above
 record the original implementation, before these pages were added.
 

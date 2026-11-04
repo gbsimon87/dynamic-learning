@@ -47,8 +47,8 @@ These application-wide concerns remain open:
   deleting records. Production audit found zero duplicate groups. The rollout
   was still pending at this review's 2026-10-09 snapshot; the later 2026-10-10
   deployed/index-verification record supersedes that pending status. This is
-  historical evidence, not a fresh live audit; see [operations](../OPERATIONS.md) and the
-  [account-protection outcome](../history/PROJECT_KNOWLEDGE_2026-11-03.md#account-and-learning-protection-2026-10-09).
+  historical evidence, not a fresh live audit; see
+  [protecting learner data](../OPERATIONS.md#protect-learner-data).
 - **Boundary — local mode:** localStorage account data is controlled by anyone
   with browser access; it is not an authorization boundary. API mode checks the
   signed-in parent and child ownership before reading/writing child progress.

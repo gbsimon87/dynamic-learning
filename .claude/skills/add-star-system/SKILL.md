@@ -112,4 +112,4 @@ planet card, the map card, a trip there and Home. Add a credits entry
 
 Record delivered scope and verification in `docs/CHANGELOG.md` and update the
 Solar System roadmap/current references as needed. Keep `PROJECT_KNOWLEDGE.md`
-short and leave dated history archives unchanged.
+short.

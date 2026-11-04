@@ -20,8 +20,8 @@ speed. The year/subject overviews are already built; include them in the checks.
   were added later.
 - **[OPERATIONS.md](OPERATIONS.md):** deployment invariants, dated production/dev
   hosting records, Blueprint setup and checks still needing live evidence.
-  The [historical project record](history/PROJECT_KNOWLEDGE_2026-11-03.md)
-  documents “Public curriculum overviews (2026-10-15)”.
+  Public curriculum overviews are generated from
+  [curriculumGuides.js](../shared/curriculumGuides.js).
 - **[render.yaml](../render.yaml):** actual deployment configuration. Check
   production/dev branches, `PUBLIC_APP_URL`, `SEO_INDEXABLE` and build-time
   `VITE_USE_API` against the intended service before deploying.
@@ -246,9 +246,8 @@ practical limits, with topic names and counts drawn from the curriculum registry
 They are included in public prerendering, metadata and sitemap generation, and
 linked from the public hub and homepage. Learner information remains private.
 
-Implementation and editorial checks are recorded in
-[the historical project record](history/PROJECT_KNOWLEDGE_2026-11-03.md) under “Public curriculum overviews
-(2026-10-15)”. These pages no longer need to be created.
+Their content lives in [curriculumGuides.js](../shared/curriculumGuides.js).
+These pages no longer need to be created.
 
 ### Remaining follow-up — after deployment
 
