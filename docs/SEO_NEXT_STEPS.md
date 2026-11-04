@@ -18,9 +18,10 @@ speed. The year/subject overviews are already built; include them in the checks.
   and rollout checklist”, including configuration, HTTP checks and search tools.
   Original page counts describe the initial audit; the curriculum overviews
   were added later.
-- **[PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md):** §6 item 17 identifies the
-  live production/dev services and Blueprint setup. “Public curriculum
-  overviews (2026-10-15)” documents the additional public pages.
+- **[OPERATIONS.md](OPERATIONS.md):** deployment invariants, dated production/dev
+  hosting records, Blueprint setup and checks still needing live evidence.
+  The [historical project record](history/PROJECT_KNOWLEDGE_2026-11-03.md)
+  documents “Public curriculum overviews (2026-10-15)”.
 - **[render.yaml](../render.yaml):** actual deployment configuration. Check
   production/dev branches, `PUBLIC_APP_URL`, `SEO_INDEXABLE` and build-time
   `VITE_USE_API` against the intended service before deploying.
@@ -150,8 +151,8 @@ version visitors and Google actually receive works the same way.
 
    The Blueprint syncs `render.yaml` from `dev`, while production code deploys
    from `main`. Review configuration changes before pushing; keep the production
-   service on Starter and the databases separate. See PROJECT_KNOWLEDGE §6 item
-   17 and [Render’s deployment instructions](https://render.com/docs/deploys).
+   service on Starter and the databases separate. See [operations](OPERATIONS.md)
+   and [Render’s deployment instructions](https://render.com/docs/deploys).
 
 ### Verify the production response
 
@@ -246,7 +247,7 @@ They are included in public prerendering, metadata and sitemap generation, and
 linked from the public hub and homepage. Learner information remains private.
 
 Implementation and editorial checks are recorded in
-[PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md) under “Public curriculum overviews
+[the historical project record](history/PROJECT_KNOWLEDGE_2026-11-03.md) under “Public curriculum overviews
 (2026-10-15)”. These pages no longer need to be created.
 
 ### Remaining follow-up — after deployment

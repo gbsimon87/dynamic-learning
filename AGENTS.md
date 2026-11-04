@@ -7,8 +7,8 @@ that limitation rather than claiming to switch models.
 # Learn with Bix — agent guide
 
 React + Vite learning app for 6–8 year olds. Two modes: **Skills Mode**
-(standalone, ungated mini-games) and **Curriculum Mode** (gated, progress-tracked
-UK National Curriculum path).
+(standalone, ungated mini-games) and **Curriculum Mode** (progress-tracked UK National Curriculum path; all built
+challenges are open).
 
 The working guides are the skills in `.claude/skills/`. Claude Code loads them on
 demand; other agents (Codex, Cursor, Copilot, Gemini) should read the `SKILL.md`
@@ -24,12 +24,20 @@ deliberately does not repeat them.**
 | Add another real star system to the Solar System page | `add-star-system` |
 | Touch progress, persistence, or unlock rules | `curriculum-progress` |
 
-Stack, architecture, commands and current state: `docs/PROJECT_KNOWLEDGE.md`.
-Backlog: `docs/PROJECT_IDEAS.md`. Deployment: `render.yaml` and `docs/PROJECT_KNOWLEDGE.md` §6 item 17.
+Project workflows for any AI tool: Curriculum courses/challenges in
+`docs/AUTHORING.md`; standalone Skills Mode games in `docs/SKILLS_AUTHORING.md`.
+
+Start with `docs/PROJECT_KNOWLEDGE.md`, the short current guide. It links to
+architecture, commands, inventory, maintained examples and task-specific sources;
+load only the references needed. Delivered outcomes go in `docs/CHANGELOG.md`,
+upcoming work in `docs/PROJECT_IDEAS.md`. Deployment: `render.yaml` and
+`docs/OPERATIONS.md`. The dated `docs/history/` snapshot is historical, not
+required background for ordinary builds; do not append new work there.
 
 ## Non-negotiables
 
-1. **Learner progress is irreplaceable** — browser-only, no backup, no export.
+1. **Learner progress is irreplaceable** — production uses the API + MongoDB;
+   local development defaults to the browser store. Never assume a reset is safe.
    Never change the stored shape, the storage key, or an unlock rule without
    reading the `curriculum-progress` skill first.
 2. **`docs/curriculum/` decides what we teach.** It holds the statutory
@@ -37,7 +45,10 @@ Backlog: `docs/PROJECT_IDEAS.md`. Deployment: `render.yaml` and `docs/PROJECT_KN
    requirement it serves. Read a topic's row before writing its questions, and
    never paraphrase statutory text when saving a new programme of study.
 3. **Both themes, large touch targets.** Colour comes from the `--light-*` /
-   `--dark-*` tokens in `App.css`; the audience is 6–8 years old.
+   `--dark-*` tokens in `App.css`; the audience is 6–8 years old. Future topics
+   retain the built years' visual teaching approach: illustrated introductions,
+   worked examples and useful question models/manipulatives. Follow the
+   project reference `docs/VISUAL_RECIPES.md` and the matching subject renderer.
 4. **Prove it works before calling it done** — a written file is not a working
    change. `npm run lint`, `npm test` and `npm run build` must pass; see
    "Browser checks and subagents" for when a browser pass is needed too.
@@ -72,3 +83,16 @@ Continue using the codebase, terminal, tests, linting, type checks, and build ou
 If visual verification is still needed, state that browser verification could not be completed in this session.
 
 Do not repeatedly retry unavailable browser tooling unless explicitly asked.
+
+## Durable authoring records
+
+Use `docs/superpowers/templates/` for short topic briefs and course build records.
+Save reusable decisions and review evidence under `docs/superpowers/`; disposable
+`.superpowers/` and `.sdd/` runtime logs are not the source of truth. Record what
+was implemented, technically validated, content-reviewed and device-reviewed
+separately. Automated checks cannot certify a child’s learning experience.
+
+For course builds, follow the timing workflow in `docs/AUTHORING.md`: the
+coordinating agent starts/resumes the course timer, pauses when yielding, and
+reports its duration after the requested build and verification finish. Keep
+the timer ID in the course record; never estimate unrecorded token usage.

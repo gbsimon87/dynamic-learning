@@ -104,8 +104,12 @@ building it; free flight's `tripTo` is the one place to change.
 
 ## Before you call it done
 
-One batched browser pass (CLAUDE.md "Browser checks"): `node
+One batched browser pass (AGENTS.md "Browser checks"): `node
 scripts/checkSolarUi.js --systems` after `npm run build` — every viewport and
 both themes in one run. Look at the screenshots: the new system's overview, a
 planet card, the map card, a trip there and Home. Add a credits entry
 (`src/pages/credits/Credits.jsx`) only if you add a picture file.
+
+Record delivered scope and verification in `docs/CHANGELOG.md` and update the
+Solar System roadmap/current references as needed. Keep `PROJECT_KNOWLEDGE.md`
+short and leave dated history archives unchanged.

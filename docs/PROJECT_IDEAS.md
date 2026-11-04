@@ -3,18 +3,22 @@
 > **⚠️ AI-MAINTAINED DOCUMENT — UPCOMING WORK ONLY.**
 > Nothing that is finished belongs in this file. When an idea ships, **delete its
 > row** — do not mark it done and leave it behind — and record the outcome in
-> [PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md), which is where history lives.
+> [CHANGELOG.md](CHANGELOG.md), which is where new delivered outcomes live.
 > The same goes for bugs: a fixed bug is deleted here and written up there.
 
 **Last reviewed:** 2026-10-15
 
-Item-by-item source evidence: [backlog audit in PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md#backlog-source-audit-2026-10-09).
+Curriculum scope and authoring workflow refreshed 2026-11-03; other ideas
+retain their recorded review dates.
+
+Item-by-item historical source evidence: [backlog audit](history/PROJECT_KNOWLEDGE_2026-11-03.md#backlog-source-audit-2026-10-09).
 
 ## Context for prioritisation
-- Curriculum Mode ships **UK Years 1–4 Maths** (Year 1: 32 topics, 128 challenges; Year 3: 44 topics,
-  176 challenges; Year 4: 42 topics, 168 challenges), **Years 1–4 English** (Years 1–2 completed 2026-10-11) and **Years 1–4
-  Science** (Year 1: 16 topics, 64 challenges, 2026-10-11; Year 2: 19 topics, 76 challenges, 2026-10-11; Year 3: 21 topics, 84 challenges, 2026-10-03; Year 4: 20 topics, 80 challenges, 2026-10-11), plus standalone Skills Mode
-  games. English and Science are still waiting on an owner's interactive review;
+- Curriculum Mode implements **32 pathways across Years 1–5: 749 topics /
+  2,996 challenge slots**, plus standalone Skills Mode games. The current
+  subject/year inventory is in [CURRICULUM_INVENTORY.md](CURRICULUM_INVENTORY.md).
+  Implementation does not certify statutory coverage or content/device review.
+  English and Science still have outstanding owner's interactive review;
   see their trackers in `docs/english-curriculum/` and `docs/science-curriculum/`.
   Year 1 Maths is implemented (2026-10-11), with visual browser review still
   pending because browser controls were unavailable in the implementation session.
@@ -59,7 +63,7 @@ Item-by-item source evidence: [backlog audit in PROJECT_KNOWLEDGE.md](PROJECT_KN
   Badges hang off `completionMilestones` and live in a rewards document per
   child (`src/data/badges.js`). Streaks did not need the per-attempt write path
   after all: the day stamps live in that same rewards document (v2), so
-  progress was not touched. See PROJECT_KNOWLEDGE §5, "Badges, XP & streaks".
+  progress was not touched. See the [rewards implementation record](history/PROJECT_KNOWLEDGE_2026-11-03.md#badges-xp--streaks-badges-2026-09-19-xp-streaks-and-news-2026-09-30).
 - **`npm run seed` exists** (2026-09-19) and creates a test parent with two
   children who have different progress through both years. Use it rather than
   clicking through the curriculum by hand to reach a state worth looking at.
@@ -70,8 +74,8 @@ Item-by-item source evidence: [backlog audit in PROJECT_KNOWLEDGE.md](PROJECT_KN
   now use it too (2026-10-15). Recorded sounds shipped 2026-10-10 (Mixkit,
   see docs/sounds/README.md). The Mixkit licence covers use in the app;
   keeping the MP3s in the public repo was cleared with a lawyer.
-- **Domain and sign-up email verification are live** as recorded in
-  PROJECT_KNOWLEDGE on 2026-10-09. The sending-domain prerequisite is closed;
+- **Domain and sign-up email verification were recorded live** on 2026-10-09;
+  see [operations](OPERATIONS.md) for source configuration and dated hosting evidence. The sending-domain prerequisite is closed;
   sign-up fixes and their interactive checks are done (2026-10-10). The app was renamed
   **Learn with Bix** on 2026-10-10.
 - **Shipped 2026-11-03:** illustrated Bix lessons now fill Years 4–5's missing
@@ -80,15 +84,15 @@ Item-by-item source evidence: [backlog audit in PROJECT_KNOWLEDGE.md](PROJECT_KN
   questions also have source-based Maths models, English word-part and object
   references, Science classification diagrams, results charts and pictured cards. Existing
   illustrated subjects retain their introductions. Browser/device review remains
-  pending; see PROJECT_KNOWLEDGE, "Illustrated teaching across Years 4–5".
+  pending; see the [illustrated-teaching record](history/PROJECT_KNOWLEDGE_2026-11-03.md#illustrated-teaching-across-years-45-2026-11-03).
 - **Shipped 2026-10-10:** the first-play kit (Bix's intro at `/hello`,
   first-visit coach marks, the Daily Bix puzzle, brain breaks), Maths
   read-aloud, Bix's jokes, certificates, questions as data and five free-play
   games. Rewards are now **v3** (`intro`, `tips`, `puzzles`); see
-  PROJECT_KNOWLEDGE §5. New per-child flags belong in the rewards document the
+  the [first-play record](history/PROJECT_KNOWLEDGE_2026-11-03.md#first-play-bixs-intro-coach-marks-daily-puzzle--brain-breaks-2026-10-10). New per-child flags belong in the rewards document the
   same way; a new modal uses `src/components/ui/Dialog.jsx` (or the
   `useModalDialog` hook).
-- Ideas should serve the **registered curricula (Years 1–4)** and both account
+- Ideas should serve the **registered curricula (Years 1–5)** and both account
   types where relevant, while keeping the core experience suitable for 6–8 year olds.
 
 ## What 6–8 year olds enjoy (the lens for #22 onwards)
@@ -130,7 +134,7 @@ and what is left. File names and engineering detail are in
 
 | # | Idea | What it is | Done so far / what's left | Status |
 |---|---|---|---|---|
-| 6 | **Write new questions as data** | Most challenges today are hand-built screens. A shared format lets us write a question as a few lines of data, for example "a clock showing half past 3, pick the time", and the app draws it. New topics become much quicker to build. | **Done:** the format and the screen for 13 question types (multiple choice, typed numbers, spelling, sorting, ordering, charts, clocks, coins, fractions and more). **Done:** Year 1 and Year 2 English use it for 37 and 38 topics respectively (dictation reuses its existing memory game). **Left:** move the earlier English games onto it. | 🟡 Partial |
+| 6 | **Move earlier English games onto shared question data** | Shared formats and renderers already make new topics quicker to build. Bring the earlier English games onto them while preserving their teaching and interactions. | **Left:** migrate `EnglishPracticeGame` only with side-by-side replay and regression evidence. The shared format, later data-based courses and authoring tools are delivered; see [the authoring workflow](AUTHORING.md) and PROJECT_KNOWLEDGE. | 🟡 Partial |
 | 7 | **Accessibility and keyboard check** | Make sure every game works for a child using a keyboard or a screen reader, or who needs less motion, and that text is readable in both colour themes. | **Left:** nobody has played every interaction with a keyboard only and with a screen reader. Do that, and fix what breaks. | ⚪ Idea |
 | 8 | **Read-aloud everywhere** | A "Read it to me" button, so a child who can't yet read fluently can still play. | **Done:** every curriculum subject (Maths added 2026-10-10), the Solar System, the daily puzzle, the new free-play games and the older Skills games (2026-10-15), including visible word banks/options and optional Speed Reader story narration. **Left:** drag-and-build Maths questions that read their tiles out as a list; checking the voice on real phones and tablets. | 🟡 Partial |
 | 9 | **Progress report for grown-ups** | Parents (and later teachers) see how a child is getting on. | **Done:** the Parent area shows each child's progress, badges and profile settings. **Left:** "time spent learning" and "topics to practise more". Both need the app to start recording each attempt (step 5 of the order below). Maybe a "reset progress" button, designed carefully so nothing is lost by accident. | 🟡 Partial |
@@ -175,9 +179,10 @@ alongside everything else.
 3. **Finish read-aloud verification (#8).** The older Skills games now have
    read-aloud and shared answer celebrations (2026-10-15). Check actual device
    voices and the remaining drag-and-build Maths readings.
-4. **Add new content the quicker way (#15, #20).** Build Geography
-   in the new question format (#6), and new Skills games on the
-   free-play frame.
+4. **Add new content through the authoring workflow (#15, #20).** Use
+   [AUTHORING.md](AUTHORING.md), scoped topic context, scaffold previews and
+   topic/course checks. Extend Geography using its existing subject engine;
+   build new Skills games on the free-play frame.
 5. **Start recording each attempt, once #11 allows it.** That unlocks the
    grown-ups' report (#9), questions that adjust (#10) and analytics (#36).
 6. **Fun extras, roughly cheapest first:**
@@ -198,7 +203,7 @@ alongside everything else.
 
 The detail behind the rows above, for whoever picks one up.
 
-- **#6** Kinds and their rules: `src/data/challenges/questionKinds.js` (lint a
+- **#6** Start future builds at [AUTHORING.md](AUTHORING.md). Kinds and their rules: `src/data/challenges/questionKinds.js` (lint a
   bank with `lintBuild`); renderer: `src/components/challenge/data/DataChallenge.jsx`;
   how-to and field table: the `building-curriculum-topics` skill. Move
   `EnglishPracticeGame` over only once its challenges can be replayed side by
@@ -209,8 +214,8 @@ The detail behind the rows above, for whoever picks one up.
   handles from `@hello-pangea/dnd` in `DragToOrder`. Counting `onKeyDown`
   handlers is not an audit; play each interaction end to end.
 - **#8** Speech: `src/utils/speech.js`, `SpeakButton`; Maths readings go through
-  `data/mathSpeech.js` and `components/challenge/readAloud.js` (PROJECT_KNOWLEDGE
-  §5, "Maths read-aloud"). Always keep the visible text and a sound-off path.
+  `data/mathSpeech.js` and `components/challenge/readAloud.js` (see the
+  [Maths read-aloud record](history/PROJECT_KNOWLEDGE_2026-11-03.md#maths-read-aloud-8-2026-10-10)). Always keep the visible text and a sound-off path.
 - **#9 / #10** Progress stores completions only: no per-challenge timestamps,
   attempt counts or wrong answers. Record attempts during the run in
   `ChallengeShell` (or the game), in a new store kept separate from

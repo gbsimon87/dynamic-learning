@@ -71,7 +71,8 @@ not deployed or physically device-tested. Stretch ideas are not phase blockers.
   failures leave play available. #74 will build the passport on these stamps.
   Flight rewards last only for that adventure; traced-figure collections last
   only for this page visit. Neither changes curriculum progress or mission stamps.
-- Update this roadmap and `PROJECT_KNOWLEDGE.md` with implementation; lint,
+- Update this roadmap and `CHANGELOG.md` with delivered implementation; update
+  current architecture references only when their contracts change. Lint,
   tests, build and UI checks are required. Keep device/playtest gates honest.
 
 ## Upcoming sequence and dependencies

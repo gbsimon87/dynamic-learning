@@ -17,7 +17,12 @@
     "test:components": "vitest run",
     "audit:accounts": "node --env-file-if-exists=.env scripts/auditAccountIndexes.js",
     "audit:progress": "node --env-file-if-exists=.env scripts/auditProgress.js",
-    "check:seo": "node scripts/checkSeo.js"
+    "check:seo": "node scripts/checkSeo.js",
+    "topic:context": "node scripts/topicContext.js",
+    "check:topic": "node scripts/checkTopic.js",
+    "check:course": "node scripts/checkTopic.js --all",
+    "scaffold:topic": "node scripts/scaffoldTopic.js",
+    "course:timer": "node scripts/courseTimer.js"
   },
   "dependencies": {
     "@fontsource/abeezee": "^5.2.5",
