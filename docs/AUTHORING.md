@@ -1,6 +1,6 @@
 # Curriculum authoring
 
-Start with the requested year, subject and topic ID. The current registry covers years 1–6 (Year 6: Science only so far) and 12 subjects; check availability rather than assuming a registered course has every challenge. All built challenges are open. Completion tracks learning and awards; it does not gate access.
+Start with the requested year, subject and topic ID. The current registry covers years 1–6 (Year 6: Science and a Maths place-value pilot) and 12 subjects; check availability rather than assuming a registered course has every challenge. All built challenges are open. Completion tracks learning and awards; it does not gate access.
 
 This is the project workflow for Curriculum Mode, readable by any AI tool or
 developer. For standalone Skills Mode games use [SKILLS_AUTHORING.md](SKILLS_AUTHORING.md).
@@ -76,8 +76,9 @@ the coordinator integrates, pilots and reviews, and the agents write the banks.
    bank writing; keep the coordinator on the stronger model for review.
 4. **Keep the coordinator's context small while they work**: read files by line
    range, avoid commands that print whole files or long test logs, batch
-   independent calls, and run the full suite once at the end rather than after
-   every edit.
+   independent calls, and use focused checks for pilots and individual strands.
+   Follow [validation](VALIDATION.md): run the full set once before merge/release,
+   repeating only checks warranted by later changes or failures.
 5. **Review what comes back** before the full suite:
    - safeguarding-sensitive topics in full;
    - the facts each agent says it was unsure of;
@@ -111,7 +112,18 @@ further subject needs:
 - the counts that list every pathway: the guide totals in
   `shared/curriculumGuides.test.js`, the Year 6 subjects in
   `tests/components/curriculumSelect.test.jsx` and `subjectsForYear(6)` in
-  `src/data/signupFlow.test.js`.
+  `src/data/signupFlow.test.js`;
+- public-guide implementation assertions in `tests/components/curriculumGuides.test.jsx`:
+  staged topics remain unavailable and the guide must say so;
+- future-year recipe fixtures in `scripts/curriculum/authoring.test.js` when the
+  new subject game becomes the newest reference, and the per-year reading limits
+  in `src/data/lessons/lintLessons.js` when registering a new lesson year.
+
+Before the pilot, check that each displayed quest name starts with a capital,
+including after a Number/Geometry prefix. Use actual `toKebabCase` outputs and
+preserve existing IDs. Give parallel tasks exclusive file ownership, including
+test and lesson filenames. Use the subject's own bank contract and numeric/input
+limits in strand briefs, rather than copying Science's 0–999 default.
 
 Tests that need a year with no curriculum use Year 7.
 
@@ -168,13 +180,21 @@ The game must have a default export accepting `level`, `onComplete` and the topi
 
 Review every variant: independently recompute answers, require one defensible answer, remove tied orderings and plausible alternative readings, check British spelling and age-appropriate ranges, and compare prompts with the visible drawing/evidence. Question pictures use visible givens or authored evidence, never hidden answers, hints or correct bin assignments; a worked introductory example is authored separately and may show its own solution. Preserve accessible labels, picture/card association, both themes and sound-off play. Wrong attempts must retry; hints should help without giving the answer. Bix's lesson must teach the same representation as its challenge. Shared builders should accept deterministic `rng` for tests and randomise once per mount in the game.
 
+Use [the shared validation policy](VALIDATION.md). During development and at
+pilot/strand handoffs, lint affected files, run the relevant bank/playthrough and
+integration tests, and use the applicable checker:
+
 ```sh
 npm run check:topic -- --year N --subject SUBJECT --topic TOPICID
 npm run check:course -- --year N --subject SUBJECT
-npm run lint
-npm test
-npm run build
 ```
+
+Run the full `npm run lint`, `npm test` and `npm run build` once when the final
+implementation is ready for merge/release. Reuse passing results for unchanged
+code; rerun affected checks after fixes. Broaden immediately for progress,
+accounts, routing or shared-engine changes. Report any pending final checks at
+intermediate handoffs. Keep successful test listings in temporary logs and read
+only failures/summaries.
 
 The topic check validates wrapper JSX, immediate relative imports and banks covered by its adapters. The course check applies it to every registered topic, continues after individual failures and exits nonzero if any fail. Both accept `--json` for complete machine-readable check results (context emits Markdown); `--seeds 50` selects the deterministic runs (1–1000). An unsupported adapter is a limitation, not a successful bank check; default validation exits nonzero. `--structure-only` deliberately narrows the check and reports that scope. For bespoke pure builders, context/topic checks also accept `--builder PATH --export NAME`. Keep subject-specific validators and tests where the generic checker cannot prove the interaction. Extend jsdom playthroughs for retry, hints where relevant, full completion and the `{ combos }` callback payload.
 
@@ -197,7 +217,13 @@ pauses when yielding, and stops after the requested work and verification finish
 Keep the timer ID in the course record; never reset an old measurement or sum
 overlapping parent/subagent timers. Timing includes unpaused AI/tool/test waits,
 does not infer tokens and is not content approval. Keep unavailable token counts
-unknown, with their reporting gaps explicit.
+unknown, with their reporting gaps explicit. After stopping the timer, run
+`npm run course:usage -- --timer ID --branch BRANCH --record RECORD --topics N --write`
+when Claude JSONL logs are available. It deduplicates IDs, filters the recorded
+window and updates both measurement destinations. Use explicit session paths for
+ambiguous/resumed sessions; for other tools use their own counters or record
+unknown. Add a brief evidence-based retrospective and apply reusable improvements
+to the prompt/brief before finishing.
 
 Keep these statuses separate in the brief/course record:
 

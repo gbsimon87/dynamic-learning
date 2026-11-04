@@ -44,7 +44,7 @@ All built challenges are open. Missing modules remain unavailable; completion co
 
 ## Prove the change
 
-Run `npm run check:topic -- --year N --subject SUBJECT --topic TOPICID` and inspect reported unsupported bank/interaction checks. Add or extend the relevant bank test and jsdom playthrough (for example `tests/components/year4MathPlaythrough.test.jsx`) for wrong-answer retry and full completion, preserving the callback payload. Run `npm run lint`, `npm test` and `npm run build`.
+Run `npm run check:topic -- --year N --subject SUBJECT --topic TOPICID` and inspect reported unsupported bank/interaction checks. Add or extend the relevant bank test and jsdom playthrough (for example `tests/components/year4MathPlaythrough.test.jsx`) for wrong-answer retry and full completion, preserving the callback payload. Use focused lint and relevant existing/extended tests for this change under `docs/VALIDATION.md`; cosmetic fixes normally need no new test. Run the full lint/tests/build set once before merge/release, with broader regression checks immediately for shared/progress changes. Report deferred final checks at intermediate handoffs.
 
 Browser work follows `AGENTS.md`: only use it for gaps such as real layout, drag or canvas, with both themes and required viewports in one batched pass. Authenticated curriculum routes require a selected child; local development defaults to localStorage unless built with `VITE_USE_API=true`.
 

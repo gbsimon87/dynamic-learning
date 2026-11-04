@@ -49,15 +49,19 @@ upcoming work in `docs/PROJECT_IDEAS.md`. Deployment: `render.yaml` and
    retain the built years' visual teaching approach: illustrated introductions,
    worked examples and useful question models/manipulatives. Follow the
    project reference `docs/VISUAL_RECIPES.md` and the matching subject renderer.
-4. **Prove it works before calling it done** — a written file is not a working
-   change. `npm run lint`, `npm test` and `npm run build` must pass; see
-   "Browser checks and subagents" for when a browser pass is needed too.
+4. **Prove the change at the right scope** — use focused checks during development
+   and at intermediate handoffs. Run `npm run lint`, `npm test` and `npm run build`
+   once when the final implementation is ready for merge/release; repeat only
+   checks warranted by later changes, failures or unresolved risk. Progress,
+   accounts and shared infrastructure need broader regression checks immediately.
+   Follow `docs/VALIDATION.md`; report deferred final checks explicitly.
 
 ## Browser checks and subagents
 
-**Browser (Playwright) checks are a last resort.** Prove a change with lint,
-tests and the build first, and add or extend a test before reaching for a
-browser. `tests/components/` playthrough tests drive whole challenges in jsdom.
+**Browser (Playwright) checks are a last resort.** Use affected lint/tests first,
+adding or extending a meaningful test where needed; build if the browser target
+requires it. Follow `docs/VALIDATION.md` for when the full validation set is due.
+`tests/components/` playthrough tests drive whole challenges in jsdom.
 Open the browser only for what jsdom cannot show: canvas, WebGL and 3D scenes,
 real layout or overlap, drag, maps. Then make it one batched pass, with every
 viewport and both themes in one script. Fix everything it shows, confirm with

@@ -9,7 +9,7 @@ import CurriculumGuide, { CurriculumOverview } from '../../src/seo/CurriculumGui
 
 vi.mock('../../src/components/mascot/Mascot', () => ({ default: () => null }));
 
-it('offers all thirty-two guides from an anonymous, year-grouped hub', () => {
+it('offers all thirty-four guides from an anonymous, year-grouped hub', () => {
   render(<MemoryRouter><CurriculumOverview /></MemoryRouter>);
   for (const guide of CURRICULUM_GUIDES) {
     expect(screen.getByRole('link', { name: new RegExp(guide.label) }).getAttribute('href')).toBe(guide.path);
@@ -25,7 +25,8 @@ it.each(CURRICULUM_GUIDES)('renders the full $label topic inventory without an a
   const curriculum = loadCurriculum(guide.year, guide.subject);
   for (const category of curriculum) for (const topic of category.topics) {
     expect(screen.getByText(topic.name, { selector: 'li' })).toBeTruthy();
-    for (const challenge of topic.challenges) expect(isChallengeImplemented(guide.subject, guide.year, topic.id, challenge.id)).toBe(true);
+    const expectedBuilt = guide.year !== 6 || guide.subject !== 'math' || category === curriculum[0];
+    for (const challenge of topic.challenges) expect(isChallengeImplemented(guide.subject, guide.year, topic.id, challenge.id)).toBe(expectedBuilt);
   }
   expect(screen.getAllByRole('link', { name: /Create an account/ }).every(link => link.getAttribute('href') === '/signup')).toBe(true);
   expect(screen.getByRole('navigation', { name: `More Year ${guide.year} subjects` }).querySelectorAll('a')).toHaveLength(CURRICULUM_GUIDES.filter(item => item.year === guide.year).length - 1);
@@ -34,7 +35,7 @@ it.each(CURRICULUM_GUIDES)('renders the full $label topic inventory without an a
 });
 
 it('does not turn an unknown curriculum guide into another year’s content', () => {
-  render(<RouterProvider router={createMemoryRouter([{ path: "*", element: <CurriculumGuide slug="year-6-maths" /> }])} />);
+  render(<RouterProvider router={createMemoryRouter([{ path: "*", element: <CurriculumGuide slug="year-7-maths" /> }])} />);
   expect(screen.getByRole('heading', { level: 1 }).textContent).toBe("We can't find that page");
 });
 

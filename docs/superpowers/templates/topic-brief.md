@@ -23,7 +23,7 @@ Content review: <independent answer checks, ambiguity, distractors, lesson align
 | Status | Evidence / remaining work |
 |---|---|
 | Implemented | |
-| Technically validated | Topic checker adapter/limitations; lint; tests; build; playthroughs |
+| Technically validated | Focused lint/tests/playthroughs and checker limitations; final full checks passed or explicitly pending under VALIDATION.md |
 | Content reviewed | Requirement coverage, variants and reviewer |
 | Device reviewed | Browser justification, themes/viewports, physical device gaps |
 | Owner/learner review | Only decisions/experience that cannot be inferred |

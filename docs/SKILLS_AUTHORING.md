@@ -86,12 +86,17 @@ Add meaningful pure-generator tests and a component playthrough for correct
 and wrong attempts, retry, level/mode reset and relevant locked controls.
 Check the route/hub/guide registration as well as the component in isolation.
 
-```sh
-npm run lint
-npm test
-npm run build
-npm run check:seo
-```
+Follow [the shared validation policy](VALIDATION.md): during development and at
+intermediate handoffs, lint affected files and run the relevant generator,
+playthrough, route/hub and guide tests. A cosmetic edit normally reuses existing
+tests rather than adding new ones. Broaden immediately for shared shell, routing,
+account or persistence changes.
+
+When the final implementation is ready for merge/release, run `npm run lint`,
+`npm test` and `npm run build` once. Public route/catalogue/guide or SEO changes
+also require `npm run check:seo` before release. Rerun only checks warranted by
+subsequent changes/failures, and report pending final checks at intermediate
+handoffs. Redirect verbose output to temporary logs; inspect failures/summaries.
 
 The SEO check uses the built Express app and local Chrome; consult
 [SEO_AUDIT.md](SEO_AUDIT.md) and [OPERATIONS.md](OPERATIONS.md). If required

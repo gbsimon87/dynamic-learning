@@ -1,7 +1,7 @@
 import { findUsSpellings, wordCount } from "../english/textChecks.js";
 
 /** Per-year reading limits, matching Geography's (docs/geography-curriculum/shared-design-spec.md §3). */
-export const LESSON_AGES = { 1: { lineWords: 10 }, 2: { lineWords: 12 }, 3: { lineWords: 16 }, 4: { lineWords: 18 }, 5: { lineWords: 20 } };
+export const LESSON_AGES = { 1: { lineWords: 10 }, 2: { lineWords: 12 }, 3: { lineWords: 16 }, 4: { lineWords: 18 }, 5: { lineWords: 20 }, 6: { lineWords: 22 } };
 
 const TYPES = new Set(["equation", "column", "steps", "jumps", "bar", "groups", "table", "sentence", "fix", "diagram"]);
 const text = (value) => typeof value === "string" && value.trim().length > 0;

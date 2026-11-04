@@ -115,9 +115,13 @@ don't spawn subagents, and don't re-check the page after every tweak.
 Follow "Browser checks and subagents" in `AGENTS.md`: tests first, the browser
 only when a test cannot show it.
 
-1. `npm run lint && npm test && npm run build && npm run check:seo`. check:seo
-   already loads the public guide and sitemap in Chrome (it needs local
-   Chrome/CHROME_PATH), so don't re-check those by hand.
+1. Follow `docs/VALIDATION.md`: during development and intermediate handoffs,
+   lint affected files and run relevant generator/playthrough/route/guide tests.
+   Run full lint/tests/build once before merge/release; broaden immediately for
+   shared shell, routing, accounts or persistence changes. Public route/catalogue/
+   guide changes also require `npm run check:seo` before release. It already loads
+   the public guide and sitemap in Chrome (local Chrome/CHROME_PATH required), so
+   don't re-check those by hand. Report final checks not yet run.
    If required Chrome/browser tooling is unavailable, finish the other checks
    and report that explicit verification gap under `AGENTS.md`; do not change
    the app to work around missing AI/browser tooling.

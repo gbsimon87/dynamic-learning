@@ -207,8 +207,106 @@ Pupils know when it is appropriate to find the mean of a data set.
 
 # Mapping to our curriculum dataset
 
-> **No Year 6 Maths dataset yet.** The app's registered curricula stop at Year 4.
-> When one is built, map each topic here, as [year-3-maths.md](year-3-maths.md) does.
+The complete 49-topic course tree is registered in `src/data/year6MathCurriculum.js`.
+The place-value strand is the implemented pilot (16 challenges); the remaining
+45 topics are planned and unavailable until their modules are built. Category
+and topic titles below were approved on 2026-11-04. Each requirement is quoted
+verbatim; no statutory bullet is excluded. See the [course record](../superpowers/2026-11-04-year6-math-course-build.md).
+
+### Number – number and place value
+
+| Proposed topic | Proposed permanent topic ID | Statutory requirement (verbatim) |
+|---|---|---|
+| Place Value to Ten Million | `place-value-to-ten-million` | read, write, order and compare numbers up to 10 000 000 and determine the value of each digit |
+| Rounding Whole Numbers | `rounding-whole-numbers` | round any whole number to a required degree of accuracy |
+| Negative Numbers and Intervals | `negative-numbers-and-intervals` | use negative numbers in context, and calculate intervals across zero |
+| Place Value Problems | `place-value-problems` | solve number and practical problems that involve all of the above. |
+
+### Number – addition, subtraction, multiplication and division
+
+| Proposed topic | Proposed permanent topic ID | Statutory requirement (verbatim) |
+|---|---|---|
+| Long Multiplication | `long-multiplication` | multiply multi-digit numbers up to 4 digits by a two-digit whole number using the formal written method of long multiplication |
+| Long Division and Remainders | `long-division-and-remainders` | divide numbers up to 4 digits by a two-digit whole number using the formal written method of long division, and interpret remainders as whole number remainders, fractions, or by rounding, as appropriate for the context |
+| Short Division and Remainders | `short-division-and-remainders` | divide numbers up to 4 digits by a two-digit number using the formal written method of short division where appropriate, interpreting remainders according to the context |
+| Mental Calculation Strategies | `mental-calculation-strategies` | perform mental calculations, including with mixed operations and large numbers |
+| Factors, Multiples and Primes | `factors-multiples-and-primes` | identify common factors, common multiples and prime numbers |
+| Order of Operations | `order-of-operations` | use their knowledge of the order of operations to carry out calculations involving the four operations |
+| Multi-Step Addition and Subtraction | `multi-step-addition-and-subtraction` | solve addition and subtraction multi-step problems in contexts, deciding which operations and methods to use and why |
+| Four-Operation Problems | `four-operation-problems` | solve problems involving addition, subtraction, multiplication and division |
+| Estimating and Checking Answers | `estimating-and-checking-answers` | use estimation to check answers to calculations and determine, in the context of a problem, an appropriate degree of accuracy. |
+
+### Number – fractions (including decimals and percentages)
+
+| Proposed topic | Proposed permanent topic ID | Statutory requirement (verbatim) |
+|---|---|---|
+| Simplifying Fractions and Common Denominators | `simplifying-fractions-and-common-denominators` | use common factors to simplify fractions; use common multiples to express fractions in the same denomination |
+| Comparing and Ordering Fractions | `comparing-and-ordering-fractions` | compare and order fractions, including fractions > 1 |
+| Adding and Subtracting Fractions and Mixed Numbers | `adding-and-subtracting-fractions-and-mixed-numbers` | add and subtract fractions with different denominators and mixed numbers, using the concept of equivalent fractions |
+| Multiplying Proper Fractions | `multiplying-proper-fractions` | multiply simple pairs of proper fractions, writing the answer in its simplest form [for example, 1/4 × 1/2 = 1/8] |
+| Dividing Fractions by Whole Numbers | `dividing-fractions-by-whole-numbers` | divide proper fractions by whole numbers [for example, 1/3 ÷ 2 = 1/6] |
+| Fractions as Division and Decimals | `fractions-as-division-and-decimals` | associate a fraction with division and calculate decimal fraction equivalents [for example, 0.375] for a simple fraction [for example, 3/8] |
+| Decimal Place Value and Powers of Ten | `decimal-place-value-and-powers-of-ten` | identify the value of each digit in numbers given to three decimal places and multiply and divide numbers by 10, 100 and 1000 giving answers up to three decimal places |
+| Multiplying Decimals | `multiplying-decimals` | multiply one-digit numbers with up to two decimal places by whole numbers |
+| Written Division with Decimal Answers | `written-division-with-decimal-answers` | use written division methods in cases where the answer has up to two decimal places |
+| Rounding Decimal Answers | `rounding-decimal-answers` | solve problems which require answers to be rounded to specified degrees of accuracy |
+| Fraction, Decimal and Percentage Equivalences | `fraction-decimal-and-percentage-equivalences` | recall and use equivalences between simple fractions, decimals and percentages, including in different contexts. |
+
+### Ratio and proportion
+
+| Proposed topic | Proposed permanent topic ID | Statutory requirement (verbatim) |
+|---|---|---|
+| Ratio and Missing Quantities | `ratio-and-missing-quantities` | solve problems involving the relative sizes of two quantities where missing values can be found by using integer multiplication and division facts |
+| Percentages of Amounts and Comparisons | `percentages-of-amounts-and-comparisons` | solve problems involving the calculation of percentages [for example, of measures, and such as 15% of 360] and the use of percentages for comparison |
+| Similar Shapes and Scale Factors | `similar-shapes-and-scale-factors` | solve problems involving similar shapes where the scale factor is known or can be found |
+| Unequal Sharing and Grouping | `unequal-sharing-and-grouping` | solve problems involving unequal sharing and grouping using knowledge of fractions and multiples. |
+
+### Algebra
+
+| Proposed topic | Proposed permanent topic ID | Statutory requirement (verbatim) |
+|---|---|---|
+| Using Formulae | `using-formulae` | use simple formulae |
+| Linear Number Sequences | `linear-number-sequences` | generate and describe linear number sequences |
+| Missing Numbers and Expressions | `missing-numbers-and-expressions` | express missing number problems algebraically |
+| Equations with Two Unknowns | `equations-with-two-unknowns` | find pairs of numbers that satisfy an equation with two unknowns |
+| Finding All Combinations | `finding-all-combinations` | enumerate possibilities of combinations of two variables. |
+
+### Measurement
+
+| Proposed topic | Proposed permanent topic ID | Statutory requirement (verbatim) |
+|---|---|---|
+| Measurement Problems | `measurement-problems` | solve problems involving the calculation and conversion of units of measure, using decimal notation up to three decimal places where appropriate |
+| Converting Standard Units | `converting-standard-units` | use, read, write and convert between standard units, converting measurements of length, mass, volume and time from a smaller unit of measure to a larger unit, and vice versa, using decimal notation to up to three decimal places |
+| Miles and Kilometres | `miles-and-kilometres` | convert between miles and kilometres |
+| Area and Perimeter Relationships | `area-and-perimeter-relationships` | recognise that shapes with the same areas can have different perimeters and vice versa |
+| Area and Volume Formulae | `area-and-volume-formulae` | recognise when it is possible to use formulae for area and volume of shapes |
+| Areas of Triangles and Parallelograms | `areas-of-triangles-and-parallelograms` | calculate the area of parallelograms and triangles |
+| Volumes of Cubes and Cuboids | `volumes-of-cubes-and-cuboids` | calculate, estimate and compare volume of cubes and cuboids using standard units, including cubic centimetres (cm³) and cubic metres (m³), and extending to other units [for example, mm³ and km³]. |
+
+### Geometry – properties of shapes
+
+| Proposed topic | Proposed permanent topic ID | Statutory requirement (verbatim) |
+|---|---|---|
+| Drawing Shapes from Dimensions and Angles | `drawing-shapes-from-dimensions-and-angles` | draw 2-D shapes using given dimensions and angles |
+| 3-D Shapes and Nets | `3-d-shapes-and-nets` | recognise, describe and build simple 3-D shapes, including making nets |
+| Classifying Shapes and Finding Angles | `classifying-shapes-and-finding-angles` | compare and classify geometric shapes based on their properties and sizes and find unknown angles in any triangles, quadrilaterals, and regular polygons |
+| Parts of Circles | `parts-of-circles` | illustrate and name parts of circles, including radius, diameter and circumference and know that the diameter is twice the radius |
+| Missing Angles | `missing-angles` | recognise angles where they meet at a point, are on a straight line, or are vertically opposite, and find missing angles. |
+
+### Geometry – position and direction
+
+| Proposed topic | Proposed permanent topic ID | Statutory requirement (verbatim) |
+|---|---|---|
+| Coordinates in Four Quadrants | `coordinates-in-four-quadrants` | describe positions on the full coordinate grid (all four quadrants) |
+| Drawing, Translating and Reflecting Shapes | `drawing-translating-and-reflecting-shapes` | draw and translate simple shapes on the coordinate plane, and reflect them in the axes. |
+
+### Statistics
+
+| Proposed topic | Proposed permanent topic ID | Statutory requirement (verbatim) |
+|---|---|---|
+| Pie Charts and Line Graphs | `pie-charts-and-line-graphs` | interpret and construct pie charts and line graphs and use these to solve problems |
+| The Mean | `the-mean` | calculate and interpret the mean as an average. |
+
 
 ---
 

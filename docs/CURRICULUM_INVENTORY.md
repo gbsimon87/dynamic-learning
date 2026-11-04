@@ -40,13 +40,15 @@ it does not certify full statutory coverage, teaching accuracy or device review.
 | 5 | [PE](../src/data/year5PeCurriculum.js) | 12 | 48 | Complete |
 | 5 | [Relationships & Health](../src/data/year5WellbeingCurriculum.js) | 13 | 52 | Complete |
 | 6 | [Science](../src/data/year6ScienceCurriculum.js) | 24 | 96 | Complete |
+| 6 | [Maths](../src/data/year6MathCurriculum.js) | 4 built / 49 planned | 16 built / 196 planned | Place-value pilot |
 | 6 | Other subjects | 0 | 0 | Not registered yet |
-| **Total** | **33 complete pathways** | **773 built** | **3,092 built** | |
+| **Total** | **33 complete pathways + 1 pilot** | **777 built / 822 registered** | **3,108 built / 3,288 registered** | |
 
 Years 1–4 have Maths, English, Science, History and Geography. Year 5 adds Art &
 Design, Computing, Design & Technology, French, Music, PE and Relationships &
-Health (`wellbeing`). Year 6 has Science only so far; its other subjects are
-built one at a time and stay unregistered until built. Saved statutory
+Health (`wellbeing`). Year 6 has complete Science and a Maths place-value pilot.
+Maths registers its full approved tree; its 45 unbuilt topics remain unavailable.
+Other subjects are built one at a time. Saved statutory
 programmes and subject specs do not establish playable implementation.
 
 ## Awards and introductions
@@ -59,7 +61,7 @@ The Year 6 award will use Maths, English and Science; Year 6 Science stays
 excluded until Year 6 Maths and English exist, so a Science-only award is never
 earned and later taken away. Preserve existing awards when adding pathways.
 
-Maths Years 1–5 and English Years 3–5 use separately registered Bix lesson screens.
+Maths Years 1–5, the Year 6 Maths pilot and English Years 3–5 use separately registered Bix lesson screens.
 Other pathways can have illustrated introductions inside their subject games:
 History story cards, Geography notes and the Science/other-subject adventure frame.
 Read the [visual recipes](VISUAL_RECIPES.md)

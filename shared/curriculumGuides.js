@@ -2588,7 +2588,112 @@ export const CURRICULUM_GUIDES = [
     ],
     "practical": "Diagrams and supplied results rehearse scientific enquiry. They do not show that your child has performed an experiment. Circuits should use suitable low-voltage cells with a grown-up, never mains electricity. Topics about medicines, drugs and health are kept factual and simple; talk them through together.",
     "alignment": "Topics are mapped to the Year 6 science programme of study for England."
-  }
+  },
+{
+  "year": 6,
+  "subject": "math",
+  "slug": "year-6-maths",
+  "path": "/curriculum-guide/year-6-maths",
+  "label": "Year 6 Maths",
+  "intro": "Try our place-value pilot with numbers to ten million, rounding and negative numbers. The remaining Year 6 Maths topics are coming soon.",
+  "fit": "For children ready for Year 6 number work. Only the four Number and Place Value pilot topics are currently available.",
+  "areas": [
+    {
+      "categoryId": "number-number-and-place-value",
+      "title": "Number and Place Value",
+      "icon": "🔢",
+      "description": "Available pilot: read and compare numbers to ten million, round whole numbers and calculate intervals across zero.",
+      "example": "What is the interval from −7 to 5?",
+      "colour": "mint"
+    },
+    {
+      "categoryId": "number-addition-subtraction-multiplication-and-division",
+      "title": "The Four Operations",
+      "icon": "✖️",
+      "description": "Coming soon: written and mental methods, factors, primes, operation order and checking multi-step problems.",
+      "example": "Which operation should you do first?",
+      "colour": "rose"
+    },
+    {
+      "categoryId": "number-fractions-including-decimals-and-percentages",
+      "title": "Fractions, Decimals and Percentages",
+      "icon": "🍰",
+      "description": "Coming soon: simplify and calculate with fractions, use decimal place value and connect fractions, decimals and percentages.",
+      "example": "How can you simplify 18/24?",
+      "colour": "gold"
+    },
+    {
+      "categoryId": "ratio-and-proportion",
+      "title": "Ratio and Proportion",
+      "icon": "⚖️",
+      "description": "Coming soon: missing quantities, percentages of amounts, scale factors and unequal sharing.",
+      "example": "If 2 cups serve 3 people, how many serve 9?",
+      "colour": "lilac"
+    },
+    {
+      "categoryId": "algebra",
+      "title": "Algebra",
+      "icon": "🔤",
+      "description": "Coming soon: simple formulae, linear sequences, missing numbers and combinations of two variables.",
+      "example": "Which pairs of whole numbers have a sum of 8?",
+      "colour": "mint"
+    },
+    {
+      "categoryId": "measurement",
+      "title": "Measurement",
+      "icon": "📏",
+      "description": "Coming soon: convert units and explore perimeter, area and volume, including triangles, parallelograms and cuboids.",
+      "example": "What is the volume of a 3 cm by 4 cm by 5 cm cuboid?",
+      "colour": "rose"
+    },
+    {
+      "categoryId": "geometry-properties-of-shapes",
+      "title": "Properties of Shapes",
+      "icon": "🔷",
+      "description": "Coming soon: dimensions and angles, nets, shape properties, circle parts and missing angles.",
+      "example": "What is the diameter of a circle with radius 4 cm?",
+      "colour": "gold"
+    },
+    {
+      "categoryId": "geometry-position-and-direction",
+      "title": "Position and Direction",
+      "icon": "📍",
+      "description": "Coming soon: all four coordinate quadrants, translations and reflections in the axes.",
+      "example": "Where does (−3, 2) move when reflected in the y-axis?",
+      "colour": "lilac"
+    },
+    {
+      "categoryId": "statistics",
+      "title": "Statistics",
+      "icon": "📊",
+      "description": "Coming soon: interpret and construct pie charts and line graphs, and calculate the mean.",
+      "example": "What is the mean of 4, 6 and 8?",
+      "colour": "mint"
+    }
+  ],
+  "games": [
+    {
+      "to": "/skills/fraction-fun",
+      "icon": "🍕",
+      "label": "Fraction Fun",
+      "description": "Explore parts of a whole"
+    },
+    {
+      "to": "/skills/arithmetic-practice",
+      "icon": "➕",
+      "label": "Arithmetic Practice",
+      "description": "Warm up with calculations"
+    },
+    {
+      "to": "/skills/measure",
+      "icon": "📏",
+      "label": "Measure It",
+      "description": "Read scales and measures"
+    }
+  ],
+  "practical": "The place-value pilot is available now; all other areas are coming soon. Later screen activities will support drawing and graph decisions, but practical work with rulers, protractors, physical nets and graph construction needs follow-up away from the screen.",
+  "alignment": "The planned course maps to the Year 6 mathematics programme of study for England. This pilot covers Number and Place Value only; the other statutory areas are not yet available."
+}
 ];
 
 export function findCurriculumGuide(slug) {

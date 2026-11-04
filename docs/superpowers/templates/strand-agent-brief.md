@@ -9,13 +9,16 @@ Remove any section the subject does not use.
 
 You are writing question banks for Year <N> <subject> in "Learn with Bix", a
 React learning app for children (repo: <absolute repo path>). The
-infrastructure exists; you only write content in:
+infrastructure exists; you only edit the following exclusively owned files:
 
 - `<bank file 1>` (strand "<strand title>")
 - `<bank file 2>` (strand "<strand title>")
+- `<lesson file(s), only if explicitly assigned; otherwise coordinator owns them>`
 
 Do not edit any other file. Another agent is writing `<other files>` at the
-same time. Do not commit.
+same time. Test filenames are also owned: do not create or overwrite a file
+another task owns. Ask the coordinator to change shared exports/registry files.
+Do not commit. Retain these accepted pilot corrections: <short list>.
 
 ## Read first
 
@@ -30,7 +33,14 @@ same time. Do not commit.
 5. `<visual renderer>`: the figure types and their props, especially
    `<new types for these strands>`.
 
-## Each file exports three things
+## Exact subject contract
+
+<Replace this section with the pilot's actual exports, level recipe, question
+kinds, custom answer checker and lesson contract. The example below is Science;
+Maths/English often use procedural builders and separate Bix lessons. Do not
+force another subject into Science's pools or numeric limits.>
+
+Example Science exports
 
 ```js
 export const <strand> = { "<topic-id>": { rule, hint, facts, sorts, structures, enquiries }, ... };
@@ -71,18 +81,27 @@ must never reveal an answer.
   `alternatives` only for genuinely equivalent word orders.
 - No two prompts may be the same within facts, sorts, structures or enquiries.
   Name a child (Leo, Maya, Ellie) to keep them distinct.
-- Number answers are whole numbers from 0 to 999.
+- Numeric domain: <subject/year bounds, decimals/fractions/negative support>.
+  Input capacity and answer checking: <maxDigits and supported response format>.
+  Verify boundaries such as 10,000,000 and signed answers where relevant.
 - Stay inside the statutory bullets and their notes. <Subject exclusions, e.g.
   series circuits only; no genes or chromosomes.>
 
 ## Verify before finishing
 
-Run `node --test --test-reporter=spec <subject test file>`. The shape test
-fails until every strand is written; ignore only that one. Run
-`npx eslint <your files>`. Then reread every question once as a careful
+Build and validate one representative topic before scaling. Run
+`node --test --test-reporter=spec <scoped bank test file>` and
+`npx eslint <your files>`. Full-course shape tests may fail for other agents'
+unwritten files: identify those exact failures; never ignore a failure in your
+own topic. Follow `docs/VALIDATION.md`: the coordinator runs the full set once
+before merge/release; agents run focused checks, with broader regressions
+immediately if shared code is changed. Keep verbose output in temporary logs.
+Then reread every question once as a careful
 teacher would: recompute numbers, follow each key or diagram, remove ambiguity.
 
 ## Report back (concisely)
 
 Topic IDs with their counts, judgement calls (especially sensitive topics),
-test and eslint results, and every fact you were unsure of.
+test and eslint results, every fact you were unsure of, and lesson/visual gaps.
+Keep the handoff short; return file paths instead of pasting the banks. The
+coordinator collects logged usage centrally—do not add a second aggregate.

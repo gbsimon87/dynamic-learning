@@ -121,8 +121,8 @@ once here (121 messages). The subagent logs do not overlap the main log.
 
 How to read these numbers:
 
-- Cache write and cache read are parts of the input, not extra input; they are
-  in separate columns as the logs report them.
+- Input, cache write and cache read are preserved as separate raw log counters;
+  no tool-independent total-input or cost figure is inferred from them.
 - Opus and Sonnet tokens are not equal in cost.
 - Excluded: the earlier `feat/improve-course-builds` docs work in the same
   session, and 8 later messages about usage reporting (16 input, 7,597 cache

@@ -7,10 +7,10 @@ import { getPageSeo, PUBLIC_PATHS } from './seo.js';
 
 // Public descriptions must follow actual content, including category identity,
 // rather than silently dropping topics or publishing an unimplemented path.
-test('all thirty-three public guides cover every category of their implemented pathway', () => {
-  assert.equal(CURRICULUM_GUIDES.length, 33);
-  assert.equal(new Set(CURRICULUM_GUIDES.map(guide => guide.path)).size, 33);
-  assert.equal(new Set(CURRICULUM_GUIDES.map(guide => guide.intro)).size, 33);
+test('all thirty-four public guides cover every category of their implemented pathway', () => {
+  assert.equal(CURRICULUM_GUIDES.length, 34);
+  assert.equal(new Set(CURRICULUM_GUIDES.map(guide => guide.path)).size, 34);
+  assert.equal(new Set(CURRICULUM_GUIDES.map(guide => guide.intro)).size, 34);
   for (const year of CURRICULUM_YEARS) for (const subject of CURRICULUM_SUBJECTS) {
     if (!isCurriculumAvailable(year, subject.id)) continue;
     const guide = curriculumGuideFor(year, subject.id);
@@ -25,7 +25,7 @@ test('all thirty-three public guides cover every category of their implemented p
     assert.ok(GUIDE_SUBJECTS[subject.id].practical);
   }
   assert.equal(CURRICULUM_GUIDES.length, CURRICULUM_YEARS.reduce((sum, year) => sum + CURRICULUM_SUBJECTS.filter(subject => isCurriculumAvailable(year, subject.id)).length, 0));
-  assert.equal(findCurriculumGuide('year-6-maths'), undefined);
+  assert.equal(findCurriculumGuide('year-6-maths').year, 6);
   assert.equal(curriculumGuideFor(4, 'music'), undefined);
 });
 
@@ -54,4 +54,14 @@ test('free practice only links to existing standalone games and practical gaps s
     if (['geography', 'history'].includes(guide.subject)) assert.ok(guide.alignment.includes('does not cover the whole key stage'));
     if (guide.subject === 'english' && guide.year >= 3) assert.ok(guide.alignment.includes(guide.year >= 5 ? 'shared Years 5–6' : 'shared Years 3–4'));
   }
+});
+
+
+test('Year 6 Maths public guide makes the pilot boundary explicit', () => {
+  const guide = curriculumGuideFor(6, 'math');
+  assert.match(guide.intro, /place-value pilot/);
+  assert.match(guide.fit, /Only the four Number and Place Value pilot topics/);
+  assert.match(guide.areas[0].description, /Available pilot/);
+  for (const area of guide.areas.slice(1)) assert.match(area.description, /Coming soon/);
+  assert.match(guide.alignment, /other statutory areas are not yet available/);
 });

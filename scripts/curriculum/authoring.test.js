@@ -134,9 +134,9 @@ test("generic scaffolding rejects envelopes and custom controls before creating 
 });
 
 test("future-year context points to existing visual recipes without pretending to register their banks", async () => {
-  const recipe = visualRecipe({ root: REPO_ROOT, year: 6, subject: "math" });
-  assert.equal(recipe.referenceYear, 5);
-  assert.ok(recipe.paths.includes("src/pages/skills/math/challenges/year5/Year5MathGame.jsx"));
+  const recipe = visualRecipe({ root: REPO_ROOT, year: 7, subject: "math" });
+  assert.equal(recipe.referenceYear, 6);
+  assert.ok(recipe.paths.includes("src/pages/skills/math/challenges/year6/Year6MathGame.jsx"));
   const science = visualRecipe({ root: REPO_ROOT, year: 7, subject: "science" });
   assert.equal(science.referenceYear, 6);
   assert.ok(science.paths.includes("src/pages/skills/science/challenges/year6/Year6ScienceGame.jsx"));

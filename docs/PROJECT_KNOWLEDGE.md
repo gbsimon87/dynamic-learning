@@ -17,6 +17,7 @@ current behaviour.
 | Time and token measurement | [Build measurement](BUILD_MEASUREMENT.md) |
 | Upcoming work | [Project ideas](PROJECT_IDEAS.md), [Solar System roadmap](SOLAR_SYSTEM_IDEAS.md) |
 | Delivered changes | [Changelog](CHANGELOG.md) |
+| Check scope and final merge validation | [Validation policy](VALIDATION.md) |
 | Coding rules learned from past bugs | [Engineering rules](ENGINEERING_RULES.md) |
 
 ## 1. What This Project Is
@@ -70,6 +71,7 @@ npm run scaffold:topic -- --year N --subject SUBJECT --topic TOPICID --game src/
 npm run check:topic -- --year N --subject SUBJECT --topic TOPICID
 npm run check:course -- --year N --subject SUBJECT
 npm run course:timer -- report year6
+npm run course:usage -- --help
 ```
 
 Scaffolding previews by default; `--write` creates files without overwriting.
@@ -161,8 +163,8 @@ See [architecture](ARCHITECTURE.md) and [operations](OPERATIONS.md) before chang
 
 ## 5. What Currently Exists
 
-**33 pathways, 773 topics and 3,092 implemented slots across Years 1–6.** Year 6
-has Science only so far. See the [full inventory](CURRICULUM_INVENTORY.md) for subject
+**34 registered pathways, 777 built topics and 3,108 implemented slots across Years 1–6.**
+Year 6 has complete Science and a Maths place-value pilot (4 of 49 topics built). See the [full inventory](CURRICULUM_INVENTORY.md) for subject
 coverage, award exclusions, introductions and review trackers. “Implemented”
 means files exist; it does not certify statutory coverage or content/device review.
 
@@ -209,8 +211,10 @@ Read the mode's project guide and repository rules. Preserve permanent IDs, lear
 awards. Keep statutory boundaries, British English, answerability, visual/lesson
 alignment and sound-off accessibility. Reuse the kit; vary Curriculum's four slots
 and keep standalone Skills loops independent of Curriculum completion.
-Run `npm run lint`, `npm test` and `npm run build`. Follow `AGENTS.md` for justified
-browser checks; report technical/content/device review separately.
+Use focused checks at intermediate handoffs; follow [validation](VALIDATION.md)
+for the full lint/tests/build once before merge/release and broader checks for
+shared/progress changes. Follow `AGENTS.md` for justified browser checks; report
+technical/content/device review and deferred final checks separately.
 
 ## 9. Hard-Won Rules (from the 2026-08-21 audit)
 

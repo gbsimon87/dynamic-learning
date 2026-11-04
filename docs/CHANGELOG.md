@@ -6,6 +6,56 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-04 — Focused development checks and one final validation pass
+
+- Added [validation policy](VALIDATION.md) for Curriculum and Skills: focused
+  checks at intermediate handoffs; full lint/tests/build once before merge/release.
+  Rerun checks affected by subsequent fixes and broaden immediately for progress,
+  accounts, routing, shared engines/components or build configuration changes.
+- Aligned AGENTS.md, both authoring guides, course/topic/strand templates and
+  relevant agent skills. Keep meaningful bank/playthrough coverage, explicit
+  pending final checks and short log summaries. Documentation-only changes do
+  not require application suites/builds.
+- Validated this documentation-only change with diff, local-link and skill
+  metadata checks; application tests/build were not rerun.
+
+## 2026-11-04 — Automatic course usage records and build feedback
+
+- Added `course:usage` for Claude Code logs: branch/timer filtering, global
+  message-ID deduplication, per-model/role counters, subagent/resumed-session
+  support and explicit unknown fields. Raw transcripts stay outside the repo.
+- A completed build can update its course record and Measured builds row in one
+  command. Repeated collection refreshes the same entry; ambiguous/missing sources
+  fail clearly, and unfinished pilots cannot write completed-build rows.
+- Updated the start prompt, course record and strand brief to collect usage
+  automatically, check integration fixtures before scaling, preserve pilot
+  corrections and record concrete next-build improvements. Parameterised subject
+  numeric/lesson contracts instead of imposing Science defaults.
+- Collector tests cover duplicate/cumulative rows, branch/time filtering,
+  unknown counters, malformed logs, ambiguous discovery and idempotent records.
+  A read-only Science check documents its timer-versus-branch-start difference;
+  the original baseline is preserved.
+- Validation: lint, full tests (2,680 Node and 750 component tests; four MongoDB
+  tests skipped without configuration) and build pass. No browser check needed
+  for this tooling/documentation change.
+
+## 2026-11-04 — Year 6 Maths place-value pilot
+
+- Owner pilot feedback: capitalised each displayed quest title’s first letter;
+  permanent category IDs remain unchanged.
+
+- Registered the approved 49-topic / 196-slot Maths tree with year-award inclusion
+  explicitly disabled. Only the four place-value topics are playable so far:
+  16 challenges and 16 illustrated, separately registered Bix lessons.
+- Added place-value charts through ten million, rounding and negative-number
+  models, ordering/sorting tasks and contextual problems. Uses existing theme
+  styles and interaction controls; no learner data is reset or migrated.
+- Bank tests independently recompute visible calculations; playthroughs cover
+  all 16 challenges in both themes, retry/hints and completion, plus real loader
+  entry through every lesson. Full validation and remaining owner trial are
+  recorded in the [course record](superpowers/2026-11-04-year6-math-course-build.md).
+- The other 45 topics remain unavailable pending the requested pilot review.
+
 ## 2026-11-04 — Ocean Explorer merged into dev
 
 The `feat/underwater` branch (built 2026-10-29) is merged. Ocean Explorer is a

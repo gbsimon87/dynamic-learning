@@ -1,3 +1,4 @@
+import { YEAR6_MATH_TOPIC_SKILLS } from "./year6MathCertificateSkills.js";
 import { YEAR3_GEOGRAPHY_TOPIC_SKILLS } from "./year3GeographyCertificateSkills.js";
 import { YEAR1_GEOGRAPHY_TOPIC_SKILLS } from "./year1GeographyCertificateSkills.js";
 import { YEAR2_GEOGRAPHY_TOPIC_SKILLS } from "./year2GeographyCertificateSkills.js";
@@ -48,6 +49,7 @@ import { YEAR6_SCIENCE_TOPIC_SKILLS } from "./year6ScienceCertificateSkills.js";
 export const SKILL_STATEMENT_MAX = 80;
 
 export const TOPIC_SKILLS = {
+  ...YEAR6_MATH_TOPIC_SKILLS,
   ...YEAR5_MATH_TOPIC_SKILLS,
   ...YEAR5_ENGLISH_TOPIC_SKILLS,
   ...YEAR5_SCIENCE_TOPIC_SKILLS,

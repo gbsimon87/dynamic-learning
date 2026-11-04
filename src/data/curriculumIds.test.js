@@ -1,3 +1,4 @@
+import { year6MathCurriculum } from "./year6MathCurriculum.js";
 import { year6ScienceCurriculum } from "./year6ScienceCurriculum.js";
 import { year5MathCurriculum } from "./year5MathCurriculum.js";
 import { year5EnglishCurriculum } from "./year5EnglishCurriculum.js";
@@ -1123,4 +1124,106 @@ const YEAR6_SCIENCE_IDS = [
 
 test("Year 6 Science category and topic ids are unchanged", () => {
   assert.deepEqual(ids(year6ScienceCurriculum), YEAR6_SCIENCE_IDS);
+});
+
+// Year 6 Maths approved tree: these IDs are URL and progress keys.
+const YEAR6_MATH_IDS = [
+  [
+    "number-number-and-place-value",
+    [
+      "place-value-to-ten-million",
+      "rounding-whole-numbers",
+      "negative-numbers-and-intervals",
+      "place-value-problems"
+    ]
+  ],
+  [
+    "number-addition-subtraction-multiplication-and-division",
+    [
+      "long-multiplication",
+      "long-division-and-remainders",
+      "short-division-and-remainders",
+      "mental-calculation-strategies",
+      "factors-multiples-and-primes",
+      "order-of-operations",
+      "multi-step-addition-and-subtraction",
+      "four-operation-problems",
+      "estimating-and-checking-answers"
+    ]
+  ],
+  [
+    "number-fractions-including-decimals-and-percentages",
+    [
+      "simplifying-fractions-and-common-denominators",
+      "comparing-and-ordering-fractions",
+      "adding-and-subtracting-fractions-and-mixed-numbers",
+      "multiplying-proper-fractions",
+      "dividing-fractions-by-whole-numbers",
+      "fractions-as-division-and-decimals",
+      "decimal-place-value-and-powers-of-ten",
+      "multiplying-decimals",
+      "written-division-with-decimal-answers",
+      "rounding-decimal-answers",
+      "fraction-decimal-and-percentage-equivalences"
+    ]
+  ],
+  [
+    "ratio-and-proportion",
+    [
+      "ratio-and-missing-quantities",
+      "percentages-of-amounts-and-comparisons",
+      "similar-shapes-and-scale-factors",
+      "unequal-sharing-and-grouping"
+    ]
+  ],
+  [
+    "algebra",
+    [
+      "using-formulae",
+      "linear-number-sequences",
+      "missing-numbers-and-expressions",
+      "equations-with-two-unknowns",
+      "finding-all-combinations"
+    ]
+  ],
+  [
+    "measurement",
+    [
+      "measurement-problems",
+      "converting-standard-units",
+      "miles-and-kilometres",
+      "area-and-perimeter-relationships",
+      "area-and-volume-formulae",
+      "areas-of-triangles-and-parallelograms",
+      "volumes-of-cubes-and-cuboids"
+    ]
+  ],
+  [
+    "geometry-properties-of-shapes",
+    [
+      "drawing-shapes-from-dimensions-and-angles",
+      "3-d-shapes-and-nets",
+      "classifying-shapes-and-finding-angles",
+      "parts-of-circles",
+      "missing-angles"
+    ]
+  ],
+  [
+    "geometry-position-and-direction",
+    [
+      "coordinates-in-four-quadrants",
+      "drawing-translating-and-reflecting-shapes"
+    ]
+  ],
+  [
+    "statistics",
+    [
+      "pie-charts-and-line-graphs",
+      "the-mean"
+    ]
+  ]
+];
+
+test("Year 6 Maths category and topic ids are unchanged", () => {
+  assert.deepEqual(ids(year6MathCurriculum), YEAR6_MATH_IDS);
 });

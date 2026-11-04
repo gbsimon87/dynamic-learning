@@ -19,6 +19,7 @@ function mount(child = null) {
         <Routes>
           <Route path="/curriculum" element={<CurriculumSelectPage />} />
           <Route path="/curriculum/year/5/french" element={<p>Course opened</p>} />
+          <Route path="/curriculum/year/6/math" element={<p>Year 6 Maths opened</p>} />
           <Route path="/curriculum/year/6/science" element={<p>Year 6 Science opened</p>} />
         </Routes>
       </MemoryRouter>
@@ -38,10 +39,10 @@ it.each([1, 2, 3, 4, 5])("shows only courses available for saved Year %i", (year
   expect(subjectNames()).toEqual(yearGroup === 5 ? YEAR_5_SUBJECTS : CORE_SUBJECTS);
 });
 
-it("shows only Science for saved Year 6 while its other courses are built", async () => {
+it("shows Maths and Science for saved Year 6 while its other courses are built", async () => {
   const user = userEvent.setup();
   mount({ yearGroup: 6 });
-  expect(subjectNames()).toEqual(["Science"]);
+  expect(subjectNames()).toEqual(["Maths", "Science"]);
   await user.click(screen.getByRole("button", { name: /Science/ }));
   expect(screen.getByText("Year 6 Science opened")).toBeTruthy();
 });
@@ -71,4 +72,11 @@ it("keeps the year prompt before selection and filters after choosing a year", a
   await user.click(screen.getByRole("button", { name: /^Year 1/ }));
   expect(subjectNames()).toEqual(CORE_SUBJECTS);
   expect(screen.queryByText("Pick a year first")).toBeNull();
+});
+
+it("opens the staged Year 6 Maths pathway", async () => {
+  const user = userEvent.setup();
+  mount({ yearGroup: 6, subjects: ["math"] });
+  await user.click(screen.getByRole("button", { name: /Maths/ }));
+  expect(screen.getByText("Year 6 Maths opened")).toBeTruthy();
 });

@@ -22,7 +22,8 @@
     "check:topic": "node scripts/checkTopic.js",
     "check:course": "node scripts/checkTopic.js --all",
     "scaffold:topic": "node scripts/scaffoldTopic.js",
-    "course:timer": "node scripts/courseTimer.js"
+    "course:timer": "node scripts/courseTimer.js",
+    "course:usage": "node scripts/courseUsage.js"
   },
   "dependencies": {
     "@fontsource/abeezee": "^5.2.5",

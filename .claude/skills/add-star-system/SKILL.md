@@ -69,9 +69,12 @@ All paths below are under `src/pages/skills/geography/`.
 4. **Add a system test** `systems/<id>.test.js` for its own facts (copy
    `trappist1.test.js`: ages on two planets, densities, water-zone clues,
    spoken names without a minus sign, the clue deck).
-5. **Run** `node --test src/pages/skills/geography/systems/*.test.js` (use the
-   glob: `node --test <dir>` does not work here), then `npm run lint`,
-   `npm test`, `npm run build`.
+5. **Validate at the right scope:** during development run affected system tests,
+   registry/loader tests and lint affected files. For the whole systems bank use
+   `node --test src/pages/skills/geography/systems/*.test.js` (the directory alone
+   does not discover these files). Follow `docs/VALIDATION.md`: full lint/tests/build
+   once before merge/release; broaden immediately for shared-engine changes and
+   report pending final checks at intermediate handoffs.
 
 ## Writing for 6–8 year olds
 

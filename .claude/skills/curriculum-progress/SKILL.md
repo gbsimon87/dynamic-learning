@@ -117,7 +117,7 @@ Do not remove it.
 
 ## Verify before claiming completion
 
-Run `npm run lint`, `npm test` and `npm run build`.
+Progress changes require broader regression checks immediately: cover the affected rules, both store drivers, hydration and child/year/subject isolation as relevant below. Follow `docs/VALIDATION.md` for the full lint/tests/build set once before merge/release; do not postpone progress regressions until that final pass.
 
 `npm test` covers the pure rules, lock state and navigation, and
 `tests/components/progress.test.jsx` covers hydration, persistence across a

@@ -1,3 +1,4 @@
+import { year6MathCurriculum } from "./year6MathCurriculum.js";
 import { year6ScienceCurriculum } from "./year6ScienceCurriculum.js";
 import { year5ArtCurriculum } from "./year5ArtCurriculum.js";
 import { year5ComputingCurriculum } from "./year5ComputingCurriculum.js";
@@ -70,6 +71,7 @@ const CURRICULA = [
   // The Year 6 award will be Maths, English and Science (owner decision 2026-11-04). Science
   // stays out of it until all three exist, so a Science-only award is never earned and later
   // taken away.
+  { year: 6, subject: "math", available: true, countsTowardYear: false, load: () => year6MathCurriculum },
   { year: 6, subject: "science", available: true, countsTowardYear: false, load: () => year6ScienceCurriculum },
   // Year 5 (docs/curriculum/year-5-*.md, key-stage-2-*.md), built 2026-11.
   { year: 5, subject: "math", available: true, load: () => year5MathCurriculum },
