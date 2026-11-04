@@ -42,7 +42,7 @@ quoted evidence appearing verbatim in its passage.
 
 These describe the original Years 3–4 content recipe. The current visual baseline
 is the illustrated lesson/word-part/literal-picture approach in
-[visual-recipes.md](visual-recipes.md); use the current year's working examples.
+[VISUAL_RECIPES.md](../../../../docs/VISUAL_RECIPES.md); use the current year's working examples.
 
 - Five questions per challenge. A challenge built on one passage asks 3–4.
 - Grammar terms come with a gloss in slots 1–3, "conjunction (joining word)",

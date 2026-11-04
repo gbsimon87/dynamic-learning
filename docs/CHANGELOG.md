@@ -7,6 +7,16 @@ work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Older implementation histo
 is preserved in the [2026-11-03 archive](history/PROJECT_KNOWLEDGE_2026-11-03.md).
 Do not append new work to that dated snapshot.
 
+## 2026-11-04 — Authoring follow-ups
+
+- `BUILD_MEASUREMENT.md` now gives tool-neutral token-recording rules instead
+  of OpenAI/Codex-specific commands.
+- Course timer records in `docs/authoring/timings/` are git-ignored; final
+  totals go in the course record.
+- Removed the skill's `references/visual-recipes.md` pointer; links now go
+  straight to `docs/VISUAL_RECIPES.md`.
+- Backlog #44 tracks bank-checker adapters for the 140 structure-only topics.
+
 ## 2026-11-03 — Full course-building branch review
 
 Reviewed all tracked and untracked work on `feat/improve-course-builds` against

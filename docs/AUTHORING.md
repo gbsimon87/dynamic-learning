@@ -128,8 +128,8 @@ Production uses API + MongoDB; development defaults to the browser store unless 
 
 ## Report the evidence honestly
 
-Follow [build measurement](BUILD_MEASUREMENT.md) for timing and official OpenAI
-token-reporting options. The coordinating agent starts/resumes the scope's timer,
+Follow [build measurement](BUILD_MEASUREMENT.md) for timing and token
+recording. The coordinating agent starts/resumes the scope's timer,
 pauses when yielding, and stops after the requested work and verification finish.
 Keep the timer ID in the course record; never reset an old measurement or sum
 overlapping parent/subagent timers. Timing includes unpaused AI/tool/test waits,

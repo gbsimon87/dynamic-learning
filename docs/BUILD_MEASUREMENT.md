@@ -22,52 +22,30 @@ stop after the requested implementation and verification finish. Use another
 ID for a different scope, such as `year6-math`. Never reset an old record or sum
 overlapping coordinator/subagent timers. Finishing a timer does not approve content.
 
-Records persist in `docs/authoring/timings/`; `report --json` provides millisecond
+Records persist locally in `docs/authoring/timings/`, which is git-ignored: copy
+the final report into the course record. `report --json` provides millisecond
 totals. Recorded work is unpaused wall time, including AI/tool/test waits.
 Unrecorded breaks count as work. This is not CPU time or token usage, and cannot
 reconstruct an earlier unrecorded build. No Year 6 record starts merely by
 reading these instructions.
 
-## OpenAI-documented token reporting
+## Token usage
 
-In **Codex CLI**, `/status` reports session configuration and token usage.
-`/usage` provides account activity, with daily/weekly/cumulative views where
-available. In the **app/IDE** command section, `/status` is described as chat ID,
-context usage and rate limits. A context-capacity or rate-limit percentage is
-not a measurement of all tokens spent building a course. See the
-[official command reference](https://learn.chatgpt.com/docs/developer-commands).
+Token reporting depends on the AI tool and changes between versions, so this
+project documents no tool-specific commands. Use whatever usage report or
+export the tool you are using provides, and record in the course record which
+tool, model and report the numbers came from.
 
-For a future **non-interactive CLI run**, OpenAI documents saving the JSONL
-event stream with `codex exec --json`. Completed-turn events carry a `usage`
-object including input, cached input and output counts. Example (this launches
-the actual requested work, not a monitor of an existing app conversation):
-
-```sh
-codex exec --sandbox workspace-write --json "<your curriculum-building request>" > /tmp/year6.jsonl
-jq 'select(.type == "turn.completed") | .usage' /tmp/year6.jsonl
-```
-
-The first line is a documented CLI invocation, not a command to run merely to
-check an already-running build. See [OpenAI's non-interactive-mode guide](https://learn.chatgpt.com/docs/non-interactive-mode).
-Keep raw transcripts outside the public repository; put observed totals and
-their scope/source in the course record. If a run is resumed, capture its
-additional turns too. Count each recorded event once and retain failed or
-missing-usage gaps; a failed turn without usage must not be reported as zero.
-
-Keep input, cached input and output as separate columns. Total input plus output
-is the overall token measure; cached input is an input breakdown, not an extra
-quantity to add. Record all relevant sessions/subagent usage only when its
-coverage is established, without duplicating aggregate and child totals.
-The [OpenAI usage schema](https://developers.openai.com/api/reference/resources/responses/methods/create)
-distinguishes totals from input/output breakdowns. Token counts alone do not
-establish monetary cost or equal work across different models.
-
-The app-server protocol also documents
-[`thread/tokenUsage/updated`](https://learn.chatgpt.com/docs/app-server)
-for a client integration. This project has no integration with that live event
-stream; the local build timer does not collect app-session tokens. When the
-current surface exposes no suitable totals/export, leave tokens **unknown**
-rather than estimating from words, file sizes or context percentages.
+- Keep input, cached input and output as separate columns where the tool
+  reports them. Cached input is a breakdown of input, not an extra amount.
+- Include subagent or resumed-session usage only when its coverage is known,
+  and never count an aggregate and its parts twice.
+- A context-window or rate-limit percentage is not a count of tokens spent.
+- When no suitable total is available, record tokens as **unknown**. Never
+  estimate from words, file sizes or context percentages, and never report a
+  missing count as zero.
+- Token counts alone do not establish cost or equal work across models.
+- Keep raw transcripts outside the public repository.
 
 ## Build record
 

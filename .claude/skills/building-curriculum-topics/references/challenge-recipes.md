@@ -1,6 +1,6 @@
 # Shared challenge recipes
 
-Use [the visual recipes](visual-recipes.md) alongside this interaction reference.
+Use [the visual recipes](../../../../docs/VISUAL_RECIPES.md) alongside this interaction reference.
 The currently built years' illustrated lessons, subject frames, diagrams and
 manipulatives are the baseline for future topics. Reuse their visual renderer
 and interaction; a data bank is only the content layer.
