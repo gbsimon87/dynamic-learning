@@ -1,0 +1,23 @@
+/* The shared card look. Each world places the card; colours come from the panel tokens. */
+.world-card { display: flex; flex-direction: column; gap: 6px; box-sizing: border-box; padding: 12px; overflow: hidden; border: 1px solid color-mix(in srgb, currentColor 20%, transparent); border-radius: 16px; background: var(--light-panel); color: var(--light-text); box-shadow: 0 4px 16px #0004; font-family: system-ui, sans-serif; }
+body.dark .world-card { background: var(--dark-panel); color: var(--dark-text); }
+.world-card__header { display: flex; flex: 0 0 auto; align-items: flex-start; justify-content: space-between; gap: 4px; }
+.world-card__eyebrow { display: block; margin-bottom: 2px; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; opacity: .75; }
+.world-card h2 { margin: 0; color: inherit; font-size: 22px; line-height: 1.15; }
+.world-card__close { min-width: 48px; min-height: 48px; border: 0; border-radius: 8px; background: transparent; color: inherit; font-size: 24px; line-height: 1; cursor: pointer; }
+.world-card__summary { flex: 0 0 auto; margin: 0; font-size: 13px; line-height: 1.4; }
+.world-card__honesty { flex: 0 0 auto; margin: 0 0 6px; font-size: 12px; font-style: italic; line-height: 1.35; opacity: .85; }
+.world-card__body { min-height: 0; padding-right: 2px; overflow-y: auto; overscroll-behavior: contain; }
+.world-card__body[hidden] { display: none; }
+.world-card__meta { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 0 6px; }
+.world-card__meta span { padding: 2px 6px; border: 1px solid color-mix(in srgb, currentColor 22%, transparent); border-radius: 999px; font-size: 11px; }
+.world-card__meta span:empty { display: none; }
+.world-card__stats { display: grid; gap: 4px; margin: 0 0 8px; padding: 0; list-style: none; font-size: 13px; line-height: 1.35; }
+.world-card__stats span { opacity: .8; }
+.world-card ul { font-size: 13px; line-height: 1.45; }
+.world-card__more-facts summary { display: flex; min-height: 48px; align-items: center; font-weight: 700; cursor: pointer; }
+.world-card__tour-button, .world-card__navigation button { min-width: 48px; min-height: 48px; margin: 0; padding: 6px 10px; border: 1px solid color-mix(in srgb, currentColor 22%, transparent); border-radius: 8px; background: transparent; color: inherit; font: inherit; font-weight: 700; cursor: pointer; }
+.world-card__navigation { display: flex; flex: 0 0 auto; gap: 6px; }
+.world-card__navigation button { flex: 1; }
+.world-card__navigation button:disabled { opacity: .4; }
+.world-card button:focus-visible, .world-card summary:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }

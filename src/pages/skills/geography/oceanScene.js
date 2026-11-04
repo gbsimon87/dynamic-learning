@@ -1,0 +1,409 @@
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { createOceanSubmarine } from './oceanSubmarine.js';
+import { createOceanWater, OCEAN_SURFACE_HEIGHT } from './oceanWater.js';
+import { createOceanEnvironment, oceanFloorHeight } from './oceanEnvironment.js';
+import { STEERING, createSteeringState, isSteeringIdle, stepSteering } from './oceanSteering.js';
+import { createOrbitPilot, nearestOrbitTarget } from '../../../components/worlds/orbitPilot.js';
+
+const VIEW_DIRECTION = new THREE.Vector3(9, 3.2, 12).normalize();
+const UP = new THREE.Vector3(0, 1, 0);
+const START = { x: 0, y: 3, z: 0 };
+const STILL = { turn: 0, throttle: 0, lift: 0 };
+const ANGLE_STEP = 0.12;
+const ZOOM_FACTOR = 1.12;
+const MIN_POLAR_ANGLE = 0.18;
+const MAX_POLAR_ANGLE = Math.PI / 2;
+const NOSE = new THREE.Vector3(0, 0, -1);
+// The sun keeps this offset from the submarine so its shadow box travels with it.
+const SUN_OFFSET = new THREE.Vector3(-8, 14, -6);
+const orbitProfile = (target) => target.orbit ?? null;
+const PALETTE_KEYS = ['water', 'surface', 'caustic', 'sand', 'rock', 'grass', 'hull', 'trim', 'window', 'metal', 'light'];
+
+/**
+ * The child steers the craft; the camera keeps their chosen angle in the craft's
+ * frame. Optional water motion runs at a capped 30 frames/second.
+ */
+export function createOceanScene({ canvas, container, onReady, onUnavailable, onWaterMotionChange = () => {}, onOrbitOffer = () => {}, onOrbitChange = () => {} }) {
+  const scene = new THREE.Scene();
+  let renderer, controls, resizeObserver, themeObserver;
+  let camera, target, radius, homeDistance, submarine, propeller, centre, world;
+  let steering = createSteeringState(START), input = STILL;
+  // The child's chosen camera offset, in the submarine's yaw frame.
+  const viewOffset = new THREE.Vector3();
+  let disposed = false, ready = false, hasSize = false, positioned = false;
+  let water, environment, pilot, sun, offer = null, frame = null, lastTime = null;
+  // After leaving orbit the camera's aim and the camera glide from the orbit view back behind the submarine.
+  const aimFrom = new THREE.Vector3(), aimPoint = new THREE.Vector3(), cameraFrom = new THREE.Vector3(), cameraTo = new THREE.Vector3();
+  let aimBlend = 0;
+  const motionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+  let reduced = motionQuery?.matches ?? false;
+  let paused = reduced;
+
+  const orbiting = () => pilot?.isActive() ?? false;
+  // A reduced-motion orbit holds still, so it needs no frames of its own.
+  const driving = () => (orbiting() && !reduced) || aimBlend > 0 || !isSteeringIdle(steering, input);
+  const canAnimate = () => !disposed && hasSize && !document.hidden && (!paused || driving());
+
+  function updateAnimation() {
+    if (!canAnimate()) {
+      if (frame !== null) cancelAnimationFrame(frame);
+      frame = null;
+      lastTime = null;
+    } else if (frame === null) frame = requestAnimationFrame(animate);
+  }
+
+  function animate(now) {
+    frame = null;
+    if (!canAnimate()) { lastTime = null; return; }
+    if (lastTime === null) lastTime = now;
+    // Steering runs at the display rate; water-only frames keep the 30 fps cap.
+    const steer = driving();
+    if (now > lastTime && (steer || now - lastTime >= 1000 / 30)) {
+      const seconds = Math.min((now - lastTime) / 1000, 0.1);
+      lastTime = now;
+      if (!paused) {
+        water.advance(seconds);
+        environment.advance(seconds);
+        // Swimming animals can come within reach of a parked submarine.
+        if (!orbiting() && !steer) updateOffer();
+      }
+      if (orbiting()) circle(seconds);
+      else if (steer) drive(seconds);
+      easeAim(seconds);
+      draw();
+    }
+    updateAnimation();
+  }
+
+  function setWaterPaused(value) {
+    if (disposed) return;
+    paused = reduced || value;
+    onWaterMotionChange({ paused, reduced });
+    updateAnimation();
+  }
+
+  function preferenceChanged() {
+    if (disposed) return;
+    reduced = motionQuery.matches;
+    setWaterPaused(paused);
+  }
+
+  function visibilityChanged() {
+    lastTime = null;
+    updateAnimation();
+    draw();
+  }
+
+  function constrainView() {
+    if (disposed) return;
+    const spherical = new THREE.Spherical().setFromVector3(camera.position.clone().sub(target));
+    spherical.radius = THREE.MathUtils.clamp(spherical.radius, controls.minDistance, controls.maxDistance);
+    const ceiling = OCEAN_SURFACE_HEIGHT - 0.8;
+    const minAngle = Math.acos(THREE.MathUtils.clamp((ceiling - target.y) / spherical.radius, -1, 1));
+    controls.minPolarAngle = Math.max(MIN_POLAR_ANGLE, minAngle);
+    spherical.phi = THREE.MathUtils.clamp(spherical.phi, controls.minPolarAngle, MAX_POLAR_ANGLE);
+    camera.position.setFromSpherical(spherical).add(target);
+    camera.lookAt(target);
+  }
+
+  function placeSubmarine() {
+    const { position, yaw, climb } = steering;
+    submarine.position.set(position.x, position.y, position.z);
+    submarine.rotation.set(climb / STEERING.liftSpeed * 0.12, yaw, 0);
+    submarine.updateMatrixWorld();
+    submarine.localToWorld(target.copy(centre));
+    environment.focus(submarine.position);
+    followSun();
+  }
+
+  function followSun() {
+    sun.position.copy(target).add(SUN_OFFSET);
+    sun.target.position.copy(target);
+    sun.target.updateMatrixWorld();
+    renderer.shadowMap.needsUpdate = true;
+  }
+
+  function saveView() {
+    viewOffset.subVectors(camera.position, target).applyAxisAngle(UP, -steering.yaw);
+  }
+
+  function followSubmarine() {
+    camera.position.copy(viewOffset).applyAxisAngle(UP, steering.yaw).add(target);
+    controls.target.copy(target);
+    constrainView();
+  }
+
+  function drive(seconds) {
+    steering = stepSteering(steering, input, seconds, world);
+    propeller.rotation.z += steering.speed * seconds * 3;
+    placeSubmarine();
+    followSubmarine();
+    updateOffer();
+  }
+
+  // Orbit is offered near a discovery, as Solar System offers it near a planet.
+  function updateOffer() {
+    const near = nearestOrbitTarget(environment.discoveries.filter((item) => item.object3d.visible), submarine.position, orbitProfile);
+    if ((near ? near.key ?? near.id : null) === (offer?.key ?? null)) return;
+    offer = near ? { key: near.key ?? near.id, id: near.id, name: near.name } : null;
+    onOrbitOffer(offer && { id: offer.id, name: offer.name });
+  }
+
+  function circle(seconds) {
+    pilot.update(seconds);
+    if (!reduced) propeller.rotation.z += seconds * 4;
+    submarine.updateMatrixWorld();
+    submarine.localToWorld(target.copy(centre));
+    camera.position.y = Math.min(camera.position.y, OCEAN_SURFACE_HEIGHT - 0.8);
+    camera.lookAt(controls.target);
+    followSun();
+  }
+
+  function easeAim(seconds) {
+    if (aimBlend <= 0) return;
+    aimBlend = Math.max(0, aimBlend - seconds / 0.8);
+    const eased = aimBlend * aimBlend * (3 - 2 * aimBlend);
+    camera.position.lerpVectors(cameraTo.copy(camera.position), cameraFrom, eased);
+    camera.lookAt(aimPoint.lerpVectors(target, aimFrom, eased));
+  }
+
+  function enterOrbit() {
+    const next = environment?.discoveries.find((discovery) => (discovery.key ?? discovery.id) === offer?.key);
+    if (disposed || !next || orbiting() || !pilot.start(next)) return false;
+    // The pilot takes over, so leftover coasting must not keep the loop awake.
+    steering = createSteeringState(steering.position, steering.yaw);
+    onOrbitChange({ id: next.id, name: next.name, steady: reduced });
+    if (reduced) { circle(0); draw(); }
+    updateAnimation();
+    return true;
+  }
+
+  // Steering resumes where the orbit left the craft, facing the way it was going.
+  function leaveOrbit() {
+    if (disposed || !orbiting()) return;
+    pilot.stop();
+    aimFrom.copy(controls.target);
+    cameraFrom.copy(camera.position);
+    const nose = NOSE.clone().applyQuaternion(submarine.quaternion);
+    const { x, y, z } = submarine.position;
+    steering = createSteeringState({ x, y, z }, Math.atan2(-nose.x, -nose.z));
+    placeSubmarine();
+    controls.target.copy(target);
+    constrainView();
+    saveView();
+    aimBlend = reduced ? 0 : 1;
+    easeAim(0);
+    onOrbitChange(null);
+    updateOffer();
+    updateAnimation();
+    draw();
+  }
+
+  function setSteering({ turn, throttle, lift }) {
+    if (disposed) return;
+    input = { turn, throttle, lift };
+    updateAnimation();
+  }
+
+  function returnToStart() {
+    if (disposed) return;
+    leaveOrbit();
+    steering = createSteeringState(START);
+    placeSubmarine();
+    resetView();
+    updateOffer();
+    updateAnimation();
+  }
+
+  function viewChanged() {
+    constrainView();
+    saveView();
+    draw();
+  }
+
+  function dispose() {
+    if (disposed) return;
+    pilot?.stop();
+    disposed = true;
+    updateAnimation();
+    motionQuery?.removeEventListener('change', preferenceChanged);
+    resizeObserver?.disconnect();
+    themeObserver?.disconnect();
+    controls?.removeEventListener('change', viewChanged);
+    controls?.dispose();
+    document.removeEventListener('visibilitychange', visibilityChanged);
+    canvas.removeEventListener('webglcontextlost', contextLost);
+    water?.dispose();
+    const geometries = new Set(), materials = new Set();
+    scene.traverse((object) => {
+      if (object.isInstancedMesh) object.dispose();
+      object.shadow?.dispose();
+      if (object.geometry) geometries.add(object.geometry);
+      if (object.material) {
+        for (const material of [object.material].flat()) materials.add(material);
+      }
+    });
+    geometries.forEach((geometry) => geometry.dispose());
+    materials.forEach((material) => material.dispose());
+    renderer?.dispose();
+  }
+
+  function unavailable() {
+    if (disposed) return;
+    dispose();
+    onUnavailable();
+  }
+
+  function contextLost(event) {
+    event.preventDefault();
+    unavailable();
+  }
+
+  function draw() {
+    if (disposed || !hasSize || document.hidden) return;
+    try {
+      renderer.render(scene, camera);
+      if (!ready) { ready = true; onReady(); }
+    } catch {
+      unavailable();
+    }
+  }
+
+  function refreshPalette() {
+    if (disposed) return;
+    const style = getComputedStyle(container);
+    const palette = Object.fromEntries(PALETTE_KEYS.map((key) => {
+      const value = style.getPropertyValue(`--ocean-${key}`).trim();
+      return [key, value ? new THREE.Color(value) : new THREE.Color()];
+    }));
+    scene.background = palette.water;
+    scene.fog = new THREE.FogExp2(palette.water, 0.032);
+    scene.traverse((object) => {
+      if (object.isLight) object.color.copy(palette.light);
+      if (object.isHemisphereLight) object.groundColor.copy(palette.water).multiplyScalar(0.6);
+      const material = object.material;
+      if (material?.userData.oceanColor) material.color.copy(palette[material.userData.oceanColor]);
+    });
+    water?.setPalette(palette);
+    environment?.setPalette(palette);
+    draw();
+  }
+
+  function resetView() {
+    if (disposed || !hasSize || orbiting()) return;
+    camera.position.copy(VIEW_DIRECTION).applyAxisAngle(UP, steering.yaw).multiplyScalar(homeDistance).add(target);
+    controls.target.copy(target);
+    constrainView();
+    controls.update();
+    saveView();
+    draw();
+  }
+
+  function resize() {
+    if (disposed) return;
+    const width = container.clientWidth, height = container.clientHeight;
+    hasSize = width > 0 && height > 0;
+    if (!hasSize) { updateAnimation(); return; }
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    renderer.setSize(width, height, false);
+    // Fit the full model even in portrait, allowing a little space for its edges.
+    const vertical = THREE.MathUtils.degToRad(camera.fov) / 2;
+    const horizontal = Math.atan(Math.tan(vertical) * camera.aspect);
+    controls.minDistance = radius / Math.sin(Math.min(vertical, horizontal)) * 1.08;
+    controls.maxDistance = controls.minDistance * 2.4;
+    homeDistance = controls.minDistance * 1.1;
+    if (!positioned) { positioned = true; resetView(); }
+    else { constrainView(); controls.update(); draw(); }
+    updateAnimation();
+  }
+
+  function handleViewKey(event) {
+    if (disposed || !hasSize || orbiting() || event.altKey || event.ctrlKey || event.metaKey) return false;
+    if (event.key === 'Home') { resetView(); return true; }
+    // Plain arrows steer the submarine; Shift+arrows look around.
+    if (event.key.startsWith('Arrow') && !event.shiftKey) return false;
+    const spherical = new THREE.Spherical().setFromVector3(camera.position.clone().sub(target));
+    switch (event.key) {
+      case 'ArrowLeft': spherical.theta -= ANGLE_STEP; break;
+      case 'ArrowRight': spherical.theta += ANGLE_STEP; break;
+      case 'ArrowUp': spherical.phi -= ANGLE_STEP; break;
+      case 'ArrowDown': spherical.phi += ANGLE_STEP; break;
+      case '+': case '=': spherical.radius /= ZOOM_FACTOR; break;
+      case '-': case '−': spherical.radius *= ZOOM_FACTOR; break;
+      default: return false;
+    }
+    spherical.phi = THREE.MathUtils.clamp(spherical.phi, controls.minPolarAngle, MAX_POLAR_ANGLE);
+    spherical.radius = THREE.MathUtils.clamp(spherical.radius, controls.minDistance, controls.maxDistance);
+    camera.position.setFromSpherical(spherical).add(target);
+    constrainView();
+    controls.update();
+    draw();
+    return true;
+  }
+
+  const api = { resetView, setWaterPaused, handleViewKey, setSteering, returnToStart, enterOrbit, leaveOrbit, dispose };
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.autoUpdate = false;
+    renderer.shadowMap.needsUpdate = true;
+    camera = new THREE.PerspectiveCamera(42, 1, 0.1, 180);
+    submarine = createOceanSubmarine();
+    propeller = submarine.getObjectByName('ocean-propeller');
+    submarine.position.set(START.x, START.y, START.z);
+    submarine.traverse((object) => { if (object.isMesh) { object.castShadow = true; object.receiveShadow = true; } });
+    scene.add(submarine);
+    const bounds = new THREE.Box3().setFromObject(submarine).getBoundingSphere(new THREE.Sphere());
+    target = bounds.center;
+    radius = bounds.radius;
+    centre = submarine.worldToLocal(target.clone());
+    const sand = new THREE.MeshStandardMaterial({ roughness: 1 });
+    water = createOceanWater(sand);
+    environment = createOceanEnvironment(water, sand);
+    world = { floorHeight: oceanFloorHeight, obstacles: environment.obstacles };
+    environment.focus(submarine.position);
+    // The water helper owns the sand texture/shader; terrain owns its geometry.
+    sand.userData.oceanColor = 'sand';
+    scene.add(environment.group, water.surface, new THREE.HemisphereLight(undefined, undefined, 1.15));
+    const light = sun = new THREE.DirectionalLight(undefined, 2.6);
+    light.position.copy(SUN_OFFSET);
+    light.castShadow = true;
+    light.shadow.mapSize.set(1024, 1024);
+    Object.assign(light.shadow.camera, { left: -24, right: 24, top: 24, bottom: -24, near: 0.5, far: 70 });
+    light.shadow.normalBias = 0.06;
+    light.shadow.bias = -0.00015;
+    scene.add(light, light.target);
+    controls = new OrbitControls(camera, canvas);
+    controls.target.copy(target);
+    controls.enablePan = false;
+    controls.enableDamping = false;
+    controls.autoRotate = false;
+    controls.minPolarAngle = MIN_POLAR_ANGLE;
+    controls.maxPolarAngle = MAX_POLAR_ANGLE;
+    controls.rotateSpeed = 0.6;
+    controls.zoomSpeed = 0.7;
+    controls.touches.TWO = THREE.TOUCH.DOLLY_ROTATE;
+    controls.addEventListener('change', viewChanged);
+    pilot = createOrbitPilot({ ship: submarine, camera, controls, profile: orbitProfile, forward: NOSE, reducedMotion: () => reduced });
+    canvas.addEventListener('webglcontextlost', contextLost);
+    document.addEventListener('visibilitychange', visibilityChanged);
+    motionQuery?.addEventListener('change', preferenceChanged);
+    onWaterMotionChange({ paused, reduced });
+    resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(container);
+    themeObserver = new MutationObserver(refreshPalette);
+    themeObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    refreshPalette();
+    resize();
+  } catch {
+    unavailable();
+  }
+  return api;
+}

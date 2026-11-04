@@ -27,6 +27,6 @@ body.dark .ui-dialog-panel.solar-missions-dialog { background: var(--dark-panel)
 .solar-missions-dialog__progress { display: flex; align-items: center; gap: 10px; font-size: 13px; }
 .solar-missions-dialog__progress progress { flex: 1; min-width: 0; height: 8px; accent-color: currentColor; }
 .solar-missions-dialog__list { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
-.solar-missions-dialog .solar-section__toggle { padding: 4px 2px; border: 0; border-radius: 0; background: transparent; }
+.solar-missions-dialog .world-section__toggle { padding: 4px 2px; border: 0; border-radius: 0; background: transparent; }
 .solar-missions-dialog__actions { display: flex; gap: 6px; }
 .solar-missions-dialog__actions button:last-child { flex: 1; font-weight: 700; }

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import SolarSections, { SolarSection } from './SolarSections.jsx';
+import WorldSections, { WorldSection } from '../../../components/worlds/WorldSections.jsx';
 import { SKY_LINE } from './constellationSkyLayout.js';
 import { isMuted } from '../../../components/celebration/sound/player.js';
 import { speak, stopNarration } from '../../../utils/speech.js';
@@ -29,10 +29,10 @@ export default function ConstellationCard({ onFindSky, onJoinDots, constellation
     <p className="solar-constellation__hint">Drag the sky to look around.</p>
     {viewpointNote && <p className="solar-constellation__hint">Star patterns as seen from Earth</p>}
     <div className="solar-constellation__scroll">
-      <SolarSections key={constellation.id}>
-        <SolarSection section="about" title="✨ About this pattern"><p>{constellation.alsoKnownAs}</p><p>{constellation.description}</p><p>{SKY_LINE}</p></SolarSection>
-        <SolarSection section="facts" title="💡 Star facts"><ul>{constellation.facts.map(fact => <li key={fact}>{fact}</li>)}</ul></SolarSection>
-      </SolarSections>
+      <WorldSections key={constellation.id}>
+        <WorldSection section="about" title="✨ About this pattern"><p>{constellation.alsoKnownAs}</p><p>{constellation.description}</p><p>{SKY_LINE}</p></WorldSection>
+        <WorldSection section="facts" title="💡 Star facts"><ul>{constellation.facts.map(fact => <li key={fact}>{fact}</li>)}</ul></WorldSection>
+      </WorldSections>
     </div>
     <nav className="solar-constellation__controls" aria-label="Constellation navigation">
       <button aria-label="Previous" title="Previous" onClick={onPrevious} disabled={index === 0}>←</button>

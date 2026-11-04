@@ -35,6 +35,12 @@ it.each(SKILL_GUIDES)('renders the $label guide with one h1, instructions and it
   expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
   expect(screen.getByText(guide.instructions)).toBeTruthy();
   expect(screen.getByRole('link', { name: `Play ${guide.label}` }).getAttribute('href')).toBe(guide.to);
+  if (guide.preview) {
+    expect(screen.getByText('Prototype preview')).toBeTruthy();
+    expect(screen.queryByText('Choose your level')).toBeNull();
+  } else {
+    expect(screen.getByText('Choose your level')).toBeTruthy();
+  }
 });
 
 it('exposes every guide alongside its existing game link on the skills hub', () => {

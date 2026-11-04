@@ -12,6 +12,7 @@ current behaviour.
 | Architecture and persistence contracts | [Current architecture](ARCHITECTURE.md) |
 | Implemented subjects, years and counts | [Curriculum inventory](CURRICULUM_INVENTORY.md) |
 | Visual teaching patterns | [Visual recipes](VISUAL_RECIPES.md) |
+| Solar System and Ocean Explorer 3D worlds | [Explorable worlds](EXPLORABLE_WORLDS.md) |
 | Deployment or outstanding review | [Operations](OPERATIONS.md), [SEO follow-up](SEO_NEXT_STEPS.md) |
 | Time and token measurement | [Build measurement](BUILD_MEASUREMENT.md) |
 | Upcoming work | [Project ideas](PROJECT_IDEAS.md), [Solar System roadmap](SOLAR_SYSTEM_IDEAS.md) |

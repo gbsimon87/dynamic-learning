@@ -37,7 +37,7 @@ import ConstellationCard from "./ConstellationCard.jsx";
 import JoinDots from "./JoinDots.jsx";
 import SolarFlightControls from "./SolarFlightControls.jsx";
 import SolarCameraChoices from "./SolarCameraChoices.jsx";
-import SolarOrbitControl from "./SolarOrbitControl.jsx";
+import SolarOrbitControl from "../../../components/worlds/WorldOrbitControl.jsx";
 import SolarToolbarMenu from "./SolarToolbarMenu.jsx";
 import SolarCockpit from "./SolarCockpit.jsx";
 import { createSolarFreeFlight } from "./solarFreeFlight.js";

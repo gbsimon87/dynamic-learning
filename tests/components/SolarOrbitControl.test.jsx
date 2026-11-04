@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { expect, test, vi } from 'vitest';
-import SolarOrbitControl from '../../src/pages/skills/geography/SolarOrbitControl.jsx';
+import SolarOrbitControl from '../../src/components/worlds/WorldOrbitControl.jsx';
 import SolarFlightControls from '../../src/pages/skills/geography/SolarFlightControls.jsx';
 import { HOME_SYSTEM } from '../../src/pages/skills/geography/systems/home.js';
 

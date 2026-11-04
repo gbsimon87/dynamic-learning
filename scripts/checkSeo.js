@@ -10,6 +10,7 @@ import { chromium } from 'playwright-core';
 import { createApp } from '../server/app.js';
 import { PUBLIC_PATHS } from '../shared/seo.js';
 import { CURRICULUM_GUIDES } from '../shared/curriculumGuides.js';
+import { SKILL_GUIDES } from '../shared/skillGuides.js';
 
 const dist = path.resolve('dist');
 const screenshots = path.resolve('.seo-artifacts');
@@ -112,7 +113,7 @@ try {
   await staticPage.getByRole('heading', { name: 'Flag Finder', level: 1 }).waitFor();
   assert.ok((await staticPage.getByRole('main').innerText()).includes('REST Countries'));
   await staticPage.goto(`${base}/skills`);
-  assert.equal(await staticPage.locator('a.sk-guide-link').count(), 27);
+  assert.equal(await staticPage.locator('a.sk-guide-link').count(), SKILL_GUIDES.length);
   assert.deepEqual(errors, [], 'no client errors or CSP errors');
   console.log(`Browser verification passed: SPA navigation, gameplay, metadata, 404, no-JS pages and both themes at desktop/mobile sizes. Screenshots: ${screenshots}`);
 } finally {

@@ -6,6 +6,24 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-04 — Ocean Explorer merged into dev
+
+The `feat/underwater` branch (built 2026-10-29) is merged. Ocean Explorer is a
+3D Skills Mode world at `/skills/ocean-explorer`, with its preview guide at
+`/learn/ocean-explorer`. It is the second explorable world on the Solar System's
+concept, sharing the new world kit in `src/components/worlds/`:
+
+- **Phase 1:** a stationary submarine you can view, zoom and reset.
+- **Phase 2:** manual steering with the Solar System's joystick and keys.
+- **Phase 3:** orbit a coral reef and read its card.
+- **Phase 4:** swimming sea life, now 12 species and 85 animals across nine reefs.
+
+How it works is in [EXPLORABLE_WORLDS.md](EXPLORABLE_WORLDS.md); the
+[design](superpowers/specs/2026-10-29-ocean-explorer-design.md) and phase plans
+are in `docs/superpowers/`. Remaining work is idea #44. The course-checker
+backlog item it collided with is now #45. Owner review of the sea-life facts and
+physical-device review are pending.
+
 ## 2026-11-04 — Year 6 Science, and Years 5–6 award membership
 
 - Registered Year 6 (Science only so far): 5 strands, 24 topics, 96 challenges
@@ -37,7 +55,7 @@ work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history bef
   totals go in the course record.
 - Removed the skill's `references/visual-recipes.md` pointer; links now go
   straight to `docs/VISUAL_RECIPES.md`.
-- Backlog #44 tracks bank-checker adapters for the 140 structure-only topics.
+- Backlog #45 tracks bank-checker adapters for the 140 structure-only topics.
 - Removed the dated `docs/history/` project-knowledge archive and the branch
   review record; links now point to current docs. The archive's still-current
   coding rules moved to `ENGINEERING_RULES.md`. Earlier detail remains in git
@@ -55,7 +73,7 @@ The first-context guide now has direct, AI-tool-neutral paths for Curriculum
 courses and standalone Skills Mode games. Added `SKILLS_AUTHORING.md`, promoted
 the visual catalogue into `VISUAL_RECIPES.md`, and documented complete new-course
 integration. The entry guide is 1,590 words; the full earlier content remains in
-the archive. Bank-checker coverage gaps are tracked as backlog #44.
+the archive. Bank-checker coverage gaps are tracked as backlog #45.
 
 Lint, full tests (2,627 unit/API and 655 component passes; four existing skips)
 and build passed. All 749 topics were swept: 609 passed bank checks over 50

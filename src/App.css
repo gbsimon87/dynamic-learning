@@ -1,4 +1,16 @@
 :root {
+  --light-ocean-water: #146f86;
+  --dark-ocean-water: #10536b;
+  --light-ocean-surface: #75d6dd;
+  --dark-ocean-surface: #53adb9;
+  --light-ocean-caustic: #a8e4df;
+  --dark-ocean-caustic: #7fbfcb;
+  --light-ocean-sand: #d8ca9f;
+  --dark-ocean-sand: #b5b398;
+  --light-ocean-rock: #768e83;
+  --dark-ocean-rock: #5b7874;
+  --light-ocean-grass: #397b59;
+  --dark-ocean-grass: #316b59;
   --light-navbar-bg: #f3e5e8;
   --dark-navbar-bg: #22181c;
 
