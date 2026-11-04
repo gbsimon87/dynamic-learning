@@ -6,6 +6,17 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-04 — Year 6 Maths regression coverage and fixes
+
+- Extended focused bank checks and all-slot playthroughs, including decimal tile entry, incorrect-answer retry and independent arithmetic checks. Fixed input, arithmetic, distractor and lesson-format failures found during validation.
+- Full validation evidence and remaining teaching/device review are in the [course record](superpowers/2026-11-04-year6-math-course-build.md#follow-up-validation--2026-11-04).
+
+## 2026-11-04 — Year 6 Maths complete course implementation
+
+- Completed all 49 Year 6 Maths topics and 196 challenge slots in the existing Year 6 Maths teaching frame. The course now includes the four operations, fractions and decimals, ratio, algebra, measurement, geometry, position and statistics alongside the place-value pilot.
+- Added a Bix lesson for every challenge slot, updated the public guide and curriculum inventory, and retained the staged award setting (`countsTowardYear: false`) without changing learner progress or stored IDs.
+- Final build result and remaining content/device review are recorded in the [course record](superpowers/2026-11-04-year6-math-course-build.md).
+
 ## 2026-11-04 — Focused development checks and one final validation pass
 
 - Added [validation policy](VALIDATION.md) for Curriculum and Skills: focused

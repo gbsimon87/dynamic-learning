@@ -2595,14 +2595,14 @@ export const CURRICULUM_GUIDES = [
   "slug": "year-6-maths",
   "path": "/curriculum-guide/year-6-maths",
   "label": "Year 6 Maths",
-  "intro": "Try our place-value pilot with numbers to ten million, rounding and negative numbers. The remaining Year 6 Maths topics are coming soon.",
-  "fit": "For children ready for Year 6 number work. Only the four Number and Place Value pilot topics are currently available.",
+  "intro": "Build confidence with the full Year 6 Maths course: number, fractions, ratio, algebra, measure, geometry and statistics.",
+  "fit": "For children ready for Year 6 Maths. Each area has four short challenges per topic, with Bix’s worked tips before play.",
   "areas": [
     {
       "categoryId": "number-number-and-place-value",
       "title": "Number and Place Value",
       "icon": "🔢",
-      "description": "Available pilot: read and compare numbers to ten million, round whole numbers and calculate intervals across zero.",
+      "description": "Read and compare numbers to ten million, round, use negative numbers and solve place-value problems.",
       "example": "What is the interval from −7 to 5?",
       "colour": "mint"
     },
@@ -2610,7 +2610,7 @@ export const CURRICULUM_GUIDES = [
       "categoryId": "number-addition-subtraction-multiplication-and-division",
       "title": "The Four Operations",
       "icon": "✖️",
-      "description": "Coming soon: written and mental methods, factors, primes, operation order and checking multi-step problems.",
+      "description": "Use written and mental methods, factors, primes, operation order and checking for multi-step problems.",
       "example": "Which operation should you do first?",
       "colour": "rose"
     },
@@ -2618,7 +2618,7 @@ export const CURRICULUM_GUIDES = [
       "categoryId": "number-fractions-including-decimals-and-percentages",
       "title": "Fractions, Decimals and Percentages",
       "icon": "🍰",
-      "description": "Coming soon: simplify and calculate with fractions, use decimal place value and connect fractions, decimals and percentages.",
+      "description": "Simplify and calculate with fractions, use decimal place value and connect fractions, decimals and percentages.",
       "example": "How can you simplify 18/24?",
       "colour": "gold"
     },
@@ -2626,7 +2626,7 @@ export const CURRICULUM_GUIDES = [
       "categoryId": "ratio-and-proportion",
       "title": "Ratio and Proportion",
       "icon": "⚖️",
-      "description": "Coming soon: missing quantities, percentages of amounts, scale factors and unequal sharing.",
+      "description": "Find missing quantities, calculate percentages of amounts, use scale factors and share unequally.",
       "example": "If 2 cups serve 3 people, how many serve 9?",
       "colour": "lilac"
     },
@@ -2634,7 +2634,7 @@ export const CURRICULUM_GUIDES = [
       "categoryId": "algebra",
       "title": "Algebra",
       "icon": "🔤",
-      "description": "Coming soon: simple formulae, linear sequences, missing numbers and combinations of two variables.",
+      "description": "Use simple formulae, linear sequences, missing numbers and combinations of two variables.",
       "example": "Which pairs of whole numbers have a sum of 8?",
       "colour": "mint"
     },
@@ -2642,7 +2642,7 @@ export const CURRICULUM_GUIDES = [
       "categoryId": "measurement",
       "title": "Measurement",
       "icon": "📏",
-      "description": "Coming soon: convert units and explore perimeter, area and volume, including triangles, parallelograms and cuboids.",
+      "description": "Convert units and explore perimeter, area and volume, including triangles, parallelograms and cuboids.",
       "example": "What is the volume of a 3 cm by 4 cm by 5 cm cuboid?",
       "colour": "rose"
     },
@@ -2650,7 +2650,7 @@ export const CURRICULUM_GUIDES = [
       "categoryId": "geometry-properties-of-shapes",
       "title": "Properties of Shapes",
       "icon": "🔷",
-      "description": "Coming soon: dimensions and angles, nets, shape properties, circle parts and missing angles.",
+      "description": "Use dimensions and angles, nets, shape properties, circle parts and missing angles.",
       "example": "What is the diameter of a circle with radius 4 cm?",
       "colour": "gold"
     },
@@ -2658,7 +2658,7 @@ export const CURRICULUM_GUIDES = [
       "categoryId": "geometry-position-and-direction",
       "title": "Position and Direction",
       "icon": "📍",
-      "description": "Coming soon: all four coordinate quadrants, translations and reflections in the axes.",
+      "description": "Work in all four coordinate quadrants, then translate and reflect shapes in the axes.",
       "example": "Where does (−3, 2) move when reflected in the y-axis?",
       "colour": "lilac"
     },
@@ -2666,7 +2666,7 @@ export const CURRICULUM_GUIDES = [
       "categoryId": "statistics",
       "title": "Statistics",
       "icon": "📊",
-      "description": "Coming soon: interpret and construct pie charts and line graphs, and calculate the mean.",
+      "description": "Interpret pie charts and line graphs, then calculate and explain the mean.",
       "example": "What is the mean of 4, 6 and 8?",
       "colour": "mint"
     }
@@ -2691,8 +2691,8 @@ export const CURRICULUM_GUIDES = [
       "description": "Read scales and measures"
     }
   ],
-  "practical": "The place-value pilot is available now; all other areas are coming soon. Later screen activities will support drawing and graph decisions, but practical work with rulers, protractors, physical nets and graph construction needs follow-up away from the screen.",
-  "alignment": "The planned course maps to the Year 6 mathematics programme of study for England. This pilot covers Number and Place Value only; the other statutory areas are not yet available."
+  "practical": "Screen activities build calculation and construction decisions. Practical work with rulers, protractors, physical nets and graph construction needs follow-up away from the screen.",
+  "alignment": "The full course maps to the Year 6 mathematics programme of study for England."
 }
 ];
 

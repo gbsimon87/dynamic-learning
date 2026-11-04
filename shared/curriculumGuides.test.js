@@ -57,11 +57,10 @@ test('free practice only links to existing standalone games and practical gaps s
 });
 
 
-test('Year 6 Maths public guide makes the pilot boundary explicit', () => {
+test('Year 6 Maths public guide describes the complete pathway', () => {
   const guide = curriculumGuideFor(6, 'math');
-  assert.match(guide.intro, /place-value pilot/);
-  assert.match(guide.fit, /Only the four Number and Place Value pilot topics/);
-  assert.match(guide.areas[0].description, /Available pilot/);
-  for (const area of guide.areas.slice(1)) assert.match(area.description, /Coming soon/);
-  assert.match(guide.alignment, /other statutory areas are not yet available/);
+  assert.match(guide.intro, /full Year 6 Maths course/);
+  assert.match(guide.fit, /four short challenges per topic/);
+  for (const area of guide.areas) assert.doesNotMatch(area.description, /Coming soon|pilot/i);
+  assert.match(guide.alignment, /full course maps/);
 });

@@ -16,6 +16,14 @@ vi.mock('../../src/components/challenge/DragToOrder',()=>({default:({items,onReo
 function solve(q) {
   if(q.kind==='choice') fireEvent.click(screen.getByRole('button',{name:String(q.answer),exact:true}));
   else if(q.kind==='number') fireEvent.change(screen.getByRole('textbox'),{target:{value:String(q.answer)}});
+  else if(q.kind==='build') {
+    const used = new Set();
+    for(const char of q.answer) {
+      const tile = q.tiles.find(t => t.label === char && !used.has(t.id));
+      used.add(tile.id);
+      fireEvent.click(within(screen.getByRole('group',{name:'Tiles to use'})).getAllByRole('button',{name:char,exact:true}).find(button => !button.disabled));
+    }
+  }
   else if(q.kind==='order') for(const id of [...q.answer].reverse()) fireEvent.click(screen.getByRole('button',{name:`Move ${id} first`}));
   else if(q.kind==='sort') for(const card of q.cards) {
     fireEvent.click(within(screen.getByRole('group',{name:'Cards to sort'})).getByRole('button',{name:card.label,exact:true}));
@@ -24,7 +32,7 @@ function solve(q) {
   else throw new Error(`Unhandled ${q.kind}`);
 }
 
-for(const theme of ['light','dark']) for(const topic of TOPIC_KEYS) it(`${theme}: ${topic} completes all four pilot challenges once`,async()=>{
+for(const theme of ['light','dark']) for(const topic of TOPIC_KEYS) it(`${theme}: ${topic} completes all four challenges once`,async()=>{
   document.body.classList.add(theme);
   vi.useFakeTimers();
   vi.spyOn(Math,'random').mockReturnValue(.375);
@@ -34,9 +42,10 @@ for(const theme of ['light','dark']) for(const topic of TOPIC_KEYS) it(`${theme}
       render(<Year6MathGame topic={topic} level={level} onComplete={complete}/>);
       for(const [i,q] of questions.entries()) {
         expect(screen.getByText(q.prompt)).toBeTruthy();
-        if(i===0 && q.kind==='number') {
+        if(i===0 && ['number','choice'].includes(q.kind)) {
           for(let attempt=0;attempt<2;attempt++) {
-            fireEvent.change(screen.getByRole('textbox'),{target:{value:String(q.answer+1)}});
+            if(q.kind==='number') fireEvent.change(screen.getByRole('textbox'),{target:{value:String(q.answer+1)}});
+            else fireEvent.click(screen.getByRole('button',{name:String(q.options.find(option=>option!==q.answer)),exact:true}));
             fireEvent.click(screen.getByRole('button',{name:'Check my answer'}));
             await act(async()=>vi.advanceTimersByTime(1000));
           }
@@ -59,7 +68,7 @@ for(const theme of ['light','dark']) for(const topic of TOPIC_KEYS) it(`${theme}
   } finally { vi.useRealTimers(); vi.restoreAllMocks(); document.body.classList.remove(theme); }
 },20000);
 
-it('the real loader opens each pilot slot on its own Bix lesson, then starts the game',async()=>{
+it('the real loader opens every slot on its own Bix lesson, then starts the game',async()=>{
   for(const topic of TOPIC_KEYS) for(let level=1;level<=4;level++) {
     render(<MemoryRouter initialEntries={[`/year/6/math/problem/number-number-and-place-value/${topic}/${level}`]}><Routes>
       <Route path="/year/:year/:subject/problem/:categoryId/:topicId/:challengeId" element={<Challenge onComplete={()=>{}}/>}/>

@@ -1,4 +1,5 @@
 import { table, steps, jumps } from "../../topicLessons.js";
+import { ADDITIONAL_YEAR6_MATH_LESSONS } from "./additional.js";
 
 // Independently authored examples for the four Number and place value pilots.
 // Statutory scope: docs/curriculum/year-6-maths.md, Number – number and place value.
@@ -8,7 +9,7 @@ const lesson = (title, lines, { note, ...example }) => ({
   example,
 });
 
-export const YEAR6_MATH_LESSONS = {
+const PLACE_VALUE_LESSONS = {
   "place-value-to-ten-million": [
     lesson("Read each digit's value", [
       "Read the chart from the largest place to the ones.",
@@ -137,3 +138,5 @@ export const YEAR6_MATH_LESSONS = {
     ], "Use the updated total in the second step, then reverse the subtraction to check.")),
   ],
 };
+
+export const YEAR6_MATH_LESSONS = { ...PLACE_VALUE_LESSONS, ...ADDITIONAL_YEAR6_MATH_LESSONS };

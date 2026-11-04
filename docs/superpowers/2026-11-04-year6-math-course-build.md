@@ -1,6 +1,6 @@
 # Course build: Year 6 Maths
 
-**Status:** Scope approved 2026-11-04. Place-value pilot implemented; awaiting owner trial.
+**Status:** Implementation complete 2026-11-04. All 49 approved topics have four challenge modules and four Bix lessons; the final production build passed.
 **Branch:** `feat/year6-math` · **Timer:** `year6-math`
 
 ## Approved statutory mapping
@@ -215,3 +215,95 @@ Observed corrections carried into the workflow: displayed quest capitalisation,
 future-year and staged-guide integration fixtures, matching lesson/task direction
 and representation, and exclusive bank/test/lesson filenames for parallel work.
 No token saving is claimed; this unfinished pilot is not a completed-build row.
+
+## Complete-course implementation — 2026-11-04
+
+- Coordinator: Codex, `gpt-5.6-terra`; branch `feat/year6-math`; timer
+  `year6-math`. This resumed the existing pilot timer rather than replacing it.
+- Implemented the remaining 45 approved topics, bringing the course to 49 topics
+  and 196 playable challenge slots. There are 196 static challenge entry modules
+  under `src/pages/skills/math/challenges/year6/`, all using the established
+  Year 6 Maths renderer and completion contract.
+- Added four shared authored banks for operations, fractions/decimals,
+  ratio/algebra and measurement/geometry/statistics. Each topic follows the
+  course progression: method, practice, comparison or structure, then context.
+  The existing place-value bank is unchanged.
+- Added separately registered Bix lessons for all remaining slots. Each lesson
+  gives a topic-specific method, comparison and context prompt before the game.
+  The original place-value lessons remain unchanged.
+- Updated the public guide and inventory to describe the complete course. The
+  course remains `countsTowardYear: false`; no progress, storage, IDs, unlock
+  rules, account behaviour or award membership were changed.
+
+### Completion evidence
+
+- `npm run build` passed: Vite transformed 5,347 modules and the prerender step
+  completed. The existing large-chunk warning remains.
+- Per owner instruction, lint and all test commands were skipped. No browser or
+  physical-device pass was run. The course still needs teacher/owner review of
+  the generated question variants, real touch/drag use and practical work with
+  rulers, protractors, nets and graphs.
+- Technical authoring records for the 45 added topics are in
+  `docs/authoring/year6-math-*.md`. They retain their unchecked review items;
+  implementation does not certify teaching quality or device suitability.
+- Final timer report: `year6-math` finished with 0h 27m 37s recorded work,
+  0h 22m 25s paused and 0h 50m 2s total elapsed across four sessions.
+- Token usage is unknown. `npm run course:usage -- --timer year6-math --branch
+  feat/year6-math --record docs/superpowers/2026-11-04-year6-math-course-build.md
+  --topics 49 --write` found zero matching Claude coordinator sessions, which
+  is expected for this Codex session. No estimate or unrelated session was used.
+
+### Retrospective
+
+- The shared Year 6 Maths game and lesson framework made course-wide module
+  registration mechanical while keeping each statutory topic in a dedicated
+  builder. The generated topic records make the outstanding content and device
+  review visible rather than treating the build as certification.
+- A future course build should begin with dedicated renderer support for formal
+  written methods, construction and graph plotting before bulk authoring; the
+  current course uses the established table, ordering, choice and numeric-input
+  controls for those decisions.
+
+### Follow-up validation — 2026-11-04
+
+Owner requested minimal meaningful tests across all dirty files and the full test
+suite. Follow-up timer: `year6-math-validation` (the completed build timer was
+left intact). Model switching is unavailable in this session.
+
+Coverage includes all 49 bank registrations, all 196 wrapper/lesson slots,
+50 deterministic seeds per level, accepted/rejected responses, input capacity,
+public guide metadata and anonymous rendering. The jsdom playthrough completes
+every slot in both theme classes, checks retry/hints for number and choice
+questions, and verifies completion fires once with its payload. Added independent
+arithmetic checks across all four new bank modules, including fraction expression
+distractors. Documentation, inventory and topic briefs were reviewed as records;
+they do not require artificial executable tests.
+
+Validation exposed and fixed whole-number controls used for decimal answers
+(now using the existing decimal tile builder), floating-point artefacts,
+equivalent fraction distractors, empty coordinate option sets, an incorrect
+order-of-operations context answer, non-integral equal-sharing quantities,
+incorrect fraction-order values and a cuboid face-count error. Lesson format
+checks now include the entire course; introductions have three lines and bounded
+titles. Removed obsolete pilot-only assumptions from lesson/guide tests and
+replaced the SEO checker's existing-guide 404 fixture with an unknown Year 7 URL.
+
+Technical checks do not approve teaching quality. Some later questions repeat
+fixed prompts/models within a run; prompt uniqueness remains asserted for the
+original pilot. Practical construction, real drag, layout, touch, voice and
+physical-device/child review remain outstanding. jsdom theme coverage does not
+certify visual contrast. No progress or account data was reset or changed.
+
+Final results for the complete dirty working tree after the fixes:
+
+- `npm run lint`: passed; the subsequent SEO-fixture-only edit also passed focused ESLint.
+- `npm test`: passed, 2,681 Node tests passed, 4 skipped; all 840 component tests across 81 files passed.
+- `npm run build`: passed, 5,347 modules transformed and 65 pages prerendered; existing chunk-size warning remains.
+- `npm run check:course -- --year 6 --subject math`: all 49 topics passed within the checker's documented scope.
+- `npm run check:seo`: passed HTTP/crawl checks for 65 public URLs and the existing browser batch for navigation, metadata, gameplay, 404s, no-JavaScript pages and desktop/mobile in both themes. This does not constitute a visual/device review of all Year 6 challenge screens.
+- `git diff --check`: passed.
+
+Local server tests initially encountered sandbox `listen EPERM`; the complete
+suite passed with the permitted localhost execution. No application workaround
+was introduced. Recorded follow-up work: 4m 58s, excluding initial inspection
+before starting this separate timer. Token usage is unknown.

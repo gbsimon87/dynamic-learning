@@ -17,9 +17,7 @@ for (const [subject, years] of Object.entries(LESSONS)) {
   for (const year of Object.keys(years).map(Number)) {
     test(`${subject} Year ${year}: every topic has four lessons that pass the lint`, () => {
       const curriculum = loadCurriculum(year, subject);
-      // Staged Year 6 Maths only requires lessons for its built place-value strand.
-      // The bank suite locks this exact pilot set until the rest is implemented.
-      const topicIds = (subject === "math" && year === 6 ? curriculum.slice(0, 1) : curriculum)
+      const topicIds = curriculum
         .flatMap((category) => category.topics.map((topic) => topic.id));
       assert.deepEqual(lintLessons(LESSONS[subject][year], { year, topicIds }), []);
     });

@@ -25,8 +25,7 @@ it.each(CURRICULUM_GUIDES)('renders the full $label topic inventory without an a
   const curriculum = loadCurriculum(guide.year, guide.subject);
   for (const category of curriculum) for (const topic of category.topics) {
     expect(screen.getByText(topic.name, { selector: 'li' })).toBeTruthy();
-    const expectedBuilt = guide.year !== 6 || guide.subject !== 'math' || category === curriculum[0];
-    for (const challenge of topic.challenges) expect(isChallengeImplemented(guide.subject, guide.year, topic.id, challenge.id)).toBe(expectedBuilt);
+    for (const challenge of topic.challenges) expect(isChallengeImplemented(guide.subject, guide.year, topic.id, challenge.id)).toBe(true);
   }
   expect(screen.getAllByRole('link', { name: /Create an account/ }).every(link => link.getAttribute('href') === '/signup')).toBe(true);
   expect(screen.getByRole('navigation', { name: `More Year ${guide.year} subjects` }).querySelectorAll('a')).toHaveLength(CURRICULUM_GUIDES.filter(item => item.year === guide.year).length - 1);
