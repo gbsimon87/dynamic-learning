@@ -29,8 +29,7 @@ The first-context guide now has direct, AI-tool-neutral paths for Curriculum
 courses and standalone Skills Mode games. Added `SKILLS_AUTHORING.md`, promoted
 the visual catalogue into `VISUAL_RECIPES.md`, and documented complete new-course
 integration. The entry guide is 1,590 words; the full earlier content remains in
-the archive. Read the [review record](authoring/2026-11-03-branch-review.md) for
-scope, fixes and coverage limits.
+the archive. Bank-checker coverage gaps are tracked as backlog #44.
 
 Lint, full tests (2,627 unit/API and 655 component passes; four existing skips)
 and build passed. All 749 topics were swept: 609 passed bank checks over 50
