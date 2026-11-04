@@ -24,8 +24,9 @@ deliberately does not repeat them.**
 | Add another real star system to the Solar System page | `add-star-system` |
 | Touch progress, persistence, or unlock rules | `curriculum-progress` |
 
-Project workflows for any AI tool: Curriculum courses/challenges in
-`docs/AUTHORING.md`; standalone Skills Mode games in `docs/SKILLS_AUTHORING.md`.
+To build a subject for a year, the owner pastes the prompt in
+`docs/superpowers/templates/course-start-prompt.md`. Project workflows for any AI
+tool: Curriculum courses/challenges in `docs/AUTHORING.md`; standalone Skills Mode games in `docs/SKILLS_AUTHORING.md`.
 
 Start with `docs/PROJECT_KNOWLEDGE.md`, the short current guide. It links to
 architecture, commands, inventory, maintained examples and task-specific sources;

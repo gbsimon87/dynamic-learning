@@ -99,9 +99,10 @@ Content slips the checks caught in the Year 6 build, so put them in every brief:
 - A sort's cards must fit its prompt's starting point. "Start with one bulb"
   cannot include "remove the second bulb".
 
-### Adding another Year 6 subject
+### Adding another subject to a registered year
 
-Year 6 is registered, so a further Year 6 subject needs:
+A year that already has a subject needs no year-list changes. For Year 6, a
+further subject needs:
 
 - its dataset and registry entry, with `countsTowardYear: false` until Year 6
   Maths, English and Science all exist;

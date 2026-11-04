@@ -87,6 +87,9 @@ turns this into practice.
 
 ## Build record
 
+The owner's steps for collecting token usage from any tool are in
+[the course start prompt](superpowers/templates/course-start-prompt.md#your-steps).
+
 Use the [course template](superpowers/templates/course-build.md). Record timer
 ID, observed token counters/source and coverage gaps, scope/model, corrections
 after first implementation and final technical/content/device evidence.
