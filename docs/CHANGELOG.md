@@ -6,6 +6,17 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-05 — Year 6 English: Adding Endings to fer
+
+- Built all four curriculum slots and Bix lessons for **Adding Endings to fer**: visible root-and-suffix models, spelling choices, sorting, letter tiles and sentence spelling all teach when vowel-led suffixes do or do not double the `r` in `-fer` words. The course remains explicitly excluded from Year 6 awards.
+- Focused lint, deterministic four-slot bank checking (50 seeds), topic-loader checking and a retry/hint/completion component playthrough pass. Full-course lint/test/build, browser layout, physical-device and content/owner review remain pending.
+
+## 2026-11-04 — Year 6 English course integration and pilot
+
+- Registered the approved 31-topic / 124-slot Year 6 English tree, mapped each permanent topic ID to the Years 5–6 statutory programme and retained `countsTowardYear: false`. No learner-progress, persistence or unlock rule changed.
+- Built the four-slot Formal and Informal Vocabulary pilot with Bix lessons, touch-friendly choice/sort/tile activities, 15 authored templates per slot and a retry/hint/completion playthrough. The public guide now identifies the other 30 topics as unavailable while they are built.
+- Focused lint, bank, registration, selector, guide and component checks pass. Full lint, test, build, course-wide checker, browser-layout and device/content review are intentionally pending the complete course.
+
 ## 2026-11-04 — Year 6 Maths regression coverage and fixes
 
 - Extended focused bank checks and all-slot playthroughs, including decimal tile entry, incorrect-answer retry and independent arithmetic checks. Fixed input, arithmetic, distractor and lesson-format failures found during validation.

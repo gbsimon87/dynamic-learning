@@ -2521,6 +2521,28 @@ export const CURRICULUM_GUIDES = [
   },
   {
     "year": 6,
+    "subject": "english",
+    "slug": "year-6-english",
+    "path": "/curriculum-guide/year-6-english",
+    "label": "Year 6 English",
+    "intro": "Choose words for the reader and purpose. Formal and informal vocabulary is ready first; the other Year 6 English quests are being prepared.",
+    "fit": "For children ready to make deliberate language choices for formal writing, compare viewpoints and edit for clarity.",
+    "areas": [
+      { "categoryId": "spelling---advanced-patterns", "title": "Spelling · Advanced Patterns", "icon": "🔤", "description": "Practise endings after -fer, hyphens, the tricky ough string, confusing pairs and the Year 6 word list.", "example": "Is it referring or refering?", "colour": "mint" },
+      { "categoryId": "reading---interpretation-and-comparison", "title": "Reading · Interpretation and Comparison", "icon": "📖", "description": "Use evidence to predict, summarise across paragraphs, explore language and compare viewpoints.", "example": "Which detail supports this prediction?", "colour": "rose" },
+      { "categoryId": "grammar---formal-language-and-sentence-choices", "title": "Grammar · Formal Language and Sentence Choices", "icon": "🎩", "description": "Choose formal vocabulary, explore synonyms and antonyms, and use active, passive and formal structures.", "example": "Which word suits a formal letter?", "colour": "gold" },
+      { "categoryId": "grammar---cohesion-layout-and-punctuation", "title": "Grammar · Cohesion, Layout and Punctuation", "icon": "🔗", "description": "Link ideas across paragraphs and use layout, colons, semicolons, dashes and hyphens clearly.", "example": "Which link shows a contrast?", "colour": "lilac" },
+      { "categoryId": "writing---composition-and-editing", "title": "Writing · Composition and Editing", "icon": "🖊️", "description": "Choose a register for a reader, précis a passage and proofread for clarity and effect.", "example": "Which sentence suits a council letter?", "colour": "mint" }
+    ],
+    "games": [
+      { "to": "/skills/word-builder", "icon": "🔤", "label": "Word Builder", "description": "Put letters together" },
+      { "to": "/skills/sentence-builder", "icon": "📝", "label": "Sentence Builder", "description": "Make a sentence" },
+      { "to": "/skills/synonym-match", "icon": "🦁", "label": "Synonym Safari", "description": "Explore similar meanings" }
+    ],
+    "alignment": "Topics draw on the shared Years 5–6 English programme for England. The grammar content begins in Year 6 as set out in Appendix 2; the reading and spelling split is Bix’s documented choice. Formal and Informal Vocabulary is available now; the listed remaining topics are planned and stay unavailable until their four challenges are built."
+  },
+  {
+    "year": 6,
     "subject": "science",
     "slug": "year-6-science",
     "path": "/curriculum-guide/year-6-science",

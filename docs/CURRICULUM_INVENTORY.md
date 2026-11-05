@@ -41,14 +41,17 @@ it does not certify full statutory coverage, teaching accuracy or device review.
 | 5 | [Relationships & Health](../src/data/year5WellbeingCurriculum.js) | 13 | 52 | Complete |
 | 6 | [Science](../src/data/year6ScienceCurriculum.js) | 24 | 96 | Complete |
 | 6 | [Maths](../src/data/year6MathCurriculum.js) | 49 | 196 | Complete |
+| 6 | [English](../src/data/year6EnglishCurriculum.js) | 31 planned / 2 built | 124 planned / 8 built | Staged; remaining topics unavailable |
 | 6 | Other subjects | 0 | 0 | Not registered yet |
-| **Total** | **34 complete pathways** | **822** | **3,288** | |
+| **Total** | **34 complete pathways + 1 staged pathway** | **853 planned / 824 built** | **3,412 planned / 3,296 built** | |
 
 Years 1–4 have Maths, English, Science, History and Geography. Year 5 adds Art &
 Design, Computing, Design & Technology, French, Music, PE and Relationships &
-Health (`wellbeing`). Year 6 has complete Science and Maths. Other subjects are
-built one at a time. Saved statutory programmes and subject specs do not establish
-playable implementation.
+Health (`wellbeing`). Year 6 has complete Science and Maths plus an English
+staged pathway; its other English topics are registered for honest curriculum planning but
+remain unavailable until their challenge files exist. Other subjects are built one
+at a time. Saved statutory programmes and subject specs do not establish playable
+implementation.
 
 ## Awards and introductions
 

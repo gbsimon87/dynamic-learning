@@ -70,6 +70,7 @@ body.dark .curriculum-guide {
 .curriculum-guide summary:focus-visible { outline: 3px solid var(--guide-ink); outline-offset: 4px; }
 .curriculum-guide details ul { padding-left: 1.25rem; }
 .curriculum-guide details li { margin-bottom: 0.65rem; }
+.curriculum-guide-topic-status { display: inline-block; margin-left: 0.55rem; padding: 0.1rem 0.45rem; border-radius: 999px; background: var(--guide-panel); color: var(--guide-ink); font-size: 0.75rem; font-weight: bold; }
 .curriculum-guide-steps { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; padding: 0; margin: 2rem 0 0; }
 .curriculum-guide-steps li { padding: 1.5rem; background: var(--guide-panel); border-radius: 1.5rem; }
 .curriculum-guide-steps li > span { font-size: 2rem; }

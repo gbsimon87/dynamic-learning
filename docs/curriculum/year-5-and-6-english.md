@@ -218,10 +218,8 @@ The grammatical terms that pupils should learn are labelled as 'terminology for 
 
 # Mapping to our curriculum dataset
 
-> **No Year 5 or Year 6 English dataset yet.** The app's registered curricula stop at Year 4. When one is built, map each topic
-> here to the statutory bullet it serves, as
-> [year-3-and-4-english.md](year-3-and-4-english.md) does, and list anything
-> deliberately not covered.
+> The Year 5 and Year 6 datasets are mapped below. Category and topic titles
+> are permanent URL and learner-progress IDs; rename only with a migration.
 
 ---
 
@@ -358,3 +356,77 @@ a reasoned view and a courteous challenge. They sit in the "Reading" strand beca
 | Spoken language, the other bullets (listening, asking questions, building vocabulary, role play and the rest) | Discussion and performance, not marked by the app |
 | Recognising vocabulary and structures appropriate for formal speech and writing, including subjunctive forms · using passive verbs | Year 6 (Appendix 2 starts them in Year 6) |
 | Appendix 1: –fer, the hyphen, ough, the second half of the homophones and the second half of the word list | Year 6 |
+
+---
+
+## Year 6 topics mapped to statutory requirements
+
+> **Status: staged 2026-11 (31 topics, 124 challenge slots).** The approved
+> category and topic titles are permanent IDs in `year6EnglishCurriculum.js`.
+> The Year 6 rows below implement the Year 6 half of the documented split.
+
+### 1. Spelling - Advanced Patterns
+
+| Topic | Id | Statutory requirement it serves |
+|---|---|---|
+| Adding Endings to fer | `adding-endings-to-fer` | use further prefixes and suffixes and understand the guidance for adding them (Appendix 1: adding suffixes beginning with vowel letters to words ending in –fer) |
+| Hyphens in Words | `hyphens-in-words` | use further prefixes and suffixes and understand the guidance for adding them (Appendix 1: use of the hyphen) |
+| The Letter String ough | `the-letter-string-ough` | use knowledge of morphology and etymology in spelling and understand that the spelling of some words needs to be learnt specifically (Appendix 1: words containing the letter-string ough) |
+| Confusing Word Pairs | `confusing-word-pairs` | continue to distinguish between homophones and other words which are often confused (Appendix 1, Year 6 half) |
+| Year 6 Word List Part 1 | `year-6-word-list-part-1` | use knowledge of morphology and etymology in spelling and understand that the spelling of some words needs to be learnt specifically, as listed in English Appendix 1 (identity to pronunciation) |
+| Year 6 Word List Part 2 | `year-6-word-list-part-2` | the same (queue to yacht) |
+
+### 2. Reading - Interpretation and Comparison
+
+| Topic | Id | Statutory requirement it serves |
+|---|---|---|
+| Exploring Meaning in Context | `exploring-meaning-in-context` | checking that the book makes sense to them, discussing their understanding and exploring the meaning of words in context |
+| Predicting from Details | `predicting-from-details` | predicting what might happen from details stated and implied |
+| Summarising across Paragraphs | `summarising-across-paragraphs` | summarising the main ideas drawn from more than one paragraph, identifying key details that support the main ideas |
+| Figurative Language and its Effect | `figurative-language-and-its-effect` | discuss and evaluate how authors use language, including figurative language, considering the impact on the reader |
+| Comparing Accounts and Viewpoints | `comparing-accounts-and-viewpoints` | making comparisons within and across books; notes: compare different accounts of the same event and discuss viewpoints |
+| Themes and Conventions | `themes-and-conventions` | identifying and discussing themes and conventions in and across a wide range of writing |
+| Asking Questions about Texts | `asking-questions-about-texts` | asking questions to improve their understanding |
+
+### 3. Grammar - Formal Language and Sentence Choices
+
+| Topic | Id | Statutory requirement it serves |
+|---|---|---|
+| Formal and Informal Vocabulary | `formal-and-informal-vocabulary` | Appendix 2, Year 6, Word: The difference between vocabulary typical of informal speech and vocabulary appropriate for formal speech and writing |
+| Synonyms and Antonyms | `synonyms-and-antonyms` | Appendix 2, Year 6, Word: How words are related by meaning as synonyms and antonyms |
+| Active and Passive Voice | `active-and-passive-voice` | use of the passive to affect the presentation of information in a sentence; using passive verbs to affect the presentation of information in a sentence |
+| Formal Structures and the Subjunctive | `formal-structures-and-the-subjunctive` | the difference between structures typical of informal speech and structures appropriate for formal speech and writing; recognising vocabulary and structures that are appropriate for formal speech and writing, including subjunctive forms |
+| Expanded Noun Phrases for Information | `expanded-noun-phrases-for-information` | using expanded noun phrases to convey complicated information concisely |
+
+### 4. Grammar - Cohesion, Layout and Punctuation
+
+| Topic | Id | Statutory requirement it serves |
+|---|---|---|
+| Cohesive Devices across Paragraphs | `cohesive-devices-across-paragraphs` | Appendix 2, Year 6, Text: linking ideas across paragraphs using a wider range of cohesive devices |
+| Ellipsis | `ellipsis` | Appendix 2, Year 6, Text: linking ideas across paragraphs using a wider range of cohesive devices, including ellipsis |
+| Layout Devices | `layout-devices` | Appendix 2, Year 6, Text: layout devices [for example, headings, sub-headings, columns, bullets, or tables, to structure text] |
+| Semicolons, Colons and Dashes | `semicolons-colons-and-dashes` | use of the semi-colon, colon and dash to mark the boundary between independent clauses |
+| Punctuation in Lists | `punctuation-in-lists` | use of the colon to introduce a list and use of semi-colons within lists |
+| Bullet Point Punctuation | `bullet-point-punctuation` | punctuation of bullet points to list information |
+| Hyphens to Avoid Ambiguity | `hyphens-to-avoid-ambiguity` | how hyphens can be used to avoid ambiguity |
+
+### 5. Writing - Composition and Editing
+
+| Topic | Id | Statutory requirement it serves |
+|---|---|---|
+| Formal Register for Audience and Purpose | `formal-register-for-audience-and-purpose` | selecting appropriate grammar and vocabulary, understanding how such choices can change and enhance meaning; distinguishing between the language of speech and writing and choosing the appropriate register |
+| Precising Longer Passages | `precising-longer-passages` | précising longer passages |
+| Passive Voice in Writing | `passive-voice-in-writing` | using passive verbs to affect the presentation of information in a sentence |
+| Subjunctive Forms in Writing | `subjunctive-forms-in-writing` | recognising vocabulary and structures that are appropriate for formal speech and writing, including subjunctive forms |
+| Proofreading for Clarity and Effect | `proofreading-for-clarity-and-effect` | proposing changes to vocabulary, grammar and punctuation to enhance effects and clarify meaning; proof-read for spelling and punctuation errors |
+| Year 6 Dictation | `year-6-dictation` | spelling and punctuation from the Year 6 programme and Appendix 1; dictation is our marked-practice design, not a separate statutory bullet |
+
+### Year 6 bullets with no topic
+
+| Requirement | Why |
+|---|---|
+| write legibly, fluently and with increasing speed; choosing letter shapes, joins and implements | Handwriting needs a pen and a teacher's eye. |
+| reading aloud; learning poetry by heart; preparing poems and plays to perform | Performance needs an audience or adult feedback. |
+| recommending books to peers; formal presentations and debates; performing compositions | Spoken work is not reliably markable in this app. |
+| noting and developing initial ideas; assessing the effectiveness of own and others' writing | These need a child's own extended writing and feedback. |
+| spoken-language requirements not represented by a marked reading task | Conversation, listening, role play and live discussion need people together. |

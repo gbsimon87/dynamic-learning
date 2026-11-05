@@ -163,8 +163,8 @@ See [architecture](ARCHITECTURE.md) and [operations](OPERATIONS.md) before chang
 
 ## 5. What Currently Exists
 
-**34 registered pathways, 777 built topics and 3,108 implemented slots across Years 1–6.**
-Year 6 has complete Science and a Maths place-value pilot (4 of 49 topics built). See the [full inventory](CURRICULUM_INVENTORY.md) for subject
+**35 registered pathways: 34 complete and a staged Year 6 English pathway (2 of 31 topics built).**
+See the [full inventory](CURRICULUM_INVENTORY.md) for subject
 coverage, award exclusions, introductions and review trackers. “Implemented”
 means files exist; it does not certify statutory coverage or content/device review.
 

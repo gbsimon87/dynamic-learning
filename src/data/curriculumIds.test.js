@@ -1,5 +1,6 @@
 import { year6MathCurriculum } from "./year6MathCurriculum.js";
 import { year6ScienceCurriculum } from "./year6ScienceCurriculum.js";
+import { year6EnglishCurriculum } from "./year6EnglishCurriculum.js";
 import { year5MathCurriculum } from "./year5MathCurriculum.js";
 import { year5EnglishCurriculum } from "./year5EnglishCurriculum.js";
 import { year5ScienceCurriculum } from "./year5ScienceCurriculum.js";
@@ -1124,6 +1125,18 @@ const YEAR6_SCIENCE_IDS = [
 
 test("Year 6 Science category and topic ids are unchanged", () => {
   assert.deepEqual(ids(year6ScienceCurriculum), YEAR6_SCIENCE_IDS);
+});
+
+const YEAR6_ENGLISH_IDS = [
+  ["spelling---advanced-patterns", ["adding-endings-to-fer", "hyphens-in-words", "the-letter-string-ough", "confusing-word-pairs", "year-6-word-list-part-1", "year-6-word-list-part-2"]],
+  ["reading---interpretation-and-comparison", ["exploring-meaning-in-context", "predicting-from-details", "summarising-across-paragraphs", "figurative-language-and-its-effect", "comparing-accounts-and-viewpoints", "themes-and-conventions", "asking-questions-about-texts"]],
+  ["grammar---formal-language-and-sentence-choices", ["formal-and-informal-vocabulary", "synonyms-and-antonyms", "active-and-passive-voice", "formal-structures-and-the-subjunctive", "expanded-noun-phrases-for-information"]],
+  ["grammar---cohesion-layout-and-punctuation", ["cohesive-devices-across-paragraphs", "ellipsis", "layout-devices", "semicolons-colons-and-dashes", "punctuation-in-lists", "bullet-point-punctuation", "hyphens-to-avoid-ambiguity"]],
+  ["writing---composition-and-editing", ["formal-register-for-audience-and-purpose", "precising-longer-passages", "passive-voice-in-writing", "subjunctive-forms-in-writing", "proofreading-for-clarity-and-effect", "year-6-dictation"]],
+];
+
+test("Year 6 English category and topic ids are unchanged", () => {
+  assert.deepEqual(ids(year6EnglishCurriculum), YEAR6_ENGLISH_IDS);
 });
 
 // Year 6 Maths approved tree: these IDs are URL and progress keys.

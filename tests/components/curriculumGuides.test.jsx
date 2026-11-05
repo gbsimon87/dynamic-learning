@@ -9,7 +9,7 @@ import CurriculumGuide, { CurriculumOverview } from '../../src/seo/CurriculumGui
 
 vi.mock('../../src/components/mascot/Mascot', () => ({ default: () => null }));
 
-it('offers all thirty-four guides from an anonymous, year-grouped hub', () => {
+it('offers all thirty-five guides from an anonymous, year-grouped hub', () => {
   render(<MemoryRouter><CurriculumOverview /></MemoryRouter>);
   for (const guide of CURRICULUM_GUIDES) {
     expect(screen.getByRole('link', { name: new RegExp(guide.label) }).getAttribute('href')).toBe(guide.path);
@@ -25,7 +25,9 @@ it.each(CURRICULUM_GUIDES)('renders the full $label topic inventory without an a
   const curriculum = loadCurriculum(guide.year, guide.subject);
   for (const category of curriculum) for (const topic of category.topics) {
     expect(screen.getByText(topic.name, { selector: 'li' })).toBeTruthy();
-    for (const challenge of topic.challenges) expect(isChallengeImplemented(guide.subject, guide.year, topic.id, challenge.id)).toBe(true);
+    const built = topic.challenges.every(challenge => isChallengeImplemented(guide.subject, guide.year, topic.id, challenge.id));
+    if (built) expect(isChallengeImplemented(guide.subject, guide.year, topic.id, topic.challenges[0].id)).toBe(true);
+    else expect(screen.getByText(topic.name, { selector: 'li' }).textContent).toContain('Coming soon');
   }
   expect(screen.getAllByRole('link', { name: /Create an account/ }).every(link => link.getAttribute('href') === '/signup')).toBe(true);
   expect(screen.getByRole('navigation', { name: `More Year ${guide.year} subjects` }).querySelectorAll('a')).toHaveLength(CURRICULUM_GUIDES.filter(item => item.year === guide.year).length - 1);

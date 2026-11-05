@@ -3,6 +3,7 @@ import { AuthContext } from '../context/auth-context';
 import { Link, useParams } from 'react-router';
 import { CURRICULUM_GUIDES, GUIDE_SUBJECTS, findCurriculumGuide } from '../../shared/curriculumGuides.js';
 import { CURRICULUM_YEARS, loadCurriculum } from '../data/curriculumRegistry';
+import { isChallengeImplemented } from '../data/challengeAvailability';
 import Mascot from '../components/mascot/Mascot';
 import NotFound from '../pages/NotFound';
 import './SkillGuide.css';
@@ -151,7 +152,10 @@ export default function CurriculumGuide({ slug: suppliedSlug }) {
                 <p className="curriculum-guide-example">{area.example}</p>
                 <details>
                   <summary>See all {category.topics.length} topics</summary>
-                  <ul>{category.topics.map(topic => <li key={topic.id}>{topic.name}</li>)}</ul>
+                  <ul>{category.topics.map(topic => {
+                    const available = topic.challenges.every(challenge => isChallengeImplemented(guide.subject, guide.year, topic.id, challenge.id));
+                    return <li key={topic.id}>{topic.name}{!available && <span className="curriculum-guide-topic-status">Coming soon</span>}</li>;
+                  })}</ul>
                 </details>
               </section>
             );
