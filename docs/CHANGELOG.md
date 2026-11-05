@@ -6,6 +6,14 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-05 — Shape Explorer restyle, 2D/3D and per-level shapes
+
+- `/skills/shapes` now runs on `FreePlayShell` (levels, star pips, read-aloud, shared feedback) with themed SVG shapes and large name tiles; a wrong tile is set aside so the child retries. `ShapeQuiz.jsx` and the `--sq-*` tokens are gone.
+- A 2D / 3D switch (keeps the level). Each level has its own shapes: 2D 6 / 8 / 16 (up to the kinds of triangle and quadrilateral, 7–12-sided polygons, sector, lens), 3D 6 / 5 / 6 (up to the regular solids, frustum, bipyramid). Pure bank `src/data/freePlay/shapeExplorer.js`; "Trapezoid" is now "Trapezium" (UK).
+- Names that also fit one drawing (rhombus/parallelogram, the triangle kinds, octahedron/bipyramid, diamond/trapezium) are never offered together (`alsoCounts` / `group`). Square/rectangle and circle/oval stay distinct, as in Years 1–2.
+- Flat-faced solids are drawn from vertex data (`solidModels.js`: hull faces, back-face culling, shading), with face-count and Euler-formula tests; curved solids are hand-drawn. Left out: megagon, icosagon, hendecagon, prismatoid, antiprism, Möbius strip, Klein bottle, ellipsoid, ovoid.
+- Checked: focused lint, unit and component tests. **No browser check** — the 3D drawings, tile wrapping for long names and both themes have not been seen on screen. Not device-reviewed.
+
 ## 2026-11-05 — Flag Finder restyle
 
 - `/skills/flag-finder` now runs on `FreePlayShell` like the other free-play games: star pips, read-aloud, shared feedback and Bix's cheer. The "Where in the world?" label and select are gone; the whole planet and each continent are the level chips. A wrong country greys out and the child tries again; the right one lights up and the next flag follows.

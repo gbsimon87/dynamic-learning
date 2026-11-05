@@ -16,9 +16,7 @@
   place-items: center;
   width: min(260px, 72vw);
   aspect-ratio: 1;
-  background:
-    radial-gradient(circle at 50% 45%, var(--ck-panel) 0 38%, transparent 39%),
-    var(--ck-muted);
+  background: var(--ck-muted);
   border: 3px solid var(--ck-border);
   border-radius: 28px;
   transition: transform 220ms ease, border-color 220ms ease;
@@ -40,6 +38,27 @@
   stroke-linejoin: round;
   filter: drop-shadow(0 6px 0 var(--ck-border));
   animation: se-pop 360ms cubic-bezier(.2, 1.5, .5, 1) both;
+}
+
+/* Light and shade laid over a solid's faces: no outline of their own. */
+.se-shape .se-shade {
+  stroke: none;
+  pointer-events: none;
+}
+
+/* Equal-side ticks and the right-angle mark: lines, not fills. */
+.se-shape .se-tick {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: miter;
+}
+
+/* The 2D / 3D switch sits centred above the game. */
+.se-kinds {
+  display: flex;
+  width: fit-content;
+  margin: 0 auto 1.25rem;
 }
 
 @keyframes se-pop {

@@ -1,6 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
 import ShapeExplorer from '../../src/pages/skills/math/ShapeExplorer';
+import ShapeArt from '../../src/pages/skills/math/ShapeArt';
+import { KINDS, shapesForLevel } from '../../src/data/freePlay/shapeExplorer';
 
 vi.mock('../../src/utils/speech', () => ({ speak: () => {}, stopNarration: () => {}, speakAndWait: async () => {}, isNarrationSupported: () => false }));
 vi.mock('../../src/components/celebration/sound/player', () => ({
@@ -9,6 +11,31 @@ vi.mock('../../src/components/celebration/sound/player', () => ({
 vi.mock('../../src/components/celebration/fx/effects', () => ({ playEffect: () => () => {} }));
 
 const choices = () => [...document.querySelectorAll('.se-choice')];
+
+it('every shape in every level has a drawing', () => {
+  for (const kind of KINDS) {
+    for (const level of [1, 2, 3]) {
+      for (const shape of shapesForLevel(level, kind.id)) {
+        const { container, unmount } = render(<ShapeArt id={shape.id} />);
+        const svg = container.querySelector('svg.se-shape');
+        expect(svg, `${kind.id} L${level} ${shape.id} has no drawing`).not.toBeNull();
+        expect(svg.children.length, shape.id).toBeGreaterThan(0);
+        unmount();
+      }
+    }
+  }
+});
+
+it('the 2D / 3D switch deals solids and keeps the level', () => {
+  render(<ShapeExplorer />);
+  fireEvent.click(screen.getByRole('button', { name: /Medium/ }));
+  fireEvent.click(screen.getByRole('button', { name: '3D shapes' }));
+  expect(screen.getByRole('button', { name: '3D shapes' }).getAttribute('aria-pressed')).toBe('true');
+  expect(screen.getByText('What 3D shape is this?')).toBeTruthy();
+  expect(screen.getByRole('button', { name: /Medium/ }).getAttribute('aria-pressed')).toBe('true');
+  const solids = new Set(shapesForLevel(2, '3d').map((s) => s.name));
+  for (const tile of choices()) expect(solids.has(tile.textContent)).toBe(true);
+});
 
 it('draws one shape with four named choices', () => {
   render(<ShapeExplorer />);
