@@ -1,198 +1,330 @@
-/* === Wrapper ===
-   A wide stage so the map is big enough for small fingers to find a city. */
-.find-the-city {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  text-align: center;
-  width: 100%;
-}
+/* ===========================================================
+   FIND THE CITY
+   One viewport, no scrolling: a slim header, Bix's question card, and a
+   map that takes everything that is left. Every rule is scoped under
+   .ftc / .ftc-* (CSS is global here). Colours are the challenge-kit
+   --ck-* tokens, so both themes work.
+=========================================================== */
 
-/* === Score & Prompt === */
-.find-the-city .score {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--light-text);
-}
-
-.find-the-city .prompt {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--light-text);
-}
-
-body.dark .find-the-city .score,
-body.dark .find-the-city .prompt {
-  color: var(--dark-text);
-}
-
-/* === Map === */
-.find-the-city .mapContainer {
-  width: 100%;
-  height: clamp(340px, 60vh, 720px);
-  border-radius: 12px;
+/* Exactly one viewport below the sticky navbar; the map flexes. */
+.ftc-shell {
+  height: calc(100dvh - var(--navbar-height, 56px));
+  min-height: 24rem;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
-.find-the-city .leaflet-container {
-  width: 100%;
+.ftc {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 8px;
   height: 100%;
-  cursor: pointer;
-  border-radius: 12px;
+  min-height: 0;
+  padding: 8px 12px 12px;
+  color: var(--ck-text);
 }
 
-.find-the-city .mapContainer.answered .leaflet-container {
-  cursor: grab;
+/* --- header: back, title, score --- */
+.ftc-header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
 }
 
-/* Result, hint and "Next city" sit in one row between the prompt and the map. */
-.find-the-city .mapStatus {
+.ftc-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-width: 48px;
+  min-height: 48px;
+  border-radius: 999px;
+  font-weight: 700;
+  color: inherit;
+  text-decoration: none;
+}
+.ftc-back:hover { background: var(--ck-muted); }
+.ftc-back:focus-visible { outline: 3px solid var(--ck-text); outline-offset: 2px; }
+/* Phone: the arrow alone, with the words kept for screen readers. */
+.ftc-back-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The page name is the quietest big text: the city is the headline. */
+.ftc-title {
+  margin: 0;
+  font-size: clamp(1.05rem, 4.4vw, 1.3rem);
+  font-weight: 800;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ftc-score {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--ck-muted);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.ftc-score-found,
+.ftc-score-round {
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+.ftc-score-found { background: var(--ck-panel); font-size: 1rem; }
+.ftc-score-found b { font-size: 1.1rem; font-weight: 800; }
+.ftc-score-round { font-size: 0.85rem; font-weight: 700; opacity: 0.8; }
+
+/* --- Bix's question card --- */
+.ftc-quest {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "bix find"
+    "status status";
+  align-items: center;
+  gap: 4px 12px;
+  padding: 10px 14px 12px;
+  border-radius: 20px;
+  background: var(--ck-panel);
+  box-shadow:
+    0 0 0 1px var(--ck-card-edge),
+    0 2px 4px var(--panel-shadow),
+    0 10px 24px -12px var(--panel-shadow);
+}
+
+.ftc-bix {
+  grid-area: bix;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+}
+/* Bix is his own size elsewhere; keep him inside the card. */
+.ftc-bix .mascot { transform-origin: center; }
+
+.ftc-find {
+  grid-area: find;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 10px;
+  min-width: 0;
+}
+.ftc-find .speak-btn { flex: none; align-self: center; }
+
+.ftc-find-label {
+  flex: 0 0 100%;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* The headline: the biggest, heaviest thing on the page. */
+.ftc-city {
+  margin: 0;
+  min-width: 0;
+  font-size: clamp(1.9rem, 1.2rem + 3.4vw, 2.9rem);
+  font-weight: 800;
+  line-height: 1.05;
+  color: var(--ck-accent);
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+.ftc-city:focus { outline: none; }
+.ftc-city:focus-visible { outline: 3px solid var(--ck-text); outline-offset: 4px; border-radius: 6px; }
+
+/* Hint / result row: reading size, with one clear action on the right. */
+.ftc-status {
+  grid-area: status;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  gap: 0.75rem 1.25rem;
-  min-height: 3.25rem;
+  justify-content: space-between;
+  gap: 6px 12px;
+  min-width: 0;
+  min-height: 48px;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+.ftc-message { flex: 1 1 10rem; min-width: 0; font-weight: 600; text-align: left; }
+.ftc-result { font-weight: 700; }
+.ftc-hint {
+  flex: 0 1 auto;
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: var(--ck-muted);
+  font-weight: 700;
 }
 
-.find-the-city .mapStatus .info {
-  margin-top: 0;
+/* The kit's feedback line is sized for a full-page question; shrink it here. */
+.ftc-status .free-play-feedback {
+  flex: none;
+  min-height: 0;
+  margin: 0;
+  font-size: 0.95rem;
+  justify-content: flex-start;
 }
+.ftc-status .challenge-feedback-icon { width: 1.6rem; height: 1.6rem; font-size: 0.95rem; }
+.ftc-status .challenge-feedback-bix { display: none; }
+/* The words under the cheer repeat the result; the icon and cheer are enough. */
+.ftc-status .free-play-feedback:empty { display: none; }
 
-.find-the-city .hintBtn {
-  min-height: 3rem;
-  padding: 0.6rem 1.25rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  border-radius: 10px;
-  border: 2px solid var(--light-accent);
-  background-color: var(--light-panel);
-  color: var(--light-text);
+/* --- buttons: the accent is a fill with its matching ink --- */
+.ftc-btn {
+  min-height: 48px;
+  padding: 0 1.25rem;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  font: inherit;
+  font-size: 1.05rem;
+  font-weight: 800;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+.ftc-btn:focus-visible { outline: 3px solid var(--ck-text); outline-offset: 3px; }
+.ftc-btn-primary {
+  background: var(--ck-accent);
+  color: var(--ck-on-accent);
+  box-shadow: 0 4px 0 var(--ck-border);
+}
+.ftc-btn-primary:hover { transform: translateY(-2px); }
+.ftc-btn-primary:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--ck-border); }
+.ftc-btn-quiet {
+  background: var(--ck-muted);
+  color: var(--ck-text);
+  border-color: var(--ck-border);
+  font-weight: 700;
+}
+.ftc-btn-quiet:hover { border-color: var(--ck-text); }
+
+/* --- the map --- */
+.ftc-stage {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--map-ocean);
+  box-shadow: 0 0 0 1px var(--ck-card-edge), 0 8px 24px -12px var(--panel-shadow);
+}
+.ftc-stage .leaflet-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--map-ocean);
+  cursor: pointer;
+}
+.ftc-stage.is-answered .leaflet-container { cursor: grab; }
+
+/* Bigger zoom buttons for small fingers. */
+.ftc-stage .leaflet-bar a {
+  width: 44px;
+  height: 44px;
+  line-height: 44px;
+  font-size: 1.25rem;
 }
 
-.find-the-city .hintBtn:hover {
-  background-color: var(--light-accent);
-  color: white;
-}
-
-body.dark .find-the-city .hintBtn {
-  border-color: var(--dark-accent);
-  background-color: var(--dark-panel);
-  color: var(--dark-text);
-}
-
-body.dark .find-the-city .hintBtn:hover {
-  background-color: var(--dark-accent);
-  color: var(--dark-bg);
-}
-
-.find-the-city .hintText {
-  font-size: 1.2rem;
-  font-weight: 600;
-  padding: 0.6rem 1.1rem;
-  border-radius: 10px;
-  background-color: var(--light-panel);
-  color: var(--light-text);
-}
-
-body.dark .find-the-city .hintText {
-  background-color: var(--dark-panel);
-  color: var(--dark-text);
+/* Fractional zoom scales tiles by a non-integer factor, leaving hairline seams
+   between them; overlapping each tile by half a pixel hides them. */
+.ftc-stage .leaflet-container img.leaflet-tile {
+  mix-blend-mode: normal;
+  width: 256.5px !important;
+  height: 256.5px !important;
 }
 
 /* Map overlays. The OSM tiles are light in both themes, so the overlays use
    the light tokens in both themes too - the dark ones vanish on the tiles. */
-.find-the-city .guessLine {
+.ftc-stage .guessLine {
   stroke: var(--light-text);
   stroke-width: 3;
 }
-
-.find-the-city .guessDot {
+.ftc-stage .guessDot {
   stroke: var(--light-text);
   stroke-width: 3;
   fill: var(--light-panel);
   fill-opacity: 1;
 }
-
-.find-the-city .cityDot {
+.ftc-stage .cityDot {
   stroke: var(--light-panel);
   stroke-width: 3;
   fill: var(--light-accent);
   fill-opacity: 1;
 }
-
-.find-the-city .leaflet-tooltip.cityLabel,
-.find-the-city .leaflet-tooltip.distanceLabel {
+.ftc-stage .leaflet-tooltip.cityLabel,
+.ftc-stage .leaflet-tooltip.distanceLabel {
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--light-text);
 }
 
-/* === Info/Feedback === */
-.find-the-city .info {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--light-accent);
-  margin-top: 0.5rem;
+/* --- finished --- */
+.ftc-done {
+  grid-row: 2 / 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 0;
+  padding: 16px;
+  border-radius: 24px;
+  background: var(--ck-panel);
+  text-align: center;
+  box-shadow:
+    0 0 0 1px var(--ck-card-edge),
+    0 2px 4px var(--panel-shadow),
+    0 16px 36px -12px var(--panel-shadow);
 }
+.ftc-done-title { margin: 0; font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 800; }
+.ftc-done-score { margin: 0; font-size: 1.15rem; }
+.ftc-done-score b { color: var(--ck-accent); font-size: 1.4em; }
 
-body.dark .find-the-city .info {
-  color: var(--dark-accent);
-}
-
-/* === Start Screen === */
-.find-the-city .intro {
-  font-size: 1.2rem;
-  color: var(--light-text);
-}
-
-body.dark .find-the-city .intro {
-  color: var(--dark-text);
-}
-
-/* === Buttons === */
-.find-the-city .startBtn,
-.find-the-city .restartBtn,
-.find-the-city .nextBtn {
-  padding: 0.9rem 2rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-  border-radius: 10px;
-  cursor: pointer;
-  background-color: var(--light-accent);
-  color: white;
-  border: none;
-  transition: all 0.25s ease;
-}
-
-.find-the-city .startBtn:hover,
-.find-the-city .restartBtn:hover,
-.find-the-city .nextBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(239, 98, 108, 0.3);
-}
-
-body.dark .find-the-city .startBtn,
-body.dark .find-the-city .restartBtn,
-body.dark .find-the-city .nextBtn {
-  background-color: var(--dark-accent);
-  color: var(--dark-bg);
-}
-
-/* === Responsive Layout === */
-@media (max-width: 600px) {
-  .find-the-city {
-    padding: 1rem;
+/* --- tablet and up: one row for Bix, the city and what to do --- */
+@media (min-width: 720px) {
+  .ftc { gap: 12px; padding: 8px 16px 16px; }
+  .ftc-back { padding: 0 0.9rem 0 0.6rem; }
+  .ftc-back-text {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
   }
+  .ftc-title { font-size: 1.35rem; }
 
-  .find-the-city .mapContainer {
-    height: clamp(300px, 55vh, 500px);
+  .ftc-quest {
+    grid-template-columns: auto auto minmax(0, 1fr);
+    grid-template-areas: "bix find status";
+    gap: 16px;
+    padding: 10px 20px;
   }
+  .ftc-bix { width: 72px; height: 72px; }
+  .ftc-status { justify-content: flex-end; font-size: 1.1rem; }
+  .ftc-message { text-align: right; }
+}
+
+/* Short, wide screens (a phone on its side): keep the card to one slim row. */
+@media (max-height: 520px) {
+  .ftc-bix { display: none; }
+  .ftc-quest { grid-template-areas: "find status"; grid-template-columns: auto minmax(0, 1fr); padding: 6px 14px; }
+  .ftc-city { font-size: 1.6rem; }
+  .ftc-find-label { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ftc-btn { transition: none; }
 }

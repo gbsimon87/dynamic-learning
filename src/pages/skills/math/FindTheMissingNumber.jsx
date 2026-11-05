@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import '../../../components/challenge/challenge-kit.css';
+import '../../../components/skills/FreePlayShell.css';
 import './FindTheMissingNumber.css';
 import SpeakButton from '../../../components/challenge/SpeakButton';
 import AnswerFeedbackLine from '../../../components/skills/AnswerFeedbackLine';
@@ -40,6 +42,8 @@ function generatePattern(skip) {
 
   return { sequence, missingIndex, correctAnswer, options: allOptions };
 }
+
+const SKIP_CHOICES = Array.from({ length: 12 }, (_, i) => i + 1);
 
 function FindTheMissingNumber() {
   const [started, setStarted] = useState(false);
@@ -95,74 +99,103 @@ function FindTheMissingNumber() {
 
   if (!started) {
     return (
-      <div className="wrapper">
-        <h2 className="prompt">🔁 Number Patterns Setup</h2>
+      <div className="free-play-page mn">
+        <header className="free-play-header">
+          <h1 className="free-play-title">Missing Number</h1>
+          <p className="free-play-intro">Pick a number from 1 to 12, then start.</p>
+        </header>
 
-        <div className="settingsGroup">
-          <label>Choose skip pattern:</label>
-          <select
-            value={skip}
-            onChange={(e) => setSkip(parseInt(e.target.value))}
-          >
-            <option value="2">Count by 2s</option>
-            <option value="3">Count by 3s</option>
-            <option value="5">Count by 5s</option>
-            <option value="10">Count by 10s</option>
-          </select>
+        <div className="challenge-container mn-panel">
+          <section className="mn-group" aria-labelledby="mn-skip-label">
+            <h2 id="mn-skip-label" className="mn-label">Count by which number?</h2>
+            <div className="free-play-levels mn-steps" role="group" aria-labelledby="mn-skip-label">
+              {SKIP_CHOICES.map((step) => (
+                <button
+                  key={step}
+                  type="button"
+                  className={`free-play-level${skip === step ? ' is-active' : ''}`}
+                  aria-pressed={skip === step}
+                  onClick={() => setSkip(step)}
+                >
+                  {step}
+                </button>
+              ))}
+            </div>
+            <p className="mn-example" aria-live="polite">
+              Counting by {skip}: {[0, 1, 2, 3].map((i) => skip + i * skip).join(', ')}, …
+            </p>
+          </section>
+
+          <button type="button" className="submit-btn mn-start" onClick={startPractice}>
+            Start Practice
+          </button>
         </div>
-
-        <button className="startBtn" onClick={startPractice}>
-          Start Practice ➡️
-        </button>
       </div>
     );
   }
 
-  const displayedSequence = question.sequence
-    .map((num, i) => (i === question.missingIndex ? '__' : num))
+  const spokenPattern = question.sequence
+    .map((num, i) => (i === question.missingIndex ? 'blank' : num))
     .join(', ');
 
   return (
-    <div className="wrapper">
-      <div className="score">
-        Score: {score} / {total}
+    <div className="free-play-page mn">
+      <div className="challenge-container mn-panel mn-play">
+        <p className="mn-score" aria-live="polite">
+          Score: {score} / {total}
+        </p>
+
+        <h1 className="mn-solve">What number is missing?</h1>
+
+        <div className="mn-sequence" ref={fb.answerRef}>
+          <ol className="mn-tiles" aria-label="Number pattern">
+            {question.sequence.map((num, i) => (
+              <li
+                key={i}
+                className={`mn-tile${i === question.missingIndex ? ' is-missing' : ''}${i === question.missingIndex && selected !== null ? ' is-revealed' : ''}`}
+              >
+                {i === question.missingIndex
+                  ? (selected !== null ? question.correctAnswer : <span aria-label="missing">?</span>)
+                  : num}
+              </li>
+            ))}
+          </ol>
+          <SpeakButton text={`What number is missing? ${spokenPattern}`} label="Hear the pattern" compact />
+        </div>
+
+        {selected !== null && !isCorrect && <p className="mn-reveal">The missing number was {question.correctAnswer}.</p>}
+        <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
+
+        <div className="mn-options">
+          {question.options.map((option) => {
+            const isThisCorrect = option === question.correctAnswer;
+            const isThisSelected = option === selected;
+
+            let className = 'mn-option';
+            if (selected !== null) {
+              if (isThisCorrect) className += ' is-correct';
+              else if (isThisSelected) className += ' is-wrong';
+              else className += ' is-dimmed';
+            }
+
+            return (
+              <button
+                key={option}
+                type="button"
+                className={className}
+                onClick={() => handleSelect(option)}
+                disabled={selected !== null}
+              >
+                {option}
+              </button>
+            );
+          })}
+        </div>
+
+        <button type="button" className="mn-restart" onClick={handleRestart}>
+          Change pattern
+        </button>
       </div>
-
-      <h2 className="prompt">What number is missing?</h2>
-
-      <div className="word" ref={fb.answerRef}>{displayedSequence} <SpeakButton text={`What number is missing? ${question.sequence.map((num, i) => i === question.missingIndex ? 'blank' : num).join(', ')}`} label="Hear the pattern" compact /></div>
-
-      {selected !== null && !isCorrect && <p className="answer-reveal">The missing number was {question.correctAnswer}.</p>}
-      <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
-
-      <div className="options">
-        {question.options.map((option) => {
-          const isThisCorrect = option === question.correctAnswer;
-          const isThisSelected = option === selected;
-
-          let className = 'optionBtn';
-          if (selected !== null) {
-            if (isThisCorrect) className += ' correct';
-            else if (isThisSelected) className += ' wrong';
-            else className += ' dimmed';
-          }
-
-          return (
-            <button
-              key={option}
-              className={className}
-              onClick={() => handleSelect(option)}
-              disabled={selected !== null}
-            >
-              {option}
-            </button>
-          );
-        })}
-      </div>
-
-      <button className="restartBtn" onClick={handleRestart}>
-        ⏮ Restart
-      </button>
     </div>
   );
 }

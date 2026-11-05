@@ -1,177 +1,208 @@
-.wrapper {
+/* Missing Number. Page frame, panel, segmented picker and Start button come
+   from FreePlayShell.css and challenge-kit.css; colours are the kit's --ck-*
+   tokens, so both themes work. Every rule is scoped under .mn (CSS is global
+   here). */
+
+.mn .mn-panel {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
-  padding: 2rem;
-  max-width: 600px;
-  margin: 0 auto;
+  gap: 1.75rem;
 }
 
-.score {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--light-text);
-}
+.mn .mn-play { gap: 1.25rem; }
 
-body.dark .score {
-  color: var(--dark-text);
-}
-
-.prompt {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--light-text);
-}
-
-body.dark .prompt {
-  color: var(--dark-text);
-}
-
-.word {
-  font-size: 2.2rem;
-  font-weight: bold;
-  color: var(--light-text);
-  font-family: monospace;
-  background-color: var(--light-panel);
-  padding: 1.5rem 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-body.dark .word {
-  color: var(--dark-text);
-  background-color: var(--dark-panel);
-}
-
-.feedback {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.feedback.correct {
-  color: var(--light-accent);
-}
-
-.feedback.wrong {
-  color: #888;
-}
-
-body.dark .feedback.correct {
-  color: var(--dark-accent);
-}
-
-body.dark .feedback.wrong {
-  color: #aaa;
-}
-
-.options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-}
-
-.optionBtn {
-  font-size: 1.5rem;
-  padding: 0.75rem 1.5rem;
-  border: 2px solid var(--light-accent);
-  border-radius: 8px;
-  background-color: var(--light-panel);
-  color: var(--light-text);
-  cursor: pointer;
-  transition: all 0.2s;
-  font-weight: 600;
-  min-width: 80px;
-}
-
-.optionBtn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(239, 98, 108, 0.3);
-}
-
-body.dark .optionBtn {
-  background-color: var(--dark-panel);
-  border-color: var(--dark-accent);
-  color: var(--dark-text);
-}
-
-body.dark .optionBtn:hover:not(:disabled) {
-  box-shadow: 0 4px 8px rgba(132, 220, 207, 0.3);
-}
-
-.optionBtn.correct {
-  background-color: var(--light-accent);
-  color: white;
-  border-color: var(--light-accent);
-  transform: scale(1.05);
-}
-
-body.dark .optionBtn.correct {
-  background-color: var(--dark-accent);
-  color: var(--dark-bg);
-  border-color: var(--dark-accent);
-}
-
-.optionBtn.wrong {
-  background-color: #888;
-  color: white;
-  border-color: #888;
-}
-
-body.dark .optionBtn.wrong {
-  background-color: #555;
-  color: white;
-  border-color: #555;
-}
-
-.optionBtn.dimmed {
-  opacity: 0.4;
-}
-
-.settingsGroup {
+.mn .mn-group {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
   width: 100%;
 }
 
-.settingsGroup label {
-  font-weight: 600;
-  color: var(--light-text);
-}
-
-body.dark .settingsGroup label {
-  color: var(--dark-text);
-}
-
-select {
-  width: 80%;
-  max-width: 300px;
-}
-
-.startBtn,
-.restartBtn {
-  padding: 0.75rem 2rem;
+.mn .mn-label {
+  margin: 0;
   font-size: 1.2rem;
-  font-weight: 600;
-  border-radius: 8px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.mn .mn-steps {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  width: 100%;
+  max-width: 28rem;
+}
+
+.mn .mn-steps .free-play-level {
+  min-height: 56px;
+  padding: 0;
+  font-size: 1.3rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.mn .mn-example {
+  margin: 0.2rem 0 0;
+  padding: 0.5rem 1.1rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  background: var(--ck-muted);
+  border: 2px solid var(--ck-border);
+  border-radius: 12px;
+}
+
+.mn .mn-start {
+  min-width: 14rem;
+  margin-top: 0.25rem;
+  font-size: 1.3rem;
+}
+
+.mn .mn-start:hover,
+.mn .mn-restart:hover { filter: brightness(1.06); }
+
+.mn .mn-start:focus-visible,
+.mn .mn-restart:focus-visible,
+.mn .mn-option:focus-visible {
+  outline: 3px solid var(--ck-text);
+  outline-offset: 3px;
+}
+
+/* ---------- Playing ---------- */
+
+.mn .mn-score {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.mn .mn-solve {
+  margin: 0;
+  font-size: 1.4rem;
+  text-wrap: balance;
+}
+
+.mn .mn-sequence {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  max-width: 100%;
+  padding: 1.25rem clamp(0.75rem, 4vw, 2rem);
+  background: var(--ck-muted);
+  border: 2px solid var(--ck-border);
+  border-radius: 20px;
+}
+
+.mn .mn-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mn .mn-tile {
+  display: grid;
+  place-items: center;
+  min-width: 4.2rem;
+  min-height: 4.2rem;
+  padding: 0 0.75rem;
+  font-size: clamp(1.6rem, 6vw, 2.2rem);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--ck-text);
+  background: var(--ck-panel);
+  border: 2px solid var(--ck-border);
+  border-radius: 14px;
+}
+
+.mn .mn-tile.is-missing {
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--ck-text);
+}
+
+.mn .mn-tile.is-revealed {
+  color: var(--ck-on-accent);
+  background: var(--ck-accent);
+  border-style: solid;
+  border-color: var(--ck-accent);
+}
+
+.mn .mn-reveal {
+  margin: 0;
+  font-weight: 700;
+}
+
+.mn .mn-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.mn .mn-option {
+  min-width: 5.5rem;
+  min-height: 64px;
+  padding: 0 1.5rem;
+  font: inherit;
+  font-size: 1.6rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--ck-text);
+  background: var(--ck-panel);
+  border: 2px solid var(--ck-border);
+  border-radius: 14px;
   cursor: pointer;
-  background-color: var(--light-accent);
-  color: white;
-  border: none;
-  transition: all 0.2s;
+  transition: transform 160ms cubic-bezier(0.2, 0.9, 0.3, 1), border-color 160ms ease;
 }
 
-.startBtn:hover,
-.restartBtn:hover {
+.mn .mn-option:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(239, 98, 108, 0.3);
+  border-color: var(--ck-text);
 }
 
-body.dark .startBtn,
-body.dark .restartBtn {
-  background-color: var(--dark-accent);
-  color: var(--dark-bg);
+.mn .mn-option:disabled { cursor: default; }
+
+.mn .mn-option.is-correct {
+  color: var(--ck-on-accent);
+  background: var(--ck-accent);
+  border-color: var(--ck-accent);
+}
+
+.mn .mn-option.is-wrong {
+  background: var(--ck-muted);
+  border-style: dashed;
+  text-decoration: line-through;
+}
+
+.mn .mn-option.is-dimmed { opacity: 0.45; }
+
+.mn .mn-restart {
+  min-height: 48px;
+  padding: 0 1.4rem;
+  font: inherit;
+  font-weight: 700;
+  color: var(--ck-text);
+  background: transparent;
+  border: 2px solid var(--ck-border);
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+@media (max-width: 520px) {
+  .mn .mn-steps { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .mn .mn-tile { min-width: 3.4rem; min-height: 3.4rem; padding: 0 0.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mn .mn-option { transition: none; }
+  .mn .mn-option:hover:not(:disabled) { transform: none; }
 }

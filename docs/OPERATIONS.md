@@ -128,8 +128,6 @@ Source-confirmed on **2026-11-03**:
   and [SightWordPop.css](../src/pages/skills/english/SightWordPop.css), including
   bare `select` rules in the two Maths files. Scope changes one file at a time
   with visual checks.
-- [SynonymSafari.jsx](../src/pages/skills/english/SynonymSafari.jsx) still uses
-  unnamespaced `difficulty` browser storage.
 - [Reward merging](../shared/mergeRewards.js) uses conservative maxima/unions;
   simultaneous distinct activity can undercount. It is not an exact
   cross-device attempt ledger.

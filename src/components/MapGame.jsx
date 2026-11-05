@@ -1,10 +1,12 @@
 import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
+import { Link } from 'react-router';
 import * as turf from '@turf/turf';
 import { OSM_TILES } from '../data/osmTiles';
 import SpeakButton from './challenge/SpeakButton';
 import AnswerFeedbackLine from './skills/AnswerFeedbackLine';
 import { useAnswerFeedback } from './skills/useAnswerFeedback';
+import './MapGame.css';
 
 /**
  * `CONTINENT` values in countries.geojson that must never be asked as a
@@ -44,7 +46,7 @@ const normalizeName = str =>
     .toLowerCase()
     .trim();
 
-export default function MapGame({ geoJson, mode }) {
+export default function MapGame({ geoJson, mode, onModeChange }) {
   const fb = useAnswerFeedback();
   const missedRef = useRef(false);
   const lockedRef = useRef(false);
@@ -472,12 +474,9 @@ const continentGeoJson = useMemo(() => {
   };
 
   return (
-    <div
-      // MapContainer reads its own style only on mount, so the sea colour is a class.
-      className={mode === 'continents' ? 'mapgame mapgame--plain' : 'mapgame'}
-      style={{ position: 'relative', height: '100%', width: '100%' }}
-    >
-      <TopBar
+    // MapContainer reads its own style only on mount, so the sea colour is a class.
+    <div className={mode === 'continents' ? 'mapgame mapgame--plain' : 'mapgame'}>
+      <GameHeader
         feedback={fb.feedback}
         feedbackRef={fb.feedbackRef}
         answerRef={fb.answerRef}
@@ -490,34 +489,37 @@ const continentGeoJson = useMemo(() => {
         continentFilter={continentFilter}
         setContinentFilter={setContinentFilter}
         mode={mode}
+        onModeChange={onModeChange}
       />
 
-      <MapContainer
-        center={WORLD_CENTER}
-        zoom={WORLD_ZOOM}
-        minZoom={1.5}
-        // Whole zoom levels left Africa tiny on a 720px-tall screen: the next
-        // level in is just too big. WorldMap.css hides the tile seams this causes.
-        zoomSnap={0.25}
-        maxZoom={6}
-        style={{ height: '100%', width: '100%' }}
-        worldCopyJump={true}
-        zoomControl={false}
-      >
-        {/* Continents draw on plain sea: labelled tiles would name the answer. */}
-        {mode === 'countries' && <TileLayer {...OSM_TILES} />}
+      <div className="mapgame-stage">
+        <MapContainer
+          className="mapgame-map"
+          center={WORLD_CENTER}
+          zoom={WORLD_ZOOM}
+          minZoom={1.5}
+          // Whole zoom levels left Africa tiny on a 720px-tall screen: the next
+          // level in is just too big. WorldMap.css hides the tile seams this causes.
+          zoomSnap={0.25}
+          maxZoom={6}
+          worldCopyJump={true}
+          zoomControl={false}
+        >
+          {/* Continents draw on plain sea: labelled tiles would name the answer. */}
+          {mode === 'countries' && <TileLayer {...OSM_TILES} />}
 
-        {/* react-leaflet ignores `data` changes, so the key remounts it. */}
-        <GeoJSON
-          key={mode === 'continents' ? mode : `${mode}-${continentFilter}`}
-          data={mode === 'continents' ? continentGeoJson : countryGeoJson}
-          style={styleFeature}
-          onEachFeature={onEachFeature}
-        />
+          {/* react-leaflet ignores `data` changes, so the key remounts it. */}
+          <GeoJSON
+            key={mode === 'continents' ? mode : `${mode}-${continentFilter}`}
+            data={mode === 'continents' ? continentGeoJson : countryGeoJson}
+            style={styleFeature}
+            onEachFeature={onEachFeature}
+          />
 
-        <FitToContinent continent={mode === 'continents' ? 'All' : continentFilter} />
-
-      </MapContainer>
+          <FitToContinent continent={mode === 'continents' ? 'All' : continentFilter} />
+          <KeepMapSized />
+        </MapContainer>
+      </div>
     </div>
   );
 }
@@ -539,12 +541,9 @@ function FitToContinent({ continent }) {
       map.flyTo(WORLD_CENTER, WORLD_ZOOM, { animate });
       return;
     }
-    // Keep the continent clear of the HUD floating over the top of the map.
-    const hud = map.getContainer().parentElement?.querySelector('.mapgame-hud');
-    const top = (hud?.offsetHeight ?? 0) + 24;
     map.flyToBounds(bounds, {
       animate,
-      paddingTopLeft: [16, top],
+      paddingTopLeft: [16, 16],
       paddingBottomRight: [16, 16],
     });
   }, [map, continent]);
@@ -552,80 +551,89 @@ function FitToContinent({ continent }) {
   return null;
 }
 
-// --- Top Bar ---
-function TopBar({ target, score, round, message, feedback, feedbackRef, answerRef, onReset, continents, continentFilter, setContinentFilter, mode }) {
+// Leaflet only watches the window. The header can change height (a long
+// target name or message wraps), so tell the map when its own box changes.
+function KeepMapSized() {
+  const map = useMap();
+  useEffect(() => {
+    if (typeof ResizeObserver === 'undefined') return undefined;
+    const ro = new ResizeObserver(() => map.invalidateSize({ pan: false }));
+    ro.observe(map.getContainer());
+    return () => ro.disconnect();
+  }, [map]);
+  return null;
+}
+
+// --- Page header: title, game choices and the live question, above the map ---
+function GameHeader({
+  target, score, round, message, feedback, feedbackRef, answerRef, onReset,
+  continents, continentFilter, setContinentFilter, mode, onModeChange,
+}) {
+  const isCountries = mode === 'countries';
   return (
-    <div
-      ref={answerRef}
-      className="mapgame-hud"
-      style={{
-        position: 'absolute',
-        top: 12,
-        left: '50%',
-        transform: 'translateX(-50%)',
-        background: 'var(--map-hud)',
-        padding: '10px 14px',
-        borderRadius: 10,
-        boxShadow: '0 6px 20px rgba(0,0,0,0.08)',
-        display: 'flex',
-        gap: 12,
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        // Without a max width, a long target name ("Democratic Republic of the
-        // Congo") pushed the HUD past the viewport edge; without a height cap it
-        // wrapped to 5-6 rows on a phone and covered the map the child must tap.
-        maxWidth: 'min(calc(100% - 24px), 640px)',
-        maxHeight: '40%',
-        overflowY: 'auto',
-        zIndex: 1000
-      }}
-      aria-live="polite"
-    >
-      <strong>Round:</strong> {round}
-      <span style={{ width: 10 }} />
-      <strong>Score:</strong> {score}
-      <span style={{ width: 10 }} />
-      <strong>Find:</strong>{' '}
-      <span style={{ fontWeight: 700, color: target ? 'var(--map-text)' : 'var(--map-muted)' }}>
-        {target ? target : 'Loading...'}
-      </span>
-      {target && <SpeakButton text={`Find ${target}`} label="Hear the place" compact />}
-      <AnswerFeedbackLine feedback={feedback} ref={feedbackRef} />
+    <header className="mapgame-header">
+      <Link to="/skills" className="mapgame-back">
+        <span aria-hidden="true">←</span>
+        <span className="mapgame-back-text">Back to Skills</span>
+      </Link>
 
-      <select
-        disabled={mode === 'continents'}
-        value={continentFilter}
-        onChange={(e) => setContinentFilter(e.target.value)}
-        style={{
-          border: '1px solid var(--map-border)',
-          borderRadius: 8,
-          padding: '6px 8px',
-          cursor: mode === 'continents' ? 'not-allowed' : 'pointer',
-          opacity: mode === 'continents' ? 0.6 : 1,
-        }}
-      >
+      <h1 className="mapgame-title">
+        {isCountries ? '🌍 Country Finder' : '🗺️ Continent Finder'}
+      </h1>
 
-        {continents.map(cont => (
-          <option key={cont} value={cont}>{cont}</option>
-        ))}
-      </select>
+      <div className="mapgame-setup">
+        <div className="mapgame-modes" role="group" aria-label="Map game mode">
+          {['countries', 'continents'].map((choice) => (
+            <button
+              key={choice}
+              type="button"
+              className="mapgame-mode"
+              aria-pressed={mode === choice}
+              onClick={() => onModeChange(choice)}
+            >
+              {choice === 'countries' ? 'Countries' : 'Continents'}
+            </button>
+          ))}
+        </div>
 
-      <button
-        onClick={onReset}
-        style={{
-          border: '1px solid var(--map-border)',
-          background: 'var(--map-chip)',
-          color: 'var(--map-text)',
-          padding: '6px 10px',
-          borderRadius: 8,
-          cursor: 'pointer'
-        }}
-      >
+        {/* Only countries can be filtered by region; continents are the whole map. */}
+        {isCountries && (
+          <select
+            className="mapgame-select"
+            aria-label="Region"
+            value={continentFilter}
+            onChange={(e) => setContinentFilter(e.target.value)}
+          >
+            {continents.map((cont) => (
+              <option key={cont} value={cont}>{cont === 'All' ? 'All regions' : cont}</option>
+            ))}
+          </select>
+        )}
+      </div>
+
+      <button type="button" className="mapgame-reset" onClick={onReset}>
         Reset
       </button>
 
-      <em style={{ color: 'var(--map-text)' }}>{message}</em>
-    </div>
+      <div ref={answerRef} className="mapgame-quest" aria-live="polite">
+        <div className="mapgame-find">
+          <span className="mapgame-find-label">Find</span>
+          <strong className={target ? 'mapgame-target' : 'mapgame-target is-idle'}>
+            {target ? target : 'Loading...'}
+          </strong>
+          {target && <SpeakButton text={`Find ${target}`} label="Hear the place" compact />}
+        </div>
+
+        <div className="mapgame-status">
+          <AnswerFeedbackLine feedback={feedback} ref={feedbackRef} />
+          <span className="mapgame-message">{message}</span>
+        </div>
+
+        <p className="mapgame-stats">
+          <span>Round <b>{round}</b></span>
+          <span>Score <b>{score}</b></span>
+        </p>
+      </div>
+    </header>
   );
 }

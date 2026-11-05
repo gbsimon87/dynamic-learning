@@ -1,5 +1,4 @@
-import { useState, useEffect, useContext, useRef, useCallback } from 'react';
-import { ThemeContext } from '../../../context/theme-context';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import './NumberBonds.css';
 import SpeakButton from '../../../components/challenge/SpeakButton';
 import AnswerFeedbackLine from '../../../components/skills/AnswerFeedbackLine';
@@ -16,6 +15,13 @@ function shuffle(array) {
 }
 
 const MAX_PAIRS = 6;
+const MIN_TARGET = 2;
+const MAX_TARGET = 100;
+const PRESET_TARGETS = [5, 10, 20];
+const MODES = [
+  { id: 'match', label: 'Match cards' },
+  { id: 'practice', label: 'Practice' },
+];
 // Below this many pairs the memory game is trivial, so the UI warns instead.
 const MIN_USEFUL_PAIRS = 3;
 
@@ -48,7 +54,6 @@ function generateCards(target) {
 }
 
 export default function NumberBonds() {
-  const { theme } = useContext(ThemeContext);
   const [target, setTarget] = useState(10);
   const [isCustom, setIsCustom] = useState(false);
   // Draft text for the custom-target box. The input used to be uncontrolled and
@@ -69,7 +74,7 @@ export default function NumberBonds() {
   const commitCustomTarget = () => {
     const parsed = parseInt(customDraft, 10);
     if (Number.isNaN(parsed)) return;
-    const clamped = Math.min(100, Math.max(2, parsed));
+    const clamped = Math.min(MAX_TARGET, Math.max(MIN_TARGET, parsed));
     setCustomDraft(String(clamped));
     setTarget(clamped);
   };
@@ -206,150 +211,177 @@ export default function NumberBonds() {
     }
   };
 
+  const pairCount = pairCountForTarget(target);
+  const presetActive = (n) => !isCustom && target === n;
+
+  const chooseMode = (next) => {
+    if (next !== mode) setMode(next);
+  };
+
+  const stepCustom = (delta) => {
+    const base = Number.isNaN(parseInt(customDraft, 10)) ? target : parseInt(customDraft, 10);
+    const next = Math.min(MAX_TARGET, Math.max(MIN_TARGET, base + delta));
+    setCustomDraft(String(next));
+    setTarget(next);
+  };
+
   return (
-    <div className={`bonds-wrapper ${theme}`}>
-      {/* Header */}
-      <div className="bonds-header">
-        <h2 className="bonds-title">🔢 Number Bonds</h2>
+    <div className="free-play-page nb">
+      <header className="free-play-header">
+        <h1 className="free-play-title">Number Bonds</h1>
+        <p className="free-play-intro">Two numbers that add up to your target.</p>
+      </header>
 
-        <div className="bonds-controls">
-          <div className="bonds-select">
-            <label htmlFor="target">Target:</label>
-            <select
-              id="target"
-              value={isCustom ? 'custom' : String(target)}  // ← FIX: use isCustom flag
-              onChange={(e) => {
-                const val = e.target.value;
-                if (val === 'custom') {
-                  setIsCustom(true);  // ← FIX: set flag instead
-                } else {
-                  setIsCustom(false);  // ← FIX: clear flag for preset values
-                  setTarget(parseInt(val));
-                }
-              }}
-            >
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="custom">Custom</option>
-            </select>
-
-            {isCustom && (
-              <input
-                type="number"
-                min="2"
-                max="100"
-                placeholder="Enter number"
-                className="bonds-custom-input"
-                value={customDraft}
-                onChange={(e) => setCustomDraft(e.target.value)}
-                onBlur={commitCustomTarget}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    commitCustomTarget();
-                  }
-                }}
-              />
-            )}
-          </div>
-
-          <div className="bonds-select">
-            <label htmlFor="mode">Mode:</label>
-            <select
-              id="mode"
-              value={mode}
-              onChange={(e) => setMode(e.target.value)}
-            >
-              <option value="match">Match Mode</option>
-              <option value="practice">Practice Mode</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      {/* Match Mode */}
-      {mode === 'match' && (
-        <>
-          <div className="bonds-score">
-            Pairs: {matches} / {cards.length / 2} | Tries: {tries}
-          </div>
-
-          <p className="bonds-prompt">Find two numbers that add up to <strong>{target}</strong> <SpeakButton getText={() => `Find two numbers that add up to ${target}. Shown numbers: ${cards.filter((card) => flipped.includes(card.id) || matched.includes(card.id)).map((card) => card.value).join(', ') || 'Flip a card first'}.`} resetKey={cards.map((card) => card.id).join('|')} label="Hear shown numbers" compact /></p>
-
-          {pairCountForTarget(target) < MIN_USEFUL_PAIRS && (
-            <p className="bonds-notice">
-              Only {pairCountForTarget(target)}{' '}
-              {pairCountForTarget(target) === 1 ? 'pair adds' : 'pairs add'} up to{' '}
-              {target} — pick a bigger target for a longer game.
-            </p>
-          )}
-
-          <div className="bonds-grid" ref={fb.answerRef}>
-            {cards.map((card) => {
-              const isFlipped = flipped.includes(card.id) || matched.includes(card.id);
-              return (
+      <div className="challenge-container nb-panel">
+        <div className="nb-controls">
+          <section className="nb-group" aria-labelledby="nb-target-label">
+            <h2 id="nb-target-label" className="nb-label">Target</h2>
+            <div className="free-play-levels" role="group" aria-labelledby="nb-target-label">
+              {PRESET_TARGETS.map((n) => (
                 <button
+                  key={n}
                   type="button"
-                  key={card.id}
-                  className={`bonds-card ${isFlipped ? 'flipped' : ''} ${matched.includes(card.id) ? 'matched' : ''
-                    }`}
-                  onClick={() => handleFlip(card.id)}
-                  disabled={matched.includes(card.id) || flipped.length === 2}
-                  aria-label={isFlipped ? `Number ${card.value}` : 'Hidden number card'}
+                  className={`free-play-level${presetActive(n) ? ' is-active' : ''}`}
+                  aria-pressed={presetActive(n)}
+                  onClick={() => { setIsCustom(false); setTarget(n); }}
                 >
-                  <div className="bonds-card-inner">
-                    <div className="bonds-card-front">❓</div>
-                    <div className="bonds-card-back">{card.value}</div>
-                  </div>
+                  {n}
                 </button>
-              );
-            })}
-          </div>
-          <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
+              ))}
+              <button
+                type="button"
+                className={`free-play-level${isCustom ? ' is-active' : ''}`}
+                aria-pressed={isCustom}
+                onClick={() => {
+                  setIsCustom(true);
+                  setCustomDraft(String(target));
+                }}
+              >
+                Custom
+              </button>
+            </div>
+            {isCustom && (
+              <div className="nb-stepper" role="group" aria-label="Custom target">
+                <button type="button" className="nb-step" aria-label="One less" onClick={() => stepCustom(-1)} disabled={target <= MIN_TARGET}>−</button>
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  min={MIN_TARGET}
+                  max={MAX_TARGET}
+                  placeholder="?"
+                  aria-label="Custom target number"
+                  className="nb-stepper-input"
+                  value={customDraft}
+                  onChange={(e) => setCustomDraft(e.target.value)}
+                  onBlur={commitCustomTarget}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      commitCustomTarget();
+                    }
+                  }}
+                />
+                <button type="button" className="nb-step" aria-label="One more" onClick={() => stepCustom(1)} disabled={target >= MAX_TARGET}>+</button>
+              </div>
+            )}
+          </section>
 
+          <section className="nb-group" aria-labelledby="nb-mode-label">
+            <h2 id="nb-mode-label" className="nb-label">Mode</h2>
+            <div className="free-play-levels" role="group" aria-labelledby="nb-mode-label">
+              {MODES.map(({ id, label }) => (
+                <button
+                  key={id}
+                  type="button"
+                  className={`free-play-level${mode === id ? ' is-active' : ''}`}
+                  aria-pressed={mode === id}
+                  onClick={() => chooseMode(id)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </section>
+        </div>
 
-          {feedback === 'done' && (
-            <div className="bonds-feedback correct">🎉 You matched them all!</div>
-          )}
-        </>
-      )}
+        {/* Match Mode */}
+        {mode === 'match' && (
+          <>
+            <div className="nb-score" aria-live="polite">
+              <span className="nb-stat">Pairs <strong>{matches} / {cards.length / 2}</strong></span>
+              <span className="nb-stat">Tries <strong>{tries}</strong></span>
+            </div>
 
-      {/* Practice Mode */}
-      {mode === 'practice' && question && (
-        <div className="practice-container" ref={fb.answerRef}>
-          <SpeakButton text={`${question.a} plus what equals ${target}?`} label="Hear the equation" compact />
-          <div className="practice-equation">
-            <span>{question.a}</span>
-            <span> + </span>
-            <div className="practice-input-group">
+            <p className="nb-prompt">
+              Find two numbers that add up to <strong>{target}</strong>{' '}
+              <SpeakButton getText={() => `Find two numbers that add up to ${target}. Shown numbers: ${cards.filter((card) => flipped.includes(card.id) || matched.includes(card.id)).map((card) => card.value).join(', ') || 'Flip a card first'}.`} resetKey={cards.map((card) => card.id).join('|')} label="Hear shown numbers" compact />
+            </p>
+
+            {pairCount < MIN_USEFUL_PAIRS && (
+              <p className="nb-notice">
+                Only {pairCount} {pairCount === 1 ? 'pair adds' : 'pairs add'} up to {target} — pick a bigger target for a longer game.
+              </p>
+            )}
+
+            <div className="nb-grid" ref={fb.answerRef}>
+              {cards.map((card) => {
+                const isMatched = matched.includes(card.id);
+                const isFlipped = flipped.includes(card.id) || isMatched;
+                return (
+                  <button
+                    type="button"
+                    key={card.id}
+                    className={`nb-card${isFlipped ? ' flipped' : ''}${isMatched ? ' matched' : ''}`}
+                    onClick={() => handleFlip(card.id)}
+                    disabled={isMatched || flipped.length === 2}
+                    aria-label={isFlipped ? `Number ${card.value}` : 'Hidden number card'}
+                  >
+                    <span className="nb-card-inner">
+                      <span className="nb-card-front">?</span>
+                      <span className="nb-card-back">{card.value}</span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
+
+            {feedback === 'done' && (
+              <p className="nb-done" role="status">🎉 You matched them all!</p>
+            )}
+          </>
+        )}
+
+        {/* Practice Mode */}
+        {mode === 'practice' && question && (
+          <div className="nb-practice" ref={fb.answerRef}>
+            <div className="nb-equation">
+              <span className="nb-eq-num">{question.a}</span>
+              <span className="nb-eq-sign" aria-hidden="true">+</span>
               <input
                 type="number"
+                inputMode="numeric"
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') handleSubmit(e);
                 }}
-                className="practice-input"
+                className="nb-answer"
                 min="0"
                 placeholder="?"
+                aria-label="Missing number"
               />
-              <button
-                type="button"
-                onClick={handleSubmit}
-                className="practice-btn"
-                disabled={!answer}
-              >
-                Check
-              </button>
+              <span className="nb-eq-sign" aria-hidden="true">=</span>
+              <span className="nb-eq-num">{target}</span>
+              <SpeakButton text={`${question.a} plus what equals ${target}?`} label="Hear the equation" compact />
             </div>
-
-            <span> = {target}</span>
+            <button type="button" onClick={handleSubmit} className="submit-btn nb-check" disabled={!answer}>
+              Check
+            </button>
+            <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
           </div>
-
-          <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

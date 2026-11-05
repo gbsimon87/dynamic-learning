@@ -6,6 +6,60 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-05 — Flag Finder restyle
+
+- `/skills/flag-finder` now runs on `FreePlayShell` like the other free-play games: star pips, read-aloud, shared feedback and Bix's cheer. The "Where in the world?" label and select are gone; the whole planet and each continent are the level chips. A wrong country greys out and the child tries again; the right one lights up and the next flag follows.
+- On desktop (≥900px wide, ≥600px tall) the whole game fits the window with no page scroll: flag beside the four answers, the flag absorbing spare height. Smaller screens scroll as normal. Question generation is the pure `src/data/freePlay/flagFinder.js`; the shell takes a new optional `className`.
+- Checked: lint, component tests, build, unit test for the generator; one batched browser pass at 1280×720, 1440×800, 1920×1080 and 390×844 in both themes (desktop `scrollHeight` equals the viewport). Not device-reviewed by a child. `npm test` has 4 failures in Year 6 lesson/story/award tests from the uncommitted Year 6 work, not this change.
+
+## 2026-11-05 — City Spotlight restyle and levels
+
+- `/skills/city-spotlight` now opens straight on a picture (the "Start Game" screen and the "Finished" screen are gone) and runs on `FreePlayShell` like the other free-play games: Easier / Medium / Harder levels (3 / 4 / 6 cities to choose from), star pips, read-aloud of the clue and the shared feedback. Rounds are endless; a wrong city greys out and the child tries again.
+- Layout uses the width: on a wide card the picture sits beside the clue and city buttons; on a phone the picture is on top. Type steps are page title, then the question, then the city buttons, then the clue. CSS is `cs-*` scoped (the old global `.score` / `.prompt` rules are gone).
+- New pure generator `src/data/freePlay/citySpotlight.js` (wrong choices never share the answer's country) with unit tests; `tests/components/citySpotlight.test.jsx` rewritten. Focused lint and tests only. **No browser check** (the Playwright browser was in use by another session): layout, both themes and phone width are unreviewed; full lint/test/build and device review pending.
+
+## 2026-11-05 — Speed Reader restyle, levels and more stories
+
+- `/skills/speed-reader` setup now sits in the shared challenge-kit panel (both themes via `--ck-*` tokens). A new Easy / Medium / Hard picker chooses which stories are offered and the starting pace (`src/data/freePlay/speedReader.js`: 70 / 110 / 160 wpm, 1 / 1 / 2 words at a time); speed and chunk size can still be changed.
+- The speed control is now a big single-thumb slider with a 🐢 and 🚀 at the ends, the same look as the Arithmetic Practice slider, plus Slow / Steady / Fast / Super quick buttons and a live "words a minute" readout. The focus-letter option is a switch.
+- "Your own story" is now one of two big cards ("A Bix story" / "Your own story") instead of a collapsed `<details>`; it shows a word count and still skips the questions.
+- `src/data/stories.json` grew from 6 to 18 stories (6 per level, 3 questions each). New unit tests (`src/data/freePlay/speedReader.test.js`, including a story-shape check) and `tests/components/speedReader.test.jsx`; `textSecurity` test updated for the own-story card. Focused lint and tests only. No browser check (requested); full lint/test/build and device review pending.
+
+## 2026-11-05 — Sight Word Pop restyle and levels
+
+- `/skills/sight-word-pop` now starts from Easier / Medium / Harder levels instead of two sliders (8 words in 60s with slow bubbles, up to 12 words in 45s with fast ones). Playing has a time bar, a big target-word banner with read-aloud, larger coloured bubbles (theme tokens, both themes), and a 1–3 star result screen with Play again / Change level and a Stop button.
+- Fixes: a bubble now scores by whether it matches the *current* target (a leftover bubble of the previous target no longer scores), and the game no longer ends while the last target is still floating. CSS is now `swp-*` scoped (the old global `.wrapper`/`.score`/`.prompt` rules are gone). New `tests/components/sightWordPop.test.jsx`. Focused lint and tests only. No browser check (requested); full lint/test/build and device review pending.
+
+## 2026-11-05 — Synonym Safari restyle and levels
+
+- `/skills/synonym-match` now runs on `FreePlayShell` like Word Builder: Easier / Medium / Harder levels, star pips, read-aloud and the shared feedback. It stays a flip-card memory game: Easier has 3 pairs of everyday words, Medium 4, Harder 6 with longer words (enormous / colossal). A right pair stays face up in a shared colour with a tick; a wrong pair shakes and turns back over. Rounds take one word family per pair, so no word can match anything but its own partner.
+- New pure generator `src/data/freePlay/synonyms.js` (bank grew from 16 pairs to 70 synonym families) with unit tests, and `tests/components/synonymSafari.test.jsx`. The unnamespaced `difficulty` localStorage key is no longer written (removed from `docs/OPERATIONS.md` known issues). CSS is now `sa-*` scoped. Focused lint and tests only. No browser check (requested); full lint/test/build and device review pending.
+
+## 2026-11-05 — Opposite Match restyle and levels
+
+- `/skills/opposite-match` now runs on `FreePlayShell` like Word Builder: Easier / Medium / Harder levels, star pips, read-aloud and the shared feedback. Easier matches three pairs of everyday words, Medium four pairs, Harder five pairs with longer words (ancient / modern). Matching can start from either column; a right match locks both words in a shared colour with a tick, a wrong tap shakes that word and the first word stays chosen. Rounds never hold two pairs sharing a word (`old`).
+- New pure generator `src/data/freePlay/opposites.js` (bank grew from 38 to 61 pairs) with unit tests; component test rewritten. CSS is now `om-*` scoped (the old global `.word-chip`/`.drop-zone` rules are gone). Focused lint and tests only. No browser check (requested); full lint/test/build and device review pending.
+
+## 2026-11-05 — Sentence Builder restyle and levels
+
+- `/skills/sentence-builder` now runs on `FreePlayShell` like Word Builder: Easier / Medium / Harder levels, star pips, read-aloud and the shared feedback. The old word-count sliders are replaced by levels: Easier 3–4 words, Medium 5–6, Harder 7–11. Easier and Medium keep the capital letter on the first word and the full stop on the last as clues; Harder drops both. Words fill numbered slots; tapping a placed word takes it back; a wrong order shakes only the misplaced words so the child can fix them.
+- New pure generator `src/data/freePlay/sentenceBuilder.js` with unit tests (bank grew to 47 sentences); component tests rewritten. Its CSS is now `sb-*` scoped (the old global `.word-chip`/`.check-btn` rules are gone). Focused lint and tests only. No browser check (requested); full lint/test/build and device review pending.
+
+## 2026-11-05 — Word Sorter restyle and levels
+
+- `/skills/word-sorter` now runs on `FreePlayShell` like Word Builder: Easier / Medium / Harder levels, star pips, read-aloud and the shared feedback. Easier sorts nouns and verbs (6 words), Medium adds adjectives, Harder adds adverbs with longer words (8 words). Each box has its own colour and a plain-language hint ("naming words"). A wrong box shakes and the word stays in the bank; a right one pops in as a chip. Ambiguous words (play, drink, light, fast…) are excluded.
+- New pure generator `src/data/freePlay/wordSorter.js` with unit tests, and `tests/components/wordSorter.test.jsx`. Focused lint and tests pass. No browser check (requested); full lint/test/build and device review pending.
+
+## 2026-11-05 — Number Bonds restyle
+
+- `/skills/number-bonds` now uses the shared free-play frame and kit tokens. The Target and Mode dropdowns are big segmented buttons (5/10/20/Custom; Match cards/Practice), Custom is a 52px −/+ stepper with a typed box clamped to 2–100, cards are larger flip tiles, and Practice uses the Arithmetic Practice equation panel. Rules are scoped under `.nb`.
+- New `tests/components/numberBonds.test.jsx`; `olderSkillsFeedback` test updated for the new controls. Focused tests and lint pass. No browser check (requested); full lint/test/build and device review pending.
+
+## 2026-11-05 — Arithmetic Practice setup restyle
+
+- `/skills/arithmetic-practice` now uses the shared free-play frame and kit tokens. Operations are big toggle chips, the mix option is a switch, operand count and number size are segmented pickers (Up to 10/20/50/100), and Min/Max is one dual-thumb slider with 44px thumbs and a live "From x to y" readout. The play screen shares the same look. All rules are scoped under `.ap`, removing global `select` and `input[type=range]` leaks.
+- New jsdom test `tests/components/mathPractice.test.jsx`; focused lint passes. One batched browser pass (desktop and 360px, both themes, drag including thumbs at the top end) found and fixed a chip wrap/clip. Full lint/test/build and physical-device review remain pending.
+
 ## 2026-11-05 — Year 6 English: Adding Endings to fer
 
 - Built all four curriculum slots and Bix lessons for **Adding Endings to fer**: visible root-and-suffix models, spelling choices, sorting, letter tiles and sentence spelling all teach when vowel-led suffixes do or do not double the `r` in `-fer` words. The course remains explicitly excluded from Year 6 awards.

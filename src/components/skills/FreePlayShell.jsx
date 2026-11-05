@@ -25,6 +25,8 @@ import "./FreePlayShell.css";
  * `levels`                    [{ id, label }] to replace Easier / Medium /
  *                             Harder (Reading Numbers picks a number range);
  *                             the ids are what makeQuestion receives.
+ * `className`                extra class on the page, for a game that fits the
+ *                             viewport or widens the card (scoped by that game).
  * `onLevelChange(id)`         told when the child picks a level, so a page with
  *                             several modes can keep the same one.
  * `beforeGame`                 a node between the heading and the game, e.g. a
@@ -56,7 +58,7 @@ function freshQuestion(makeQuestion, level, previous) {
   return question;
 }
 
-function FreePlayShell({ title, icon, intro, makeQuestion, render, initialLevel = 1, levels = LEVELS, beforeGame, onLevelChange }) {
+function FreePlayShell({ title, icon, intro, makeQuestion, render, initialLevel = 1, levels = LEVELS, beforeGame, onLevelChange, className = "" }) {
   const [level, setLevel] = useState(initialLevel);
   const [round, setRound] = useState(() => ({ n: 0, question: makeQuestion(Math.random, initialLevel) }));
   const [locked, setLocked] = useState(false);
@@ -125,7 +127,7 @@ function FreePlayShell({ title, icon, intro, makeQuestion, render, initialLevel 
   const stars = Math.floor(fb.correct / MILESTONE_EVERY);
 
   return (
-    <div className="free-play-page">
+    <div className={`free-play-page ${className}`.trim()}>
       <header className="free-play-header">
         <h1 className="free-play-title">
           {icon && <span aria-hidden="true">{icon} </span>}

@@ -1,18 +1,13 @@
-
-/* === Fit the map to one viewport, minus the sticky navbar (I20) === */
+/* === Fit the game to one viewport, minus the sticky navbar (I20) ===
+   The header and the map share this box, so nothing can scroll the page. */
 .worldmap-shell {
   height: calc(100dvh - var(--navbar-height, 56px));
   min-height: 24rem;
   overflow: hidden;
 }
 
-/* Keep the HUD compact on small screens so it doesn't blanket the map (I20). */
-@media (max-width: 600px) {
-  .mapgame-hud {
-    font-size: 0.85rem;
-    gap: 6px !important;
-    padding: 8px 10px !important;
-  }
+.worldmap-status {
+  padding: 0.5rem 1rem;
 }
 
 /* Fractional zoom scales tiles by a non-integer factor, leaving hairline seams
@@ -27,43 +22,4 @@
 /* Continent Finder has no tiles; the container itself is the sea. */
 .mapgame--plain .leaflet-container {
   background: var(--map-ocean);
-}
-
-/* Local game choices use a neutral segmented control, distinct from the
-   accent-filled navigation actions. The underline also signals selection
-   without relying on colour alone. */
-.worldmap-modes {
-  display: flex;
-  gap: 4px;
-  padding: 4px;
-  border: 1px solid var(--map-border);
-  border-radius: 12px;
-  background: var(--map-chip);
-}
-.worldmap-modes .worldmap-mode {
-  min-height: 44px;
-  padding: 8px 14px;
-  border: 0;
-  border-bottom: 3px solid transparent;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--map-muted);
-  font: inherit;
-  cursor: pointer;
-}
-.worldmap-modes .worldmap-mode[aria-pressed="true"] {
-  background: var(--light-panel);
-  color: var(--map-text);
-  border-bottom-color: var(--map-text);
-  font-weight: 700;
-}
-body.dark .worldmap-modes .worldmap-mode[aria-pressed="true"] {
-  background: var(--dark-panel);
-}
-.worldmap-modes .worldmap-mode:hover {
-  color: var(--map-text);
-}
-.worldmap-modes .worldmap-mode:focus-visible {
-  outline: 2px solid var(--map-text);
-  outline-offset: 2px;
 }

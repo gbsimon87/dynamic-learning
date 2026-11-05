@@ -1,165 +1,76 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import cities from '../../../data/cities.json';
-import './CitySpotlight.css';
-import SpeakButton from '../../../components/challenge/SpeakButton';
-import AnswerFeedbackLine from '../../../components/skills/AnswerFeedbackLine';
-import { useAnswerFeedback } from '../../../components/skills/useAnswerFeedback';
+import { useState } from "react";
+import FreePlayShell from "../../../components/skills/FreePlayShell";
+import { LEVELS, makeCityQuestion } from "../../../data/freePlay/citySpotlight";
+import "./CitySpotlight.css";
 
-function shuffle(array) {
-  const a = [...array];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
+const MISSING_PICTURE =
+  'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23ddd" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" fill="%23666"%3EPicture not found%3C/text%3E%3C/svg%3E';
+
+/**
+ * City Spotlight — a famous place appears and the child names its city.
+ * Endless rounds on the free-play loop. A wrong tap greys that city out and the
+ * child tries again; the right one lights up and the next picture follows.
+ * Harder levels offer more cities to choose from. Finding cities on a map is
+ * its own game: see FindTheCity.jsx.
+ */
+function CitySpotlight() {
+  return (
+    <FreePlayShell
+      title="City Spotlight"
+      icon="🏙️"
+      intro="Look at the picture and pick the city."
+      makeQuestion={makeCityQuestion}
+      levels={LEVELS}
+      className="city-spotlight-page"
+      render={(props) => <Question {...props} />}
+    />
+  );
 }
 
-// Match the picture to the city. Finding cities on a map is its own game:
-// see FindTheCity.jsx.
-export default function CitySpotlight() {
-  const [started, setStarted] = useState(false);
-  const [pool, setPool] = useState([]);
-  const [current, setCurrent] = useState(null);
-  const [selected, setSelected] = useState(null);
-  const [score, setScore] = useState(0);
-  const [total, setTotal] = useState(0);
-  const fb = useAnswerFeedback();
-  const clearFeedback = fb.clear;
-  const selectedRef = useRef(false);
+function Question({ question, submit, locked }) {
+  const [missed, setMissed] = useState([]);
 
-  // ---- Hooks ----
-  useEffect(() => {
-    setPool(shuffle(cities));
-  }, []);
-
-  const options = useMemo(() => {
-    if (!current) return [];
-    const other = shuffle(cities.filter(c => c.name !== current.name)).slice(0, 3);
-    return shuffle([...other.map(o => o.name), current.name]);
-  }, [current]);
-
-  // ---- Handlers ----
-  function startGame() {
-    fb.reset();
-    selectedRef.current = false;
-    setStarted(true);
-    setScore(0);
-    setTotal(0);
-    setSelected(null);
-    loadNext();
-  }
-
-  const loadNext = useCallback(() => {
-    if (pool.length === 0) {
-      setCurrent(null);
-      return;
-    }
-    const [next, ...rest] = pool;
-    setCurrent(next);
-    setPool(rest);
-    selectedRef.current = false;
-    setSelected(null);
-    clearFeedback();
-  }, [pool, clearFeedback]);
-
-  useEffect(() => {
-    if (started && current && selected !== null) {
-      const timer = setTimeout(loadNext, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [started, selected, current, loadNext]);
-
-  function handleSelect(answerName) {
-    if (selectedRef.current || selected !== null) return;
-    selectedRef.current = true;
-    setSelected(answerName);
-    fb.answer(answerName === current.name);
-    setTotal(t => t + 1);
-    if (answerName === current.name) setScore(s => s + 1);
-  }
-
-  // ---- Render ----
-  if (!started) {
-    return (
-      <div className="city-spotlight">
-        <h2>City Spotlight</h2>
-        <p className="intro">Look at the picture and pick the city.</p>
-        <button onClick={startGame} className="startBtn">
-          Start Game
-        </button>
-      </div>
-    );
-  }
-
-  if (current === null) {
-    return (
-      <div className="city-spotlight">
-        <h2>🎉 Finished!</h2>
-        <div className="score">
-          Score: {score} / {total}
-        </div>
-        <button
-          onClick={() => {
-            setStarted(false);
-            setPool(shuffle(cities));
-          }}
-          className="restartBtn"
-        >
-          Play Again
-        </button>
-      </div>
-    );
-  }
-
-  // ---- Fallback-safe <picture> block ----
-  function renderImage() {
-    const handleError = e => {
-      console.warn(`⚠️ Failed to load ${current.image}`);
-      // Use a generic placeholder or hide the image
-      e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23ddd" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" fill="%23666"%3EImage not found%3C/text%3E%3C/svg%3E';
-    };
-
-    return (
-      <img
-        className="cityImage"
-        key={current.name}
-        src={current.image}
-        alt="A famous place in the city"
-        loading="lazy"
-        onError={handleError}
-      />
-    );
-  }
+  const choose = (name) => {
+    if (locked || missed.includes(name)) return;
+    const correct = name === question.answer;
+    if (!correct) setMissed((names) => [...names, name]);
+    submit(correct);
+  };
 
   return (
-    <div className="city-spotlight">
-      <div className="score">
-        Score: {score} / {total}
-      </div>
+    <div className="cs-board">
+      <img
+        className="cs-image"
+        src={question.image}
+        alt="A famous place in the city"
+        onError={(e) => {
+          e.currentTarget.onerror = null;
+          e.currentTarget.src = MISSING_PICTURE;
+        }}
+      />
 
-      <h2 className="prompt">{current.hint} <SpeakButton text={`${current.hint} Which city is this?`} label="Hear the hint" compact /></h2>
-      <div ref={fb.answerRef}>{renderImage()}</div>
-      <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
-
-      <div className="options">
-        {options.map(opt => (
-          <button
-            key={opt}
-            className={`optionBtn ${selected !== null
-                ? opt === current.name
-                  ? 'correct'
-                  : opt === selected
-                    ? 'wrong'
-                    : 'dimmed'
-                : ''
-              }`}
-            onClick={() => handleSelect(opt)}
-            disabled={selected !== null}
-          >
-            {opt}
-          </button>
-        ))}
+      <div className="cs-side">
+        <p className="cs-clue">{question.hint}</p>
+        <div className="cs-options" data-count={question.choices.length} role="group" aria-label="Choose the city">
+          {question.choices.map((name) => {
+            const state = locked ? (name === question.answer ? "is-correct" : "is-dimmed") : missed.includes(name) ? "is-wrong" : "";
+            return (
+              <button
+                key={name}
+                type="button"
+                className={`cs-option ${state}`.trim()}
+                disabled={locked || missed.includes(name)}
+                onClick={() => choose(name)}
+              >
+                {name}
+                {state === "is-correct" && <span className="cs-tick" aria-hidden="true"> ✓</span>}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
 }
+
+export default CitySpotlight;

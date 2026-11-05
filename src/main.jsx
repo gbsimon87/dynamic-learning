@@ -76,6 +76,12 @@ const router = createBrowserRouter([
         ],
       },
 
+      // World Map draws its own back link inside its header so the map can fill
+      // the viewport without a separate back bar pushing the page into a scroll.
+      { path: "skills/world-map", lazy: () => import("./pages/skills/geography/WorldMap").then((m) => ({ Component: m.default })) },
+      // Find the City is the same: one viewport, its own back link.
+      { path: "skills/find-the-city", lazy: () => import("./pages/skills/geography/FindTheCity").then((m) => ({ Component: m.default })) },
+
       // === Skills games: every one lives under /skills/<name> with a shared back bar ===
       {
         element: <SkillGameLayout />,
@@ -102,10 +108,8 @@ const router = createBrowserRouter([
           { path: "skills/synonym-match", lazy: () => import("./pages/skills/english/SynonymSafari").then((m) => ({ Component: m.default })) },
           { path: "skills/sight-word-pop", lazy: () => import("./pages/skills/english/SightWordPop").then((m) => ({ Component: m.default })) },
           { path: "skills/speed-reader", lazy: () => import("./pages/skills/english/SpeedReader").then((m) => ({ Component: m.default })) },
-          { path: "skills/world-map", lazy: () => import("./pages/skills/geography/WorldMap").then((m) => ({ Component: m.default })) },
           { path: "skills/flag-finder", lazy: () => import("./pages/skills/geography/FlagFinder").then((m) => ({ Component: m.default })) },
           { path: "skills/city-spotlight", lazy: () => import("./pages/skills/geography/CitySpotlight").then((m) => ({ Component: m.default })) },
-          { path: "skills/find-the-city", lazy: () => import("./pages/skills/geography/FindTheCity").then((m) => ({ Component: m.default })) },
           { path: "skills/solar-system", lazy: () => import("./pages/skills/geography/SolarSystemPage").then((m) => ({ Component: m.default })) },
           { path: "skills/ocean-explorer", lazy: () => import("./pages/skills/geography/OceanExplorer").then((m) => ({ Component: m.default })) },
         ],

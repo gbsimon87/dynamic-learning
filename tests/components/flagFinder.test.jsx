@@ -32,19 +32,20 @@ describe('Flag Finder loading', () => {
     await waitFor(() => expect(fetchPage).toHaveBeenCalledTimes(2));
     expect(new URL(fetchPage.mock.calls[0][0]).searchParams.get('limit')).toBe('100');
     expect(new URL(fetchPage.mock.calls[1][0]).searchParams.get('offset')).toBe('4');
-    const flag = screen.getByRole('img');
+    const flag = screen.getByRole('img', { name: /^Flag of / });
     const original = flag.getAttribute('src');
     const correct = flag.getAttribute('alt').replace('Flag of ', '');
     fireEvent.click(screen.getByRole('button', { name: correct }));
     expect(document.querySelector('.free-play-feedback.challenge-feedback-correct')).toBeTruthy();
     const feedbackText = document.querySelector('.free-play-feedback').textContent;
     await act(async () => resolveSecond(response(records('Z', 'Asia'))));
-    expect(screen.getByRole('img').getAttribute('src')).toBe(original);
+    expect(screen.getByRole('img', { name: /^Flag of / }).getAttribute('src')).toBe(original);
     expect(document.querySelector('.free-play-feedback').textContent).toBe(feedbackText);
-    expect(screen.getByRole('option', { name: /whole planet \(8\)/ })).toBeTruthy();
-    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Asia' } });
-    expect(screen.getByRole('img').getAttribute('alt')).toMatch(/Flag of Z/);
-    expect(screen.getByText('Score: 0 / 0')).toBeTruthy();
+    expect(screen.queryByText('Where in the world?')).toBeNull();
+    expect(document.querySelector('.flag-continentPicker')).toBeNull();
+    fireEvent.click(await screen.findByRole('button', { name: 'Asia' }));
+    expect(screen.getByRole('button', { name: 'Asia' }).getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByRole('img', { name: /Flag of Z/ })).toBeTruthy();
     view.unmount();
     mount(store);
     expect(screen.queryByText('Loading flags...')).toBeNull();
@@ -68,9 +69,10 @@ describe('Flag Finder loading', () => {
     const store = createFlagCountriesStore({ fetchPage, pageDelayMs: 0 });
     mount(store);
     await screen.findByText('Some flags couldn’t load. You can keep playing.');
-    expect(screen.getAllByRole('button')).toHaveLength(5);
+    expect(screen.getAllByRole('button', { name: /^A\d$/ })).toHaveLength(4);
     fireEvent.click(screen.getByRole('button', { name: 'Try again' }));
-    await screen.findByRole('option', { name: /whole planet \(8\)/ });
+    await waitFor(() => expect(screen.queryByText('Some flags couldn’t load. You can keep playing.')).toBeNull());
+    expect(fetchPage).toHaveBeenCalledTimes(3);
   });
 
   it('aborts a stalled request and makes retry available', async () => {

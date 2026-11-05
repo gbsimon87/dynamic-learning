@@ -1,342 +1,429 @@
-.wrapper {
+/* Arithmetic Practice. The page frame, panel, segmented pickers and Start
+   button come from FreePlayShell.css and challenge-kit.css; colours are the
+   kit's --ck-* tokens, so both themes work. Every rule is scoped under .ap
+   (CSS is global here). */
+
+.ap {
+  --ap-thumb: 44px;
+}
+
+.ap .ap-panel {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
-  padding: 2rem;
-  max-width: 600px;
-  margin: 0 auto;
+  gap: 1.75rem;
 }
 
-/* ---------- Typography & Layout ---------- */
-
-.score,
-.prompt {
-  font-weight: 600;
-  color: var(--light-text);
-}
-
-.score {
-  font-size: 1.2rem;
-}
-
-.prompt {
-  font-size: 1.5rem;
-}
-
-body.dark .score,
-body.dark .prompt {
-  color: var(--dark-text);
-}
-
-/* ---------- Question Display ---------- */
-
-.word {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: var(--light-text);
-  font-family: monospace;
-  background-color: var(--light-panel);
-  padding: 1.5rem 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-body.dark .word {
-  color: var(--dark-text);
-  background-color: var(--dark-panel);
-}
-
-/* ---------- Feedback ---------- */
-
-.feedback {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.feedback.correct {
-  color: var(--light-accent);
-}
-
-.feedback.wrong {
-  color: #888;
-}
-
-body.dark .feedback.correct {
-  color: var(--dark-accent);
-}
-
-body.dark .feedback.wrong {
-  color: #aaa;
-}
-
-/* ---------- Options ---------- */
-
-.options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-}
-
-.optionBtn {
-  font-size: 1.5rem;
-  padding: 0.75rem 1.5rem;
-  border: 2px solid var(--light-accent);
-  border-radius: 8px;
-  background-color: var(--light-panel);
-  color: var(--light-text);
-  cursor: pointer;
-  transition: all 0.2s;
-  font-weight: 600;
-  min-width: 80px;
-}
-
-.optionBtn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(239, 98, 108, 0.3);
-}
-
-body.dark .optionBtn {
-  background-color: var(--dark-panel);
-  border-color: var(--dark-accent);
-  color: var(--dark-text);
-}
-
-body.dark .optionBtn:hover:not(:disabled) {
-  box-shadow: 0 4px 8px rgba(132, 220, 207, 0.3);
-}
-
-.optionBtn.correct {
-  background-color: var(--light-accent);
-  color: white;
-  border-color: var(--light-accent);
-  transform: scale(1.05);
-}
-
-body.dark .optionBtn.correct {
-  background-color: var(--dark-accent);
-  color: var(--dark-bg);
-}
-
-.optionBtn.wrong {
-  background-color: #888;
-  color: white;
-  border-color: #888;
-}
-
-body.dark .optionBtn.wrong {
-  background-color: #555;
-}
-
-.optionBtn.dimmed {
-  opacity: 0.4;
-}
-
-/* ---------- Settings Panel ---------- */
-
-.settingsGroup {
+.ap .ap-group {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
   width: 100%;
 }
 
-.settingsGroup label {
-  font-weight: 600;
-  color: var(--light-text);
-}
-
-body.dark .settingsGroup label {
-  color: var(--dark-text);
-}
-
-/* ---------- Buttons ---------- */
-
-.startBtn,
-.restartBtn {
-  padding: 0.75rem 2rem;
+.ap .ap-label {
+  margin: 0;
   font-size: 1.2rem;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  background-color: var(--light-accent);
-  color: white;
-  border: none;
-  transition: all 0.2s;
+  font-weight: 700;
+  line-height: 1.3;
+  text-wrap: balance;
 }
 
-.startBtn:hover,
-.restartBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(239, 98, 108, 0.3);
+.ap .ap-hint {
+  max-width: 30rem;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  opacity: 0.85;
 }
 
-body.dark .startBtn,
-body.dark .restartBtn {
-  background-color: var(--dark-accent);
-  color: var(--dark-bg);
+.ap .ap-start {
+  min-width: 14rem;
+  margin-top: 0.25rem;
+  font-size: 1.3rem;
 }
 
-/* ---------- Enhanced Select Styling ---------- */
-
-select {
-  width: 80%;
-  max-width: 300px;
-  padding: 0.6rem 1rem;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 2px solid var(--light-accent);
-  background-color: var(--light-panel);
-  color: var(--light-text);
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
+.ap .ap-start:hover,
+.ap .ap-restart:hover {
+  filter: brightness(1.06);
 }
 
-select:hover,
-select:focus {
-  border-color: var(--light-accent);
-  box-shadow: 0 0 8px rgba(239, 98, 108, 0.3);
-  outline: none;
+.ap .ap-start:focus-visible,
+.ap .ap-restart:focus-visible,
+.ap .ap-option:focus-visible {
+  outline: 3px solid var(--ck-text);
+  outline-offset: 3px;
 }
 
-body.dark select {
-  background-color: var(--dark-panel);
-  color: var(--dark-text);
-  border-color: var(--dark-accent);
-}
+/* ---------- Operation chips (real checkboxes, drawn as big buttons) ---------- */
 
-body.dark select:hover,
-body.dark select:focus {
-  box-shadow: 0 0 8px rgba(132, 220, 207, 0.3);
-}
-
-/* ---------- Custom Range Slider ---------- */
-
-input[type='range'] {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 80%;
-  max-width: 300px;
-  height: 6px;
-  border-radius: 5px;
-  background: linear-gradient(
-    to right,
-    var(--light-accent),
-    rgba(239, 98, 108, 0.3)
-  );
-  outline: none;
-  transition: background 0.2s;
-  cursor: pointer;
-}
-
-input[type='range']::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--light-accent);
-  box-shadow: 0 0 4px rgba(239, 98, 108, 0.4);
-  transition: transform 0.2s ease;
-}
-
-input[type='range']::-webkit-slider-thumb:hover {
-  transform: scale(1.2);
-}
-
-body.dark input[type='range'] {
-  background: linear-gradient(
-    to right,
-    var(--dark-accent),
-    rgba(132, 220, 207, 0.3)
-  );
-}
-
-body.dark input[type='range']::-webkit-slider-thumb {
-  background: var(--dark-accent);
-  box-shadow: 0 0 4px rgba(132, 220, 207, 0.4);
-}
-
-/* Firefox support */
-input[type='range']::-moz-range-track {
-  height: 6px;
-  border-radius: 5px;
-  background: linear-gradient(
-    to right,
-    var(--light-accent),
-    rgba(239, 98, 108, 0.3)
-  );
-}
-
-body.dark input[type='range']::-moz-range-track {
-  background: linear-gradient(
-    to right,
-    var(--dark-accent),
-    rgba(132, 220, 207, 0.3)
-  );
-}
-
-input[type='range']::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--light-accent);
-  border: none;
-  box-shadow: 0 0 4px rgba(239, 98, 108, 0.4);
-}
-
-body.dark input[type='range']::-moz-range-thumb {
-  background: var(--dark-accent);
-  box-shadow: 0 0 4px rgba(132, 220, 207, 0.4);
-}
-
-/* === Operation multi-select (R3) === */
-.opGrid {
+.ap .ap-chips {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 0.5rem 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
   width: 100%;
 }
 
-.opCheck {
+.ap .ap-chip {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.ap .ap-chip input,
+.ap .ap-switch input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.ap .ap-chip-face {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-weight: 600;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 56px;
+  padding: 0 1rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  border: 2px solid var(--ck-border);
+  border-radius: 14px;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.ap .ap-chip-sign {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.3rem;
+  line-height: 1;
+  border-radius: 50%;
+  background: var(--ck-panel);
+}
+
+.ap .ap-chip:hover .ap-chip-face {
+  border-color: var(--ck-text);
+}
+
+.ap .ap-chip input:checked + .ap-chip-face {
+  color: var(--ck-on-accent);
+  background: var(--ck-accent);
+  border-color: var(--ck-accent);
+}
+
+.ap .ap-chip input:checked + .ap-chip-face .ap-chip-sign {
+  color: var(--ck-text);
+}
+
+.ap .ap-chip input:focus-visible + .ap-chip-face,
+.ap .ap-switch input:focus-visible + .ap-switch-track {
+  outline: 3px solid var(--ck-text);
+  outline-offset: 3px;
+}
+
+/* ---------- Mix switch ---------- */
+
+.ap .ap-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 48px;
+  font-weight: 700;
   cursor: pointer;
-  color: var(--light-text);
 }
 
-.opCheck input {
-  width: 1.15rem;
-  height: 1.15rem;
-  accent-color: var(--light-accent);
-  cursor: pointer;
+.ap .ap-switch-track {
+  position: relative;
+  flex: none;
+  width: 56px;
+  height: 32px;
+  border-radius: 999px;
+  background: var(--ck-border);
+  transition: background-color 160ms ease;
 }
 
-.opCheck input:disabled {
-  cursor: default;
+.ap .ap-switch-track::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--ck-panel);
+  box-shadow: 0 1px 2px var(--panel-shadow), 0 2px 5px var(--panel-shadow);
+  transition: transform 200ms cubic-bezier(0.2, 0.9, 0.3, 1);
 }
 
-.opCheck:has(input:disabled) {
+.ap .ap-switch input:checked + .ap-switch-track {
+  background: var(--ck-accent);
+}
+
+.ap .ap-switch input:checked + .ap-switch-track::after {
+  transform: translateX(24px);
+}
+
+.ap .ap-switch.is-disabled {
   opacity: 0.55;
   cursor: default;
 }
 
-.settingsHint {
-  font-size: 0.85rem;
+.ap .ap-switch input:disabled {
+  cursor: default;
+}
+
+/* ---------- Number range ---------- */
+
+.ap .ap-readout {
+  margin: 0.2rem 0 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.ap .ap-readout strong {
+  display: inline-block;
+  min-width: 3.2rem;
+  padding: 0.1rem 0.7rem;
+  font-weight: 800;
+  background: var(--ck-muted);
+  border: 2px solid var(--ck-border);
+  border-radius: 12px;
+}
+
+.ap .ap-slider {
+  position: relative;
+  width: 100%;
+  max-width: 26rem;
+  height: calc(var(--ap-thumb) + 1.6rem);
+}
+
+.ap .ap-slider-track {
+  position: absolute;
+  top: calc(var(--ap-thumb) / 2 - 6px);
+  left: calc(var(--ap-thumb) / 2);
+  right: calc(var(--ap-thumb) / 2);
+  height: 12px;
+  border-radius: 999px;
+  background: var(--ck-muted);
+  box-shadow: inset 0 0 0 2px var(--ck-border);
+}
+
+.ap .ap-slider-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--lo) * 100%);
+  right: calc((1 - var(--hi)) * 100%);
+  border-radius: 999px;
+  background: var(--ck-accent);
+}
+
+.ap .ap-slider-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--ap-thumb);
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  pointer-events: none;
+  -webkit-appearance: none;
+  appearance: none;
+  touch-action: pan-y;
+}
+
+.ap .ap-slider-input:focus {
+  outline: none;
+}
+
+.ap .ap-slider-input::-webkit-slider-runnable-track {
+  height: var(--ap-thumb);
+  background: transparent;
+}
+
+.ap .ap-slider-input::-moz-range-track {
+  height: var(--ap-thumb);
+  background: transparent;
+}
+
+.ap .ap-slider-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: var(--ap-thumb);
+  height: var(--ap-thumb);
+  border-radius: 50%;
+  background: var(--ck-accent);
+  border: 5px solid var(--ck-panel);
+  box-shadow: 0 0 0 2px var(--ck-border), 0 2px 4px var(--panel-shadow), 0 6px 12px -2px var(--panel-shadow);
+  box-sizing: border-box;
+  pointer-events: auto;
+  cursor: grab;
+}
+
+.ap .ap-slider-input::-moz-range-thumb {
+  width: var(--ap-thumb);
+  height: var(--ap-thumb);
+  border-radius: 50%;
+  background: var(--ck-accent);
+  border: 5px solid var(--ck-panel);
+  box-shadow: 0 0 0 2px var(--ck-border), 0 2px 4px var(--panel-shadow), 0 6px 12px -2px var(--panel-shadow);
+  box-sizing: border-box;
+  pointer-events: auto;
+  cursor: grab;
+}
+
+.ap .ap-slider-input:active::-webkit-slider-thumb { cursor: grabbing; }
+.ap .ap-slider-input:active::-moz-range-thumb { cursor: grabbing; }
+
+.ap .ap-slider-input:focus-visible::-webkit-slider-thumb {
+  outline: 3px solid var(--ck-text);
+  outline-offset: 3px;
+}
+
+.ap .ap-slider-input:focus-visible::-moz-range-thumb {
+  outline: 3px solid var(--ck-text);
+  outline-offset: 3px;
+}
+
+.ap .ap-slider-ends {
+  position: absolute;
+  left: calc(var(--ap-thumb) / 2);
+  right: calc(var(--ap-thumb) / 2);
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
   opacity: 0.75;
-  color: var(--light-text);
 }
 
-body.dark .opCheck,
-body.dark .settingsHint {
-  color: var(--dark-text);
+/* ---------- Playing ---------- */
+
+.ap .ap-play {
+  gap: 1.25rem;
 }
 
-body.dark .opCheck input {
-  accent-color: var(--dark-accent);
+.ap .ap-score {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.ap .ap-solve {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.ap .ap-question {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  max-width: 100%;
+  padding: 1.25rem clamp(1rem, 4vw, 2rem);
+  background: var(--ck-muted);
+  border: 2px solid var(--ck-border);
+  border-radius: 20px;
+}
+
+.ap .ap-question-text {
+  font-size: clamp(1.9rem, 7vw, 2.6rem);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.ap .ap-reveal {
+  margin: 0;
+  font-weight: 700;
+}
+
+.ap .ap-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.ap .ap-option {
+  min-width: 5.5rem;
+  min-height: 64px;
+  padding: 0 1.5rem;
+  font: inherit;
+  font-size: 1.6rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--ck-text);
+  background: var(--ck-panel);
+  border: 2px solid var(--ck-border);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 160ms cubic-bezier(0.2, 0.9, 0.3, 1), border-color 160ms ease;
+}
+
+.ap .ap-option:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: var(--ck-text);
+}
+
+.ap .ap-option:disabled {
+  cursor: default;
+}
+
+.ap .ap-option.is-correct {
+  color: var(--ck-on-accent);
+  background: var(--ck-accent);
+  border-color: var(--ck-accent);
+}
+
+.ap .ap-option.is-wrong {
+  background: var(--ck-muted);
+  border-style: dashed;
+  text-decoration: line-through;
+}
+
+.ap .ap-option.is-dimmed {
+  opacity: 0.45;
+}
+
+.ap .ap-restart {
+  min-height: 48px;
+  padding: 0 1.4rem;
+  font: inherit;
+  font-weight: 700;
+  color: var(--ck-text);
+  background: transparent;
+  border: 2px solid var(--ck-border);
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+@media (max-width: 520px) {
+  .ap .ap-chip-face { gap: 0.4rem; padding: 0 0.5rem; font-size: 0.95rem; }
+  .ap .ap-chip-sign { width: 1.7rem; height: 1.7rem; }
+  .ap .free-play-levels { width: 100%; }
+  .ap .free-play-levels .free-play-level { flex: 1 1 auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ap .ap-chip-face,
+  .ap .ap-switch-track,
+  .ap .ap-switch-track::after,
+  .ap .ap-option { transition: none; }
+  .ap .ap-option:hover:not(:disabled) { transform: none; }
 }

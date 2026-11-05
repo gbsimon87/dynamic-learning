@@ -142,5 +142,293 @@
         "answer": 0
       }
     ]
+  },
+  {
+    "id": "red-balloon",
+    "title": "The Red Balloon",
+    "emoji": "🎈",
+    "band": "easy",
+    "text": "Sam got a red balloon at the fair. Then the wind pulled it away! It floated over the hill. A little girl caught it and gave it back. Sam said thank you and tied it to his wrist.",
+    "questions": [
+      {
+        "q": "What colour was the balloon?",
+        "options": ["Blue", "Red", "Green"],
+        "answer": 1
+      },
+      {
+        "q": "Where did the balloon float?",
+        "options": ["Over the hill", "Into the sea", "Into a tree"],
+        "answer": 0
+      },
+      {
+        "q": "How did Sam keep it safe?",
+        "options": ["He put it in his bag", "He tied it to his wrist", "He let it go"],
+        "answer": 1
+      }
+    ]
+  },
+  {
+    "id": "max-the-puppy",
+    "title": "Max the Puppy",
+    "emoji": "🐶",
+    "band": "easy",
+    "text": "Max is a small brown puppy. He loves to dig in the garden. Today he dug up a big bone! He ran to show Dad. Dad laughed and gave Max a great big hug.",
+    "questions": [
+      {
+        "q": "What colour is Max?",
+        "options": ["Black", "White", "Brown"],
+        "answer": 2
+      },
+      {
+        "q": "What did Max dig up?",
+        "options": ["A bone", "A ball", "A sock"],
+        "answer": 0
+      },
+      {
+        "q": "Who did Max show?",
+        "options": ["Mum", "Dad", "Gran"],
+        "answer": 1
+      }
+    ]
+  },
+  {
+    "id": "rainy-day",
+    "title": "The Rainy Day",
+    "emoji": "☔",
+    "band": "easy",
+    "text": "It rained all morning. Tom put on his yellow boots and went outside. He jumped in every puddle. Splash! Splash! Soon he was very wet, but he was very happy.",
+    "questions": [
+      {
+        "q": "What did Tom put on?",
+        "options": ["Yellow boots", "A red hat", "Blue gloves"],
+        "answer": 0
+      },
+      {
+        "q": "What did Tom jump in?",
+        "options": ["Leaves", "Puddles", "Snow"],
+        "answer": 1
+      },
+      {
+        "q": "How did Tom feel at the end?",
+        "options": ["Cross", "Sad", "Happy"],
+        "answer": 2
+      }
+    ]
+  },
+  {
+    "id": "star-bear",
+    "title": "Star Bear",
+    "emoji": "⭐",
+    "band": "easy",
+    "text": "Lily has a soft bear called Star. One night Star fell off her bed. Lily could not sleep. She found him on the floor and gave him a hug. Then she slept all night.",
+    "questions": [
+      {
+        "q": "What is the bear called?",
+        "options": ["Star", "Moon", "Sunny"],
+        "answer": 0
+      },
+      {
+        "q": "Why could Lily not sleep?",
+        "options": ["It was too hot", "Star fell off the bed", "She was hungry"],
+        "answer": 1
+      },
+      {
+        "q": "Where did Lily find Star?",
+        "options": ["In the garden", "Under a chair", "On the floor"],
+        "answer": 2
+      }
+    ]
+  },
+  {
+    "id": "garden-race",
+    "title": "The Garden Race",
+    "emoji": "🐌",
+    "band": "medium",
+    "text": "Sid the snail wanted to win the garden race. \"You are too slow!\" laughed the ladybird. Sid smiled and kept going, one tiny inch at a time. The ladybird stopped to eat a juicy leaf and fell asleep in the sun. When she woke up, Sid was already at the finish line. \"Slow and steady wins,\" said Sid.",
+    "questions": [
+      {
+        "q": "Who wanted to win the race?",
+        "options": ["Sid the snail", "The ladybird", "A bee"],
+        "answer": 0
+      },
+      {
+        "q": "What did the ladybird do?",
+        "options": ["She flew home", "She ate a leaf and fell asleep", "She helped Sid"],
+        "answer": 1
+      },
+      {
+        "q": "What did Sid say at the end?",
+        "options": ["\"I am tired.\"", "\"You are too slow!\"", "\"Slow and steady wins.\""],
+        "answer": 2
+      }
+    ]
+  },
+  {
+    "id": "night-market",
+    "title": "The Night Market",
+    "emoji": "🏮",
+    "band": "medium",
+    "text": "Every Friday, the town had a night market. Lanterns hung above the stalls and glowed orange and gold. Ravi bought warm bread from the baker and a paper kite from an old man. A musician played a drum beside the fountain, and Ravi tapped his feet to the beat. On the way home, the kite danced behind him in the breeze.",
+    "questions": [
+      {
+        "q": "When is the night market?",
+        "options": ["Every Friday", "Every Monday", "Every Sunday"],
+        "answer": 0
+      },
+      {
+        "q": "What did Ravi buy from the old man?",
+        "options": ["Warm bread", "A paper kite", "A drum"],
+        "answer": 1
+      },
+      {
+        "q": "Who played the drum?",
+        "options": ["The baker", "Ravi", "A musician"],
+        "answer": 2
+      }
+    ]
+  },
+  {
+    "id": "brave-little-boat",
+    "title": "The Brave Little Boat",
+    "emoji": "⛵",
+    "band": "medium",
+    "text": "A little red boat sat in the harbour and watched the big ships sail out to sea. \"I am too small,\" she sighed. One foggy morning, a fishing crew got lost. The little boat had a bright lamp, so she shone it across the water. The crew followed the light and reached the shore safely. After that, everyone knew how brave she was.",
+    "questions": [
+      {
+        "q": "What colour was the little boat?",
+        "options": ["Red", "Blue", "Yellow"],
+        "answer": 0
+      },
+      {
+        "q": "What was the weather like?",
+        "options": ["Sunny", "Foggy", "Snowy"],
+        "answer": 1
+      },
+      {
+        "q": "What helped the crew find the shore?",
+        "options": ["A map", "A loud horn", "Her bright lamp"],
+        "answer": 2
+      }
+    ]
+  },
+  {
+    "id": "late-bee",
+    "title": "The Bee Who Was Late",
+    "emoji": "🐝",
+    "band": "medium",
+    "text": "Bella the bee was always late for work. Each morning she stopped to watch the sunrise, and the other bees had already flown away. \"Where were you?\" asked the Queen. Bella showed her a field of purple flowers that she had spotted from the sky. The whole hive flew there and came home with sweet nectar. Now Bella is the first to know where the best flowers grow.",
+    "questions": [
+      {
+        "q": "Why was Bella late?",
+        "options": ["She watched the sunrise", "She was asleep", "She was lost"],
+        "answer": 0
+      },
+      {
+        "q": "What did Bella find?",
+        "options": ["A new hive", "A field of purple flowers", "A river"],
+        "answer": 1
+      },
+      {
+        "q": "Who asked, \"Where were you?\"",
+        "options": ["Her mum", "A frog", "The Queen"],
+        "answer": 2
+      }
+    ]
+  },
+  {
+    "id": "mountain-hut",
+    "title": "The Mountain Hut",
+    "emoji": "🏔️",
+    "band": "longer",
+    "text": "Nina and her grandad climbed a steep mountain path. The air grew cold and the clouds came close. After three hours, they reached a small wooden hut. Inside there was a stove, two beds and a shelf of old books. Grandad lit a fire and made hot chocolate. Outside, snow began to fall softly. Nina pressed her nose to the window and watched the white flakes cover the trees. \"This is the best day ever,\" she whispered. They fell asleep to the sound of the wind.",
+    "questions": [
+      {
+        "q": "Who climbed the mountain with Nina?",
+        "options": ["Her grandad", "Her teacher", "Her dog"],
+        "answer": 0
+      },
+      {
+        "q": "How long did the climb take?",
+        "options": ["One hour", "Three hours", "All day"],
+        "answer": 1
+      },
+      {
+        "q": "What did Grandad make?",
+        "options": ["Soup", "Toast", "Hot chocolate"],
+        "answer": 2
+      }
+    ]
+  },
+  {
+    "id": "clockmakers-cat",
+    "title": "The Clockmaker's Cat",
+    "emoji": "🕰️",
+    "band": "longer",
+    "text": "In a tiny shop on Mill Street lived a clockmaker and his grey cat, Tick. The shop was full of ticking clocks, big and small. Every day at noon, Tick sat by the window and waited for the cuckoo clock to sing. One day the little bird stopped popping out. The clockmaker sighed, because his hands were too big to reach the tiny gears. Tick wriggled inside the clock and nudged a stuck cog with his paw. Cuckoo! The bird popped out, and the whole shop felt happy again.",
+    "questions": [
+      {
+        "q": "What was the cat called?",
+        "options": ["Tock", "Tick", "Chime"],
+        "answer": 1
+      },
+      {
+        "q": "When did Tick wait for the cuckoo clock?",
+        "options": ["At noon", "At bedtime", "At breakfast"],
+        "answer": 0
+      },
+      {
+        "q": "How did Tick fix the clock?",
+        "options": ["He pulled a rope", "He rang a bell", "He nudged a stuck cog"],
+        "answer": 2
+      }
+    ]
+  },
+  {
+    "id": "lighthouse-night",
+    "title": "The Lighthouse Night",
+    "emoji": "🔦",
+    "band": "longer",
+    "text": "Ana's aunt looked after the lighthouse on Seal Rock. Each evening, Ana helped her climb ninety-nine steps to switch on the great lamp. One night, a storm blew in and the power went out. Aunt Rosa found a box of candles and some mirrors. Together they lit a ring of candles, and the mirrors sent the glow far across the waves. A ferry that had lost its way turned towards the light and reached the harbour safely. In the morning, the captain brought them a basket of apples.",
+    "questions": [
+      {
+        "q": "How many steps did they climb?",
+        "options": ["Nineteen", "Ninety-nine", "Nine hundred"],
+        "answer": 1
+      },
+      {
+        "q": "What went out in the storm?",
+        "options": ["The power", "The sun", "The sea"],
+        "answer": 0
+      },
+      {
+        "q": "What did the captain bring?",
+        "options": ["Fish", "Flowers", "A basket of apples"],
+        "answer": 2
+      }
+    ]
+  },
+  {
+    "id": "desert-fox",
+    "title": "The Desert Fox",
+    "emoji": "🦊",
+    "band": "longer",
+    "text": "Under the huge desert sky lived a small fox with enormous ears. Fennel slept all day in a cool burrow and came out when the sand turned chilly. One night, he heard a faint cry. A baby lizard was stuck under a heavy stone! Fennel pushed with his nose, then with his paws, until the stone rolled away. The lizard wriggled free and gave a happy flick of its tail. From then on, the lizards of the dunes always waved their tails when Fennel passed by.",
+    "questions": [
+      {
+        "q": "When did Fennel come out of his burrow?",
+        "options": ["At noon", "When the sand turned chilly", "In the rain"],
+        "answer": 1
+      },
+      {
+        "q": "What was stuck under the stone?",
+        "options": ["A baby lizard", "A mouse", "A beetle"],
+        "answer": 0
+      },
+      {
+        "q": "What did the lizards do afterwards?",
+        "options": ["Hid away", "Sang a song", "Waved their tails"],
+        "answer": 2
+      }
+    ]
   }
 ]

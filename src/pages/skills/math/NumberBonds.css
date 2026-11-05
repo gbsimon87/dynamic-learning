@@ -1,307 +1,295 @@
-.bonds-wrapper {
+/* Number Bonds. The page frame, panel and segmented pickers come from
+   FreePlayShell.css and challenge-kit.css; colours are the kit's --ck-*
+   tokens, so both themes work. Every rule is scoped under .nb (CSS is
+   global here). */
+
+.nb .nb-panel {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
-  padding: 1rem;
-  width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
-  box-sizing: border-box;
 }
 
-/* Header adjustments */
-.bonds-header {
+.nb .nb-controls {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 1.25rem 2.5rem;
   width: 100%;
-  gap: 0.75rem;
 }
 
-.bonds-title {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--light-text);
+.nb .nb-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.nb .nb-label {
   margin: 0;
-}
-body.dark .bonds-title {
-  color: var(--dark-text);
-}
-
-.bonds-select {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 600;
-}
-
-.bonds-select label {
-  color: var(--light-text);
-}
-body.dark .bonds-select label {
-  color: var(--dark-text);
-}
-
-.bonds-select select {
-  border: 2px solid var(--light-accent);
-  background-color: var(--light-panel);
-  border-radius: 8px;
-  padding: 0.3rem 0.5rem;
-  font-weight: 600;
-  cursor: pointer;
-  color: var(--light-text);
-}
-body.dark .bonds-select select {
-  border-color: var(--dark-accent);
-  background-color: var(--dark-panel);
-  color: var(--dark-text);
-}
-
-.bonds-score {
   font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--light-text);
-}
-body.dark .bonds-score {
-  color: var(--dark-text);
+  font-weight: 700;
 }
 
-.bonds-prompt {
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: var(--light-text);
-}
-body.dark .bonds-prompt {
-  color: var(--dark-text);
+.nb .nb-card:focus-visible,
+.nb .nb-step:focus-visible,
+.nb .nb-stepper-input:focus-visible,
+.nb .nb-answer:focus-visible,
+.nb .nb-check:focus-visible {
+  outline: 3px solid var(--ck-text);
+  outline-offset: 3px;
 }
 
-.bonds-grid {
+/* ---------- Custom target stepper ---------- */
+
+.nb .nb-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.nb .nb-step {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-  gap: 0.75rem;
-  width: 100%;
-  max-width: 500px;
-  justify-items: center;
-}
-
-.bonds-card {
-  perspective: 1000px;
-  cursor: pointer;
-  border: 0;
+  place-items: center;
+  width: 52px;
+  height: 52px;
   padding: 0;
-  background: transparent;
-}
-
-/* Card resizing logic */
-.bonds-card-inner {
-  position: relative;
-  width: clamp(70px, 20vw, 100px);
-  height: clamp(70px, 20vw, 100px);
-  transform-style: preserve-3d;
-  transition: transform 0.4s;
-}
-
-.bonds-card.flipped .bonds-card-inner {
-  transform: rotateY(180deg);
-}
-
-.bonds-card-front,
-.bonds-card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 12px;
-  backface-visibility: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 1.3rem;
-}
-
-.bonds-card-front {
-  background-color: var(--light-panel);
-  border: 2px solid var(--light-accent);
-  color: var(--light-accent);
-}
-body.dark .bonds-card-front {
-  background-color: var(--dark-panel);
-  border-color: var(--dark-accent);
-  color: var(--dark-accent);
-}
-
-.bonds-card-back {
-  background-color: var(--light-accent);
-  color: white;
-  transform: rotateY(180deg);
-}
-body.dark .bonds-card-back {
-  background-color: var(--dark-accent);
-  color: var(--dark-bg);
-}
-
-.bonds-card.matched .bonds-card-back {
-  opacity: 0.7;
-}
-
-.bonds-feedback {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-.bonds-feedback.correct {
-  color: var(--light-accent);
-}
-.bonds-feedback.wrong {
-  color: #888;
-  animation: shake 0.3s;
-}
-body.dark .bonds-feedback.correct {
-  color: var(--dark-accent);
-}
-body.dark .bonds-feedback.wrong {
-  color: #aaa;
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  75% { transform: translateX(6px); }
-}
-
-/* PRACTICE MODE STYLES */
-.practice-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.practice-equation {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--light-text);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-body.dark .practice-equation {
-  color: var(--dark-text);
-}
-
-.practice-input {
-  width: 60px;
-  font-size: 1.8rem;
-  text-align: center;
-  font-weight: 700;
-  border: 2px solid var(--light-accent);
-  border-radius: 8px;
-  padding: 0.3rem;
-  background: var(--light-panel);
-  color: var(--light-text);
-}
-.practice-input:focus {
-  outline: none;
-  border-color: var(--light-accent);
-}
-body.dark .practice-input {
-  background: var(--dark-panel);
-  border-color: var(--dark-accent);
-  color: var(--dark-text);
-}
-
-.bonds-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  align-items: center;
-  justify-content: flex-end;
-  width: 100%;
-}
-
-.practice-input-group {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.practice-btn {
-  background-color: var(--light-accent);
-  color: white;
+  font: inherit;
+  font-size: 1.7rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--ck-on-accent);
+  background: var(--ck-accent);
   border: none;
-  border-radius: 8px;
-  padding: 0.4rem 0.8rem;
-  font-weight: 600;
-  font-size: 1rem;
+  border-radius: 50%;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: filter 160ms ease, transform 160ms ease;
 }
 
-.practice-btn:hover:not(:disabled) {
+.nb .nb-step:hover:not(:disabled) {
+  filter: brightness(1.08);
   transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
-.practice-btn:disabled {
-  opacity: 0.5;
+.nb .nb-step:disabled {
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
-body.dark .practice-btn {
-  background-color: var(--dark-accent);
-  color: var(--dark-bg);
-}
-
-.bonds-custom-input {
-  width: 80px;
-  font-weight: 600;
-  font-size: 1rem;
-  border: 2px solid var(--light-accent);
-  border-radius: 8px;
-  padding: 0.25rem 0.4rem;
-  background-color: var(--light-panel);
-  color: var(--light-text);
+.nb .nb-stepper-input,
+.nb .nb-answer {
+  box-sizing: border-box;
+  font: inherit;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
   text-align: center;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  border: 2px solid var(--ck-border);
+  border-radius: 14px;
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
-body.dark .bonds-custom-input {
-  border-color: var(--dark-accent);
-  background-color: var(--dark-panel);
-  color: var(--dark-text);
+.nb .nb-stepper-input::-webkit-outer-spin-button,
+.nb .nb-stepper-input::-webkit-inner-spin-button,
+.nb .nb-answer::-webkit-outer-spin-button,
+.nb .nb-answer::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-/* On very small screens */
-@media (max-width: 480px) {
-  .bonds-grid {
-    gap: 0.6rem;
-  }
-  .bonds-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .bonds-controls {
-    justify-content: center;
-  }
-  .bonds-title {
-    text-align: center;
-    width: 100%;
-  }
-  .bonds-card-inner {
-    width: 70px;
-    height: 70px;
-  }
+.nb .nb-stepper-input {
+  width: 5.5rem;
+  height: 56px;
+  font-size: 1.6rem;
 }
-/* Small-target warning (I13) */
-.bonds-notice {
-  margin: 0 auto 0.5rem;
+
+/* ---------- Match mode ---------- */
+
+.nb .nb-score {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.nb .nb-stat {
+  padding: 0.3rem 1rem;
+  font-weight: 700;
+  background: var(--ck-muted);
+  border: 2px solid var(--ck-border);
+  border-radius: 999px;
+}
+
+.nb .nb-stat strong {
+  margin-left: 0.3rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.nb .nb-prompt {
+  margin: 0;
+  font-size: clamp(1.2rem, 3.6vw, 1.45rem);
+  font-weight: 700;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+.nb .nb-prompt strong {
+  display: inline-block;
+  padding: 0 0.6rem;
+  background: var(--ck-accent);
+  color: var(--ck-on-accent);
+  border-radius: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.nb .nb-notice {
   max-width: 32rem;
-  font-size: 0.9rem;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
   opacity: 0.85;
-  color: var(--light-text);
 }
 
-body.dark .bonds-notice {
-  color: var(--dark-text);
+.nb .nb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+  gap: 0.8rem;
+  width: 100%;
+  max-width: 32rem;
+  justify-items: center;
+}
+
+.nb .nb-card {
+  width: 100%;
+  max-width: 108px;
+  aspect-ratio: 1;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  perspective: 800px;
+  cursor: pointer;
+}
+
+.nb .nb-card:disabled {
+  cursor: default;
+}
+
+.nb .nb-card-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 400ms cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+.nb .nb-card.flipped .nb-card-inner {
+  transform: rotateY(180deg);
+}
+
+.nb .nb-card:hover:not(.flipped):not(:disabled) .nb-card-front {
+  border-color: var(--ck-text);
+}
+
+.nb .nb-card-front,
+.nb .nb-card-back {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  border-radius: 18px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.nb .nb-card-front {
+  color: var(--ck-accent);
+  background: var(--ck-muted);
+  border: 2px solid var(--ck-border);
+  transition: border-color 160ms ease;
+}
+
+.nb .nb-card-back {
+  color: var(--ck-text);
+  background: var(--ck-panel);
+  border: 3px solid var(--ck-accent);
+  transform: rotateY(180deg);
+}
+
+.nb .nb-card.matched .nb-card-back {
+  color: var(--ck-on-accent);
+  background: var(--ck-accent);
+  border-color: var(--ck-accent);
+}
+
+.nb .nb-done {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+/* ---------- Practice mode ---------- */
+
+.nb .nb-practice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.nb .nb-equation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  max-width: 100%;
+  padding: 1.25rem clamp(1rem, 4vw, 2rem);
+  background: var(--ck-muted);
+  border: 2px solid var(--ck-border);
+  border-radius: 20px;
+}
+
+.nb .nb-eq-num,
+.nb .nb-eq-sign {
+  font-size: clamp(1.9rem, 7vw, 2.6rem);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.nb .nb-answer {
+  width: clamp(4.5rem, 20vw, 6rem);
+  height: 64px;
+  font-size: clamp(1.7rem, 6vw, 2.2rem);
+  background: var(--ck-panel);
+}
+
+.nb .nb-answer:focus {
+  border-color: var(--ck-accent);
+}
+
+.nb .nb-check:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+@media (max-width: 520px) {
+  .nb .nb-controls { gap: 1rem; }
+  .nb .free-play-levels { width: 100%; }
+  .nb .free-play-levels .free-play-level { flex: 1 1 auto; }
+  .nb .nb-grid { gap: 0.6rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nb .nb-card-inner,
+  .nb .nb-card-front,
+  .nb .nb-step { transition: none; }
+  .nb .nb-step:hover:not(:disabled) { transform: none; }
 }

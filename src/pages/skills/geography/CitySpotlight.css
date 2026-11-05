@@ -1,189 +1,157 @@
-/* === Wrapper === */
-.city-spotlight {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 2rem;
-  max-width: 700px;
-  margin: 0 auto;
-  text-align: center;
+/* ===========================================================
+   CITY SPOTLIGHT — sits on the free-play kit (FreePlayShell).
+   Hierarchy, largest to smallest: page title, the question,
+   the city choices, the clue. Colours are the kit's --ck-* tokens
+   (the App.css --light-* / --dark-* pairs), so both themes work.
+   Every rule is scoped under .city-spotlight-page / .cs-*.
+=========================================================== */
+
+/* Use the width: the picture gets the larger share on a wide card. */
+.city-spotlight-page .challenge-container {
+  max-width: 980px;
+}
+
+.city-spotlight-page .free-play-prompt-row .free-play-prompt {
+  font-size: clamp(1.5rem, 4vw, 1.9rem);
+}
+
+.cs-board {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(1.25rem, 3vw, 2rem);
+  align-items: stretch;
+  text-align: left;
+}
+
+/* A fixed 4:3 box: the photos run from 2.12:1 (Sydney) to 0.75:1 (portrait
+   Tokyo), and `cover` crops rather than letterboxing, so the card never jumps
+   height between questions. aspect-ratio reserves the space before load. */
+.cs-image {
+  display: block;
   width: 100%;
-}
-
-/* === Score & Prompt === */
-.city-spotlight .score {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--light-text);
-}
-
-.city-spotlight .prompt {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--light-text);
-}
-
-body.dark .city-spotlight .score,
-body.dark .city-spotlight .prompt {
-  color: var(--dark-text);
-}
-
-/* === City Image ===
-   A fixed 4:3 box at every breakpoint. The source photos range from 2.12:1
-   (Sydney) to 0.75:1 (portrait Tokyo), so without a fixed ratio the card height
-   jumps between questions. `object-fit: cover` crops to fill rather than
-   letterboxing, and `aspect-ratio` reserves the space before the image loads so
-   the layout does not shift. */
-.city-spotlight .cityImage {
-  width: 100%;
-  max-width: 500px;
   aspect-ratio: 4 / 3;
-  height: auto;
-  border-radius: 12px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
   object-fit: cover;
   object-position: center;
-  background-color: var(--light-panel);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 20px;
+  background: var(--ck-muted);
+  box-shadow:
+    0 0 0 1px var(--ck-card-edge),
+    0 4px 8px var(--panel-shadow),
+    0 18px 30px -14px var(--panel-shadow);
 }
 
-body.dark .city-spotlight .cityImage {
-  background-color: var(--dark-panel);
-}
-
-.city-spotlight .cityImage:hover {
-  transform: scale(1.03);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-}
-
-/* === Options === */
-.city-spotlight .options {
+.cs-side {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+  flex-direction: column;
   justify-content: center;
-  width: 100%;
+  gap: 1.1rem;
+  min-width: 0;
 }
 
-.city-spotlight .optionBtn {
-  font-size: 1.2rem;
-  padding: 0.8rem 1.5rem;
-  border-radius: 10px;
-  border: 2px solid var(--light-accent);
-  background-color: var(--light-panel);
-  color: var(--light-text);
+/* The clue is a helper line, not the question: smaller and quieter than the
+   choices, but still readable (it is the only help a 6-year-old gets). */
+.cs-clue {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 14px;
+  background: var(--ck-muted);
+  font-size: 1.05rem;
   font-weight: 600;
+  line-height: 1.4;
+  text-wrap: balance;
+}
+
+.cs-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+/* Three choices stack: a lone third button would sit orphaned in a 2-up grid. */
+.cs-options[data-count="3"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.cs-option {
+  min-height: 64px; /* large target: the audience is 6-8 */
+  padding: 0.5rem 1rem;
+  border: 3px solid transparent;
+  border-radius: 14px;
+  font: inherit;
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--ck-text);
+  background: var(--ck-muted);
   cursor: pointer;
-  transition: all 0.25s ease;
-  min-width: 130px;
+  transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
 }
 
-.city-spotlight .optionBtn:hover:not(:disabled) {
-  background-color: var(--light-accent);
-  color: white;
+.cs-option:hover:not(:disabled) {
   transform: translateY(-2px);
+  border-color: var(--ck-accent);
 }
 
-.city-spotlight .optionBtn.correct {
-  background-color: var(--light-accent);
-  color: white;
-  border-color: var(--light-accent);
-  transform: scale(1.05);
+.cs-option:focus-visible {
+  outline: 3px solid var(--ck-text);
+  outline-offset: 2px;
 }
 
-.city-spotlight .optionBtn.wrong {
-  background-color: #888;
-  color: white;
-  border-color: #888;
+.cs-option.is-correct {
+  color: var(--ck-on-accent);
+  background: var(--ck-accent);
+  border-color: var(--ck-accent);
+  opacity: 1;
+  animation: cs-pop 380ms cubic-bezier(.2, 1.6, .5, 1);
 }
 
-.city-spotlight .optionBtn.dimmed {
-  opacity: 0.4;
+/* A miss greys the city out; it stays readable (the child can see what they
+   chose) and is crossed out so it is not mistaken for a disabled choice. */
+.cs-option.is-wrong {
+  opacity: 0.55;
+  text-decoration: line-through;
+  cursor: default;
+  animation: cs-shake 360ms ease;
+}
+
+.cs-option.is-dimmed {
+  opacity: 0.45;
   cursor: default;
 }
 
-body.dark .city-spotlight .optionBtn {
-  border-color: var(--dark-accent);
-  background-color: var(--dark-panel);
-  color: var(--dark-text);
+@keyframes cs-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+  100% { transform: scale(1); }
 }
 
-body.dark .city-spotlight .optionBtn:hover:not(:disabled) {
-  background-color: var(--dark-accent);
-  color: var(--dark-bg);
+@keyframes cs-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
 }
 
-body.dark .city-spotlight .optionBtn.correct {
-  background-color: var(--dark-accent);
-  color: var(--dark-bg);
-}
-
-body.dark .city-spotlight .optionBtn.wrong {
-  background-color: #555;
-}
-
-
-/* === Info/Feedback === */
-.city-spotlight .info {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--light-accent);
-  margin-top: 0.5rem;
-}
-
-body.dark .city-spotlight .info {
-  color: var(--dark-accent);
-}
-
-/* === Start Screen === */
-.city-spotlight .intro {
-  font-size: 1.2rem;
-  color: var(--light-text);
-}
-
-body.dark .city-spotlight .intro {
-  color: var(--dark-text);
-}
-
-/* === Buttons === */
-.city-spotlight .startBtn,
-.city-spotlight .restartBtn {
-  padding: 0.9rem 2rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-  border-radius: 10px;
-  cursor: pointer;
-  background-color: var(--light-accent);
-  color: white;
-  border: none;
-  transition: all 0.25s ease;
-}
-
-.city-spotlight .startBtn:hover,
-.city-spotlight .restartBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(239, 98, 108, 0.3);
-}
-
-body.dark .city-spotlight .startBtn,
-body.dark .city-spotlight .restartBtn {
-  background-color: var(--dark-accent);
-  color: var(--dark-bg);
-}
-
-/* === Responsive Layout === */
-@media (max-width: 600px) {
-  .city-spotlight .cityImage {
-    max-width: 100%;
+/* Narrow: picture on top, choices under it. */
+@media (max-width: 760px) {
+  .cs-board {
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .city-spotlight .optionBtn {
+  .cs-clue {
+    text-align: center;
+  }
+}
+
+@media (max-width: 420px) {
+  .cs-option {
     font-size: 1.1rem;
-    padding: 0.6rem 1.2rem;
+    min-height: 56px;
+    padding: 0.4rem 0.6rem;
   }
 }
 
-/* No desktop max-height override: `aspect-ratio` above governs the box at every
-   width. The previous `max-height: none` here is what let each image fall back
-   to its own natural aspect ratio on desktop. */
+@media (prefers-reduced-motion: reduce) {
+  .cs-option { transition: none; }
+  .cs-option.is-correct,
+  .cs-option.is-wrong { animation: none; }
+}

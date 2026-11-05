@@ -23,6 +23,7 @@ it("profile input and preview render script-like text literally and reject overl
 
 it("custom story textarea bounds pasted input without stripping markup or punctuation", () => {
   render(<SpeedReader />);
+  fireEvent.click(screen.getByRole("button", { name: /Your own story/ }));
   const textarea = screen.getByLabelText("Your story");
   const text = 'O’Brien <script>alert(1)</script> <img src=x onerror=alert(2)>';
   fireEvent.change(textarea, { target: { value: text } });

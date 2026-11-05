@@ -25,8 +25,8 @@ beforeEach(() => {
 
 it('Number Bonds practice counts a retry once and resets feedback on mode changes', () => {
   render(<ThemeContext.Provider value={{ theme: 'light' }}><NumberBonds /></ThemeContext.Provider>);
-  fireEvent.change(screen.getByLabelText('Mode:'), { target: { value: 'practice' } });
-  const first = Number(document.querySelector('.practice-equation span').textContent);
+  fireEvent.click(screen.getByRole('button', { name: 'Practice' }));
+  const first = Number(document.querySelector('.nb-eq-num').textContent);
   const input = screen.getByPlaceholderText('?');
   const check = screen.getByRole('button', { name: 'Check' });
 
@@ -37,10 +37,10 @@ it('Number Bonds practice counts a retry once and resets feedback on mode change
   fireEvent.click(check);
   expect(calls.answer.mock.calls).toEqual([[false], [true, { firstTry: false }]]);
 
-  fireEvent.change(screen.getByLabelText('Mode:'), { target: { value: 'match' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Match cards' }));
   expect(calls.reset).toHaveBeenCalled();
-  fireEvent.change(screen.getByLabelText('Mode:'), { target: { value: 'practice' } });
-  const nextFirst = Number(document.querySelector('.practice-equation span').textContent);
+  fireEvent.click(screen.getByRole('button', { name: 'Practice' }));
+  const nextFirst = Number(document.querySelector('.nb-eq-num').textContent);
   fireEvent.change(screen.getByPlaceholderText('?'), { target: { value: String(10 - nextFirst) } });
   fireEvent.click(screen.getByRole('button', { name: 'Check' }));
   expect(calls.answer.mock.lastCall).toEqual([true, { firstTry: true }]);

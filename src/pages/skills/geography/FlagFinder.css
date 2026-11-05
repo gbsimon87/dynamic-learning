@@ -1,194 +1,213 @@
-.flag-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  padding: 2rem;
-  max-width: 600px;
-  margin: 0 auto;
+/* Flag Finder — sits on the free-play kit (FreePlayShell.css). Colours come
+   from the --ck-* aliases and the --light-home-* / --dark-home-* pairs, so both
+   themes are covered. Every rule is scoped under .ff-*. */
+
+.ff-page {
+  --ff-right-bg: var(--light-home-space);
+  --ff-right-edge: var(--light-home-space-edge);
+  --ff-right-ink: var(--light-home-space-ink);
+  --ff-wrong-bg: var(--light-home-arithmetic);
+  --ff-wrong-edge: var(--light-home-arithmetic-edge);
+  --ff-wrong-ink: var(--light-home-arithmetic-ink);
 }
 
-.flag-score {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--light-text);
-}
-body.dark .flag-score {
-  color: var(--dark-text);
-}
-
-.flag-prompt {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--light-text);
-  margin: 0;
-}
-body.dark .flag-prompt {
-  color: var(--dark-text);
+body.dark .ff-page {
+  --ff-right-bg: var(--dark-home-space);
+  --ff-right-edge: var(--dark-home-space-edge);
+  --ff-right-ink: var(--dark-home-space-ink);
+  --ff-wrong-bg: var(--dark-home-arithmetic);
+  --ff-wrong-edge: var(--dark-home-arithmetic-edge);
+  --ff-wrong-ink: var(--dark-home-arithmetic-ink);
 }
 
-.flag-card {
-  background-color: var(--light-panel);
-  padding: 1rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-body.dark .flag-card {
-  background-color: var(--dark-panel);
-}
+.ff-page .challenge-container { max-width: 980px; }
 
-.flag-image {
-  width: 240px;
-  height: 160px;
-  object-fit: contain;
-  border-radius: 8px;
-}
-
-.flag-feedback {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-.flag-feedback.correct {
-  color: var(--light-accent);
-}
-.flag-feedback.wrong {
-  color: #888;
-}
-body.dark .flag-feedback.correct {
-  color: var(--dark-accent);
-}
-body.dark .flag-feedback.wrong {
-  color: #aaa;
-}
-
-.flag-options {
-  display: flex;
+.ff-stage {
+  display: grid;
   gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
+  min-width: 0;
 }
 
-.flag-optionBtn {
-  font-size: 1.1rem;
-  padding: 0.75rem 1.5rem;
-  border: 2px solid var(--light-accent);
-  border-radius: 8px;
-  background-color: var(--light-panel);
-  color: var(--light-text);
-  cursor: pointer;
-  transition: all 0.2s;
-  font-weight: 600;
-  min-width: 120px;
-}
-.flag-optionBtn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(239,98,108,0.3);
-}
-.flag-optionBtn:disabled {
-  cursor: default;
-}
-
-body.dark .flag-optionBtn {
-  background-color: var(--dark-panel);
-  border-color: var(--dark-accent);
-  color: var(--dark-text);
-}
-body.dark .flag-optionBtn:hover:not(:disabled) {
-  box-shadow: 0 4px 8px rgba(132,220,207,0.3);
-}
-
-.flag-optionBtn.correct {
-  background-color: var(--light-accent);
-  color: white;
-  border-color: var(--light-accent);
-  transform: scale(1.05);
-}
-body.dark .flag-optionBtn.correct {
-  background-color: var(--dark-accent);
-  color: var(--dark-bg);
-  border-color: var(--dark-accent);
-}
-
-.flag-optionBtn.wrong {
-  background-color: #888;
-  color: white;
-  border-color: #888;
-}
-body.dark .flag-optionBtn.wrong {
-  background-color: #555;
-  color: white;
-  border-color: #555;
-}
-
-.flag-optionBtn.dimmed {
-  opacity: 0.4;
-}
-
-.flag-loading {
-  color: var(--light-text);
-  padding: 2rem;
-}
-body.dark .flag-loading {
-  color: var(--dark-text);
-}
-
-/* === Continent picker (R6) === */
-.flag-continentPicker {
+.ff-flag {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  width: 100%;
+  justify-content: center;
+  padding: 1rem;
+  border-radius: 20px;
+  background: var(--ck-muted);
+  min-height: 0;
 }
 
-.flag-continentPicker label {
-  font-weight: 600;
-  color: var(--light-text);
+.ff-flag-img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  border-radius: 6px;
+  /* A white flag still needs an edge against the card. */
+  filter: drop-shadow(0 0 1px var(--ck-border)) drop-shadow(0 4px 8px var(--panel-shadow));
 }
 
-.flag-continentPicker select {
-  width: 100%;
-  max-width: 280px;
-  padding: 0.6rem 1rem;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 8px;
-  border: 2px solid var(--light-accent);
-  background-color: var(--light-panel);
-  color: var(--light-text);
+.ff-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.ff-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 64px;
+  padding: 0.5rem 0.9rem;
+  font: inherit;
+  font-size: clamp(1.05rem, 3.6vw, 1.3rem);
+  font-weight: 800;
+  line-height: 1.2;
+  text-wrap: balance;
+  color: var(--ck-text);
+  background: var(--ck-panel);
+  border: 3px solid var(--ck-border);
+  border-bottom-width: 6px;
+  border-radius: 18px;
   cursor: pointer;
+  transition: transform 150ms ease, background-color 150ms ease, border-color 150ms ease, opacity 150ms ease;
 }
 
-.flag-continentPicker select:focus {
-  outline: 3px solid var(--light-accent);
+.ff-option:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: var(--ck-muted);
+}
+
+.ff-option:focus-visible {
+  outline: 3px solid var(--ck-text);
   outline-offset: 2px;
 }
 
-body.dark .flag-continentPicker label {
-  color: var(--dark-text);
+.ff-option:disabled { cursor: default; }
+
+.ff-option.is-correct {
+  color: var(--ff-right-ink);
+  background: var(--ff-right-bg);
+  border-color: var(--ff-right-edge);
+  animation: ff-pop 260ms ease-out;
 }
 
-body.dark .flag-continentPicker select {
-  background-color: var(--dark-panel);
-  color: var(--dark-text);
-  border-color: var(--dark-accent);
+.ff-option.is-wrong {
+  color: var(--ff-wrong-ink);
+  background: var(--ff-wrong-bg);
+  border-color: var(--ff-wrong-edge);
+  animation: ff-shake 420ms ease;
 }
 
-body.dark .flag-continentPicker select:focus {
-  outline-color: var(--dark-accent);
+.ff-option.is-dimmed { opacity: 0.45; }
+
+@keyframes ff-pop {
+  from { transform: scale(0.92); }
+  to { transform: scale(1); }
 }
 
-.flag-loadStatus,
-.flag-error {
-  color: var(--light-text);
+@keyframes ff-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-7px); }
+  40% { transform: translateX(7px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+
+/* --- loading and partial-load status --- */
+.ff-status {
+  margin: 0 auto 1rem;
+  font-weight: 600;
   text-align: center;
-  margin: 0;
 }
-body.dark .flag-loadStatus,
-body.dark .flag-error {
-  color: var(--dark-text);
+
+.ff-status-inline { margin: -0.5rem auto 0.75rem; font-size: 0.95rem; }
+
+.ff-retry {
+  min-height: 48px;
+  margin: 0.5rem 0 0 0.5rem;
+  padding: 0 1.2rem;
+  font: inherit;
+  font-weight: 800;
+  color: var(--ck-on-accent);
+  background: var(--ck-accent);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
 }
-.flag-loadStatus .flag-optionBtn {
-  display: block;
-  margin: 0.75rem auto 0;
+
+.ff-retry:focus-visible { outline: 3px solid var(--ck-text); outline-offset: 2px; }
+
+/* --- desktop: the whole game fits the window, no page scroll ---
+   Navbar + back bar take about 8.5rem; the flag absorbs whatever height is
+   left. Below these sizes the page scrolls as normal. */
+@media (min-width: 900px) and (min-height: 600px) {
+  .ff-page {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    height: calc(100dvh - 8.5rem);
+    padding-top: 0.5rem;
+    padding-bottom: 1rem;
+  }
+
+  .ff-page .free-play-header { margin-bottom: 0.75rem; gap: 0.25rem; }
+  .ff-page .free-play-intro { font-size: 1rem; }
+
+  .ff-page .challenge-container {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    width: 100%;
+    min-height: 0;
+    box-sizing: border-box;
+    padding-block: 1rem;
+  }
+
+  .ff-page .free-play-toolbar { margin-bottom: 0.75rem; flex-wrap: nowrap; }
+  .ff-page .free-play-levels .free-play-level { padding: 0 0.75rem; font-size: 0.95rem; }
+  .ff-page .free-play-prompt-row { margin-bottom: 0.75rem; }
+  .ff-page .free-play-feedback { margin-top: 0.5rem; }
+
+  .ff-page .free-play-stage {
+    display: flex;
+    flex: 1 1 0;
+    min-height: 0;
+  }
+
+  .ff-stage {
+    flex: 1;
+    max-height: 460px;
+    align-self: center;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    align-items: stretch;
+    gap: 1.25rem;
+  }
+
+  /* The image is laid over the card so its height follows the card, not the file. */
+  .ff-flag { position: relative; overflow: hidden; }
+  .ff-flag-img {
+    position: absolute;
+    inset: 1rem;
+    width: calc(100% - 2rem);
+    height: calc(100% - 2rem);
+    max-height: none;
+  }
+
+  .ff-options {
+    grid-template-columns: 1fr;
+    align-content: center;
+    gap: 0.6rem;
+  }
+
+  .ff-option { min-height: 52px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ff-option { transition: none; }
+  .ff-option.is-correct,
+  .ff-option.is-wrong { animation: none; }
 }

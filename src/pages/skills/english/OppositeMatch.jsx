@@ -1,209 +1,102 @@
-import { useState, useEffect, useContext, useRef } from 'react';
-import { ThemeContext } from '../../../context/theme-context';
-import './OppositeMatch.css';
-import SpeakButton from '../../../components/challenge/SpeakButton';
-import AnswerFeedbackLine from '../../../components/skills/AnswerFeedbackLine';
-import { useAnswerFeedback } from '../../../components/skills/useAnswerFeedback';
-
-const PAIRS = [
-  // 🌡️ Temperature / Weather
-  ['hot', 'cold'],
-  ['warm', 'cool'],
-  ['wet', 'dry'],
-  ['sunny', 'rainy'],
-
-  // 📏 Size / Amount
-  ['big', 'small'],
-  ['tall', 'short'],
-  ['wide', 'narrow'],
-  ['full', 'empty'],
-  ['heavy', 'light'],
-
-  // 💬 Feelings / Character
-  ['happy', 'sad'],
-  ['kind', 'mean'],
-  ['brave', 'scared'],
-  ['polite', 'rude'],
-  ['quiet', 'loud'],
-
-  // ⚡ Speed / Movement
-  ['fast', 'slow'],
-  ['early', 'late'],
-  ['near', 'far'],
-  ['up', 'down'],
-  ['come', 'go'],
-
-  // 🌞 Time / States
-  ['day', 'night'],
-  ['open', 'closed'],
-  ['awake', 'asleep'],
-  ['begin', 'end'],
-  ['start', 'finish'],
-
-  // 👶 Age / Growth
-  ['young', 'old'],
-  ['new', 'old'],
-  ['first', 'last'],
-
-  // ⚙️ Qualities / Opposites
-  ['hard', 'soft'],
-  ['strong', 'weak'],
-  ['clean', 'dirty'],
-  ['bright', 'dark'],
-  ['smooth', 'rough'],
-
-  // 💭 Others / Abstract
-  ['right', 'wrong'],
-  ['in', 'out'],
-  ['before', 'after'],
-  ['push', 'pull'],
-];
-
-
-function shuffle(list) {
-  const next = [...list];
-  for (let i = next.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [next[i], next[j]] = [next[j], next[i]];
-  }
-  return next;
-}
+import { useEffect, useRef, useState } from "react";
+import FreePlayShell from "../../../components/skills/FreePlayShell";
+import { LEVELS, makeOppositeQuestion } from "../../../data/freePlay/opposites";
+import "./OppositeMatch.css";
 
 /**
- * Pick `count` pairs, never two that share a word.
- *
- * `old` is the right-hand word of both ['young','old'] and ['new','old']. When a
- * round drew both, `rightWords` contained "old" twice - and that word is used as
- * the React key, which must be unique. Matching was done by value so tapping either
- * marked BOTH as matched, and the round could never reach completion: a dead end
- * with no restart control. Deduping the round makes it structurally impossible
- * while keeping both (individually correct) pairs in the bank.
+ * Opposite Match — free play on opposites. Tap a word, then tap its opposite
+ * in the other column. A right match locks both words in a shared colour; a
+ * wrong tap shakes that word and the first word stays chosen, so the child
+ * tries again. Harder levels add more pairs and longer words.
  */
-function getRandomPairs(count = 5) {
-  const chosen = [];
-  const used = new Set();
-
-  for (const pair of shuffle(PAIRS)) {
-    if (chosen.length === count) break;
-    if (used.has(pair[0]) || used.has(pair[1])) continue;
-    chosen.push(pair);
-    used.add(pair[0]);
-    used.add(pair[1]);
-  }
-
-  return chosen;
+function OppositeMatch() {
+  return (
+    <FreePlayShell
+      title="Opposite Match"
+      icon="↔️"
+      intro="Match each word with its opposite: hot and cold, up and down."
+      makeQuestion={makeOppositeQuestion}
+      levels={LEVELS}
+      render={(props) => <Question {...props} />}
+    />
+  );
 }
 
-export default function OppositeMatch() {
-  const { theme } = useContext(ThemeContext);
-  const [pairs, setPairs] = useState(getRandomPairs());
-  const [leftWords, setLeftWords] = useState([]);
-  const [rightWords, setRightWords] = useState([]);
-  const [matches, setMatches] = useState({});
-  const [score, setScore] = useState(0);
-  const [total, setTotal] = useState(0);
-  const [feedback, setFeedback] = useState(null);
-  const [selected, setSelected] = useState(null);
-  const [roundKey, setRoundKey] = useState(0);
-  const fb = useAnswerFeedback();
-  const missedWordsRef = useRef(new Set());
-  const matchedWordsRef = useRef(new Set());
-  const clearFeedback = fb.clear;
+const COLOURS = 5;
 
-  // Setup words each round
-  useEffect(() => {
-    setLeftWords(shuffle(pairs.map((p) => p[0])));
-    setRightWords(shuffle(pairs.map((p) => p[1])));
-  }, [pairs]);
+function Question({ question, submit, locked }) {
+  const [matched, setMatched] = useState([]); // pair indices, in the order matched
+  const [selected, setSelected] = useState(null); // { side: "left" | "right", word }
+  const [shaking, setShaking] = useState(null);
+  const shakeTimer = useRef(null);
 
-  // Tap a word, then tap its opposite
-  function handleWordClick(word) {
-    if (matchedWordsRef.current.has(word)) return;
-    setSelected((current) => (current === word ? null : word));
-  }
+  useEffect(() => () => window.clearTimeout(shakeTimer.current), []);
 
-  function handleTargetClick(target) {
-    if (!selected) return;
-    const word = selected;
-    if (matchedWordsRef.current.has(word)) return;
+  const pairIndexOf = (side, word) => question.pairs.findIndex((p) => p[side === "left" ? 0 : 1] === word);
+  const colourOf = (side, word) => {
+    const order = matched.indexOf(pairIndexOf(side, word));
+    return order === -1 ? null : order % COLOURS;
+  };
 
-    const pair = pairs.find(([a]) => a === word);
-    const correct = pair && pair[1] === target;
-    fb.answer(Boolean(correct), { firstTry: !missedWordsRef.current.has(word) });
-    if (!correct) missedWordsRef.current.add(word);
+  const tap = (side, word) => {
+    if (locked || colourOf(side, word) !== null) return;
 
-    setTotal(prev => prev + 1);
+    if (!selected || selected.side === side) {
+      setSelected((current) => (current && current.side === side && current.word === word ? null : { side, word }));
+      return;
+    }
 
-    if (correct) {
-      matchedWordsRef.current.add(word);
-      setScore(prev => prev + 1);
-      setMatches(prev => ({ ...prev, [word]: target }));
+    const [leftWord, rightWord] = side === "right" ? [selected.word, word] : [word, selected.word];
+    const index = question.pairs.findIndex((p) => p[0] === leftWord && p[1] === rightWord);
+    if (index !== -1) {
+      setMatched((prev) => [...prev, index]);
       setSelected(null);
+      if (matched.length + 1 === question.pairs.length) submit(true);
+    } else {
+      setShaking(`${side}:${word}`);
+      window.clearTimeout(shakeTimer.current);
+      shakeTimer.current = window.setTimeout(() => setShaking(null), 500);
+      submit(false);
     }
-  }
+  };
 
-  // Next round once all matched
-  useEffect(() => {
-    if (Object.keys(matches).length === pairs.length) {
-      setFeedback('done');
-      const timer = setTimeout(() => {
-        setPairs(getRandomPairs());
-        setRoundKey((key) => key + 1);
-        setMatches({});
-        setSelected(null);
-        setFeedback(null);
-        missedWordsRef.current.clear();
-        matchedWordsRef.current.clear();
-        clearFeedback();
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [matches, pairs, clearFeedback]);
+  const renderColumn = (side, words, label) => (
+    <div className="om-column" role="group" aria-label={label}>
+      {words.map((word) => {
+        const colour = colourOf(side, word);
+        const isMatched = colour !== null;
+        const isSelected = selected?.side === side && selected.word === word;
+        const partner = question.pairs[pairIndexOf(side, word)][side === "left" ? 1 : 0];
+        return (
+          <button
+            key={word}
+            type="button"
+            className={[
+              "om-tile",
+              isMatched ? `is-matched om-colour-${colour}` : "",
+              isSelected ? "is-selected" : "",
+              shaking === `${side}:${word}` ? "is-shaking" : "",
+            ].join(" ")}
+            aria-pressed={isMatched ? undefined : isSelected}
+            aria-label={isMatched ? `${word}, matched with ${partner}` : word}
+            disabled={locked || isMatched}
+            onClick={() => tap(side, word)}
+          >
+            <span>{word}</span>
+            {isMatched && <span className="om-check" aria-hidden="true">✓</span>}
+          </button>
+        );
+      })}
+    </div>
+  );
 
   return (
-    <div className={`match-wrapper ${theme}`}>
-      <div className="match-score">Score: {score} / {total}</div>
-      <h2 className="match-prompt">Tap a word, then tap its opposite</h2>
-      <SpeakButton getText={() => `Tap a word, then tap its opposite. Words: ${leftWords.join(', ')}. Opposites: ${rightWords.join(', ')}.`} resetKey={roundKey} label="Hear the words" compact />
-
-      <div className="match-area" ref={fb.answerRef}>
-        <div className="left-column">
-          {leftWords.map((word) => (
-            <button
-              type="button"
-              key={word}
-              className={`word-chip ${matches[word] ? 'matched' : ''} ${selected === word ? 'selected' : ''}`}
-              aria-pressed={selected === word}
-              disabled={Boolean(matches[word])}
-              onClick={() => handleWordClick(word)}
-            >
-              {word}
-            </button>
-          ))}
-        </div>
-
-        <div className="right-column">
-          {rightWords.map((target) => {
-            const isMatched = Object.values(matches).includes(target);
-            return (
-              <button
-                type="button"
-                key={target}
-                className={`drop-zone ${isMatched ? 'matched' : ''}`}
-                disabled={isMatched || !selected}
-                onClick={() => handleTargetClick(target)}
-              >
-                {target}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
-      {feedback === 'done' && (
-        <div className="match-feedback correct">🎉 Well done!</div>
-      )}
+    <div className="om-board">
+      {renderColumn("left", question.left, "Words")}
+      <span className="om-divider" aria-hidden="true">↔</span>
+      {renderColumn("right", question.right, "Opposites")}
     </div>
   );
 }
+
+export default OppositeMatch;

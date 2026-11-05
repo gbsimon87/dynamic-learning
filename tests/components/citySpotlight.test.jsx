@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router";
 import { afterEach, expect, it, vi } from "vitest";
 import cities from "../../src/data/cities.json";
 import CitySpotlight from "../../src/pages/skills/geography/CitySpotlight";
@@ -11,52 +12,51 @@ vi.mock("../../src/components/celebration/fx/effects", () => ({ playEffect: () =
 
 afterEach(() => vi.useRealTimers());
 
+const game = () => render(<MemoryRouter><CitySpotlight /></MemoryRouter>);
 const feedback = () => document.querySelector(".free-play-feedback");
+const options = () => [...document.querySelectorAll(".cs-option")];
+const shown = () => cities.find((c) => c.image === document.querySelector(".cs-image").getAttribute("src"));
+const pick = (name) => fireEvent.click(options().find((b) => b.textContent.replace("✓", "").trim() === name));
 
-it("has at least 50 cities, each with a picture, a hint and a unique name", () => {
-  expect(cities.length).toBeGreaterThanOrEqual(50);
-  expect(new Set(cities.map((c) => c.name)).size).toBe(cities.length);
-  expect(cities.every((c) => c.image && c.hint)).toBe(true);
+it("opens straight on a picture and its choices, with no start screen", () => {
+  game();
+  expect(screen.queryByText("Start Game")).toBeNull();
+  expect(document.querySelector(".cs-image")).toBeTruthy();
+  expect(options()).toHaveLength(3); // Easier: three cities
+  expect(options().map((b) => b.textContent)).toContain(shown().name);
+  expect(document.querySelector(".cs-clue").textContent).toBe(shown().hint);
 });
 
-const shown = () => cities.find((c) => c.image === document.querySelector(".cityImage").getAttribute("src"));
-const pick = (name) => fireEvent.click(screen.getByRole("button", { name }));
-const text = () => document.querySelector(".score").textContent;
-
-it("clears the cheer when the next picture appears", () => {
+it("a wrong city greys out and can be retried; the right one moves on to a new picture", () => {
   vi.useFakeTimers();
-  render(<CitySpotlight />);
-  fireEvent.click(screen.getByText("Start Game"));
-
+  game();
   const first = shown();
+
+  const wrong = options().find((b) => b.textContent !== first.name);
+  fireEvent.click(wrong);
+  expect(wrong.disabled).toBe(true);
+  expect(wrong.className).toContain("is-wrong");
+  expect(options().filter((b) => !b.disabled)).toHaveLength(2);
+
   pick(first.name);
+  expect(options().find((b) => b.textContent.startsWith(first.name)).className).toContain("is-correct");
   expect(feedback().textContent).not.toBe("");
 
-  act(() => vi.advanceTimersByTime(1600));
+  act(() => vi.advanceTimersByTime(1700));
   expect(shown().name).not.toBe(first.name);
   expect(feedback().textContent).toBe("");
+  expect(options().every((b) => !b.disabled && !b.className.includes("is-"))).toBe(true);
 });
 
-it("plays every city, scores each answer and finishes", () => {
-  vi.useFakeTimers();
-  render(<CitySpotlight />);
-  fireEvent.click(screen.getByText("Start Game"));
-  expect(text()).toBe("Score: 0 / 0");
-
-  const seen = new Set();
-  for (let i = 0; i < cities.length; i++) {
-    const city = shown();
-    seen.add(city.name);
-    pick(i % 2 === 0 ? city.name : screen.getAllByRole("button").find((b) => b.className.includes("optionBtn") && b.textContent !== city.name).textContent);
-    act(() => vi.advanceTimersByTime(1600));
-  }
-  expect(seen.size).toBe(cities.length);
-  expect(screen.getByText(/Finished/)).toBeTruthy();
-  expect(text()).toBe(`Score: ${Math.ceil(cities.length / 2)} / ${cities.length}`);
+it("a harder level offers more cities and starts a fresh question", () => {
+  game();
+  fireEvent.click(screen.getByRole("button", { name: /Harder/ }));
+  expect(options()).toHaveLength(6);
+  fireEvent.click(screen.getByRole("button", { name: /Medium/ }));
+  expect(options()).toHaveLength(4);
 });
 
 it("does not name the city in the picture's alt text", () => {
-  render(<CitySpotlight />);
-  fireEvent.click(screen.getByText("Start Game"));
-  expect(document.querySelector(".cityImage").alt).not.toContain(shown().name);
+  game();
+  expect(document.querySelector(".cs-image").alt).not.toContain(shown().name);
 });
