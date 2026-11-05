@@ -100,7 +100,8 @@
   transition: transform 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
 }
 
-.se-choice:hover:not(:disabled) {
+.se-choice:hover:not(:disabled),
+.se-choice:focus-visible:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 6px 0 var(--ck-border);
 }
@@ -155,10 +156,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .se-shape,
-  .se-stage.is-solved,
-  .se-choice.is-right,
-  .se-choice.is-wrong { animation: none; }
-  .se-choice,
   .se-stage { transition: none; }
+  .se-stage.is-solved { animation: none; }
+  .se-shape { animation: none; }
+  .se-choice { transition: none; }
+  .se-choice.is-right { animation: none; }
+  .se-choice.is-wrong { animation: none; }
 }
