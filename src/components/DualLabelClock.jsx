@@ -55,9 +55,9 @@ function DualLabelClock({ value, showHourHand, showMinuteHand, showSecondHand, s
         value={value}
         renderHourMarks={true}
         renderMinuteMarks={true}
-        hourHandWidth={showHourHand ? 5 : 0}
-        minuteHandWidth={showMinuteHand ? 3 : 0}
-        secondHandWidth={showSecondHand ? 1 : 0}
+        hourHandWidth={showHourHand ? 8 : 0}
+        minuteHandWidth={showMinuteHand ? 5 : 0}
+        secondHandWidth={showSecondHand ? 2 : 0}
         size={size}
       />
       {dualLabels}

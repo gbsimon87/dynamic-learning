@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import DualLabelClock from './DualLabelClock';
 import SpeakButton from './challenge/SpeakButton';
+// ClockPanel.css reads the --ck-* tokens; without this import they are undefined
+// on a direct visit and the clock hands render transparent.
+import './challenge/challenge-kit.css';
 import './ClockPanel.css';
 
 function ClockPanel({ theme }) {
