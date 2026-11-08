@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { year6MathCurriculum as curriculum } from "./year6MathCurriculum.js";
+import { year6EnglishCurriculum } from "./year6EnglishCurriculum.js";
 import { YEAR6_MATH_TOPIC_SKILLS } from "./year6MathCertificateSkills.js";
 import { countsTowardYear, isCurriculumAvailable, loadCurriculum, yearAwardSubjectIds } from "./curriculumRegistry.js";
 import { toKebabCase } from "../utils/toKebabCase.js";
@@ -29,10 +30,10 @@ test("every Year 6 Maths topic has a dedicated certificate line", () => {
   }
 });
 
-test("staged Year 6 Maths preserves existing year awards and unavailable courses", () => {
+test("staged Year 6 subjects preserve existing year awards and unavailable courses", () => {
   assert.equal(countsTowardYear(6, "math"), false);
   assert.deepEqual(yearAwardSubjectIds(6), []);
   assert.deepEqual(yearAwardSubjectIds(5), ["math", "english", "science"]);
-  assert.equal(loadCurriculum(6, "english"), null);
+  assert.equal(loadCurriculum(6, "english"), year6EnglishCurriculum);
   assert.equal(loadCurriculum(7, "math"), null);
 });

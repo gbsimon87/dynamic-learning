@@ -6,6 +6,31 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-08 — Year 6 English: Interpretation and Comparison completed
+
+- Built all four Curriculum slots and matching Bix lessons for **Exploring Meaning in Context**, **Predicting from Details**, **Summarising across Paragraphs**, **Figurative Language and its Effect**, **Comparing Accounts and Viewpoints**, **Themes and Conventions**, and **Asking Questions about Texts**. Each topic uses visible reading evidence, then progresses through choices, claim sorting, response tiles and independent application; learner progress, unlocks and Year 6 award membership are unchanged.
+- Every reading bank has 15 authored templates per slot. Deterministic bank validation, a retry/hint/choice/sort/tile/completion playthrough and the production build pass. The full lint run remains blocked by an in-progress cohesion-topic lint error; full test runs also report unfinished lessons in the concurrently built cohesion/writing scope. Browser, touch-device, teacher/content and owner/learner review remain pending.
+
+## 2026-11-07 — Year 6 English: Spelling - Advanced Patterns completed
+
+- Built all four curriculum slots and Bix lessons for **The Letter String ough** (rhyme-word models, sound sorting, letter tiles, sentence choices), **Confusing Word Pairs** (the eleven Year 6 pairs: meaning choices, clue sorting, tiles and sentence checks) and **Year 6 Word List Parts 1 and 2** (spelling-chunk models, right/wrong sorting, tiles and typed sentence gaps for every statutory word from identity to yacht). The quest now has six playable topics; the course remains explicitly excluded from Year 6 awards.
+- Bank tests check every word against the saved Appendix 1 data; the node test caught and fixed identical sentence-check prompts in Confusing Word Pairs. Focused lint, 50-seed topic checks and completion playthroughs of all 16 new slots pass. Full-course lint/test/build, browser layout, physical-device and content/owner review remain pending.
+
+## 2026-11-07 — Year 6 English: Formal Language and Sentence Choices
+
+- Completed all four curriculum slots and Bix lessons for **Active and Passive Voice**, **Formal Structures and the Subjunctive**, and **Expanded Noun Phrases for Information**. The quest now also includes the already-built Formal and Informal Vocabulary and Synonyms and Antonyms topics.
+- Topic checks (four slots × 50 deterministic seeds), bank tests and a component playthrough for retry, hint, choice, sort and tile-build completion pass. Browser layout, physical-device, content/owner review and full-course validation remain pending.
+
+## 2026-11-06 — Year 6 English: Synonyms and Antonyms
+
+- Built all four curriculum slots and Bix lessons for **Synonyms and Antonyms**: choosing synonyms and antonyms, sorting around one headword, swapping a word in a sentence with word tiles, and odd-one-out and same/opposite-meaning sentence choices. The course remains explicitly excluded from Year 6 awards.
+- Focused lint, deterministic four-slot bank checking (50 seeds), topic-loader checking and component playthroughs of all four slots pass. Full-course lint/test/build, browser layout, physical-device and content/owner review remain pending.
+
+## 2026-11-06 — Year 6 English: Hyphens in Words
+
+- Built all four curriculum slots and Bix lessons for **Hyphens in Words**: visible prefix-and-base models, prefix sorting, letter-tile spelling and sentence choices teach the Appendix 1 forms `co-ordinate` and `re-enter` without conflating them with the later punctuation topic about avoiding ambiguity. The course remains explicitly excluded from Year 6 awards.
+- Focused lint, deterministic four-slot bank checking (50 seeds), topic-loader checking and a retry/hint/completion component playthrough pass. Full-course lint/test/build, browser layout, physical-device and content/owner review remain pending.
+
 ## 2026-11-05 — Year 6 English: Adding Endings to fer
 
 - Built all four curriculum slots and Bix lessons for **Adding Endings to fer**: visible root-and-suffix models, spelling choices, sorting, letter tiles and sentence spelling all teach when vowel-led suffixes do or do not double the `r` in `-fer` words. The course remains explicitly excluded from Year 6 awards.
