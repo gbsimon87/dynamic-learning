@@ -6,6 +6,16 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-08 — Year 6 English: Composition and Editing completed
+
+- Built all four Curriculum slots and matching Bix lessons for **Formal Register for Audience and Purpose**, **Precising Longer Passages**, **Passive Voice in Writing**, **Subjunctive Forms in Writing**, **Proofreading for Clarity and Effect**, and **Year 6 Dictation**. The quest uses visible context, choice/sort/sentence-tile practice and the existing sound-off look-cover-write dictation route; progress, unlocks and Year 6 award membership are unchanged.
+- Five authored banks pass 30-seed topic checks, bank lint and a retry/hint/choice/sort/tile completion playthrough. Dictation has its own Appendix 1 bank test and a structure-only loader check because its specialised response kinds are unsupported by the generic checker. Lint and the production build pass; full tests currently report broader API/public-page failures. Browser layout, physical-device, teacher/content and owner/learner review remain pending.
+
+## 2026-11-08 — Year 6 English: Cohesion, Layout and Punctuation completed
+
+- Built all four curriculum slots and Bix lessons for the seven topics: **Cohesive Devices across Paragraphs** (contrast, result and repeated-phrase links), **Ellipsis** (spotting and building omissions), **Layout Devices** (device matching, leaflet sub-heading tapping), **Semicolons, Colons and Dashes**, **Punctuation in Lists** and **Bullet Point Punctuation** (tap-the-gap and tap-the-line controls), and **Hyphens to Avoid Ambiguity**. The course remains explicitly excluded from Year 6 awards.
+- Each bank has 15 authored templates per slot. Bank lint, semantic bank tests (for example: only the repeating opener repeats paragraph 1's words; every bullet list is internally consistent), 50-seed topic checks and a playthrough of all 28 slots (retry, hint, choice, sort, tiles, tap) pass; focused lint is clean. Bullet-point style is one taught convention that the statutory text does not specify, so owner review is advised. Full-course lint/test/build, browser layout, physical-device and content/owner review remain pending.
+
 ## 2026-11-08 — Year 6 English: Interpretation and Comparison completed
 
 - Built all four Curriculum slots and matching Bix lessons for **Exploring Meaning in Context**, **Predicting from Details**, **Summarising across Paragraphs**, **Figurative Language and its Effect**, **Comparing Accounts and Viewpoints**, **Themes and Conventions**, and **Asking Questions about Texts**. Each topic uses visible reading evidence, then progresses through choices, claim sorting, response tiles and independent application; learner progress, unlocks and Year 6 award membership are unchanged.

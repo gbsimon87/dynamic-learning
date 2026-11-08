@@ -1,11 +1,15 @@
 import { topicLessons as lesson, sentence as s, table as t, fix as f, steps } from "../../topicLessons.js";
 
 import { YEAR6_SPELLING_ADVANCED_LESSONS } from "./spellingAdvancedPatterns.js";
+import { YEAR6_COHESION_LAYOUT_PUNCTUATION_LESSONS } from "./cohesionLayoutPunctuation.js";
 import { YEAR6_READING_INTERPRETATION_LESSONS } from "./readingInterpretationAndComparison.js";
+import { YEAR6_COMPOSITION_EDITING_LESSONS } from "./compositionAndEditing.js";
 
 export const YEAR6_ENGLISH_LESSONS = {
   ...YEAR6_SPELLING_ADVANCED_LESSONS,
+  ...YEAR6_COHESION_LAYOUT_PUNCTUATION_LESSONS,
   ...YEAR6_READING_INTERPRETATION_LESSONS,
+  ...YEAR6_COMPOSITION_EDITING_LESSONS,
   "hyphens-in-words": lesson("Join the word parts clearly", [
     "A hyphen is a short joining line inside some words. It can show where a prefix joins a base word.",
     "Learn the prefix and the base word, then place the hyphen exactly at their join.",

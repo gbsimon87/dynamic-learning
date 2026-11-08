@@ -43,9 +43,11 @@ const variants = ({ kind, text }) => {
 const hint = "Look at what comes before the list. A complete clause is followed by a colon. If the items contain commas, use semi-colons between the items.";
 const intro = { colon: "Use a colon after a complete clause to introduce a list.", semicolon: "The items contain commas, so use semi-colons between the items." };
 
+const draft = ({ kind, text }) => (kind === "colon" ? text.replace(":", "").replace(/\.$/, "") : text.replace(/;/g, "").replace(/\.$/, ""));
+
 const slot1 = lists.map(item => { const v = variants(item); return ch(
   item.kind === "colon" ? "Which sentence uses a colon correctly to introduce the list?" : "Which sentence uses semi-colons correctly to separate the items?",
-  v.right, v.wrong, { text: intro[item.kind], hint }); });
+  v.right, v.wrong, { text: `${intro[item.kind]} Draft: ${draft(item)}.`, hint }); });
 
 const slot2 = lists.map((_, i) => {
   const good = [lists[i], lists[(i + 8) % lists.length]];
@@ -66,7 +68,6 @@ const slot3 = lists.map(item => {
   );
 });
 
-const draft = ({ kind, text }) => (kind === "colon" ? text.replace(":", "").replace(/\.$/, "") : text.replace(/;/g, "").replace(/\.$/, ""));
 const slot4 = lists.map(item => { const v = variants(item); return ch(
   "Which version of this note is punctuated correctly?", v.right, v.wrong,
   { passage: { title: "Draft", blocks: [{ type: "p", text: draft(item) }] }, hint }); });

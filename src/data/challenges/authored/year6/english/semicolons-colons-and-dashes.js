@@ -41,7 +41,7 @@ export const hint = "Check that each side of the mark could stand alone as a sen
 
 const slot1 = pairs.map(pair => ch(
   `Which sentence uses a ${MARKS[pair.kind].name} correctly to join two independent clauses?`, join(pair), wrongSet(pair),
-  { text: `Use a ${MARKS[pair.kind].name} when you want ${MARKS[pair.kind].role}.`, hint },
+  { text: `Join “${pair.one}” and “${pair.two.replace(/\.$/, "")}”. Use a ${MARKS[pair.kind].name} when you want ${MARKS[pair.kind].role}.`, hint },
 ));
 
 const slot2 = pairs.map((_, i) => {
@@ -62,7 +62,7 @@ const slot3 = pairs.map(pair => {
 const relation = { semicolon: "The two ideas are closely related and equally important.", colon: "The second clause explains why or how the first happened.", dash: "The writer wants a pause or a surprise before the second clause." };
 const slot4 = pairs.map(pair => ch(
   "Which sentence is punctuated correctly to join the two clauses?", join(pair), wrongSet(pair),
-  { text: relation[pair.kind], hint },
+  { text: `Clauses: “${pair.one}” and “${pair.two.replace(/\.$/, "")}”. ${relation[pair.kind]}`, hint },
 ));
 
 export const topic = { rule: RULE, hint, levels: { 1: slot1, 2: slot2, 3: slot3, 4: slot4 } };

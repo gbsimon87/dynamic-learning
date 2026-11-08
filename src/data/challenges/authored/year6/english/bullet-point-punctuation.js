@@ -67,7 +67,7 @@ const slot3 = lists.map((list, i) => {
     { variant: "sentences", text: "The other bullets all follow the same style.", hinted: [answer, answer === 1 ? 2 : 1], hint });
 });
 
-const slot4 = lists.map((list, i) => {
+const slot4 = lists.map(list => {
   const right = flat(list);
   const firstSlip = flat({ lead: list.lead, items: list.items.map((text, index) => (index === 0 ? slip(list.style, text) : text)) });
   const allWrong = flat({ lead: list.lead, items: list.items.map(text => wrongStyle(list.style, text)) });

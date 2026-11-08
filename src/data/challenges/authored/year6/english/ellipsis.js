@@ -25,11 +25,19 @@ export const rows = [
 const hint = "Ask which words the reader can already work out from the first part. Ellipsis leaves those words out and keeps the meaning clear.";
 const at = (index, step) => rows[(index + step) % rows.length];
 
-const slot1 = rows.map((row, i) => ch(
-  "Which sentence uses ellipsis, leaving out words the reader can work out?", row.short,
-  [row.full, at(i, 4).full, at(i, 9).full],
-  { text: "Ellipsis is a gap where repeated words could have been.", hint },
-));
+const bare = word => word.replace(/[^A-Za-z0-9']/g, "").toLowerCase();
+/** Words of the full sentence that are missing from the shorter one. */
+const omittedWords = row => {
+  const kept = row.short.split(" ").map(bare);
+  return row.full.split(" ").map(bare).filter(word => { const at = kept.indexOf(word); if (at >= 0) { kept.splice(at, 1); return false; } return true; });
+};
+const slot1 = rows.map(row => {
+  const omitted = new Set(omittedWords(row));
+  const present = [...new Set(row.short.split(" ").map(bare).filter(word => word && !omitted.has(word)))];
+  return ch(`In “${row.short}”, which word has been left out because the reader can work it out?`, row.left,
+    present.sort((x, y) => y.length - x.length).slice(0, 3),
+    { text: `Full wording: ${row.full}`, hint });
+});
 
 const slot2 = rows.map((_, i) => st(
   `Sort the sentences: which use ellipsis and which repeat every word (set ${i + 1})?`,
@@ -49,5 +57,6 @@ const slot4 = rows.map((row, i) => ch(
   { passage: { title: "Draft", blocks: [{ type: "p", text: row.full }] }, hint },
 ));
 
+export { omittedWords };
 export const topic = { rule: RULE, hint, levels: { 1: slot1, 2: slot2, 3: slot3, 4: slot4 } };
 export const buildEllipsis = buildTopic(topic);

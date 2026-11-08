@@ -41,15 +41,14 @@ it does not certify full statutory coverage, teaching accuracy or device review.
 | 5 | [Relationships & Health](../src/data/year5WellbeingCurriculum.js) | 13 | 52 | Complete |
 | 6 | [Science](../src/data/year6ScienceCurriculum.js) | 24 | 96 | Complete |
 | 6 | [Maths](../src/data/year6MathCurriculum.js) | 49 | 196 | Complete |
-| 6 | [English](../src/data/year6EnglishCurriculum.js) | 31 planned / 11 built | 124 planned / 44 built | Staged; remaining topics unavailable |
+| 6 | [English](../src/data/year6EnglishCurriculum.js) | 31 | 124 | Complete |
 | 6 | Other subjects | 0 | 0 | Not registered yet |
-| **Total** | **34 complete pathways + 1 staged pathway** | **853 planned / 833 built** | **3,412 planned / 3,332 built** | |
+| **Total** | **35 complete pathways** | **853 planned / 853 built** | **3,412 planned / 3,412 built** | |
 
 Years 1–4 have Maths, English, Science, History and Geography. Year 5 adds Art &
 Design, Computing, Design & Technology, French, Music, PE and Relationships &
 Health (`wellbeing`). Year 6 has complete Science and Maths plus an English
-staged pathway; its other English topics are registered for honest curriculum planning but
-remain unavailable until their challenge files exist. Other subjects are built one
+complete pathway. Other subjects are built one
 at a time. Saved statutory programmes and subject specs do not establish playable
 implementation.
 
@@ -59,9 +58,9 @@ implementation.
 of playability. Geography stays outside overall year awards; Years 2 and 4 History
 also remain excluded. The Year 5 award uses Maths, English and Science (owner
 decision 2026-11-04: Year 5 History and the other Year 5 subjects are excluded).
-The Year 6 award will use Maths, English and Science; Year 6 Science stays
-excluded until Year 6 Maths and English exist, so a Science-only award is never
-earned and later taken away. Preserve existing awards when adding pathways.
+The Year 6 award is set to use Maths, English and Science when enabled by an owner
+decision. Its current staged exclusion is retained so no award rule changes silently.
+Preserve existing awards when adding pathways.
 
 Maths Years 1–6 and English Years 3–5 use separately registered Bix lesson screens.
 Other pathways can have illustrated introductions inside their subject games:
