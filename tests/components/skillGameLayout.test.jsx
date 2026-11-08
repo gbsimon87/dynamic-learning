@@ -21,3 +21,9 @@ it("puts one Back to Skills link above every game", () => {
 it("keeps every game under /skills/", () => {
   for (const game of SKILL_GROUPS.flatMap((group) => group.games)) expect(game.to).toMatch(/^\/skills\/[a-z-]+$/);
 });
+
+it("lists Shape Explorer with Maths instead of a one-game Shapes group", () => {
+  const maths = SKILL_GROUPS.find((group) => group.id === "math");
+  expect(maths.games.some((game) => game.to === "/skills/shapes")).toBe(true);
+  expect(SKILL_GROUPS.some((group) => group.id === "shapes")).toBe(false);
+});

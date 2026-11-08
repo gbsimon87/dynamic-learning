@@ -6,67 +6,57 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
-## 2026-11-05 — Shape Explorer restyle, 2D/3D and per-level shapes
+## 2026-11-08 — Shape Explorer moved to Maths
 
-- `/skills/shapes` now runs on `FreePlayShell` (levels, star pips, read-aloud, shared feedback) with themed SVG shapes and large name tiles; a wrong tile is set aside so the child retries. `ShapeQuiz.jsx` and the `--sq-*` tokens are gone.
-- A 2D / 3D switch (keeps the level). Each level has its own shapes: 2D 6 / 8 / 16 (up to the kinds of triangle and quadrilateral, 7–12-sided polygons, sector, lens), 3D 6 / 5 / 6 (up to the regular solids, frustum, bipyramid). Pure bank `src/data/freePlay/shapeExplorer.js`; "Trapezoid" is now "Trapezium" (UK).
-- Names that also fit one drawing (rhombus/parallelogram, the triangle kinds, octahedron/bipyramid, diamond/trapezium) are never offered together (`alsoCounts` / `group`). Square/rectangle and circle/oval stay distinct, as in Years 1–2.
-- Flat-faced solids are drawn from vertex data (`solidModels.js`: hull faces, back-face culling, shading), with face-count and Euler-formula tests; curved solids are hand-drawn. Left out: megagon, icosagon, hendecagon, prismatoid, antiprism, Möbius strip, Klein bottle, ellipsoid, ovoid.
-- Checked: focused lint, unit and component tests. **No browser check** — the 3D drawings, tile wrapping for long names and both themes have not been seen on screen. Not device-reviewed.
+- Moved the Shape Explorer card into Maths on the Skills hub and removed the now-empty Shapes category. Its existing `/skills/shapes` game route and public guide are unchanged.
+- Skills hub/guide tests, full lint, production build and public SEO validation pass. The concurrent Year 6 English lesson-content validation failure remains outside this change.
 
-## 2026-11-05 — Flag Finder restyle
+## 2026-11-08 — Year 6 Geography complete course implementation
 
-- `/skills/flag-finder` now runs on `FreePlayShell` like the other free-play games: star pips, read-aloud, shared feedback and Bix's cheer. The "Where in the world?" label and select are gone; the whole planet and each continent are the level chips. A wrong country greys out and the child tries again; the right one lights up and the next flag follows.
-- On desktop (≥900px wide, ≥600px tall) the whole game fits the window with no page scroll: flag beside the four answers, the flag absorbing spare height. Smaller screens scroll as normal. Question generation is the pure `src/data/freePlay/flagFinder.js`; the shell takes a new optional `className`.
-- Checked: lint, component tests, build, unit test for the generator; one batched browser pass at 1280×720, 1440×800, 1920×1080 and 390×844 in both themes (desktop `scrollHeight` equals the viewport). Not device-reviewed by a child. `npm test` has 4 failures in Year 6 lesson/story/award tests from the uncommitted Year 6 work, not this change.
+- Built the 16-topic, 64-challenge Year 6 Geography pathway: regional comparison; glaciers, river/coast management and climate responses; energy, migration, trade and UK land use; then six-figure references, digital layers and fieldwork planning/evaluation. Every topic uses the established Geography field-note presentation and a visible evidence card for its answer.
+- Registered the course, permanent IDs, certificate outcomes, public guide and Year 6 selector/signup availability. Geography is explicitly `countsTowardYear: false`, so it does not alter the Year 6 Maths/English/Science certificate or any saved learner progress.
+- The Geography data test, 16-topic course checker (20 deterministic seeds) and a 64-wrapper/retry/hint/completion component playthrough pass. Full repository lint, tests and production build remain to be run; browser layout, physical-device, content specialist and learner review remain pending.
 
-## 2026-11-05 — City Spotlight restyle and levels
+## 2026-11-08 — Year 6 History built; Year 6 award switched on
 
-- `/skills/city-spotlight` now opens straight on a picture (the "Start Game" screen and the "Finished" screen are gone) and runs on `FreePlayShell` like the other free-play games: Easier / Medium / Harder levels (3 / 4 / 6 cities to choose from), star pips, read-aloud of the clue and the shared feedback. Rounds are endless; a wrong city greys out and the child tries again.
-- Layout uses the width: on a wide card the picture sits beside the clue and city buttons; on a phone the picture is on top. Type steps are page title, then the question, then the city buttons, then the clue. CSS is `cs-*` scoped (the old global `.score` / `.prompt` rules are gone).
-- New pure generator `src/data/freePlay/citySpotlight.js` (wrong choices never share the answer's country) with unit tests; `tests/components/citySpotlight.test.jsx` rewritten. Focused lint and tests only. **No browser check** (the Playwright browser was in use by another session): layout, both themes and phone width are unreviewed; full lint/test/build and device review pending.
+- Built **Year 6 History**: 5 categories, 20 topics, 80 challenges. Local history (method topics with made-up examples, plus Jarrow through time: Bede, Palmer's shipyard, the 1936 march), crime and punishment from the Anglo-Saxons to today, and change/cause/significance skills. Registered with `countsTowardYear: false`; public guide, certificate lines, permanent IDs and the statutory crosswalk added. See [the course record](superpowers/2026-11-08-year6-history-course-build.md).
+- **Owner decision:** Year 6 Maths, English and Science now count toward the Year 6 award (staged exclusion removed; no earned award can be lost). Registry and dataset tests updated.
+- Checks: lint, 20/20 `check:course`, a 80-challenge component playthrough, build and node/component suites pass, except one Year 6 English lesson lint failure from concurrent English work. Not checked in a browser or on a device; content, Jarrow fact-check and sensitive-topic reviews are pending.
 
-## 2026-11-05 — Speed Reader restyle, levels and more stories
+## 2026-11-08 — Year 6 English: Composition and Editing completed
 
-- `/skills/speed-reader` setup now sits in the shared challenge-kit panel (both themes via `--ck-*` tokens). A new Easy / Medium / Hard picker chooses which stories are offered and the starting pace (`src/data/freePlay/speedReader.js`: 70 / 110 / 160 wpm, 1 / 1 / 2 words at a time); speed and chunk size can still be changed.
-- The speed control is now a big single-thumb slider with a 🐢 and 🚀 at the ends, the same look as the Arithmetic Practice slider, plus Slow / Steady / Fast / Super quick buttons and a live "words a minute" readout. The focus-letter option is a switch.
-- "Your own story" is now one of two big cards ("A Bix story" / "Your own story") instead of a collapsed `<details>`; it shows a word count and still skips the questions.
-- `src/data/stories.json` grew from 6 to 18 stories (6 per level, 3 questions each). New unit tests (`src/data/freePlay/speedReader.test.js`, including a story-shape check) and `tests/components/speedReader.test.jsx`; `textSecurity` test updated for the own-story card. Focused lint and tests only. No browser check (requested); full lint/test/build and device review pending.
+- Built all four Curriculum slots and matching Bix lessons for **Formal Register for Audience and Purpose**, **Precising Longer Passages**, **Passive Voice in Writing**, **Subjunctive Forms in Writing**, **Proofreading for Clarity and Effect**, and **Year 6 Dictation**. The quest uses visible context, choice/sort/sentence-tile practice and the existing sound-off look-cover-write dictation route; progress, unlocks and Year 6 award membership are unchanged.
+- Five authored banks pass 30-seed topic checks, bank lint and a retry/hint/choice/sort/tile completion playthrough. Dictation has its own Appendix 1 bank test and a structure-only loader check because its specialised response kinds are unsupported by the generic checker. Lint and the production build pass; full tests currently report broader API/public-page failures. Browser layout, physical-device, teacher/content and owner/learner review remain pending.
 
-## 2026-11-05 — Sight Word Pop restyle and levels
+## 2026-11-08 — Year 6 English: Cohesion, Layout and Punctuation completed
 
-- `/skills/sight-word-pop` now starts from Easier / Medium / Harder levels instead of two sliders (8 words in 60s with slow bubbles, up to 12 words in 45s with fast ones). Playing has a time bar, a big target-word banner with read-aloud, larger coloured bubbles (theme tokens, both themes), and a 1–3 star result screen with Play again / Change level and a Stop button.
-- Fixes: a bubble now scores by whether it matches the *current* target (a leftover bubble of the previous target no longer scores), and the game no longer ends while the last target is still floating. CSS is now `swp-*` scoped (the old global `.wrapper`/`.score`/`.prompt` rules are gone). New `tests/components/sightWordPop.test.jsx`. Focused lint and tests only. No browser check (requested); full lint/test/build and device review pending.
+- Built all four curriculum slots and Bix lessons for the seven topics: **Cohesive Devices across Paragraphs** (contrast, result and repeated-phrase links), **Ellipsis** (spotting and building omissions), **Layout Devices** (device matching, leaflet sub-heading tapping), **Semicolons, Colons and Dashes**, **Punctuation in Lists** and **Bullet Point Punctuation** (tap-the-gap and tap-the-line controls), and **Hyphens to Avoid Ambiguity**. The course remains explicitly excluded from Year 6 awards.
+- Each bank has 15 authored templates per slot. Bank lint, semantic bank tests (for example: only the repeating opener repeats paragraph 1's words; every bullet list is internally consistent), 50-seed topic checks and a playthrough of all 28 slots (retry, hint, choice, sort, tiles, tap) pass; focused lint is clean. Bullet-point style is one taught convention that the statutory text does not specify, so owner review is advised. Full-course lint/test/build, browser layout, physical-device and content/owner review remain pending.
 
-## 2026-11-05 — Synonym Safari restyle and levels
+## 2026-11-08 — Year 6 English: Interpretation and Comparison completed
 
-- `/skills/synonym-match` now runs on `FreePlayShell` like Word Builder: Easier / Medium / Harder levels, star pips, read-aloud and the shared feedback. It stays a flip-card memory game: Easier has 3 pairs of everyday words, Medium 4, Harder 6 with longer words (enormous / colossal). A right pair stays face up in a shared colour with a tick; a wrong pair shakes and turns back over. Rounds take one word family per pair, so no word can match anything but its own partner.
-- New pure generator `src/data/freePlay/synonyms.js` (bank grew from 16 pairs to 70 synonym families) with unit tests, and `tests/components/synonymSafari.test.jsx`. The unnamespaced `difficulty` localStorage key is no longer written (removed from `docs/OPERATIONS.md` known issues). CSS is now `sa-*` scoped. Focused lint and tests only. No browser check (requested); full lint/test/build and device review pending.
+- Built all four Curriculum slots and matching Bix lessons for **Exploring Meaning in Context**, **Predicting from Details**, **Summarising across Paragraphs**, **Figurative Language and its Effect**, **Comparing Accounts and Viewpoints**, **Themes and Conventions**, and **Asking Questions about Texts**. Each topic uses visible reading evidence, then progresses through choices, claim sorting, response tiles and independent application; learner progress, unlocks and Year 6 award membership are unchanged.
+- Every reading bank has 15 authored templates per slot. Deterministic bank validation, a retry/hint/choice/sort/tile/completion playthrough and the production build pass. The full lint run remains blocked by an in-progress cohesion-topic lint error; full test runs also report unfinished lessons in the concurrently built cohesion/writing scope. Browser, touch-device, teacher/content and owner/learner review remain pending.
 
-## 2026-11-05 — Opposite Match restyle and levels
+## 2026-11-07 — Year 6 English: Spelling - Advanced Patterns completed
 
-- `/skills/opposite-match` now runs on `FreePlayShell` like Word Builder: Easier / Medium / Harder levels, star pips, read-aloud and the shared feedback. Easier matches three pairs of everyday words, Medium four pairs, Harder five pairs with longer words (ancient / modern). Matching can start from either column; a right match locks both words in a shared colour with a tick, a wrong tap shakes that word and the first word stays chosen. Rounds never hold two pairs sharing a word (`old`).
-- New pure generator `src/data/freePlay/opposites.js` (bank grew from 38 to 61 pairs) with unit tests; component test rewritten. CSS is now `om-*` scoped (the old global `.word-chip`/`.drop-zone` rules are gone). Focused lint and tests only. No browser check (requested); full lint/test/build and device review pending.
+- Built all four curriculum slots and Bix lessons for **The Letter String ough** (rhyme-word models, sound sorting, letter tiles, sentence choices), **Confusing Word Pairs** (the eleven Year 6 pairs: meaning choices, clue sorting, tiles and sentence checks) and **Year 6 Word List Parts 1 and 2** (spelling-chunk models, right/wrong sorting, tiles and typed sentence gaps for every statutory word from identity to yacht). The quest now has six playable topics; the course remains explicitly excluded from Year 6 awards.
+- Bank tests check every word against the saved Appendix 1 data; the node test caught and fixed identical sentence-check prompts in Confusing Word Pairs. Focused lint, 50-seed topic checks and completion playthroughs of all 16 new slots pass. Full-course lint/test/build, browser layout, physical-device and content/owner review remain pending.
 
-## 2026-11-05 — Sentence Builder restyle and levels
+## 2026-11-07 — Year 6 English: Formal Language and Sentence Choices
 
-- `/skills/sentence-builder` now runs on `FreePlayShell` like Word Builder: Easier / Medium / Harder levels, star pips, read-aloud and the shared feedback. The old word-count sliders are replaced by levels: Easier 3–4 words, Medium 5–6, Harder 7–11. Easier and Medium keep the capital letter on the first word and the full stop on the last as clues; Harder drops both. Words fill numbered slots; tapping a placed word takes it back; a wrong order shakes only the misplaced words so the child can fix them.
-- New pure generator `src/data/freePlay/sentenceBuilder.js` with unit tests (bank grew to 47 sentences); component tests rewritten. Its CSS is now `sb-*` scoped (the old global `.word-chip`/`.check-btn` rules are gone). Focused lint and tests only. No browser check (requested); full lint/test/build and device review pending.
+- Completed all four curriculum slots and Bix lessons for **Active and Passive Voice**, **Formal Structures and the Subjunctive**, and **Expanded Noun Phrases for Information**. The quest now also includes the already-built Formal and Informal Vocabulary and Synonyms and Antonyms topics.
+- Topic checks (four slots × 50 deterministic seeds), bank tests and a component playthrough for retry, hint, choice, sort and tile-build completion pass. Browser layout, physical-device, content/owner review and full-course validation remain pending.
 
-## 2026-11-05 — Word Sorter restyle and levels
+## 2026-11-06 — Year 6 English: Synonyms and Antonyms
 
-- `/skills/word-sorter` now runs on `FreePlayShell` like Word Builder: Easier / Medium / Harder levels, star pips, read-aloud and the shared feedback. Easier sorts nouns and verbs (6 words), Medium adds adjectives, Harder adds adverbs with longer words (8 words). Each box has its own colour and a plain-language hint ("naming words"). A wrong box shakes and the word stays in the bank; a right one pops in as a chip. Ambiguous words (play, drink, light, fast…) are excluded.
-- New pure generator `src/data/freePlay/wordSorter.js` with unit tests, and `tests/components/wordSorter.test.jsx`. Focused lint and tests pass. No browser check (requested); full lint/test/build and device review pending.
+- Built all four curriculum slots and Bix lessons for **Synonyms and Antonyms**: choosing synonyms and antonyms, sorting around one headword, swapping a word in a sentence with word tiles, and odd-one-out and same/opposite-meaning sentence choices. The course remains explicitly excluded from Year 6 awards.
+- Focused lint, deterministic four-slot bank checking (50 seeds), topic-loader checking and component playthroughs of all four slots pass. Full-course lint/test/build, browser layout, physical-device and content/owner review remain pending.
 
-## 2026-11-05 — Number Bonds restyle
+## 2026-11-06 — Year 6 English: Hyphens in Words
 
-- `/skills/number-bonds` now uses the shared free-play frame and kit tokens. The Target and Mode dropdowns are big segmented buttons (5/10/20/Custom; Match cards/Practice), Custom is a 52px −/+ stepper with a typed box clamped to 2–100, cards are larger flip tiles, and Practice uses the Arithmetic Practice equation panel. Rules are scoped under `.nb`.
-- New `tests/components/numberBonds.test.jsx`; `olderSkillsFeedback` test updated for the new controls. Focused tests and lint pass. No browser check (requested); full lint/test/build and device review pending.
-
-## 2026-11-05 — Arithmetic Practice setup restyle
-
-- `/skills/arithmetic-practice` now uses the shared free-play frame and kit tokens. Operations are big toggle chips, the mix option is a switch, operand count and number size are segmented pickers (Up to 10/20/50/100), and Min/Max is one dual-thumb slider with 44px thumbs and a live "From x to y" readout. The play screen shares the same look. All rules are scoped under `.ap`, removing global `select` and `input[type=range]` leaks.
-- New jsdom test `tests/components/mathPractice.test.jsx`; focused lint passes. One batched browser pass (desktop and 360px, both themes, drag including thumbs at the top end) found and fixed a chip wrap/clip. Full lint/test/build and physical-device review remain pending.
+- Built all four curriculum slots and Bix lessons for **Hyphens in Words**: visible prefix-and-base models, prefix sorting, letter-tile spelling and sentence choices teach the Appendix 1 forms `co-ordinate` and `re-enter` without conflating them with the later punctuation topic about avoiding ambiguity. The course remains explicitly excluded from Year 6 awards.
+- Focused lint, deterministic four-slot bank checking (50 seeds), topic-loader checking and a retry/hint/completion component playthrough pass. Full-course lint/test/build, browser layout, physical-device and content/owner review remain pending.
 
 ## 2026-11-05 — Year 6 English: Adding Endings to fer
 

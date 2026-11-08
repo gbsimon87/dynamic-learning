@@ -163,7 +163,7 @@ See [architecture](ARCHITECTURE.md) and [operations](OPERATIONS.md) before chang
 
 ## 5. What Currently Exists
 
-**35 registered pathways: 34 complete and a staged Year 6 English pathway (2 of 31 topics built).**
+**37 registered pathways, all complete (Year 6: Maths, English, Science, History and Geography).**
 See the [full inventory](CURRICULUM_INVENTORY.md) for subject
 coverage, award exclusions, introductions and review trackers. “Implemented”
 means files exist; it does not certify statutory coverage or content/device review.

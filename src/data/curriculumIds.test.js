@@ -1,6 +1,8 @@
 import { year6MathCurriculum } from "./year6MathCurriculum.js";
 import { year6ScienceCurriculum } from "./year6ScienceCurriculum.js";
 import { year6EnglishCurriculum } from "./year6EnglishCurriculum.js";
+import { year6HistoryCurriculum } from "./year6HistoryCurriculum.js";
+import { year6GeographyCurriculum } from "./year6GeographyCurriculum.js";
 import { year5MathCurriculum } from "./year5MathCurriculum.js";
 import { year5EnglishCurriculum } from "./year5EnglishCurriculum.js";
 import { year5ScienceCurriculum } from "./year5ScienceCurriculum.js";
@@ -1239,4 +1241,29 @@ const YEAR6_MATH_IDS = [
 
 test("Year 6 Maths category and topic ids are unchanged", () => {
   assert.deepEqual(ids(year6MathCurriculum), YEAR6_MATH_IDS);
+});
+
+// Year 6 History, built 2026-11-08. These ids are now URL and progress keys.
+const YEAR6_HISTORY_IDS = [
+  ["local-history---investigating-your-area", ["what-is-local-history", "maps-through-time", "buildings-and-streets-as-evidence", "census-photos-and-memories", "planning-a-local-study"]],
+  ["local-history---jarrow-through-time", ["jarrow-and-the-venerable-bede", "palmers-shipyard-and-the-iron-ships", "the-jarrow-march-1936"]],
+  ["crime-and-punishment---anglo-saxons-to-1700", ["law-and-order-before-1066", "norman-law-and-the-forest", "magna-carta-and-trial-by-jury", "vagabonds-plots-and-the-poor-law"]],
+  ["crime-and-punishment---1700-to-today", ["highwaymen-and-the-bloody-code", "transportation-to-australia", "peels-police", "prisons-and-reformers", "crime-fighting-today"]],
+  ["thinking-like-a-historian", ["change-and-continuity", "cause-and-consequence", "who-and-what-mattered"]],
+];
+
+test("Year 6 History category and topic ids are unchanged", () => {
+  assert.deepEqual(ids(year6HistoryCurriculum), YEAR6_HISTORY_IDS);
+});
+
+// Year 6 Geography, built 2026-11-08. These ids are URL and progress keys.
+const YEAR6_GEOGRAPHY_IDS = [
+  ["regions-and-comparison", ["belize-and-the-caribbean-coast", "comparing-four-regions", "europe-the-americas-and-russia", "changing-uk-counties-and-cities"]],
+  ["environmental-change", ["glaciers-and-mountain-environments", "managing-rivers", "managing-coasts", "climate-change-responses"]],
+  ["people-resources-and-connections", ["energy-choices-and-trade-offs", "population-and-migration", "global-trade-networks", "changing-uk-land-use"]],
+  ["maps-data-and-fieldwork", ["six-figure-references-and-scale", "digital-map-layers", "planning-a-fieldwork-enquiry", "presenting-and-evaluating-fieldwork"]],
+];
+
+test("Year 6 Geography category and topic ids are unchanged", () => {
+  assert.deepEqual(ids(year6GeographyCurriculum), YEAR6_GEOGRAPHY_IDS);
 });

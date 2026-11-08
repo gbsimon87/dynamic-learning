@@ -2543,6 +2543,50 @@ export const CURRICULUM_GUIDES = [
   },
   {
     "year": 6,
+    "subject": "history",
+    "slug": "year-6-history",
+    "path": "/curriculum-guide/year-6-history",
+    "label": "Year 6 History",
+    "intro": "Become a local history detective, follow Jarrow through time and trace crime and punishment from the Anglo-Saxons to today.",
+    "fit": "For children ready to use maps, buildings, records and memories as evidence, and to explain change, cause and significance.",
+    "areas": [
+      { "categoryId": "local-history---investigating-your-area", "title": "Local History · Investigating Your Area", "icon": "🏘️", "description": "Learn how to study a place: old maps, buildings and streets, census pages, photographs, memories and how to plan an enquiry.", "example": "What can an old map tell us about a village?", "colour": "mint" },
+      { "categoryId": "local-history---jarrow-through-time", "title": "Local History · Jarrow Through Time", "icon": "🚢", "description": "Follow one real town through the centuries: Bede's monastery, Palmer's shipyard and the Jarrow March of 1936.", "example": "Why did men march from Jarrow to London?", "colour": "rose" },
+      { "categoryId": "crime-and-punishment---anglo-saxons-to-1700", "title": "Crime and Punishment · Anglo-Saxons to 1700", "icon": "⚖️", "description": "Explore law and order before 1066, Norman law and the forest, Magna Carta and trial by jury, and Tudor and Stuart fears about poverty and plots.", "example": "What did Magna Carta say about the king and the law?", "colour": "gold" },
+      { "categoryId": "crime-and-punishment---1700-to-today", "title": "Crime and Punishment · 1700 to Today", "icon": "👮", "description": "Meet highwaymen, convicts sent to Australia, Peel's police, prison reformers and today's crime-fighting science.", "example": "Why did Robert Peel start the police?", "colour": "lilac" },
+      { "categoryId": "thinking-like-a-historian", "title": "Thinking Like a Historian", "icon": "⭐", "description": "Explain change and continuity, cause and consequence, and who and what mattered.", "example": "What changed, and what stayed the same?", "colour": "mint" }
+    ],
+    "activities": [
+      { "icon": "🗺️", "title": "Compare old and new", "description": "With a grown-up, find an old map or photo of a place near you and spot what changed and what stayed." },
+      { "icon": "🏠", "title": "Read a street", "description": "Walk down a street and look for clues in street names, building styles and signs." },
+      { "icon": "⚖️", "title": "Crime then and now", "description": "Talk about how a rule or punishment from the past differs from one today, and why." }
+    ],
+    "practical": "Local history belongs to your own place, so use libraries, museums, local archives and older relatives with a grown-up. Crime and punishment topics are stated factually and gently; talk through harsh punishments together.",
+    "alignment": "Topics are mapped to the National Curriculum in England for key stage 2 (Years 3–6): a local history study and a theme in British history beyond 1066 (crime and punishment). The year-by-year allocation is Bix’s choice; this path does not cover the whole key stage."
+  },
+  {
+    "year": 6,
+    "subject": "geography",
+    "slug": "year-6-geography",
+    "path": "/curriculum-guide/year-6-geography",
+    "label": "Year 6 Geography",
+    "intro": "Use maps, evidence and field notes to explore changing places, environmental choices and global connections.",
+    "fit": "For children ready to compare regions, weigh geographical trade-offs and plan a fair local enquiry.",
+    "areas": [
+      { "categoryId": "regions-and-comparison", "title": "Regions and Comparison", "icon": "🌍", "description": "Compare Belize, the Caribbean coast, Europe, the Americas, Russia and changing places in the UK.", "example": "What evidence makes a comparison fair?", "colour": "mint" },
+      { "categoryId": "environmental-change", "title": "Environmental Change", "icon": "🏔️", "description": "Explore glaciers, mountain environments, river and coast management, and responses to climate change.", "example": "Which flood plan balances different needs?", "colour": "rose" },
+      { "categoryId": "people-resources-and-connections", "title": "People, Resources and Connections", "icon": "🚢", "description": "Investigate energy choices, population and migration, global trade networks and changing UK land use.", "example": "What trade-off comes with this energy choice?", "colour": "gold" },
+      { "categoryId": "maps-data-and-fieldwork", "title": "Maps, Data and Fieldwork", "icon": "🧭", "description": "Use six-figure references, map layers and enquiry evidence, then present and evaluate geographical findings.", "example": "What does this six-figure reference identify?", "colour": "lilac" }
+    ],
+    "games": [
+      { "to": "/skills/world-map", "icon": "🗺️", "label": "World Map", "description": "Explore countries and places" },
+      { "to": "/skills/city-spotlight", "icon": "🏙️", "label": "City Spotlight", "description": "Take a closer look at a city" },
+      { "to": "/skills/find-the-city", "icon": "📍", "label": "Find the City", "description": "Put places on the map" }
+    ],
+    "alignment": "Topics are mapped to the National Curriculum in England for key stage 2 (Years 3–6). The year-by-year allocation is Bix’s choice; this path does not cover the whole key stage, and digital activities do not certify outdoor fieldwork."
+  },
+  {
+    "year": 6,
     "subject": "science",
     "slug": "year-6-science",
     "path": "/curriculum-guide/year-6-science",

@@ -97,6 +97,12 @@ const CATEGORY_ICONS = [
   { match: /^physical processes$/i, icon: "🌋" },
   { match: /^two european regions$/i, icon: "🏞️" },
   { match: /^maps and local surveys$/i, icon: "🧭" },
+  // History, Year 6
+  { match: /^local history - investigating your area$/i, icon: "🏘️" },
+  { match: /^local history - jarrow through time$/i, icon: "🚢" },
+  { match: /^crime and punishment - anglo-saxons to 1700$/i, icon: "⚖️" },
+  { match: /^crime and punishment - 1700 to today$/i, icon: "👮" },
+  { match: /^thinking like a historian$/i, icon: "⭐" },
   // History, Year 3
   { match: /^stone age to iron age$/i, icon: "🪨" },
   { match: /^roman britain$/i, icon: "🏛️" },

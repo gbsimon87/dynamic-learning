@@ -1,0 +1,23 @@
+// Read-only topic certificate lines for Year 6 History, keyed "6/history/<topicId>".
+export const YEAR6_HISTORY_TOPIC_SKILLS = {
+  "6/history/what-is-local-history": "I can explain what local history is and what clues it uses.",
+  "6/history/maps-through-time": "I can compare old and new maps to spot how a place changed.",
+  "6/history/buildings-and-streets-as-evidence": "I can use buildings and street names as clues to the past.",
+  "6/history/census-photos-and-memories": "I can use census pages, photos and memories as evidence.",
+  "6/history/planning-a-local-study": "I can plan a local history enquiry from question to answer.",
+  "6/history/jarrow-and-the-venerable-bede": "I can explain why Jarrow mattered in Anglo-Saxon times.",
+  "6/history/palmers-shipyard-and-the-iron-ships": "I can explain how Palmer's shipyard changed Jarrow.",
+  "6/history/the-jarrow-march-1936": "I can explain why the Jarrow March happened and what it showed.",
+  "6/history/law-and-order-before-1066": "I can describe how Anglo-Saxons and Vikings dealt with crime.",
+  "6/history/norman-law-and-the-forest": "I can describe how the Normans changed law and order.",
+  "6/history/magna-carta-and-trial-by-jury": "I can explain Magna Carta and how trial by jury began.",
+  "6/history/vagabonds-plots-and-the-poor-law": "I can describe Tudor and Stuart ideas about poverty and plots.",
+  "6/history/highwaymen-and-the-bloody-code": "I can explain highwaymen and why punishments grew harsh.",
+  "6/history/transportation-to-australia": "I can explain why convicts were sent to Australia.",
+  "6/history/peels-police": "I can explain why Peel started the Metropolitan Police.",
+  "6/history/prisons-and-reformers": "I can describe how prisons changed and who pushed for change.",
+  "6/history/crime-fighting-today": "I can describe how fingerprints and DNA help solve crimes.",
+  "6/history/change-and-continuity": "I can show what changed and what stayed the same over time.",
+  "6/history/cause-and-consequence": "I can explain causes and consequences of historical events.",
+  "6/history/who-and-what-mattered": "I can explain why some people and events matter more than others.",
+};

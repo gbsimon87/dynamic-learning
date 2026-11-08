@@ -21,6 +21,7 @@ export const SKILL_GROUPS = [
       { to: "/skills/charts", icon: "📊", label: "Chart Detective" },
       { to: "/skills/place-value", icon: "🧱", label: "Place Value Blocks" },
       { to: "/skills/rule-zoo", icon: "🦓", label: "Secret Rule Zoo" },
+      { to: "/skills/shapes", icon: "🔺", label: "Shape Explorer" },
     ],
   },
   {
@@ -38,14 +39,6 @@ export const SKILL_GROUPS = [
       { to: "/skills/sight-word-pop", icon: "🎈", label: "Sight Word Pop" },
       { to: "/skills/speed-reader", icon: "⚡", label: "Speed Reader" },
     ],
-  },
-  {
-    id: "shapes",
-    icon: "🔷",
-    name: "Shapes",
-    hue: "--sk-hue-shapes",
-    deep: "--sk-deep-shapes",
-    games: [{ to: "/skills/shapes", icon: "🔺", label: "Shape Explorer" }],
   },
   {
     id: "geography",

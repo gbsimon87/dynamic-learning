@@ -205,10 +205,36 @@ digital presentation made by the learner. Example graphs cannot count as
 collected fieldwork data. Grown-up activity cards support those practical
 requirements without adding tracked outdoor completion.
 
-Year 5 is implemented (16 topics, 64 challenges; see the Year 5 table above). Year 6 is
-proposed in the year split only and remains unbuilt. Years 3 and 4 have 64
-implemented challenges each. Remaining stage work must be reviewed when Year 6
-is specified. Physical-device review remains pending.
+## Year 6 topics mapped to statutory requirements
+
+**Implementation status (2026-11-08):** Year 6 Geography deepens the Years 3–5
+route with comparison, environmental decisions and independent enquiry. These
+topic titles are permanent title-derived IDs. Digital completion rehearses map,
+data and enquiry thinking; it does not certify a learner's outdoor observation,
+measurement, original graph or digital presentation.
+
+| Year | Category | Topic | Topic ID | Requirement codes |
+|---|---|---|---|---|
+| 6 | Regions and Comparison | Belize and the Caribbean Coast | `belize-and-the-caribbean-coast` | K2-L1, K2-P1, K2-Hp, K2-Hh, K2-S1 |
+| 6 | Regions and Comparison | Comparing Four Regions | `comparing-four-regions` | K2-P1, K2-Hp, K2-Hh, K2-S1 |
+| 6 | Regions and Comparison | Europe the Americas and Russia | `europe-the-americas-and-russia` | K2-L1, K2-L3, K2-S1 |
+| 6 | Regions and Comparison | Changing UK Counties and Cities | `changing-uk-counties-and-cities` | K2-L2, K2-Hh, K2-S1 |
+| 6 | Environmental Change | Glaciers and Mountain Environments | `glaciers-and-mountain-environments` | K2-Hp, K2-Hh, K2-S1 |
+| 6 | Environmental Change | Managing Rivers | `managing-rivers` | K2-Hp, K2-Hh, K2-S1 |
+| 6 | Environmental Change | Managing Coasts | `managing-coasts` | K2-Hp, K2-Hh, K2-S1 |
+| 6 | Environmental Change | Climate Change Responses | `climate-change-responses` | K2-Hp, K2-Hh, K2-S1 |
+| 6 | People Resources and Connections | Energy Choices and Trade Offs | `energy-choices-and-trade-offs` | K2-Hh, K2-Hp, K2-S1 |
+| 6 | People Resources and Connections | Population and Migration | `population-and-migration` | K2-Hh, K2-L1, K2-S1 |
+| 6 | People Resources and Connections | Global Trade Networks | `global-trade-networks` | K2-Hh, K2-L1, K2-S1 |
+| 6 | People Resources and Connections | Changing UK Land Use | `changing-uk-land-use` | K2-L2, K2-Hh, K2-S3 |
+| 6 | Maps Data and Fieldwork | Six Figure References and Scale | `six-figure-references-and-scale` | K2-S1, K2-S2 |
+| 6 | Maps Data and Fieldwork | Digital Map Layers | `digital-map-layers` | K2-S1, K2-S2 |
+| 6 | Maps Data and Fieldwork | Planning a Fieldwork Enquiry | `planning-a-fieldwork-enquiry` | K2-S3, K2-S1 |
+| 6 | Maps Data and Fieldwork | Presenting and Evaluating Fieldwork | `presenting-and-evaluating-fieldwork` | K2-S3, K2-S1 |
+
+Year 5 is implemented (16 topics, 64 challenges; see the Year 5 table above).
+Year 6 now adds 16 topics and 64 challenges. Physical-device review remains
+pending.
 
 ---
 
