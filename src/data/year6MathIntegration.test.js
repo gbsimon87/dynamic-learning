@@ -30,9 +30,9 @@ test("every Year 6 Maths topic has a dedicated certificate line", () => {
   }
 });
 
-test("staged Year 6 subjects preserve existing year awards and unavailable courses", () => {
-  assert.equal(countsTowardYear(6, "math"), false);
-  assert.deepEqual(yearAwardSubjectIds(6), []);
+test("Year 6 core award is enabled while additional subjects stay outside it", () => {
+  assert.equal(countsTowardYear(6, "math"), true);
+  assert.deepEqual(yearAwardSubjectIds(6), ["math", "english", "science"]);
   assert.deepEqual(yearAwardSubjectIds(5), ["math", "english", "science"]);
   assert.equal(loadCurriculum(6, "english"), year6EnglishCurriculum);
   assert.equal(loadCurriculum(7, "math"), null);

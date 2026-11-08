@@ -112,6 +112,8 @@ it, and never convert one tool's figures into another's.
 | Build | Tool and models | Topics | Work time | Messages | Input | Cache write | Cache read | Output | Record |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---|
 | Year 6 Science (2026-11-04) | Claude Code: Opus 5.5 coordinator, two Sonnet 5.5 content agents | 24 | 23 min 21 s | 121 | 242 | 710,510 | 21,519,577 | 257,420 | [course record](superpowers/2026-11-04-year6-science-course-build.md) |
+| Year 6 Geography | Claude Code: claude-sonnet-5-5 | 16 | 0h 12m 43s | 84 | 168 | 353,035 | 12,275,214 | 191,548 | [course record](superpowers/2026-11-08-year6-geography-course-build.md) |
+| Year 6 History | Claude Code: claude-sonnet-5-5 | 20 | 0h 15m 38s | 109 | 218 | 425,485 | 15,788,074 | 206,050 | [course record](superpowers/2026-11-08-year6-history-course-build.md) |
 
 What the baseline showed:
 

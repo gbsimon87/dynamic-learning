@@ -83,8 +83,9 @@ test("Year 6 Science circuit diagrams use only known symbols, and its bank is se
   }
 });
 
-test("Year 6 Science stays outside the Year 6 award until Maths and English join it", () => {
-  assert.equal(countsTowardYear(6, "science"), false);
+test("Year 6 Science counts toward the Year 6 award with Maths and English (owner decision 2026-11-08)", () => {
+  for (const subject of ["math", "english", "science"]) assert.equal(countsTowardYear(6, subject), true, subject);
+  assert.equal(countsTowardYear(6, "history"), false);
   assert.equal(countsTowardYear(5, "history"), false);
   for (const subject of ["math", "english", "science"]) assert.equal(countsTowardYear(5, subject), true, subject);
 });

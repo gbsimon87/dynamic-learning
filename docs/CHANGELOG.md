@@ -6,6 +6,23 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-08 — Shape Explorer moved to Maths
+
+- Moved the Shape Explorer card into Maths on the Skills hub and removed the now-empty Shapes category. Its existing `/skills/shapes` game route and public guide are unchanged.
+- Skills hub/guide tests, full lint, production build and public SEO validation pass. The concurrent Year 6 English lesson-content validation failure remains outside this change.
+
+## 2026-11-08 — Year 6 Geography complete course implementation
+
+- Built the 16-topic, 64-challenge Year 6 Geography pathway: regional comparison; glaciers, river/coast management and climate responses; energy, migration, trade and UK land use; then six-figure references, digital layers and fieldwork planning/evaluation. Every topic uses the established Geography field-note presentation and a visible evidence card for its answer.
+- Registered the course, permanent IDs, certificate outcomes, public guide and Year 6 selector/signup availability. Geography is explicitly `countsTowardYear: false`, so it does not alter the Year 6 Maths/English/Science certificate or any saved learner progress.
+- The Geography data test, 16-topic course checker (20 deterministic seeds) and a 64-wrapper/retry/hint/completion component playthrough pass. Full repository lint, tests and production build remain to be run; browser layout, physical-device, content specialist and learner review remain pending.
+
+## 2026-11-08 — Year 6 History built; Year 6 award switched on
+
+- Built **Year 6 History**: 5 categories, 20 topics, 80 challenges. Local history (method topics with made-up examples, plus Jarrow through time: Bede, Palmer's shipyard, the 1936 march), crime and punishment from the Anglo-Saxons to today, and change/cause/significance skills. Registered with `countsTowardYear: false`; public guide, certificate lines, permanent IDs and the statutory crosswalk added. See [the course record](superpowers/2026-11-08-year6-history-course-build.md).
+- **Owner decision:** Year 6 Maths, English and Science now count toward the Year 6 award (staged exclusion removed; no earned award can be lost). Registry and dataset tests updated.
+- Checks: lint, 20/20 `check:course`, a 80-challenge component playthrough, build and node/component suites pass, except one Year 6 English lesson lint failure from concurrent English work. Not checked in a browser or on a device; content, Jarrow fact-check and sensitive-topic reviews are pending.
+
 ## 2026-11-08 — Year 6 English: Composition and Editing completed
 
 - Built all four Curriculum slots and matching Bix lessons for **Formal Register for Audience and Purpose**, **Precising Longer Passages**, **Passive Voice in Writing**, **Subjunctive Forms in Writing**, **Proofreading for Clarity and Effect**, and **Year 6 Dictation**. The quest uses visible context, choice/sort/sentence-tile practice and the existing sound-off look-cover-write dictation route; progress, unlocks and Year 6 award membership are unchanged.

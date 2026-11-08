@@ -32,7 +32,7 @@ test("Year 6 English registers the approved staged tree and preserves award memb
   assert.equal(year6EnglishCurriculum.length, 5);
   assert.equal(topics.length, 31);
   assert.equal(new Set(topics.map(topic => topic.id)).size, 31);
-  assert.equal(countsTowardYear(6, "english"), false);
+  assert.equal(countsTowardYear(6, "english"), true);
   assert.deepEqual(Object.keys(YEAR6_ENGLISH_TOPIC_SKILLS).sort(), topics.map(topic => `6/english/${topic.id}`).sort());
   const source = readFileSync(new URL("../../docs/curriculum/year-5-and-6-english.md", import.meta.url), "utf8");
   for (const topic of topics) {

@@ -1,6 +1,8 @@
 import { year6MathCurriculum } from "./year6MathCurriculum.js";
 import { year6ScienceCurriculum } from "./year6ScienceCurriculum.js";
 import { year6EnglishCurriculum } from "./year6EnglishCurriculum.js";
+import { year6HistoryCurriculum } from "./year6HistoryCurriculum.js";
+import { year6GeographyCurriculum } from "./year6GeographyCurriculum.js";
 import { year5ArtCurriculum } from "./year5ArtCurriculum.js";
 import { year5ComputingCurriculum } from "./year5ComputingCurriculum.js";
 import { year5DesignCurriculum } from "./year5DesignCurriculum.js";
@@ -68,13 +70,14 @@ export const CURRICULUM_SUBJECTS = [
 ];
 
 const CURRICULA = [
-  // Year 6 (docs/curriculum/year-6-*.md), being built one subject at a time from 2026-11.
-  // The Year 6 award will be Maths, English and Science (owner decision 2026-11-04). Science
-  // stays out of it until all three exist, so a Science-only award is never earned and later
-  // taken away.
-  { year: 6, subject: "math", available: true, countsTowardYear: false, load: () => year6MathCurriculum },
-  { year: 6, subject: "english", available: true, countsTowardYear: false, load: () => year6EnglishCurriculum },
-  { year: 6, subject: "science", available: true, countsTowardYear: false, load: () => year6ScienceCurriculum },
+  // Year 6 (docs/curriculum/year-6-*.md, key-stage-2-history.md), built one subject at a time from 2026-11.
+  // The Year 6 award is Maths, English and Science (owner decision 2026-11-04, enabled 2026-11-08 once
+  // all three existed). Other Year 6 subjects stay outside the award.
+  { year: 6, subject: "math", available: true, load: () => year6MathCurriculum },
+  { year: 6, subject: "english", available: true, load: () => year6EnglishCurriculum },
+  { year: 6, subject: "science", available: true, load: () => year6ScienceCurriculum },
+  { year: 6, subject: "history", available: true, countsTowardYear: false, load: () => year6HistoryCurriculum },
+  { year: 6, subject: "geography", available: true, countsTowardYear: false, load: () => year6GeographyCurriculum },
   // Year 5 (docs/curriculum/year-5-*.md, key-stage-2-*.md), built 2026-11.
   { year: 5, subject: "math", available: true, load: () => year5MathCurriculum },
   { year: 5, subject: "english", available: true, load: () => year5EnglishCurriculum },

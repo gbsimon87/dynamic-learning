@@ -22,6 +22,7 @@ export const HISTORY_AGE = {
   3: { storyWords: 60, sentenceWords: 16, rounds: 5, minBank: 7, options: 3 },
   4: { storyWords: 70, sentenceWords: 18, rounds: 5, minBank: 7, options: 3 },
   5: { storyWords: 80, sentenceWords: 20, rounds: 5, minBank: 7, options: 3 },
+  6: { storyWords: 90, sentenceWords: 22, rounds: 5, minBank: 7, options: 3 },
 };
 
 export const HISTORY_TITLES = {
@@ -30,6 +31,7 @@ export const HISTORY_TITLES = {
   3: ["Meet it", "When was it?", "History detective", "Think like a historian"],
   4: ["Meet it", "When was it?", "History detective", "Think like a historian"],
   5: ["Meet it", "When was it?", "History detective", "Think like a historian"],
+  6: ["Meet it", "When was it?", "History detective", "Think like a historian"],
 };
 
 const words = (text) => String(text).split(/\s+/).filter(Boolean);

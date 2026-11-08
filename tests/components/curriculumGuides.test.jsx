@@ -9,7 +9,7 @@ import CurriculumGuide, { CurriculumOverview } from '../../src/seo/CurriculumGui
 
 vi.mock('../../src/components/mascot/Mascot', () => ({ default: () => null }));
 
-it('offers all thirty-five guides from an anonymous, year-grouped hub', () => {
+it('offers all thirty-seven guides from an anonymous, year-grouped hub', () => {
   render(<MemoryRouter><CurriculumOverview /></MemoryRouter>);
   for (const guide of CURRICULUM_GUIDES) {
     expect(screen.getByRole('link', { name: new RegExp(guide.label) }).getAttribute('href')).toBe(guide.path);

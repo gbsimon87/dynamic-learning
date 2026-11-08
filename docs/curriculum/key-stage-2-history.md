@@ -125,7 +125,7 @@ Years 3–6 allocation is recorded here; it is a project choice, not a DfE year 
 | 3 | Stone Age to Iron Age; Roman Empire and its impact on Britain; earliest civilisations overview with Ancient Egypt depth study | All 22 topics / 88 challenges built |
 | 4 | Anglo-Saxons and Scots; Viking and Anglo-Saxon struggle to Edward the Confessor | All 18 topics / 72 challenges built |
 | 5 | Ancient Greece (depth study); a non-European society (Mayan civilization c. AD 900); chronology and enquiry skills linking Years 3–5 | All 22 topics / 88 challenges built |
-| 6 | Local history study; a theme in British history beyond 1066 | Reserved; no specs or implementations |
+| 6 | Local history study (method, plus Jarrow as a worked example); a theme in British history beyond 1066 (crime and punishment); change, cause and significance skills | All 20 topics / 80 challenges built (content review pending) |
 
 Year 3 therefore does **not** cover the whole KS2 programme. The local study,
 beyond-1066 theme, Greece and non-European comparison remain for later years.
@@ -224,6 +224,46 @@ civilization (Baghdad) and Benin are not taught. The **local history study** and
 | One Long Timeline | `one-long-timeline` | the aims: understand the methods of historical enquiry, and note connections, contrasts and trends over time | BC and AD, ordering Years 3–5 events and parallel histories |
 | Sources and Interpretations | `sources-and-interpretations` | the aims: understand the methods of historical enquiry, and note connections, contrasts and trends over time | Primary and secondary sources, bias, new evidence and interpretations |
 | Comparing Past Societies | `comparing-past-societies` | the aims: understand the methods of historical enquiry, and note connections, contrasts and trends over time | Similarity and difference: Greece, the Maya and Britain c. AD 900 |
+
+## Year 6 topic crosswalk
+
+Dataset: `src/data/year6HistoryCurriculum.js`. Titles approved 2026-11-08; IDs are
+permanent URL and progress keys. Year 6 teaches the two units reserved from Year 5:
+a **local history study** and **a theme in British history beyond 1066**. A statutory
+local study depends on the child's own place, so five topics teach the *method* with
+made-up or generic examples (never claims about the child's locality) and three trace
+**Jarrow** as a real worked example, "a study over time tracing how several aspects
+of national history are reflected in the locality (this can go beyond 1066)". The
+beyond-1066 theme is **crime and punishment from the Anglo-Saxons to the present**
+(an example given in the programme), chosen because it extends Year 4's Anglo-Saxon
+laws. The other themes (monarchs, leisure, Greek and Roman legacy, a turning point)
+are not taught. Harsh punishments are stated soberly and briefly. The last three
+topics practise the aims' historical concepts (change, cause, significance).
+
+| Topic | ID | Statutory requirement | Focus / non-statutory example |
+|---|---|---|---|
+| What Is Local History? | `what-is-local-history` | a local history study | Locality, local and national history, kinds of clue and where records are kept |
+| Maps Through Time | `maps-through-time` | a local history study | Comparing old and new maps; what changed, what stayed; limits of maps |
+| Buildings and Streets as Evidence | `buildings-and-streets-as-evidence` | a local history study | Building styles, materials, street names, plaques and reuse |
+| Census, Photos and Memories | `census-photos-and-memories` | a local history study | Census pages, photographs and oral history as evidence |
+| Planning a Local Study | `planning-a-local-study` | a local history study | Enquiry steps from a question to a conclusion; recording sources |
+| Jarrow and the Venerable Bede | `jarrow-and-the-venerable-bede` | a local history study | Worked example over time: St Paul's monastery, AD 681–735, Bede and Anglo-Saxon Jarrow |
+| Palmer's Shipyard and the Iron Ships | `palmers-shipyard-and-the-iron-ships` | a local history study | Worked example over time: shipbuilding, 1851–1934, and the growing town |
+| The Jarrow March, 1936 | `the-jarrow-march-1936` | a local history study | Worked example over time: the Depression, the march to London and what it showed |
+| Law and Order Before 1066 | `law-and-order-before-1066` | a study of an aspect or theme in British history that extends pupils’ chronological knowledge beyond 1066 | Theme starting point: Anglo-Saxon and Viking law, built on Year 4 |
+| Norman Law and the Forest | `norman-law-and-the-forest` | a study of an aspect or theme in British history that extends pupils’ chronological knowledge beyond 1066 | After 1066: the king's peace, Forest Law and Norman courts |
+| Magna Carta and Trial by Jury | `magna-carta-and-trial-by-jury` | a study of an aspect or theme in British history that extends pupils’ chronological knowledge beyond 1066 | 1215: Magna Carta, the end of ordeal and the growth of juries |
+| Vagabonds, Plots and the Poor Law | `vagabonds-plots-and-the-poor-law` | a study of an aspect or theme in British history that extends pupils’ chronological knowledge beyond 1066 | Tudor and Stuart poverty, the 1601 Poor Law and the Gunpowder Plot |
+| Highwaymen and the Bloody Code | `highwaymen-and-the-bloody-code` | a study of an aspect or theme in British history that extends pupils’ chronological knowledge beyond 1066 | 1700s: highwaymen, the Bloody Code and thief-takers |
+| Transportation to Australia | `transportation-to-australia` | a study of an aspect or theme in British history that extends pupils’ chronological knowledge beyond 1066 | 1788–1868: convicts, the First Fleet and the harm to Aboriginal peoples |
+| Peel's Police | `peels-police` | a study of an aspect or theme in British history that extends pupils’ chronological knowledge beyond 1066 | 1829: the Metropolitan Police and why it began |
+| Prisons and Reformers | `prisons-and-reformers` | a study of an aspect or theme in British history that extends pupils’ chronological knowledge beyond 1066 | Prisons, John Howard, Elizabeth Fry and changing aims of punishment |
+| Crime-Fighting Today | `crime-fighting-today` | a study of an aspect or theme in British history that extends pupils’ chronological knowledge beyond 1066 | Fingerprints, DNA, courts today and the end of the death penalty for murder |
+| Change and Continuity | `change-and-continuity` | the aims: understand historical concepts such as continuity and change, cause and consequence, similarity, difference and significance | What changed and what stayed the same; fast and slow change |
+| Cause and Consequence | `cause-and-consequence` | the aims: understand historical concepts such as continuity and change, cause and consequence, similarity, difference and significance | Long-term causes, triggers and consequences |
+| Who and What Mattered? | `who-and-what-mattered` | the aims: understand historical concepts such as continuity and change, cause and consequence, similarity, difference and significance | Significance, viewpoint and whose story is missing |
+
+---
 
 ---
 

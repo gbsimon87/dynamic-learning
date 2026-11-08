@@ -3,7 +3,7 @@ import { shuffle, order } from "../year1Math/shared.js";
 export const GEOGRAPHY_TITLES = ["Explore", "Locate and read", "Use evidence", "Connect and explain"];
 export const GEOGRAPHY_AGE = { notesWords: 60, sentenceWords: 16, rounds: 5, minBank: 7 };
 /** Per-year limits from shared spec §3. Year 4 allows slightly longer notes and sentences. */
-export const GEOGRAPHY_AGES = { 1: { notesWords: 30, sentenceWords: 10, rounds: 4, minBank: 6 }, 2: { notesWords: 45, sentenceWords: 12, rounds: 5, minBank: 7 }, 3: GEOGRAPHY_AGE, 4: { notesWords: 70, sentenceWords: 18, rounds: 5, minBank: 7 }, 5: { notesWords: 70, sentenceWords: 18, rounds: 5, minBank: 7 } };
+export const GEOGRAPHY_AGES = { 1: { notesWords: 30, sentenceWords: 10, rounds: 4, minBank: 6 }, 2: { notesWords: 45, sentenceWords: 12, rounds: 5, minBank: 7 }, 3: GEOGRAPHY_AGE, 4: { notesWords: 70, sentenceWords: 18, rounds: 5, minBank: 7 }, 5: { notesWords: 70, sentenceWords: 18, rounds: 5, minBank: 7 }, 6: { notesWords: 80, sentenceWords: 20, rounds: 5, minBank: 7 } };
 
 /** Evidence is kept with its question, including the exact supporting lines and source IDs. */
 export function buildGeographyTopic(topic) {
