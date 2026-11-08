@@ -1,13 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
-  PENALTY_MS, adjustRange, answerOf, buildFacts, createDeck, factLabel, formatSeconds, missed, slowest, summarise,
-  trickyFacts,
+  PENALTY_MS, answerOf, buildFacts, createDeck, describeTables, factLabel, formatSeconds, missed, slowest, summarise,
+  toggleTable, trickyFacts,
 } from "./timesTables.js";
 import { seeded } from "./random.js";
 
 test("one table deals both orders of 1-12 with no duplicates", () => {
-  const facts = buildFacts(5, 5);
+  const facts = buildFacts([5]);
   assert.equal(facts.length, 23); // 5x1..5x12 and 1x5..12x5, 5x5 once
   assert.equal(new Set(facts.map(factLabel)).size, facts.length);
   assert.ok(facts.every((f) => f.a === 5 || f.b === 5));
@@ -15,22 +15,29 @@ test("one table deals both orders of 1-12 with no duplicates", () => {
   assert.ok(facts.some((f) => f.a === 12 && f.b === 5));
 });
 
-test("a range covers every table in it, and 0 and 20 are allowed", () => {
-  const facts = buildFacts(0, 20);
-  assert.ok(facts.some((f) => factLabel(f) === "0 × 7"));
-  assert.ok(facts.some((f) => factLabel(f) === "20 × 12"));
-  assert.equal(answerOf({ a: 20, b: 12 }), 240);
-  assert.ok(facts.every((f) => f.a <= 20 && f.b <= 20));
+test("a mix of tables covers only the tables picked", () => {
+  const facts = buildFacts([2, 5, 10]);
+  assert.ok(facts.some((f) => factLabel(f) === "10 × 12"));
+  assert.ok(facts.some((f) => factLabel(f) === "7 × 5"));
+  assert.ok(facts.every((f) => [2, 5, 10].includes(f.a) || [2, 5, 10].includes(f.b)));
+  assert.equal(new Set(facts.map(factLabel)).size, facts.length);
+  assert.equal(answerOf({ a: 12, b: 12 }), 144);
 });
 
-test("adjustRange keeps from <= to", () => {
-  assert.deepEqual(adjustRange({ from: 8, to: 5 }, "from"), { from: 8, to: 8 });
-  assert.deepEqual(adjustRange({ from: 3, to: 2 }, "to"), { from: 2, to: 2 });
-  assert.deepEqual(adjustRange({ from: 2, to: 9 }, "from"), { from: 2, to: 9 });
+test("toggleTable taps a table on or off and keeps the order", () => {
+  assert.deepEqual(toggleTable([2, 10], 5), [2, 5, 10]);
+  assert.deepEqual(toggleTable([2, 5, 10], 5), [2, 10]);
+  assert.deepEqual(toggleTable([], 3), [3]);
+});
+
+test("describeTables reads naturally", () => {
+  assert.equal(describeTables([5]), "the 5 times table");
+  assert.equal(describeTables([2, 5]), "the 2 and 5 times tables");
+  assert.equal(describeTables([2, 5, 10]), "the 2, 5 and 10 times tables");
 });
 
 test("the deck deals every fact before repeating and never repeats back to back", () => {
-  const facts = buildFacts(2, 4);
+  const facts = buildFacts([2, 3, 4]);
   for (let seed = 1; seed <= 100; seed += 1) {
     const deck = createDeck(facts, seeded(seed));
     const dealt = Array.from({ length: facts.length * 3 }, () => factLabel(deck.next()));

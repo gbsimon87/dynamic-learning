@@ -6,6 +6,11 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-08 — Times Tables Race: simpler setup screen
+
+- Replaced the From/To dropdowns and quick-choice buttons with numbered steps: tap any mix of 1–12 times-table tiles (with All and Clear), then pick one of two picture cards, Beat the clock or Finish the race. Start stays disabled until a table is chosen. Tables 0 and 13–20 are no longer offered. The play and results screens are unchanged. Skills Mode stays untracked.
+- Data and component tests updated and passing. Full lint and production build pass. Full `npm test` reports three failures already on `dev`, in files this change does not touch: Year 6 English lesson lint and two `stories.test.js` checks. One browser pass at 375px and 1280px in both themes found no horizontal scroll and 64px+ tiles. The play and results screens and a real device were not checked.
+
 ## 2026-11-08 — Shape Explorer moved to Maths
 
 - Moved the Shape Explorer card into Maths on the Skills hub and removed the now-empty Shapes category. Its existing `/skills/shapes` game route and public guide are unchanged.

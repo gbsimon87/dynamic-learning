@@ -3,14 +3,15 @@ import { shuffle } from "./random.js";
 /**
  * Times Tables Race: the pure parts.
  *
- * A fact is { a, b } and is asked as "a × b". Choosing tables from..to deals
- * every fact with one factor in that range and the other from 1 to 12, in
+ * A fact is { a, b } and is asked as "a × b". Choosing some tables deals
+ * every fact with one factor from those tables and the other from 1 to 12, in
  * both orders (3 × 8 and 8 × 3 are different questions that share an answer).
  * A result is { fact, ms, misses }: how long the child took to get that
  * question right and how many wrong tries came first.
  */
 
-export const MAX_TABLE = 20;
+/** The tables a child can tap: 1 to 12, any mix of them. */
+export const TABLE_CHOICES = Array.from({ length: 12 }, (_, i) => i + 1);
 export const MULTIPLIER_MAX = 12;
 /** A round adds this to the clock for every wrong try, so guessing never pays. */
 export const PENALTY_MS = 3000;
@@ -20,21 +21,26 @@ export const SLOW_MS = 5000;
 export const ROUND_SIZES = [10, 20, 30];
 export const COUNTDOWN_SECONDS = [30, 60, 90];
 
-/** Keeps from <= to when one end of the range is changed. */
-export function adjustRange({ from, to }, changed) {
-  if (changed === "from" && from > to) return { from, to: from };
-  if (changed === "to" && to < from) return { from: to, to };
-  return { from, to };
+/** Taps a table on or off, keeping the list in order. */
+export function toggleTable(tables, table) {
+  return tables.includes(table) ? tables.filter((t) => t !== table) : [...tables, table].sort((x, y) => x - y);
+}
+
+/** "the 5 times table", "the 2 and 5 times tables", "the 2, 5 and 10 times tables". */
+export function describeTables(tables) {
+  if (tables.length === 0) return "no times tables yet";
+  if (tables.length === 1) return `the ${tables[0]} times table`;
+  return `the ${tables.slice(0, -1).join(", ")} and ${tables[tables.length - 1]} times tables`;
 }
 
 export const answerOf = (fact) => fact.a * fact.b;
 export const factLabel = (fact) => `${fact.a} × ${fact.b}`;
 const factKey = (fact) => `${fact.a}x${fact.b}`;
 
-export function buildFacts(from, to) {
+export function buildFacts(tables) {
   const seen = new Set();
   const facts = [];
-  for (let table = from; table <= to; table += 1) {
+  for (const table of tables) {
     for (let other = 1; other <= MULTIPLIER_MAX; other += 1) {
       for (const fact of [{ a: table, b: other }, { a: other, b: table }]) {
         if (seen.has(factKey(fact))) continue;
