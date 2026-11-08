@@ -32,9 +32,10 @@ it("is listed on the Skills hub", () => {
 
 it("a round: wrong tries cost 3s, right answers advance, results list the miss", () => {
   renderGame();
-  press("Set number of questions");
-  press("Just one");
-  press("Start");
+  press("Finish the race");
+  press("Clear");
+  press("2 times table");
+  press("Start!");
   expect(document.activeElement).toBe(screen.getByLabelText("Your answer"));
   expect(prompt().includes(2)).toBe(true);
 
@@ -61,8 +62,8 @@ it("a round: wrong tries cost 3s, right answers advance, results list the miss",
 
 it("a physical keyboard types the answer and Enter checks it", () => {
   renderGame();
-  press("Set number of questions");
-  press("Start");
+  press("Finish the race");
+  press("Start!");
   const [a, b] = prompt();
   [...String(a * b)].forEach((key) => fireEvent.keyDown(document.body, { key }));
   fireEvent.keyDown(document.body, { key: "Enter" });
@@ -72,9 +73,9 @@ it("a physical keyboard types the answer and Enter checks it", () => {
 
 it("the countdown ends when time runs out and counts the right answers", () => {
   renderGame();
-  expect(screen.getByRole("button", { name: "Beat the countdown" }).getAttribute("aria-pressed")).toBe("true");
+  expect(screen.getByRole("button", { name: "Beat the clock" }).getAttribute("aria-pressed")).toBe("true");
   press("30 seconds");
-  press("Start");
+  press("Start!");
   expect(screen.getByRole("timer").textContent).toContain("30s");
 
   const [a, b] = prompt();
@@ -85,18 +86,36 @@ it("the countdown ends when time runs out and counts the right answers", () => {
   expect(within(results).getByText("1 right in 30 seconds")).toBeTruthy();
 });
 
-it("changing the tables starts clean, and the range never inverts", () => {
+it("tapping tiles picks any mix of tables, and Start waits for at least one", () => {
   renderGame();
-  fireEvent.change(screen.getByLabelText("From"), { target: { value: "9" } });
-  expect(screen.getByLabelText("To").value).toBe("9");
-  press("Set number of questions");
-  press("Start");
+  expect(screen.getByText("You picked the 2, 5 and 10 times tables.")).toBeTruthy();
+  press("Clear");
+  expect(screen.getByRole("button", { name: "Start!" }).disabled).toBe(true);
+  expect(screen.getByText("Tap at least one times table.")).toBeTruthy();
+  press("3 times table");
+  press("9 times table");
+  expect(screen.getByRole("button", { name: "9 times table" }).getAttribute("aria-pressed")).toBe("true");
+  press("3 times table");
+  expect(screen.getByText("You picked the 9 times table.")).toBeTruthy();
+  press("Finish the race");
+  press("Start!");
+  for (let i = 0; i < 5; i += 1) {
+    const [a, b] = prompt();
+    expect(a === 9 || b === 9).toBe(true);
+    answerRight(a, b);
+  }
+});
+
+it("changing the tables starts clean", () => {
+  renderGame();
+  press("Finish the race");
+  press("Start!");
   const [a, b] = prompt();
   answerRight(a, b);
   press("Stop");
   press("Change tables");
   expect(screen.getByRole("region", { name: "Choose your game" })).toBeTruthy();
-  press("Start");
+  press("Start!");
   expect(screen.getByText("Question 1 of 10")).toBeTruthy();
   expect(screen.getByRole("timer").textContent).toContain("0.");
 });

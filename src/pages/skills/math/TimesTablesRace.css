@@ -3,7 +3,8 @@
    so both themes work. Every rule is scoped under .ttr. */
 
 /* Buttons that share a screen never share a colour: the accent fills Start,
-   Check and Practise; the chosen option is inverted ink; Play again is
+   Check, Practise and the chosen table tiles (the chosen race card gets an
+   accent ring); the chosen option is inverted ink; Play again is
    purple; Stop and Change tables are outlines. */
 .ttr {
   --ttr-again: var(--light-home-reading-ink);
@@ -41,8 +42,12 @@ body.dark .ttr {
 }
 
 .ttr .ttr-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 0.4rem 0 0;
   font-size: 1.3rem;
-  margin-top: 0.4rem;
 }
 
 .ttr .ttr-setup,
@@ -54,37 +59,140 @@ body.dark .ttr {
   gap: 1rem;
 }
 
-.ttr .ttr-range {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 0.9rem;
-}
-
-.ttr .ttr-pick {
+/* --- setup: numbered steps, tappable table tiles, two race cards --- */
+.ttr .ttr-step {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
-  font-weight: 700;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
 }
 
-.ttr .ttr-pick select {
-  min-height: 56px;
-  min-width: 5.5rem;
-  padding: 0 0.8rem;
-  font: inherit;
-  font-size: 1.4rem;
+.ttr .ttr-step-number {
+  display: inline-grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  flex-shrink: 0;
+  font-size: 1.15rem;
   font-weight: 800;
-  text-align: center;
+  color: var(--ck-on-accent);
+  background: var(--ck-accent);
+  border-radius: 50%;
+}
+
+.ttr .ttr-tiles {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.6rem;
+  width: 100%;
+  max-width: 34rem;
+}
+
+.ttr .ttr-tile {
+  position: relative;
+  min-height: 64px;
+  font: inherit;
+  font-size: 1.6rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
   color: var(--ck-text);
   background: var(--ck-muted);
-  border: 2px solid var(--ck-border);
-  border-radius: 12px;
+  border: 3px solid var(--ck-border);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 120ms ease, background-color 120ms ease;
 }
 
-.ttr .ttr-times {
-  padding-bottom: 1rem;
-  font-weight: 700;
+.ttr .ttr-tile:hover:not(.is-on) {
+  border-color: var(--ck-text);
+}
+
+.ttr .ttr-tile:active {
+  transform: scale(0.94);
+}
+
+.ttr .ttr-tile.is-on {
+  color: var(--ck-on-accent);
+  background: var(--ck-accent);
+  border-color: var(--ck-accent);
+}
+
+.ttr .ttr-tick {
+  position: absolute;
+  top: 3px;
+  right: 6px;
+  font-size: 0.85rem;
+}
+
+.ttr .ttr-tile-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.ttr .ttr-modes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  width: 100%;
+  max-width: 34rem;
+}
+
+.ttr .ttr-mode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 1rem 0.8rem;
+  font: inherit;
+  color: var(--ck-text);
+  background: var(--ck-muted);
+  border: 3px solid var(--ck-border);
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.ttr .ttr-mode:hover:not(.is-on) {
+  border-color: var(--ck-text);
+}
+
+.ttr .ttr-mode.is-on {
+  border-color: var(--ck-accent);
+  box-shadow: 0 0 0 3px var(--ck-accent);
+}
+
+.ttr .ttr-mode-icon {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.ttr .ttr-mode-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.ttr .ttr-mode-blurb {
+  font-size: 0.95rem;
+  line-height: 1.35;
+  opacity: 0.85;
+}
+
+.ttr .ttr-tile:focus-visible,
+.ttr .ttr-mode:focus-visible,
+.ttr .ttr-secondary:focus-visible {
+  outline: 3px solid var(--ck-text);
+  outline-offset: 3px;
+}
+
+/* A phone: four tiles a row so each stays a big target. */
+@media (max-width: 480px) {
+  .ttr .ttr-tiles {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .ttr .ttr-mode {
+    padding: 0.8rem 0.5rem;
+  }
 }
 
 .ttr .ttr-note {
@@ -93,9 +201,15 @@ body.dark .ttr {
 }
 
 .ttr .ttr-start {
-  min-width: 12rem;
+  min-width: 14rem;
+  min-height: 64px;
   margin-top: 0.4rem;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
+}
+
+.ttr .ttr-start:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 /* --- playing --- */

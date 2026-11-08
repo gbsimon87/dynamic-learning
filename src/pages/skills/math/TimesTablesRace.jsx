@@ -4,15 +4,15 @@ import AnswerFeedbackLine from "../../../components/skills/AnswerFeedbackLine";
 import { useAnswerFeedback } from "../../../components/skills/useAnswerFeedback";
 import { createSubmissionGate } from "../../../data/submissionGate";
 import {
-  COUNTDOWN_SECONDS, MAX_TABLE, PENALTY_MS, ROUND_SIZES, adjustRange, answerOf, buildFacts, createDeck, factLabel,
-  formatSeconds, missed, slowest, summarise, trickyFacts,
+  COUNTDOWN_SECONDS, PENALTY_MS, ROUND_SIZES, TABLE_CHOICES, answerOf, buildFacts, createDeck, describeTables,
+  factLabel, formatSeconds, missed, slowest, summarise, toggleTable, trickyFacts,
 } from "../../../data/freePlay/timesTables";
 import "../../../components/challenge/challenge-kit.css";
 import "../../../components/skills/FreePlayShell.css";
 import "./TimesTablesRace.css";
 
 /**
- * Times Tables Race — pick the tables, then race the clock.
+ * Times Tables Race — tap the tables, then race the clock.
  *
  * Two ways to play: a round of 10, 20 or 30 questions timed overall (a wrong
  * try adds 3 seconds), or a countdown scored by how many are right. Answers
@@ -25,15 +25,12 @@ import "./TimesTablesRace.css";
 
 const NEXT_DELAY = 650;
 const TICK_MS = 100;
-const PRESETS = [
-  { label: "Just one", apply: ({ from }) => ({ from, to: from }) },
-  { label: "Up to 5", apply: () => ({ from: 1, to: 5 }) },
-  { label: "Up to 10", apply: () => ({ from: 1, to: 10 }) },
-  { label: "Up to 12", apply: () => ({ from: 1, to: 12 }) },
+const MODES = [
+  { value: "countdown", icon: "⏱️", title: "Beat the clock", blurb: "Get as many right as you can before time runs out." },
+  { value: "round", icon: "🏁", title: "Finish the race", blurb: "Answer them all as fast as you can. A wrong try adds 3 seconds." },
 ];
-const TABLES = Array.from({ length: MAX_TABLE + 1 }, (_, n) => n);
 
-const DEFAULTS = { from: 2, to: 5, mode: "countdown", roundSize: 10, seconds: 60 };
+const DEFAULTS = { tables: [2, 5, 10], mode: "countdown", roundSize: 10, seconds: 60 };
 
 function TimesTablesRace() {
   const [settings, setSettings] = useState(DEFAULTS);
@@ -45,8 +42,8 @@ function TimesTablesRace() {
     setGame({ id: (game?.id ?? 0) + 1, ...config });
   };
   const startFromSettings = () => {
-    const { from, to, mode, roundSize, seconds } = settings;
-    start({ facts: buildFacts(from, to), mode, size: mode === "round" ? roundSize : seconds, practice: false });
+    const { tables, mode, roundSize, seconds } = settings;
+    start({ facts: buildFacts(tables), mode, size: mode === "round" ? roundSize : seconds, practice: false });
   };
   const backToSetup = () => {
     setGame(null);
@@ -59,7 +56,7 @@ function TimesTablesRace() {
         <h1 className="free-play-title">
           <span aria-hidden="true">✖️ </span>Times Tables Race
         </h1>
-        <p className="free-play-intro">Pick your times tables, then answer as fast as you can.</p>
+        <p className="free-play-intro">Tap your times tables, pick a race, then answer as fast as you can.</p>
       </header>
 
       <div className="challenge-container free-play ttr">
@@ -101,69 +98,91 @@ function Segmented({ label, options, isActive, onPick }) {
   );
 }
 
+function Step({ number, title, children }) {
+  return (
+    <div className="ttr-step">
+      <h2 className="ttr-heading">
+        <span className="ttr-step-number" aria-hidden="true">{number}</span>
+        {title}
+      </h2>
+      {children}
+    </div>
+  );
+}
+
 function Setup({ settings, onChange, onStart }) {
-  const { from, to, mode, roundSize, seconds } = settings;
+  const { tables, mode, roundSize, seconds } = settings;
   const set = (patch) => onChange({ ...settings, ...patch });
-  const setRange = (key, value) => set(adjustRange({ from, to, [key]: Number(value) }, key));
-  const pool = buildFacts(from, to).length;
+  const ready = tables.length > 0;
 
   return (
     <section className="ttr-setup" aria-label="Choose your game">
-      <h2 className="ttr-heading">Which times tables?</h2>
-      <div className="ttr-range">
-        <label className="ttr-pick">
-          <span>From</span>
-          <select value={from} onChange={(e) => setRange("from", e.target.value)}>
-            {TABLES.map((n) => <option key={n} value={n}>{n}</option>)}
-          </select>
-        </label>
-        <span className="ttr-times" aria-hidden="true">to</span>
-        <label className="ttr-pick">
-          <span>To</span>
-          <select value={to} onChange={(e) => setRange("to", e.target.value)}>
-            {TABLES.map((n) => <option key={n} value={n}>{n}</option>)}
-          </select>
-        </label>
-      </div>
-      <Segmented
-        label="Quick choices"
-        options={PRESETS}
-        isActive={() => false}
-        onPick={(preset) => set(preset.apply({ from, to }))}
-      />
-      <p className="ttr-note">
-        {from === to ? `The ${from} times table` : `Times tables ${from} to ${to}`} · {pool} questions in the mix
-      </p>
+      <Step number="1" title="Tap your times tables">
+        <div className="ttr-tiles" role="group" aria-label="Times tables">
+          {TABLE_CHOICES.map((table) => {
+            const on = tables.includes(table);
+            return (
+              <button
+                key={table}
+                type="button"
+                className={`ttr-tile${on ? " is-on" : ""}`}
+                aria-pressed={on}
+                aria-label={`${table} times table`}
+                onClick={() => set({ tables: toggleTable(tables, table) })}
+              >
+                {table}
+                {on && <span className="ttr-tick" aria-hidden="true">✓</span>}
+              </button>
+            );
+          })}
+        </div>
+        <div className="ttr-tile-actions">
+          <button type="button" className="ttr-secondary" onClick={() => set({ tables: TABLE_CHOICES })}>All</button>
+          <button type="button" className="ttr-secondary" onClick={() => set({ tables: [] })}>Clear</button>
+        </div>
+        <p className="ttr-note" aria-live="polite">
+          {ready ? `You picked ${describeTables(tables)}.` : "Tap at least one times table."}
+        </p>
+      </Step>
 
-      <h2 className="ttr-heading">How do you want to race?</h2>
-      <Segmented
-        label="Game type"
-        options={[{ label: "Beat the countdown", value: "countdown" }, { label: "Set number of questions", value: "round" }]}
-        isActive={(option) => option.value === mode}
-        onPick={(option) => set({ mode: option.value })}
-      />
-      {mode === "round" ? (
-        <Segmented
-          label="Number of questions"
-          options={ROUND_SIZES.map((n) => ({ label: `${n} questions`, value: n }))}
-          isActive={(option) => option.value === roundSize}
-          onPick={(option) => set({ roundSize: option.value })}
-        />
-      ) : (
-        <Segmented
-          label="Countdown length"
-          options={COUNTDOWN_SECONDS.map((n) => ({ label: `${n} seconds`, value: n }))}
-          isActive={(option) => option.value === seconds}
-          onPick={(option) => set({ seconds: option.value })}
-        />
-      )}
-      <p className="ttr-note">
-        {mode === "round"
-          ? "Answer them all as fast as you can. A wrong try adds 3 seconds."
-          : "Get as many right as you can before time runs out."}
-      </p>
+      <Step number="2" title="How do you want to race?">
+        <div className="ttr-modes" role="group" aria-label="Game type">
+          {MODES.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              className={`ttr-mode${option.value === mode ? " is-on" : ""}`}
+              aria-pressed={option.value === mode}
+              aria-label={option.title}
+              aria-describedby={`ttr-mode-${option.value}`}
+              onClick={() => set({ mode: option.value })}
+            >
+              <span className="ttr-mode-icon" aria-hidden="true">{option.icon}</span>
+              <span className="ttr-mode-title">{option.title}</span>
+              <span className="ttr-mode-blurb" id={`ttr-mode-${option.value}`}>{option.blurb}</span>
+            </button>
+          ))}
+        </div>
+        {mode === "round" ? (
+          <Segmented
+            label="Number of questions"
+            options={ROUND_SIZES.map((n) => ({ label: `${n} questions`, value: n }))}
+            isActive={(option) => option.value === roundSize}
+            onPick={(option) => set({ roundSize: option.value })}
+          />
+        ) : (
+          <Segmented
+            label="Countdown length"
+            options={COUNTDOWN_SECONDS.map((n) => ({ label: `${n} seconds`, value: n }))}
+            isActive={(option) => option.value === seconds}
+            onPick={(option) => set({ seconds: option.value })}
+          />
+        )}
+      </Step>
 
-      <button type="button" className="submit-btn ttr-start" onClick={onStart}>Start</button>
+      <button type="button" className="submit-btn ttr-start" onClick={onStart} disabled={!ready}>
+        <span aria-hidden="true">▶ </span>Start!
+      </button>
     </section>
   );
 }
