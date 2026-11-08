@@ -178,6 +178,13 @@ rules: extend those layers instead of creating another store or counter.
 For feature detail, read the [architecture](ARCHITECTURE.md) and the source it
 links. Delivered outcomes belong in [CHANGELOG.md](CHANGELOG.md).
 
+The **teacher planning preview** at `/teachers/planning` uses fictional Year 3
+maths assessment evidence to create editable three-week plans and resource
+playlists. It has no teacher accounts, live assessments or saved plans yet;
+refresh discards edits and printing/PDF keeps a copy. It is linked from the
+footer and excluded from search indexing. See the
+[phased plan](superpowers/plans/2026-11-08-teacher-planning-playlists.md).
+
 ## 6. Known Issues / Debt
 
 [OPERATIONS.md](OPERATIONS.md) separates source-confirmed limitations, dated

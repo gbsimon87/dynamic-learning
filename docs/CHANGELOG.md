@@ -6,6 +6,12 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-08 — Teacher planning and playlists preview
+
+- Added `/teachers/planning`, linked from the footer, with clearly fictional Year 3 maths evidence. The preview distinguishes correct/incorrect/skipped/not-assessed responses, shows pupil distributions and explains its provisional teaching priorities.
+- Teachers can choose objectives, generate 3–15 lessons over three weeks, edit titles/objectives/timings/teaching notes, reorder lessons and Bix resources, and print/save a complete PDF. Twenty existing curriculum challenges and supporting Fraction Fun are resolved from current catalogues/availability. Replacing a draft requires explicit confirmation; refreshing loses edits. Teacher accounts, saved plans, live assessments and school sharing remain future milestones.
+- Full lint/build, all 941 component tests, planner/resource unit tests and HTTP route regressions pass. Browser layout/contrast checks cover desktop, tablet and phone in both themes, plus complete print output. Full `npm test` has three pre-existing failures in Year 6 English lesson lint and story content; four database tests skip without MongoDB. SEO HTTP checks pass, but its browser script stops at an unchanged Number Bonds heading mismatch. Physical-device, assistive-technology and teacher review remain pending. See the [plan and evidence](superpowers/plans/2026-11-08-teacher-planning-playlists.md).
+
 ## 2026-11-08 — Shape Explorer moved to Maths
 
 - Moved the Shape Explorer card into Maths on the Skills hub and removed the now-empty Shapes category. Its existing `/skills/shapes` game route and public guide are unchanged.

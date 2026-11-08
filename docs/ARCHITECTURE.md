@@ -10,6 +10,14 @@ Skills Mode is standalone and ungated at `/skills` and `/skills/<game>`. Curricu
 
 [AuthContext](../src/context/AuthContext.jsx) owns account/profile state. Progress belongs to the active child, not the parent account or browser as a whole. Keep identity, gameplay, completion and persistence in their existing layers rather than calling a concrete storage driver from a game.
 
+The ungated `/teachers/planning` route lazy-loads the teacher planning preview.
+`src/data/teacherPlanning.js` holds fictional evidence and pure planning rules;
+`teacherPlanningResources.js` resolves existing Year 3 maths and Skills references
+with injected built availability. The page keeps its draft in React state only
+and provides a separate print view. It does not write account, progress or
+assessment records. The shared footer links to the preview; `APP_PAGES` recognises
+direct server requests while keeping the route outside indexable public pages.
+
 ## Registry, datasets and implementation availability
 
 [curriculumRegistry.js](../src/data/curriculumRegistry.js) is the registry for years 1–6, 12 subjects and 33 available year/subject pathways. It is not a promise that every possible year/subject pairing exists or that every registered challenge has a component. Use `findCurriculum` / `loadCurriculum` and inspect the target dataset.

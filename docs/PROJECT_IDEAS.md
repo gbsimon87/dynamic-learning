@@ -129,6 +129,15 @@ below reflects current risks and dependencies; it does not commit ideas to work.
 
 ## 💡 Ideas
 
+### Teacher planning and playlists — planned 2026-11-08
+
+Next: teacher access and saved plans, followed by class pre-tests and private
+school sharing. The Year 3 maths planning preview is implemented; see
+[delivered changes](CHANGELOG.md). Assessment evidence needs separate records:
+existing completion totals cannot diagnose learning gaps. Review the preview
+with teachers before expanding its resource mappings and planning suggestions.
+See the [phased plan](superpowers/plans/2026-11-08-teacher-planning-playlists.md).
+
 Each idea says what a child or grown-up would get, then what is already done
 and what is left. File names and engineering detail are in
 [Notes for builders](#-notes-for-builders) at the end.

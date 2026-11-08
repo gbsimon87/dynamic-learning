@@ -53,7 +53,7 @@ test('missing routes/assets and internal build files return 404, while real priv
     assert.ok(!html.includes('rel="canonical"'), '404 has no canonical pointing to a valid URL');
     assert.equal(response.headers.get('x-robots-tag'), 'noindex, follow');
   }
-  for (const pathname of ['/login', '/signup', '/profiles', '/parent', '/reset-password?token=secret', '/curriculum/year/2/math', '/year/2/math/problem/number/counting/1', '/parent/trophies/example']) {
+  for (const pathname of ['/login', '/signup', '/profiles', '/parent', '/teachers/planning', '/reset-password?token=secret', '/curriculum/year/2/math', '/year/2/math/problem/number/counting/1', '/parent/trophies/example']) {
     const response = await request(pathname);
     assert.equal(response.status, 200, pathname);
     assert.equal(response.headers.get('cache-control'), 'no-store');

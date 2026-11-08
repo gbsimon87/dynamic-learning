@@ -8,6 +8,7 @@ export const APP_PAGES = {
   '/reset-password': 'Choose a new password', '/profiles': 'Learner profiles', '/parent': 'Parent area',
   '/curriculum': 'Choose your curriculum', '/trophies': 'Trophy room', '/hello': 'Meet Bix',
   '/daily-puzzle': 'Daily puzzle', '/credits': 'Credits', '/privacy': 'Privacy',
+  '/teachers/planning': 'Teacher planning preview',
 };
 
 export function normalisePath(pathname) {

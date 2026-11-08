@@ -17,6 +17,9 @@ test('public catalogue contains unique descriptions and canonicals for every gui
 });
 
 test('private, utility, unknown and staging pages are excluded without blocking public navigation', () => {
+  assert.equal(getPageSeo('/teachers/planning').exists, true);
+  assert.equal(getPageSeo('/teachers/planning').robots, 'noindex, follow');
+  assert.equal(PUBLIC_PATHS.includes('/teachers/planning'), false);
   for (const path of ['/login', '/reset-password', '/parent', '/parent/trophies/example', '/year/2/math/problem/a/b/1', '/privacy', '/credits', '/daily-puzzle', '/missing-page']) {
     assert.equal(getPageSeo(path).robots, 'noindex, follow');
   }

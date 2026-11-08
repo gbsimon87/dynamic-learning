@@ -37,6 +37,7 @@ const router = createBrowserRouter([
       { path: "curriculum-guide/:slug", element: <CurriculumGuide /> },
       // Public descriptions are prerendered; existing play routes stay ungated.
       { path: "learn/:slug", element: <SkillGuide /> },
+      { path: "teachers/planning", lazy: () => import("./pages/teachers/TeacherPlanning").then((m) => ({ Component: m.default })) },
 
       // === Auth: ungated, these are how you get an account in the first place ===
       { path: "login", lazy: () => import("./pages/auth/Login").then((m) => ({ Component: m.default })) },
