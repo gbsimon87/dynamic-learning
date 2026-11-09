@@ -281,6 +281,25 @@ const drive = (from, seconds, step = 50) => {
   for (let t = 0; t <= seconds * 1000; t += step) tick(from + t);
   return from + seconds * 1000 + step;
 };
+
+it('assists a tour to an existing discovery and freezes it when paused', () => {
+  harness.motion.matches = false;
+  const onOrbitChange = vi.fn();
+  api = createOceanScene({ canvas, container, onReady: vi.fn(), onUnavailable: vi.fn(), onOrbitChange });
+  const [scene] = harness.renderers.at(-1).render.mock.calls[0];
+  const submarine = scene.getObjectByName('ocean-submarine');
+  expect(api.tourTo('coral-reef')).toBe(true);
+  tick(0);
+  tick(400);
+  const pausedAt = submarine.position.clone();
+  api.setTourPaused(true);
+  tick(800);
+  expect(submarine.position.distanceTo(pausedAt)).toBeLessThan(0.00001);
+  api.setTourPaused(false);
+  tick(1200);
+  for (let time = 1300; time <= 2800; time += 100) tick(time);
+  expect(onOrbitChange).toHaveBeenLastCalledWith({ id: 'coral-reef', name: 'Coral reef', steady: false });
+});
 const yawFrame = (camera, submarine) => camera.position.clone().sub(submarine.position).applyAxisAngle(new THREE.Vector3(0, 1, 0), -submarine.rotation.y);
 
 it('drives the submarine, spins the propeller and keeps the chosen view behind it', () => {

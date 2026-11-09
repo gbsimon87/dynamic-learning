@@ -71,7 +71,8 @@ body.dark .ocean-explorer {
 
 .ocean-explorer .ocean-explorer__reset,
 .ocean-explorer .ocean-explorer__motion,
-.ocean-explorer .ocean-explorer__start {
+.ocean-explorer .ocean-explorer__start,
+.ocean-explorer .ocean-explorer__tour-launch {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -92,10 +93,12 @@ body.dark .ocean-explorer {
 .ocean-explorer .ocean-explorer__start { background: var(--ocean-panel); color: var(--ocean-text); border-color: currentColor; }
 .ocean-explorer .ocean-explorer__reset:disabled,
 .ocean-explorer .ocean-explorer__motion:disabled,
-.ocean-explorer .ocean-explorer__start:disabled { opacity: 0.55; cursor: default; }
+.ocean-explorer .ocean-explorer__start:disabled,
+.ocean-explorer .ocean-explorer__tour-launch:disabled { opacity: 0.55; cursor: default; }
 .ocean-explorer .ocean-explorer__reset:focus-visible,
 .ocean-explorer .ocean-explorer__motion:focus-visible,
 .ocean-explorer .ocean-explorer__start:focus-visible,
+.ocean-explorer .ocean-explorer__tour-launch:focus-visible,
 .ocean-explorer .ocean-explorer__go:focus-visible,
 .ocean-explorer .ocean-explorer__help summary:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
 
@@ -150,6 +153,11 @@ body.dark .ocean-explorer {
   .ocean-explorer .ocean-explorer__drive { display: block; }
 }
 @media (max-width: 720px) {
+  .ocean-explorer .ocean-explorer__header { display: block; }
+  .ocean-explorer .ocean-explorer__header > div:first-child,
+  .ocean-explorer .ocean-explorer__actions { width: 100%; min-width: 0; }
+  .ocean-explorer .ocean-explorer__actions { margin-top: 1rem; }
+  .ocean-explorer .ocean-explorer__actions > button { box-sizing: border-box; flex: 1 1 calc(50% - 0.3rem); min-width: 0; padding-inline: 0.8rem; }
   .ocean-explorer .ocean-explorer__stick { width: 108px; height: 108px; }
   .ocean-explorer .ocean-explorer__stick span { left: 24px; top: 24px; }
 }
@@ -158,6 +166,12 @@ body.dark .ocean-explorer {
 .ocean-explorer .ocean-explorer__orbit { top: 12px; bottom: auto; }
 .ocean-explorer .ocean-explorer__card { position: absolute; z-index: 60; top: 12px; right: 12px; display: flex; width: min(340px, calc(100% - 24px)); max-height: calc(100% - 24px); pointer-events: none; }
 .ocean-explorer .ocean-explorer__card .world-card { width: 100%; max-height: 100%; pointer-events: auto; }
+.ocean-explorer .ocean-explorer__tour { position: absolute; z-index: 65; top: 12px; left: 12px; display: grid; gap: 0.35rem; max-width: min(320px, calc(100% - 24px)); padding: 0.7rem 0.85rem; border: 2px solid currentColor; border-radius: 0.85rem; background: var(--ocean-panel); color: var(--ocean-text); box-shadow: 0 4px 18px color-mix(in srgb, var(--ocean-text) 18%, transparent); }
+.ocean-explorer .ocean-explorer__tour span { line-height: 1.35; }
+.ocean-explorer .ocean-explorer__tour div { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.ocean-explorer .ocean-explorer__tour button { min-height: 44px; padding: 0.45rem 0.75rem; border: 1px solid currentColor; border-radius: 999px; background: transparent; color: inherit; font: inherit; font-weight: 700; cursor: pointer; }
+.ocean-explorer .ocean-explorer__tour button:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
 @media (max-width: 720px) {
   .ocean-explorer .ocean-explorer__card { top: 76px; left: 12px; right: 12px; width: auto; max-height: 45%; }
+  .ocean-explorer .ocean-explorer__tour { right: 12px; max-width: none; }
 }

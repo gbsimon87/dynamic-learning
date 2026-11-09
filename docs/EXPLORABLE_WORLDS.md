@@ -6,6 +6,17 @@ branch's notes when it was merged (2026-11-04). The Solar System roadmap is
 idea #44 in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Owner review of the sea-life
 facts and physical-device review are still pending.
 
+## Ocean Explorer — Reef neighbours tour (2026-11-09)
+
+**Start reef tour** takes the submarine on a short, optional assisted journey
+through three existing discoveries: coral reef, parrotfish and green sea turtle.
+Each arrival opens its normal orbit/card with a small age-appropriate narration.
+The tour can be paused (which also holds its orbit), resumed, replayed/muted at a
+stop, moved backward/forward and skipped without saving anything; free driving
+and manual discovery remain unchanged. Reduced motion arrives straight at each
+stop instead of animating the travel. Owner review of the existing sea-life facts
+and physical-device review remain open.
+
 ## Shared world kit (2026-10-29)
 
 `src/components/worlds/` holds world-neutral pieces that Solar System and Ocean
