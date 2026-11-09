@@ -1,0 +1,20 @@
+// Read-only topic certificate lines for Year 6 French, keyed "6/french/<topicId>".
+export const YEAR6_FRENCH_TOPIC_SKILLS = {
+  "6/french/following-instructions": "I can understand and follow instructions in French.",
+  "6/french/rhymes-songs-and-poems": "I can spot rhymes and patterns in French songs and poems.",
+  "6/french/pronunciation-and-intonation": "I can read French aloud with the right sounds and tune.",
+  "6/french/asking-for-help": "I can ask for help and check what something means in French.",
+  "6/french/opinions-and-reasons": "I can give an opinion with a reason and reply to others in French.",
+  "6/french/daily-routine-and-time": "I can tell the time and describe my day in French.",
+  "6/french/holidays-and-travel": "I can talk about holidays, places and travel in French.",
+  "6/french/describing-people": "I can describe what people look like and are like in French.",
+  "6/french/describing-places": "I can describe my home and town in French.",
+  "6/french/describing-actions": "I can say what people are doing and how in French.",
+  "6/french/my-your-his-and-her": "I can use mon, ma, mes, ton, ta, tes, son, sa and ses.",
+  "6/french/want-can-and-must": "I can use vouloir, pouvoir and devoir with another verb.",
+  "6/french/going-to-do-things": "I can say what is going to happen with aller and a verb.",
+  "6/french/french-and-english-compared": "I can spot how French and English grammar differ.",
+  "6/french/reading-longer-texts": "I can read longer French texts and stories and understand them.",
+  "6/french/using-a-dictionary": "I can find and choose the right word in a French dictionary.",
+  "6/french/writing-about-myself": "I can write and adapt French sentences about myself.",
+};

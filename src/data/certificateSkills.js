@@ -42,6 +42,7 @@ import { YEAR5_GEOGRAPHY_TOPIC_SKILLS } from "./year5GeographyCertificateSkills.
 import { YEAR5_ART_TOPIC_SKILLS } from "./year5ArtCertificateSkills.js";
 import { YEAR5_COMPUTING_TOPIC_SKILLS } from "./year5ComputingCertificateSkills.js";
 import { YEAR6_COMPUTING_TOPIC_SKILLS } from "./year6ComputingCertificateSkills.js";
+import { YEAR6_FRENCH_TOPIC_SKILLS } from "./year6FrenchCertificateSkills.js";
 import { YEAR5_DESIGN_TOPIC_SKILLS } from "./year5DesignCertificateSkills.js";
 import { YEAR5_FRENCH_TOPIC_SKILLS } from "./year5FrenchCertificateSkills.js";
 import { YEAR5_MUSIC_TOPIC_SKILLS } from "./year5MusicCertificateSkills.js";
@@ -64,6 +65,7 @@ export const TOPIC_SKILLS = {
   ...YEAR5_ART_TOPIC_SKILLS,
   ...YEAR5_COMPUTING_TOPIC_SKILLS,
   ...YEAR6_COMPUTING_TOPIC_SKILLS,
+  ...YEAR6_FRENCH_TOPIC_SKILLS,
   ...YEAR5_DESIGN_TOPIC_SKILLS,
   ...YEAR5_FRENCH_TOPIC_SKILLS,
   ...YEAR5_MUSIC_TOPIC_SKILLS,

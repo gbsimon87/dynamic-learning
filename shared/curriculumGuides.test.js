@@ -7,10 +7,10 @@ import { getPageSeo, PUBLIC_PATHS } from './seo.js';
 
 // Public descriptions must follow actual content, including category identity,
 // rather than silently dropping topics or publishing an unimplemented path.
-test('all thirty-eight public guides cover every category of their implemented or staged pathway', () => {
-  assert.equal(CURRICULUM_GUIDES.length, 38);
-  assert.equal(new Set(CURRICULUM_GUIDES.map(guide => guide.path)).size, 38);
-  assert.equal(new Set(CURRICULUM_GUIDES.map(guide => guide.intro)).size, 38);
+test('all thirty-nine public guides cover every category of their implemented or staged pathway', () => {
+  assert.equal(CURRICULUM_GUIDES.length, 39);
+  assert.equal(new Set(CURRICULUM_GUIDES.map(guide => guide.path)).size, 39);
+  assert.equal(new Set(CURRICULUM_GUIDES.map(guide => guide.intro)).size, 39);
   for (const year of CURRICULUM_YEARS) for (const subject of CURRICULUM_SUBJECTS) {
     if (!isCurriculumAvailable(year, subject.id)) continue;
     const guide = curriculumGuideFor(year, subject.id);

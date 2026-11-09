@@ -2610,6 +2610,29 @@ export const CURRICULUM_GUIDES = [
   },
   {
     "year": 6,
+    "subject": "french",
+    "slug": "year-6-french",
+    "path": "/curriculum-guide/year-6-french",
+    "label": "Year 6 French",
+    "intro": "Listen, chat, describe and read longer French: the final step before secondary school.",
+    "fit": "For children who know some everyday French and are ready to follow instructions, give reasons and write about themselves.",
+    "areas": [
+      { "categoryId": "listening-and-sounds", "title": "Listening and Sounds", "icon": "👂", "description": "Follow classroom instructions, find rhymes and patterns in songs and poems, and read aloud with the right sounds and tune.", "example": "What does Levez-vous ! ask you to do?", "colour": "mint" },
+      { "categoryId": "conversations", "title": "Conversations", "icon": "💬", "description": "Ask for help, give opinions with reasons, talk about your day and the time, and chat about holidays and travel.", "example": "How do you say you like it because it is fun?", "colour": "rose" },
+      { "categoryId": "describing", "title": "Describing", "icon": "🖍️", "description": "Describe people, homes and towns, and what people are doing and how.", "example": "Which sentence describes a tall girl with long hair?", "colour": "gold" },
+      { "categoryId": "grammar", "title": "Grammar", "icon": "🧱", "description": "Use my, your, his and her, the verbs want, can and must, the near future with aller, and compare French with English.", "example": "Is it mon, ma or mes with maison?", "colour": "lilac" },
+      { "categoryId": "reading-and-writing", "title": "Reading and Writing", "icon": "📖", "description": "Read longer texts and stories, look words up in a bilingual dictionary and write and adapt sentences about yourself.", "example": "Which dictionary meaning fits this sentence?", "colour": "mint" }
+    ],
+    "activities": [
+      { "icon": "👂", "title": "Jacques a dit", "description": "Play Simon Says in French: Levez-vous, asseyez-vous, touchez la tête. Take turns being the caller." },
+      { "icon": "📕", "title": "Dictionary race", "description": "Call out an English word and race to find its French in a bilingual dictionary. Check whether it is a noun or a verb." },
+      { "icon": "✉️", "title": "A letter to a pen pal", "description": "Write five sentences about yourself, your family and your town, then change one word in each to make a new letter." }
+    ],
+    "practical": "The app shows French on screen with an optional French voice, but it cannot hear your child speak. Practise saying the words aloud together, sing French songs and, if you can, chat with a French speaker.",
+    "alignment": "Topics are mapped to the National Curriculum in England for key stage 2 languages (Years 3–6). The year-by-year allocation and the choice of French are Bix’s; this path does not cover the whole key stage."
+  },
+  {
+    "year": 6,
     "subject": "science",
     "slug": "year-6-science",
     "path": "/curriculum-guide/year-6-science",

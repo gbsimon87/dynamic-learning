@@ -6,6 +6,11 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-09 — Year 6 French
+
+- Registered Year 6 French (`countsTowardYear: false`; the Year 6 award stays Maths, English and Science): 17 topics / 68 challenges in Listening and Sounds, Conversations, Describing, Grammar, and Reading and Writing, mapped in `docs/curriculum/key-stage-2-languages.md`. It covers the key stage 2 bullets Year 5 left for Year 6 (listening and responding, songs, rhymes and poems, pronunciation and intonation, dictionary use, describing in writing, comparing French with English) plus possessives, vouloir/pouvoir/devoir and the near future. Speaking aloud is served on screen only, with an optional French voice.
+- Added certificate lines, the public guide, permanent-ID tests and a test that opens every challenge; reuses the Year 5 French picture renderer. `check:course` passes 17/17. Teacher content review and device review are still pending.
+
 ## 2026-11-09 — Year 6 Computing
 
 - Registered Year 6 Computing (`countsTowardYear: false`; the Year 6 award stays Maths, English and Science): 17 topics / 68 challenges in Programming Projects, Physical Systems, Algorithms, Data and Information, and Online World, mapped in `docs/curriculum/key-stage-2-computing.md`. It covers the key stage 2 bullets Year 5 left out (controlling or simulating physical systems; collecting, analysing, evaluating and presenting data). Questions stay unplugged and every output is computed by its builder; pictures reuse the Year 5 Computing renderer.

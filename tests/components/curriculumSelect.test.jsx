@@ -39,10 +39,10 @@ it.each([1, 2, 3, 4, 5])("shows only courses available for saved Year %i", (year
   expect(subjectNames()).toEqual(yearGroup === 5 ? YEAR_5_SUBJECTS : CORE_SUBJECTS);
 });
 
-it("shows Maths, English, Science, History, Geography and Computing for saved Year 6", async () => {
+it("shows Maths, English, Science, History, Geography, Computing and French for saved Year 6", async () => {
   const user = userEvent.setup();
   mount({ yearGroup: 6 });
-  expect(subjectNames()).toEqual(["Maths", "English", "Geography", "Science", "History", "Computing"]);
+  expect(subjectNames()).toEqual(["Maths", "English", "Geography", "Science", "History", "Computing", "French"]);
   await user.click(screen.getByRole("button", { name: /Science/ }));
   expect(screen.getByText("Year 6 Science opened")).toBeTruthy();
 });

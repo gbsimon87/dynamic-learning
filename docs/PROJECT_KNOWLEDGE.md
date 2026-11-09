@@ -163,7 +163,7 @@ See [architecture](ARCHITECTURE.md) and [operations](OPERATIONS.md) before chang
 
 ## 5. What Currently Exists
 
-**38 registered pathways, all complete (Year 6: Maths, English, Science, History, Geography and Computing).**
+**39 registered pathways, all complete (Year 6: Maths, English, Science, History, Geography, Computing and French).**
 See the [full inventory](CURRICULUM_INVENTORY.md) for subject
 coverage, award exclusions, introductions and review trackers. “Implemented”
 means files exist; it does not certify statutory coverage or content/device review.

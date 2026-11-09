@@ -115,6 +115,7 @@ it, and never convert one tool's figures into another's.
 | Year 6 Geography | Claude Code: claude-sonnet-5-5 | 16 | 0h 12m 43s | 84 | 168 | 353,035 | 12,275,214 | 191,548 | [course record](superpowers/2026-11-08-year6-geography-course-build.md) |
 | Year 6 History | Claude Code: claude-sonnet-5-5 | 20 | 0h 15m 38s | 109 | 218 | 425,485 | 15,788,074 | 206,050 | [course record](superpowers/2026-11-08-year6-history-course-build.md) |
 | Year 6 computing | Claude Code: claude-opus-5-5 | 17 | 0h 11m 2s | 62 | 124 | 143,479 | 9,045,212 | 67,061 | [course record](superpowers/2026-11-09-year6-computing-course-build.md) |
+| Year 6 French | Claude Code: claude-opus-5-5, claude-sonnet-5-5 | 17 | 0h 20m 31s | 93 | 186 | 503,468 | 11,254,228 | 264,997 | [course record](superpowers/2026-11-09-year6-french-course-build.md) |
 
 What the baseline showed:
 
