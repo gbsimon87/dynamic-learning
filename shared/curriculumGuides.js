@@ -1,5 +1,9 @@
 // Public editorial content only. Topic names and counts are read from the app registry.
 // Reviewed against docs/curriculum/ mappings; no learner state belongs here.
+import { SKILL_GROUPS } from './skillsCatalog.js';
+
+const SKILL_LABELS = new Map(SKILL_GROUPS.flatMap(group => group.games.map(game => [game.to, game.label])));
+
 export const GUIDE_SUBJECTS = {
   "math": {
     "name": "Maths",
@@ -111,7 +115,7 @@ export const GUIDE_SUBJECTS = {
   }
 };
 
-export const CURRICULUM_GUIDES = [
+const GUIDE_CONTENT = [
   {
     "year": 1,
     "subject": "math",
@@ -2807,6 +2811,11 @@ export const CURRICULUM_GUIDES = [
   "alignment": "The full course maps to the Year 6 mathematics programme of study for England."
 }
 ];
+
+export const CURRICULUM_GUIDES = GUIDE_CONTENT.map(guide => ({
+  ...guide,
+  games: guide.games?.map(game => ({ ...game, label: SKILL_LABELS.get(game.to) ?? game.label })),
+}));
 
 export function findCurriculumGuide(slug) {
   return CURRICULUM_GUIDES.find(guide => guide.slug === slug);

@@ -42,11 +42,16 @@ test('every guide has distinct public metadata and a correct breadcrumb', () => 
 });
 
 test('free practice only links to existing standalone games and practical gaps stay explicit', () => {
-  const gamePaths = new Set(SKILL_GROUPS.flatMap(group => group.games.map(game => game.to)));
+  const games = SKILL_GROUPS.flatMap(group => group.games);
+  const gamePaths = new Set(games.map(game => game.to));
+  const labels = new Map(games.map(game => [game.to, game.label]));
   for (const guide of CURRICULUM_GUIDES) {
     if (guide.games) {
       assert.equal(guide.games.length, 3);
-      for (const game of guide.games) assert.ok(gamePaths.has(game.to), game.to);
+      for (const game of guide.games) {
+        assert.ok(gamePaths.has(game.to), game.to);
+        assert.equal(game.label, labels.get(game.to), `${guide.label}: ${game.to} uses the current Skills Mode name`);
+      }
     } else {
       assert.ok(['science', 'history', 'art', 'computing', 'design', 'french', 'music', 'pe', 'wellbeing'].includes(guide.subject));
       assert.equal(guide.activities.length, 3);

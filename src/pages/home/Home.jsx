@@ -9,6 +9,7 @@ import { useHomeResume } from "./useHomeResume";
 import { useReveal } from "./useReveal";
 import { CURRICULUM_ICON } from "../../data/curriculumRegistry";
 import ProgressRing from "../../components/ProgressRing";
+import { SKILL_GROUPS } from "../../../shared/skillsCatalog.js";
 import "./Home.css";
 
 /* ===== DECORATION =====
@@ -30,13 +31,15 @@ const GLYPHS = [
   { char: "★", left: 78, top: 88, size: 1.9, duration: 17, delay: 4 },
 ];
 
+const SKILL_LABELS = Object.fromEntries(SKILL_GROUPS.flatMap((group) => group.games.map((game) => [game.to, game.label])));
+
 /* Featured practice stays secondary to the curriculum journey. */
 const FEATURED_SKILLS = [
   {
     id: "space",
     subject: "Geography",
     icon: "🪐",
-    title: "Solar System",
+    title: SKILL_LABELS["/skills/solar-system"],
     blurb: "Blast off and meet the planets!",
     to: "/skills/solar-system",
     action: "Explore space",
@@ -45,7 +48,7 @@ const FEATURED_SKILLS = [
     id: "reading",
     subject: "English",
     icon: "⚡",
-    title: "Speed Reader",
+    title: SKILL_LABELS["/skills/speed-reader"],
     blurb: "Read a story, one flash at a time.",
     to: "/skills/speed-reader",
     action: "Read a story",
@@ -54,7 +57,7 @@ const FEATURED_SKILLS = [
     id: "arithmetic",
     subject: "Maths",
     icon: "🧮",
-    title: "Arithmetic Practice",
+    title: SKILL_LABELS["/skills/arithmetic-practice"],
     blurb: "Try adding, taking away, times and dividing.",
     to: "/arithmetic-practice",
     action: "Try some sums",
@@ -63,7 +66,7 @@ const FEATURED_SKILLS = [
     id: "bonds",
     subject: "Maths",
     icon: "🔗",
-    title: "Number Bonds",
+    title: SKILL_LABELS["/skills/number-bonds"],
     blurb: "Find the numbers that belong together.",
     to: "/number-bonds",
     action: "Make a match",

@@ -10,6 +10,8 @@ work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history bef
 
 - Renamed every Skills Mode card with an action-focused, child-friendly description of what it teaches, from “Clock Generator” to “Learn to Read Time”. The same labels now appear on the linked public guides; existing routes, game behaviour, saved progress and content are unchanged.
 - Reordered the Skills hub so learners see calculation and times-table practice first in Maths, story reading first in English, and Solar System exploration first in Geography; the remaining games progress from foundational recognition to broader application.
+- The homepage's “Fancy a quick play?” cards now draw their titles from the same Skills catalogue, so they show the current names and stay aligned with future renames.
+- Curriculum-guide free-game recommendations now draw their labels from that same catalogue too, updating every affected Year 1–6 guide while retaining the specific activity descriptions and links.
 - Focused catalogue, hub and public-guide checks pass (34 component tests and 9 catalogue/SEO tests), as does the production build. The SEO check's HTTP pass covers all 70 public URLs; its browser phase remains blocked by the pre-existing `🔢 Number Bonds` heading assertion after it opens the unchanged game page. Full lint and tests are separately blocked by the concurrent Year 6 French work and existing Year 6 English/story-content failures. Device review was not needed for this wording-only change.
 
 ## 2026-11-09 — Times Tables Race clock control
