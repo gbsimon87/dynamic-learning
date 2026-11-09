@@ -32,7 +32,7 @@ export function createOceanScene({ canvas, container, onReady, onUnavailable, on
   // The child's chosen camera offset, in the submarine's yaw frame.
   const viewOffset = new THREE.Vector3();
   let disposed = false, ready = false, hasSize = false, positioned = false;
-  let water, environment, pilot, sun, offer = null, frame = null, lastTime = null;
+  let water, environment, pilot, sun, offer = null, frame = null, lastTime = null, tourTravel = null, tourPaused = false;
   // After leaving orbit the camera's aim and the camera glide from the orbit view back behind the submarine.
   const aimFrom = new THREE.Vector3(), aimPoint = new THREE.Vector3(), cameraFrom = new THREE.Vector3(), cameraTo = new THREE.Vector3();
   let aimBlend = 0;
@@ -42,7 +42,7 @@ export function createOceanScene({ canvas, container, onReady, onUnavailable, on
 
   const orbiting = () => pilot?.isActive() ?? false;
   // A reduced-motion orbit holds still, so it needs no frames of its own.
-  const driving = () => (orbiting() && !reduced) || aimBlend > 0 || !isSteeringIdle(steering, input);
+  const driving = () => ((orbiting() || tourTravel) && !reduced && !tourPaused) || aimBlend > 0 || !isSteeringIdle(steering, input);
   const canAnimate = () => !disposed && hasSize && !document.hidden && (!paused || driving());
 
   function updateAnimation() {
@@ -68,7 +68,8 @@ export function createOceanScene({ canvas, container, onReady, onUnavailable, on
         // Swimming animals can come within reach of a parked submarine.
         if (!orbiting() && !steer) updateOffer();
       }
-      if (orbiting()) circle(seconds);
+      if (tourTravel && !tourPaused) travelTour(seconds);
+      else if (orbiting() && !tourPaused) circle(seconds);
       else if (steer) drive(seconds);
       easeAim(seconds);
       draw();
@@ -179,9 +180,86 @@ export function createOceanScene({ canvas, container, onReady, onUnavailable, on
     return true;
   }
 
+  // Tours travel to an existing discovery, then use the ordinary orbit view.
+  // The route is intentionally brief and can be paused or abandoned at any point.
+  function travelTour(seconds) {
+    const journey = tourTravel;
+    if (!journey) return;
+    journey.next.object3d.getWorldPosition(journey.center);
+    journey.destination.copy(journey.center).add(journey.offset);
+    journey.elapsed = Math.min(journey.duration, journey.elapsed + seconds);
+    const progress = journey.duration === 0 ? 1 : journey.elapsed / journey.duration;
+    const eased = progress * progress * (3 - 2 * progress);
+    const position = journey.position.lerpVectors(journey.from, journey.destination, eased);
+    const direction = journey.direction.subVectors(journey.destination, journey.from).setY(0);
+    const yaw = direction.lengthSq() > 1e-8 ? Math.atan2(-direction.x, -direction.z) : steering.yaw;
+    steering = createSteeringState(position, yaw);
+    placeSubmarine();
+    followSubmarine();
+    if (progress >= 1) arriveAtTourStop();
+  }
+
+  function arriveAtTourStop() {
+    const journey = tourTravel;
+    if (!journey) return;
+    tourTravel = null;
+    tourPaused = false;
+    controls.enabled = true;
+    offer = { key: journey.next.key ?? journey.next.id, id: journey.next.id, name: journey.next.name };
+    onOrbitOffer({ id: offer.id, name: offer.name });
+    enterOrbit();
+  }
+
+  function tourTo(id) {
+    const next = environment?.discoveries.find((discovery) => discovery.key === id || discovery.id === id);
+    if (disposed || !next) return false;
+    if (orbiting()) pilot.stop();
+    input = STILL;
+    controls.enabled = false;
+    const center = new THREE.Vector3();
+    next.object3d.getWorldPosition(center);
+    const offset = submarine.position.clone().sub(center).setY(0);
+    if (offset.lengthSq() < 1e-8) offset.set(0, 0, 1);
+    offset.setLength(Math.max(next.orbit?.radius * 1.8, 3.5));
+    tourTravel = {
+      next,
+      from: submarine.position.clone(),
+      center,
+      offset,
+      destination: new THREE.Vector3(),
+      position: new THREE.Vector3(),
+      direction: new THREE.Vector3(),
+      elapsed: 0,
+      duration: reduced ? 0 : 1.6,
+    };
+    tourPaused = false;
+    if (reduced) {
+      travelTour(0);
+      draw();
+    } else updateAnimation();
+    return true;
+  }
+
+  function setTourPaused(value) {
+    if (disposed) return;
+    tourPaused = Boolean(value);
+    input = STILL;
+    updateAnimation();
+  }
+
   // Steering resumes where the orbit left the craft, facing the way it was going.
   function leaveOrbit() {
-    if (disposed || !orbiting()) return;
+    if (disposed) return;
+    if (tourTravel) {
+      tourTravel = null;
+      tourPaused = false;
+      controls.enabled = true;
+      updateOffer();
+      updateAnimation();
+      draw();
+      return;
+    }
+    if (!orbiting()) return;
     pilot.stop();
     aimFrom.copy(controls.target);
     cameraFrom.copy(camera.position);
@@ -209,6 +287,7 @@ export function createOceanScene({ canvas, container, onReady, onUnavailable, on
   function returnToStart() {
     if (disposed) return;
     leaveOrbit();
+    tourPaused = false;
     steering = createSteeringState(START);
     placeSubmarine();
     resetView();
@@ -344,7 +423,7 @@ export function createOceanScene({ canvas, container, onReady, onUnavailable, on
     return true;
   }
 
-  const api = { resetView, setWaterPaused, handleViewKey, setSteering, returnToStart, enterOrbit, leaveOrbit, dispose };
+  const api = { resetView, setWaterPaused, handleViewKey, setSteering, returnToStart, enterOrbit, leaveOrbit, tourTo, setTourPaused, dispose };
   try {
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
     renderer.outputColorSpace = THREE.SRGBColorSpace;

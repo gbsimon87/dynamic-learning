@@ -6,6 +6,34 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-09 — Skills Mode names explain the learning goal
+
+- Renamed every Skills Mode card with an action-focused, child-friendly description of what it teaches, from “Clock Generator” to “Learn to Read Time”. The same labels now appear on the linked public guides; existing routes, game behaviour, saved progress and content are unchanged.
+- Reordered the Skills hub so learners see calculation and times-table practice first in Maths, story reading first in English, and Solar System exploration first in Geography; the remaining games progress from foundational recognition to broader application.
+- The homepage's “Fancy a quick play?” cards now draw their titles from the same Skills catalogue, so they show the current names and stay aligned with future renames.
+- Curriculum-guide free-game recommendations now draw their labels from that same catalogue too, updating every affected Year 1–6 guide while retaining the specific activity descriptions and links.
+- Focused catalogue, hub and public-guide checks pass (34 component tests and 9 catalogue/SEO tests), as does the production build. The SEO check's HTTP pass covers all 70 public URLs; its browser phase remains blocked by the pre-existing `🔢 Number Bonds` heading assertion after it opens the unchanged game page. Full lint and tests are separately blocked by the concurrent Year 6 French work and existing Year 6 English/story-content failures. Device review was not needed for this wording-only change.
+
+## 2026-11-09 — Times Tables Race clock control
+
+- Both Beat the clock and Finish the race now let learners hide or show the live clock during a race. Hiding it does not pause, reset or otherwise alter the race.
+- The focused component playthrough covers the control in both race types, and the production build passes. Repository-wide lint and tests are currently blocked outside this change by active French work and existing Year 6 English/story-content failures.
+
+## 2026-11-09 — Year 6 French
+
+- Registered Year 6 French (`countsTowardYear: false`; the Year 6 award stays Maths, English and Science): 17 topics / 68 challenges in Listening and Sounds, Conversations, Describing, Grammar, and Reading and Writing, mapped in `docs/curriculum/key-stage-2-languages.md`. It covers the key stage 2 bullets Year 5 left for Year 6 (listening and responding, songs, rhymes and poems, pronunciation and intonation, dictionary use, describing in writing, comparing French with English) plus possessives, vouloir/pouvoir/devoir and the near future. Speaking aloud is served on screen only, with an optional French voice.
+- Added certificate lines, the public guide, permanent-ID tests and a test that opens every challenge; reuses the Year 5 French picture renderer. `check:course` passes 17/17. Teacher content review and device review are still pending.
+
+## 2026-11-09 — Year 6 Computing
+
+- Registered Year 6 Computing (`countsTowardYear: false`; the Year 6 award stays Maths, English and Science): 17 topics / 68 challenges in Programming Projects, Physical Systems, Algorithms, Data and Information, and Online World, mapped in `docs/curriculum/key-stage-2-computing.md`. It covers the key stage 2 bullets Year 5 left out (controlling or simulating physical systems; collecting, analysing, evaluating and presenting data). Questions stay unplugged and every output is computed by its builder; pictures reuse the Year 5 Computing renderer.
+- Added certificate lines, the public guide, permanent-ID tests and a test that opens every challenge. `check:course` passes 17/17, lint and build pass, and full tests pass except three existing Year 6 English lesson and story failures that also fail on `dev`. Teacher content review, a check of the longer program pictures in a real browser, and device review are still pending.
+
+## 2026-11-09 — Ocean Explorer Reef neighbours tour
+
+- Added an optional three-stop guided tour at `/skills/ocean-explorer`: assisted travel, normal orbit/card views and short narration for the coral reef, parrotfish and green sea turtle. Children can pause/resume or skip it at any point, use previous/next and narration controls at a stop, or keep exploring manually; no Skills or curriculum progress is saved.
+- Reduced-motion users arrive directly at each stop. The public guide and Ocean Explorer roadmap now describe Phase 5. Focused page/card and scene tests pass; physical-device performance/touch review and owner review of the underlying reef and sea-life facts remain open.
+
 ## 2026-11-09 — Lesson plans open as a readable teaching sequence
 
 - Generated plans start with a compact outline grouped by week, including lesson/activity counts and timings. Only one lesson opens at a time. Opening shows Warm up → Teach and model → Practise → Check understanding, with direct activity links; support/stretch, evidence and activity previews remain available through disclosures.

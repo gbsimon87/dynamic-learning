@@ -75,9 +75,9 @@ try {
   assert.ok(await page.getByText('Counting in Multiples of 4, 8, 50 and 100', { exact: true }).isVisible());
   await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Skills', exact: true }).click();
   await page.getByRole('heading', { name: 'Pick a game' }).waitFor();
-  await page.getByRole('link', { name: 'About Number Bonds', exact: true }).click();
-  await page.getByRole('heading', { name: 'Number Bonds', level: 1 }).waitFor();
-  await page.getByRole('link', { name: 'Play Number Bonds' }).click();
+  await page.getByRole('link', { name: 'About Make Number Bonds', exact: true }).click();
+  await page.getByRole('heading', { name: 'Make Number Bonds', level: 1 }).waitFor();
+  await page.getByRole('link', { name: 'Play Make Number Bonds' }).click();
   await page.getByRole('heading', { name: '🔢 Number Bonds' }).waitFor();
   assert.equal(await page.locator('meta[name="robots"]').getAttribute('content'), 'noindex, follow');
   await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Skills', exact: true }).click();
@@ -110,7 +110,7 @@ try {
     assert.ok(await staticPage.locator('.curriculum-guide-area details[open] li').first().isVisible());
   }
   await staticPage.goto(`${base}/learn/flag-finder`);
-  await staticPage.getByRole('heading', { name: 'Flag Finder', level: 1 }).waitFor();
+  await staticPage.getByRole('heading', { name: 'Match Flags to Countries', level: 1 }).waitFor();
   assert.ok((await staticPage.getByRole('main').innerText()).includes('REST Countries'));
   await staticPage.goto(`${base}/skills`);
   assert.equal(await staticPage.locator('a.sk-guide-link').count(), SKILL_GUIDES.length);

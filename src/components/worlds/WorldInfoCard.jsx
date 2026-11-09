@@ -13,6 +13,7 @@ export default function WorldInfoCard({ discovery, baseClass = 'world-card', orb
   const { name, facts = [], closer = [] } = discovery;
   const detailsVisible = !orbiting || expandedOrbit === name;
   const lastStop = tour.active && tour.index === tour.total - 1;
+  const tourPaused = Boolean(tour.paused);
   const introduction = discovery.summary?.match(/^[\s\S]*?[.!?](?:\s|$)/)?.[0] ?? discovery.summary;
   const css = part => `${baseClass}__${part}`;
   return <aside className={`${baseClass}${tour.active ? ` ${baseClass}--tour` : ''}`} aria-label={`${name} information`}>
@@ -44,10 +45,10 @@ export default function WorldInfoCard({ discovery, baseClass = 'world-card', orb
       </WorldSections>
     </div>
     {tour.active && <div className={css('navigation')} aria-label="Tour navigation">
-      <button onClick={() => tourActions?.previous()} disabled={tour.index === 0} aria-label="Previous">←</button>
-      <button onClick={() => tourActions?.replay()} disabled={tour.muted} aria-label="Replay narration">↻</button>
-      <button onClick={() => tourActions?.toggleNarration()} aria-label={tour.muted ? 'Turn sound on' : 'Mute'}>{tour.muted ? '🔊' : '🔇'}</button>
-      <button onClick={() => tourActions?.next()} aria-label={lastStop ? tour.finishLabel : 'Next'}>{lastStop ? (tour.finishIcon ?? '✓') : '→'}</button>
+      <button onClick={() => tourActions?.previous()} disabled={tourPaused || tour.index === 0} aria-label="Previous">←</button>
+      <button onClick={() => tourActions?.replay()} disabled={tourPaused || tour.muted} aria-label="Replay narration">↻</button>
+      <button onClick={() => tourActions?.toggleNarration()} disabled={tourPaused} aria-label={tour.muted ? 'Turn sound on' : 'Mute'}>{tour.muted ? '🔊' : '🔇'}</button>
+      <button onClick={() => tourActions?.next()} disabled={tourPaused} aria-label={lastStop ? tour.finishLabel : 'Next'}>{lastStop ? (tour.finishIcon ?? '✓') : '→'}</button>
     </div>}
   </aside>;
 }

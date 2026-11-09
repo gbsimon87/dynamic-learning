@@ -7,20 +7,22 @@ import OceanExplorer from '../../src/pages/skills/geography/OceanExplorer';
 import SkillGameLayout from '../../src/components/skills/SkillGameLayout';
 import SkillsPage from '../../src/pages/skills/SkillsPage';
 import { OCEAN_DISCOVERIES } from '../../src/pages/skills/geography/oceanDiscoveries.js';
+import { speak, stopNarrationOf } from '../../src/utils/speech.js';
 
 const scenes = vi.hoisted(() => []);
+const speech = vi.hoisted(() => ({ speak: vi.fn(), stopNarrationOf: vi.fn() }));
 vi.mock('../../src/pages/skills/geography/oceanScene.js', () => ({
   createOceanScene: vi.fn((options) => {
-    const api = { resetView: vi.fn(), setWaterPaused: vi.fn(), setSteering: vi.fn(), returnToStart: vi.fn(), enterOrbit: vi.fn(() => true), leaveOrbit: vi.fn(), handleViewKey: vi.fn((event) => event.key === '+' || (event.shiftKey && event.key.startsWith('Arrow'))), dispose: vi.fn() };
+    const api = { resetView: vi.fn(), setWaterPaused: vi.fn(), setSteering: vi.fn(), returnToStart: vi.fn(), enterOrbit: vi.fn(() => true), leaveOrbit: vi.fn(), tourTo: vi.fn(() => true), setTourPaused: vi.fn(), handleViewKey: vi.fn((event) => event.key === '+' || (event.shiftKey && event.key.startsWith('Arrow'))), dispose: vi.fn() };
     scenes.push({ ...options, ...api });
     return api;
   }),
 }));
 
-vi.mock('../../src/utils/speech.js', () => ({ speak: vi.fn(), stopNarrationOf: vi.fn() }));
+vi.mock('../../src/utils/speech.js', () => speech);
 vi.mock('../../src/components/celebration/sound/player.js', () => ({ isMuted: () => false }));
 
-beforeEach(() => { scenes.length = 0; });
+beforeEach(() => { scenes.length = 0; speech.speak.mockReset(); speech.stopNarrationOf.mockReset(); });
 
 it('waits for a rendered scene, resets it and delegates only supported view keys', () => {
   render(<OceanExplorer />);
@@ -118,13 +120,36 @@ it('sends the submarine back to the start once the scene is ready', () => {
   expect(scenes[0].returnToStart).toHaveBeenCalledOnce();
 });
 
+it('takes a pauseable guided tour through existing discoveries', () => {
+  render(<OceanExplorer />);
+  act(() => scenes[0].onReady());
+  fireEvent.click(screen.getByRole('button', { name: 'Start reef tour' }));
+  expect(scenes[0].tourTo).toHaveBeenCalledWith('coral-reef');
+  expect(screen.getByRole('status').textContent).toMatch(/heading to Coral reef/i);
+
+  act(() => scenes[0].onOrbitChange({ ...REEF, steady: false }));
+  expect(screen.getByText('Tour stop 1 of 3')).toBeTruthy();
+  expect(speak).toHaveBeenCalledOnce();
+
+  fireEvent.click(screen.getByRole('button', { name: 'Pause tour' }));
+  expect(scenes[0].setTourPaused).toHaveBeenLastCalledWith(true);
+  expect(stopNarrationOf).toHaveBeenCalledOnce();
+  expect(screen.getByRole('button', { name: 'Next' }).disabled).toBe(true);
+  fireEvent.click(screen.getByRole('button', { name: 'Resume tour' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Next' }));
+  expect(scenes[0].tourTo).toHaveBeenLastCalledWith('parrotfish');
+  fireEvent.click(screen.getByRole('button', { name: 'Skip tour' }));
+  expect(scenes[0].leaveOrbit).toHaveBeenCalledOnce();
+  expect(screen.getByRole('button', { name: 'Start reef tour' })).toBeTruthy();
+});
+
 it('opens the preview from the real Skills catalogue and returns through the shared back bar', async () => {
   const router = createMemoryRouter([
     { path: '/skills', element: <SkillsPage /> },
     { element: <SkillGameLayout />, children: [{ path: '/skills/ocean-explorer', element: <OceanExplorer /> }] },
   ], { initialEntries: ['/skills'] });
   render(<RouterProvider router={router} />);
-  await userEvent.click(screen.getByRole('link', { name: 'Ocean Explorer (preview)', exact: true }));
+  await userEvent.click(screen.getByRole('link', { name: 'Explore the Ocean (preview)', exact: true }));
   expect(screen.getByRole('heading', { name: 'Ocean Explorer' })).toBeTruthy();
   expect(screen.getByText('Prototype preview')).toBeTruthy();
   await userEvent.click(screen.getByRole('link', { name: 'Back to Skills' }));

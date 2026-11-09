@@ -22,6 +22,20 @@ it("lets signed-out visitors explore coverage while the hero starts signup", () 
   expect(screen.getByRole("link", { name: /Explore the curriculum/ }).getAttribute("href")).toBe("/what-we-teach");
 });
 
+it("uses the current Skills Mode names in quick play", () => {
+  mount({ status: "signedOut", child: null });
+  for (const title of ["Explore the Solar System", "Read Stories", "Practise Calculations", "Make Number Bonds"]) {
+    expect(screen.getByRole("heading", { name: title })).toBeTruthy();
+  }
+});
+
+it("marks subjects a year does not offer without promising them later", () => {
+  mount({ status: "signedOut", child: null });
+  expect(screen.queryByText(/Not yet available|Not offered/)).toBeNull();
+  expect(screen.getAllByText("–").length).toBeGreaterThan(0);
+  expect(screen.getAllByText("Not included in Year 1", { selector: ".sr-only" }).length).toBeGreaterThan(0);
+});
+
 it.each([
   { status: "needsChild", child: null },
   { status: "ready", child: { name: "Ada", avatar: "🐱", colour: "sky" } },

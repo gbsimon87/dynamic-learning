@@ -577,31 +577,86 @@ body.dark .home-page {
 .home-coverage-summary strong { color: var(--home-curriculum-ink); }
 .home-coverage-summary span { color: var(--home-muted); }
 
-.home-coverage-scroll { overflow-x: auto; border-radius: 12px; }
+/* The table scrolls sideways on narrow screens: the Year column stays put and
+   a soft edge on the right shows there is more to see. */
+.home-coverage-scroll {
+  position: relative; /* keeps the screen-reader-only text inside the scroller */
+  overflow-x: auto;
+  border: 1px solid var(--home-card-edge);
+  border-radius: 16px;
+  background:
+    linear-gradient(to left, var(--home-card) 40%, transparent) right center / 2.5rem 100% no-repeat local,
+    radial-gradient(farthest-side at 100% 50%, color-mix(in srgb, var(--home-curriculum-ink) 22%, transparent), transparent) right center / 1rem 100% no-repeat scroll,
+    var(--home-card);
+  scrollbar-color: var(--home-curriculum-edge) transparent;
+}
 .home-coverage-scroll:focus-visible { outline: 3px solid var(--home-focus); outline-offset: 3px; }
 
 .home-coverage-table {
   width: 100%;
-  min-width: 640px;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 
-.home-coverage-table caption {
-  padding: 0 0 0.8rem;
-  color: var(--home-muted);
-  font-size: 0.95rem;
-  text-align: left;
+.home-coverage-key { margin: 0 0 0.9rem; line-height: 1.5; }
+.home-coverage-key strong { display: block; color: var(--home-ink); font-size: 1rem; }
+.home-coverage-key span { display: block; margin-top: 0.2rem; color: var(--home-muted); font-size: 0.9rem; }
+
+@media (max-width: 480px) {
+  .home-coverage-table tr > :first-child { padding-inline: 0.7rem 0.5rem; }
 }
 
 .home-coverage-table th,
-.home-coverage-table td { padding: 0.85rem 0.7rem; border-bottom: 1px solid var(--home-card-edge); }
-.home-coverage-table thead { background: var(--home-curriculum-label); color: var(--home-curriculum-ink); }
-.home-coverage-subject { display: inline-flex; align-items: center; gap: 0.4rem; white-space: nowrap; }
-.home-coverage-table th:first-child { text-align: left; white-space: nowrap; }
+.home-coverage-table td { padding: 0.45rem 0.3rem; border-bottom: 1px solid var(--home-card-edge); }
 .home-coverage-table tbody tr:last-child > * { border-bottom: 0; }
-.home-coverage-count { display: block; font-size: 1.2rem; }
-.home-coverage-empty { color: var(--home-muted); font-size: 0.9rem; }
+
+.home-coverage-table thead th {
+  padding: 0.75rem 0.35rem 0.65rem;
+  border-bottom-color: var(--home-curriculum-edge);
+  background: var(--home-curriculum-label);
+  color: var(--home-curriculum-ink);
+  font-size: 0.8rem;
+  line-height: 1.25;
+  vertical-align: bottom;
+}
+.home-coverage-subject { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; }
+.home-coverage-icon { font-size: 1.25rem; line-height: 1; }
+
+/* Year column: pinned while the subjects scroll beneath it. */
+.home-coverage-table tr > :first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  padding-inline: 0.9rem 0.7rem;
+  border-right: 1px solid var(--home-card-edge);
+  text-align: left;
+  white-space: nowrap;
+}
+.home-coverage-table tbody th { background: var(--home-card); color: var(--home-ink); font-weight: 700; }
+.home-coverage-table thead th:first-child { font-size: 0.9rem; }
+
+.home-coverage-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3rem;
+  min-height: 3rem;
+  padding: 0 0.5rem;
+  box-sizing: border-box;
+  border: 1px solid var(--home-curriculum-edge);
+  border-radius: 14px;
+  background: var(--home-curriculum);
+  color: var(--home-curriculum-ink);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 160ms ease-out, border-color 160ms ease-out;
+}
+a.home-coverage-count:hover { background: var(--home-curriculum-label); border-color: var(--home-curriculum-ink); text-decoration: underline; text-underline-offset: 0.2em; }
+a.home-coverage-count:focus-visible { outline: 3px solid var(--home-focus); outline-offset: 2px; }
+.home-coverage-empty { color: var(--home-muted); font-size: 1.05rem; }
 
 .home-coverage-actions { margin: 1.25rem 0 0; text-align: center; }
 
@@ -775,10 +830,10 @@ body.dark .home-page {
   .home-btn,
   .home-skill,
   .home-ring-fill,
-  .reveal-armed { transition: none; }
+  .reveal-armed,
+  .home-coverage-count { transition: none; }
 
   .home-btn:hover,
   .home-skill:hover { transform: none; }
 }
 
-.home-coverage-guide { display: inline-flex; align-items: center; justify-content: center; min-width: 48px; min-height: 48px; color: inherit; text-underline-offset: 0.2em; }

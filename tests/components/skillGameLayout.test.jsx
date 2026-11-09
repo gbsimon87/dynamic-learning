@@ -27,3 +27,14 @@ it("lists Shape Explorer with Maths instead of a one-game Shapes group", () => {
   expect(maths.games.some((game) => game.to === "/skills/shapes")).toBe(true);
   expect(SKILL_GROUPS.some((group) => group.id === "shapes")).toBe(false);
 });
+
+it("orders each hub subject from its requested first skill through related practice", () => {
+  expect(SKILL_GROUPS.find((group) => group.id === "math").games.slice(0, 4).map((game) => game.label)).toEqual([
+    "Practise Calculations",
+    "Explore Times Tables",
+    "Practise Times Tables",
+    "Build Numbers with Place Value",
+  ]);
+  expect(SKILL_GROUPS.find((group) => group.id === "english").games[0].label).toBe("Read Stories");
+  expect(SKILL_GROUPS.find((group) => group.id === "geography").games[0].label).toBe("Explore the Solar System");
+});

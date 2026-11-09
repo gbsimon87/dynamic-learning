@@ -1,7 +1,7 @@
 # Ocean Explorer — design
 
 Date: 2026-10-29  
-Status: Phase 1, the water-appearance follow-up and Phase 2 (manual steering) implemented; Phase 3 (coral reef orbit) implemented; Phase 4 has a parrotfish, clownfish, green sea turtle, spotted eagle ray and seahorse; the drivable ocean is 20 times the first preview's area and busy with nine reefs and 85 animals of twelve species; later phases remain future work.  
+Status: Phases 1–5 implemented: manual steering, coral-reef and animal orbits, 85 animals of 12 species across nine reefs, and the optional Reef neighbours tour. The tour assists travel between a coral reef, parrotfish and green sea turtle, with narration and pause/skip controls; Phase 6 remains future work.
 Home: Skills Mode → Geography → **Ocean Explorer**  
 Audience: children aged 6–8.
 

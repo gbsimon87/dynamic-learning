@@ -34,7 +34,7 @@ test("subjects come from the registry for the year", () => {
   assert.deepEqual([...subjectsForYear(1)].sort(), ["english", "geography", "history", "math", "science"]);
   assert.deepEqual([...subjectsForYear(2)].sort(), ["english", "geography", "history", "math", "science"]);
   assert.deepEqual(subjectsForYear(7), []);
-  assert.deepEqual(subjectsForYear(6), ["math", "english", "geography", "science", "history"]);
+  assert.deepEqual(subjectsForYear(6), ["math", "english", "geography", "science", "history", "computing", "french"]);
   assert.deepEqual([...subjectsForYear(3)].sort(), ["english", "geography", "history", "math", "science"]);
   assert.deepEqual(subjectsForYear(4), ["math", "english", "geography", "science", "history"]);
 });

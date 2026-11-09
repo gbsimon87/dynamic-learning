@@ -1,0 +1,20 @@
+// Read-only topic certificate lines for Year 6 Computing, keyed "6/computing/<topicId>".
+export const YEAR6_COMPUTING_TOPIC_SKILLS = {
+  "6/computing/combining-loops-and-decisions": "I can predict programs that make a decision inside a loop.",
+  "6/computing/variables-that-change": "I can trace how counters and totals change in a loop.",
+  "6/computing/procedures": "I can define and call procedures to reuse steps.",
+  "6/computing/debugging-longer-programs": "I can find and fix bugs in longer programs.",
+  "6/computing/sensors-and-inputs": "I can explain how sensors give input to a program.",
+  "6/computing/controlling-devices": "I can follow programs that control devices.",
+  "6/computing/simulations": "I can explain how a simulation models something real.",
+  "6/computing/searching-algorithms": "I can compare ways to search through a list.",
+  "6/computing/sorting-algorithms": "I can follow how a sorting algorithm puts items in order.",
+  "6/computing/comparing-algorithms": "I can count steps to compare two algorithms.",
+  "6/computing/collecting-data": "I can plan how to collect useful data.",
+  "6/computing/databases-and-spreadsheets": "I can sort, filter and calculate with data.",
+  "6/computing/presenting-data": "I can choose a clear way to present data.",
+  "6/computing/how-email-and-messaging-work": "I can explain how email and messages travel online.",
+  "6/computing/smart-searching": "I can search smartly and spot adverts in results.",
+  "6/computing/fact-or-fake": "I can check whether online content is true.",
+  "6/computing/digital-footprint-and-reporting": "I can protect my digital footprint and report worries.",
+};

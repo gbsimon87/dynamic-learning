@@ -40,16 +40,21 @@ export default function HomeCurriculumOverview() {
         <strong>{totals.pathways} completed pathways</strong>
         <span>{totals.topics} topics · {totals.challenges.toLocaleString("en-GB")} challenges</span>
       </p>
+      <p className="home-coverage-key" id="home-coverage-key">
+        <strong>Number of topics by year and subject</strong>
+        <span>Select a number to read that year’s overview. A dash means the subject isn’t included for that year.</span>
+      </p>
       <div className="home-coverage-scroll" role="region" aria-labelledby="home-coverage-title" tabIndex={0}>
         <table className="home-coverage-table" aria-describedby="home-coverage-key home-coverage-note">
-          <caption id="home-coverage-key">Number of topics by year and subject</caption>
+          <caption className="sr-only">Number of topics by year and subject</caption>
           <thead>
             <tr>
               <th scope="col">Year</th>
               {overviewSubjects.map((subject) => (
                 <th scope="col" key={subject.id}>
                   <span className="home-coverage-subject">
-                    <span aria-hidden="true">{subject.icon}</span> {subject.name}
+                    <span className="home-coverage-icon" aria-hidden="true">{subject.icon}</span>
+                    <span>{subject.name}</span>
                   </span>
                 </th>
               ))}
@@ -59,13 +64,30 @@ export default function HomeCurriculumOverview() {
             {rows.map((row) => (
               <tr key={row.year}>
                 <th scope="row">Year {row.year}</th>
-                {row.subjects.map((pathway, index) => (
-                  <td key={overviewSubjects[index].id}>
-                    {pathway ? (
-                      curriculumGuideFor(row.year, overviewSubjects[index].id) ? <Link className="home-coverage-guide" to={curriculumGuideFor(row.year, overviewSubjects[index].id).path} aria-label={`Year ${row.year} ${overviewSubjects[index].name}: ${pathway.topics} topics. Read the overview`}>{pathway.topics} <span aria-hidden="true">↗</span></Link> : <strong className="home-coverage-count">{pathway.topics}</strong>
-                    ) : <span className="home-coverage-empty">Not yet available</span>}
-                  </td>
-                ))}
+                {row.subjects.map((pathway, index) => {
+                  const subject = overviewSubjects[index];
+                  const guide = pathway && curriculumGuideFor(row.year, subject.id);
+                  return (
+                    <td key={subject.id}>
+                      {!pathway ? (
+                        <span className="home-coverage-empty">
+                          <span aria-hidden="true">–</span>
+                          <span className="sr-only">Not included in Year {row.year}</span>
+                        </span>
+                      ) : guide ? (
+                        <Link
+                          className="home-coverage-count"
+                          to={guide.path}
+                          aria-label={`Year ${row.year} ${subject.name}: ${pathway.topics} topics. Read the overview`}
+                        >
+                          {pathway.topics}
+                        </Link>
+                      ) : (
+                        <span className="home-coverage-count">{pathway.topics}</span>
+                      )}
+                    </td>
+                  );
+                })}
               </tr>
             ))}
           </tbody>

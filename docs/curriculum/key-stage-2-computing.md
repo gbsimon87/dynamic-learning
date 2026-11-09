@@ -53,8 +53,8 @@ Pupils should be taught to:
 
 ## Dataset mapping
 
-Year 5 Computing topics are mapped in the table at the end of this file. Key
-stage 2 requirements with no topic yet are listed under that table.
+Year 5 and Year 6 Computing topics are mapped in the tables at the end of this
+file. Key stage 2 requirements with no topic yet are listed under each table.
 
 ---
 
@@ -92,3 +92,29 @@ Year 5 Computing (subject `computing`, added 2026-11) has 17 topics in five cate
 | Safe and Responsible Use | Kind and Responsible Online (`kind-and-responsible-online`) | use technology safely, respectfully and responsibly; recognise acceptable/unacceptable behaviour; identify a range of ways to report concerns about content and contact (respectfully and responsibly; report concerns) |
 
 Left for Year 6 (or not assessable unplugged): actually writing and running programs, controlling or simulating a physical system, and the bullet on selecting, using and combining software on a range of devices, including collecting, analysing, evaluating and presenting data and information. Binary and data representation appear in the aims but not in the key stage 2 bullets, so they are not taught yet. Safety content is deliberately gentle and age-appropriate: the focus is on what to do (keep information private, tell a trusted adult, report or block) rather than on what could go wrong.
+
+## Year 6 topics mapped to statutory requirements
+
+Year 6 Computing (subject `computing`, approved 2026-11-09) has 17 topics in five categories, extending Year 5 and covering the bullets Year 5 left: controlling or simulating physical systems, and collecting, analysing, evaluating and presenting data. Questions stay unplugged: programs are shown as plain lines to trace, order or fix, and every output is recomputed by the question builder. The text in brackets names the part of the bullet each topic serves.
+
+| Category | Topic (stable ID) | Statutory requirement served |
+|---|---|---|
+| Programming Projects | Combining Loops and Decisions (`combining-loops-and-decisions`) | use sequence, selection, and repetition in programs; work with variables and various forms of input and output (sequence, selection, and repetition) |
+| Programming Projects | Variables That Change (`variables-that-change`) | use sequence, selection, and repetition in programs; work with variables and various forms of input and output (work with variables) |
+| Programming Projects | Procedures (`procedures`) | design, write and debug programs that accomplish specific goals, including controlling or simulating physical systems; solve problems by decomposing them into smaller parts (solve problems by decomposing them into smaller parts) |
+| Programming Projects | Debugging Longer Programs (`debugging-longer-programs`) | use logical reasoning to explain how some simple algorithms work and to detect and correct errors in algorithms and programs (detect and correct errors in algorithms and programs) |
+| Physical Systems | Sensors and Inputs (`sensors-and-inputs`) | use sequence, selection, and repetition in programs; work with variables and various forms of input and output (various forms of input and output) |
+| Physical Systems | Controlling Devices (`controlling-devices`) | design, write and debug programs that accomplish specific goals, including controlling or simulating physical systems; solve problems by decomposing them into smaller parts (controlling ... physical systems) |
+| Physical Systems | Simulations (`simulations`) | design, write and debug programs that accomplish specific goals, including controlling or simulating physical systems; solve problems by decomposing them into smaller parts (simulating physical systems) |
+| Algorithms | Searching Algorithms (`searching-algorithms`) | use logical reasoning to explain how some simple algorithms work and to detect and correct errors in algorithms and programs (explain how some simple algorithms work) |
+| Algorithms | Sorting Algorithms (`sorting-algorithms`) | use logical reasoning to explain how some simple algorithms work and to detect and correct errors in algorithms and programs (explain how some simple algorithms work) |
+| Algorithms | Comparing Algorithms (`comparing-algorithms`) | use logical reasoning to explain how some simple algorithms work and to detect and correct errors in algorithms and programs (use logical reasoning) |
+| Data and Information | Collecting Data (`collecting-data`) | select, use and combine a variety of software (including internet services) on a range of digital devices to design and create a range of programs, systems and content that accomplish given goals, including collecting, analysing, evaluating and presenting data and information (collecting ... data and information) |
+| Data and Information | Databases and Spreadsheets (`databases-and-spreadsheets`) | select, use and combine a variety of software (including internet services) on a range of digital devices to design and create a range of programs, systems and content that accomplish given goals, including collecting, analysing, evaluating and presenting data and information (analysing ... data and information) |
+| Data and Information | Presenting Data (`presenting-data`) | select, use and combine a variety of software (including internet services) on a range of digital devices to design and create a range of programs, systems and content that accomplish given goals, including collecting, analysing, evaluating and presenting data and information (evaluating and presenting data and information) |
+| Online World | How Email and Messaging Work (`how-email-and-messaging-work`) | understand computer networks including the internet; how they can provide multiple services, such as the world wide web; and the opportunities they offer for communication and collaboration (multiple services; communication and collaboration) |
+| Online World | Smart Searching (`smart-searching`) | use search technologies effectively, appreciate how results are selected and ranked, and be discerning in evaluating digital content (use search technologies effectively, appreciate how results are selected and ranked) |
+| Online World | Fact or Fake (`fact-or-fake`) | use search technologies effectively, appreciate how results are selected and ranked, and be discerning in evaluating digital content (be discerning in evaluating digital content) |
+| Online World | Digital Footprint and Reporting (`digital-footprint-and-reporting`) | use technology safely, respectfully and responsibly; recognise acceptable/unacceptable behaviour; identify a range of ways to report concerns about content and contact (use technology safely; identify a range of ways to report concerns) |
+
+Left out: writing and running real code inside the app, judging particular commercial software products, and binary (named in the aims, not the key stage 2 bullets). Safety content stays gentle and action-focused.

@@ -86,6 +86,26 @@ it("the countdown ends when time runs out and counts the right answers", () => {
   expect(within(results).getByText("1 right in 30 seconds")).toBeTruthy();
 });
 
+it("can hide the clock in either race without stopping the race", () => {
+  renderGame();
+  press("Start!");
+  expect(screen.getByRole("timer")).toBeTruthy();
+  press("Hide clock");
+  expect(screen.queryByRole("timer")).toBeNull();
+  expect(screen.getByRole("button", { name: "Show clock" }).getAttribute("aria-pressed")).toBe("true");
+  press("Show clock");
+  expect(screen.getByRole("timer")).toBeTruthy();
+  press("Stop");
+  press("Change tables");
+
+  press("Finish the race");
+  press("Start!");
+  expect(screen.getByRole("timer")).toBeTruthy();
+  press("Hide clock");
+  expect(screen.queryByRole("timer")).toBeNull();
+  expect(screen.getByText("Question 1 of 10")).toBeTruthy();
+});
+
 it("tapping tiles picks any mix of tables, and Start waits for at least one", () => {
   renderGame();
   expect(screen.getByText("You picked the 2, 5 and 10 times tables.")).toBeTruthy();

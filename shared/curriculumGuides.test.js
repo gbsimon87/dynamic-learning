@@ -7,10 +7,10 @@ import { getPageSeo, PUBLIC_PATHS } from './seo.js';
 
 // Public descriptions must follow actual content, including category identity,
 // rather than silently dropping topics or publishing an unimplemented path.
-test('all thirty-seven public guides cover every category of their implemented or staged pathway', () => {
-  assert.equal(CURRICULUM_GUIDES.length, 37);
-  assert.equal(new Set(CURRICULUM_GUIDES.map(guide => guide.path)).size, 37);
-  assert.equal(new Set(CURRICULUM_GUIDES.map(guide => guide.intro)).size, 37);
+test('all thirty-nine public guides cover every category of their implemented or staged pathway', () => {
+  assert.equal(CURRICULUM_GUIDES.length, 39);
+  assert.equal(new Set(CURRICULUM_GUIDES.map(guide => guide.path)).size, 39);
+  assert.equal(new Set(CURRICULUM_GUIDES.map(guide => guide.intro)).size, 39);
   for (const year of CURRICULUM_YEARS) for (const subject of CURRICULUM_SUBJECTS) {
     if (!isCurriculumAvailable(year, subject.id)) continue;
     const guide = curriculumGuideFor(year, subject.id);
@@ -42,11 +42,16 @@ test('every guide has distinct public metadata and a correct breadcrumb', () => 
 });
 
 test('free practice only links to existing standalone games and practical gaps stay explicit', () => {
-  const gamePaths = new Set(SKILL_GROUPS.flatMap(group => group.games.map(game => game.to)));
+  const games = SKILL_GROUPS.flatMap(group => group.games);
+  const gamePaths = new Set(games.map(game => game.to));
+  const labels = new Map(games.map(game => [game.to, game.label]));
   for (const guide of CURRICULUM_GUIDES) {
     if (guide.games) {
       assert.equal(guide.games.length, 3);
-      for (const game of guide.games) assert.ok(gamePaths.has(game.to), game.to);
+      for (const game of guide.games) {
+        assert.ok(gamePaths.has(game.to), game.to);
+        assert.equal(game.label, labels.get(game.to), `${guide.label}: ${game.to} uses the current Skills Mode name`);
+      }
     } else {
       assert.ok(['science', 'history', 'art', 'computing', 'design', 'french', 'music', 'pe', 'wellbeing'].includes(guide.subject));
       assert.equal(guide.activities.length, 3);
