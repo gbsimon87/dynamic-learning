@@ -14,8 +14,8 @@ retain their recorded review dates.
 Delivered outcomes: [CHANGELOG.md](CHANGELOG.md).
 
 ## Context for prioritisation
-- Curriculum Mode implements **37 pathways across Years 1–6: 889 topics /
-  3,556 challenge slots** (Year 6: Maths, English, Science, History and Geography), plus standalone Skills Mode games. The current
+- Curriculum Mode implements **39 pathways across Years 1–6: 923 topics /
+  3,692 challenge slots** (Year 6: Maths, English, Science, History, Geography, Computing and French), plus standalone Skills Mode games. The current
   subject/year inventory is in [CURRICULUM_INVENTORY.md](CURRICULUM_INVENTORY.md).
   Implementation does not certify statutory coverage or content/device review.
   English and Science still have outstanding owner's interactive review;

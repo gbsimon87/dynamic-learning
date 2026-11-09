@@ -44,14 +44,18 @@ it does not certify full statutory coverage, teaching accuracy or device review.
 | 6 | [English](../src/data/year6EnglishCurriculum.js) | 31 | 124 | Complete |
 | 6 | [History](../src/data/year6HistoryCurriculum.js) | 20 | 80 | Complete (content review pending) |
 | 6 | [Geography](../src/data/year6GeographyCurriculum.js) | 16 | 64 | Complete (content review pending) |
+| 6 | [Computing](../src/data/year6ComputingCurriculum.js) | 17 | 68 | Complete (content review pending) |
+| 6 | [French](../src/data/year6FrenchCurriculum.js) | 17 | 68 | Complete (content review pending) |
 | 6 | Other subjects | 0 | 0 | Not registered yet |
-| **Total** | **37 complete pathways** | **889 planned / 889 built** | **3,556 planned / 3,556 built** | |
+| **Total** | **39 complete pathways** | **923 planned / 923 built** | **3,692 planned / 3,692 built** | |
 
 Years 1–4 have Maths, English, Science, History and Geography. Year 5 adds Art &
 Design, Computing, Design & Technology, French, Music, PE and Relationships &
 Health (`wellbeing`). Year 6 has complete Science, Maths, English, History
-(a local history study and crime and punishment) and Geography (environmental
-change, connected places, maps and fieldwork). Other subjects are built one at a
+(a local history study and crime and punishment), Geography (environmental
+change, connected places, maps and fieldwork) and Computing (programming projects,
+physical systems, algorithms, data and the online world) and French (listening and
+sounds, conversations, describing, grammar, reading and writing). Other subjects are built one at a
 time. Saved statutory programmes and subject specs do not establish playable implementation.
 
 ## Awards and introductions
@@ -61,8 +65,8 @@ of playability. Geography stays outside overall year awards; Years 2 and 4 Histo
 also remain excluded. The Year 5 award uses Maths, English and Science (owner
 decision 2026-11-04: Year 5 History and the other Year 5 subjects are excluded).
 The Year 6 award uses Maths, English and Science (owner decision 2026-11-08: the
-staged exclusion was lifted once all three existed). Year 6 History and Geography
-are excluded. Preserve existing awards when adding pathways.
+staged exclusion was lifted once all three existed). Year 6 History, Geography,
+Computing and French are excluded. Preserve existing awards when adding pathways.
 
 Maths Years 1–6 and English Years 3–5 use separately registered Bix lesson screens.
 Other pathways can have illustrated introductions inside their subject games:
