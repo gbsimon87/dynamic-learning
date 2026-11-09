@@ -6,18 +6,47 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
-<<<<<<< HEAD
+## 2026-11-09 — Lesson plans open as a readable teaching sequence
+
+- Generated plans start with a compact outline grouped by week, including lesson/activity counts and timings. Only one lesson opens at a time. Opening shows Warm up → Teach and model → Practise → Check understanding, with direct activity links; support/stretch, evidence and activity previews remain available through disclosures.
+- Editing fields appear only after “Edit lesson”; lesson movement controls appear only after “Reorder lessons”. Edits update the reading and full print views, survive closing/reopening and move with lessons across weeks. The sample desktop outline is approximately half its previous height; the opened first lesson shrank from 1,321px to 820px without removing teaching content.
+- Full lint/build and all 958 component tests pass, including 22 teacher workflows. Full Node tests retain the same three existing Year 6 English/story-content failures and four skips. Chrome layout checks covered 1280/768/360px in both themes, reading/editing/reordering, disclosures, preserved progress and all 15 printed lessons, with no horizontal overflow or page errors; sampled text contrast exceeds 4.5:1. Physical-device, assistive-technology and teacher usability reviews remain pending.
+
+## 2026-11-09 — Teacher planning page simplified into three steps
+
+- Fixed class selection: year and subject are now one-tap chips that apply immediately (with a confirmation only when topics or a plan would be lost). Previously a changed year did nothing until a separate "Use this year and subject" button was found, so the header and search stayed on the old year. Year chips only list years that have a curriculum.
+- Fixed input-state bugs: topics now apply as soon as they are added (no "Use these class needs" step), re-pressing the active input tab no longer blocks planning, switching between topics, pasted results and the sample keeps each tab's evidence, and a teacher's untick survives status changes. Each topic gets a Teach / Practise / Secure / Not sure control.
+- Rebuilt the hierarchy as header → 1 What does your class need? → 2 Choose what to plan → 3 Build the plan → plan. Removed the hero metrics, duplicate "Find the right activity" section, eyebrow labels, rules essay and most helper copy. Lessons are collapsible rows; activity instructions and previews sit behind one disclosure. Learner progress and storage are untouched.
+- Full lint/build and all 957 component tests pass; Node tests retain the same three content failures and four skips. One Chromium pass (plus one confirmation pass) covered desktop and phone in both themes with no overflow or console errors. Print layout, teacher review and physical devices were not rechecked.
+
+## 2026-11-08 — Teacher search across the whole selected curriculum
+
+- Quick class overview now searches every built challenge in the selected year and subject, using curriculum names, actual lesson titles/text, classroom terms, prefixes and spelling suggestions. The default Year 3 Maths course has 176 challenges across 44 topics; selectors cover all 37 registered pathways. Wider source-derived metadata supplements the original pilot's detailed descriptions.
+- Search shows matching activities and lets teachers choose a particular challenge directly. Those IDs are retained in generated lessons and validated against the selected focus/availability. Imports and the general resource finder share the same catalogue. Curriculum changes protect unsaved work with confirmation; plan/print labels retain their own context. Closed lesson editors render on demand.
+- Full lint/build, focused logic/workflow checks and all 956 component tests pass. Node tests retain three unchanged content failures and four database-dependent skips. One Chrome pass covers desktop, tablet and phone in both themes, Maths/Science/English context changes and printing. See the [coverage and review record](superpowers/2026-11-08-teacher-full-curriculum-search.md).
+
+## 2026-11-08 — Teacher class input, fuzzy search and automatic plans
+
+- `/teachers/planning` now starts with class-needs entry instead of loading fictional evidence. Teachers can describe needs and choose a class status, or paste CSV/TSV topic-response totals and confirm their mappings. Sample data is an explicit opt-in. Inputs stay in the current tab; refresh clears them, and saved accounts/plans remain pending.
+- Added typo/transposition suggestions to reviewed classroom vocabulary. Uncertain matches require confirmation. Automatic plans use the entered evidence and representation, choose matching resources, favour teaching needs when allocating extra lessons, and use confident topics for retrieval. No sample scores fill gaps, class totals do not infer individual groups, and existing edits require explicit draft replacement.
+- Full lint/build and all 952 component tests pass; final focused checks cover the mobile/vocabulary refinements. Full Node tests retain three unchanged content failures and four database-dependent skips. Chrome checks cover both input routes and generated plans at desktop/tablet/phone widths in both themes, plus print. See the [class-input record](superpowers/2026-11-08-teacher-class-input.md) for validation and remaining review.
+
+## 2026-11-08 — Find teacher activities by learning need
+
+- Added reviewed teacher descriptions for the Year 3 pilot's 20 curriculum challenges and Fraction Fun: learning objective, child actions, starting knowledge, teaching use, scope and limits. Existing curriculum names, IDs and progress remain intact.
+- Teachers can search classroom terms, resolve ambiguous needs such as “finding halves”, inspect read-only examples from actual question banks, include objectives in planning focus and add activities within a lesson. Resource explanations also appear in printed plans. Missing activities and supporting-only matches are explicit; edited drafts are preserved.
+- Full lint/build and all 947 component tests pass. The full Node suite retains three existing content failures and four database-dependent skips. One Chrome pass covers desktop, tablet and phone in both themes, five example model types and print. Teacher, physical-device and assistive-technology review remain pending. See the [discovery record](superpowers/2026-11-08-teacher-resource-discovery.md) for scope and evidence.
+
 ## 2026-11-08 — Teacher planning and playlists preview
 
 - Added `/teachers/planning`, linked from the footer, with clearly fictional Year 3 maths evidence. The preview distinguishes correct/incorrect/skipped/not-assessed responses, shows pupil distributions and explains its provisional teaching priorities.
 - Teachers can choose objectives, generate 3–15 lessons over three weeks, edit titles/objectives/timings/teaching notes, reorder lessons and Bix resources, and print/save a complete PDF. Twenty existing curriculum challenges and supporting Fraction Fun are resolved from current catalogues/availability. Replacing a draft requires explicit confirmation; refreshing loses edits. Teacher accounts, saved plans, live assessments and school sharing remain future milestones.
 - Full lint/build, all 941 component tests, planner/resource unit tests and HTTP route regressions pass. Browser layout/contrast checks cover desktop, tablet and phone in both themes, plus complete print output. Full `npm test` has three pre-existing failures in Year 6 English lesson lint and story content; four database tests skip without MongoDB. SEO HTTP checks pass, but its browser script stops at an unchanged Number Bonds heading mismatch. Physical-device, assistive-technology and teacher review remain pending. See the [plan and evidence](superpowers/plans/2026-11-08-teacher-planning-playlists.md).
-=======
+
 ## 2026-11-08 — Times Tables Race: simpler setup screen
 
 - Replaced the From/To dropdowns and quick-choice buttons with numbered steps: tap any mix of 1–12 times-table tiles (with All and Clear), then pick one of two picture cards, Beat the clock or Finish the race. Start stays disabled until a table is chosen. Tables 0 and 13–20 are no longer offered. The play and results screens are unchanged. Skills Mode stays untracked.
 - Data and component tests updated and passing. Full lint and production build pass. Full `npm test` reports three failures already on `dev`, in files this change does not touch: Year 6 English lesson lint and two `stories.test.js` checks. One browser pass at 375px and 1280px in both themes found no horizontal scroll and 64px+ tiles. The play and results screens and a real device were not checked.
->>>>>>> dev
 
 ## 2026-11-08 — Shape Explorer moved to Maths
 

@@ -1,3 +1,5 @@
+import { teachingForNeed } from "./teacherClassInput.js";
+
 // Pure planning rules. Assessment evidence is deliberately separate from progress.
 export const PLANNING_OBJECTIVES = [
   {
@@ -106,50 +108,67 @@ export function moveItem(items, index, offset) {
   return next;
 }
 
-export function generateTeachingPlan({ selectedIds, lessonsPerWeek = 5, duration = 45, evidence = SAMPLE_EVIDENCE, resources = [] }) {
+export function generateTeachingPlan({ selectedIds, lessonsPerWeek = 5, duration = 45, evidence = [], resources = [], evidenceMeta = {}, objectives = PLANNING_OBJECTIVES, year = 3, subjectName = "Maths", subject = "math" }) {
   if (!Number.isInteger(lessonsPerWeek) || lessonsPerWeek < 1 || lessonsPerWeek > 5 || !Number.isInteger(duration) || duration < 20 || duration > 90) {
     throw new RangeError("Choose 1–5 lessons per week and 20–90 minutes per lesson.");
   }
   // Catalogue order keeps foundational fraction representations before comparisons.
-  const selected = PLANNING_OBJECTIVES.filter((objective) => selectedIds.includes(objective.id));
+  const selected = objectives.filter((objective) => selectedIds.includes(objective.id));
   if (!selected.length) throw new RangeError("Choose at least one objective.");
   const count = lessonsPerWeek * 3;
-  const teachingSlots = Math.max(selected.length, Math.ceil(count * 2 / 3));
-  if (selected.length > count) throw new RangeError("Choose fewer objectives or more lessons so each objective has a lesson.");
   const snapshots = selected.map((objective) => {
     const summary = evidence.find((row) => row.objectiveId === objective.id);
-    return { objectiveId: objective.id, reason: summary?.reason ?? "No assessment evidence. Start with a teacher-led check.", priority: summary?.priority ?? "check" };
+    return { objectiveId: objective.id, reason: summary?.reason ?? "No assessment evidence. Start with a teacher-led check.", priority: summary?.priority ?? "check",
+      source: summary?.source ?? evidenceMeta.source ?? "unspecified", needs: summary?.needs?.map((need) => ({ ...need, resourceIds: need.resourceIds ? [...need.resourceIds] : null })) ?? [] };
   });
-  const retrieval = evidence.find((row) => row.priority === "retrieve" && !selectedIds.includes(row.objectiveId));
-  const retrievalObjective = PLANNING_OBJECTIVES.find((objective) => objective.id === retrieval?.objectiveId);
-  const lessons = Array.from({ length: count }, (_, index) => {
-    const objectiveIndex = index < teachingSlots ? Math.min(selected.length - 1, Math.floor(index * selected.length / teachingSlots)) : (index - teachingSlots) % selected.length;
-    const objective = selected[objectiveIndex];
+  const focuses = selected.flatMap((objective, objectiveIndex) => {
     const snapshot = snapshots[objectiveIndex];
+    const active = snapshot.needs.filter((need) => need.priority !== "retrieve");
+    return (active.length ? active : snapshot.needs.length ? snapshot.needs : [null]).map((need) => ({
+      objective, objectiveIndex, needId: need?.needId, resourceIds: need?.resourceIds, title: need?.title ?? objective.title,
+      reason: need?.reason ?? snapshot.reason, priority: need?.priority ?? snapshot.priority,
+    }));
+  });
+  const teachingSlots = Math.max(focuses.length, Math.ceil(count * 2 / 3));
+  if (focuses.length > count) throw new RangeError("Choose fewer learning needs or more lessons so each focus has a lesson.");
+  const allocation = focuses.map(() => 1);
+  const weight = (focus) => ({ teach: 3, consolidate: 2, check: 1, retrieve: 1 })[focus.priority] ?? 1;
+  for (let remaining = teachingSlots - focuses.length; remaining > 0; remaining -= 1) {
+    const target = focuses.reduce((best, focus, i) => weight(focus) / (allocation[i] + 1) > weight(focuses[best]) / (allocation[best] + 1) ? i : best, 0);
+    allocation[target] += 1;
+  }
+  const sequence = focuses.flatMap((_, i) => Array.from({ length: allocation[i] }, () => i));
+  const retrieval = evidence.find((row) => row.priority === "retrieve" && !selectedIds.includes(row.objectiveId));
+  const retrievalObjective = objectives.find((objective) => objective.id === retrieval?.objectiveId);
+  const lessons = Array.from({ length: count }, (_, index) => {
+    const focusIndex = index < teachingSlots ? sequence[index] : (index - teachingSlots) % focuses.length;
+    const focus = focuses[focusIndex];
+    const objective = focus.objective;
+    const teaching = teachingForNeed(focus.needId, objective);
     const revisit = index >= teachingSlots;
-    const previousOccurrences = Array.from({ length: index }, (_, earlier) => earlier < teachingSlots
-      ? Math.min(selected.length - 1, Math.floor(earlier * selected.length / teachingSlots))
-      : (earlier - teachingSlots) % selected.length).filter((value) => value === objectiveIndex).length;
-    const stage = revisit ? "Revisit and apply" : snapshotStage(previousOccurrences, snapshots[objectiveIndex].priority);
-    const options = resources.filter((resource) => resource.objectiveIds.includes(objective.id) && resource.available);
+    const previousOccurrences = Array.from({ length: index }, (_, earlier) => earlier < teachingSlots ? sequence[earlier] : (earlier - teachingSlots) % focuses.length).filter((value) => value === focusIndex).length;
+    const stage = revisit ? "Revisit and apply" : snapshotStage(previousOccurrences, focus.priority);
+    const options = resources.filter((resource) => resource.objectiveIds.includes(objective.id) && resource.available && (!focus.needId || resource.needIds?.includes(focus.needId)) && (!focus.resourceIds || focus.resourceIds.includes(resource.id)));
     const curriculum = options.filter((resource) => resource.kind === "curriculum");
     const resource = curriculum[Math.min(previousOccurrences, curriculum.length - 1)] ?? options[0];
     const practiceMinutes = Math.min(10, Math.floor(duration / 4));
     const checkpointMinutes = 5;
     const starterMinutes = 5;
     return {
-      id: `lesson-${index + 1}`, objectiveId: objective.id,
-      title: `${stage}: ${objective.title}`,
-      duration, rationale: snapshot.reason,
+      id: `lesson-${index + 1}`, objectiveId: objective.id, needId: focus.needId ?? null, learningGoal: focus.title,
+      title: `${stage}: ${focus.title}`,
+      duration, rationale: focus.reason,
       starter: retrievalObjective ? `Brief retrieval: ${retrievalObjective.goal} Ask pupils to explain their method.` : "Ask pupils to show what they remember about today's objective using a drawing or objects.",
-      teaching: objective.teach, activity: objective.practical, checkpoint: objective.checkpoint,
-      support: objective.support, stretch: objective.stretch, notes: "",
+      teaching: resource?.detailLevel === "lesson" ? resource.lesson.lines.join(" ") : teaching.teach,
+      activity: resource?.detailLevel === "lesson" && resource.lesson.example ? `Work through “${resource.lesson.example.title}” together. Ask pupils to explain the steps, then use the selected challenge for practice.` : teaching.practical, checkpoint: teaching.checkpoint,
+      support: teaching.support, stretch: teaching.stretch, notes: "",
       timing: { starter: starterMinutes, teaching: duration - starterMinutes - practiceMinutes - checkpointMinutes, practice: practiceMinutes, checkpoint: checkpointMinutes },
       resources: resource ? [{ resourceId: resource.id, minutes: practiceMinutes, instruction: resource.instruction }] : [],
     };
   });
-  return { title: "Year 3 maths · Three-week teaching plan", lessonsPerWeek, duration,
-    evidenceVersion: SAMPLE_CLASS.version, snapshots, lessons };
+  return { title: `Year ${year} ${subjectName.toLowerCase()} · Three-week teaching plan`, year, subject, subjectName, objectives: selected.map((objective) => ({ ...objective })), lessonsPerWeek, duration,
+    evidenceSource: evidenceMeta.source ?? "unspecified", inputRevision: evidenceMeta.revision ?? 0, classSize: evidenceMeta.classSize ?? null,
+    retrievalReason: retrieval?.reason ?? "", snapshots, lessons };
 }
 
 function snapshotStage(occurrence, priority) {

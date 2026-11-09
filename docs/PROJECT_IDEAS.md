@@ -136,6 +136,18 @@ school sharing. The Year 3 maths planning preview is implemented; see
 [delivered changes](CHANGELOG.md). Assessment evidence needs separate records:
 existing completion totals cannot diagnose learning gaps. Review the preview
 with teachers before expanding its resource mappings and planning suggestions.
+The reviewed pilot resource finder and read-only challenge examples are now
+implemented. Quick class-topic judgement, pasted question-response totals,
+fuzzy spelling suggestions and generation from confirmed learning needs are
+also implemented as an unsaved, class-level pilot. Next: saved/reopened plans
+and teacher access; individual evidence and Bix pre-tests need their own records.
+See the [input implementation and limits](superpowers/2026-11-08-teacher-class-input.md).
+Search now covers every built challenge in the selected year/subject across the
+37 registered pathways, with matching activities retained in generated plans.
+See the [full-curriculum search record](superpowers/2026-11-08-teacher-full-curriculum-search.md).
+Additional reviewed teacher descriptions beyond the original pilot remain future
+content work; wider search already reuses existing topic and lesson metadata.
+See the [discovery and input decisions](superpowers/2026-11-08-teacher-resource-discovery.md).
 See the [phased plan](superpowers/plans/2026-11-08-teacher-planning-playlists.md).
 
 Each idea says what a child or grown-up would get, then what is already done

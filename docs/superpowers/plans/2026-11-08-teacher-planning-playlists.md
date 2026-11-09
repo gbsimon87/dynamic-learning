@@ -2,7 +2,13 @@
 
 Date: 2026-11-08  
 Branch: `feat/teacher-planning-playlists` (from local `dev`)  
-Status: milestone 1 implemented; milestones 2–4 pending. Full merge validation
+Status: milestone 1 and pilot teacher resource discovery implemented; milestones
+2–4 pending. See the [discovery record](../2026-11-08-teacher-resource-discovery.md)
+for classroom vocabulary and source review. Quick class needs, pasted totals and
+generation from confirmed needs are now an additional unsaved pilot; see the
+[class-input record](../2026-11-08-teacher-class-input.md). Search now covers all built challenges
+in the selected year/subject; see the [full-curriculum search record](../2026-11-08-teacher-full-curriculum-search.md).
+Earlier milestone evidence below describes its original scope. Full merge validation
 has unrelated existing content-test and SEO-script failures (see evidence below).
 
 ## Outcome and pilot

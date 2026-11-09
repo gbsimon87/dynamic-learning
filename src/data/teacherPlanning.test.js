@@ -33,7 +33,7 @@ test("one answer and an empty class never establish a teaching judgement", () =>
 });
 
 test("three-week draft follows foundational order, revisits objectives and uses arithmetic retrieval", () => {
-  const input = { selectedIds: [...focus].reverse(), resources };
+  const input = { selectedIds: [...focus].reverse(), resources, evidence: SAMPLE_EVIDENCE };
   const plan = generateTeachingPlan(input);
   assert.equal(plan.lessons.length, 15);
   assert.equal(plan.lessons[0].objectiveId, focus[0]);
@@ -75,7 +75,7 @@ test("reordering is immutable, bounded and preserves teacher edits", () => {
 });
 
 test("resource identities resolve to shipped challenge wrappers and a real Skills route", () => {
-  assert.equal(resources.length, 21);
+  assert.equal(resources.filter((resource) => resource.kind === "curriculum").length, 176);
   assert.equal(new Set(resources.map((resource) => resource.id)).size, resources.length);
   for (const resource of resources.filter((resource) => resource.kind === "curriculum")) {
     const pascal = resource.topicId.split("-").map((word) => word[0].toUpperCase() + word.slice(1)).join("");

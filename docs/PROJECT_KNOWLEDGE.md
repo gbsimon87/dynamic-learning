@@ -178,12 +178,23 @@ rules: extend those layers instead of creating another store or counter.
 For feature detail, read the [architecture](ARCHITECTURE.md) and the source it
 links. Delivered outcomes belong in [CHANGELOG.md](CHANGELOG.md).
 
-The **teacher planning preview** at `/teachers/planning` uses fictional Year 3
-maths assessment evidence to create editable three-week plans and resource
-playlists. It has no teacher accounts, live assessments or saved plans yet;
-refresh discards edits and printing/PDF keeps a copy. It is linked from the
+The **teacher planning pilot** at `/teachers/planning` accepts class-level
+needs or pasted question-response totals and generates editable three-week
+plans with matching resource playlists. Fictional evidence is an explicit demo
+choice. It has no teacher accounts, live assessments or saved plans yet;
+refresh discards inputs/edits and printing/PDF keeps a copy. It is linked from the
 footer and excluded from search indexing. See the
 [phased plan](superpowers/plans/2026-11-08-teacher-planning-playlists.md).
+
+Year/subject selectors scope fuzzy search to all built challenges in that
+curriculum, using topic/activity names, existing lesson text and classroom terms.
+The Year 3 Maths default covers 176 challenges across 44 topics. Matching activity
+IDs are retained in generated plans. Existing teaching notes and the pilot's
+additional reviewed descriptions remain distinct; read-only previews never
+record pupil progress. See the [full-curriculum search record](superpowers/2026-11-08-teacher-full-curriculum-search.md)
+for coverage, source limits and checks.
+The [class-input record](superpowers/2026-11-08-teacher-class-input.md) describes
+accepted imports, evidence limits, input-to-plan rules and current validation.
 
 ## 6. Known Issues / Debt
 

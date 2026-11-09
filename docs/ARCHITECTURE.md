@@ -17,6 +17,32 @@ with injected built availability. The page keeps its draft in React state only
 and provides a separate print view. It does not write account, progress or
 assessment records. The shared footer links to the preview; `APP_PAGES` recognises
 direct server requests while keeping the route outside indexable public pages.
+`teacherResourceCatalogue.js` supplies additional teacher labels, reviewed
+learning-need aliases and scope independently of permanent curriculum IDs.
+`teacherResourceExamples.js` adapts real pure question builders into read-only
+examples. `TeacherResources.jsx` provides the finder and simplified example
+models without mounting challenge runners or accessing the store.
+`TeacherClassInput.jsx` collects class judgement or reviewed CSV/TSV topic totals;
+`teacherClassInput.js` validates imports and compiles evidence independently of
+learner progress. No sample evidence is loaded by default. The generator uses
+confirmed learning focuses to narrow activities and teaching prompts, weights
+extra slots by priority and freezes evidence/source/revision in the plan. Input
+changes require application and explicit draft replacement; all state is unsaved
+and class-level, with no new API or pupil-data persistence.
+`getTeacherCurriculum` in `teacherPlanningResources.js` now indexes every topic
+and challenge in the selected registry dataset, with injected built availability
+and metadata from `lessons/index.js` where available. It supplies dynamic
+objectives/learning focuses as well as resources. Quick entry, import review and
+the resource finder share these arrays. Search retains matching resource IDs;
+input compilation validates them and plan snapshots copy them. Year/subject
+changes require confirmation before clearing unsaved input/plan state. Existing
+lesson notes supply wider planning content; detailed pilot descriptions are
+additional metadata rather than a limit on discoverable resources.
+Generated plans initially show a weekly outline. The page tracks one active
+lesson by its stable draft ID; `LessonCard` separates the readable teaching
+sequence from its explicit editing mode. Reordering is a separate display mode.
+All edits still update the same in-memory draft, and the independent print view
+includes every lesson regardless of which lesson or editing controls are open.
 
 ## Registry, datasets and implementation availability
 
