@@ -149,7 +149,7 @@ it('opens the preview from the real Skills catalogue and returns through the sha
     { element: <SkillGameLayout />, children: [{ path: '/skills/ocean-explorer', element: <OceanExplorer /> }] },
   ], { initialEntries: ['/skills'] });
   render(<RouterProvider router={router} />);
-  await userEvent.click(screen.getByRole('link', { name: 'Ocean Explorer (preview)', exact: true }));
+  await userEvent.click(screen.getByRole('link', { name: 'Explore the Ocean (preview)', exact: true }));
   expect(screen.getByRole('heading', { name: 'Ocean Explorer' })).toBeTruthy();
   expect(screen.getByText('Prototype preview')).toBeTruthy();
   await userEvent.click(screen.getByRole('link', { name: 'Back to Skills' }));

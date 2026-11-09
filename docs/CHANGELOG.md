@@ -6,6 +6,17 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-09 — Skills Mode names explain the learning goal
+
+- Renamed every Skills Mode card with an action-focused, child-friendly description of what it teaches, from “Clock Generator” to “Learn to Read Time”. The same labels now appear on the linked public guides; existing routes, game behaviour, saved progress and content are unchanged.
+- Reordered the Skills hub so learners see calculation and times-table practice first in Maths, story reading first in English, and Solar System exploration first in Geography; the remaining games progress from foundational recognition to broader application.
+- Focused catalogue, hub and public-guide checks pass (34 component tests and 9 catalogue/SEO tests), as does the production build. The SEO check's HTTP pass covers all 70 public URLs; its browser phase remains blocked by the pre-existing `🔢 Number Bonds` heading assertion after it opens the unchanged game page. Full lint and tests are separately blocked by the concurrent Year 6 French work and existing Year 6 English/story-content failures. Device review was not needed for this wording-only change.
+
+## 2026-11-09 — Times Tables Race clock control
+
+- Both Beat the clock and Finish the race now let learners hide or show the live clock during a race. Hiding it does not pause, reset or otherwise alter the race.
+- The focused component playthrough covers the control in both race types, and the production build passes. Repository-wide lint and tests are currently blocked outside this change by active French work and existing Year 6 English/story-content failures.
+
 <<<<<<< Updated upstream
 =======
 ## 2026-11-09 — Ocean Explorer Reef neighbours tour

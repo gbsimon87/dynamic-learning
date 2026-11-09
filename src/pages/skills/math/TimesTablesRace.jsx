@@ -192,6 +192,7 @@ function Play({ facts, mode, size, onFinish }) {
   const deckRef = useRef(null);
   if (!deckRef.current) deckRef.current = createDeck(facts, Math.random);
 
+  const [clockHidden, setClockHidden] = useState(false);
   const [fact, setFact] = useState(() => deckRef.current.next());
   const [n, setN] = useState(0);
   const [answer, setAnswer] = useState("");
@@ -288,13 +289,23 @@ function Play({ facts, mode, size, onFinish }) {
   return (
     <section className="ttr-play" aria-label="Race">
       <div className="ttr-hud">
-        <p className="ttr-clock" role="timer" aria-label={mode === "round" ? "Time so far" : "Time left"}>
-          <span aria-hidden="true">⏱️ </span>
-          {mode === "round" ? formatSeconds(elapsed) : `${Math.ceil(remaining / 1000)}s`}
-        </p>
+        {!clockHidden && (
+          <p className="ttr-clock" role="timer" aria-label={mode === "round" ? "Time so far" : "Time left"}>
+            <span aria-hidden="true">⏱️ </span>
+            {mode === "round" ? formatSeconds(elapsed) : `${Math.ceil(remaining / 1000)}s`}
+          </p>
+        )}
         <p className="ttr-progress">
           {mode === "round" ? `Question ${Math.min(results.length + 1, size)} of ${size}` : `${results.length} right`}
         </p>
+        <button
+          type="button"
+          className="ttr-clock-toggle"
+          aria-pressed={clockHidden}
+          onClick={() => setClockHidden((hidden) => !hidden)}
+        >
+          {clockHidden ? "Show clock" : "Hide clock"}
+        </button>
         <button type="button" className="ttr-stop" onClick={finish}>Stop</button>
       </div>
 

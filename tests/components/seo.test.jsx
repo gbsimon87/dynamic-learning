@@ -17,7 +17,7 @@ it('updates canonical, title, social metadata and robots after client navigation
   document.documentElement.dataset.seoOrigin = 'https://learnwithbix.com';
   document.documentElement.dataset.seoIndexable = 'true';
   render(<MemoryRouter initialEntries={['/learn/number-bonds?utm_source=test']}><PageMetadata /><Link to="/login">Sign in</Link><Link to="/skills">Skills</Link></MemoryRouter>);
-  expect(document.title).toContain('Number Bonds');
+  expect(document.title).toContain('Make Number Bonds');
   expect(document.querySelector('[rel="canonical"]').href).toBe('https://learnwithbix.com/learn/number-bonds');
   expect(document.querySelector('[name="robots"]').content).toBe('index, follow');
   expect(document.querySelectorAll('#seo-jsonld')).toHaveLength(1);
