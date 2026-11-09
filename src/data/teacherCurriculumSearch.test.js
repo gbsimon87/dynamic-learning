@@ -2,7 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync } from "node:fs";
 import { CURRICULUM_YEARS, CURRICULUM_SUBJECTS, loadCurriculum } from "./curriculumRegistry.js";
-import { getTeacherCurriculum } from "./teacherPlanningResources.js";
+import { getTeacherCurriculum, teachingFromBriefing } from "./teacherPlanningResources.js";
+import { getBriefingNotes } from "./teacherBriefings/index.js";
 import { searchLearningNeeds } from "./teacherResourceCatalogue.js";
 import { compileClassEvidence } from "./teacherClassInput.js";
 import { generateTeachingPlan } from "./teacherPlanning.js";
@@ -33,7 +34,7 @@ test("every registered year/subject indexes every built challenge with original 
       assert.ok(catalogue.objectives.some((objective) => objective.id === resource.topicId));
     }
   }
-  assert.equal(courses, 37);
+  assert.equal(courses, 39);
   assert.equal(maths.resources.filter((resource) => resource.kind === "curriculum" && resource.available).length, 176);
   assert.equal(maths.objectives.length, 44);
 });
@@ -59,7 +60,9 @@ test("a selected matching challenge survives input compilation and is used throu
   const evidence = compileClassEvidence([{ needId: match.need.id, priority: "teach", resourceIds: [resource.id] }], "teacher", maths);
   const plan = generateTeachingPlan({ selectedIds: [match.need.objectiveId], evidence, resources: maths.resources, objectives: maths.objectives, evidenceMeta: { source: "teacher" } });
   assert.ok(plan.lessons.every((lesson) => lesson.resources.length === 1 && lesson.resources[0].resourceId === resource.id));
-  assert.equal(plan.lessons[0].teaching, resource.lesson.lines.join(" "));
+  // Topics with briefing notes teach from the teacher notes; the selected
+  // challenge's worked example still drives the activity.
+  assert.equal(plan.lessons[0].teaching, teachingFromBriefing(resource.topicName, getBriefingNotes(3, "math", resource.topicId)).teach);
   assert.match(plan.lessons[0].activity, /3 marks past 50/);
   assert.equal(getResourceExample(resource).origin, "lesson");
   evidence[0].needs[0].resourceIds.push("edited");
@@ -89,4 +92,34 @@ test("other years/subjects generate correctly labelled plans and cannot borrow Y
   const missing = getTeacherCurriculum({ isBuilt: () => false });
   assert.deepEqual(missing.needs, []); assert.deepEqual(missing.objectives, []);
   assert.deepEqual(search("perimeter", missing), []);
+});
+
+test("plans share one body of subject knowledge with the topic briefings", () => {
+  const notes = getBriefingNotes(3, "math", "column-subtraction");
+  const objective = maths.objectives.find((entry) => entry.id === "column-subtraction");
+  assert.equal(objective.source, "briefing");
+  assert.match(objective.teach, new RegExp(notes.inBrief.slice(0, 30)));
+  assert.ok(objective.support.includes(notes.misconceptions[0].mistake) && objective.support.includes(notes.misconceptions[0].response));
+  assert.ok(objective.checkpoint.includes(notes.misconceptions[1].mistake));
+  assert.deepEqual(objective.vocabulary, notes.vocabulary.map((word) => word.term));
+  assert.equal(objective.briefingPath, "/teachers/briefings/3/math/column-subtraction");
+  const plan = generateTeachingPlan({ selectedIds: ["column-subtraction"], resources: maths.resources, objectives: maths.objectives });
+  assert.ok(plan.lessons.every((lesson) => lesson.briefingPath === objective.briefingPath && lesson.vocabulary.length === notes.vocabulary.length));
+  assert.doesNotMatch(plan.lessons[0].teaching, /classroom materials/);
+});
+
+test("hand-written pilot plans keep their activities but gain the briefing vocabulary and link", () => {
+  const pilot = maths.objectives.find((entry) => entry.id === "equivalent-fractions");
+  assert.equal(pilot.source, "pilot");
+  assert.match(pilot.practical, /fold equal-length paper strips/);
+  assert.ok(pilot.vocabulary.length >= 4);
+  assert.equal(pilot.briefingPath, "/teachers/briefings/3/math/equivalent-fractions");
+});
+
+test("topics without notes keep the generic text and no briefing link", () => {
+  const year4 = getTeacherCurriculum({ year: 4, subject: "math", isBuilt });
+  const generic = year4.objectives.find((entry) => !getBriefingNotes(4, "math", entry.id));
+  assert.equal(generic.source, "generic");
+  assert.equal(generic.briefingPath, null);
+  assert.deepEqual(generic.vocabulary, []);
 });

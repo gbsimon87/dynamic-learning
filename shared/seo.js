@@ -1,14 +1,19 @@
 import { SKILL_GUIDES } from './skillGuides.js';
 import { CURRICULUM_GUIDES } from './curriculumGuides.js';
+import { PARENT_EXPLAINERS, PARENT_GUIDES_PATH, findParentExplainer, isExplainerPublic, parentGuidePath } from './parentExplainers.js';
 
 export const PUBLIC_ORIGIN = 'https://learnwithbix.com';
-export const PUBLIC_PATHS = ['/', '/skills', '/what-we-teach', ...CURRICULUM_GUIDES.map(guide => guide.path), ...SKILL_GUIDES.map(guide => guide.path)];
+export const PUBLIC_PATHS = ['/', '/skills', '/what-we-teach', ...CURRICULUM_GUIDES.map(guide => guide.path), ...SKILL_GUIDES.map(guide => guide.path),
+  // Parent guides go public one by one, after a teacher's content review.
+  ...(PARENT_EXPLAINERS.some(isExplainerPublic) ? [PARENT_GUIDES_PATH] : []), ...PARENT_EXPLAINERS.filter(isExplainerPublic).map(explainer => parentGuidePath(explainer.slug))];
 export const APP_PAGES = {
   '/login': 'Sign in', '/signup': 'Create an account', '/forgot-password': 'Reset your password',
   '/reset-password': 'Choose a new password', '/profiles': 'Learner profiles', '/parent': 'Parent area',
   '/curriculum': 'Choose your curriculum', '/trophies': 'Trophy room', '/hello': 'Meet Bix',
   '/daily-puzzle': 'Daily puzzle', '/credits': 'Credits', '/privacy': 'Privacy',
   '/teachers/planning': 'Teacher planning preview',
+  '/teachers': 'Teacher tools', '/teachers/briefings': 'Topic briefings',
+  '/teachers/reports': 'Report comment builder', '/parent-guides': 'Parent guides',
 };
 
 export function normalisePath(pathname) {
@@ -40,6 +45,12 @@ export function getPageSeo(pathname, { origin = PUBLIC_ORIGIN, indexable = true 
   } else if (curriculumGuide) {
     name = `${curriculumGuide.label}: Topics & Learning Path`;
     description = `${curriculumGuide.intro} Explore ${curriculumGuide.label} with Bix before signing up.`;
+  } else if (path === PARENT_GUIDES_PATH) {
+    description = 'Plain-English guides for parents: how key maths and English methods are taught at primary school, and quick ways to help at home.';
+  } else if (path.startsWith(`${PARENT_GUIDES_PATH}/`) && findParentExplainer(path.slice(PARENT_GUIDES_PATH.length + 1))) {
+    const explainer = findParentExplainer(path.slice(PARENT_GUIDES_PATH.length + 1));
+    name = `${explainer.title}: A Guide for Parents`;
+    description = `${explainer.summary} How it is taught at school and quick ways to help at home.`;
   } else if (path === '/skills') {
     name = 'Maths, English & Geography Learning Games';
     description = `Explore ${SKILL_GUIDES.length} learning games for primary school children. Practise numbers, words, shapes and geography with Learn with Bix.`;
@@ -51,6 +62,7 @@ export function getPageSeo(pathname, { origin = PUBLIC_ORIGIN, indexable = true 
     name = `Year ${year} ${subject} Curriculum`;
   } else if (path.startsWith('/year/')) name = 'Curriculum challenge';
   else if (path.startsWith('/parent/trophies/')) name = 'Learner trophies';
+  else if (/^\/teachers\/briefings\/[^/]+\/[^/]+\/[^/]+$/.test(path)) name = 'Topic briefing';
   const exists = Boolean(name);
   const canonical = exists ? `${origin}${path}` : null;
   const robots = indexable && isPublic ? 'index, follow' : 'noindex, follow';

@@ -7,11 +7,11 @@ const NONE = { source: "none", evidence: [] };
 
 // Step 1. Topics apply as soon as they are added, so there is no separate
 // "use these needs" step to forget. Pasted results still need confirming.
-export default function TeacherClassInput({ resources, needs = LEARNING_NEEDS, onApply, onDirty, onSample }) {
+export default function TeacherClassInput({ resources, needs = LEARNING_NEEDS, initialEntries = [], onApply, onDirty, onSample }) {
   const [mode, setMode] = useState("topics");
   const [query, setQuery] = useState("");
   const [browseOpen, setBrowseOpen] = useState(false);
-  const [entries, setEntries] = useState([]);
+  const [entries, setEntries] = useState(initialEntries);
   const [paste, setPaste] = useState("");
   const [review, setReview] = useState(null);
   const [appliedReview, setAppliedReview] = useState(null);

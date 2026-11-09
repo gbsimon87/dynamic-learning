@@ -64,7 +64,7 @@ it("adds, reorders, opens and removes existing resources without navigating away
   expect(links[1].getAttribute("target")).toBe("_blank");
   await user.click(first.getByRole("button", { name: "Move resource 2 earlier" }));
   expect(first.getAllByRole("link", { name: "Open resource" })[0].getAttribute("href")).toBe("/skills/fraction-fun");
-  await user.click(first.getByRole("button", { name: "Remove Fraction Fun" }));
+  await user.click(first.getByRole("button", { name: "Remove Learn About Fractions" }));
   expect(first.getAllByRole("link", { name: "Open resource" })).toHaveLength(1);
 });
 
@@ -133,7 +133,8 @@ it("starts with a compact outline, reads one lesson at a time and preserves edit
   expect(container.querySelectorAll(".tp-print article")).toHaveLength(15);
 });
 
-it("provides a discoverable preview link from the shared footer", () => {
+it("is reached from the footer's Teacher tools hub rather than its own footer link", () => {
   render(<MemoryRouter><AppFooter /></MemoryRouter>);
-  expect(screen.getByRole("link", { name: "Teacher planning preview" }).getAttribute("href")).toBe("/teachers/planning");
+  expect(screen.getByRole("link", { name: "Teacher tools" }).getAttribute("href")).toBe("/teachers");
+  expect(screen.queryByRole("link", { name: "Teacher planning preview" })).toBeNull();
 });

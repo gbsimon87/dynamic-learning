@@ -6,6 +6,22 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-09 — Lesson plans and topic briefings share one body of subject knowledge
+
+- Where a topic briefing has authored notes, its generated lessons now take their text from them, instead of the planning pilot's generic line or Bix's child-facing tips. "Teach" uses the notes in brief and the first key idea; "Support" names a common misconception and the response to it; "Check understanding" asks pupils to judge a second misconception. All 44 Year 3 Maths topics now get topic-specific plans, and later notes (for example Science and History) are picked up automatically. The five hand-written pilot objectives keep their practical activities.
+- Every lesson for a topic with notes shows its key vocabulary and a "Read the topic briefing" link, which opens in a new tab so the unsaved plan is kept. The printed plan includes the vocabulary. Each briefing has "Plan lessons for this topic", which opens planning with that course chosen and the topic already added in step 1.
+- The planning page's back link now goes to Teacher tools.
+- Planning tests now expect the briefing-based text. They also expect 39 courses (the stale count of 37 is fixed) and the renamed "Learn About Fractions" activity. New tests cover the shared notes, the pilot overlay, the generic fallback and the briefing-to-plan round trip.
+- Lint, the build and all 982 component tests pass. Unit tests still show only the 3 earlier Year 6 English and story failures. Not browser-checked.
+
+## 2026-11-09 — Teacher tools: briefings, report comments and parent explainers
+
+- Added a `/teachers` hub (the footer's single teacher link; the separate planning link was removed) and three account-free tools; nothing typed into them is saved or sent. See the [design record](superpowers/2026-11-09-teacher-everyday-tools.md).
+- **Topic briefings** (`/teachers/briefings`): every Maths and English topic with Bix introductions shows its four worked examples and challenge links. All 44 Year 3 Maths topics also have authored teacher notes: the statutory text quoted verbatim, the idea in brief, key ideas, common misconceptions, vocabulary, and the links to Year 2 and Year 4.
+- **Report comment builder** (`/teachers/reports`): judgement bands, curriculum-topic strengths and next steps, learning behaviours and a target produce an editable draft, with pronoun agreement, Reword, character/word counts, Copy and Next pupil.
+- **Parent guides** (`/parent-guides`): 12 plain-English explainers (number bonds to grammar words) with worked examples drawn by the lesson renderer, home activities, mix-ups and free Bix practice links. Each can be shared as a link or printed with an unsaved teacher note. They sit beneath the public curriculum guides: each guide area links to its matching explainers, `/what-we-teach` lists them all, and each explainer links back to its year guides. They stay `noindex` until a teacher reviews each one and adds it to `REVIEWED`.
+- 28 new data and component tests pass, as do the extended SEO tests, lint and the production build. Repository-wide tests still show earlier failures outside this work: the Year 6 English lesson lint, the story bands, the planning search's expected count of 37 courses (there are now 39), and one planning-page playthrough ("Remove Fraction Fun"). Not yet browser-checked for real layout or print output. The teacher notes and explainers are not yet content-reviewed, and nothing has been device-reviewed.
+
 ## 2026-11-09 — Skills Mode names explain the learning goal
 
 - Renamed every Skills Mode card with an action-focused, child-friendly description of what it teaches, from “Clock Generator” to “Learn to Read Time”. The same labels now appear on the linked public guides; existing routes, game behaviour, saved progress and content are unchanged.

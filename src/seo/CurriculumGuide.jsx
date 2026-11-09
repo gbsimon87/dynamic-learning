@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { AuthContext } from '../context/auth-context';
 import { Link, useParams } from 'react-router';
 import { CURRICULUM_GUIDES, GUIDE_SUBJECTS, findCurriculumGuide } from '../../shared/curriculumGuides.js';
+import { PARENT_EXPLAINERS, PARENT_GUIDES_PATH, explainersForGuideArea, parentGuidePath } from '../../shared/parentExplainers.js';
 import { CURRICULUM_YEARS, loadCurriculum } from '../data/curriculumRegistry';
 import { isChallengeImplemented } from '../data/challengeAvailability';
 import Mascot from '../components/mascot/Mascot';
@@ -77,11 +78,37 @@ export function CurriculumOverview() {
           </div>
         </section>
       ))}
+      <ParentGuidesStrip />
       <aside className="curriculum-guide-note">
         <h2>Go at your child’s pace</h2>
         <p>These paths follow the curriculum in England. Choose by confidence and learning needs, as well as age. Free practice games are available <Link to="/skills">without an account</Link>.</p>
       </aside>
     </article>
+  );
+}
+
+function HowItsTaught({ year, subject, categoryId }) {
+  const explainers = explainersForGuideArea(year, subject, categoryId);
+  if (!explainers.length) return null;
+  return (
+    <p className="curriculum-guide-howto">
+      <span>How it’s taught: </span>
+      {explainers.map((explainer, index) => <span key={explainer.slug}>{index > 0 && ', '}<Link to={parentGuidePath(explainer.slug)}>{explainer.title}</Link></span>)}
+    </p>
+  );
+}
+
+function ParentGuidesStrip() {
+  return (
+    <section aria-labelledby="parent-guides-title" className="curriculum-guide-parent-guides">
+      <p className="curriculum-guide-eyebrow">For parents and carers</p>
+      <h2 id="parent-guides-title">How it’s taught at school</h2>
+      <p>Plain-English guides to the methods children learn, with quick ways to help at home.</p>
+      <ul className="curriculum-guide-jumps">
+        {PARENT_EXPLAINERS.map(explainer => <li key={explainer.slug}><Link to={parentGuidePath(explainer.slug)}>{explainer.title}</Link></li>)}
+      </ul>
+      <p className="curriculum-guide-small"><Link to={PARENT_GUIDES_PATH}>See all parent guides by year</Link></p>
+    </section>
   );
 }
 
@@ -150,6 +177,7 @@ export default function CurriculumGuide({ slug: suppliedSlug }) {
                 <h3 id={`area-${index}`}>{area.title}</h3>
                 <p>{area.description}</p>
                 <p className="curriculum-guide-example">{area.example}</p>
+                <HowItsTaught year={guide.year} subject={guide.subject} categoryId={area.categoryId} />
                 <details>
                   <summary>See all {category.topics.length} topics</summary>
                   <ul>{category.topics.map(topic => {

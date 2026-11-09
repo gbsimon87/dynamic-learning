@@ -43,3 +43,17 @@ it('does not turn an unknown curriculum guide into another year’s content', ()
 function render(view) {
   return renderView(<AuthContext.Provider value={{ status: "signedOut" }}>{view}</AuthContext.Provider>);
 }
+
+it('links each guide area to the parent guides that explain how it is taught', () => {
+  render(<MemoryRouter initialEntries={['/curriculum-guide/year-3-maths']}><Routes><Route path="/curriculum-guide/:slug" element={<CurriculumGuide />} /></Routes></MemoryRouter>);
+  expect(screen.getByRole('link', { name: 'Column subtraction' }).getAttribute('href')).toBe('/parent-guides/column-subtraction');
+  expect(screen.getByRole('link', { name: 'Times tables' }).getAttribute('href')).toBe('/parent-guides/times-tables');
+  expect(screen.queryByRole('link', { name: 'Number bonds' })).toBeNull();
+});
+
+it('lists the parent guides from the what-we-teach hub', () => {
+  render(<MemoryRouter><CurriculumOverview /></MemoryRouter>);
+  expect(screen.getByRole('heading', { name: 'How it’s taught at school' })).toBeTruthy();
+  expect(screen.getByRole('link', { name: 'Phonics' }).getAttribute('href')).toBe('/parent-guides/phonics');
+  expect(screen.getByRole('link', { name: 'See all parent guides by year' }).getAttribute('href')).toBe('/parent-guides');
+});

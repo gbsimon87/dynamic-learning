@@ -3,6 +3,24 @@ import { getLesson } from "./lessons/index.js";
 import { SKILL_GROUPS } from "../../shared/skillsCatalog.js";
 import { PLANNING_OBJECTIVES } from "./teacherPlanning.js";
 import { describeCurriculumResource, FRACTION_FUN_DESCRIPTION, LEARNING_NEEDS } from "./teacherResourceCatalogue.js";
+import { getBriefingNotes } from "./teacherBriefings/index.js";
+
+export const briefingPath = (year, subject, topicId) => `/teachers/briefings/${Number(year)}/${subject}/${topicId}`;
+
+// One body of subject knowledge per topic: where a topic briefing has authored
+// notes, its plan text comes from them instead of a second hand-written copy.
+// Design record: docs/superpowers/2026-11-09-teacher-everyday-tools.md
+export function teachingFromBriefing(name, notes) {
+  const [watch, check = watch] = notes.misconceptions;
+  const topic = name.toLowerCase();
+  return {
+    teach: `${notes.inBrief} ${notes.keyFacts[0]}`,
+    practical: `Work through an example of ${topic} together, then use the selected challenge for guided practice.`,
+    checkpoint: `Show this mistake and ask pupils whether it is right and why: ${check.mistake}`,
+    support: `Watch for: ${watch.mistake} ${watch.response}`,
+    stretch: "Ask pupils to justify their method or explain how they would check an answer.",
+  };
+}
 
 // Index the complete selected curriculum. The earlier Year 3 pilot supplies
 // extra reviewed descriptions; other resources reuse available lesson metadata.
@@ -59,8 +77,14 @@ export function getTeacherCurriculum({ year = 3, subject = "math", isBuilt }) {
     resources.push(...topicResources);
     if (!topicResources.some((resource) => resource.available)) continue;
     const original = pilot ? PLANNING_OBJECTIVES.find((objective) => objective.id === topic.id) : null;
-    objectives.push(original ?? {
-      id: topic.id, title: topic.name, strand: category.title, goal: topic.name,
+    const notes = getBriefingNotes(year, subject, topic.id);
+    // Hand-written pilot plans keep their practical activities; every topic
+    // with notes also carries its vocabulary and a link to the full briefing.
+    const shared = notes ? { vocabulary: notes.vocabulary.map((word) => word.term), briefingPath: briefingPath(year, subject, topic.id) } : { vocabulary: [], briefingPath: null };
+    objectives.push(original ? { ...original, ...shared, source: "pilot" } : notes ? {
+      id: topic.id, title: topic.name, strand: category.title, goal: topic.name, source: "briefing", ...shared, ...teachingFromBriefing(topic.name, notes),
+    } : {
+      id: topic.id, title: topic.name, strand: category.title, goal: topic.name, source: "generic", ...shared,
       teach: `Introduce ${topic.name.toLowerCase()} using your classroom materials or the Bix introduction. Model an example and discuss pupils' reasoning.`,
       practical: `Work through an example of ${topic.name.toLowerCase()} together, then use the selected challenge for guided practice.`,
       checkpoint: `Use a fresh example about ${topic.name.toLowerCase()} and ask pupils to explain their answer.`,

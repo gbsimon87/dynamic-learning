@@ -140,3 +140,8 @@ body.dark .curriculum-guide {
 .curriculum-guide-related { margin-block: 3rem 1.5rem; }
 .curriculum-guide-related h2 { font-size: 1.3rem; }
 @media (max-width: 700px) { .curriculum-overview-grid { grid-template-columns: 1fr; } }
+
+/* Links to the parent guides ("how it's taught") */
+.curriculum-guide .curriculum-guide-howto { font-size: 0.9rem; margin: 0.5rem 0 0; }
+.curriculum-guide .curriculum-guide-howto a { color: var(--area-ink); font-weight: bold; text-underline-offset: 3px; display: inline-flex; align-items: center; min-height: 44px; }
+.curriculum-guide .curriculum-guide-parent-guides ul { list-style: none; padding: 0; }

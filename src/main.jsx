@@ -38,6 +38,12 @@ const router = createBrowserRouter([
       // Public descriptions are prerendered; existing play routes stay ungated.
       { path: "learn/:slug", element: <SkillGuide /> },
       { path: "teachers/planning", lazy: () => import("./pages/teachers/TeacherPlanning").then((m) => ({ Component: m.default })) },
+      { path: "teachers", lazy: () => import("./pages/teachers/TeacherHub").then((m) => ({ Component: m.default })) },
+      { path: "teachers/briefings", lazy: () => import("./pages/teachers/TeacherBriefings").then((m) => ({ Component: m.default })) },
+      { path: "teachers/briefings/:year/:subject/:topicId", lazy: () => import("./pages/teachers/TeacherBriefings").then((m) => ({ Component: m.default })) },
+      { path: "teachers/reports", lazy: () => import("./pages/teachers/TeacherReports").then((m) => ({ Component: m.default })) },
+      { path: "parent-guides", lazy: () => import("./seo/ParentGuides").then((m) => ({ Component: m.default })) },
+      { path: "parent-guides/:slug", lazy: () => import("./seo/ParentGuides").then((m) => ({ Component: m.default })) },
 
       // === Auth: ungated, these are how you get an account in the first place ===
       { path: "login", lazy: () => import("./pages/auth/Login").then((m) => ({ Component: m.default })) },

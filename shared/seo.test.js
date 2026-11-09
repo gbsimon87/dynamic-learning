@@ -20,6 +20,13 @@ test('private, utility, unknown and staging pages are excluded without blocking 
   assert.equal(getPageSeo('/teachers/planning').exists, true);
   assert.equal(getPageSeo('/teachers/planning').robots, 'noindex, follow');
   assert.equal(PUBLIC_PATHS.includes('/teachers/planning'), false);
+  for (const path of ['/teachers', '/teachers/briefings', '/teachers/briefings/3/math/column-addition', '/teachers/reports', '/parent-guides', '/parent-guides/phonics']) {
+    assert.equal(getPageSeo(path).exists, true, path);
+    assert.equal(getPageSeo(path).robots, 'noindex, follow', path);
+    assert.equal(PUBLIC_PATHS.includes(path), false, path);
+  }
+  assert.equal(getPageSeo('/parent-guides/phonics').title, 'Phonics: A Guide for Parents | Learn with Bix');
+  assert.equal(getPageSeo('/parent-guides/not-a-guide').exists, false);
   for (const path of ['/login', '/reset-password', '/parent', '/parent/trophies/example', '/year/2/math/problem/a/b/1', '/privacy', '/credits', '/daily-puzzle', '/missing-page']) {
     assert.equal(getPageSeo(path).robots, 'noindex, follow');
   }

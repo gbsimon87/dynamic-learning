@@ -14,7 +14,7 @@ export const stonehengeAndTheBronzeAge = year3Topic([
  ], sort("Stonehenge or bronze making?", ["Stonehenge","Bronze making"], [["stones from Wales",0],["mixing copper and tin",1],["solstice sunlight",0]], ["stones travelled from Wales", "mixing copper and tin", "sun at solstices"])),
  lesson("🕰️", "a clock for time", [
   ["Stonehenge began in the later Stone Age.","Which age saw its beginnings?","Stone Age","Iron Age","Roman Britain"],
-  ["The stone circle was raised before the British Bronze Age.","Did the stone circle begin in the Iron Age?","no, before the Bronze Age","yes, after Roman Britain","yes, after iron tools"],
+  ["The stone circle was raised around the end of the Stone Age.","Did the stone circle begin in the Iron Age?","no, around the end of the Stone Age","yes, after Roman Britain","yes, after iron tools"],
   ["People used the site into the Bronze Age.","When did people continue using the site?","Bronze Age","only today","only Roman times"],
   ["The Iron Age followed the Bronze Age.","Which age came next?","Iron Age","Stone Age","Roman Britain"],
   ["Roman Britain came later; today comes last.","What comes last on this timeline?","Today","Iron Age","Roman Britain"],

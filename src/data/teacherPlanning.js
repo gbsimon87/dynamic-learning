@@ -159,9 +159,11 @@ export function generateTeachingPlan({ selectedIds, lessonsPerWeek = 5, duration
       title: `${stage}: ${focus.title}`,
       duration, rationale: focus.reason,
       starter: retrievalObjective ? `Brief retrieval: ${retrievalObjective.goal} Ask pupils to explain their method.` : "Ask pupils to show what they remember about today's objective using a drawing or objects.",
-      teaching: resource?.detailLevel === "lesson" ? resource.lesson.lines.join(" ") : teaching.teach,
+      // Briefing notes are written for teachers; Bix's lesson lines are for children.
+      teaching: resource?.detailLevel === "lesson" && objective.source !== "briefing" ? resource.lesson.lines.join(" ") : teaching.teach,
       activity: resource?.detailLevel === "lesson" && resource.lesson.example ? `Work through “${resource.lesson.example.title}” together. Ask pupils to explain the steps, then use the selected challenge for practice.` : teaching.practical, checkpoint: teaching.checkpoint,
       support: teaching.support, stretch: teaching.stretch, notes: "",
+      vocabulary: objective.vocabulary ?? [], briefingPath: objective.briefingPath ?? null,
       timing: { starter: starterMinutes, teaching: duration - starterMinutes - practiceMinutes - checkpointMinutes, practice: practiceMinutes, checkpoint: checkpointMinutes },
       resources: resource ? [{ resourceId: resource.id, minutes: practiceMinutes, instruction: resource.instruction }] : [],
     };

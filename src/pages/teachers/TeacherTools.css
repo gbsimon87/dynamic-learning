@@ -1,0 +1,124 @@
+/* Teacher everyday tools: hub, briefings, report builder, parent explainers.
+   Builds on the planning pilot's scoped tokens (.teacher-planning --tp-*). */
+
+.teacher-tools .tt-kicker { display: block; font-size: .82rem; font-weight: bold; letter-spacing: .04em; text-transform: uppercase; color: var(--tp-rose); margin: 0 0 8px; }
+.teacher-tools .tt-privacy { margin-top: 28px; }
+.teacher-tools .tt-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.teacher-tools .tt-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.teacher-tools .tt-button-link { display: inline-flex; align-items: center; min-height: 48px; padding: 10px 18px; border-radius: 10px; background: var(--tp-button); color: var(--tp-on-button); font-weight: bold; text-decoration: none; }
+.teacher-tools .tt-button-link:hover { text-decoration: underline; }
+.teacher-tools .tt-status { min-height: 1.5em; margin-top: 8px; color: var(--tp-green); font-weight: bold; }
+.teacher-tools .tt-print-only { display: none; }
+
+/* Hub and explainer cards */
+.teacher-tools .tt-hub { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.teacher-tools .tt-hub-card { display: flex; flex-direction: column; gap: 6px; height: 100%; min-height: 48px; padding: 20px; border: 1px solid var(--tp-edge); border-radius: 16px; background: var(--tp-paper); color: var(--tp-ink); text-decoration: none; transition: border-color .15s, transform .15s; }
+.teacher-tools .tt-hub-card strong { font-size: 1.15rem; line-height: 1.3; }
+.teacher-tools .tt-hub-card > span:last-child { color: var(--tp-muted); }
+.teacher-tools .tt-hub-card:hover { border-color: var(--tp-ink); transform: translateY(-2px); }
+@media (prefers-reduced-motion: reduce) { .teacher-tools .tt-hub-card:hover { transform: none; } }
+
+/* Sections and content blocks */
+.teacher-tools .tt-section { border-top: 1px solid var(--tp-edge); padding: 26px 0; }
+.teacher-tools .tt-section h2 { margin-bottom: 14px; }
+.teacher-tools .tt-lead { font-size: 1.08rem; max-width: 65ch; }
+.teacher-tools .tt-quote { margin: 0 0 10px; padding: 12px 16px; background: var(--tp-green-bg); color: var(--tp-ink); border-radius: 10px; font-style: italic; }
+.teacher-tools .tt-quote p { margin: 0 0 4px; }
+.teacher-tools .tt-quote p:last-child { margin: 0; }
+.teacher-tools .tt-list { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; max-width: 70ch; }
+.teacher-tools .tt-numbered { margin: 0 0 16px; padding-left: 1.4em; display: grid; gap: 8px; max-width: 70ch; }
+.teacher-tools .tt-cards, .teacher-tools .tt-lessons { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.teacher-tools .tt-card { padding: 16px 18px; border: 1px solid var(--tp-edge); border-radius: 14px; background: var(--tp-paper); }
+.teacher-tools .tt-card p:last-child, .teacher-tools .tt-card ul:last-child { margin-bottom: 0; }
+.teacher-tools .tt-card h3 { margin-bottom: 8px; }
+.teacher-tools .tt-lessons .lesson-example { margin-top: 12px; }
+.teacher-tools .tt-glossary { margin: 0; display: grid; gap: 10px; }
+.teacher-tools .tt-glossary > div { display: grid; grid-template-columns: minmax(120px, 200px) 1fr; gap: 4px 16px; padding-bottom: 10px; border-bottom: 1px dashed var(--tp-edge); }
+.teacher-tools .tt-glossary dt { font-weight: bold; }
+.teacher-tools .tt-glossary dd { margin: 0; }
+@media (max-width: 560px) { .teacher-tools .tt-glossary > div { grid-template-columns: 1fr; } }
+.teacher-tools .tt-link-row { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; }
+.teacher-tools .tt-link-row a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-weight: bold; }
+.teacher-tools .tt-examples { display: grid; gap: 12px; margin-bottom: 16px; }
+
+/* Briefing topic list */
+.teacher-tools .tt-search { max-width: 420px; margin-bottom: 18px; }
+.teacher-tools .tt-topic-group { border-top: 1px solid var(--tp-edge); padding: 20px 0 8px; }
+.teacher-tools .tt-topic-group h2 { font-size: 1.1rem; margin-bottom: 8px; }
+.teacher-tools .tt-topic-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 4px 20px; }
+.teacher-tools .tt-topic-list li { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 10px; }
+.teacher-tools .tt-topic-list a { display: inline-flex; align-items: center; min-height: 44px; font-weight: bold; }
+.teacher-tools .tt-pager { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; border-top: 1px solid var(--tp-edge); padding: 20px 0; }
+.teacher-tools .tt-pager a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-weight: bold; }
+
+/* Report builder */
+.teacher-planning.tt-wide { max-width: 1120px; }
+/* One rule spans both columns so the draft panel lines up with step 1. */
+.teacher-tools .tt-report { display: grid; gap: 24px 32px; border-top: 1px solid var(--tp-edge); padding-top: 28px; }
+.teacher-tools .tt-report-form > .tt-section:first-child { border-top: 0; padding-top: 0; }
+.teacher-tools .tt-report-form > .tt-section:last-child { padding-bottom: 0; }
+@media (min-width: 900px) {
+  .teacher-tools .tt-report { grid-template-columns: minmax(0, 1.3fr) minmax(320px, 1fr); align-items: start; }
+  /* Clear the sticky navbar when it slides back in. */
+  .teacher-tools .tt-report-draft { position: sticky; top: 88px; }
+}
+.teacher-tools .tt-section > .tp-quiet { margin-top: -6px; margin-bottom: 16px; max-width: 60ch; }
+
+/* Field labels: text and "(optional)" stay on one line above the control. */
+.teacher-tools .tt-label { display: block; }
+.teacher-tools .tt-field { margin-bottom: 20px; }
+.teacher-tools .tt-field > legend { margin-bottom: 8px; }
+.teacher-tools .tt-row { display: flex; flex-wrap: wrap; gap: 16px 20px; align-items: end; }
+.teacher-tools .tt-row > fieldset > legend { margin-bottom: 6px; }
+
+/* Joined segmented control, sized to match the 48px inputs beside it. */
+.teacher-tools .tt-segments { display: inline-grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
+.teacher-tools .tt-segments button { min-height: 48px; min-width: 56px; padding: 6px 14px; border-radius: 0; margin-left: -1px; font-weight: bold; line-height: 1.2; text-align: center; }
+.teacher-tools .tt-segments button:first-child { margin-left: 0; border-radius: 10px 0 0 10px; }
+.teacher-tools .tt-segments button:last-child { border-radius: 0 10px 10px 0; }
+.teacher-tools .tt-segments button:hover:not(:disabled), .teacher-tools .tt-segments button:focus-visible { position: relative; z-index: 1; }
+.teacher-tools .tt-segments button[aria-pressed="true"] { position: relative; z-index: 2; background: var(--tp-ink); color: var(--tp-paper); border-color: var(--tp-ink); }
+.teacher-tools .tt-bands { display: grid; width: 100%; }
+.teacher-tools .tt-bands button { padding: 6px 8px; font-size: .92rem; }
+/* "Not reported" is the resting state, so it stays quiet; a real judgement is the one that stands out. */
+.teacher-tools .tt-bands .tt-band-none[aria-pressed="true"] { background: var(--tp-soft); color: var(--tp-muted); border-color: var(--tp-edge); }
+
+.teacher-tools .tt-subject { border: 1px solid var(--tp-edge); border-radius: 14px; padding: 14px 16px 16px; margin-bottom: 10px; background: var(--tp-paper); }
+.teacher-tools .tt-subject.is-on { border-color: var(--tp-green); }
+.teacher-tools .tt-subject legend { float: left; width: 100%; font-size: 1rem; margin-bottom: 10px; }
+.teacher-tools .tt-subject legend + * { clear: both; }
+.teacher-tools .tt-subject-detail { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px 16px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--tp-edge); }
+/* If one label wraps, its select still lines up with its neighbour. */
+.teacher-tools .tt-subject-detail label { justify-content: space-between; }
+.teacher-tools .tt-span-all { grid-column: 1 / -1; }
+.teacher-tools .tt-section .tp-chips { margin-bottom: 4px; }
+.teacher-tools .tt-target { max-width: 360px; margin-top: 20px; }
+
+.teacher-tools .tt-report-draft { border: 1px solid var(--tp-edge); border-radius: 16px; padding: 20px; background: var(--tp-paper); box-shadow: 0 8px 24px -16px rgb(0 0 0 / .35); }
+.teacher-tools .tt-report-draft h2 { margin-bottom: 12px; }
+.teacher-tools .tt-report-draft > .tp-quiet:not(.tt-count) { margin-bottom: 12px; }
+.teacher-tools .tt-report-draft textarea { min-height: 300px; font-size: 1rem; }
+.teacher-tools .tt-count { margin: 6px 0 0; text-align: right; font-size: .85rem; font-variant-numeric: tabular-nums; }
+.teacher-tools .tt-report-draft .tp-hint { margin: 12px 0 0; }
+.teacher-tools .tt-draft-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.teacher-tools .tt-draft-actions .tp-primary { grid-column: 1 / -1; min-height: 52px; font-size: 1.05rem; }
+
+/* Parent explainers */
+.teacher-tools .tt-teacher-panel { margin-top: 8px; padding: 4px 16px 12px; border: 1px dashed var(--tp-muted); border-radius: 12px; }
+.teacher-tools .tt-teacher-panel label { margin-top: 8px; }
+.teacher-tools .tt-note { margin-top: 16px; padding: 12px 16px; border: 2px solid var(--tp-ink); border-radius: 12px; }
+.teacher-tools .tt-note h2 { font-size: 1rem; margin-bottom: 6px; }
+.teacher-tools .tt-note p { white-space: pre-wrap; margin: 0; }
+
+@media print {
+  .teacher-tools .tt-no-print, .teacher-tools .tt-actions { display: none !important; }
+  .teacher-tools .tt-print-only { display: block; }
+  .teacher-tools span.tt-print-only { display: inline; }
+  .teacher-tools .tt-section { padding: 12px 0; break-inside: avoid-page; }
+  .teacher-tools .tt-card, .teacher-tools .lesson-example { break-inside: avoid; }
+  .teacher-tools .tt-hub-card { transform: none; }
+}
+
+/* Public parent guides use a breadcrumb like the curriculum guides */
+.teacher-tools .tt-breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin-bottom: 16px; font-size: .92rem; color: var(--tp-muted); }
+.teacher-tools .tt-breadcrumb a { display: inline-flex; align-items: center; min-height: 44px; font-weight: bold; }

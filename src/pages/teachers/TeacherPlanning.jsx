@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { isChallengeImplemented } from "../../data/challengeAvailability";
 import { getTeacherCurriculum } from "../../data/teacherPlanningResources";
 import { CURRICULUM_SUBJECTS, CURRICULUM_YEARS, getSubjectName, isCurriculumAvailable, isYearAvailable } from "../../data/curriculumRegistry";
 import { generateTeachingPlan, moveItem, SAMPLE_CLASS, SAMPLE_EVIDENCE } from "../../data/teacherPlanning";
+import { compileClassEvidence } from "../../data/teacherClassInput";
 import { resourceFit } from "../../data/teacherResourceCatalogue";
 import { ResourceFinder, ResourceInformation } from "./TeacherResources";
 import TeacherClassInput from "./TeacherClassInput";
@@ -109,6 +110,10 @@ function LessonCard({ lesson, index, count, resources, objectives, needs, year, 
     {open && <div className="tp-lesson-body" id={bodyId}>
       <div className="tp-lesson-toolbar"><p className="tp-lesson-goal"><span>Learning focus</span>{lesson.learningGoal}</p><button type="button" onClick={() => { setFinderOpen(false); setEditing((value) => !value); }}>{editing ? "Done editing" : "Edit lesson"}</button></div>
       {!editing ? <>
+        {(lesson.vocabulary?.length > 0 || lesson.briefingPath) && <div className="tp-lesson-knowledge">
+          {lesson.vocabulary?.length > 0 && <p><span>Key vocabulary</span>{lesson.vocabulary.join(" · ")}</p>}
+          {lesson.briefingPath && <a className="tp-open" href={lesson.briefingPath} target="_blank" rel="noopener noreferrer">Read the topic briefing <Icon name="external" /></a>}
+        </div>}
         <ol className="tp-lesson-flow" aria-label="Teaching sequence">
           {[["starter", "Warm up", 5], ["teaching", "Teach and model", lesson.duration - practice - 10], ["activity", "Practise", practice], ["checkpoint", "Check understanding", 5]].map(([field, title, minutes]) => <li key={field}>
             <div className="tp-flow-heading"><h4>{title}</h4><span>{minutes} min</span></div>
@@ -155,6 +160,7 @@ function PrintablePlan({ plan, resources }) {
     {plan.lessons.map((lesson, index) => <article key={lesson.id}>
       <h2>Week {Math.floor(index / plan.lessonsPerWeek) + 1} · Lesson {index + 1}: {lesson.title}</h2>
       <p>{lesson.duration} minutes · {lesson.learningGoal}</p>
+      {lesson.vocabulary?.length > 0 && <p><strong>Key vocabulary:</strong> {lesson.vocabulary.join(", ")}</p>}
       <p><strong>Evidence:</strong> {lesson.rationale}</p>
       {[["starter", "Starter"], ["teaching", "Teaching"], ["activity", "Practical activity"], ["support", "Support"], ["stretch", "Stretch"], ["checkpoint", "Checkpoint"], ["notes", "Notes"]].map(([field, label]) => lesson[field] && <p key={field}><strong>{label}:</strong> {lesson[field]}</p>)}
       <ol>{lesson.resources.map((entry) => {
@@ -165,12 +171,29 @@ function PrintablePlan({ plan, resources }) {
   </section>;
 }
 
+// A topic briefing links here with ?year=&subject=&topic= so the topic is
+// already added in step 1. Invalid or unknown values fall back to the default.
+function initialContext(params) {
+  const year = Number(params.get("year"));
+  const subject = params.get("subject");
+  return YEARS.includes(year) && isCurriculumAvailable(year, subject) ? { year, subject } : { year: 3, subject: "math" };
+}
+
+function initialSeed(params, catalogue) {
+  const entries = catalogue.needs.filter((need) => need.objectiveId === params.get("topic")).map((need) => ({ needId: need.id, priority: "teach" }));
+  if (!entries.length) return null;
+  try { return { entries, input: { source: "teacher", evidence: compileClassEvidence(entries, "teacher", catalogue), revision: 1 } }; }
+  catch { return null; }
+}
+
 export default function TeacherPlanning() {
-  const [context, setContext] = useState({ year: 3, subject: "math" });
+  const [params] = useSearchParams();
+  const [context, setContext] = useState(() => initialContext(params));
   const [pendingContext, setPendingContext] = useState(null);
   const catalogue = useMemo(() => getTeacherCurriculum({ ...context, isBuilt: isChallengeImplemented }), [context]);
   const { resources, objectives, needs, year, subjectName } = catalogue;
-  const [input, setInput] = useState(EMPTY_INPUT);
+  const [seed, setSeed] = useState(() => initialSeed(params, catalogue));
+  const [input, setInput] = useState(() => seed?.input ?? EMPTY_INPUT);
   const [overrides, setOverrides] = useState({});
   const [dirty, setDirty] = useState(false);
   const [lessonsPerWeek, setLessonsPerWeek] = useState(5);
@@ -208,7 +231,7 @@ export default function TeacherPlanning() {
     } catch (error) { setMessage(error.message); setReplacement(false); }
   };
   const switchContext = (next) => {
-    setContext(next); setPendingContext(null); setPlan(null); setInput(EMPTY_INPUT); setActiveLessonId(null); setReordering(false);
+    setContext(next); setPendingContext(null); setPlan(null); setInput(EMPTY_INPUT); setActiveLessonId(null); setReordering(false); setSeed(null);
     setOverrides({}); setDirty(false); setReplacement(false); setMessage("");
   };
   const chooseContext = (next) => {
@@ -227,7 +250,7 @@ export default function TeacherPlanning() {
   return <div className="teacher-planning">
     <div className="tp-screen">
       <header className="tp-header">
-        <Link className="tp-back" to="/"><Icon name="back" />Learn with Bix</Link>
+        <Link className="tp-back" to="/teachers"><Icon name="back" />Teacher tools</Link>
         <h1>Plan your next three weeks</h1>
         <p className="tp-lede">Pick your class, add what they need, get a lesson-by-lesson plan. <span className="tp-unsaved">Not saved. Print to keep it.</span></p>
         <ClassPicker context={context} onChoose={chooseContext} />
@@ -241,7 +264,7 @@ export default function TeacherPlanning() {
         </div>}
       </header>
 
-      <TeacherClassInput key={`${year}:${context.subject}`} resources={resources} needs={needs} onApply={applyInput} onDirty={(value) => { setDirty(value); if (value) setReplacement(false); }} onSample={sample} />
+      <TeacherClassInput key={`${year}:${context.subject}`} initialEntries={seed?.entries} resources={resources} needs={needs} onApply={applyInput} onDirty={(value) => { setDirty(value); if (value) setReplacement(false); }} onSample={sample} />
 
       <section className="tp-step" aria-labelledby="tp-focus-heading">
         <h2 id="tp-focus-heading"><span className="tp-step-n" aria-hidden="true">2</span>Choose what to plan</h2>

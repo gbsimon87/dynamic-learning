@@ -48,7 +48,7 @@ export default function AppFooter() {
 
           <div className="app-footer-group">
             <h2>About</h2>
-            <Link to="/teachers/planning">Teacher planning preview</Link>
+            <Link to="/teachers">Teacher tools</Link>
             <Link to="/privacy">Privacy</Link>
             <Link to="/credits">Credits</Link>
           </div>

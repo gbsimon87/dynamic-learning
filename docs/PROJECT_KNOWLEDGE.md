@@ -178,6 +178,17 @@ rules: extend those layers instead of creating another store or counter.
 For feature detail, read the [architecture](ARCHITECTURE.md) and the source it
 links. Delivered outcomes belong in [CHANGELOG.md](CHANGELOG.md).
 
+**Teacher tools** at `/teachers` link the planning pilot to three
+account-free tools. **Topic briefings** (`/teachers/briefings`) cover every
+Maths and English topic that has Bix introductions; Year 3 Maths also has
+authored teacher notes, which also supply the planning pilot's lesson text, vocabulary and briefing links for those topics. The **report comment builder** (`/teachers/reports`)
+drafts editable, template-built comments. The 12 **parent guides**
+(`/parent-guides/:slug`, data in `shared/parentExplainers.js`) are the
+"how it's taught" layer under the curriculum guides, which link to them. They
+can be sent as links or printed, and become indexed only once reviewed. None of
+these pages stores what is typed into it. See the
+[design record](superpowers/2026-11-09-teacher-everyday-tools.md).
+
 The **teacher planning pilot** at `/teachers/planning` accepts class-level
 needs or pasted question-response totals and generates editable three-week
 plans with matching resource playlists. Fictional evidence is an explicit demo
