@@ -3,6 +3,7 @@ import { year6ScienceCurriculum } from "./year6ScienceCurriculum.js";
 import { year6EnglishCurriculum } from "./year6EnglishCurriculum.js";
 import { year6HistoryCurriculum } from "./year6HistoryCurriculum.js";
 import { year6GeographyCurriculum } from "./year6GeographyCurriculum.js";
+import { year6ComputingCurriculum } from "./year6ComputingCurriculum.js";
 import { year5ArtCurriculum } from "./year5ArtCurriculum.js";
 import { year5ComputingCurriculum } from "./year5ComputingCurriculum.js";
 import { year5DesignCurriculum } from "./year5DesignCurriculum.js";
@@ -78,6 +79,8 @@ const CURRICULA = [
   { year: 6, subject: "science", available: true, load: () => year6ScienceCurriculum },
   { year: 6, subject: "history", available: true, countsTowardYear: false, load: () => year6HistoryCurriculum },
   { year: 6, subject: "geography", available: true, countsTowardYear: false, load: () => year6GeographyCurriculum },
+  // Year 6 Computing (key-stage-2-computing.md), staged from 2026-11-09: outside the award.
+  { year: 6, subject: "computing", available: true, countsTowardYear: false, load: () => year6ComputingCurriculum },
   // Year 5 (docs/curriculum/year-5-*.md, key-stage-2-*.md), built 2026-11.
   { year: 5, subject: "math", available: true, load: () => year5MathCurriculum },
   { year: 5, subject: "english", available: true, load: () => year5EnglishCurriculum },

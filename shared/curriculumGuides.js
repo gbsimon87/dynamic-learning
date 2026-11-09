@@ -2587,6 +2587,29 @@ export const CURRICULUM_GUIDES = [
   },
   {
     "year": 6,
+    "subject": "computing",
+    "slug": "year-6-computing",
+    "path": "/curriculum-guide/year-6-computing",
+    "label": "Year 6 Computing",
+    "intro": "Longer programs, sensors and algorithms, data you can trust and a sharper eye online.",
+    "fit": "For children ready to trace longer programs, compare algorithms and question what they see online.",
+    "areas": [
+      { "categoryId": "programming-projects", "title": "Programming Projects", "icon": "🧩", "description": "Combine loops and decisions, track variables that change, reuse procedures and debug longer programs.", "example": "How many times does this loop say Clap?", "colour": "mint" },
+      { "categoryId": "physical-systems", "title": "Physical Systems", "icon": "🚦", "description": "Use sensors as input, follow programs that control lights, fans and motors, and run simple simulations.", "example": "What should the fan do when it gets hot?", "colour": "rose" },
+      { "categoryId": "algorithms", "title": "Algorithms", "icon": "⚙️", "description": "Follow linear and halving searches and bubble sort, then count steps to compare algorithms.", "example": "Which search finds the number in fewer guesses?", "colour": "gold" },
+      { "categoryId": "data-and-information", "title": "Data and Information", "icon": "📊", "description": "Plan how to collect data, filter and sort databases, use simple spreadsheet formulas and choose honest charts.", "example": "Which chart shows this best?", "colour": "lilac" },
+      { "categoryId": "online-world", "title": "Online World", "icon": "🌐", "description": "Explore how email and messaging work, search smartly, check what is true online and look after your digital footprint.", "example": "Is this result an advert?", "colour": "mint" }
+    ],
+    "activities": [
+      { "icon": "🔁", "title": "Fizz-buzz round the table", "description": "Count round the family, saying Fizz for multiples of 3. Then talk about the loop and the if inside it." },
+      { "icon": "🧰", "title": "Name a routine", "description": "Write a family procedure, such as 'tidy up', and call it by name instead of listing every step." },
+      { "icon": "🐛", "title": "Debug together", "description": "Ask a grown-up to hide one mistake in a longer set of instructions, then trace it to find the bug." }
+    ],
+    "practical": "Pictures and puzzles help rehearse computing ideas, but the app cannot assess your child writing and testing real programs or controlling real devices. Make time to build programs in a block-based or text-based language.",
+    "alignment": "Topics are mapped to the National Curriculum in England for key stage 2 (Years 3–6). The year-by-year allocation is Bix’s choice; this path does not cover the whole key stage."
+  },
+  {
+    "year": 6,
     "subject": "science",
     "slug": "year-6-science",
     "path": "/curriculum-guide/year-6-science",

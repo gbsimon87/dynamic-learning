@@ -6,8 +6,11 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
-<<<<<<< Updated upstream
-=======
+## 2026-11-09 — Year 6 Computing
+
+- Registered Year 6 Computing (`countsTowardYear: false`; the Year 6 award stays Maths, English and Science): 17 topics / 68 challenges in Programming Projects, Physical Systems, Algorithms, Data and Information, and Online World, mapped in `docs/curriculum/key-stage-2-computing.md`. It covers the key stage 2 bullets Year 5 left out (controlling or simulating physical systems; collecting, analysing, evaluating and presenting data). Questions stay unplugged and every output is computed by its builder; pictures reuse the Year 5 Computing renderer.
+- Added certificate lines, the public guide, permanent-ID tests and a test that opens every challenge. `check:course` passes 17/17, lint and build pass, and full tests pass except three existing Year 6 English lesson and story failures that also fail on `dev`. Teacher content review, a check of the longer program pictures in a real browser, and device review are still pending.
+
 ## 2026-11-09 — Ocean Explorer Reef neighbours tour
 
 - Added an optional three-stop guided tour at `/skills/ocean-explorer`: assisted travel, normal orbit/card views and short narration for the coral reef, parrotfish and green sea turtle. Children can pause/resume or skip it at any point, use previous/next and narration controls at a stop, or keep exploring manually; no Skills or curriculum progress is saved.
@@ -50,7 +53,6 @@ work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history bef
 - Teachers can choose objectives, generate 3–15 lessons over three weeks, edit titles/objectives/timings/teaching notes, reorder lessons and Bix resources, and print/save a complete PDF. Twenty existing curriculum challenges and supporting Fraction Fun are resolved from current catalogues/availability. Replacing a draft requires explicit confirmation; refreshing loses edits. Teacher accounts, saved plans, live assessments and school sharing remain future milestones.
 - Full lint/build, all 941 component tests, planner/resource unit tests and HTTP route regressions pass. Browser layout/contrast checks cover desktop, tablet and phone in both themes, plus complete print output. Full `npm test` has three pre-existing failures in Year 6 English lesson lint and story content; four database tests skip without MongoDB. SEO HTTP checks pass, but its browser script stops at an unchanged Number Bonds heading mismatch. Physical-device, assistive-technology and teacher review remain pending. See the [plan and evidence](superpowers/plans/2026-11-08-teacher-planning-playlists.md).
 
->>>>>>> Stashed changes
 ## 2026-11-08 — Times Tables Race: simpler setup screen
 
 - Replaced the From/To dropdowns and quick-choice buttons with numbered steps: tap any mix of 1–12 times-table tiles (with All and Clear), then pick one of two picture cards, Beat the clock or Finish the race. Start stays disabled until a table is chosen. Tables 0 and 13–20 are no longer offered. The play and results screens are unchanged. Skills Mode stays untracked.

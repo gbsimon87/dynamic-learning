@@ -3,6 +3,7 @@ import { year6ScienceCurriculum } from "./year6ScienceCurriculum.js";
 import { year6EnglishCurriculum } from "./year6EnglishCurriculum.js";
 import { year6HistoryCurriculum } from "./year6HistoryCurriculum.js";
 import { year6GeographyCurriculum } from "./year6GeographyCurriculum.js";
+import { year6ComputingCurriculum } from "./year6ComputingCurriculum.js";
 import { year5MathCurriculum } from "./year5MathCurriculum.js";
 import { year5EnglishCurriculum } from "./year5EnglishCurriculum.js";
 import { year5ScienceCurriculum } from "./year5ScienceCurriculum.js";
@@ -1266,4 +1267,17 @@ const YEAR6_GEOGRAPHY_IDS = [
 
 test("Year 6 Geography category and topic ids are unchanged", () => {
   assert.deepEqual(ids(year6GeographyCurriculum), YEAR6_GEOGRAPHY_IDS);
+});
+
+// Year 6 Computing, approved 2026-11-09. These ids are URL and progress keys.
+const YEAR6_COMPUTING_IDS = [
+  ["programming-projects", ["combining-loops-and-decisions", "variables-that-change", "procedures", "debugging-longer-programs"]],
+  ["physical-systems", ["sensors-and-inputs", "controlling-devices", "simulations"]],
+  ["algorithms", ["searching-algorithms", "sorting-algorithms", "comparing-algorithms"]],
+  ["data-and-information", ["collecting-data", "databases-and-spreadsheets", "presenting-data"]],
+  ["online-world", ["how-email-and-messaging-work", "smart-searching", "fact-or-fake", "digital-footprint-and-reporting"]],
+];
+
+test("Year 6 Computing category and topic ids are unchanged", () => {
+  assert.deepEqual(ids(year6ComputingCurriculum), YEAR6_COMPUTING_IDS);
 });
