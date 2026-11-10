@@ -52,7 +52,6 @@
 .teacher-tools .tt-pager a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-weight: bold; }
 
 /* Report builder */
-.teacher-planning.tt-wide { max-width: 1120px; }
 /* One rule spans both columns so the draft panel lines up with step 1. */
 .teacher-tools .tt-report { display: grid; gap: 24px 32px; border-top: 1px solid var(--tp-edge); padding-top: 28px; }
 .teacher-tools .tt-report-form > .tt-section:first-child { border-top: 0; padding-top: 0; }

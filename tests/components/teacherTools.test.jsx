@@ -52,10 +52,13 @@ it("drafts a report from judgements, rewords it, copies it and clears for the ne
   expect(writeText).toHaveBeenCalledWith(draft());
   expect(screen.getByText(/Copied/)).toBeTruthy();
 
+  await user.selectOptions(screen.getByRole("combobox", { name: "Year group" }), "4");
+  expect(screen.getByLabelText(/First name/).value).toBe("Sam");
+  expect(within(screen.getByRole("group", { name: "Maths judgement" })).getByRole("button", { name: "Not reported" }).getAttribute("aria-pressed")).toBe("true");
   await user.click(screen.getByRole("button", { name: "Next pupil" }));
   expect(screen.getByLabelText(/First name/).value).toBe("");
   expect(draft()).toMatch(/\[Name\]/);
-  expect(screen.getByRole("button", { name: "Year 3" }).getAttribute("aria-pressed")).toBe("true");
+  expect(screen.getByRole("combobox", { name: "Year group" }).value).toBe("4");
   expect(setItem).not.toHaveBeenCalled();
 });
 

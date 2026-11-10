@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync } from "node:fs";
 import { CURRICULUM_YEARS, CURRICULUM_SUBJECTS, loadCurriculum } from "./curriculumRegistry.js";
-import { getTeacherCurriculum, teachingFromBriefing } from "./teacherPlanningResources.js";
+import { getTeacherCurriculum, getTeacherPlanningCatalogue, teachingFromBriefing } from "./teacherPlanningResources.js";
 import { getBriefingNotes } from "./teacherBriefings/index.js";
 import { searchLearningNeeds } from "./teacherResourceCatalogue.js";
 import { compileClassEvidence } from "./teacherClassInput.js";
@@ -122,4 +122,21 @@ test("topics without notes keep the generic text and no briefing link", () => {
   assert.equal(generic.source, "generic");
   assert.equal(generic.briefingPath, null);
   assert.deepEqual(generic.vocabulary, []);
+});
+
+
+test("combined catalogues isolate objectives across subjects while preserving activity URLs and need links", () => {
+  for (const year of CURRICULUM_YEARS) {
+    const catalogue = getTeacherPlanningCatalogue({ year, isBuilt });
+    assert.equal(new Set(catalogue.objectives.map((objective) => objective.id)).size, catalogue.objectives.length);
+    assert.equal(new Set(catalogue.needs.map((need) => need.id)).size, catalogue.needs.length);
+    for (const objective of catalogue.objectives) {
+      assert.equal(objective.id, `${objective.subject}:${objective.topicId}`);
+      assert.ok(catalogue.needs.some((need) => need.objectiveId === objective.id && need.subject === objective.subject));
+      const resource = catalogue.resources.find((resource) => resource.available && resource.objectiveIds.includes(objective.id));
+      assert.ok(resource, objective.id);
+      assert.equal(resource.subject, objective.subject);
+      if (resource.kind === "curriculum") assert.ok(resource.to.includes(`/${year}/${objective.subject}/`));
+    }
+  }
 });

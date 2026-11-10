@@ -88,3 +88,24 @@ test("resource identities resolve to shipped challenge wrappers and a real Skill
   assert.ok(skills.instruction.includes("indefinitely"));
   assert.ok(getPlanningResources(() => false).filter((resource) => resource.kind === "curriculum").every((resource) => !resource.available));
 });
+
+test("multi-subject plans keep colliding topic IDs, resources and retrieval within their subject", () => {
+  const objectives = ["math", "science"].flatMap((subject) => ["shared-topic", "retrieval"].map((id) => ({
+    ...PLANNING_OBJECTIVES[0], id: `${subject}:${id}`, subject, subjectName: subject === "math" ? "Maths" : "Science", goal: `${subject} retrieval goal`,
+  })));
+  const selectedIds = ["math:shared-topic", "science:shared-topic"];
+  const plan = generateTeachingPlan({ selectedIds, objectives, lessonsPerWeek: 2,
+    resources: selectedIds.map((id) => ({ id: `resource:${id}`, objectiveIds: [id], available: true, kind: "curriculum" })),
+    evidence: ["math", "science"].map((subject) => ({ objectiveId: `${subject}:retrieval`, priority: "retrieve", reason: `${subject} secure` })),
+  });
+  assert.equal(plan.subjectName, "Maths + Science");
+  assert.deepEqual(plan.subjects, ["math", "science"]);
+  assert.equal(plan.subject, null);
+  assert.equal(plan.objectives.length, 2);
+  for (const lesson of plan.lessons) {
+    assert.equal(lesson.objectiveId, `${lesson.subject}:shared-topic`);
+    assert.equal(lesson.resources[0].resourceId, `resource:${lesson.objectiveId}`);
+    assert.ok(lesson.starter.includes(`${lesson.subject} retrieval goal`));
+    assert.ok(!lesson.starter.includes(`${lesson.subject === "math" ? "science" : "math"} retrieval goal`));
+  }
+});

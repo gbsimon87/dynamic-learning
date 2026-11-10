@@ -1,4 +1,4 @@
-import { loadCurriculum, getSubjectName } from "./curriculumRegistry.js";
+import { loadCurriculum, getSubjectName, CURRICULUM_SUBJECTS, isCurriculumAvailable } from "./curriculumRegistry.js";
 import { getLesson } from "./lessons/index.js";
 import { SKILL_GROUPS } from "../../shared/skillsCatalog.js";
 import { PLANNING_OBJECTIVES } from "./teacherPlanning.js";
@@ -108,4 +108,25 @@ export function getTeacherCurriculum({ year = 3, subject = "math", isBuilt }) {
     if (numbers >= 0 && sets >= 0 && numbers > sets) [objectives[numbers], objectives[sets]] = [objectives[sets], objectives[numbers]];
   }
   return { year: Number(year), subject, subjectName: getSubjectName(subject), resources: [...resources, ...skills], objectives, needs };
+}
+
+// Plan identities are scoped to subject: different courses can reuse topic IDs.
+// Keep the underlying curriculum and activity IDs unchanged.
+export function getTeacherPlanningCatalogue({ year = 3, isBuilt }) {
+  const courses = CURRICULUM_SUBJECTS.filter(({ id }) => isCurriculumAvailable(year, id))
+    .map(({ id }) => getTeacherCurriculum({ year, subject: id, isBuilt }));
+  return {
+    year,
+    resources: courses.flatMap((course) => course.resources.map((resource) => ({
+      ...resource, objectiveIds: resource.objectiveIds.map((id) => `${course.subject}:${id}`),
+    }))),
+    objectives: courses.flatMap((course) => course.objectives.map((objective) => ({
+      ...objective, topicId: objective.id, id: `${course.subject}:${objective.id}`,
+      subject: course.subject, subjectName: course.subjectName,
+    }))),
+    needs: courses.flatMap((course) => course.needs.map((need) => ({
+      ...need, objectiveId: `${course.subject}:${need.objectiveId}`, subject: course.subject,
+      subjectName: course.subjectName,
+    }))),
+  };
 }

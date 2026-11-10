@@ -3,10 +3,9 @@ import { Link, useParams } from "react-router";
 import LessonExample from "../../components/challenge/lesson/LessonExample";
 import { LESSONS } from "../../data/lessons/index.js";
 import { briefingCourses, getTopicBriefing, listBriefingTopics } from "../../data/teacherBriefings/index.js";
-import { TeacherBack } from "./TeacherHub";
+import TeacherWorkspace, { TeacherHeader } from "./TeacherWorkspace";
 import { Icon } from "./TeacherIcons";
 import "../../components/challenge/lesson/lesson.css";
-import "./TeacherPlanning.css";
 import "./TeacherTools.css";
 
 const COURSES = briefingCourses();
@@ -24,21 +23,17 @@ function BriefingIndex() {
   const term = query.trim().toLowerCase();
   const shown = categories.map((category) => ({ ...category, topics: category.topics.filter((topic) => !term || `${topic.name} ${category.title}`.toLowerCase().includes(term)) })).filter((category) => category.topics.length);
   const chooseYear = (year) => setCourse((current) => ({ year, subject: COURSES.some((entry) => entry.year === year && entry.subject === current.subject) ? current.subject : COURSES.find((entry) => entry.year === year).subject }));
-  return <div className="teacher-planning teacher-tools">
-    <header className="tp-header">
-      <TeacherBack />
-      <h1>Topic briefings</h1>
-      <p className="tp-lede">Everything to read before you teach a topic: the key ideas, common mistakes, vocabulary and the worked examples Bix uses.</p>
-      <div className="tp-picker-row">
-        <div className="tp-chips" role="group" aria-label="Year">
-          {years.map((year) => <button key={year} type="button" aria-pressed={course.year === year} onClick={() => chooseYear(year)}>Year {year}</button>)}
-        </div>
-        <div className="tp-chips" role="group" aria-label="Subject">
-          {subjects.map((entry) => <button key={entry.subject} type="button" aria-pressed={course.subject === entry.subject} onClick={() => setCourse({ ...course, subject: entry.subject })}>{entry.subjectName}</button>)}
-        </div>
-      </div>
-    </header>
-    <label className="tt-search">Find a topic<input type="search" value={query} maxLength={80} placeholder="For example, fractions or column" onChange={(event) => setQuery(event.target.value)} /></label>
+  return <TeacherWorkspace className="teacher-tools">
+    <TeacherHeader title="Topic briefings" />
+    <div className="tw-panel tw-filters">
+      <label>Year group<select value={course.year} onChange={(event) => chooseYear(Number(event.target.value))}>
+        {years.map((year) => <option key={year} value={year}>Year {year}</option>)}
+      </select></label>
+      <label>Subject<select value={course.subject} onChange={(event) => setCourse({ ...course, subject: event.target.value })}>
+        {subjects.map((entry) => <option key={entry.subject} value={entry.subject}>{entry.subjectName}</option>)}
+      </select></label>
+      <label>Find a topic<input type="search" value={query} maxLength={80} placeholder="Search topics, e.g. fractions" onChange={(event) => setQuery(event.target.value)} /></label>
+    </div>
     {!hasNotes && <p className="tp-notice">Teacher notes for {courseName} aren't written yet. {hasLessons ? "Briefings here show Bix's worked examples for each topic." : "Briefings here link to each topic's challenges for now."}</p>}
     {shown.length === 0 && <p className="tp-hint" role="status">No topic matches “{query}”.</p>}
     {shown.map((category) => <section key={category.id} className="tt-topic-group" aria-labelledby={`cat-${category.id}`}>
@@ -48,7 +43,7 @@ function BriefingIndex() {
         {topic.hasNotes && <span className="tp-tag tp-tag--teach">Teacher notes</span>}
       </li>)}</ul>
     </section>)}
-  </div>;
+  </TeacherWorkspace>;
 }
 
 function Section({ title, children }) {
@@ -81,22 +76,18 @@ function BriefingNotes({ notes }) {
 
 function BriefingPage({ year, subject, topicId }) {
   const briefing = useMemo(() => getTopicBriefing(year, subject, topicId), [year, subject, topicId]);
-  if (!briefing) return <div className="teacher-planning teacher-tools">
-    <TeacherBack to="/teachers/briefings">All topic briefings</TeacherBack>
-    <h1>Briefing not found</h1>
+  if (!briefing) return <TeacherWorkspace className="teacher-tools">
+    <TeacherHeader title="Briefing not found" backTo="/teachers/briefings" backLabel="All topic briefings" />
     <p>This topic doesn't exist. Choose another from the <Link to="/teachers/briefings">topic list</Link>.</p>
-  </div>;
+  </TeacherWorkspace>;
   const lessons = briefing.challenges.filter((challenge) => challenge.lesson);
-  return <article className="teacher-planning teacher-tools tt-printable">
-    <header className="tp-header">
-      <span className="tt-no-print"><TeacherBack to="/teachers/briefings">All topic briefings</TeacherBack></span>
-      <p className="tt-kicker">Year {briefing.year} {briefing.subjectName} · {briefing.categoryTitle}</p>
-      <h1>{briefing.name}</h1>
-      <div className="tt-actions tt-no-print">
+  return <TeacherWorkspace as="article" className="teacher-tools tt-printable tw-reading">
+    <TeacherHeader title={briefing.name} backTo="/teachers/briefings" backLabel="All topic briefings"
+      context={`Year ${briefing.year} ${briefing.subjectName} · ${briefing.categoryTitle}`}
+      actions={<>
         <Link className="tt-button-link" to={`/teachers/planning?year=${briefing.year}&subject=${briefing.subject}&topic=${briefing.topicId}`}>Plan lessons for this topic</Link>
         <button type="button" onClick={() => window.print()}><Icon name="print" />Print briefing</button>
-      </div>
-    </header>
+      </>} />
     {briefing.notes ? <BriefingNotes notes={briefing.notes} /> : <p className="tp-notice">Detailed teacher notes for this topic aren't written yet. {lessons.length ? "Below are the worked examples Bix uses to introduce it." : "Open a challenge below to see how Bix teaches it."}</p>}
     {lessons.length > 0 && <Section title="How Bix teaches it">
       <ol className="tt-lessons">{lessons.map((challenge) => <li key={challenge.id} className="tt-card">
@@ -114,7 +105,7 @@ function BriefingPage({ year, subject, topicId }) {
       {briefing.next && <Link to={briefingPath(year, subject, briefing.next.id)}>{briefing.next.name} →</Link>}
     </nav>
     {briefing.notes && <p className="tp-quiet">Teacher notes are written by the Learn with Bix team and not yet reviewed by a teacher. Check them against your school's scheme.</p>}
-  </article>;
+  </TeacherWorkspace>;
 }
 
 export default function TeacherBriefings() {

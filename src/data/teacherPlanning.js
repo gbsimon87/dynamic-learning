@@ -138,12 +138,16 @@ export function generateTeachingPlan({ selectedIds, lessonsPerWeek = 5, duration
     allocation[target] += 1;
   }
   const sequence = focuses.flatMap((_, i) => Array.from({ length: allocation[i] }, () => i));
-  const retrieval = evidence.find((row) => row.priority === "retrieve" && !selectedIds.includes(row.objectiveId));
-  const retrievalObjective = objectives.find((objective) => objective.id === retrieval?.objectiveId);
+  const retrievals = evidence.filter((row) => row.priority === "retrieve" && !selectedIds.includes(row.objectiveId));
+  const subjects = [...new Set(selected.map((objective) => objective.subject ?? subject))];
+  const planSubjectName = subjects.map((id) => selected.find((objective) => objective.subject === id)?.subjectName ?? subjectName).join(" + ");
   const lessons = Array.from({ length: count }, (_, index) => {
     const focusIndex = index < teachingSlots ? sequence[index] : (index - teachingSlots) % focuses.length;
     const focus = focuses[focusIndex];
     const objective = focus.objective;
+    const lessonSubject = objective.subject ?? subject;
+    const retrieval = retrievals.find((row) => objectives.find((candidate) => candidate.id === row.objectiveId)?.subject === objective.subject);
+    const retrievalObjective = objectives.find((candidate) => candidate.id === retrieval?.objectiveId);
     const teaching = teachingForNeed(focus.needId, objective);
     const revisit = index >= teachingSlots;
     const previousOccurrences = Array.from({ length: index }, (_, earlier) => earlier < teachingSlots ? sequence[earlier] : (earlier - teachingSlots) % focuses.length).filter((value) => value === focusIndex).length;
@@ -155,7 +159,7 @@ export function generateTeachingPlan({ selectedIds, lessonsPerWeek = 5, duration
     const checkpointMinutes = 5;
     const starterMinutes = 5;
     return {
-      id: `lesson-${index + 1}`, objectiveId: objective.id, needId: focus.needId ?? null, learningGoal: focus.title,
+      id: `lesson-${index + 1}`, subject: lessonSubject, subjectName: objective.subjectName ?? subjectName, objectiveId: objective.id, needId: focus.needId ?? null, learningGoal: focus.title,
       title: `${stage}: ${focus.title}`,
       duration, rationale: focus.reason,
       starter: retrievalObjective ? `Brief retrieval: ${retrievalObjective.goal} Ask pupils to explain their method.` : "Ask pupils to show what they remember about today's objective using a drawing or objects.",
@@ -168,9 +172,9 @@ export function generateTeachingPlan({ selectedIds, lessonsPerWeek = 5, duration
       resources: resource ? [{ resourceId: resource.id, minutes: practiceMinutes, instruction: resource.instruction }] : [],
     };
   });
-  return { title: `Year ${year} ${subjectName.toLowerCase()} · Three-week teaching plan`, year, subject, subjectName, objectives: selected.map((objective) => ({ ...objective })), lessonsPerWeek, duration,
+  return { title: `Year ${year} ${planSubjectName.toLowerCase()} · Three-week teaching plan`, year, subject: subjects.length === 1 ? subjects[0] : null, subjects, subjectName: planSubjectName, calendarStartDate: null, objectives: selected.map((objective) => ({ ...objective })), lessonsPerWeek, duration,
     evidenceSource: evidenceMeta.source ?? "unspecified", inputRevision: evidenceMeta.revision ?? 0, classSize: evidenceMeta.classSize ?? null,
-    retrievalReason: retrieval?.reason ?? "", snapshots, lessons };
+    retrievalReason: retrievals.map((row) => row.reason).join(" "), snapshots, lessons };
 }
 
 function snapshotStage(occurrence, priority) {

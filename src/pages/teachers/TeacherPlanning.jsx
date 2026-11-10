@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useSearchParams } from "react-router";
+import { useSearchParams } from "react-router";
 import { isChallengeImplemented } from "../../data/challengeAvailability";
-import { getTeacherCurriculum } from "../../data/teacherPlanningResources";
+import { getTeacherPlanningCatalogue } from "../../data/teacherPlanningResources";
 import { CURRICULUM_SUBJECTS, CURRICULUM_YEARS, getSubjectName, isCurriculumAvailable, isYearAvailable } from "../../data/curriculumRegistry";
 import { generateTeachingPlan, moveItem, SAMPLE_CLASS, SAMPLE_EVIDENCE } from "../../data/teacherPlanning";
 import { compileClassEvidence } from "../../data/teacherClassInput";
@@ -9,7 +9,7 @@ import { resourceFit } from "../../data/teacherResourceCatalogue";
 import { ResourceFinder, ResourceInformation } from "./TeacherResources";
 import TeacherClassInput from "./TeacherClassInput";
 import { Icon } from "./TeacherIcons";
-import "./TeacherPlanning.css";
+import TeacherWorkspace, { TeacherHeader } from "./TeacherWorkspace";
 
 const DURATIONS = [20, 30, 40, 45, 50, 60, 75, 90];
 const YEARS = CURRICULUM_YEARS.filter(isYearAvailable);
@@ -22,14 +22,74 @@ const includedByDefault = (row, source) => source === "sample" ? row.priority ==
 const LESSON_FIELDS = [["starter", "Retrieval starter"], ["teaching", "Teaching and worked model"], ["activity", "Guided or practical activity"], ["checkpoint", "Checkpoint"]];
 const EXTRA_FIELDS = [["support", "Support"], ["stretch", "Stretch"]];
 
+function dateFromValue(value) {
+  const [year, month, day] = value.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
+function dateValue(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function mondayFor(date) {
+  const copy = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  copy.setDate(copy.getDate() - ((copy.getDay() + 6) % 7));
+  return copy;
+}
+
+function nextMondayValue() {
+  const today = new Date();
+  const monday = mondayFor(today);
+  if (monday < new Date(today.getFullYear(), today.getMonth(), today.getDate())) monday.setDate(monday.getDate() + 7);
+  return dateValue(monday);
+}
+
+function calendarDays(startDate) {
+  const start = dateFromValue(startDate);
+  // Three teaching weeks from the chosen date, including a partial calendar week.
+  return Array.from({ length: 23 }, (_, index) => new Date(start.getFullYear(), start.getMonth(), start.getDate() + index))
+    .filter((date) => date.getDay() !== 0 && date.getDay() !== 6)
+    .slice(0, 15)
+    .map((date, index) => ({ value: dateValue(date), weekday: new Intl.DateTimeFormat("en-GB", { weekday: "long" }).format(date), week: Math.floor(index / 5) + 1, date }));
+}
+
+function displayDate(value) {
+  return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short" }).format(dateFromValue(value));
+}
+
+function displayTime(value) {
+  if (!value) return "Time not set";
+  return new Intl.DateTimeFormat("en-GB", { hour: "numeric", minute: "2-digit" }).format(new Date(2000, 0, 1, ...value.split(":").map(Number)));
+}
+
+function minutesFor(time) {
+  if (!time) return null;
+  const [hours, minutes] = time.split(":").map(Number);
+  return hours * 60 + minutes;
+}
+
+function overlaps(lesson, lessons) {
+  const start = minutesFor(lesson.schedule?.startTime);
+  if (!lesson.schedule?.date || start === null) return false;
+  const end = start + lesson.duration;
+  return lessons.some((other) => {
+    const otherStart = minutesFor(other.schedule?.startTime);
+    return other.id !== lesson.id && other.schedule?.date === lesson.schedule.date && otherStart !== null && start < otherStart + other.duration && otherStart < end;
+  });
+}
+
 function ClassPicker({ context, onChoose }) {
   return <div className="tp-picker-row">
-    <div className="tp-chips" role="group" aria-label="Class year">
-      {YEARS.map((year) => <button key={year} type="button" aria-pressed={context.year === year} onClick={() => onChoose({ year, subject: isCurriculumAvailable(year, context.subject) ? context.subject : subjectsFor(year)[0].id })}>Year {year}</button>)}
-    </div>
-    <div className="tp-chips" role="group" aria-label="Subject">
-      {subjectsFor(context.year).map((subject) => <button key={subject.id} type="button" aria-pressed={context.subject === subject.id} onClick={() => onChoose({ ...context, subject: subject.id })}>{subject.name}</button>)}
-    </div>
+    <label>Year group<select aria-label="Class year" value={context.year} onChange={(event) => {
+      const year = Number(event.target.value);
+      onChoose({ year, subject: isCurriculumAvailable(year, context.subject) ? context.subject : subjectsFor(year)[0].id });
+    }}>{YEARS.map((year) => <option key={year} value={year}>Year {year}</option>)}</select></label>
+    <label>Subject<select aria-label="Subject" value={context.subject} onChange={(event) => onChoose({ ...context, subject: event.target.value })}>
+      {subjectsFor(context.year).map((subject) => <option key={subject.id} value={subject.id}>{subject.name}</option>)}
+    </select></label>
   </div>;
 }
 
@@ -38,7 +98,7 @@ function FocusRow({ objective, evidence, selected, onToggle }) {
   return <li className={`tp-focus${selected ? " is-on" : ""}`}>
     <label className="tp-focus-main">
       <input type="checkbox" checked={selected} onChange={onToggle} aria-label={`Include ${objective.title.toLowerCase()}`} />
-      <span className="tp-focus-title">{objective.title}</span>
+      <span className="tp-focus-title">{objective.title}{objective.subjectName && <small> · {objective.subjectName}</small>}</span>
     </label>
     <span className={`tp-tag tp-tag--${evidence.priority}`}>{evidence.label}</span>
     {scored && <span className="tp-score">{Math.round(evidence.accuracy * 100)}% correct</span>}
@@ -58,7 +118,7 @@ function LessonCard({ lesson, index, count, resources, objectives, needs, year, 
   const [editing, setEditing] = useState(false);
   const [resourceId, setResourceId] = useState("");
   const [finderOpen, setFinderOpen] = useState(false);
-  const available = resources.filter((resource) => resource.available && !lesson.resources.some((entry) => entry.resourceId === resource.id));
+  const available = resources.filter((resource) => resource.subject === lesson.subject && resource.available && !lesson.resources.some((entry) => entry.resourceId === resource.id));
   const addChosenResource = (resource) => {
     if (!available.some((entry) => entry.id === resource.id)) return;
     onChange({ resources: [...lesson.resources, { resourceId: resource.id, minutes: 10, instruction: resource.instruction }] });
@@ -99,7 +159,7 @@ function LessonCard({ lesson, index, count, resources, objectives, needs, year, 
     <div className="tp-lesson-row">
       <button type="button" className="tp-lesson-toggle" aria-expanded={open} aria-controls={bodyId} onClick={() => { setEditing(false); onToggle(); }}>
         <span className="tp-lesson-n">{index + 1}</span>
-        <span className="tp-lesson-name">{lesson.title}<small>{lesson.duration} min{lesson.resources.length ? ` · ${lesson.resources.length} Bix ${lesson.resources.length === 1 ? "activity" : "activities"}` : ""}</small></span>
+        <span className="tp-lesson-name">{lesson.title}<small>{lesson.subjectName} · {lesson.duration} min{lesson.schedule?.date ? ` · ${displayDate(lesson.schedule.date)}${lesson.schedule.startTime ? `, ${displayTime(lesson.schedule.startTime)}` : ""}` : ""}</small></span>
         <Icon name="chevron" />
       </button>
       {reordering && <div className="tp-move">
@@ -108,11 +168,11 @@ function LessonCard({ lesson, index, count, resources, objectives, needs, year, 
       </div>}
     </div>
     {open && <div className="tp-lesson-body" id={bodyId}>
-      <div className="tp-lesson-toolbar"><p className="tp-lesson-goal"><span>Learning focus</span>{lesson.learningGoal}</p><button type="button" onClick={() => { setFinderOpen(false); setEditing((value) => !value); }}>{editing ? "Done editing" : "Edit lesson"}</button></div>
+      <div className="tp-lesson-toolbar"><p className="tp-lesson-goal">{lesson.learningGoal}</p><button type="button" onClick={() => { setFinderOpen(false); setEditing((value) => !value); }}>{editing ? "Done editing" : "Edit lesson"}</button></div>
       {!editing ? <>
         {(lesson.vocabulary?.length > 0 || lesson.briefingPath) && <div className="tp-lesson-knowledge">
-          {lesson.vocabulary?.length > 0 && <p><span>Key vocabulary</span>{lesson.vocabulary.join(" · ")}</p>}
-          {lesson.briefingPath && <a className="tp-open" href={lesson.briefingPath} target="_blank" rel="noopener noreferrer">Read the topic briefing <Icon name="external" /></a>}
+          {lesson.vocabulary?.length > 0 && <p><span>Vocabulary</span>{lesson.vocabulary.join(" · ")}</p>}
+          {lesson.briefingPath && <a className="tp-open" href={lesson.briefingPath} target="_blank" rel="noopener noreferrer">Topic briefing <Icon name="external" /></a>}
         </div>}
         <ol className="tp-lesson-flow" aria-label="Teaching sequence">
           {[["starter", "Warm up", 5], ["teaching", "Teach and model", lesson.duration - practice - 10], ["activity", "Practise", practice], ["checkpoint", "Check understanding", 5]].map(([field, title, minutes]) => <li key={field}>
@@ -126,8 +186,8 @@ function LessonCard({ lesson, index, count, resources, objectives, needs, year, 
       </> : <div className="tp-lesson-form">
         <div className="tp-lesson-meta">
         <label className="tp-grow">Lesson title<input value={lesson.title} onChange={(event) => onChange({ title: event.target.value })} maxLength={160} /></label>
-        <label className="tp-grow">Objective<select value={lesson.objectiveId} onChange={(event) => onChange({ objectiveId: event.target.value, needId: null, learningGoal: objectives.find((objective) => objective.id === event.target.value)?.goal, rationale: "Objective changed by you. Check the activities still fit." })}>
-          {objectives.map((objective) => <option key={objective.id} value={objective.id}>{objective.title}</option>)}
+        <label className="tp-grow">Objective<select value={lesson.objectiveId} onChange={(event) => onChange({ objectiveId: event.target.value, subject: objectives.find((objective) => objective.id === event.target.value)?.subject, subjectName: objectives.find((objective) => objective.id === event.target.value)?.subjectName, needId: null, learningGoal: objectives.find((objective) => objective.id === event.target.value)?.goal, rationale: "Objective changed by you. Check the activities still fit." })}>
+          {objectives.map((objective) => <option key={objective.id} value={objective.id}>{objective.subjectName} · {objective.title}</option>)}
         </select></label>
         <label>Lesson minutes<select value={lesson.duration} onChange={(event) => onChange({ duration: Number(event.target.value) })}>{DURATIONS.map((duration) => <option key={duration}>{duration}</option>)}</select></label>
       </div>
@@ -143,12 +203,61 @@ function LessonCard({ lesson, index, count, resources, objectives, needs, year, 
         {available.map((resource) => <option key={resource.id} value={resource.id}>{resource.objectiveIds.includes(lesson.objectiveId) ? "★ " : ""}{resource.teacherTitle}</option>)}
       </select></label><button type="button" disabled={!available.some((resource) => resource.id === resourceId)} onClick={() => { const resource = available.find((entry) => entry.id === resourceId); if (resource) addChosenResource(resource); }}>Add resource</button></div>
       <details className="tp-find-for-lesson" onToggle={(event) => setFinderOpen(event.currentTarget.open)}><summary>Search activities for this lesson</summary>
-        {finderOpen && <ResourceFinder key={lesson.objectiveId} resources={resources} needs={needs} year={year} subjectName={subjectName} objectiveId={lesson.objectiveId} selectedResourceIds={lesson.resources.map((entry) => entry.resourceId)} onAdd={addChosenResource} />}
+        {finderOpen && <ResourceFinder key={lesson.objectiveId} resources={resources.filter((resource) => resource.subject === lesson.subject)} needs={needs} year={year} subjectName={subjectName} objectiveId={lesson.objectiveId} selectedResourceIds={lesson.resources.map((entry) => entry.resourceId)} onAdd={addChosenResource} />}
       </details>
       </div>}
       <details className="tp-lesson-extra"><summary>Why this lesson?</summary><p className="tp-why">{lesson.rationale}</p></details>
     </div>}
   </article>;
+}
+
+function CalendarLesson({ lesson, lessons, days, onChange }) {
+  const dayIndex = days.findIndex((day) => day.value === lesson.schedule?.date);
+  const conflict = overlaps(lesson, lessons);
+  const moveDay = (offset) => {
+    const target = dayIndex < 0 ? (offset > 0 ? 0 : days.length - 1) : dayIndex + offset;
+    if (target < 0 || target >= days.length) return;
+    onChange({ schedule: { ...lesson.schedule, date: days[target].value } });
+  };
+  return <article className={`tp-calendar-lesson${conflict ? " has-conflict" : ""}`} aria-label={`${lesson.title}, ${lesson.duration} minutes`}>
+    <div className="tp-calendar-card-head"><span><Icon name="clock" />{displayTime(lesson.schedule?.startTime)}</span><span>{lesson.duration} min</span></div>
+    <strong className="tp-calendar-title">{lesson.title}</strong>
+    <p>{lesson.subjectName}</p>
+    <details className="tp-calendar-edit"><summary>Change schedule<Icon name="chevron" /></summary><div className="tp-calendar-controls">
+      <label>Day<select aria-label={`Day for ${lesson.title}`} value={lesson.schedule?.date ?? ""} onChange={(event) => onChange({ schedule: { ...lesson.schedule, date: event.target.value || null } })}>
+        <option value="">Not scheduled</option>
+        {days.map((day) => <option key={day.value} value={day.value}>Week {day.week} · {day.weekday} {displayDate(day.value)}</option>)}
+      </select></label>
+      <label>Start time<input aria-label={`Start time for ${lesson.title}`} type="time" value={lesson.schedule?.startTime ?? ""} onChange={(event) => onChange({ schedule: { ...lesson.schedule, startTime: event.target.value || null } })} /></label>
+    </div>
+    <div className="tp-calendar-card-foot"><span>Move a school day</span><span className="tp-calendar-move"><button type="button" disabled={dayIndex <= 0} aria-label={`Move ${lesson.title} one school day earlier`} onClick={() => moveDay(-1)}><Icon name="up" /></button><button type="button" disabled={dayIndex < 0 || dayIndex === days.length - 1} aria-label={`Move ${lesson.title} one school day later`} onClick={() => moveDay(1)}><Icon name="down" /></button></span></div>
+    </details>
+    {conflict && <p className="tp-calendar-warning" role="status">Overlaps another lesson.</p>}
+  </article>;
+}
+
+function TeachingCalendar({ plan, onChange, onMessage }) {
+  const days = calendarDays(plan.calendarStartDate);
+  const scheduled = plan.lessons.filter((lesson) => days.some((day) => day.value === lesson.schedule?.date));
+  const unscheduled = plan.lessons.filter((lesson) => !days.some((day) => day.value === lesson.schedule?.date));
+  const updateLesson = (lessonId, patch) => onChange({ lessons: plan.lessons.map((lesson) => lesson.id === lessonId ? { ...lesson, ...patch } : lesson) });
+  const changeStart = (value) => {
+    if (!value) return;
+    const nextDays = calendarDays(value);
+    const lessons = plan.lessons.map((lesson) => {
+      const index = days.findIndex((day) => day.value === lesson.schedule?.date);
+      return index < 0 ? lesson : { ...lesson, schedule: { ...lesson.schedule, date: nextDays[index].value } };
+    });
+    onChange({ calendarStartDate: value, lessons });
+    onMessage("Scheduled lessons moved with the new start date; individual times were kept.");
+  };
+
+  return <section className="tp-calendar" aria-labelledby="tp-calendar-heading">
+    <h3 id="tp-calendar-heading" className="sr-only">Schedule in calendar</h3>
+    <div className="tp-calendar-head"><label>Calendar start date<input aria-label="Calendar start date" type="date" value={plan.calendarStartDate} onChange={(event) => changeStart(event.target.value)} /></label><span className="tp-quiet">{scheduled.length} of {plan.lessons.length} lessons scheduled</span></div>
+    {unscheduled.length > 0 && <section className="tp-unscheduled" aria-labelledby="tp-unscheduled-heading"><h4 id="tp-unscheduled-heading">Unscheduled lessons</h4><div className="tp-calendar-cards">{unscheduled.map((lesson) => <CalendarLesson key={lesson.id} lesson={lesson} lessons={plan.lessons} days={days} onChange={(patch) => updateLesson(lesson.id, patch)} />)}</div></section>}
+    {[1, 2, 3].map((week) => <section className="tp-calendar-week" key={week} aria-label={`Calendar week ${week}`}><h4>Week {week}<span>{displayDate(days[(week - 1) * 5].value)} – {displayDate(days[week * 5 - 1].value)}</span></h4><div className="tp-calendar-scroll" role="region" aria-label={`Week ${week} timetable, scroll for more days`} tabIndex={0}><div className="tp-calendar-grid">{days.filter((day) => day.week === week).map((day) => <section className="tp-calendar-day" key={day.value} aria-label={`${day.weekday} ${displayDate(day.value)}`}><h5>{day.weekday}<span>{displayDate(day.value)}</span></h5><div className="tp-calendar-cards">{plan.lessons.filter((lesson) => lesson.schedule?.date === day.value).sort((a, b) => (minutesFor(a.schedule?.startTime) ?? Number.MAX_SAFE_INTEGER) - (minutesFor(b.schedule?.startTime) ?? Number.MAX_SAFE_INTEGER)).map((lesson) => <CalendarLesson key={lesson.id} lesson={lesson} lessons={plan.lessons} days={days} onChange={(patch) => updateLesson(lesson.id, patch)} />)}</div></section>)}</div></div></section>)}
+  </section>;
 }
 
 function PrintablePlan({ plan, resources }) {
@@ -159,7 +268,7 @@ function PrintablePlan({ plan, resources }) {
     {plan.snapshots.map((snapshot) => <p key={snapshot.objectiveId}><strong>{plan.objectives.find((objective) => objective.id === snapshot.objectiveId)?.title}:</strong> {snapshot.reason}</p>)}
     {plan.lessons.map((lesson, index) => <article key={lesson.id}>
       <h2>Week {Math.floor(index / plan.lessonsPerWeek) + 1} · Lesson {index + 1}: {lesson.title}</h2>
-      <p>{lesson.duration} minutes · {lesson.learningGoal}</p>
+      <p>{lesson.schedule?.date ? `${new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "numeric", month: "long" }).format(dateFromValue(lesson.schedule.date))}${lesson.schedule.startTime ? ` · ${displayTime(lesson.schedule.startTime)}` : " · time not set"} · ` : "Not scheduled · "}{lesson.subjectName} · {lesson.duration} minutes · {lesson.learningGoal}</p>
       {lesson.vocabulary?.length > 0 && <p><strong>Key vocabulary:</strong> {lesson.vocabulary.join(", ")}</p>}
       <p><strong>Evidence:</strong> {lesson.rationale}</p>
       {[["starter", "Starter"], ["teaching", "Teaching"], ["activity", "Practical activity"], ["support", "Support"], ["stretch", "Stretch"], ["checkpoint", "Checkpoint"], ["notes", "Notes"]].map(([field, label]) => lesson[field] && <p key={field}><strong>{label}:</strong> {lesson[field]}</p>)}
@@ -180,7 +289,7 @@ function initialContext(params) {
 }
 
 function initialSeed(params, catalogue) {
-  const entries = catalogue.needs.filter((need) => need.objectiveId === params.get("topic")).map((need) => ({ needId: need.id, priority: "teach" }));
+  const entries = catalogue.needs.filter((need) => need.objectiveId === `${catalogue.subject}:${params.get("topic")}`).map((need) => ({ needId: need.id, priority: "teach" }));
   if (!entries.length) return null;
   try { return { entries, input: { source: "teacher", evidence: compileClassEvidence(entries, "teacher", catalogue), revision: 1 } }; }
   catch { return null; }
@@ -190,16 +299,21 @@ export default function TeacherPlanning() {
   const [params] = useSearchParams();
   const [context, setContext] = useState(() => initialContext(params));
   const [pendingContext, setPendingContext] = useState(null);
-  const catalogue = useMemo(() => getTeacherCurriculum({ ...context, isBuilt: isChallengeImplemented }), [context]);
-  const { resources, objectives, needs, year, subjectName } = catalogue;
-  const [seed, setSeed] = useState(() => initialSeed(params, catalogue));
+  const catalogue = useMemo(() => getTeacherPlanningCatalogue({ year: context.year, isBuilt: isChallengeImplemented }), [context.year]);
+  const { resources, objectives, needs, year } = catalogue;
+  const subjectName = getSubjectName(context.subject);
+  const [seed, setSeed] = useState(() => initialSeed(params, { ...catalogue, subject: context.subject }));
   const [input, setInput] = useState(() => seed?.input ?? EMPTY_INPUT);
   const [overrides, setOverrides] = useState({});
   const [dirty, setDirty] = useState(false);
   const [lessonsPerWeek, setLessonsPerWeek] = useState(5);
   const [duration, setDuration] = useState(45);
+  const [startDate, setStartDate] = useState(nextMondayValue);
+  const [startTime, setStartTime] = useState("09:00");
   const [classSize, setClassSize] = useState("");
   const [plan, setPlan] = useState(null);
+  const [setupOpen, setSetupOpen] = useState(true);
+  const [planView, setPlanView] = useState("list");
   const [activeLessonId, setActiveLessonId] = useState(null);
   const [reordering, setReordering] = useState(false);
   const [replacement, setReplacement] = useState(false);
@@ -212,30 +326,35 @@ export default function TeacherPlanning() {
   const selectedIds = focusObjectives.filter((objective) => overrides[objective.id] ?? includedByDefault(evidenceFor(objective.id), input.source)).map((objective) => objective.id);
   const sizeValue = classSize === "" ? null : Number(classSize);
   const sizeError = sizeValue !== null && (!Number.isInteger(sizeValue) || sizeValue < 1 || sizeValue > 1000);
-  const blocker = dirty ? "Press “Use these results” in step 1 first." : input.source === "none" ? "Add a topic in step 1 first." : !selectedIds.length ? "Tick at least one topic in step 2." : sizeError ? "Class size must be a whole number from 1 to 1,000." : "";
+  const blocker = dirty ? "Check your pasted results, then press “Use these results”." : input.source === "none" ? "Add at least one topic to get started." : !selectedIds.length ? "Include at least one topic in your plan." : sizeError ? "Class size must be a whole number from 1 to 1,000." : !startDate || !startTime ? "Choose a start date and lesson start time." : "";
   const stale = plan && plan.inputRevision !== input.revision;
 
   useEffect(() => {
     if (!scrollToPlan.current || !plan) return;
     scrollToPlan.current = false;
+    planRef.current?.focus?.({ preventScroll: true });
     planRef.current?.scrollIntoView?.({ behavior: "smooth", block: "start" });
   }, [plan]);
 
   const generate = () => {
     try {
       if (blocker) throw new Error(blocker);
-      const draft = generateTeachingPlan({ selectedIds, lessonsPerWeek, duration, resources, objectives, year, subject: context.subject, subjectName, evidence: input.evidence, evidenceMeta: { ...input, classSize: sizeValue ?? input.classSize ?? null } });
-      scrollToPlan.current = !plan;
-      setPlan(draft); setActiveLessonId(null); setReordering(false); setReplacement(false);
+      const generated = generateTeachingPlan({ selectedIds, lessonsPerWeek, duration, resources, objectives, year, subject: context.subject, subjectName, evidence: input.evidence, evidenceMeta: { ...input, classSize: sizeValue ?? input.classSize ?? null } });
+      const days = calendarDays(startDate);
+      const lessons = generated.lessons.map((lesson, index) => ({ ...lesson, schedule: { date: days[Math.floor(index / lessonsPerWeek) * 5 + index % lessonsPerWeek].value, startTime } }));
+      const draft = { ...generated, lessons, calendarStartDate: startDate };
+      scrollToPlan.current = true;
+      setSetupOpen(false); setPlan(draft); setPlanView("list"); setActiveLessonId(null); setReordering(false); setReplacement(false);
       setMessage(`Plan ready: ${draft.lessons.length} lessons over three weeks.`);
     } catch (error) { setMessage(error.message); setReplacement(false); }
   };
   const switchContext = (next) => {
-    setContext(next); setPendingContext(null); setPlan(null); setInput(EMPTY_INPUT); setActiveLessonId(null); setReordering(false); setSeed(null);
+    setSetupOpen(true); setContext(next); setPendingContext(null); setPlan(null); setPlanView("list"); setInput(EMPTY_INPUT); setActiveLessonId(null); setReordering(false); setSeed(null);
     setOverrides({}); setDirty(false); setReplacement(false); setMessage("");
   };
   const chooseContext = (next) => {
     if (next.year === context.year && next.subject === context.subject) { setPendingContext(null); return; }
+    if (next.year === context.year) { setContext(next); setPendingContext(null); return; }
     if (input.source !== "none" || dirty || plan) setPendingContext(next);
     else switchContext(next);
   };
@@ -245,14 +364,14 @@ export default function TeacherPlanning() {
     setReplacement(false);
   };
   const updateLesson = (id, patch) => setPlan((current) => ({ ...current, lessons: current.lessons.map((lesson) => lesson.id === id ? { ...lesson, ...patch } : lesson) }));
-  const sample = year === 3 && context.subject === "math" ? () => applyInput({ source: "sample", evidence: SAMPLE_EVIDENCE, classSize: SAMPLE_CLASS.pupils.length }) : undefined;
+  const sample = year === 3 ? () => applyInput({ source: "sample", evidence: SAMPLE_EVIDENCE.map((row) => ({ ...row, objectiveId: `math:${row.objectiveId}` })), classSize: SAMPLE_CLASS.pupils.length }) : undefined;
 
-  return <div className="teacher-planning">
+  return <TeacherWorkspace>
     <div className="tp-screen">
-      <header className="tp-header">
-        <Link className="tp-back" to="/teachers"><Icon name="back" />Teacher tools</Link>
-        <h1>Plan your next three weeks</h1>
-        <p className="tp-lede">Pick your class, add what they need, get a lesson-by-lesson plan. <span className="tp-unsaved">Not saved. Print to keep it.</span></p>
+      <TeacherHeader title="Lesson planner" note={<><Icon name="print" /><span>Unsaved · Print to keep a copy</span></>} />
+      <details className="tp-setup" open={setupOpen} onToggle={(event) => setSetupOpen(event.currentTarget.open)}>
+        <summary className="tp-setup-summary"><span><Icon name="sliders" /><strong>Plan settings</strong><span className="tp-setup-context">Year {year} · {subjectName}{plan ? ` · ${selectedIds.length} topics` : ""}</span></span><Icon name="chevron" /></summary>
+        <div className="tp-setup-content">
         <ClassPicker context={context} onChoose={chooseContext} />
         {pendingContext && <div className="tp-confirm" role="group" aria-label="Change curriculum confirmation">
           <p>Switch to <strong>Year {pendingContext.year} {getSubjectName(pendingContext.subject)}</strong>? This clears your topics{plan ? " and plan" : ""}.</p>
@@ -262,55 +381,59 @@ export default function TeacherPlanning() {
             <button type="button" className="tp-primary" onClick={() => switchContext(pendingContext)}>Change curriculum and start again</button>
           </div>
         </div>}
-      </header>
+      <div className="tp-setup-grid">
+      <div className="tp-topics-panel">
+      <TeacherClassInput topicSelection={{ selectedIds, objectives, onToggle: (id) => setOverrides((current) => ({ ...current, [id]: !selectedIds.includes(id) })) }} key={year} searchSubject={context.subject} initialEntries={seed?.entries} resources={resources} needs={needs} onApply={applyInput} onDirty={(value) => { setDirty(value); if (value) setReplacement(false); }} onSample={sample} />
 
-      <TeacherClassInput key={`${year}:${context.subject}`} initialEntries={seed?.entries} resources={resources} needs={needs} onApply={applyInput} onDirty={(value) => { setDirty(value); if (value) setReplacement(false); }} onSample={sample} />
-
-      <section className="tp-step" aria-labelledby="tp-focus-heading">
-        <h2 id="tp-focus-heading"><span className="tp-step-n" aria-hidden="true">2</span>Choose what to plan</h2>
-        {focusObjectives.length ? <>
+      {input.source !== "teacher" && focusObjectives.length > 0 && <section className="tp-step tp-evidence-review" aria-labelledby="tp-focus-heading">
+        <h3 id="tp-focus-heading">Selected topics <span className="tp-topic-count">{selectedIds.length} selected</span></h3>
           {input.source === "sample" && <p className="tp-quiet">All eight pupils and results are fictional.</p>}
           <ul className="tp-focus-list">{focusObjectives.map((objective) => <FocusRow key={objective.id} objective={objective} evidence={evidenceFor(objective.id)} selected={selectedIds.includes(objective.id)} onToggle={() => setOverrides((current) => ({ ...current, [objective.id]: !selectedIds.includes(objective.id) }))} />)}</ul>
-          <p className="tp-quiet">Secure topics come back as quick starters.</p>
-        </> : <p className="tp-quiet">Your topics will show here.</p>}
-      </section>
+      </section>}
+      </div>
 
-      <section className="tp-step" aria-labelledby="tp-build-heading">
-        <h2 id="tp-build-heading"><span className="tp-step-n" aria-hidden="true">3</span>Build the plan</h2>
+      <section className="tp-step tp-build-panel" aria-labelledby="tp-build-heading">
+        <h2 id="tp-build-heading" className="sr-only">Schedule settings</h2>
         <div className="tp-build-controls">
           <fieldset className="tp-seg tp-seg--plain"><legend>Lessons per week</legend>
             {[1, 2, 3, 4, 5].map((value) => <label key={value}><input type="radio" name="tp-lessons" value={value} checked={lessonsPerWeek === value} onChange={() => setLessonsPerWeek(value)} /><span>{value}</span></label>)}
           </fieldset>
           <label>Minutes per lesson<select value={duration} onChange={(event) => setDuration(Number(event.target.value))}>{DURATIONS.map((minutes) => <option key={minutes}>{minutes}</option>)}</select></label>
-          <label className="tp-size"><span>Class size <span className="tp-optional">(optional)</span></span><input type="number" min={1} max={1000} inputMode="numeric" value={classSize} aria-invalid={sizeError || undefined} onChange={(event) => setClassSize(event.target.value)} /></label>
+          <label>Start date<input type="date" value={startDate} onChange={(event) => setStartDate(event.target.value)} /></label>
+          <label>Lesson start time<input type="time" value={startTime} onChange={(event) => setStartTime(event.target.value)} /></label>
+          <details className="tp-class-options"><summary>Class size (optional)<Icon name="chevron" /></summary><label>Class size<input type="number" min={1} max={1000} inputMode="numeric" value={classSize} aria-invalid={sizeError || undefined} onChange={(event) => setClassSize(event.target.value)} /></label></details>
         </div>
+        <div className="tp-build-summary"><strong>{lessonsPerWeek * 3} lessons</strong><span>over 3 weeks</span></div>
         <div className="tp-go">
-          <button className="tp-primary tp-big" type="button" disabled={Boolean(blocker)} onClick={() => plan ? setReplacement(true) : generate()}>{plan ? "Rebuild plan" : "Create three-week plan"}</button>
-          <p className="tp-quiet">{blocker || `${selectedIds.length} ${selectedIds.length === 1 ? "topic" : "topics"} · ${lessonsPerWeek * 3} lessons`}</p>
+          <button className="tp-primary tp-big" type="button" disabled={Boolean(blocker)} aria-describedby="tp-build-help" onClick={() => plan ? setReplacement(true) : generate()}>{plan ? "Rebuild plan" : "Create three-week plan"}</button>
+          <p className="tp-quiet" id="tp-build-help">{blocker || "Weekends skipped."}</p>
         </div>
         {replacement && <div className="tp-confirm" role="group" aria-label="Replace draft confirmation"><p>Replace your plan? Your edits will be lost.</p><div className="tp-actions"><button type="button" onClick={() => setReplacement(false)}>Keep current plan</button><button type="button" className="tp-primary" onClick={generate}>Replace plan</button></div></div>}
-        <p role="status" className="tp-status">{message}</p>
       </section>
+      </div></div>
+      </details>
+      <p role="status" className={message.startsWith("Plan ready:") ? "sr-only" : "tp-status"}>{message}</p>
 
-      {plan && <section className="tp-plan" ref={planRef} aria-labelledby="tp-plan-heading">
+      {plan && <section className="tp-plan" ref={planRef} tabIndex={-1} aria-labelledby="tp-plan-heading">
         <div className="tp-plan-head">
           <div className="tp-grow">
-            <h2 id="tp-plan-heading">Your plan</h2>
+            <h2 id="tp-plan-heading" className="sr-only">Your plan</h2>
             <label className="tp-plan-name"><span className="sr-only">Plan name</span><input aria-label="Plan name" value={plan.title} maxLength={160} onChange={(event) => setPlan((current) => ({ ...current, title: event.target.value }))} /></label>
-            <p className="tp-quiet">{plan.lessons.length} lessons · {plan.lessons.reduce((sum, lesson) => sum + lesson.duration, 0)} minutes · open a lesson to see the teaching steps</p>
+            <p className="tp-quiet">{sourceLabel(plan.evidenceSource)}</p>
           </div>
-          <div className="tp-plan-actions"><button type="button" aria-pressed={reordering} onClick={() => setReordering((value) => !value)}>{reordering ? "Done reordering" : "Reorder lessons"}</button><button type="button" onClick={() => window.print()}><Icon name="print" />Print / Save as PDF</button></div>
+          <button type="button" className="tp-primary" onClick={() => window.print()}><Icon name="print" />Print / Save as PDF</button>
         </div>
+        <div className="tp-plan-toolbar"><div className="tp-view-switch" role="group" aria-label="Plan view"><button type="button" aria-pressed={planView === "list"} onClick={() => setPlanView("list")}><Icon name="list" />Lesson list</button><button type="button" aria-pressed={planView === "calendar"} onClick={() => { setPlanView("calendar"); setReordering(false); }}><Icon name="calendar" />Calendar</button></div>{planView === "list" && <button type="button" aria-pressed={reordering} onClick={() => setReordering((value) => !value)}>{reordering ? "Done reordering" : "Reorder lessons"}</button>}<span className="tp-plan-total">{plan.lessons.length} lessons · {plan.lessons.reduce((sum, lesson) => sum + lesson.duration, 0)} min</span></div>
         {stale && <p className="tp-notice" role="status">Your class needs changed. Press “Rebuild plan” to use them. Your edits stay until you do.</p>}
-        {[0, 1, 2].map((week) => <section className="tp-week" key={week} aria-label={`Week ${week + 1}`}>
-          <h3>Week {week + 1}<span>{plan.lessonsPerWeek} {plan.lessonsPerWeek === 1 ? "lesson" : "lessons"} · {plan.lessons.slice(week * plan.lessonsPerWeek, (week + 1) * plan.lessonsPerWeek).reduce((sum, lesson) => sum + lesson.duration, 0)} min</span></h3>
+        {planView === "calendar" ? <TeachingCalendar plan={plan} onChange={(patch) => { if (patch.calendarStartDate) setStartDate(patch.calendarStartDate); setPlan((current) => ({ ...current, ...patch })); }} onMessage={setMessage} /> : <div className="tp-weeks">{[0, 1, 2].map((week) => <section className="tp-week" key={week} aria-label={`Week ${week + 1}`}>
+          <h3>Week {week + 1}</h3>
           {plan.lessons.slice(week * plan.lessonsPerWeek, (week + 1) * plan.lessonsPerWeek).map((lesson, localIndex) => {
             const index = week * plan.lessonsPerWeek + localIndex;
-            return <LessonCard key={lesson.id} lesson={lesson} index={index} count={plan.lessons.length} resources={resources} objectives={objectives} needs={needs} year={year} subjectName={subjectName} open={activeLessonId === lesson.id} onToggle={() => setActiveLessonId((current) => current === lesson.id ? null : lesson.id)} reordering={reordering} onChange={(patch) => updateLesson(lesson.id, patch)} onMove={(offset) => { setPlan((current) => ({ ...current, lessons: moveItem(current.lessons, index, offset) })); setMessage(`Lesson moved to position ${index + offset + 1}.`); }} />;
+            return <LessonCard key={lesson.id} lesson={lesson} index={index} count={plan.lessons.length} resources={resources} objectives={objectives.filter((objective) => objective.subject === lesson.subject)} needs={needs.filter((need) => need.subject === lesson.subject)} year={year} subjectName={lesson.subjectName} open={activeLessonId === lesson.id} onToggle={() => setActiveLessonId((current) => current === lesson.id ? null : lesson.id)} reordering={reordering} onChange={(patch) => updateLesson(lesson.id, patch)} onMove={(offset) => { setPlan((current) => ({ ...current, lessons: moveItem(current.lessons, index, offset) })); setMessage(`Lesson moved to position ${index + offset + 1}.`); }} />;
           })}
-        </section>)}
+        </section>)}</div>}
       </section>}
     </div>
     {plan && <PrintablePlan plan={plan} resources={resources} />}
-  </div>;
+  </TeacherWorkspace>;
 }

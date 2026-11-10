@@ -20,7 +20,7 @@ it("lists Year 3 Maths topics with notes and filters them", async () => {
   await user.type(screen.getByLabelText("Find a topic"), "column");
   expect(screen.getByRole("link", { name: "Column Addition" })).toBeTruthy();
   expect(screen.queryByRole("link", { name: "Tenths" })).toBeNull();
-  await user.click(screen.getByRole("button", { name: "Year 4" }));
+  await user.selectOptions(screen.getByRole("combobox", { name: "Year group" }), "4");
   expect(screen.getByText(/Teacher notes for Year 4 Maths aren't written yet/)).toBeTruthy();
 });
 
@@ -38,10 +38,10 @@ it("offers Science, History and Geography in every year", async () => {
   const user = userEvent.setup();
   at("/teachers/briefings");
   for (const year of [1, 2, 3, 4, 5, 6]) {
-    await user.click(screen.getByRole("button", { name: `Year ${year}` }));
-    for (const subject of ["Science", "History", "Geography"]) expect(screen.getByRole("button", { name: subject })).toBeTruthy();
+    await user.selectOptions(screen.getByRole("combobox", { name: "Year group" }), String(year));
+    for (const subject of ["Science", "History", "Geography"]) expect(within(screen.getByRole("combobox", { name: "Subject" })).getByRole("option", { name: subject })).toBeTruthy();
   }
-  await user.click(screen.getByRole("button", { name: "History" }));
+  await user.selectOptions(screen.getByRole("combobox", { name: "Subject" }), "history");
   expect(screen.getAllByRole("link").length).toBeGreaterThan(10);
 });
 
@@ -62,12 +62,12 @@ it("links a briefing to a lesson plan that already has the topic, and the plan l
   const first = screen.getAllByRole("article", { name: /^Lesson / })[0];
   if (!within(first).queryByRole("list", { name: "Teaching sequence" })) await user.click(within(first).getAllByRole("button")[0]);
   expect(within(first).getByText(notes.vocabulary.map((word) => word.term).join(" · "))).toBeTruthy();
-  expect(within(first).getByRole("link", { name: /Read the topic briefing/ }).getAttribute("href")).toBe("/teachers/briefings/3/math/column-subtraction");
+  expect(within(first).getByRole("link", { name: /Topic briefing/ }).getAttribute("href")).toBe("/teachers/briefings/3/math/column-subtraction");
   expect(within(first).getByText(new RegExp(`^Show this mistake.*${notes.misconceptions[1].mistake.slice(0, 12).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`))).toBeTruthy();
 });
 
 it("ignores an unknown topic in the planning link", () => {
   render(<MemoryRouter initialEntries={["/teachers/planning?year=9&subject=math&topic=nothing"]}><Routes><Route path="/teachers/planning" element={<TeacherPlanning />} /></Routes></MemoryRouter>);
-  expect(screen.getByRole("button", { name: "Year 3" }).getAttribute("aria-pressed")).toBe("true");
+  expect(screen.getByRole("combobox", { name: "Class year" }).value).toBe("3");
   expect(screen.getByRole("button", { name: "Create three-week plan" })).toBeTruthy();
 });

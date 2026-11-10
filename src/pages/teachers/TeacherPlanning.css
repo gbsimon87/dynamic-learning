@@ -13,9 +13,9 @@
   --tp-button: var(--light-home-cta);
   --tp-on-button: var(--light-home-on-cta);
   color: var(--tp-ink);
-  max-width: 920px;
+  max-width: 1360px;
   margin: 0 auto;
-  padding: 32px clamp(16px, 4vw, 48px) 72px;
+  padding: 18px clamp(16px, 3vw, 40px) 48px;
   line-height: 1.55;
 }
 body.dark .teacher-planning {
@@ -35,7 +35,7 @@ body.dark .teacher-planning {
 }
 .teacher-planning * { box-sizing: border-box; }
 .teacher-planning h1, .teacher-planning h2, .teacher-planning h3, .teacher-planning h4, .teacher-planning p { margin: 0 0 12px; }
-.teacher-planning h1 { font-size: clamp(1.9rem, 3.8vw, 2.7rem); line-height: 1.12; letter-spacing: -.025em; text-wrap: balance; }
+.teacher-planning h1 { font-size: clamp(1.5rem, 2.6vw, 2.1rem); line-height: 1.12; letter-spacing: -.025em; text-wrap: balance; }
 .teacher-planning h2 { font-size: 1.35rem; line-height: 1.3; display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
 .teacher-planning h3 { font-size: 1rem; line-height: 1.4; }
 .teacher-planning h4 { font-size: 1rem; margin-top: 8px; }
@@ -91,16 +91,16 @@ body.dark .teacher-planning {
 .teacher-planning .tp-search { position: relative; margin-bottom: 8px; }
 .teacher-planning .tp-search .tp-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--tp-muted); pointer-events: none; }
 .teacher-planning .tp-search input[type="search"] { min-height: 56px; padding-left: 48px; font-size: 1.05rem; border-radius: 14px; }
-.teacher-planning .tp-matches { list-style: none; margin: 8px 0; padding: 0; border: 1px solid var(--tp-edge); border-radius: 14px; background: var(--tp-paper); overflow: hidden; }
-.teacher-planning .tp-matches > li { display: flex; flex-wrap: wrap; align-items: center; }
-.teacher-planning .tp-matches > li + li { border-top: 1px solid var(--tp-edge); }
-.teacher-planning .tp-match { flex: 1 1 260px; width: auto; justify-content: flex-start; text-align: left; border: 0; border-radius: 0; background: none; padding: 12px 16px; min-height: 56px; }
+.teacher-planning .tp-matches { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); list-style: none; margin: 8px 0; padding: 0; border: 1px solid var(--tp-edge); border-radius: 14px; background: var(--tp-paper); overflow: hidden; }
+.teacher-planning .tp-matches > li { display: flex; flex-direction: column; align-items: stretch; min-width: 0; padding: 4px; border-bottom: 1px solid var(--tp-edge); }
+.teacher-planning .tp-matches > li:nth-child(odd) { border-right: 1px solid var(--tp-edge); }
+.teacher-planning .tp-match { flex: 1; width: 100%; justify-content: flex-start; text-align: left; border: 0; border-radius: 8px; background: none; padding: 8px; min-height: 56px; font-size: .9rem; }
 .teacher-planning .tp-match:hover:not(:disabled) { background: var(--tp-soft); }
 .teacher-planning .tp-match .tp-icon { width: 28px; height: 28px; padding: 4px; border-radius: 50%; background: var(--tp-green-bg); color: var(--tp-green); }
 .teacher-planning .tp-match span, .teacher-planning .tp-need-title, .teacher-planning .tp-lesson-name { display: flex; flex-direction: column; font-weight: bold; min-width: 0; overflow-wrap: anywhere; }
 .teacher-planning :is(.tp-match, .tp-need-title, .tp-lesson-name) small { font-weight: normal; color: var(--tp-muted); font-size: .85rem; }
-.teacher-planning .tp-pick-one { padding: 0 16px; font-size: .9rem; }
-.teacher-planning .tp-pick-one[open] { flex-basis: 100%; padding: 0 16px 8px 60px; }
+.teacher-planning .tp-pick-one { padding: 0 8px; font-size: .8rem; }
+.teacher-planning .tp-pick-one[open] { padding: 0 8px 8px; }
 .teacher-planning .tp-pick-one ul { list-style: none; margin: 0; padding: 0 0 8px; display: grid; gap: 6px; }
 .teacher-planning .tp-pick-one button { width: 100%; justify-content: flex-start; text-align: left; min-height: 44px; }
 .teacher-planning .tp-needs { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 8px; }
@@ -164,6 +164,10 @@ body.dark .teacher-planning {
 .teacher-planning .tp-plan-name input[aria-label]:hover { border-color: var(--tp-edge); }
 .teacher-planning .tp-plan-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .teacher-planning .tp-plan-actions button { font-size: .9rem; }
+.teacher-planning .tp-view-switch { display: flex; border: 1px solid var(--tp-edge); border-radius: 10px; overflow: hidden; }
+.teacher-planning .tp-view-switch button { min-height: 46px; border: 0; border-radius: 0; }
+.teacher-planning .tp-view-switch button + button { border-left: 1px solid var(--tp-edge); }
+.teacher-planning .tp-view-switch button[aria-pressed="true"] { background: var(--tp-ink); color: var(--tp-paper); }
 .teacher-planning .tp-week { margin-top: 24px; border: 1px solid var(--tp-edge); border-radius: 16px; background: var(--tp-paper); }
 .teacher-planning .tp-week > h3 { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; padding: 14px 18px; margin: 0; border-bottom: 1px solid var(--tp-edge); }
 .teacher-planning .tp-week > h3 span { color: var(--tp-muted); font-size: .85rem; font-weight: normal; }
@@ -176,7 +180,7 @@ body.dark .teacher-planning {
 .teacher-planning .tp-lesson-n { flex: none; display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--tp-soft); border: 1px solid var(--tp-edge); font-weight: bold; font-size: .88rem; font-variant-numeric: tabular-nums; }
 .teacher-planning .tp-move { display: flex; }
 .teacher-planning .tp-move .tp-icon-button { border-color: transparent; background: none; }
-.teacher-planning .tp-lesson-body { display: grid; gap: 20px; padding: 20px 24px 24px; border-top: 1px solid var(--tp-edge); overflow-wrap: anywhere; }
+.teacher-planning .tp-lesson-body { display: grid; gap: 12px; padding: 14px 18px 18px; border-top: 1px solid var(--tp-edge); overflow-wrap: anywhere; }
 .teacher-planning .tp-lesson-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
 .teacher-planning .tp-lesson-goal { flex: 1 1 200px; font-weight: bold; margin: 0; }
 .teacher-planning .tp-lesson-knowledge { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin: 14px 0 0; padding: 12px 14px; border-radius: 12px; background: var(--tp-soft); }
@@ -198,6 +202,35 @@ body.dark .teacher-planning {
 .teacher-planning .tp-lesson-extra[open] summary::before { content: "−"; }
 .teacher-planning .tp-lesson-extra p { margin-bottom: 0; }
 .teacher-planning .tp-why { margin: 0; font-size: .92rem; color: var(--tp-muted); }
+.teacher-planning .tp-calendar { margin-top: 24px; }
+.teacher-planning .tp-calendar h3 { font-size: 1.15rem; }
+.teacher-planning .tp-calendar h4 { margin: 0; }
+.teacher-planning .tp-calendar h5 { font-size: .88rem; margin: 0; }
+.teacher-planning .tp-calendar h5 span { display: block; color: var(--tp-muted); font-weight: normal; }
+.teacher-planning .tp-calendar-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 16px; }
+.teacher-planning .tp-calendar-head > div { flex: 1 1 320px; }
+.teacher-planning .tp-calendar-head > label { width: 190px; }
+.teacher-planning .tp-calendar-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin: 16px 0; font-size: .92rem; font-weight: bold; color: var(--tp-muted); }
+.teacher-planning .tp-unscheduled { padding: 16px; border: 1px dashed var(--tp-muted); border-radius: 14px; margin-bottom: 18px; }
+.teacher-planning .tp-calendar-week { margin-top: 18px; }
+.teacher-planning .tp-calendar-week > h4 { padding: 0 0 8px; }
+.teacher-planning .tp-calendar-scroll { overflow-x: auto; padding-bottom: 4px; }
+.teacher-planning .tp-calendar-grid { display: grid; grid-template-columns: repeat(5, minmax(180px, 1fr)); gap: 8px; min-width: 940px; }
+.teacher-planning .tp-calendar-day { min-height: 150px; border: 1px solid var(--tp-edge); border-radius: 12px; background: var(--tp-paper); overflow: hidden; }
+.teacher-planning .tp-calendar-day > h5 { padding: 10px 12px; background: var(--tp-soft); border-bottom: 1px solid var(--tp-edge); }
+.teacher-planning .tp-calendar-cards { display: grid; gap: 8px; padding: 8px; }
+.teacher-planning .tp-calendar-lesson { padding: 10px; border: 1px solid var(--tp-edge); border-radius: 10px; background: var(--tp-paper); overflow-wrap: anywhere; }
+.teacher-planning .tp-calendar-lesson.has-conflict { border-color: var(--tp-rose); }
+.teacher-planning .tp-calendar-card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-size: .86rem; }
+.teacher-planning .tp-calendar-card-head span, .teacher-planning .tp-calendar-card-foot { color: var(--tp-muted); font-size: .8rem; font-variant-numeric: tabular-nums; }
+.teacher-planning .tp-calendar-lesson > p { margin: 6px 0; font-size: .82rem; }
+.teacher-planning .tp-calendar-controls { display: grid; gap: 8px; }
+.teacher-planning .tp-calendar-controls label { font-size: .78rem; }
+.teacher-planning .tp-calendar-controls :is(input, select) { min-height: 40px; padding: 6px 8px; font-size: .88rem; }
+.teacher-planning .tp-calendar-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 8px; }
+.teacher-planning .tp-calendar-move { display: flex; }
+.teacher-planning .tp-calendar-move button { min-width: 36px; min-height: 36px; padding: 6px; border-color: transparent; background: transparent; }
+.teacher-planning .tp-calendar-warning { color: var(--tp-rose); font-weight: bold; }
 .teacher-planning .tp-lesson-meta, .teacher-planning .tp-add-row { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
 .teacher-planning .tp-lesson-meta > label:last-child { width: 110px; }
 .teacher-planning .tp-timing { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; font-size: .82rem; font-weight: bold; font-variant-numeric: tabular-nums; }
@@ -240,6 +273,158 @@ body.dark .teacher-planning {
 .teacher-planning .tp-example-model text { fill: var(--tp-ink); stroke: none; font: 20px sans-serif; }
 .teacher-planning .tp-example-model .tp-shaded { fill: var(--tp-green); }
 .teacher-planning .tp-print { display: none; }
+/* Workspace hierarchy: setup beside priorities; the draft becomes the main surface. */
+.teacher-planning .tp-header { padding-bottom: 12px; }
+.teacher-planning .tp-back { margin-bottom: 4px; font-size: .9rem; }
+.teacher-planning .tp-heading-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; }
+.teacher-planning .tp-heading-row h1 { margin: 0; }
+.teacher-planning .tp-eyebrow { display: block; color: var(--tp-green); font-size: .75rem; font-weight: bold; letter-spacing: .09em; text-transform: uppercase; margin-bottom: 8px; }
+.teacher-planning .tp-lede { margin-bottom: 0; max-width: none; color: var(--tp-muted); font-size: .94rem; }
+.teacher-planning .tp-save-note { display: flex; align-items: center; gap: 7px; margin: 0; color: var(--tp-muted); font-size: .78rem; }
+.teacher-planning .tp-save-note .tp-icon { width: 16px; height: 16px; color: var(--tp-green); }
+.teacher-planning .tp-setup { border: 1px solid var(--tp-edge); border-radius: 20px; background: var(--tp-paper); overflow: clip; }
+.teacher-planning .tp-setup-summary { width: 100%; justify-content: space-between; gap: 12px; padding: 12px 18px; color: var(--tp-ink); background: var(--tp-soft); list-style: none; }
+.teacher-planning .tp-setup-summary::-webkit-details-marker { display: none; }
+.teacher-planning .tp-setup-summary > span { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; }
+.teacher-planning .tp-setup-summary > .tp-icon { transition: transform .15s; }
+.teacher-planning .tp-setup[open] > summary > .tp-icon { transform: rotate(180deg); }
+.teacher-planning .tp-setup[open] .tp-setup-context { display: none; }
+.teacher-planning .tp-setup-context { font-weight: normal; color: var(--tp-muted); font-size: .85rem; }
+.teacher-planning .tp-setup-content { padding: 18px; }
+.teacher-planning .tp-picker-row { display: grid; grid-template-columns: minmax(120px, 170px) minmax(150px, 230px); align-items: end; gap: 12px; padding-bottom: 12px; }
+.teacher-planning .tp-chips { gap: 4px; }
+.teacher-planning .tp-chips button { padding: 6px 12px; font-size: .88rem; border-radius: 9px; border-color: transparent; background: var(--tp-soft); }
+.teacher-planning .tp-setup-grid { display: grid; grid-template-columns: minmax(0, 1fr) 310px; gap: 18px; align-items: start; border-top: 1px solid var(--tp-edge); padding-top: 12px; }
+.teacher-planning .tp-setup-grid .tp-needs li { grid-template-columns: minmax(0, 1fr) auto; }
+.teacher-planning .tp-setup-grid .tp-needs .tp-seg { grid-column: 1 / -1; grid-row: 2; }
+.teacher-planning .tp-setup-grid > * { min-width: 0; }
+.teacher-planning .tp-setup-grid .tp-step { padding: 0; border: 0; }
+.teacher-planning .tp-setup-grid .tp-build-panel { padding: 16px; background: var(--tp-soft); border-radius: 12px; }
+.teacher-planning .tp-step h2 { font-size: 1.1rem; gap: 10px; margin-bottom: 16px; }
+.teacher-planning .tp-step-n { width: 28px; height: 28px; font-size: .85rem; border-radius: 9px; background: var(--tp-green-bg); color: var(--tp-green); }
+.teacher-planning .tp-build-controls { gap: 14px; margin-bottom: 16px; }
+.teacher-planning .tp-build-controls > fieldset { flex-basis: 100%; }
+.teacher-planning .tp-build-controls > label { flex: 1 1 120px; width: auto; }
+.teacher-planning .tp-big { width: 100%; min-height: 50px; font-size: .95rem; padding-inline: 12px; }
+.teacher-planning .tp-go { gap: 8px; }
+.teacher-planning .tp-go .tp-quiet { font-size: .82rem; }
+.teacher-planning .tp-focus { padding: 6px 12px; gap: 4px 10px; border-radius: 10px; }
+.teacher-planning .tp-focus.is-on { border-color: var(--tp-green); }
+.teacher-planning .tp-focus-main { flex-basis: 100%; min-height: 44px; font-size: .9rem; gap: 10px; }
+.teacher-planning .tp-focus-main input { width: 20px; height: 20px; }
+.teacher-planning .tp-focus-more:not([open]) { margin-left: auto; }
+.teacher-planning .tp-status { font-size: .85rem; color: var(--tp-green); }
+.teacher-planning .tp-plan { padding-top: 18px; margin-top: 16px; border: 0; }
+.teacher-planning .tp-plan-head { align-items: center; gap: 24px; }
+.teacher-planning .tp-plan-head h2 { color: var(--tp-green); gap: 12px; }
+.teacher-planning .tp-plan-name input[aria-label] { font-size: clamp(1.15rem, 2vw, 1.7rem); }
+.teacher-planning .tp-plan-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; padding: 12px 0; border-block: 1px solid var(--tp-edge); margin: 14px 0 20px; }
+.teacher-planning .tp-plan-toolbar > button { border-color: transparent; background: transparent; font-size: .85rem; }
+.teacher-planning .tp-view-switch { padding: 4px; gap: 4px; background: var(--tp-soft); border: 0; border-radius: 12px; }
+.teacher-planning .tp-view-switch button { border-radius: 8px; min-height: 44px; background: transparent; font-size: .9rem; padding: 8px 14px; }
+.teacher-planning .tp-view-switch button + button { border: 0; }
+.teacher-planning .tp-view-switch button[aria-pressed="true"] { background: var(--tp-paper); color: var(--tp-green); box-shadow: 0 2px 5px rgb(0 0 0 / .08); }
+.teacher-planning .tp-plan-total { margin-left: auto; font-size: .82rem; color: var(--tp-muted); font-variant-numeric: tabular-nums; }
+.teacher-planning .tp-weeks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 16px; }
+.teacher-planning .tp-week { min-width: 0; margin: 0; overflow: clip; border-radius: 14px; }
+.teacher-planning .tp-weeks:has(.tp-move, .is-open) { grid-template-columns: minmax(0, 1fr); }
+.teacher-planning .tp-week:has(.is-open) { grid-column: 1 / -1; }
+.teacher-planning .tp-week > h3 { background: var(--tp-soft); padding: 10px 12px; border-top: 3px solid var(--tp-green); }
+.teacher-planning .tp-week:nth-child(2) > h3 { border-top-color: var(--tp-gold); }
+.teacher-planning .tp-week:nth-child(3) > h3 { border-top-color: var(--tp-rose); }
+.teacher-planning .tp-lesson-toggle { min-height: 64px; padding: 10px; gap: 8px; }
+.teacher-planning .tp-lesson-toggle:hover { background: var(--tp-soft); }
+.teacher-planning .tp-lesson-n { border-radius: 9px; width: 28px; height: 32px; font-size: .8rem; }
+.teacher-planning .tp-lesson-name { font-size: .88rem; line-height: 1.45; }
+.teacher-planning .tp-lesson-name small { font-size: .76rem; margin-top: 4px; }
+.teacher-planning .tp-lesson-flow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.teacher-planning .tp-lesson-flow > li { padding: 16px; border: 1px solid var(--tp-edge); border-radius: 12px; background: var(--tp-paper); }
+.teacher-planning .tp-lesson-flow p { font-size: .92rem; }
+.teacher-planning .tp-calendar-head { padding: 0 0 12px; align-items: end; background: transparent; border-radius: 0; }
+.teacher-planning .tp-calendar-head > span { margin-bottom: 12px; }
+.teacher-planning .tp-calendar-head .tp-quiet { max-width: 65ch; margin: 0; font-size: .85rem; }
+.teacher-planning .tp-calendar-actions { padding: 14px 0; font-size: .85rem; }
+.teacher-planning .tp-calendar-actions > span { margin-left: auto; color: var(--tp-green); font-weight: bold; }
+.teacher-planning .tp-calendar-week > h4 { display: flex; gap: 12px; align-items: baseline; margin-top: 0; }
+.teacher-planning .tp-calendar-week > h4 span { font-size: .82rem; color: var(--tp-muted); font-weight: normal; }
+.teacher-planning .tp-calendar-scroll:focus-visible { outline: 3px solid var(--tp-green); outline-offset: 2px; }
+.teacher-planning .tp-calendar-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); min-width: 850px; gap: 10px; }
+.teacher-planning .tp-calendar-day { background: var(--tp-soft); border: 0; border-radius: 10px; }
+.teacher-planning .tp-calendar-day > h5 { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px; margin: 0; padding: 12px 10px; font-size: .82rem; }
+.teacher-planning .tp-calendar-day > h5 span { font-weight: normal; color: var(--tp-muted); }
+.teacher-planning .tp-calendar-day .tp-calendar-cards:empty::after { content: "No lessons"; padding: 16px 4px; color: var(--tp-muted); font-size: .78rem; }
+.teacher-planning .tp-calendar-lesson { border-left: 3px solid var(--tp-green); padding: 10px; }
+.teacher-planning .tp-calendar-card-head { font-size: .72rem; margin-bottom: 8px; }
+.teacher-planning .tp-calendar-card-head > span:first-child { display: flex; align-items: center; gap: 4px; color: var(--tp-green); font-weight: bold; }
+.teacher-planning .tp-calendar-card-head .tp-icon { width: 14px; height: 14px; }
+.teacher-planning .tp-calendar-title { display: block; font-size: .85rem; line-height: 1.4; }
+.teacher-planning .tp-calendar-lesson > p { font-size: .78rem; color: var(--tp-muted); }
+.teacher-planning .tp-calendar-edit > summary { width: 100%; justify-content: space-between; font-size: .76rem; min-height: 44px; }
+.teacher-planning .tp-calendar-edit > summary .tp-icon { width: 14px; height: 14px; }
+.teacher-planning .tp-calendar-edit[open] > summary .tp-icon { transform: rotate(180deg); }
+.teacher-planning .tp-calendar-move button { min-width: 44px; min-height: 44px; }
+.teacher-planning .tp-calendar-card-foot { flex-wrap: wrap; }
+.teacher-planning .tp-calendar-lesson.has-conflict { border-left-color: var(--tp-rose); }
+.teacher-planning .tp-calendar-lesson > .tp-calendar-warning { color: var(--tp-rose); }
+.teacher-planning section.tp-unscheduled > .tp-calendar-cards { grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); align-items: start; }
+/* Keep first-use guidance beside the action it explains. */
+.teacher-planning .tp-topics-panel { min-width: 0; }
+.teacher-planning .tp-topics-panel .tp-tabs { margin-bottom: 12px; gap: 0; }
+.teacher-planning .tp-topics-panel .tp-tabs button { font-size: .86rem; padding: 8px 10px; }
+.teacher-planning .tp-search input[type="search"] { min-height: 48px; font-size: .94rem; }
+.teacher-planning .tp-added-heading { display: flex; justify-content: space-between; gap: 8px; margin-top: 14px; font-size: .88rem; font-weight: bold; }
+.teacher-planning .tp-added-heading span { font-size: .78rem; font-weight: normal; color: var(--tp-muted); }
+.teacher-planning .tp-needs { margin-top: 8px; }
+.teacher-planning .tp-entry-topic { flex-direction: row; align-items: center; gap: 10px; min-height: 44px; cursor: pointer; }
+.teacher-planning .tp-entry-topic input { flex: none; width: 20px; height: 20px; accent-color: var(--tp-green); }
+.teacher-planning .tp-need-title { font-size: .9rem; }
+.teacher-planning .tp-need-title small { font-size: .76rem; }
+.teacher-planning .tp-evidence-review { margin-top: 16px; }
+.teacher-planning .tp-evidence-review h3 { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.teacher-planning .tp-topic-count { font-size: .75rem; color: var(--tp-green); padding: 3px 8px; border-radius: 6px; background: var(--tp-green-bg); }
+.teacher-planning .tp-build-panel .tp-build-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.teacher-planning .tp-build-panel .tp-build-controls > fieldset,
+.teacher-planning .tp-build-panel .tp-build-controls > label:first-of-type,
+.teacher-planning .tp-class-options { grid-column: 1 / -1; }
+.teacher-planning .tp-build-panel .tp-build-controls > label { width: 100%; }
+.teacher-planning .tp-class-options { width: 100%; }
+.teacher-planning .tp-class-options > summary { width: 100%; justify-content: space-between; font-size: .8rem; color: var(--tp-muted); }
+.teacher-planning .tp-class-options > summary .tp-icon { width: 16px; height: 16px; }
+.teacher-planning .tp-class-options[open] > summary .tp-icon { transform: rotate(180deg); }
+.teacher-planning .tp-build-summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; margin: 12px 0; font-size: .84rem; }
+.teacher-planning .tp-build-summary strong { color: var(--tp-green); }
+.teacher-planning .tp-build-summary span { color: var(--tp-muted); }
+.teacher-planning .tp-build-panel .tp-seg label { flex: 1; }
+.teacher-planning .tp-build-panel .tp-seg label span { width: 100%; }
+@media (min-width: 701px) and (max-width: 1050px) {
+  .teacher-planning .tp-build-panel .tp-build-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; }
+  .teacher-planning .tp-class-options { grid-column: 1 / -1; }
+}
+
+@media (max-width: 1050px) {
+  .teacher-planning .tp-setup-grid { grid-template-columns: minmax(0, 1fr); }
+  .teacher-planning .tp-build-controls > fieldset { flex-basis: auto; }
+  .teacher-planning .tp-needs li { grid-template-columns: minmax(0, 1fr) auto; }
+  .teacher-planning .tp-needs .tp-seg { grid-column: 1 / -1; grid-row: 2; }
+  .teacher-planning .tp-weeks { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 700px) {
+  .teacher-planning .tp-heading-row { gap: 8px; }
+  .teacher-planning .tp-setup-summary { padding: 14px; }
+  .teacher-planning .tp-setup-context { font-size: .78rem; }
+  .teacher-planning .tp-setup-content { padding: 16px; }
+  .teacher-planning .tp-picker-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+  .teacher-planning .tp-lesson-flow { grid-template-columns: minmax(0, 1fr); }
+  .teacher-planning .tp-plan-head > button { width: 100%; }
+  .teacher-planning .tp-plan-total { margin-left: 0; flex-basis: 100%; }
+  .teacher-planning .tp-calendar-actions > span { margin-left: 0; }
+  .teacher-planning .tp-calendar-grid { min-width: 0; grid-template-columns: minmax(0, 1fr); }
+  .teacher-planning .tp-calendar-day { min-height: 0; }
+  .teacher-planning .tp-calendar-day .tp-calendar-cards:empty { display: none; }
+  .teacher-planning .tp-calendar-day > h5 { justify-content: flex-start; gap: 10px; }
+  .teacher-planning .tp-calendar-controls { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+
 @media (max-width: 700px) {
   .teacher-planning .tp-needs li { grid-template-columns: minmax(0, 1fr) auto; }
   .teacher-planning .tp-needs .tp-seg { grid-column: 1 / -1; grid-row: 2; }
@@ -250,9 +435,11 @@ body.dark .teacher-planning {
   .teacher-planning .tp-big { width: 100%; }
   .teacher-planning .tp-lesson-toggle { padding-inline: 10px; gap: 10px; }
   .teacher-planning .tp-lesson-body { padding-inline: 14px; }
-  .teacher-planning .tp-pick-one[open] { padding-left: 16px; }
+  .teacher-planning .tp-matches { grid-template-columns: minmax(0, 1fr); }
+  .teacher-planning .tp-matches > li:nth-child(odd) { border-right: 0; }
   .teacher-planning .tp-tabs button { padding-inline: 8px; font-size: .95rem; }
   .teacher-planning .tp-lesson-meta > label:last-child { width: 100%; }
+  .teacher-planning .tp-calendar-head > label { width: 100%; }
 }
 @media print {
   html:has(.teacher-planning), body:has(.teacher-planning) { background: var(--light-panel); color: var(--light-text); transition: none; }

@@ -1,0 +1,56 @@
+/* Shared teacher workspace, with the compact planner as its reference.
+   Parent guides also use TeacherTools.css, so these rules stay teacher-only. */
+.teacher-workspace .tw-context { margin: 6px 0 0; color: var(--tp-muted); font-size: .85rem; }
+.teacher-workspace .tw-header-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.teacher-workspace .tw-panel { padding: 18px; border: 1px solid var(--tp-edge); border-radius: 20px; background: var(--tp-paper); min-width: 0; }
+.teacher-workspace .tw-filters { display: grid; grid-template-columns: minmax(120px, 170px) minmax(150px, 230px) minmax(180px, 1fr); align-items: end; gap: 12px; margin-bottom: 16px; }
+
+.teacher-workspace.teacher-tools .tt-section { padding: 16px 0; }
+.teacher-workspace.teacher-tools .tt-section h2 { font-size: 1.05rem; margin-bottom: 12px; }
+.teacher-workspace.teacher-tools .tt-lead { font-size: 1rem; }
+.teacher-workspace.teacher-tools .tt-status:empty { display: none; }
+.teacher-workspace.teacher-tools .tt-status { min-height: 0; margin-bottom: 0; font-size: .85rem; }
+.teacher-workspace.teacher-tools .tt-hub { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.teacher-workspace.teacher-tools .tt-hub-card { padding: 18px; border-radius: 14px; gap: 8px; }
+.teacher-workspace.teacher-tools .tt-hub-card strong { font-size: 1.05rem; }
+.teacher-workspace.teacher-tools .tt-hub-card > span { font-size: .9rem; }
+.teacher-workspace.teacher-tools .tt-privacy { margin: 16px 0 0; font-size: .85rem; }
+
+.teacher-workspace.teacher-tools .tt-topic-group { padding: 0; margin-bottom: 14px; border: 1px solid var(--tp-edge); border-radius: 14px; background: var(--tp-paper); overflow: clip; }
+.teacher-workspace.teacher-tools .tt-topic-group h2 { padding: 10px 14px; margin: 0; background: var(--tp-soft); font-size: 1rem; }
+.teacher-workspace.teacher-tools .tt-topic-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; }
+.teacher-workspace.teacher-tools .tt-topic-list li { min-width: 0; padding: 4px 14px; border-top: 1px solid var(--tp-edge); }
+.teacher-workspace.teacher-tools .tt-topic-list a { overflow-wrap: anywhere; font-size: .9rem; }
+.teacher-workspace.teacher-tools .tt-topic-list .tp-tag { font-size: .72rem; padding: 2px 6px; }
+.teacher-workspace.tw-reading .tt-section { padding: 16px 18px; margin-bottom: 14px; border: 1px solid var(--tp-edge); border-radius: 14px; background: var(--tp-paper); }
+.teacher-workspace.tw-reading .tt-section > :last-child { margin-bottom: 0; }
+.teacher-workspace.tw-reading .tt-lead { max-width: 75ch; }
+
+.teacher-workspace.teacher-tools .tt-report { border: 0; padding-top: 0; gap: 18px; }
+.teacher-workspace.teacher-tools .tt-row { gap: 12px; }
+.teacher-workspace.teacher-tools .tt-report-form .tt-field { margin-bottom: 12px; }
+.teacher-workspace.teacher-tools .tt-row > label { flex: 1 1 160px; }
+.teacher-workspace.teacher-tools .tt-subject { padding: 12px; border-radius: 12px; }
+.teacher-workspace.teacher-tools .tt-subject-detail { gap: 12px; padding-top: 12px; margin-top: 12px; }
+.teacher-workspace.teacher-tools .tt-target { margin-top: 12px; }
+.teacher-workspace.teacher-tools .tt-report-draft { padding: 16px; border-radius: 14px; background: var(--tp-soft); box-shadow: none; }
+.teacher-workspace.teacher-tools .tt-report-draft h2 { font-size: 1.05rem; }
+.teacher-workspace.teacher-tools .tt-draft-actions { margin-top: 12px; gap: 8px; }
+.teacher-workspace.teacher-tools .tt-draft-actions .tp-primary { min-height: 48px; font-size: 1rem; }
+@media (min-width: 900px) {
+  .teacher-workspace.teacher-tools .tt-report-draft { top: calc(var(--navbar-height, 76px) + 12px); }
+}
+@media (max-width: 700px) {
+  .teacher-workspace .tw-panel { padding: 16px; }
+  .teacher-workspace .tw-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .teacher-workspace .tw-filters > label:last-child { grid-column: 1 / -1; }
+  .teacher-workspace.teacher-tools .tt-hub,
+  .teacher-workspace.teacher-tools .tt-topic-list { grid-template-columns: minmax(0, 1fr); }
+  .teacher-workspace.teacher-tools .tt-bands { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+  .teacher-workspace.teacher-tools .tt-bands button { border-radius: 8px; margin: 0; }
+  .teacher-workspace .tw-header-actions { width: 100%; }
+  .teacher-workspace .tw-header-actions > * { flex: 1 1 160px; justify-content: center; text-align: center; }
+}
+@media print {
+  .teacher-workspace.tw-reading .tt-section { padding: 12px 0; border: 0; border-radius: 0; }
+}

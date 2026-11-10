@@ -179,7 +179,9 @@ For feature detail, read the [architecture](ARCHITECTURE.md) and the source it
 links. Delivered outcomes belong in [CHANGELOG.md](CHANGELOG.md).
 
 **Teacher tools** at `/teachers` link the planning pilot to three
-account-free tools. **Topic briefings** (`/teachers/briefings`) cover every
+account-free tools. All `/teachers` pages use `TeacherWorkspace.jsx` and its shared
+header, with the compact planner as the visual reference. Teacher-only layout
+rules in `TeacherWorkspace.css` keep parent guides independent. **Topic briefings** (`/teachers/briefings`) cover every
 Maths and English topic that has Bix introductions; Year 3 Maths also has
 authored teacher notes, which also supply the planning pilot's lesson text, vocabulary and briefing links for those topics. The **report comment builder** (`/teachers/reports`)
 drafts editable, template-built comments. The 12 **parent guides**
@@ -191,14 +193,22 @@ these pages stores what is typed into it. See the
 
 The **teacher planning pilot** at `/teachers/planning` accepts class-level
 needs or pasted question-response totals and generates editable three-week
-plans with matching resource playlists. Fictional evidence is an explicit demo
-choice. It has no teacher accounts, live assessments or saved plans yet;
-refresh discards inputs/edits and printing/PDF keeps a copy. It is linked from the
-footer and excluded from search indexing. See the
+plans with matching resource playlists. Its calendar view shows lessons automatically assigned from the chosen start date
+and time, respecting lessons per week and skipping weekends. Each teaching week
+is five school days from that start, which need not be Monday. Individual dates
+and times remain editable; overlaps are flagged and schedules appear in print. Fictional evidence is an explicit demo choice. It has no
+teacher accounts, live assessments or saved plans yet; refresh discards
+inputs/edits and printing/PDF keeps a copy. It is linked from the footer and
+excluded from search indexing. See the
 [phased plan](superpowers/plans/2026-11-08-teacher-planning-playlists.md).
 
 Year/subject selectors scope fuzzy search to all built challenges in that
 curriculum, using topic/activity names, existing lesson text and classroom terms.
+Teachers can add topics from several subjects to one plan for the same year.
+Changing the search subject retains topics, pasted results and draft edits;
+changing year still requires confirmation when there is work to discard.
+Lessons show their subject in the list, calendar and printout; retrieval stays
+within that subject. Pasted class results can include multiple subjects.
 The Year 3 Maths default covers 176 challenges across 44 topics. Matching activity
 IDs are retained in generated plans. Existing teaching notes and the pilot's
 additional reviewed descriptions remain distinct; read-only previews never

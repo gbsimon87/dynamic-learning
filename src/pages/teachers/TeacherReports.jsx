@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
 import { CURRICULUM_SUBJECTS, CURRICULUM_YEARS, isCurriculumAvailable, isYearAvailable, loadCurriculum } from "../../data/curriculumRegistry";
 import { BANDS, BEHAVIOURS, PRONOUNS, TARGETS, buildReport, countReport } from "../../data/teacherReports";
-import { TeacherBack } from "./TeacherHub";
-import "./TeacherPlanning.css";
+import TeacherWorkspace, { TeacherHeader } from "./TeacherWorkspace";
 import "./TeacherTools.css";
 
 const YEARS = CURRICULUM_YEARS.filter(isYearAvailable);
@@ -63,24 +62,16 @@ export default function TeacherReports() {
   };
   const nextPupil = () => { setPupil(emptyPupil()); setEdited(null); setStatus("Cleared for the next pupil. Your year group is kept."); };
 
-  return <div className="teacher-planning teacher-tools tt-wide">
-    <header className="tp-header">
-      <TeacherBack />
-      <h1>Report comment builder</h1>
-      <p className="tp-lede">Make your judgements, and a draft comment appears as you go. Edit it, copy it into your report system, then move on to the next pupil.</p>
-      <p className="tp-notice">Nothing you type here is saved or sent anywhere. Copy each comment before you clear it or leave the page.</p>
-    </header>
+  return <TeacherWorkspace className="teacher-tools">
+    <TeacherHeader title="Report comment builder" note="Unsaved · Copy each comment before leaving" />
     <div className="tt-report">
-      <div className="tt-report-form">
+      <div className="tt-report-form tw-panel">
         <section className="tt-section" aria-labelledby="pupil-heading">
-          <h2 id="pupil-heading"><span className="tp-step-n" aria-hidden="true">1</span>Pupil</h2>
-          <fieldset className="tt-field">
-            <legend>Year group</legend>
-            <div className="tp-chips">
-              {YEARS.map((option) => <button key={option} type="button" aria-pressed={year === option} onClick={() => { setYear(option); update({ subjects: {} }); }}>Year {option}</button>)}
-            </div>
-          </fieldset>
+          <h2 id="pupil-heading" className="sr-only">Pupil</h2>
           <div className="tt-row">
+            <label>Year group<select value={year} onChange={(event) => { setYear(Number(event.target.value)); update({ subjects: {} }); }}>
+              {YEARS.map((option) => <option key={option} value={option}>Year {option}</option>)}
+            </select></label>
             <label className="tp-grow"><FieldLabel optional>First name</FieldLabel><input value={pupil.name} maxLength={40} autoComplete="off" spellCheck={false} onChange={(event) => update({ name: event.target.value })} /></label>
             <fieldset><legend>Pronouns</legend><div className="tt-segments">
               {Object.entries(PRONOUNS).map(([id, words]) => <button key={id} type="button" aria-pressed={pupil.pronoun === id} onClick={() => update({ pronoun: id })}>{words.label}</button>)}
@@ -88,13 +79,12 @@ export default function TeacherReports() {
           </div>
         </section>
         <section className="tt-section" aria-labelledby="subjects-heading">
-          <h2 id="subjects-heading"><span className="tp-step-n" aria-hidden="true">2</span>Subjects</h2>
-          <p className="tp-quiet">Choose a judgement for each subject you report on. Strengths and next steps come from the Year {year} curriculum.</p>
+          <h2 id="subjects-heading">Subjects</h2>
           {subjects.map((subject) => <SubjectRow key={`${year}-${subject.id}`} subject={subject} year={year} value={pupil.subjects[subject.id]} onChange={(value) => update({ subjects: { ...pupil.subjects, [subject.id]: value } })} />)}
         </section>
         <section className="tt-section" aria-labelledby="behaviour-heading">
-          <h2 id="behaviour-heading"><span className="tp-step-n" aria-hidden="true">3</span>As a learner</h2>
-          <p className="tp-quiet" aria-live="polite">Choose up to {MAX_BEHAVIOURS}. {behavioursFull ? `${MAX_BEHAVIOURS} chosen. Unselect one to swap it.` : `${pupil.behaviours.length} chosen.`}</p>
+          <h2 id="behaviour-heading">As a learner</h2>
+          <p className="tp-quiet" aria-live="polite">{pupil.behaviours.length} of {MAX_BEHAVIOURS} selected{behavioursFull ? " · Unselect one to swap" : ""}</p>
           <div className="tp-chips" role="group" aria-label="Learning behaviours">
             {BEHAVIOURS.map((behaviour) => {
               const chosen = pupil.behaviours.includes(behaviour.id);
@@ -111,7 +101,7 @@ export default function TeacherReports() {
       </div>
       <section className="tt-report-draft" aria-labelledby="draft-heading">
         <h2 id="draft-heading">Draft comment</h2>
-        {!reported && <p className="tp-quiet">Choose a judgement for at least one subject to add it to the comment.</p>}
+        {!reported && <p className="tp-quiet">Choose a subject judgement to begin.</p>}
         <label className="tt-visually-hidden" htmlFor="report-draft">Draft comment</label>
         <textarea id="report-draft" rows={14} value={text} onChange={(event) => { setEdited(event.target.value); setStatus(""); }} />
         <p className="tp-quiet tt-count" aria-live="polite">{characters} characters · {words} words</p>
@@ -124,5 +114,5 @@ export default function TeacherReports() {
         <p role="status" className="tt-status">{status}</p>
       </section>
     </div>
-  </div>;
+  </TeacherWorkspace>;
 }

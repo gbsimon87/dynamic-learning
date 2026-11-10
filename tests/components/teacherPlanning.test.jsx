@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router";
 import { expect, it, vi } from "vitest";
@@ -39,6 +39,7 @@ it("keeps edits when settings change, confirms replacement, and creates the requ
   const user = userEvent.setup();
   mount(); await create(user);
   await user.type(within(lesson(1)).getByLabelText("Teacher notes (no pupil names)"), "Keep this edit");
+  await user.click(screen.getByText("Plan settings"));
   await user.click(within(screen.getByRole("group", { name: "Lessons per week" })).getByRole("radio", { name: "2" }));
   expect(screen.getAllByRole("article", { name: /^Lesson \d+$/ })).toHaveLength(15);
   await user.click(screen.getByRole("button", { name: "Rebuild plan" }));
@@ -88,13 +89,46 @@ it("moves a lesson across weeks with its edits and includes all edited lessons i
   expect(container.querySelector(".tp-print").textContent).toContain("Week 2 · Lesson 6");
 });
 
+it("automatically schedules from Wednesday at the chosen time, shifts dates and flags overlaps", async () => {
+  const user = userEvent.setup();
+  const { container } = mount();
+  fireEvent.change(screen.getByLabelText("Start date"), { target: { value: "2026-11-11" } });
+  fireEvent.change(screen.getByLabelText("Lesson start time"), { target: { value: "10:30" } });
+  await create(user);
+  expect(container.querySelector(".tp-print").textContent).toContain("Wednesday 11 November · 10:30");
+  await user.click(screen.getByRole("button", { name: "Calendar" }));
+  expect(screen.getByRole("heading", { name: "Schedule in calendar" })).toBeTruthy();
+  expect(screen.queryByRole("button", { name: /Place unscheduled/ })).toBeNull();
+  expect(Array.from(container.querySelectorAll(".tp-calendar-day h5")).slice(0, 5).map((heading) => heading.textContent)).toEqual(["Wednesday11 Nov", "Thursday12 Nov", "Friday13 Nov", "Monday16 Nov", "Tuesday17 Nov"]);
+  expect(screen.getByText("15 of 15 lessons scheduled")).toBeTruthy();
+  fireEvent.change(screen.getByLabelText("Calendar start date"), { target: { value: "2026-11-18" } });
+  expect(screen.getByLabelText("Calendar start date").value).toBe("2026-11-18");
+  expect(screen.getByText("15 of 15 lessons scheduled")).toBeTruthy();
+  const cards = screen.getAllByRole("article", { name: /minutes$/ });
+  await user.click(within(cards[0]).getByText("Change schedule"));
+  await user.click(within(cards[1]).getByText("Change schedule"));
+  const dayInputs = screen.getAllByLabelText(/Day for/);
+  const timeInputs = screen.getAllByLabelText(/Start time for/);
+  expect(timeInputs.every((input) => input.value === "10:30")).toBe(true);
+  expect(dayInputs[0].value).toBe("2026-11-18");
+  fireEvent.change(timeInputs[0], { target: { value: "13:15" } });
+  fireEvent.change(screen.getByLabelText("Calendar start date"), { target: { value: "2026-11-25" } });
+  const movedCards = Array.from(container.querySelectorAll(".tp-calendar-lesson"));
+  expect(movedCards[0].querySelector('input[type="time"]').value).toBe("13:15");
+  for (const card of movedCards.slice(0, 2)) await user.click(within(card).getByText("Change schedule"));
+  fireEvent.change(movedCards[0].querySelector('input[type="time"]'), { target: { value: "10:30" } });
+  await user.selectOptions(movedCards[1].querySelector("select"), movedCards[0].querySelector("select").value);
+  expect(screen.getAllByText("Overlaps another lesson.")).toHaveLength(2);
+  expect(screen.getAllByRole("region", { name: /Calendar week/ })).toHaveLength(3);
+});
+
 it("requires an objective and honestly starts again after an unmount", async () => {
   const user = userEvent.setup();
   const mounted = mount();
   await user.click(screen.getByRole("button", { name: "Try a sample class" }));
   for (const checkbox of screen.getAllByRole("checkbox").filter((input) => input.checked)) await user.click(checkbox);
   expect(screen.getByRole("button", { name: "Create three-week plan" }).disabled).toBe(true);
-  expect(screen.getByText("Tick at least one topic in step 2.")).toBeTruthy();
+  expect(screen.getByText("Include at least one topic in your plan.")).toBeTruthy();
   await user.click(screen.getByRole("checkbox", { name: "Include equivalent fractions" }));
   await create(user);
   await user.click(within(lesson(1)).getByText("Why this lesson?"));
@@ -109,6 +143,7 @@ it("starts with a compact outline, reads one lesson at a time and preserves edit
   await user.click(screen.getByRole("button", { name: "Try a sample class" }));
   await user.click(screen.getByRole("button", { name: "Create three-week plan" }));
   expect(screen.getAllByRole("article", { name: /^Lesson \d+$/ })).toHaveLength(15);
+  expect(document.activeElement).toBe(container.querySelector(".tp-plan"));
   expect(screen.queryByRole("textbox", { name: "Teaching and worked model" })).toBeNull();
   expect(screen.queryByRole("list", { name: "Teaching sequence" })).toBeNull();
   const first = within(lesson(1));
@@ -137,4 +172,46 @@ it("is reached from the footer's Teacher tools hub rather than its own footer li
   render(<MemoryRouter><AppFooter /></MemoryRouter>);
   expect(screen.getByRole("link", { name: "Teacher tools" }).getAttribute("href")).toBe("/teachers");
   expect(screen.queryByRole("link", { name: "Teacher planning preview" })).toBeNull();
+});
+
+
+it("collapses setup after building, focuses the draft and preserves edits when settings reopen", async () => {
+  const user = userEvent.setup();
+  const { container } = mount();
+  const setup = container.querySelector(".tp-setup");
+  expect(setup.open).toBe(true);
+  await create(user);
+  expect(setup.open).toBe(false);
+  const first = within(lesson(1));
+  await user.type(first.getByLabelText("Teacher notes (no pupil names)"), "Keep these counters ready.");
+  await user.click(screen.getByText("Plan settings"));
+  expect(setup.open).toBe(true);
+  await user.click(screen.getByText("Plan settings"));
+  expect(setup.open).toBe(false);
+  expect(first.getByLabelText("Teacher notes (no pupil names)").value).toBe("Keep these counters ready.");
+  await user.click(screen.getByRole("button", { name: "Calendar", exact: true }));
+  expect(container.querySelector(".tp-calendar-edit").open).toBe(false);
+  await user.click(screen.getByRole("button", { name: "Lesson list", exact: true }));
+  const restored = within(lesson(1));
+  await user.click(restored.getByRole("button", { name: "Edit lesson" }));
+  expect(restored.getByLabelText("Teacher notes (no pupil names)").value).toBe("Keep these counters ready.");
+});
+
+
+it.each([
+  ["2026-11-11", ["2026-11-11", "2026-11-12", "2026-11-18", "2026-11-19", "2026-11-25", "2026-11-26"]],
+  ["2026-11-14", ["2026-11-16", "2026-11-17", "2026-11-23", "2026-11-24", "2026-11-30", "2026-12-01"]],
+  ["2026-11-15", ["2026-11-16", "2026-11-17", "2026-11-23", "2026-11-24", "2026-11-30", "2026-12-01"]],
+])("starts a two-lessons-per-week plan on or after %s", async (start, expectedDates) => {
+  const user = userEvent.setup();
+  const { container } = mount();
+  fireEvent.change(screen.getByLabelText("Start date"), { target: { value: start } });
+  fireEvent.change(screen.getByLabelText("Lesson start time"), { target: { value: "14:45" } });
+  await user.click(within(screen.getByRole("group", { name: "Lessons per week" })).getByRole("radio", { name: "2" }));
+  await create(user);
+  await user.click(screen.getByRole("button", { name: "Calendar" }));
+  expect(screen.getByText("6 of 6 lessons scheduled")).toBeTruthy();
+  const cards = Array.from(container.querySelectorAll(".tp-calendar-lesson"));
+  expect(cards.map((card) => card.querySelector("select").value)).toEqual(expectedDates);
+  expect(cards.every((card) => card.querySelector('input[type="time"]').value === "14:45")).toBe(true);
 });

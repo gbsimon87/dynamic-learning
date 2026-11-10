@@ -5,7 +5,7 @@ import { expect, it, vi } from "vitest";
 import TeacherPlanning from "../../src/pages/teachers/TeacherPlanning";
 
 function mount() { return render(<MemoryRouter><TeacherPlanning /></MemoryRouter>); }
-function entry() { return within(screen.getByRole("region", { name: "What does your class need?" })); }
+function entry() { return within(screen.getByRole("region", { name: "Add your teaching topics" })); }
 function createButton() { return screen.getByRole("button", { name: /Create three-week plan|Rebuild plan/ }); }
 async function openFirstLesson(user) {
   const first = within(screen.getByRole("article", { name: "Lesson 1", exact: true }));
@@ -51,7 +51,7 @@ it("keeps a teacher's untick when a status changes and disables planning when ev
   expect(screen.getByRole("checkbox", { name: "Include fractions of a set of objects" }).checked).toBe(false);
   await user.click(entry().getByRole("button", { name: "Remove Find fractions of quantities" }));
   expect(createButton().disabled).toBe(true);
-  expect(screen.getByText("Add a topic in step 1 first.")).toBeTruthy();
+  expect(screen.getByText("Add at least one topic to get started.")).toBeTruthy();
 });
 
 it("reviews pasted results, requires uncertain mappings and generates priorities from real class totals", async () => {
@@ -80,6 +80,7 @@ it("blocks invalid imports and pending pastes, preserves the current plan and fl
   const first = await openFirstLesson(user);
   await user.click(first.getByRole("button", { name: "Edit lesson" }));
   await user.type(first.getByLabelText("Teacher notes (no pupil names)"), "Keep my lesson edits");
+  await user.click(screen.getByText("Plan settings"));
   await user.click(entry().getByRole("button", { name: "Paste results" }));
   await user.type(entry().getByLabelText("Paste class topic results"), "Topic,Correct,Answered\nEquivalent fractions,31,30");
   await user.click(entry().getByRole("button", { name: "Check results" }));
@@ -88,7 +89,7 @@ it("blocks invalid imports and pending pastes, preserves the current plan and fl
   await user.clear(entry().getByLabelText("Paste class topic results"));
   await user.type(entry().getByLabelText("Paste class topic results"), "Topic,Correct,Answered\nEquivalent fractions,9,30");
   await user.click(entry().getByRole("button", { name: "Check results" }));
-  expect(screen.getByText("Press “Use these results” in step 1 first.")).toBeTruthy();
+  expect(screen.getByText("Check your pasted results, then press “Use these results”.")).toBeTruthy();
   await user.click(entry().getByRole("button", { name: "Use these results" }));
   expect(first.getByLabelText("Teacher notes (no pupil names)").value).toBe("Keep my lesson edits");
   expect(screen.getByText(/Your class needs changed/)).toBeTruthy();
@@ -121,4 +122,20 @@ it("does not infer pupil groups or write class input to storage, and does not re
   expect(writes).not.toHaveBeenCalled();
   mounted.unmount(); mount();
   expect(createButton().disabled).toBe(true);
+});
+
+
+it("shows eight topics immediately, expands the list and keeps topics visible after adding", async () => {
+  const user = userEvent.setup(); mount();
+  const matchingTopics = () => within(entry().getByRole("list", { name: "Matching topics" }));
+  expect(matchingTopics().getAllByRole("button", { name: /^Add:/ })).toHaveLength(8);
+  await user.click(entry().getByRole("button", { name: "Show 8 more" }));
+  expect(matchingTopics().getAllByRole("button", { name: /^Add:/ })).toHaveLength(16);
+  await user.click(matchingTopics().getAllByRole("button", { name: /^Add:/ })[0]);
+  expect(entry().getByRole("list", { name: "Your class needs" })).toBeTruthy();
+  expect(matchingTopics().getAllByRole("button", { name: /^Add:/ })).toHaveLength(8);
+  await search(user, "fractions");
+  expect(matchingTopics().getAllByRole("button", { name: /^Add:/ }).length).toBeGreaterThan(0);
+  await user.clear(entry().getByRole("searchbox", { name: "Search topics" }));
+  expect(matchingTopics().getAllByRole("button", { name: /^Add:/ })).toHaveLength(8);
 });
