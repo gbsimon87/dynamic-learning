@@ -18,7 +18,7 @@ workspace changes were uncommitted.
 | `feat/teacher-planning-playlists` | Its tip `163406c` was already contained in `dev` | Existing history | Already integrated |
 
 Only `docs/CHANGELOG.md` conflicted. Both merges retained every added entry
-and the full existing changelog body. Every other source-branch file matches
+and the full existing changelog body. At the initial integration, every other source-branch file matched
 its checkpoint blob exactly in the combined tree. This was verified across
 all 30 Ocean, three selector and 35 Year 3 changed paths, permitting only the
 combined changelog to differ.
@@ -31,9 +31,9 @@ newer work.
 
 ## Repository state
 
-- Primary checkout is on `dev`; both other worktrees remain available on their
-  original source branches. All three have clean indexes and working trees
-  after checkpoint/integration.
+- At the initial integration, the primary checkout was on `dev` and all three
+  worktrees were clean. Both secondary worktrees remain on their original
+  source branches. Subsequent concurrent documentation work is recorded below.
 - Every non-`main` local branch and `origin/dev` is an ancestor of local `dev`.
 - Local `main` and `origin/main` remain at
   `ccdf7dccda7b3f9db7043611782f0f5d59429293`.
@@ -47,8 +47,8 @@ reported validation failures retained below. It is not a release approval.
 
 ## Combined-tree validation
 
-Implementation checked at `48d814d`; the subsequent integration record commit
-changes documentation only.
+Implementation checked at `48d814d`; the subsequent integration record and ideas snapshot commits
+change documentation only.
 
 - `npm run lint`: passed.
 - `npm run build`: passed, prerendering 70 public pages. Existing mixed JSON
@@ -73,3 +73,19 @@ changes documentation only.
 
 Temporary diagnostics: `/tmp/dev-workspace-merge-{lint,test,build,components}.log`.
 The durable outcome and validation limits are in this record.
+
+## Concurrent documentation workspace
+
+During the final validation/recording step, another session created
+`ideas/curriculum-introductions-mastery` from the integrated `dev` tip and
+edited `docs/PROJECT_IDEAS.md` to add idea #69. The integration-record commit
+(`0d49134`) landed on that newly active branch.
+
+Local `dev` was then fast-forwarded through that branch with an additional
+checkpoint of its current ideas document and this corrected record. A temporary
+Git index captured the documentation snapshot. The active branch, working file
+and real index were preserved so the concurrent author can continue. All branch
+tips observed at this checkpoint are contained in `dev`; the active worktree
+may retain that author's uncommitted documentation changes. The snapshot is
+identical to those edits at capture time, rather than a claim that work begun
+in another session has finished. No implementation code changed after validation.
