@@ -6,6 +6,11 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-11 — Keep every curriculum subject visible
+
+- `/curriculum` now keeps all 12 subjects in their usual order before and after choosing a year. Subjects without a course for that year use the existing dashed, muted-icon “Coming soon” state, expose `aria-disabled` and cannot open a course. Changing year updates availability and the child's “Your pick” tag in place.
+- Technical validation: all 10 focused selector tests and affected lint pass, covering Years 1–6, year switching, unavailable mouse/keyboard activation and available-course navigation. Full lint and production build pass (70 public pages prerendered). The full unit run passed 2,849 tests, retaining three documented Year 6 English/story-content failures and five server checks blocked by sandbox port binding (`listen EPERM`). Components were run separately after that unit-stage failure: 995 passed and 12 timed out across nine files; all 76 tests in those nine files pass on a rerun with two workers. Existing light/dark styles are reused; browser appearance and physical-device use were not checked. No curriculum content or learner-progress rules changed.
+
 ## 2026-11-11 — Years 1–6 core-subject practice builder
 
 - Added all 579 remaining Maths, English, Science and History topics in Years 1, 2, 4, 5 and 6. The builder now has 714 topics across 25 collections, including existing Year 3 Geography. The owner narrowed this expansion to these four core subjects; other subjects stay outside its scope.
