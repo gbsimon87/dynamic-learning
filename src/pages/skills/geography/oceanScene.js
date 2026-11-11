@@ -3,6 +3,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { createOceanSubmarine } from './oceanSubmarine.js';
 import { createOceanWater, OCEAN_SURFACE_HEIGHT } from './oceanWater.js';
 import { createOceanEnvironment, oceanFloorHeight } from './oceanEnvironment.js';
+import { createOceanLighting } from './oceanLighting.js';
+import { createOceanCockpit } from './oceanCockpit.js';
 import { STEERING, createSteeringState, isSteeringIdle, stepSteering } from './oceanSteering.js';
 import { createOrbitPilot, nearestOrbitTarget } from '../../../components/worlds/orbitPilot.js';
 
@@ -18,16 +20,20 @@ const NOSE = new THREE.Vector3(0, 0, -1);
 // The sun keeps this offset from the submarine so its shadow box travels with it.
 const SUN_OFFSET = new THREE.Vector3(-8, 14, -6);
 const orbitProfile = (target) => target.orbit ?? null;
-const PALETTE_KEYS = ['water', 'surface', 'caustic', 'sand', 'rock', 'grass', 'hull', 'trim', 'window', 'metal', 'light'];
+const PALETTE_KEYS = ['water', 'surface', 'caustic', 'sand', 'rock', 'grass', 'hull', 'trim', 'window', 'metal', 'light', 'cabin', 'bezel', 'steel', 'glow', 'amber', 'signal', 'screen', 'ink'];
 
 /**
  * The child steers the craft; the camera keeps their chosen angle in the craft's
  * frame. Optional water motion runs at a capped 30 frames/second.
  */
-export function createOceanScene({ canvas, container, onReady, onUnavailable, onWaterMotionChange = () => {}, onOrbitOffer = () => {}, onOrbitChange = () => {} }) {
+export function createOceanScene({ canvas, container, onReady, onUnavailable, onWaterMotionChange = () => {}, onOrbitOffer = () => {}, onOrbitChange = () => {}, onCameraViewChange = () => {} }) {
   const scene = new THREE.Scene();
   let renderer, controls, resizeObserver, themeObserver;
+  let lighting;
   let camera, target, radius, homeDistance, submarine, propeller, centre, world;
+  let cockpitCamera, cameraView = 'behind';
+  let cabin, palette;
+  const cockpitPosition = new THREE.Vector3(), cockpitAim = new THREE.Vector3();
   let steering = createSteeringState(START), input = STILL;
   // The child's chosen camera offset, in the submarine's yaw frame.
   const viewOffset = new THREE.Vector3();
@@ -301,6 +307,19 @@ export function createOceanScene({ canvas, container, onReady, onUnavailable, on
     draw();
   }
 
+  function toggleCameraView() {
+    if (disposed || !ready || !hasSize) return;
+    if (!cabin) {
+      cabin = createOceanCockpit(palette);
+      cabin.resize(cockpitCamera.aspect);
+      scene.add(cabin.group);
+    }
+    cameraView = cameraView === 'behind' ? 'cockpit' : 'behind';
+    renderer.shadowMap.needsUpdate = true;
+    onCameraViewChange(cameraView);
+    draw();
+  }
+
   function dispose() {
     if (disposed) return;
     pilot?.stop();
@@ -314,6 +333,8 @@ export function createOceanScene({ canvas, container, onReady, onUnavailable, on
     document.removeEventListener('visibilitychange', visibilityChanged);
     canvas.removeEventListener('webglcontextlost', contextLost);
     water?.dispose();
+    lighting?.dispose();
+    cabin?.disposeTextures();
     const geometries = new Set(), materials = new Set();
     scene.traverse((object) => {
       if (object.isInstancedMesh) object.dispose();
@@ -341,31 +362,62 @@ export function createOceanScene({ canvas, container, onReady, onUnavailable, on
 
   function draw() {
     if (disposed || !hasSize || document.hidden) return;
+    const cockpit = cameraView === 'cockpit';
+    // Keep the outside camera intact so switching back restores the child's view.
+    controls.enabled = !cockpit && !orbiting() && !tourTravel;
+    if (cockpit) {
+      submarine.updateMatrixWorld(true);
+      submarine.localToWorld(cockpitPosition.set(0, 0, -1.9));
+      submarine.localToWorld(cockpitAim.set(0, 0, -12));
+      cockpitCamera.position.copy(cockpitPosition);
+      cockpitCamera.lookAt(cockpitAim);
+      cabin.group.position.copy(cockpitCamera.position);
+      cabin.group.quaternion.copy(cockpitCamera.quaternion);
+      cabin.group.visible = true;
+      const automatic = orbiting() || tourTravel;
+      cabin.update({
+        position: submarine.position,
+        yaw: Math.atan2(cockpitPosition.x - cockpitAim.x, cockpitPosition.z - cockpitAim.z),
+        depth: Math.max(0, OCEAN_SURFACE_HEIGHT - submarine.position.y),
+        turn: automatic ? 0 : input.turn,
+        lift: automatic ? 0 : input.lift,
+        throttle: automatic ? 0 : input.throttle,
+        mode: tourTravel ? 'TOUR' : orbiting() ? 'ORBIT' : 'MANUAL',
+        discoveries: environment.discoveries,
+      });
+    }
+    const wasVisible = submarine.visible;
     try {
-      renderer.render(scene, camera);
+      // The hull would obscure the forward window when viewed from inside it.
+      if (cockpit) submarine.visible = false;
+      renderer.render(scene, cockpit ? cockpitCamera : camera);
       if (!ready) { ready = true; onReady(); }
     } catch {
       unavailable();
+    } finally {
+      submarine.visible = wasVisible;
+      if (cabin) cabin.group.visible = false;
     }
   }
 
   function refreshPalette() {
     if (disposed) return;
     const style = getComputedStyle(container);
-    const palette = Object.fromEntries(PALETTE_KEYS.map((key) => {
+    palette = Object.fromEntries(PALETTE_KEYS.map((key) => {
       const value = style.getPropertyValue(`--ocean-${key}`).trim();
       return [key, value ? new THREE.Color(value) : new THREE.Color()];
     }));
     scene.background = palette.water;
-    scene.fog = new THREE.FogExp2(palette.water, 0.032);
+    scene.fog = new THREE.FogExp2(palette.water, 0.026);
     scene.traverse((object) => {
-      if (object.isLight) object.color.copy(palette.light);
+      if (object.isLight && !object.userData.cabinLight) object.color.copy(palette.light);
       if (object.isHemisphereLight) object.groundColor.copy(palette.water).multiplyScalar(0.6);
       const material = object.material;
       if (material?.userData.oceanColor) material.color.copy(palette[material.userData.oceanColor]);
     });
     water?.setPalette(palette);
     environment?.setPalette(palette);
+    cabin?.setPalette(palette);
     draw();
   }
 
@@ -386,6 +438,9 @@ export function createOceanScene({ canvas, container, onReady, onUnavailable, on
     if (!hasSize) { updateAnimation(); return; }
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
+    cockpitCamera.aspect = camera.aspect;
+    cockpitCamera.updateProjectionMatrix();
+    cabin?.resize(camera.aspect);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
     renderer.setSize(width, height, false);
     // Fit the full model even in portrait, allowing a little space for its edges.
@@ -393,7 +448,7 @@ export function createOceanScene({ canvas, container, onReady, onUnavailable, on
     const horizontal = Math.atan(Math.tan(vertical) * camera.aspect);
     controls.minDistance = radius / Math.sin(Math.min(vertical, horizontal)) * 1.08;
     controls.maxDistance = controls.minDistance * 2.4;
-    homeDistance = controls.minDistance * 1.1;
+    homeDistance = controls.minDistance * 1.45;
     if (!positioned) { positioned = true; resetView(); }
     else { constrainView(); controls.update(); draw(); }
     updateAnimation();
@@ -402,6 +457,7 @@ export function createOceanScene({ canvas, container, onReady, onUnavailable, on
   function handleViewKey(event) {
     if (disposed || !hasSize || orbiting() || event.altKey || event.ctrlKey || event.metaKey) return false;
     if (event.key === 'Home') { resetView(); return true; }
+    if (cameraView === 'cockpit') return false;
     // Plain arrows steer the submarine; Shift+arrows look around.
     if (event.key.startsWith('Arrow') && !event.shiftKey) return false;
     const spherical = new THREE.Spherical().setFromVector3(camera.position.clone().sub(target));
@@ -423,18 +479,25 @@ export function createOceanScene({ canvas, container, onReady, onUnavailable, on
     return true;
   }
 
-  const api = { resetView, setWaterPaused, handleViewKey, setSteering, returnToStart, enterOrbit, leaveOrbit, tourTo, setTourPaused, dispose };
+  const api = { resetView, toggleCameraView, setWaterPaused, handleViewKey, setSteering, returnToStart, enterOrbit, leaveOrbit, tourTo, setTourPaused, dispose };
   try {
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
+    renderer.toneMappingExposure = 1.05;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.shadowMap.autoUpdate = false;
     renderer.shadowMap.needsUpdate = true;
+    lighting = createOceanLighting(renderer);
+    scene.environment = lighting.texture;
+    scene.environmentIntensity = 0.45;
     camera = new THREE.PerspectiveCamera(42, 1, 0.1, 180);
-    submarine = createOceanSubmarine();
+    cockpitCamera = new THREE.PerspectiveCamera(65, 1, 0.1, 180);
+    cockpitCamera.layers.enable(1);
+    const sand = new THREE.MeshStandardMaterial({ roughness: 1 });
+    water = createOceanWater(sand);
+    submarine = createOceanSubmarine(water);
     propeller = submarine.getObjectByName('ocean-propeller');
     submarine.position.set(START.x, START.y, START.z);
     submarine.traverse((object) => { if (object.isMesh) { object.castShadow = true; object.receiveShadow = true; } });
@@ -443,15 +506,13 @@ export function createOceanScene({ canvas, container, onReady, onUnavailable, on
     target = bounds.center;
     radius = bounds.radius;
     centre = submarine.worldToLocal(target.clone());
-    const sand = new THREE.MeshStandardMaterial({ roughness: 1 });
-    water = createOceanWater(sand);
     environment = createOceanEnvironment(water, sand);
     world = { floorHeight: oceanFloorHeight, obstacles: environment.obstacles };
     environment.focus(submarine.position);
     // The water helper owns the sand texture/shader; terrain owns its geometry.
     sand.userData.oceanColor = 'sand';
-    scene.add(environment.group, water.surface, new THREE.HemisphereLight(undefined, undefined, 1.15));
-    const light = sun = new THREE.DirectionalLight(undefined, 2.6);
+    scene.add(environment.group, water.surface, new THREE.HemisphereLight(undefined, undefined, 0.85));
+    const light = sun = new THREE.DirectionalLight(undefined, 2.9);
     light.position.copy(SUN_OFFSET);
     light.castShadow = true;
     light.shadow.mapSize.set(1024, 1024);

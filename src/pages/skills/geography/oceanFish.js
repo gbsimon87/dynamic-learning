@@ -1,4 +1,7 @@
 import * as THREE from 'three';
+import { kit, sphere, TAIL } from './oceanCreatures.js';
+import { marineBody, taperedTube } from './oceanModelDetail.js';
+import { marineSpine } from './oceanAnimalMotion.js';
 
 // A slow circle to the left of the start, clear of the reef and the parked submarine.
 export const FISH_LOOP = { x: -12, z: -3, radius: 5, height: 3.2, lapSeconds: 30 };
@@ -24,36 +27,22 @@ export function loopPose(loop, seconds) {
 export const fishPose = (seconds) => loopPose(FISH_LOOP, seconds);
 
 // Habitat colours stay the same in both interface themes.
-const COLOURS = { body: '#2fc4a8', belly: '#8de0c8', fin: '#ff8fb1', beak: '#f2efe4', eye: '#1d2733', stripe: '#ffb347' };
+const COLOURS = { body: '#279b8c', belly: '#87bfaa', fin: '#b76683', beak: '#d6d0b7', eye: '#152b2a', stripe: '#c9a364' };
 
-/** Original stylised parrotfish, about 1.8 long, nose towards −Z; wag `ocean-fish-tail`. */
+/** A tapered, scale-patterned parrotfish, nose towards −Z; wag `ocean-fish-tail`. */
 export function createOceanFish(water) {
-  const group = new THREE.Group();
-  group.name = 'ocean-fish';
-  const materials = Object.fromEntries(Object.entries(COLOURS).map(([key, color]) => {
-    const material = new THREE.MeshStandardMaterial({ color, roughness: key === 'eye' ? 0.3 : 0.6, side: THREE.DoubleSide });
-    if (key !== 'eye') water?.addCaustics(material);
-    return [key, material];
-  }));
-  const sphere = new THREE.SphereGeometry(1, 24, 16);
-  const add = (geometry, material, position, scale = [1, 1, 1], rotation = [0, 0, 0], parent = group) => {
-    const mesh = new THREE.Mesh(geometry, materials[material]);
-    mesh.position.set(...position);
-    mesh.scale.set(...scale);
-    mesh.rotation.set(...rotation);
-    mesh.receiveShadow = true;
-    parent.add(mesh);
-    return mesh;
-  };
+  const { group, add, pivot } = kit('ocean-fish', water, COLOURS);
 
-  add(sphere, 'body', [0, 0, 0], [0.32, 0.42, 0.75]);
-  add(sphere, 'belly', [0, -0.14, -0.05], [0.27, 0.27, 0.6]);
-  add(sphere, 'stripe', [0, 0.06, -0.38], [0.3, 0.33, 0.08]);
+  const body = add(marineBody([[-0.76, 0.18], [-0.56, 0.76], [-0.2, 1], [0.25, 0.85], [0.55, 0.4], [0.72, 0.1]], 0.32, 0.42), 'body', [0, 0, 0]);
   add(sphere, 'beak', [0, -0.04, -0.74], [0.16, 0.14, 0.12]);
+  const fins = [];
   for (const side of [-1, 1]) {
-    add(sphere, 'beak', [side * 0.2, 0.1, -0.5], [0.09, 0.09, 0.06]);
-    add(sphere, 'eye', [side * 0.25, 0.11, -0.52], [0.05, 0.05, 0.04]);
-    add(new THREE.CircleGeometry(0.22, 16, 0, Math.PI), 'fin', [side * 0.3, -0.08, -0.1], [1, 0.8, 1], [0, side * 1.2, -Math.PI / 2]);
+    add(sphere, 'stripe', [side * 0.245, 0.11, -0.5], [0.06, 0.06, 0.04]);
+    add(sphere, 'eye', [side * 0.274, 0.11, -0.52], [0.032, 0.032, 0.03]);
+    add(taperedTube([[side * 0.23, 0.19, -0.36], [side * 0.3, 0, -0.3], [side * 0.23, -0.2, -0.35]], 0.008, 12, 0.5), 'stripe', [0, 0, 0]);
+    const fin = pivot([side * 0.3, -0.08, -0.1]);
+    add(new THREE.CircleGeometry(0.22, 12, 0, Math.PI), 'fin', [0, 0, 0], [1, 0.8, 1], [0, side * 1.2, -Math.PI / 2], fin);
+    fins.push({ node: fin, side });
   }
   // Dorsal fin along the back.
   add(new THREE.CircleGeometry(0.55, 20, 0, Math.PI), 'fin', [0, 0.32, 0.05], [1, 0.45, 1], [0, Math.PI / 2, 0]);
@@ -61,12 +50,14 @@ export function createOceanFish(water) {
   const tail = new THREE.Group();
   tail.name = 'ocean-fish-tail';
   tail.position.set(0, 0, 0.68);
-  const fan = new THREE.Shape();
-  fan.moveTo(0, 0);
-  fan.lineTo(0.42, 0.4);
-  fan.quadraticCurveTo(0.34, 0, 0.42, -0.4);
-  fan.lineTo(0, 0);
-  add(new THREE.ShapeGeometry(fan, 8), 'fin', [0, 0, 0], [1, 1, 1], [0, -Math.PI / 2, 0], tail);
+  add(TAIL, 'fin', [0, 0, 0], [1.3, 1.3, 1], [0, -Math.PI / 2, 0], tail);
   group.add(tail);
+  group.userData.spine = marineSpine(body, tail, { start: -0.18, end: 0.8, amplitude: 0.085, rate: 6.4 });
+  group.userData.fins = fins;
   return group;
+}
+
+export function animateFish(model, seconds) {
+  model.userData.spine(seconds);
+  model.userData.fins.forEach(({ node, side }) => { node.rotation.y = side * Math.sin(seconds * 7 - 0.7) * 0.18; });
 }

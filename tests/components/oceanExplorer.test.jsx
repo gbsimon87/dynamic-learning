@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryRouter, RouterProvider } from 'react-router';
+import { createMemoryRouter, MemoryRouter, RouterProvider } from 'react-router';
 import { beforeEach, expect, it, vi } from 'vitest';
 import OceanExplorer from '../../src/pages/skills/geography/OceanExplorer';
 import SkillGameLayout from '../../src/components/skills/SkillGameLayout';
@@ -13,7 +13,8 @@ const scenes = vi.hoisted(() => []);
 const speech = vi.hoisted(() => ({ speak: vi.fn(), stopNarrationOf: vi.fn() }));
 vi.mock('../../src/pages/skills/geography/oceanScene.js', () => ({
   createOceanScene: vi.fn((options) => {
-    const api = { resetView: vi.fn(), setWaterPaused: vi.fn(), setSteering: vi.fn(), returnToStart: vi.fn(), enterOrbit: vi.fn(() => true), leaveOrbit: vi.fn(), tourTo: vi.fn(() => true), setTourPaused: vi.fn(), handleViewKey: vi.fn((event) => event.key === '+' || (event.shiftKey && event.key.startsWith('Arrow'))), dispose: vi.fn() };
+    let view = 'behind';
+    const api = { resetView: vi.fn(), toggleCameraView: vi.fn(() => { options.onCameraViewChange?.(view = view === 'behind' ? 'cockpit' : 'behind'); }), setWaterPaused: vi.fn(), setSteering: vi.fn(), returnToStart: vi.fn(), enterOrbit: vi.fn(() => true), leaveOrbit: vi.fn(), tourTo: vi.fn(() => true), setTourPaused: vi.fn(), handleViewKey: vi.fn((event) => event.key === '+' || (event.shiftKey && event.key.startsWith('Arrow'))), dispose: vi.fn() };
     scenes.push({ ...options, ...api });
     return api;
   }),
@@ -22,13 +23,15 @@ vi.mock('../../src/pages/skills/geography/oceanScene.js', () => ({
 vi.mock('../../src/utils/speech.js', () => speech);
 vi.mock('../../src/components/celebration/sound/player.js', () => ({ isMuted: () => false }));
 
+const renderOcean = (ui = <OceanExplorer />) => render(<MemoryRouter>{ui}</MemoryRouter>);
+
 beforeEach(() => { scenes.length = 0; speech.speak.mockReset(); speech.stopNarrationOf.mockReset(); });
 
 it('waits for a rendered scene, resets it and delegates only supported view keys', () => {
-  render(<OceanExplorer />);
+  renderOcean();
   const reset = screen.getByRole('button', { name: 'Reset view' });
   const canvas = screen.getByLabelText('Submarine viewing area');
-  expect(screen.getByRole('status').textContent).toMatch(/Opening/);
+  expect(screen.getByRole('status').textContent).toMatch(/Diving/);
   expect(reset.disabled).toBe(true);
   act(() => scenes[0].onReady());
   expect(screen.queryByRole('status')).toBeNull();
@@ -43,7 +46,7 @@ it('waits for a rendered scene, resets it and delegates only supported view keys
 });
 
 it('offers pause/resume and keeps the ocean still for reduced motion', () => {
-  render(<OceanExplorer />);
+  renderOcean();
   act(() => { scenes[0].onWaterMotionChange({ paused: false, reduced: false }); scenes[0].onReady(); });
   fireEvent.click(screen.getByRole('button', { name: 'Pause ocean' }));
   expect(scenes[0].setWaterPaused).toHaveBeenLastCalledWith(true);
@@ -54,8 +57,35 @@ it('offers pause/resume and keeps the ocean still for reduced motion', () => {
   expect(screen.getByRole('button', { name: 'Still ocean' }).disabled).toBe(true);
 });
 
+it('switches camera with C or the menu and ignores held keys, shortcuts and typing', () => {
+  const { container, unmount } = renderOcean();
+  const button = () => screen.getByRole('button', { name: /view C/ });
+  expect(button().disabled).toBe(true);
+  fireEvent.keyDown(document.body, { key: 'c' });
+  expect(scenes[0].toggleCameraView).not.toHaveBeenCalled();
+  act(() => scenes[0].onReady());
+  fireEvent.keyDown(document.body, { key: 'c' });
+  expect(button().getAttribute('aria-pressed')).toBe('true');
+  expect(container.querySelector('.ocean-cockpit')).toBeTruthy();
+  fireEvent.keyDown(document.body, { key: 'C', repeat: true });
+  for (const modifier of ['ctrlKey', 'altKey', 'metaKey']) fireEvent.keyDown(document.body, { key: 'c', [modifier]: true });
+  const input = document.createElement('input');
+  document.body.append(input);
+  fireEvent.keyDown(input, { key: 'c' });
+  input.remove();
+  expect(scenes[0].toggleCameraView).toHaveBeenCalledOnce();
+  fireEvent.keyDown(screen.getByLabelText('Submarine viewing area'), { key: 'C' });
+  expect(button().getAttribute('aria-pressed')).toBe('false');
+  expect(container.querySelector('.ocean-cockpit')).toBeNull();
+  fireEvent.click(button());
+  expect(button().getAttribute('aria-pressed')).toBe('true');
+  unmount();
+  fireEvent.keyDown(document.body, { key: 'c' });
+  expect(scenes[0].toggleCameraView).toHaveBeenCalledTimes(3);
+});
+
 it('keeps an honest unavailable message and disables reset when the scene fails', () => {
-  render(<OceanExplorer />);
+  renderOcean();
   act(() => scenes[0].onUnavailable());
   expect(screen.getByRole('status').textContent).toMatch(/unavailable on this device/);
   expect(screen.getByRole('button', { name: 'Reset view' }).disabled).toBe(true);
@@ -63,7 +93,7 @@ it('keeps an honest unavailable message and disables reset when the scene fails'
 });
 
 it('disposes StrictMode setups and ignores callbacks from an old scene', () => {
-  const { unmount } = render(<StrictMode><OceanExplorer /></StrictMode>);
+  const { unmount } = render(<StrictMode><MemoryRouter><OceanExplorer /></MemoryRouter></StrictMode>);
   expect(scenes).toHaveLength(2);
   expect(scenes[0].dispose).toHaveBeenCalledOnce();
   act(() => scenes[1].onReady());
@@ -74,7 +104,7 @@ it('disposes StrictMode setups and ignores callbacks from an old scene', () => {
 });
 
 it('steers from held keys, ignores repeats and releases everything on blur', () => {
-  render(<OceanExplorer />);
+  renderOcean();
   act(() => scenes[0].onReady());
   const canvas = screen.getByLabelText('Submarine viewing area');
   const last = () => scenes[0].setSteering.mock.calls.at(-1)[0];
@@ -93,7 +123,7 @@ it('steers from held keys, ignores repeats and releases everything on blur', () 
 });
 
 it('drives with the joystick and GO, releasing them on pointer up and cancel', () => {
-  render(<OceanExplorer />);
+  renderOcean();
   act(() => scenes[0].onReady());
   // stickVector can report -0 on a level stick.
   const last = () => Object.fromEntries(Object.entries(scenes[0].setSteering.mock.calls.at(-1)[0]).map(([key, value]) => [key, value + 0]));
@@ -111,7 +141,7 @@ it('drives with the joystick and GO, releasing them on pointer up and cancel', (
 });
 
 it('sends the submarine back to the start once the scene is ready', () => {
-  render(<OceanExplorer />);
+  renderOcean();
   const back = screen.getByRole('button', { name: 'Back to start' });
   expect(back.disabled).toBe(true);
   expect(screen.queryByRole('button', { name: 'Hold GO to move' })).toBeNull();
@@ -121,7 +151,7 @@ it('sends the submarine back to the start once the scene is ready', () => {
 });
 
 it('takes a pauseable guided tour through existing discoveries', () => {
-  render(<OceanExplorer />);
+  renderOcean();
   act(() => scenes[0].onReady());
   fireEvent.click(screen.getByRole('button', { name: 'Start reef tour' }));
   expect(scenes[0].tourTo).toHaveBeenCalledWith('coral-reef');
@@ -143,7 +173,7 @@ it('takes a pauseable guided tour through existing discoveries', () => {
   expect(screen.getByRole('button', { name: 'Start reef tour' })).toBeTruthy();
 });
 
-it('opens the preview from the real Skills catalogue and returns through the shared back bar', async () => {
+it('opens from the real Skills catalogue and returns through its back link', async () => {
   const router = createMemoryRouter([
     { path: '/skills', element: <SkillsPage /> },
     { element: <SkillGameLayout />, children: [{ path: '/skills/ocean-explorer', element: <OceanExplorer /> }] },
@@ -151,15 +181,14 @@ it('opens the preview from the real Skills catalogue and returns through the sha
   render(<RouterProvider router={router} />);
   await userEvent.click(screen.getByRole('link', { name: 'Explore the Ocean (preview)', exact: true }));
   expect(screen.getByRole('heading', { name: 'Ocean Explorer' })).toBeTruthy();
-  expect(screen.getByText('Prototype preview')).toBeTruthy();
-  await userEvent.click(screen.getByRole('link', { name: 'Back to Skills' }));
+  await userEvent.click(within(screen.getByRole('region', { name: 'Ocean Explorer' })).getByRole('link', { name: 'Back to Skills' }));
   expect(screen.getByRole('heading', { name: 'Pick a game' })).toBeTruthy();
   expect(scenes[0].dispose).toHaveBeenCalledOnce();
 });
 
 const REEF = { id: 'coral-reef', name: 'Coral reef' };
 const orbitReady = () => {
-  render(<OceanExplorer />);
+  renderOcean();
   act(() => scenes[0].onReady());
   act(() => scenes[0].onOrbitOffer(REEF));
 };
