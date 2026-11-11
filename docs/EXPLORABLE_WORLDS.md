@@ -6,6 +6,76 @@ branch's notes when it was merged (2026-11-04). The Solar System roadmap is
 idea #44 in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Owner review of the sea-life
 facts and physical-device review are still pending.
 
+## Ocean Explorer — animal surfaces and swimming (2026-11-11)
+
+All twelve existing species now have more individual surface and motion detail:
+scales for reef fish, smooth mammal/adult swordfish skin, shark denticles, ray
+spots, bony seahorse/turtle skin ridges and octopus mottling. Fine relief and a
+subtle Fresnel rim use the existing standard material pass; thin tissue gets
+approximate sunlight backlighting. Caustics use the final morphed surface and
+its upward-facing normal.
+
+`oceanAnimalMotion.js` builds two relative position/normal morphs per flexible
+mesh, blending a travelling wave on the GPU. Fish/sharks sweep laterally;
+whales/dolphins flex vertically. Fin and tail roots follow the body. Rays flex
+along each wing, turtle/whale flipper tips bend, octopus suckers move with the
+arms, and jellyfish tentacles lag the bell pulse. Per-instance phases avoid
+synchronised schools; hover motion lives below the unchanged discovery anchors.
+The existing water pause/reduced-motion rules apply to all movement.
+
+Static anatomy batches by material within each pivot. Fine details hide beyond
+26 units and appendages update at most 15 Hz beyond 32 units; travel remains
+smooth and existing 85-unit visibility culling remains. Full-detail models use
+about 2,500–12,600 triangles, with no downloaded animal textures or extra
+rendering passes. Real phone performance and WebGL appearance remain unverified.
+See the [implementation and validation record](superpowers/2026-11-11-ocean-explorer-animal-realism.md).
+
+## Ocean Explorer — camera views (2026-11-11)
+
+Press **C** or use **Controls → Cockpit view** to toggle the outside camera and
+a forward-facing 3D cockpit. `oceanCockpit.js` builds its bevelled pressure frame,
+curved glass, lit metal consoles, twin articulated pilot sticks, throttle levers,
+gauges and switch banks. Three telemetry screens show scene-relative depth,
+heading, drive inputs and actual nearby discoveries; other hardware is decorative.
+The separate camera follows the submarine, including tours
+and orbits, while preserving the outside camera's viewing angle. Drag/zoom apply
+to the outside view; driving works in both. No camera preference is persisted.
+Fixed furniture is batched by material, screens refresh at most five times per
+second, and the cabin is created only on first use. See the
+[3D interior record](superpowers/2026-11-11-ocean-explorer-3d-cockpit.md) and
+[camera-toggle record](superpowers/2026-11-11-ocean-explorer-camera.md).
+
+## Ocean Explorer — full-screen world and natural detail (2026-11-11)
+
+`/skills/ocean-explorer` now fills `100dvh`, with the navbar and shared Skills
+back bar hidden on this route. An overlaid Back to Skills link, title, reef-tour
+button and Controls menu replace the old page header and framed preview. The
+menu retains pause, reset, return-to-start and keyboard/touch help. Discovery
+cards, orbit controls, tour controls and touch steering have responsive overlay
+positions; touch steering is hidden during orbit. Theme colours remain paired
+in `App.css`.
+
+`oceanModelDetail.js` supplies continuous tapered bodies, curved tapered tubes,
+sculpted fins and procedural skin/scale/coral detail. The existing animals have
+more natural colours and anatomy, including countershading, shark gills, whale
+grooves, turtle scutes, pointed ray wings, curled octopus arms with instanced
+suckers, and translucent jellyfish. Porcupinefish no longer inflate repeatedly
+while swimming. `oceanReef.js` builds branching coral, open sea fans, grooved
+brain coral and hollow sponges, baking stationary parts into material batches.
+
+The submarine has reflective glass, painted and metallic materials, hull seams,
+ballast tanks, skids, instanced porthole bolts and lamps. `oceanLighting.js`
+bakes a small underwater reflection environment, disposed with the scene. Sand
+has broad colour variation, rocks have mottling, seagrass sways with the water
+clock, caustics soften with depth, and haze/light shafts have gentler falloff.
+Existing pause/reduced-motion handling also holds the grass still. The default
+camera sits farther back to show more habitat. No external assets are fetched.
+
+Production build passed; tests, lint, browser and device checks were deferred
+at the owner's request. See the [implementation record](superpowers/2026-11-11-ocean-explorer-immersive.md).
+This section supersedes the original preview's layout/model descriptions below;
+the discovery facts, routes and species distribution remain as previously authored.
+
 ## Ocean Explorer — Reef neighbours tour (2026-11-09)
 
 **Start reef tour** takes the submarine on a short, optional assisted journey

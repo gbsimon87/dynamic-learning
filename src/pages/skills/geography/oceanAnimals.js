@@ -3,7 +3,7 @@ import {
   OCTOPUS_DISCOVERY, OCTOPUS_ORBIT, PORCUPINEFISH_DISCOVERY, PORCUPINEFISH_ORBIT, RAY_DISCOVERY, RAY_ORBIT, SEAHORSE_DISCOVERY, SEAHORSE_ORBIT,
   SHARK_DISCOVERY, SHARK_ORBIT, SWORDFISH_DISCOVERY, SWORDFISH_ORBIT, TURTLE_DISCOVERY, TURTLE_ORBIT, WHALE_DISCOVERY, WHALE_ORBIT,
 } from './oceanDiscoveries.js';
-import { FISH_LOOP, FISH_RADIUS, createOceanFish } from './oceanFish.js';
+import { FISH_LOOP, FISH_RADIUS, createOceanFish, animateFish } from './oceanFish.js';
 import { animateClownfish, animateRay, animateSeahorse, animateTurtle, createOceanClownfish, createOceanRay, createOceanSeahorse, createOceanTurtle } from './oceanCreatures.js';
 import { animateDolphin, animateJellyfish, animateOctopus, animatePufferfish, animateShark, animateSwordfish, animateWhale, createOceanDolphin, createOceanJellyfish, createOceanOctopus, createOceanPufferfish, createOceanShark, createOceanSwordfish, createOceanWhale } from './oceanMoreCreatures.js';
 import { REEFS } from './oceanReef.js';
@@ -19,7 +19,7 @@ const SPECIES = [
   {
     id: 'parrotfish', discovery: FISH_DISCOVERY, orbit: FISH_ORBIT, radius: FISH_RADIUS, home: FISH_LOOP, count: 14, create: createOceanFish,
     base: { radius: 5, height: 3.2, lapSeconds: 30 },
-    animate: (model, seconds) => { model.getObjectByName('ocean-fish-tail').rotation.y = Math.sin(seconds * 7) * 0.35; },
+    animate: animateFish,
   },
   { id: 'clownfish', discovery: CLOWNFISH_DISCOVERY, orbit: CLOWNFISH_ORBIT, radius: 0.9, home: { x: 12, z: 3, radius: 3, height: 3.1, lapSeconds: 24 }, count: 10, base: { radius: 3, height: 3.1, lapSeconds: 24 }, create: createOceanClownfish, animate: animateClownfish },
   { id: 'sea-turtle', discovery: TURTLE_DISCOVERY, orbit: TURTLE_ORBIT, radius: 1.4, home: { x: 8, z: 20, radius: 4.5, height: 3.6, lapSeconds: 60 }, count: 7, base: { radius: 4.5, height: 3.6, lapSeconds: 60 }, create: createOceanTurtle, animate: animateTurtle },

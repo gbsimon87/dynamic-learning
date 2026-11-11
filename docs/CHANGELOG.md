@@ -6,6 +6,30 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-11 — More lifelike Ocean Explorer animals
+
+- Refined all twelve species with individual skin/scale patterns, micro-normal relief, subtle rim light and approximate thin-tissue sunlight scattering. Added three-band clownfish, finer porcupinefish spines, paired whale blowhole recesses and tapered turtle/whale flippers. Caustics follow the final deformed surface and favour upward-facing anatomy.
+- Added flexible body/tail swimming, fin-tip flex, rippling ray wings, curling octopus arms with attached suckers and delayed jellyfish tentacle motion. Independent phases and gentle hovering retain the existing pause/reduced-motion behaviour and discovery anchors. Shared morph buffers, batched anatomy and distance detail/animation limits keep the models within explicit geometry budgets.
+- All 21 focused model checks, 16 page checks, nine final affected scene rechecks, lint and production build pass (70 public pages prerendered). The broader affected scene run retains two existing submarine/framing failures; two initial setup timeouts pass after geometry sharing, without raising timeouts. Full Node checks still report the same eight server/content failures. Browser/GPU appearance and physical-device performance remain unverified because browser tools are unavailable. See the [implementation and validation record](superpowers/2026-11-11-ocean-explorer-animal-realism.md).
+
+## 2026-11-11 — Detailed 3D submarine cockpit
+
+- Rebuilt the cockpit in the app from the owner's futuristic-submarine prompt: bevelled pressure frame and curved glass, lit metal instrument consoles, switch banks and gauges, twin articulated pilot joysticks and paired throttle levers. The windshield shows the live ocean, and **C** retains the camera toggle.
+- Added telemetry for scene-relative depth, heading, drive input and nearby discoveries. Fixed geometry is batched, fasteners are instanced, textures refresh at most five times per second, and the cabin is created on first use. Existing keyboard/touch driving remains available; both themes have paired cabin colours.
+- Five new model/resource checks, all 16 Ocean page tests, three camera scene playthroughs, full lint and the production build pass (70 public pages prerendered). Two initial scene timeouts during concurrent build/unit work pass on isolated rerun. The full unit run reports 2,854 passes, four skips and the same eight earlier failures; the broader component sweep was not repeated beyond the affected checks. Actual WebGL lighting, both themes, touch layout and performance remain visually unverified because browser controls are unavailable. See the [3D cockpit record](superpowers/2026-11-11-ocean-explorer-3d-cockpit.md).
+
+## 2026-11-11 — Ocean Explorer cockpit camera
+
+- Press **C** to toggle between the outside view and a simple forward-facing submarine cockpit. The Controls menu offers the same action for touch users. A curved window frame and small decorative instrument panel follow the owner's reference images, using the existing ocean theme tokens.
+- The cockpit follows driving, turns, ascent/descent, tours and discovery orbits. Switching back preserves the outside viewing angle; switching while paused redraws immediately. No saved-data or progress changes.
+- The four new camera/input checks, all 16 Ocean page checks, full lint, affected follow-up lint and production build pass (70 public pages prerendered). Across all component files, 1,007 checks pass; three existing Ocean model/framing assertions still fail. Full unit checks report 2,849 passes, four skips and eight failures: five sandbox-blocked server tests and three unrelated content checks. Browser/Node REPL controls are unavailable; WebGL appearance, both themes and physical-device layout remain visually unverified. See the [implementation record](superpowers/2026-11-11-ocean-explorer-camera.md).
+
+## 2026-11-11 — Full-screen Ocean Explorer and more natural sea life
+
+- Ocean Explorer now fills the viewport like Solar System, with a compact overlaid back link, title, reef-tour button and Controls menu. The navbar and shared back bar are hidden on this route; discovery cards, tours and touch controls use responsive overlay positions in both themes.
+- Reworked sea life with continuous tapered bodies, natural colours, scale/skin detail, shark gills, whale grooves, turtle scutes, swept ray wings, curling octopus arms and translucent jellyfish. Rebuilt reefs with branching coral, open sea fans, grooved brain coral and hollow sponges. Added reflective submarine glass, hull seams, ballast tanks, window bolts and lamps, underwater environment lighting, textured rocks/sand, depth-softened caustics and swaying seagrass.
+- Created `feat/ocean-explorer-immersive` from `dev` (`163406c`). Production build passes and prerenders 70 public pages; diff whitespace check passes. Tests, lint and browser/device review are deferred at the owner's request. Implementation and remaining review limits are recorded in the [build record](superpowers/2026-11-11-ocean-explorer-immersive.md).
+
 ## 2026-11-11 — Years 1–6 core-subject practice builder
 
 - Added all 579 remaining Maths, English, Science and History topics in Years 1, 2, 4, 5 and 6. The builder now has 714 topics across 25 collections, including existing Year 3 Geography. The owner narrowed this expansion to these four core subjects; other subjects stay outside its scope.

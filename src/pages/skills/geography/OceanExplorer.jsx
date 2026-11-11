@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router';
 import { steerInput } from './flightControls.js';
 import { createOceanScene } from './oceanScene.js';
 import OceanDriveControls from './OceanDriveControls.jsx';
+import OceanCockpit from './OceanCockpit.jsx';
 import { OCEAN_DISCOVERIES } from './oceanDiscoveries.js';
 import { OCEAN_TOUR_STOPS, oceanTourDiscovery, oceanTourStop } from './oceanTour.js';
 import WorldOrbitControl from '../../../components/worlds/WorldOrbitControl.jsx';
@@ -20,6 +22,7 @@ export default function OceanExplorer() {
   const canvasRef = useRef(null);
   const sceneRef = useRef(null);
   const [status, setStatus] = useState('loading');
+  const [cameraView, setCameraView] = useState('behind');
   const [waterMotion, setWaterMotion] = useState({ paused: true, reduced: false });
   const [offer, setOffer] = useState(null);
   const [orbit, setOrbit] = useState(null);
@@ -106,6 +109,18 @@ export default function OceanExplorer() {
     setCardOpen(false);
   };
 
+  useEffect(() => {
+    if (status !== 'ready') return undefined;
+    const changeCamera = (event) => {
+      if ((event.code !== 'KeyC' && event.key.toLowerCase() !== 'c') || event.repeat || event.isComposing || event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+      if (event.target instanceof Element && event.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"]), [role="textbox"]')) return;
+      event.preventDefault();
+      sceneRef.current?.toggleCameraView();
+    };
+    document.addEventListener('keydown', changeCamera);
+    return () => document.removeEventListener('keydown', changeCamera);
+  }, [status]);
+
   // Escape leaves orbit wherever the focus is.
   useEffect(() => {
     if (!orbit) return undefined;
@@ -126,6 +141,7 @@ export default function OceanExplorer() {
       container: containerRef.current,
       onReady: () => { if (active) setStatus('ready'); },
       onUnavailable: () => { if (active) setStatus('unavailable'); },
+      onCameraViewChange: (view) => { if (active) setCameraView(view); },
       onWaterMotionChange: (motion) => { if (active) setWaterMotion(motion); },
       onOrbitOffer: (next) => { if (active) setOffer(next); },
       // The card opens with each orbit and closes when it ends.
@@ -153,24 +169,37 @@ export default function OceanExplorer() {
   return (
     <section className="ocean-explorer" aria-labelledby="ocean-title">
       <header className="ocean-explorer__header">
-        <div>
-          <span className="ocean-explorer__preview">Prototype preview</span>
-          <h1 id="ocean-title">Ocean Explorer</h1>
-          <p>Drive the submarine around the seabed and take a look around.</p>
+        <div className="ocean-explorer__brand">
+          <Link to="/skills" className="ocean-explorer__back" aria-label="Back to Skills"><span aria-hidden="true">←</span></Link>
+          <div><h1 id="ocean-title">Ocean Explorer</h1><p>A world beneath the waves</p></div>
         </div>
         <div className="ocean-explorer__actions">
-          <button className="ocean-explorer__motion" type="button" disabled={status !== 'ready' || waterMotion.reduced} onClick={() => sceneRef.current?.setWaterPaused(!waterMotion.paused)} title={waterMotion.reduced ? 'Your reduced-motion preference keeps the ocean still.' : undefined}>
-            {waterMotion.reduced ? 'Still ocean' : waterMotion.paused ? 'Resume ocean' : 'Pause ocean'}
-          </button>
-          <button className="ocean-explorer__reset" type="button" disabled={status !== 'ready'} onClick={() => sceneRef.current?.resetView()}>
-            <span aria-hidden="true">↺</span> Reset view
-          </button>
           {!tour.active && <button className="ocean-explorer__tour-launch" type="button" disabled={status !== 'ready'} onClick={startTour}>
-            Start reef tour
+            <span aria-hidden="true">◎</span> Start reef tour
           </button>}
-          <button className="ocean-explorer__start" type="button" disabled={status !== 'ready'} onClick={returnToStart}>
-            Back to start
-          </button>
+          <details className="ocean-explorer__tools">
+            <summary><span aria-hidden="true">☷</span> Controls</summary>
+            <div className="ocean-explorer__menu">
+              <button type="button" disabled={status !== 'ready'} aria-pressed={cameraView === 'cockpit'} onClick={() => sceneRef.current?.toggleCameraView()}>
+                {cameraView === 'cockpit' ? 'Outside view' : 'Cockpit view'} <kbd>C</kbd>
+              </button>
+              <button className="ocean-explorer__motion" type="button" disabled={status !== 'ready' || waterMotion.reduced} onClick={() => sceneRef.current?.setWaterPaused(!waterMotion.paused)} title={waterMotion.reduced ? 'Your reduced-motion preference keeps the ocean still.' : undefined}>
+                {waterMotion.reduced ? 'Still ocean' : waterMotion.paused ? 'Resume ocean' : 'Pause ocean'}
+              </button>
+              <button className="ocean-explorer__reset" type="button" disabled={status !== 'ready'} onClick={() => sceneRef.current?.resetView()}>
+                <span aria-hidden="true">↺</span> Reset view
+              </button>
+              <button className="ocean-explorer__start" type="button" disabled={status !== 'ready'} onClick={returnToStart}>
+                Back to start
+              </button>
+              <div className="ocean-explorer__help">
+                <p id="ocean-view-help"><strong>Drive:</strong> steer with the joystick, arrow keys or W A S D. Up rises and down dives. Hold GO or Space to move; let go to slow down.</p>
+                <p><strong>Camera:</strong> press C to switch between outside and cockpit views. In outside view, drag to look around and pinch or scroll to zoom.</p>
+                <p><strong>Discover:</strong> drive near a reef or an animal and choose Orbit to take a closer look and read about it.</p>
+                <p id="ocean-keyboard-help"><strong>Keyboard:</strong> Tab to the viewing area to drive. C switches camera. In outside view, Shift + arrow keys looks around and + and − zoom. Home resets the view, and Escape leaves orbit.</p>
+              </div>
+            </div>
+          </details>
         </div>
       </header>
       <div className="ocean-explorer__scene" ref={containerRef}>
@@ -185,7 +214,8 @@ export default function OceanExplorer() {
           onKeyUp={keyUp}
           onBlur={releaseKeys}
         >A yellow submarine beneath sunlit rippled water, above sandy ridges, scattered rocks and small patches of seagrass, with coral reefs and colourful sea animals swimming all around.</canvas>
-        {status === 'ready' && !tour.active && (
+        {status === 'ready' && cameraView === 'cockpit' && <OceanCockpit />}
+        {status === 'ready' && !tour.active && !orbit && (
           <OceanDriveControls
             onStick={(x, y) => { stick.current = { x, y }; steer(); }}
             onThrust={(on) => { going.current = on; steer(); }}
@@ -225,18 +255,16 @@ export default function OceanExplorer() {
         {status !== 'ready' && (
           <div className="ocean-explorer__message" role="status">
             <span aria-hidden="true">🌊</span>
-            <p>{status === 'loading' ? 'Opening the ocean preview…' : 'The 3D ocean preview is unavailable on this device.'}</p>
+            <p>{status === 'loading' ? 'Diving beneath the waves…' : 'The 3D ocean is unavailable on this device.'}</p>
             {status === 'unavailable' && <p>You can use Back to Skills to choose another activity.</p>}
           </div>
         )}
       </div>
-      <div className="ocean-explorer__help">
-        <p id="ocean-view-help"><strong>Drive:</strong> steer with the joystick, or the arrow keys or W A S D. Up rises and down dives. Hold GO or Space to move; let go to slow down. <strong>Look around:</strong> drag to turn the view. Pinch or scroll to zoom. <strong>Discover:</strong> drive close to a coral reef or an animal (sharks, whales, dolphins, an octopus, swordfish, jellies, turtles and lots of fish swim all over the ocean) and choose Orbit to circle it and read about it.</p>
-        <details>
-          <summary>Keyboard controls</summary>
-          <p id="ocean-keyboard-help">Tab to the viewing area. Arrow keys or W A S D steer, and holding Space moves. Hold Shift with the arrow keys to look around, + and − to zoom, and Home to reset the view. Press Escape to leave orbit. Tab moves to the next control.</p>
-        </details>
-      </div>
+      {status === 'ready' && !tour.active && <p className="ocean-explorer__hint">
+        {orbit ? <><kbd>Esc</kbd> to leave orbit</> : <><kbd>Space</kbd> to move <span aria-hidden="true">·</span> arrows to steer</>}
+        <span aria-hidden="true">·</span> <kbd>C</kbd> camera
+        {cameraView === 'behind' && <><span aria-hidden="true">·</span> drag to look</>}
+      </p>}
     </section>
   );
 }

@@ -11,6 +11,10 @@ import { ANIMALS } from '../../src/pages/skills/geography/oceanAnimals.js';
 import { OCEAN_SURFACE_HEIGHT } from '../../src/pages/skills/geography/oceanWater.js';
 
 const harness = vi.hoisted(() => ({ renderers: [], observers: [], frames: new Map(), motion: null, fail: null }));
+// The real PMREM bake requires a GPU; camera/scene tests use a texture stand-in.
+vi.mock('../../src/pages/skills/geography/oceanLighting.js', () => ({
+  createOceanLighting: () => ({ texture: new THREE.Texture(), dispose: vi.fn() }),
+}));
 vi.mock('three', async (original) => ({
   ...await original(),
   WebGLRenderer: class {
@@ -120,13 +124,16 @@ it('waits for nonzero size and stops rendering while hidden or after disposal', 
   const disposeTexture = vi.spyOn(THREE.Texture.prototype, 'dispose');
   const disposeReflection = vi.spyOn(THREE.WebGLRenderTarget.prototype, 'dispose');
   const disposeInstances = vi.spyOn(THREE.InstancedMesh.prototype, 'dispose');
+  let instanceCount = 0;
+  renderer.render.mock.calls[0][0].traverse((node) => { if (node.isInstancedMesh) instanceCount++; });
+  expect(instanceCount).toBeGreaterThan(0);
   api.dispose();
   const geometries = disposeGeometry.mock.calls.length, materials = disposeMaterial.mock.calls.length;
   expect(geometries).toBeGreaterThan(0);
   expect(materials).toBeGreaterThan(0);
   expect(disposeTexture.mock.calls.length).toBeGreaterThanOrEqual(2);
   expect(disposeReflection).toHaveBeenCalledOnce();
-  expect(disposeInstances).toHaveBeenCalledTimes(2);
+  expect(disposeInstances).toHaveBeenCalledTimes(instanceCount);
   renderer.render.mockClear();
   api.dispose();
   harness.observers[0].callback();
@@ -137,7 +144,7 @@ it('waits for nonzero size and stops rendering while hidden or after disposal', 
   expect(disposeMaterial).toHaveBeenCalledTimes(materials);
   expect(renderer.dispose).toHaveBeenCalledOnce();
   expect(disposeReflection).toHaveBeenCalledOnce();
-  expect(disposeInstances).toHaveBeenCalledTimes(2);
+  expect(disposeInstances).toHaveBeenCalledTimes(instanceCount);
   expect(harness.observers[0].disconnect).toHaveBeenCalledOnce();
 });
 
@@ -224,7 +231,7 @@ it('keeps every side porthole rim visible outside the curved hull', () => {
     for (let i = 0; i < 12; i++) {
       const angle = i * Math.PI / 6;
       ray.set(new THREE.Vector3(side * 4, center.y + Math.sin(angle) * 0.3, center.z + Math.cos(angle) * 0.3), new THREE.Vector3(-side, 0, 0));
-      expect(ray.intersectObjects(submarine.children)[0]?.object).toBe(rim);
+      expect(ray.intersectObjects(submarine.children)[0]?.object.uuid).toBe(rim.uuid);
     }
   }
 });
@@ -281,6 +288,79 @@ const drive = (from, seconds, step = 50) => {
   for (let t = 0; t <= seconds * 1000; t += step) tick(from + t);
   return from + seconds * 1000 + step;
 };
+
+it('switches to a forward cockpit without the hull, then restores the chosen outside view', () => {
+  const { renderer } = start();
+  const [scene, outside] = renderer.render.mock.calls[0];
+  const submarine = scene.getObjectByName('ocean-submarine');
+  api.handleViewKey({ key: 'ArrowLeft', shiftKey: true });
+  const chosen = outside.position.clone();
+  const pose = submarine.position.clone();
+  expect(scene.getObjectByName('ocean-cockpit-interior')).toBeUndefined();
+  renderer.render.mockImplementationOnce((world, activeCamera) => {
+    expect(submarine.visible).toBe(false);
+    const interior = world.getObjectByName('ocean-cockpit-interior');
+    expect(interior.visible).toBe(true);
+    expect(interior.layers.test(activeCamera.layers)).toBe(true);
+  });
+  api.toggleCameraView();
+  const cockpit = renderer.render.mock.calls.at(-1)[1];
+  expect(cockpit).not.toBe(outside);
+  expect(cockpit.position.distanceTo(submarine.localToWorld(new THREE.Vector3(0, 0, -1.9)))).toBeLessThan(0.00001);
+  expect(cockpit.getWorldDirection(new THREE.Vector3()).dot(new THREE.Vector3(0, 0, -1))).toBeCloseTo(1);
+  expect(submarine.position.equals(pose)).toBe(true);
+  expect(submarine.visible).toBe(true);
+  expect(scene.getObjectByName('ocean-cockpit-interior').visible).toBe(false);
+  expect(harness.frames.size).toBe(0);
+  expect(api.handleViewKey({ key: 'ArrowLeft', shiftKey: true })).toBe(false);
+  canvas.dispatchEvent(new WheelEvent('wheel', { deltaY: 1000, cancelable: true }));
+  api.toggleCameraView();
+  expect(renderer.render.mock.calls.at(-1)[1]).toBe(outside);
+  expect(outside.position.distanceTo(chosen)).toBeLessThan(0.00001);
+  expect(submarine.visible).toBe(true);
+  const released = vi.fn();
+  const interior = scene.getObjectByName('ocean-cockpit-interior');
+  for (let index = 0; index < 3; index++) interior.getObjectByName(`ocean-cockpit-display-${index}`).material.map.addEventListener('dispose', released);
+  api.dispose();
+  expect(released).toHaveBeenCalledTimes(3);
+});
+
+it('keeps the cockpit attached while turning, rising, resizing and returning to start', () => {
+  const { renderer } = start();
+  const [scene] = renderer.render.mock.calls[0];
+  const submarine = scene.getObjectByName('ocean-submarine');
+  api.toggleCameraView();
+  api.setSteering({ turn: 0.5, throttle: 1, lift: 0.4 });
+  drive(0, 2);
+  const cockpit = renderer.render.mock.calls.at(-1)[1];
+  const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(submarine.quaternion);
+  expect(cockpit.getWorldDirection(new THREE.Vector3()).dot(forward)).toBeCloseTo(1);
+  expect(cockpit.position.distanceTo(submarine.localToWorld(new THREE.Vector3(0, 0, -1.9)))).toBeLessThan(0.00001);
+  expect(cockpit.position.y).toBeLessThan(OCEAN_SURFACE_HEIGHT - 0.5);
+  Object.defineProperties(container, { clientWidth: { configurable: true, value: 390 }, clientHeight: { configurable: true, value: 844 } });
+  harness.observers[0].callback();
+  expect(cockpit.aspect).toBeCloseTo(390 / 844);
+  api.returnToStart();
+  expect(renderer.render.mock.calls.at(-1)[1]).toBe(cockpit);
+  expect(cockpit.position.distanceTo(submarine.localToWorld(new THREE.Vector3(0, 0, -1.9)))).toBeLessThan(0.00001);
+});
+
+it('switches cameras during a still tour orbit and keeps driving available after leaving', () => {
+  const { renderer } = start();
+  api.toggleCameraView();
+  expect(api.tourTo('coral-reef')).toBe(true);
+  api.setTourPaused(true);
+  const cockpit = renderer.render.mock.calls.at(-1)[1];
+  api.toggleCameraView();
+  expect(renderer.render.mock.calls.at(-1)[1]).not.toBe(cockpit);
+  api.toggleCameraView();
+  expect(renderer.render.mock.calls.at(-1)[1]).toBe(cockpit);
+  api.leaveOrbit();
+  api.setSteering({ turn: 0, throttle: 1, lift: 0 });
+  drive(0, 1);
+  const submarine = renderer.render.mock.calls.at(-1)[0].getObjectByName('ocean-submarine');
+  expect(cockpit.position.distanceTo(submarine.localToWorld(new THREE.Vector3(0, 0, -1.9)))).toBeLessThan(0.00001);
+});
 
 it('assists a tour to an existing discovery and freezes it when paused', () => {
   harness.motion.matches = false;
@@ -532,15 +612,21 @@ it('leaving orbit eases the camera view instead of snapping', () => {
 });
 
 const fishOf = t => t.scene.getObjectByName('ocean-fish');
+// A changed route must fail with a useful assertion instead of hanging the suite.
+const advanceUntil = (condition, time, label, limit = 1200) => {
+  for (let i = 0; i < limit && !condition(); i++) tick(time += 50);
+  expect(condition(), label).toBe(true);
+  return time;
+};
 // Turn to face −X, then creep towards the fish's loop and stop there.
 const parkByLoop = (t) => {
   let time = 0;
   api.setSteering({ turn: -1, throttle: 0, lift: 0 });
-  while (t.submarine.rotation.y < Math.PI / 2 - 0.05) tick(time += 50);
+  time = advanceUntil(() => t.submarine.rotation.y >= Math.PI / 2 - 0.05, time, 'turned towards the fish');
   api.setSteering({ turn: 0, throttle: 0, lift: 0 });
   time = drive(time, 2);
   api.setSteering({ turn: 0, throttle: 1, lift: 0 });
-  while (t.submarine.position.x > -3) tick(time += 50);
+  time = advanceUntil(() => t.submarine.position.x <= -3, time, 'arrived by the fish loop');
   api.setSteering({ turn: 0, throttle: 0, lift: 0 });
   return drive(time, 3);
 };
@@ -641,12 +727,12 @@ it('a still ocean orbits the fish steadily', () => {
     let time = 0;
     // The fish waits by the loop's start, so creep towards it until it is offered.
     api.setSteering({ turn: -1, throttle: 0, lift: 0 });
-    while (t.submarine.rotation.y < Math.PI / 2 - 0.05) tick(time += 50);
+    time = advanceUntil(() => t.submarine.rotation.y >= Math.PI / 2 - 0.05, time, 'turned towards the fish');
     api.setSteering({ turn: 0, throttle: 1, lift: 0 });
-    while (t.onOrbitOffer.mock.lastCall?.[0]?.id !== 'parrotfish') tick(time += 50);
+    time = advanceUntil(() => t.onOrbitOffer.mock.lastCall?.[0]?.id === 'parrotfish', time, 'fish within orbit range');
     api.setSteering({ turn: 0, throttle: 0, lift: 0 });
     // Coast to a stop; a still ocean then lets the loop sleep.
-    while (harness.frames.size) tick(time += 50);
+    time = advanceUntil(() => harness.frames.size === 0, time, 'coasting stopped');
     expect(api.enterOrbit()).toBe(true);
     expect(t.onOrbitChange).toHaveBeenLastCalledWith({ id: 'parrotfish', name: 'Parrotfish', steady: harness.motion.matches });
     const fish = fishOf(t).position;
@@ -762,7 +848,7 @@ it('shadows follow the submarine across the ocean', () => {
   const light = t.scene.children.find((object) => object.isDirectionalLight);
   let time = 0;
   api.setSteering({ turn: 1, throttle: 0, lift: 0 });
-  while (Math.abs(t.submarine.rotation.y) < Math.PI - 0.1) tick(time += 50);
+  time = advanceUntil(() => Math.abs(t.submarine.rotation.y) >= Math.PI - 0.1, time, 'facing away from the reef');
   api.setSteering({ turn: 0, throttle: 1, lift: 0 });
   for (let i = 0; i < 400; i++) tick(time += 50);
   const { x, z } = t.submarine.position;

@@ -5,24 +5,35 @@
   --ocean-sand: var(--light-ocean-sand);
   --ocean-rock: var(--light-ocean-rock);
   --ocean-grass: var(--light-ocean-grass);
-  --ocean-hull: var(--light-geo-sun);
-  --ocean-trim: var(--light-geo-foam);
-  --ocean-window: var(--light-geo-ink);
-  --ocean-metal: var(--light-geo-sea-deep);
+  --ocean-hull: var(--light-ocean-hull);
+  --ocean-trim: var(--light-ocean-trim);
+  --ocean-window: var(--light-ocean-window);
+  --ocean-metal: var(--light-ocean-metal);
+  --ocean-cabin: var(--light-ocean-cabin);
+  --ocean-bezel: var(--light-ocean-bezel);
+  --ocean-steel: var(--light-ocean-steel);
+  --ocean-glow: var(--light-ocean-glow);
+  --ocean-amber: var(--light-ocean-amber);
+  --ocean-signal: var(--light-ocean-signal);
+  --ocean-screen: var(--light-ocean-screen);
+  --ocean-ink: var(--light-ocean-ink);
   --ocean-light: var(--light-geo-foam);
   --ocean-text: var(--light-text);
   --ocean-panel: var(--light-panel);
   --ocean-accent: var(--light-accent);
-  --ocean-on-accent: var(--light-text);
+  --ocean-on-accent: var(--on-light-accent);
+  --ocean-hud-top: 88px;
+  position: relative;
+  isolation: isolate;
   width: 100%;
-  max-width: 1440px;
+  height: 100dvh;
   min-width: 0;
+  overflow: hidden;
   box-sizing: border-box;
-  margin: 0 auto;
-  padding: 1rem clamp(1rem, 3vw, 2.5rem) 1.5rem;
   color: var(--ocean-text);
+  background: var(--ocean-water);
+  font-family: system-ui, sans-serif;
 }
-
 body.dark .ocean-explorer {
   --ocean-water: var(--dark-ocean-water);
   --ocean-surface: var(--dark-ocean-surface);
@@ -30,148 +41,159 @@ body.dark .ocean-explorer {
   --ocean-sand: var(--dark-ocean-sand);
   --ocean-rock: var(--dark-ocean-rock);
   --ocean-grass: var(--dark-ocean-grass);
-  --ocean-hull: var(--dark-geo-sun);
-  --ocean-trim: var(--dark-geo-foam);
-  --ocean-window: var(--dark-geo-ink);
-  --ocean-metal: var(--dark-geo-sea-deep);
-  --ocean-light: var(--light-geo-foam);
+  --ocean-hull: var(--dark-ocean-hull);
+  --ocean-trim: var(--dark-ocean-trim);
+  --ocean-window: var(--dark-ocean-window);
+  --ocean-metal: var(--dark-ocean-metal);
+  --ocean-cabin: var(--dark-ocean-cabin);
+  --ocean-bezel: var(--dark-ocean-bezel);
+  --ocean-steel: var(--dark-ocean-steel);
+  --ocean-glow: var(--dark-ocean-glow);
+  --ocean-amber: var(--dark-ocean-amber);
+  --ocean-signal: var(--dark-ocean-signal);
+  --ocean-screen: var(--dark-ocean-screen);
+  --ocean-ink: var(--dark-ocean-ink);
   --ocean-text: var(--dark-text);
   --ocean-panel: var(--dark-panel);
   --ocean-accent: var(--dark-accent);
-  --ocean-on-accent: var(--light-text);
+  --ocean-on-accent: var(--on-dark-accent);
 }
-
-.ocean-explorer .ocean-explorer__header {
+.ocean-explorer__scene { position: absolute; inset: 0; }
+.ocean-explorer__canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+.ocean-explorer__canvas[hidden] { display: none; }
+.ocean-explorer__canvas:active { cursor: grabbing; }
+.ocean-explorer__canvas:focus-visible { outline: 3px solid var(--ocean-trim); outline-offset: -6px; }
+.ocean-explorer__header {
+  position: absolute;
+  z-index: 80;
+  top: max(16px, env(safe-area-inset-top));
+  left: max(16px, env(safe-area-inset-left));
+  right: max(16px, env(safe-area-inset-right));
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1.1rem;
+  gap: 12px;
+  pointer-events: none;
 }
-
-.ocean-explorer .ocean-explorer__preview {
-  display: inline-block;
-  padding: 0.3rem 0.7rem;
-  border: 1px solid currentColor;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 700;
+.ocean-explorer__brand, .ocean-explorer__actions { display: flex; align-items: center; gap: 10px; }
+.ocean-explorer__brand {
+  padding: 4px 16px 4px 4px;
+  border: 1px solid color-mix(in srgb, var(--ocean-text) 16%, transparent);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--ocean-panel) 94%, transparent);
+  box-shadow: 0 4px 24px color-mix(in srgb, var(--ocean-water) 35%, transparent);
+  backdrop-filter: blur(12px);
+  pointer-events: auto;
 }
-
-.ocean-explorer .ocean-explorer__header h1 {
-  margin: 0.55rem 0 0.4rem;
-  font-size: clamp(1.8rem, 4vw, 2.5rem);
-  line-height: 1.15;
-}
-
-.ocean-explorer .ocean-explorer__header p { margin: 0; line-height: 1.5; }
-
-.ocean-explorer .ocean-explorer__actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
-
-.ocean-explorer .ocean-explorer__reset,
-.ocean-explorer .ocean-explorer__motion,
-.ocean-explorer .ocean-explorer__start,
-.ocean-explorer .ocean-explorer__tour-launch {
+.ocean-explorer__brand h1 { margin: 0; font-size: clamp(16px, 2vw, 22px); line-height: 1.2; letter-spacing: -0.03em; color: inherit; }
+.ocean-explorer__brand p { margin: 3px 0 0; font-size: 11px; letter-spacing: 0.02em; opacity: 0.8; }
+.ocean-explorer__back { display: grid; place-items: center; flex-shrink: 0; width: 48px; height: 48px; border-radius: 12px; font-size: 25px; color: inherit; text-decoration: none; }
+.ocean-explorer__back:hover { background: color-mix(in srgb, currentColor 10%, transparent); }
+.ocean-explorer__actions { pointer-events: auto; }
+.ocean-explorer__actions button, .ocean-explorer__tools > summary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 8px;
+  box-sizing: border-box;
   min-height: 48px;
-  padding: 0.7rem 1.15rem;
-  border: 2px solid transparent;
-  border-radius: 999px;
-  background: var(--ocean-accent);
-  color: var(--ocean-on-accent);
-  font: inherit;
-  font-weight: 750;
-  cursor: pointer;
-}
-
-.ocean-explorer .ocean-explorer__reset:hover:not(:disabled) { border-color: currentColor; }
-.ocean-explorer .ocean-explorer__motion,
-.ocean-explorer .ocean-explorer__start { background: var(--ocean-panel); color: var(--ocean-text); border-color: currentColor; }
-.ocean-explorer .ocean-explorer__reset:disabled,
-.ocean-explorer .ocean-explorer__motion:disabled,
-.ocean-explorer .ocean-explorer__start:disabled,
-.ocean-explorer .ocean-explorer__tour-launch:disabled { opacity: 0.55; cursor: default; }
-.ocean-explorer .ocean-explorer__reset:focus-visible,
-.ocean-explorer .ocean-explorer__motion:focus-visible,
-.ocean-explorer .ocean-explorer__start:focus-visible,
-.ocean-explorer .ocean-explorer__tour-launch:focus-visible,
-.ocean-explorer .ocean-explorer__go:focus-visible,
-.ocean-explorer .ocean-explorer__help summary:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
-
-.ocean-explorer .ocean-explorer__scene {
-  position: relative;
-  height: clamp(320px, 62dvh, 680px);
-  overflow: hidden;
-  border-radius: 1.5rem;
-  background: var(--ocean-water);
-  border: 2px solid var(--ocean-panel);
-}
-
-.ocean-explorer .ocean-explorer__canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-  touch-action: none;
-  cursor: grab;
-}
-.ocean-explorer .ocean-explorer__canvas[hidden] { display: none; }
-.ocean-explorer .ocean-explorer__canvas:active { cursor: grabbing; }
-.ocean-explorer .ocean-explorer__canvas:focus-visible { outline: 4px solid var(--ocean-trim); outline-offset: -7px; }
-
-.ocean-explorer .ocean-explorer__message {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
+  padding: 10px 16px;
+  border: 1px solid color-mix(in srgb, var(--ocean-text) 20%, transparent);
+  border-radius: 14px;
   background: var(--ocean-panel);
   color: var(--ocean-text);
-  text-align: center;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
 }
-.ocean-explorer .ocean-explorer__message > span { font-size: 2.5rem; }
-.ocean-explorer .ocean-explorer__message p { max-width: 30rem; margin: 0.65rem 0 0; line-height: 1.5; }
-.ocean-explorer .ocean-explorer__help { margin-top: 0.85rem; font-size: 0.95rem; line-height: 1.55; }
-.ocean-explorer .ocean-explorer__help p { margin: 0; }
-.ocean-explorer .ocean-explorer__help summary { width: fit-content; min-height: 48px; align-content: center; cursor: pointer; font-weight: 700; }
-.ocean-explorer .ocean-explorer__help details p { max-width: 55rem; }
+.ocean-explorer__actions .ocean-explorer__tour-launch { background: var(--ocean-accent); color: var(--ocean-on-accent); border-color: transparent; }
+.ocean-explorer__actions button:hover:not(:disabled), .ocean-explorer__tools > summary:hover { box-shadow: inset 0 0 0 1px currentColor; }
+.ocean-explorer__actions button:disabled { opacity: 0.55; cursor: default; }
+.ocean-explorer__tools { position: relative; }
+.ocean-explorer__tools > summary { list-style: none; }
+.ocean-explorer__tools > summary::-webkit-details-marker { display: none; }
+.ocean-explorer__tools[open] > summary { border-color: currentColor; }
+.ocean-explorer__menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  display: grid;
+  gap: 8px;
+  width: min(320px, calc(100vw - 32px));
+  max-height: calc(100dvh - 148px - env(safe-area-inset-top));
+  padding: 12px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--ocean-panel);
+  color: var(--ocean-text);
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  border-radius: 18px;
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--ocean-water) 65%, transparent);
+}
+.ocean-explorer__help { display: grid; gap: 10px; padding: 8px 4px; font-size: 13px; line-height: 1.5; }
+.ocean-explorer__help p { margin: 0; }
+.ocean-explorer__hint {
+  position: absolute;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ocean-panel) 94%, transparent);
+  color: var(--ocean-text);
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.ocean-explorer__hint kbd { padding: 2px 6px; border: 1px solid color-mix(in srgb, currentColor 30%, transparent); border-radius: 5px; font: inherit; font-weight: 700; }
+.ocean-explorer :is(button, summary, a):focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.ocean-explorer__message { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 24px; background: var(--ocean-water); color: var(--ocean-light); text-align: center; }
+.ocean-explorer__message > span { font-size: 40px; }
+.ocean-explorer__message p { max-width: 30rem; margin: 12px 0 0; line-height: 1.5; }
 
-/* Joystick and GO follow Solar System free flight; touch and small screens only. */
-.ocean-explorer .ocean-explorer__drive { position: absolute; inset: 0; display: none; pointer-events: none; color: var(--ocean-text); }
-.ocean-explorer .ocean-explorer__stick,
-.ocean-explorer .ocean-explorer__go { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; touch-action: none; pointer-events: auto; }
-.ocean-explorer .ocean-explorer__stick { position: absolute; bottom: 16px; left: 16px; width: 128px; height: 128px; box-sizing: border-box; border: 2px solid currentColor; border-radius: 50%; background: var(--ocean-panel); }
-.ocean-explorer .ocean-explorer__stick span { position: absolute; left: 34px; top: 34px; width: 56px; height: 56px; border-radius: 50%; background: currentColor; pointer-events: none; }
-.ocean-explorer .ocean-explorer__go { position: absolute; bottom: 16px; right: 16px; width: 88px; height: 88px; border: 3px solid currentColor; border-radius: 50%; background: var(--ocean-accent); color: var(--ocean-on-accent); font: inherit; font-size: 1.4rem; font-weight: 800; cursor: pointer; }
-.ocean-explorer .ocean-explorer__go.is-on { background: var(--ocean-trim); }
+/* Keep the touch controls away from discovery cards and the device's home bar. */
+.ocean-explorer__drive { position: absolute; inset: 0; display: none; pointer-events: none; color: var(--ocean-text); }
+.ocean-explorer__stick, .ocean-explorer__go { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; touch-action: none; pointer-events: auto; }
+.ocean-explorer__stick { position: absolute; bottom: max(20px, env(safe-area-inset-bottom)); left: max(20px, env(safe-area-inset-left)); width: 128px; height: 128px; box-sizing: border-box; border: 2px solid color-mix(in srgb, currentColor 35%, transparent); border-radius: 50%; background: color-mix(in srgb, var(--ocean-panel) 85%, transparent); }
+.ocean-explorer__stick span { position: absolute; left: 34px; top: 34px; width: 56px; height: 56px; border-radius: 50%; background: var(--ocean-accent); border: 1px solid color-mix(in srgb, currentColor 30%, transparent); pointer-events: none; }
+.ocean-explorer__go { position: absolute; bottom: max(20px, env(safe-area-inset-bottom)); right: max(20px, env(safe-area-inset-right)); width: 88px; height: 88px; border: 2px solid color-mix(in srgb, var(--ocean-on-accent) 40%, transparent); border-radius: 50%; background: var(--ocean-accent); color: var(--ocean-on-accent); font: inherit; font-size: 22px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 24px color-mix(in srgb, var(--ocean-water) 40%, transparent); }
+.ocean-explorer__go.is-on { box-shadow: inset 0 0 0 4px currentColor; }
+.ocean-explorer .ocean-explorer__orbit { top: var(--ocean-hud-top); bottom: auto; left: max(16px, env(safe-area-inset-left)); }
+.ocean-explorer__card { position: absolute; z-index: 60; top: var(--ocean-hud-top); right: max(16px, env(safe-area-inset-right)); display: flex; width: min(340px, calc(100% - 32px)); max-height: calc(100% - var(--ocean-hud-top) - 24px); pointer-events: none; }
+.ocean-explorer__card .world-card { width: 100%; max-height: 100%; pointer-events: auto; }
+.ocean-explorer__tour { position: absolute; z-index: 65; bottom: max(20px, env(safe-area-inset-bottom)); left: 16px; display: grid; gap: 5px; max-width: calc(100% - 32px); box-sizing: border-box; padding: 12px 16px; border: 1px solid color-mix(in srgb, currentColor 20%, transparent); border-radius: 16px; background: var(--ocean-panel); color: var(--ocean-text); font-size: 13px; }
+.ocean-explorer__tour > div { display: flex; gap: 8px; }
+.ocean-explorer__tour button { min-height: 48px; padding: 8px 12px; border: 1px solid color-mix(in srgb, currentColor 25%, transparent); border-radius: 10px; background: transparent; color: inherit; font: inherit; font-weight: 700; cursor: pointer; }
 @media (pointer: coarse), (max-width: 720px) {
-  .ocean-explorer .ocean-explorer__drive { display: block; }
+  .ocean-explorer__drive { display: block; }
+  .ocean-explorer__hint { display: none; }
 }
-@media (max-width: 720px) {
-  .ocean-explorer .ocean-explorer__header { display: block; }
-  .ocean-explorer .ocean-explorer__header > div:first-child,
-  .ocean-explorer .ocean-explorer__actions { width: 100%; min-width: 0; }
-  .ocean-explorer .ocean-explorer__actions { margin-top: 1rem; }
-  .ocean-explorer .ocean-explorer__actions > button { box-sizing: border-box; flex: 1 1 calc(50% - 0.3rem); min-width: 0; padding-inline: 0.8rem; }
-  .ocean-explorer .ocean-explorer__stick { width: 108px; height: 108px; }
-  .ocean-explorer .ocean-explorer__stick span { left: 24px; top: 24px; }
+@media (max-width: 600px) {
+  .ocean-explorer { --ocean-hud-top: 138px; }
+  .ocean-explorer__header { flex-wrap: wrap; gap: 8px; top: max(12px, env(safe-area-inset-top)); left: 12px; right: 12px; }
+  .ocean-explorer__brand { width: 100%; box-sizing: border-box; }
+  .ocean-explorer__actions { width: 100%; justify-content: flex-end; }
+  .ocean-explorer__actions button, .ocean-explorer__tools > summary { padding-inline: 12px; font-size: 13px; }
+  .ocean-explorer__brand h1 { font-size: 18px; }
+  .ocean-explorer__stick { width: 108px; height: 108px; left: 16px; }
+  .ocean-explorer__stick span { left: 24px; top: 24px; }
+  .ocean-explorer__go { right: 16px; }
+  .ocean-explorer__card { top: calc(var(--ocean-hud-top) + 64px); left: 12px; right: 12px; width: auto; max-height: calc(100% - var(--ocean-hud-top) - 212px); }
+  .ocean-explorer__scene:has(.ocean-explorer__tour) .ocean-explorer__card { top: var(--ocean-hud-top); max-height: calc(100% - var(--ocean-hud-top) - 160px); }
 }
-
-/* Orbit and the reef card sit at the top, clear of the joystick and GO. */
-.ocean-explorer .ocean-explorer__orbit { top: 12px; bottom: auto; }
-.ocean-explorer .ocean-explorer__card { position: absolute; z-index: 60; top: 12px; right: 12px; display: flex; width: min(340px, calc(100% - 24px)); max-height: calc(100% - 24px); pointer-events: none; }
-.ocean-explorer .ocean-explorer__card .world-card { width: 100%; max-height: 100%; pointer-events: auto; }
-.ocean-explorer .ocean-explorer__tour { position: absolute; z-index: 65; top: 12px; left: 12px; display: grid; gap: 0.35rem; max-width: min(320px, calc(100% - 24px)); padding: 0.7rem 0.85rem; border: 2px solid currentColor; border-radius: 0.85rem; background: var(--ocean-panel); color: var(--ocean-text); box-shadow: 0 4px 18px color-mix(in srgb, var(--ocean-text) 18%, transparent); }
-.ocean-explorer .ocean-explorer__tour span { line-height: 1.35; }
-.ocean-explorer .ocean-explorer__tour div { display: flex; flex-wrap: wrap; gap: 0.45rem; }
-.ocean-explorer .ocean-explorer__tour button { min-height: 44px; padding: 0.45rem 0.75rem; border: 1px solid currentColor; border-radius: 999px; background: transparent; color: inherit; font: inherit; font-weight: 700; cursor: pointer; }
-.ocean-explorer .ocean-explorer__tour button:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
-@media (max-width: 720px) {
-  .ocean-explorer .ocean-explorer__card { top: 76px; left: 12px; right: 12px; width: auto; max-height: 45%; }
-  .ocean-explorer .ocean-explorer__tour { right: 12px; max-width: none; }
+@media (max-height: 500px) and (orientation: landscape) {
+  .ocean-explorer { --ocean-hud-top: 84px; }
+  .ocean-explorer__header { flex-wrap: nowrap; }
+  .ocean-explorer__brand { width: auto; }
+  .ocean-explorer__actions { width: auto; }
+  .ocean-explorer__card, .ocean-explorer__scene:has(.ocean-explorer__tour) .ocean-explorer__card { top: var(--ocean-hud-top); left: auto; right: 12px; width: min(340px, 46%); max-height: calc(100% - var(--ocean-hud-top) - 16px); }
+  .ocean-explorer__tour { max-width: 46%; }
+  .ocean-explorer__stick { width: 108px; height: 108px; }
+  .ocean-explorer__stick span { left: 24px; top: 24px; }
 }

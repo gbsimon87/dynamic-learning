@@ -6,6 +6,8 @@ import { REEF_DISCOVERY, REEF_ORBIT } from './oceanDiscoveries.js';
 import { STEERING } from './oceanSteering.js';
 import { loopPose } from './oceanFish.js';
 import { ANIMALS } from './oceanAnimals.js';
+import { marineMaterial } from './oceanModelDetail.js';
+import { prepareMarineModel, setMarineDetail } from './oceanAnimalMotion.js';
 
 // The submarine circles this high above the reef's base.
 const REEF_ORBIT_HEIGHT = 4;
@@ -25,14 +27,16 @@ export function createOceanEnvironment(water, sand) {
   const lightColor = { value: new THREE.Color() };
   let seed = 71;
   const random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
-  // Scattered positions, re-rolled until they leave every reef clear.
+  // Bounded placement, leaving every reef clear.
   const scatter = (near, range, clear) => {
-    for (;;) {
+    for (let attempt = 0; attempt < 96; attempt++) {
       // sqrt spreads them evenly by area rather than crowding the middle.
       const angle = random() * Math.PI * 2, distance = near + Math.sqrt(random()) * range;
       const x = Math.cos(angle) * distance, z = Math.sin(angle) * distance;
       if (REEFS.every(reef => Math.hypot(x - reef.x, z - reef.z) > reef.radius + clear)) return [x, z];
     }
+    // The outer decoration ring is beyond all reef footprints.
+    return [near + range, 0];
   };
   const material = (key, options = {}) => {
     const result = new THREE.MeshStandardMaterial({ roughness: 0.95, ...options });
@@ -44,17 +48,25 @@ export function createOceanEnvironment(water, sand) {
   const floorGeometry = new THREE.PlaneGeometry(floorSize, floorSize, 220, 220);
   floorGeometry.rotateX(-Math.PI / 2);
   const positions = floorGeometry.attributes.position;
-  for (let i = 0; i < positions.count; i++) positions.setY(i, oceanFloorHeight(positions.getX(i), positions.getZ(i)));
+  const sandColors = [];
+  for (let i = 0; i < positions.count; i++) {
+    const x = positions.getX(i), z = positions.getZ(i), height = oceanFloorHeight(x, z);
+    positions.setY(i, height);
+    const shade = 0.9 + height * 0.06 + Math.sin(x * 0.68 + Math.cos(z * 0.31)) * 0.035;
+    sandColors.push(shade, shade, shade * 0.97);
+  }
+  floorGeometry.setAttribute('color', new THREE.Float32BufferAttribute(sandColors, 3));
+  sand.vertexColors = true;
   floorGeometry.computeVertexNormals();
   const seabed = new THREE.Mesh(floorGeometry, sand);
   seabed.name = 'ocean-seabed';
   seabed.receiveShadow = true;
   group.add(seabed);
 
-  const rockMaterial = material('rock');
-  water.addCaustics(rockMaterial);
+  const rockMaterial = marineMaterial(water, '#ffffff', { pattern: 'rock', roughness: 0.95 });
+  rockMaterial.userData.oceanColor = 'rock';
   // Weld shared positions before recomputing normals, avoiding flat triangle faces.
-  const rockGeometry = mergeVertices(new THREE.IcosahedronGeometry(1, 2).deleteAttribute('normal').deleteAttribute('uv'));
+  const rockGeometry = mergeVertices(new THREE.IcosahedronGeometry(1, 3).deleteAttribute('normal').deleteAttribute('uv'));
   const vertices = rockGeometry.attributes.position;
   for (let i = 0; i < vertices.count; i++) {
     const x = vertices.getX(i), y = vertices.getY(i), z = vertices.getZ(i);
@@ -96,6 +108,21 @@ export function createOceanEnvironment(water, sand) {
   bladeGeometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
   bladeGeometry.computeVertexNormals();
   const grassMaterial = material('grass', { side: THREE.DoubleSide, vertexColors: true });
+  water.addCaustics(grassMaterial);
+  const grassCaustics = grassMaterial.onBeforeCompile;
+  grassMaterial.onBeforeCompile = (shader, renderer) => {
+    grassCaustics(shader, renderer);
+    shader.vertexShader = `uniform float oceanTime;\n${shader.vertexShader}`.replace('#include <begin_vertex>', `
+      #include <begin_vertex>
+      float grassPhase = oceanTime * 0.8;
+      #ifdef USE_INSTANCING
+        grassPhase += dot(instanceMatrix[3].xz, vec2(0.31, 0.21));
+      #endif
+      transformed.x += sin(grassPhase + position.y * 1.8) * position.y * position.y * 0.08;
+      transformed.z += cos(grassPhase * 0.7 + position.y) * position.y * position.y * 0.045;
+    `);
+  };
+  grassMaterial.customProgramCacheKey = () => 'ocean-seagrass-current-v1';
   const patches = 820;
   const grass = new THREE.InstancedMesh(bladeGeometry, grassMaterial, patches * 6);
   grass.name = 'ocean-seagrass';
@@ -133,27 +160,41 @@ export function createOceanEnvironment(water, sand) {
   // Ones too far away to see through the fog are hidden and left alone until the submarine nears them.
   const VISIBLE_RANGE = 85;
   let swum = 0;
-  const swimmers = ANIMALS.map((animal) => {
-    const model = animal.create(water);
+  const swimmers = ANIMALS.map((animal, index) => {
+    const model = prepareMarineModel(animal.create(water));
     model.userData.key = animal.key;
     model.visible = false;
     group.add(model);
-    return { animal, model, discovery: { ...animal.discovery, key: animal.key, object3d: model, radius: animal.radius, orbit: animal.orbit } };
+    return { animal, model, phase: index * 1.37 + (animal.loop.phase ?? 0), lastAnimated: -Infinity, discovery: { ...animal.discovery, key: animal.key, object3d: model, radius: animal.radius, orbit: animal.orbit } };
   });
-  const swim = ({ animal, model }) => {
+  const swim = (swimmer, force = false) => {
+    const { animal, model, phase } = swimmer;
     const { x, y, z, heading } = loopPose(animal.loop, swum);
+    const localTime = swum + phase;
+    const hover = animal.id === 'jellyfish' ? 0.1 : animal.id === 'seahorse' ? 0.035 : 0.015;
     model.position.set(x, y, z);
+    // Discovery/orbit anchors keep their exact loop pose; only the animal bobs.
+    model.userData.pose.position.y = Math.sin(localTime * 1.2) * hover;
     model.rotation.y = heading;
-    animal.animate(model, swum);
+    // Travel stays smooth even when small distant appendages update less often.
+    if (force || swum - swimmer.lastAnimated >= (model.userData.animationInterval ?? 0)) {
+      animal.animate(model, localTime);
+      swimmer.lastAnimated = swum;
+    }
   };
   // Hidden animals still wait where they swim, never at the origin.
-  swimmers.forEach(swim);
+  swimmers.forEach((swimmer) => swim(swimmer, true));
   /** Shows the animals within sight of `position`, putting each newly seen one where it is by now. */
   const focus = (position) => {
     for (const swimmer of swimmers) {
       const { loop } = swimmer.animal;
       const near = Math.hypot(loop.x - position.x, loop.z - position.z) < VISIBLE_RANGE;
-      if (near && !swimmer.model.visible) swim(swimmer);
+      if (near) {
+        const distance = swimmer.model.position.distanceTo(position);
+        const wasDistant = swimmer.model.userData.animationInterval > 0;
+        setMarineDetail(swimmer.model, distance);
+        if (!swimmer.model.visible || (wasDistant && distance < 32)) swim(swimmer, true);
+      }
       swimmer.model.visible = near;
     }
   };
@@ -188,6 +229,8 @@ export function createOceanEnvironment(water, sand) {
       }`,
   }));
   particles.name = 'ocean-suspended-particles';
+  // Their shader wraps around the camera, beyond the geometry's original bounds.
+  particles.frustumCulled = false;
   group.add(particles);
 
   // Faint open volumes suggest scattered sunlight; no postprocessing passes.
@@ -205,7 +248,7 @@ export function createOceanEnvironment(water, sand) {
       void main() {
         float facing = pow(abs(dot(normalize(vNormal), normalize(vView))), 2.0);
         float fade = smoothstep(0.0, 0.35, vUv.y) * (1.0 - smoothstep(0.75, 1.0, vUv.y));
-        gl_FragColor = vec4(lightColor, facing * fade * 0.018);
+        gl_FragColor = vec4(lightColor, facing * fade * exp(-length(vView) * 0.035) * 0.026);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
       }`,

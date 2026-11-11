@@ -1,8 +1,8 @@
 :root {
-  --light-ocean-water: #146f86;
-  --dark-ocean-water: #10536b;
-  --light-ocean-surface: #75d6dd;
-  --dark-ocean-surface: #53adb9;
+  --light-ocean-water: #176e85;
+  --dark-ocean-water: #0c425d;
+  --light-ocean-surface: #83cbd0;
+  --dark-ocean-surface: #438b9d;
   --light-ocean-caustic: #a8e4df;
   --dark-ocean-caustic: #7fbfcb;
   --light-ocean-sand: #d8ca9f;
@@ -11,6 +11,30 @@
   --dark-ocean-rock: #5b7874;
   --light-ocean-grass: #397b59;
   --dark-ocean-grass: #316b59;
+  --light-ocean-hull: #e6b548;
+  --dark-ocean-hull: #cfa13d;
+  --light-ocean-trim: #d4d9d4;
+  --dark-ocean-trim: #a7b8bd;
+  --light-ocean-window: #123d50;
+  --dark-ocean-window: #102c3f;
+  --light-ocean-metal: #495f65;
+  --dark-ocean-metal: #3b505e;
+  --light-ocean-cabin: #2c414b;
+  --dark-ocean-cabin: #1b303c;
+  --light-ocean-bezel: #101e28;
+  --dark-ocean-bezel: #091722;
+  --light-ocean-steel: #9aafb4;
+  --dark-ocean-steel: #819ba6;
+  --light-ocean-glow: #78e6e4;
+  --dark-ocean-glow: #59d2dc;
+  --light-ocean-amber: #f2bb63;
+  --dark-ocean-amber: #e5ab57;
+  --light-ocean-signal: #d77d65;
+  --dark-ocean-signal: #cb715e;
+  --light-ocean-screen: #062a36;
+  --dark-ocean-screen: #031d2c;
+  --light-ocean-ink: #d7f3ed;
+  --dark-ocean-ink: #bfe6e6;
   --light-navbar-bg: #f3e5e8;
   --dark-navbar-bg: #22181c;
 

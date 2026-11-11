@@ -81,7 +81,7 @@ export function createOceanWater(seabedMaterial) {
     textureHeight: 256,
     waterNormals: textures.normals,
     sunDirection: new THREE.Vector3(-0.4, -0.85, -0.3).normalize(),
-    distortionScale: 0.65,
+    distortionScale: 0.45,
     fog: true,
   });
   surface.name = 'ocean-water-surface';
@@ -112,24 +112,29 @@ export function createOceanWater(seabedMaterial) {
     material.onBeforeCompile = (shader) => {
       shader.uniforms.oceanTime = time;
       shader.uniforms.oceanCaustics = { value: textures.caustics };
-      shader.vertexShader = `varying vec3 vOceanPosition;\n${shader.vertexShader}`.replace('#include <begin_vertex>', `
-        #include <begin_vertex>
+      shader.vertexShader = `varying vec3 vOceanPosition;\nvarying vec3 vOceanNormal;\n${shader.vertexShader}`.replace('#include <worldpos_vertex>', `
+        #include <worldpos_vertex>
+        // Read the final morphed position/normal, so caustics slide over the
+        // swimming animal rather than staying on its undeformed rest shape.
         vec4 oceanPosition = vec4(transformed, 1.0);
         #ifdef USE_INSTANCING
           oceanPosition = instanceMatrix * oceanPosition;
         #endif
         vOceanPosition = (modelMatrix * oceanPosition).xyz;
+        vOceanNormal = inverseTransformDirection(transformedNormal, viewMatrix);
       `);
-      shader.fragmentShader = `uniform float oceanTime;\nuniform sampler2D oceanCaustics;\nvarying vec3 vOceanPosition;\n${shader.fragmentShader}`.replace('#include <color_fragment>', `
+      shader.fragmentShader = `uniform float oceanTime;\nuniform sampler2D oceanCaustics;\nvarying vec3 vOceanPosition;\nvarying vec3 vOceanNormal;\n${shader.fragmentShader}`.replace('#include <color_fragment>', `
         #include <color_fragment>
         vec2 projected = vOceanPosition.xz + vOceanPosition.y * vec2(0.3, 0.2);
         float causticA = texture2D(oceanCaustics, projected * 0.055 + oceanTime * vec2(0.009, 0.004)).r;
         float causticB = texture2D(oceanCaustics, projected * 0.083 + oceanTime * vec2(-0.004, 0.006)).r;
         float shimmer = min(causticA, causticB) * 1.8 + max(causticA, causticB) * 0.3;
-        diffuseColor.rgb *= 0.94 + shimmer * 0.48;
+        float depthFade = exp(-max(0.0, 9.0 - vOceanPosition.y) * 0.045);
+        float upward = max(0.0, normalize(vOceanNormal).y * (gl_FrontFacing ? 1.0 : -1.0));
+        diffuseColor.rgb *= 0.98 + shimmer * depthFade * upward * 0.36;
       `);
     };
-    material.customProgramCacheKey = () => 'ocean-caustics-r181-v2';
+    material.customProgramCacheKey = () => 'ocean-caustics-r181-v4';
   }
   addCaustics(seabedMaterial);
   const reflectionTarget = surface.material.uniforms.mirrorSampler.value.renderTarget;
