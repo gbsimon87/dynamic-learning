@@ -10,7 +10,7 @@ import {
 /**
  * Challenge 4 — applied, and nothing on screen to count.
  *
- * "Count in 50s from 0; what is the 6th number?" has to be worked out rather
+ * "Start at 0. Make 6 jumps of 50. What number do you land on?" has to be worked out rather
  * than read off a line, and there are no options to eliminate. The counts stay
  * inside 1,000, which is what caps how far a question may ask.
  */
@@ -40,16 +40,14 @@ function CountingInMultiplesOf4850And100Challenge4({ onComplete }) {
   );
 }
 
-const ORDINALS = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th"];
-
 function CountOn({ question, submit, locked }) {
   const [entered, setEntered] = useState("");
 
   return (
     <>
       <p className="challenge-prompt">
-        Start at 0 and count in <strong>{question.step}s</strong>. What is the{" "}
-        <strong>{ORDINALS[question.position - 1]}</strong> number you say?
+        Start at 0. Make <strong>{question.position}</strong> jumps of{" "}
+        <strong>{question.step}</strong>. What number do you land on?
       </p>
 
       <NumberInput

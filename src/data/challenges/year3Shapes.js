@@ -393,8 +393,8 @@ export function buildLineQuestions(level, rng = Math.random) {
     highlightSides,
     answer,
     prompt: level === 4
-      ? `A designer marked two lines on ${LINE_CONTEXTS[id]}. How are they related?`
-      : "How are the two highlighted lines related?",
+      ? `A designer marked two lines on ${LINE_CONTEXTS[id]}. Are the marked lines parallel, perpendicular or neither?`
+      : level === 2 ? "Are the two marked lines parallel or perpendicular?" : "Are the two marked lines parallel, perpendicular or neither?",
     options: level === 2 ? ["parallel", "perpendicular"] : ["parallel", "perpendicular", "neither"],
   }));
 }

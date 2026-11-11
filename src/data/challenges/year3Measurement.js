@@ -8,7 +8,7 @@
  */
 
 import { shuffleValues } from "./placeValue3Digit.js";
-import { compareMeasures, formatMoney, timeToWords } from "./measurement.js";
+import { compareMeasures, timeToWords } from "./measurement.js";
 
 const ROUNDS = 6;
 
@@ -31,7 +31,15 @@ function numericOptions(answer, step, rng, min = 0) {
 
 function moneyOptions(answer, rng) {
   return numericOptions(answer, answer < 100 ? 10 : 25, rng)
-    .map(formatMoney);
+    .map(formatYear3Money);
+}
+
+// Year 3 records pounds and pence separately; decimal money comes in Year 4.
+export function formatYear3Money(pence) {
+  const pounds = Math.floor(pence / 100);
+  const rest = pence % 100;
+  if (!pounds) return `${rest}p`;
+  return rest ? `£${pounds} and ${rest}p` : `£${pounds}`;
 }
 
 export function mixedToBase(major, minor, factor) {
@@ -106,12 +114,12 @@ const MASS_COMPARE = [
 ];
 const MASS_BUILDS = [[1, 200], [2, 400], [0, 800], [1, 600], [2, 100], [0, 500]];
 const MASS_STORIES = [
-  ["A bag weighs 1 kg 200 g. Another bag weighs 350 g. What is their total mass in grams?", 1550],
-  ["A parcel weighs 2 kg. 450 g is removed. What mass remains in grams?", 1550],
-  ["A melon weighs 850 g and a pear weighs 175 g. What is their total mass in grams?", 1025],
-  ["A sack is 3 kg. How many grams is that?", 3000],
-  ["A recipe needs 1 kg of flour. You have used 625 g. How many grams remain?", 375],
-  ["Four packets weigh 250 g each. What is their total mass in grams?", 1000],
+  ["A bag weighs 1 kg 200 g. Another bag weighs 350 g. How many grams do they weigh altogether?", 1550],
+  ["A parcel weighs 2 kg. You take out a toy weighing 450 g. How many grams does the parcel weigh now?", 1550],
+  ["A melon weighs 850 g and a pear weighs 175 g. How many grams do they weigh altogether?", 1025],
+  ["A sack weighs 3 kg. How many grams is that?", 3000],
+  ["You have 1 kg of flour. You use 625 g. How many grams of flour are left?", 375],
+  ["Four packets weigh 250 g each. How many grams do they weigh altogether?", 1000],
 ];
 
 export function buildMassQuestions(level, rng) {
@@ -138,8 +146,8 @@ const VOLUME_COMPARE = [
 ];
 const VOLUME_BUILDS = [[1, 200], [2, 400], [0, 800], [1, 600], [2, 100], [0, 500]];
 const VOLUME_STORIES = [
-  ["A jug holds 1 l 200 ml. You add 350 ml. How many millilitres are in the jug?", 1550],
-  ["A bottle holds 2 l. You pour out 450 ml. How many millilitres remain?", 1550],
+  ["A jug has 1 l 200 ml of water in it. You add 350 ml more water. How many millilitres are in the jug?", 1550],
+  ["A bottle has 2 l of water in it. You pour out 450 ml. How many millilitres remain?", 1550],
   ["A pan has 850 ml of soup. Another 175 ml is added. How many millilitres is that?", 1025],
   ["A container holds 3 l. How many millilitres is that?", 3000],
   ["A tank holds 1 l. It contains 625 ml. How many millilitres more will fill it?", 375],
@@ -183,9 +191,9 @@ const MIXED_RESULTS = [
 const MEASURE_STORIES = [
   ["A 2 m ribbon has 85 cm cut off. How many centimetres remain?", 115],
   ["A 1 kg bag has 375 g added. What is the new mass in grams?", 1375],
-  ["A 2 l jug has 650 ml poured out. How many millilitres remain?", 1350],
+  ["A jug has 2 l of water in it. You pour out 650 ml. How many millilitres remain?", 1350],
   ["A plank is 1 m 40 cm. Another is 75 cm. What is their total length in centimetres?", 215],
-  ["A parcel is 2 kg 100 g. A 450 g book is removed. What mass remains in grams?", 1650],
+  ["A parcel is 2 kg 100 g. A 450 g book is removed. How many grams does it weigh now?", 1650],
   ["A tank has 1 l 250 ml, then 375 ml is added. How many millilitres is that?", 1625],
 ];
 
@@ -217,10 +225,10 @@ const MISSING_PERIMETERS = [
 const PERIMETER_STORIES = [
   ["A rectangular garden is 8 m long and 5 m wide. What is its perimeter in metres?", 26],
   ["A square tile has sides of 7 cm. What is its perimeter in centimetres?", 28],
-  ["A picture frame is 12 cm by 9 cm. What is its perimeter in centimetres?", 42],
+  ["A rectangular picture frame is 12 cm long and 9 cm wide. What is its perimeter in centimetres?", 42],
   ["A square playground has sides of 15 m. What is its perimeter in metres?", 60],
   ["A rectangle is 14 cm long and 6 cm wide. What is its perimeter in centimetres?", 40],
-  ["A card is 10 cm by 4 cm. What is its perimeter in centimetres?", 28],
+  ["A rectangular card is 10 cm long and 4 cm wide. What is its perimeter in centimetres?", 28],
 ];
 
 function perimeterQuestion([shape, lengths], type, rng) {
@@ -251,19 +259,19 @@ const MONEY_ADDS = [
 const MONEY_CHANGE = [[500, 275], [1000, 645], [500, 199], [200, 135], [1000, 725], [500, 360]];
 const MONEY_COIN_CHANGE = [[500, 365], [200, 125], [500, 420], [200, 145], [500, 275], [1000, 850]];
 const MONEY_STORIES = [
-  ["A book costs £2.35 and a pen costs £1.40. You pay £5. How much change do you get, in pence?", 125],
+  ["A book costs £2 and 35p. A pen costs £1 and 40p. You pay £5. How much change do you get, in pence?", 125],
   ["Three cards cost 75p each. You pay £5. How much change do you get, in pence?", 275],
-  ["You have £10. You spend £3.45 and £2.30. How many pence remain?", 425],
-  ["Two toys cost £2.25 each. You pay £5. How much change do you get, in pence?", 50],
-  ["A game costs £4.75. Its price is reduced by £1.20. What is the new price in pence?", 355],
-  ["A snack costs £1.35 and a drink costs 85p. What is the total cost in pence?", 220],
+  ["You have £10. You spend £3 and 45p on a book. Then you spend £2 and 30p on pens. How many pence are left?", 425],
+  ["Two toys cost £2 and 25p each. You pay £5. How much change do you get, in pence?", 50],
+  ["A game costs £4 and 75p. The shop takes £1 and 20p off the price. What is the new price in pence?", 355],
+  ["A snack costs £1 and 35p. A drink costs 85p. What is the total cost in pence?", 220],
 ];
 
 export function buildMoneyQuestions(level, rng) {
   assertLevel(level, "money");
   if (level === 1) return six(MONEY_ADDS, rng).map(([first, second]) => {
     const answer = first + second;
-    return { type: "money-add", first, second, answer, answerLabel: formatMoney(answer), options: moneyOptions(answer, rng) };
+    return { type: "money-add", first, second, answer, answerLabel: formatYear3Money(answer), options: moneyOptions(answer, rng) };
   });
   if (level === 2) return six(MONEY_CHANGE, rng).map(([paid, cost]) => ({
     type: "money-change", paid, cost, answer: paid - cost,
@@ -342,8 +350,8 @@ export function buildRoman24Questions(level, rng) {
 
 const TIME_FACTS = [
   ["How many seconds are in 1 minute?", 60], ["How many days are in April?", 30],
-  ["How many days are in May?", 31], ["How many days are in a normal year?", 365],
-  ["How many days are in a leap year?", 366], ["How many days does February have in a normal year?", 28],
+  ["How many days are in May?", 31], ["How many days are in a year that is not a leap year?", 365],
+  ["How many days are in a leap year?", 366], ["How many days does February have in a year that is not a leap year?", 28],
 ];
 const DURATION_COMPARE = [
   ["90 seconds", 90, "2 minutes", 120], ["1 hour", 60, "55 minutes", 55],

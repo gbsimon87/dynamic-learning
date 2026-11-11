@@ -125,36 +125,36 @@ const ORDER_SETS = [
 const PROBLEMS = [
   {
     prompt:
-      "Three classes collected bottle tops. Class A collected 428, Class B collected 482 and Class C collected 284. How many did the class with the MOST collect?",
+      "Three classes collected bottle tops. Class A collected 428, Class B collected 482 and Class C collected 284. How many did the class with the most collect?",
     candidates: [428, 482, 284],
     pick: "largest",
   },
   {
-    prompt: "Ben scored 605 points and Mia scored 650 points. Type the SMALLER score.",
+    prompt: "Ben scored 605 points and Mia scored 650 points. Type the smaller score.",
     candidates: [605, 650],
     pick: "smallest",
   },
   {
     prompt:
-      "A library has 418 story books, 481 fact books and 148 poetry books. Type the SMALLEST of those numbers.",
+      "A library has 418 story books, 481 fact books and 148 poetry books. Type the smallest number.",
     candidates: [418, 481, 148],
     pick: "smallest",
   },
   {
     prompt:
-      "A farm counted 706 hens, 670 ducks and 760 geese. Type the LARGEST of those numbers.",
+      "A farm counted 706 hens, 670 ducks and 760 geese. Type the largest number.",
     candidates: [706, 670, 760],
     pick: "largest",
   },
   {
     prompt:
-      "Three lorries carried 519, 591 and 195 boxes. Type the number of boxes on the MOST loaded lorry.",
+      "Three lorries carried 519, 591 and 195 boxes. How many boxes are on the lorry with the most boxes?",
     candidates: [519, 591, 195],
     pick: "largest",
   },
   {
     prompt:
-      "A shop has 307 pens, 370 pencils and 730 rubbers. Type the SMALLEST of those numbers.",
+      "A shop has 307 pens, 370 pencils and 730 rubbers. Type the smallest number.",
     candidates: [307, 370, 730],
     pick: "smallest",
   },

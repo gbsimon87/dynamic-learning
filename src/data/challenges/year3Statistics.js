@@ -13,7 +13,7 @@ import {
  */
 const DATASETS = [
   { caption: "Books read", unit: "books", labels: ["Oak", "Elm", "Ash"], counts: [2, 4, 5], symbol: "📕" },
-  { caption: "Fruit sold", unit: "fruit", labels: ["Apples", "Pears", "Plums"], counts: [3, 5, 6], symbol: "🍎" },
+  { caption: "Fruit sold", unit: "pieces of fruit", labels: ["Apples", "Pears", "Plums"], counts: [3, 5, 6], symbol: "🍎" },
   { caption: "Birds seen", unit: "birds", labels: ["Robins", "Sparrows", "Finches"], counts: [2, 3, 5], symbol: "🐦" },
   { caption: "Stickers earned", unit: "stickers", labels: ["Ava", "Ben", "Cara"], counts: [1, 4, 6], symbol: "⭐" },
   { caption: "Tickets sold", unit: "tickets", labels: ["Monday", "Tuesday", "Friday"], counts: [2, 5, 6], symbol: "🎟️" },
@@ -23,7 +23,7 @@ const DATASETS = [
 const TABLES = [
   { caption: "Books read", unit: "books", columns: ["Week 1", "Week 2"], labels: ["Ava", "Ben", "Cara"], values: [[8, 12], [14, 9], [6, 15]] },
   { caption: "Goals scored", unit: "goals", columns: ["Monday", "Friday"], labels: ["Lions", "Tigers", "Bears"], values: [[10, 7], [5, 13], [12, 8]] },
-  { caption: "Fruit sold", unit: "fruit", columns: ["Morning", "Afternoon"], labels: ["Apples", "Pears", "Plums"], values: [[15, 8], [9, 11], [7, 12]] },
+  { caption: "Fruit sold", unit: "pieces of fruit", columns: ["Morning", "Afternoon"], labels: ["Apples", "Pears", "Plums"], values: [[15, 8], [9, 11], [7, 12]] },
   { caption: "Stickers earned", unit: "stickers", columns: ["Maths", "Reading"], labels: ["Ava", "Ben", "Cara"], values: [[11, 14], [8, 10], [6, 9]] },
   { caption: "Cakes baked", unit: "cakes", columns: ["Monday", "Tuesday"], labels: ["Small", "Large", "Iced"], values: [[12, 7], [10, 13], [6, 11]] },
   { caption: "Trees planted", unit: "trees", columns: ["Spring", "Summer"], labels: ["Oak", "Elm", "Ash"], values: [[9, 12], [5, 14], [7, 10]] },
@@ -73,7 +73,7 @@ export function buildBarChartQuestions(level, rng = Math.random) {
     return {
       ...common,
       type: "bar-story",
-      prompt: `How many more ${dataset.unit} do ${rows[1].label} and ${rows[2].label} have together than ${rows[0].label}?`,
+      prompt: `Add the numbers for ${rows[1].label} and ${rows[2].label}. How many more ${dataset.unit} is that than the number for ${rows[0].label}?`,
       answer: twoStepAnswer(rows),
     };
   });
@@ -158,7 +158,7 @@ export function buildTableQuestions(level, rng = Math.random) {
     return {
       ...common,
       type: "table-story",
-      prompt: `How many more ${dataset.unit} are recorded for ${first.label} across ${dataset.columns[0]} and ${dataset.columns[1]} than for ${second.label} in ${dataset.columns[0]}?`,
+      prompt: `Find the total for ${first.label} in both columns. How many more ${dataset.unit} is that than the number for ${second.label} in ${dataset.columns[0]}?`,
       answer: first.cells.column0 + first.cells.column1 - second.cells.column0,
     };
   });
@@ -200,18 +200,18 @@ function problemTableRound(context, shape, rng) {
     if (totals[0] === totals[1]) { values[0][0] += 2; totals = [0, 1].map((c) => values.reduce((sum, row) => sum + row[c], 0)); }
     const [big, small] = totals[0] > totals[1] ? [0, 1] : [1, 0];
     answer = totals[big] - totals[small];
-    prompt = `How many more ${unit} were there in ${cols[big]} than in ${cols[small]} altogether?`;
+    prompt = `Add all the numbers in each column. How many more ${unit} are in ${cols[big]} than in ${cols[small]}?`;
   } else if (shape === "two-rows-total") {
     const [a, b] = pick;
     answer = values[a][0] + values[a][1] + values[b][0] + values[b][1];
-    prompt = `How many ${unit} did ${labels[a]} and ${labels[b]} have altogether, across both columns?`;
+    prompt = `Find the totals for ${labels[a]} and ${labels[b]} in both columns. How many ${unit} is that altogether?`;
   } else {
     const [top, y, z] = pick;
     values[y][col] = randInt(2, 6, rng);
     values[z][col] = randInt(2, 6, rng);
     values[top][col] = values[y][col] + values[z][col] + randInt(2, 8, rng);
     answer = values[top][col] - (values[y][col] + values[z][col]);
-    prompt = `In ${cols[col]}, how many more ${unit} did ${labels[top]} have than ${labels[y]} and ${labels[z]} put together?`;
+    prompt = `Look only at ${cols[col]}. Add the numbers for ${labels[y]} and ${labels[z]}. How many more ${unit} are shown for ${labels[top]} than that total?`;
   }
 
   const view = tableView({ ...context, labels, values });
@@ -239,7 +239,7 @@ export function buildStatisticsProblemQuestions(level, rng = Math.random) {
     return {
       ...common, type: "problem-mixed", representation,
       step: scale, max: 6 * scale, ratio: scale, symbol: dataset.symbol,
-      prompt: `How many more ${dataset.unit} are shown for ${rows[1].label} and ${rows[2].label} together than ${rows[0].label}?`,
+      prompt: `Add the numbers for ${rows[1].label} and ${rows[2].label}. How many more ${dataset.unit} is that than the number for ${rows[0].label}?`,
       answer: twoStepAnswer(rows),
     };
   });

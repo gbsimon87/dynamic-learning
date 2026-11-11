@@ -23,7 +23,7 @@ function ReadingAndWritingNumbersTo1000Challenge4({ onComplete }) {
     <ChallengeShell
       questions={questions}
       onComplete={onComplete}
-      title="Read the problem, then answer in numerals."
+      title="Read the story. Write your answer using digits."
       render={({ question, submit, locked, index }) => (
         <SolveProblem key={index} question={question} submit={submit} locked={locked} />
       )}

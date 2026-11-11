@@ -22,7 +22,7 @@ function ReadingAndWritingNumbersTo1000Challenge2({ onComplete }) {
     <ChallengeShell
       questions={questions}
       onComplete={onComplete}
-      title="Write the number in numerals."
+      title="Write the number using digits."
       render={({ question, submit, locked, index }) => (
         <TypeNumeral key={index} question={question} submit={submit} locked={locked} />
       )}
@@ -46,7 +46,7 @@ function TypeNumeral({ question, submit, locked }) {
         value={entered}
         onChange={setEntered}
         disabled={locked}
-        label="In numerals"
+        label="Number in digits"
         maxDigits={4}
       />
 

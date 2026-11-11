@@ -12,7 +12,7 @@ import "./challenge-kit.css";
  * "combine amounts to make a particular value", which means seeing the amount
  * grow towards the target.
  */
-function CoinTray({ picked, onPick, onRemove, disabled, target }) {
+function CoinTray({ picked, onPick, onRemove, disabled, target, formatAmount = formatMoney }) {
   const total = totalOf(picked);
 
   return (
@@ -25,9 +25,9 @@ function CoinTray({ picked, onPick, onRemove, disabled, target }) {
             className={`coin coin-${coin}`}
             disabled={disabled}
             onClick={() => onPick(coin)}
-            aria-label={`Add ${formatMoney(coin)}`}
+            aria-label={`Add ${formatAmount(coin)}`}
           >
-            {formatMoney(coin)}
+            {formatAmount(coin)}
           </button>
         ))}
       </div>
@@ -43,17 +43,17 @@ function CoinTray({ picked, onPick, onRemove, disabled, target }) {
               className={`coin picked coin-${coin}`}
               disabled={disabled}
               onClick={() => onRemove(i)}
-              aria-label={`Remove ${formatMoney(coin)}`}
+              aria-label={`Remove ${formatAmount(coin)}`}
             >
-              {formatMoney(coin)}
+              {formatAmount(coin)}
             </button>
           ))
         )}
       </div>
 
       <p className={`coin-total ${target != null && total === target ? "matched" : ""}`}>
-        Total: <strong>{formatMoney(total)}</strong>
-        {target != null && ` — you need ${formatMoney(target)}`}
+        Total: <strong>{formatAmount(total)}</strong>
+        {target != null && ` — you need ${formatAmount(target)}`}
       </p>
     </div>
   );

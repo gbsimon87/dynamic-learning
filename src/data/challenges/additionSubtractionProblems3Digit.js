@@ -15,9 +15,9 @@ const ONE_STEP = [
  * the numbers are generated per mount by twoStepPlan.
  */
 const TWO_STEP_STORIES = [
-  { open: "A box has", item: "cards", gain: "gets {n} more", loss: "gives away {n}", ask: "How many cards now?" },
-  { open: "A library has", item: "books", gain: "{n} are returned", loss: "{n} are borrowed", ask: "How many books now?" },
-  { open: "A school has", item: "pencils", gain: "buys {n} more", loss: "uses {n}", ask: "How many pencils remain?" },
+  { open: "A box has", item: "cards", gain: "{n} more cards are added", loss: "{n} cards are taken out", ask: "How many cards are in the box now?" },
+  { open: "A library has", item: "books", gain: "{n} are returned", loss: "{n} are borrowed", ask: "How many books are in the library now?" },
+  { open: "A school has", item: "pencils", gain: "it gets {n} more pencils", loss: "it gives away {n} pencils", ask: "How many pencils does the school have left?" },
   { open: "A shop has", item: "stickers", gain: "gets {n} more", loss: "sells {n}", ask: "How many stickers now?" },
   { open: "A museum has", item: "tickets", gain: "prints {n} more", loss: "sells {n}", ask: "How many tickets remain?" },
   { open: "A team has", item: "points", gain: "earns {n}", loss: "spends {n}", ask: "How many points now?" },
@@ -26,8 +26,8 @@ const TWO_STEP_STORIES = [
 const SENTENCE_STORIES = [
   { open: "A baker has", item: "buns", gain: "bakes {n} more", loss: "sells {n}", ask: "How many buns now?" },
   { open: "A zoo has", item: "visitors", gain: "{n} more arrive", loss: "{n} go home", ask: "How many visitors now?" },
-  { open: "A pond has", item: "frogspawn eggs", gain: "{n} more are laid", loss: "{n} hatch", ask: "How many eggs are there now?" },
-  { open: "A toy shop has", item: "marbles", gain: "orders {n} more", loss: "sells {n}", ask: "How many marbles now?" },
+  { open: "A pond has", item: "frog eggs", gain: "{n} more are laid", loss: "{n} hatch", ask: "How many eggs are there now?" },
+  { open: "A toy shop has", item: "marbles", gain: "it gets {n} more marbles", loss: "sells {n}", ask: "How many marbles now?" },
   { open: "A car park has", item: "cars", gain: "{n} more drive in", loss: "{n} drive out", ask: "How many cars now?" },
   { open: "A farm has", item: "apples", gain: "picks {n} more", loss: "sells {n}", ask: "How many apples now?" },
 ];
@@ -35,7 +35,7 @@ const SENTENCE_STORIES = [
 const FINAL_STORIES = [
   { open: "A garden centre has", item: "seeds", gain: "gets {n} more", loss: "plants {n}", ask: "How many seeds are left?" },
   { open: "A hall has", item: "chairs", gain: "{n} are brought in", loss: "{n} are moved out", ask: "How many chairs are there now?" },
-  { open: "A class has", item: "paper stars", gain: "makes {n} more", loss: "gives away {n}", ask: "How many stars remain?" },
+  { open: "A class has", item: "paper stars", gain: "makes {n} more", loss: "gives away {n}", ask: "How many stars does the class have left?" },
   { open: "A club has", item: "badges", gain: "makes {n} more", loss: "gives away {n}", ask: "How many badges now?" },
   { open: "A cinema has", item: "popcorn bags", gain: "fills {n} more", loss: "sells {n}", ask: "How many bags are left?" },
   { open: "A lake has", item: "geese", gain: "{n} more land", loss: "{n} fly away", ask: "How many geese are there now?" },
@@ -73,7 +73,7 @@ function storyPrompt(story, { start, first, second }) {
   const phrase = (change) => {
     const words = (change > 0 ? story.gain : story.loss).replace("{n}", Math.abs(change));
     // "gets 125 more" needs a subject; "125 are returned" already has one.
-    return /^\d/.test(words) ? words : `it ${words}`;
+    return /^\d/.test(words) || words.startsWith("it ") ? words : `it ${words}`;
   };
   return `${story.open} ${start} ${story.item}. First, ${phrase(first)}. Then ${phrase(second)}. ${story.ask}`;
 }

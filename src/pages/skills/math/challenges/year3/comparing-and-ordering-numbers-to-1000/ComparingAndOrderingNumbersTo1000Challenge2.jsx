@@ -37,7 +37,7 @@ function PickSymbol({ question, submit, locked }) {
   return (
     <>
       <p className="challenge-prompt">
-        These have the same number of 100s. Which symbol is true?
+        Both numbers have the same hundreds digit. Choose &lt;, = or &gt; to fill the gap.
       </p>
 
       <p className="statement">

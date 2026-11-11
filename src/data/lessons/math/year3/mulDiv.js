@@ -50,12 +50,12 @@ export const MUL_DIV_LESSONS = {
   ],
   "multiplying-and-dividing-two-digit-numbers": [
     {
-      title: "Read a partitioned multiplication",
+      title: "Split a multiplication into easier parts",
       lines: ["Split the 2-digit number into tens and ones.", "Multiply each part by the 1-digit number.", "Add the 2 answers to get the total."],
       example: { type: "steps", title: "23 × 4", steps: ["Split 23 into 20 and 3.", "20 × 4 = 80", "3 × 4 = 12", "80 + 12 = 92"], note: "So 23 × 4 = 92." },
     },
     {
-      title: "Build a friendly partition",
+      title: "Split into easier parts",
       lines: ["To multiply, split into tens and ones, then multiply each part.", "To divide, split off a tens number in the table, like 40 for the 4s.", "Divide what is left, then add the 2 answers."],
       example: { type: "steps", title: "52 ÷ 4", steps: ["Split 52 into 40 and 12.", "40 ÷ 4 = 10", "12 ÷ 4 = 3", "10 + 3 = 13"], note: "So 52 ÷ 4 = 13." },
     },
@@ -72,13 +72,13 @@ export const MUL_DIV_LESSONS = {
   ],
   "scaling-and-correspondence-problems": [
     {
-      title: "Find a scaled amount",
-      lines: ["'4 times as long' means 4 lots of the short one.", "Multiply the short length by the number of times.", "The scaled amount is always the bigger one."],
+      title: "Find the new measurement",
+      lines: ["'4 times as long' means 4 lots of the short one.", "Multiply the short length by the number of times.", "In these questions, the new length is longer than the first."],
       example: { type: "jumps", title: "A 3 cm ribbon, and one 4 times as long", terms: ["0", "3", "6", "9", "12"], step: "+3", note: "4 jumps of 3 cm make 12 cm." },
     },
     {
-      title: "Find the scale factor",
-      lines: ["The scale factor says how many times bigger something is.", "Ask: the small amount times what makes the big amount?", "Divide the big amount by the small amount."],
+      title: "How many times as long?",
+      lines: ["The scale factor tells you how many times as long or high.", "Ask: the small amount times what makes the big amount?", "Divide the big amount by the small amount."],
       example: { type: "equation", title: "A 5 cm tower and a 20 cm tower", parts: ["20", "÷", "5", "=", "4"], note: "The big tower is 4 times as high." },
     },
     {
@@ -96,7 +96,7 @@ export const MUL_DIV_LESSONS = {
     {
       title: "Choose the right operation",
       lines: ["Picture what happens in the story.", "Equal groups put together means ×.", "Sharing equally, or putting into piles, means ÷."],
-      example: { type: "table", title: "Clue words", headers: ["The story says", "Use"], rows: [["5 boxes with 6 in each", "6 × 5"], ["30 shared between 5", "30 ÷ 5"], ["30 put into piles of 6", "30 ÷ 6"]], note: "Adding or taking away will not give equal groups." },
+      example: { type: "table", title: "Clue words", headers: ["The story says", "Use"], rows: [["5 boxes with 6 in each", "6 × 5"], ["30 shared between 5", "30 ÷ 5"], ["30 put into piles of 6", "30 ÷ 6"]], note: "Choose the calculation that matches what happens in the story." },
     },
     {
       title: "Find the missing number",
@@ -105,7 +105,7 @@ export const MUL_DIV_LESSONS = {
     },
     {
       title: "Use a known fact",
-      lines: ["Start with a times table fact you know.", "Make 1 number 10 times bigger, and the answer is 10 times bigger.", "This works for dividing too."],
+      lines: ["Start with a times table fact you know.", "Multiply one number by 10. The product is 10 times as big.", "To divide, multiply the total by 10. Divide by the same number."],
       example: { type: "equation", title: "Known fact: 3 × 4 = 12", parts: ["30", "×", "4", "=", "120"], note: "So 120 ÷ 4 = 30 too." },
     },
     {

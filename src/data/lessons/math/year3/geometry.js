@@ -7,7 +7,7 @@ export const GEOMETRY_LESSONS = {
   "drawing-2-d-shapes": [
     {
       title: "Trace a 2-D shape",
-      lines: ["A 2-D shape is flat with straight sides.", "Draw one side at a time, from corner to corner.", "Stop when the last side meets the first corner."],
+      lines: ["A 2-D shape is flat. These shapes have straight sides.", "Draw one side at a time, from corner to corner.", "Stop when the last side meets the first corner."],
       example: { type: "steps", title: "Tracing a triangle", steps: ["Start at the top corner.", "Draw side 1 down to the next corner.", "Draw side 2 along the bottom.", "Draw side 3 back to the start."], note: "A triangle has 3 sides, so it needs 3 lines." },
     },
     {
@@ -29,7 +29,7 @@ export const GEOMETRY_LESSONS = {
   "making-and-recognising-3-d-shapes": [
     {
       title: "Recognise a solid shape",
-      lines: ["A 3-D shape is solid, like a box or a ball.", "Look at the faces: flat, curved, square or triangle?", "A shape keeps its name even when it is turned over."],
+      lines: ["A 3-D shape is solid, like a box or a ball.", "Look for flat faces and curved surfaces.", "A shape keeps its name even when it is turned over."],
       example: { type: "table", title: "Spot the solid", headers: ["Solid", "Looks like"], rows: [["cube", "a dice"], ["cylinder", "a tin of beans"], ["cone", "an ice cream cone"], ["sphere", "a ball"]], note: "Turn a cone upside down and it is still a cone." },
     },
     {
@@ -39,7 +39,7 @@ export const GEOMETRY_LESSONS = {
     },
     {
       title: "Choose the parts for a model",
-      lines: ["To make a solid, you need the right faces.", "Check the face shapes first: squares, rectangles or triangles.", "Then check the number of edges and corners."],
+      lines: ["To make a solid, you need the right faces.", "Check the face shapes first: squares, rectangles or triangles.", "Then check how many faces, edges and corners you need."],
       example: { type: "steps", title: "Parts for a cube", steps: ["Every face is a square.", "It has 6 faces.", "It has 12 edges and 8 corners."], note: "A cuboid looks similar, but its faces are rectangles." },
     },
     {
@@ -100,7 +100,7 @@ export const GEOMETRY_LESSONS = {
     },
     {
       title: "Name acute, right and obtuse",
-      lines: ["An acute angle is less than a right angle.", "An obtuse angle is greater than a right angle.", "A right angle is exactly a square corner."],
+      lines: ["An acute angle is less than a right angle.", "An obtuse angle is wider than a right angle but smaller than a half turn.", "A right angle is exactly a square corner."],
       example: { type: "table", title: "Three kinds of angle", headers: ["Name", "Size"], rows: [["acute", "less than a right angle"], ["right angle", "a square corner"], ["obtuse", "greater than a right angle"]], note: "Acute angles are small and pointy." },
     },
     {
@@ -128,11 +128,11 @@ export const GEOMETRY_LESSONS = {
     {
       title: "Compare pairs of lines",
       lines: ["Do the lines stay the same distance apart? Parallel.", "Do they meet at a square corner? Perpendicular.", "If neither is true, the answer is neither."],
-      example: { type: "steps", title: "Two sides of a triangle", steps: ["Do they stay apart? No, they meet.", "Do they meet at a square corner? No.", "So the lines are neither."], note: "Lines can meet without being perpendicular." },
+      example: { type: "steps", title: "Two sides of a triangle with no right angles", steps: ["Do they stay apart? No, they meet.", "Do they meet at a square corner? No.", "So the lines are neither."], note: "Lines can meet without being perpendicular." },
     },
     {
       title: "Use line properties in a design",
-      lines: ["Designers use lines on doors, windows and signs.", "Look at the 2 marked lines on the design.", "Ask the parallel and perpendicular questions to decide."],
+      lines: ["Designers use lines on doors, windows and signs.", "Look at the 2 marked lines on the design.", "Do they stay the same distance apart or meet at a square corner?"],
       example: { type: "steps", title: "Lines on a window frame", steps: ["The top and bottom of the frame never meet.", "They stay the same distance apart.", "So they are parallel."], note: "Ask: do they meet, and is it a square corner?" },
     },
   ],

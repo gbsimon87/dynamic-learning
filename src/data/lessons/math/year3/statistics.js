@@ -38,12 +38,12 @@ export const STATISTICS_LESSONS = {
     },
     {
       title: "Build a scaled pictogram",
-      lines: ["Read each number from the table.", "Divide by the key to find how many pictures.", "Draw that many pictures in the row."],
+      lines: ["Read each number from the table.", "Divide by the number one picture stands for.", "Draw that many pictures in the row."],
       example: { type: "equation", title: "Key: 1 picture = 10. Show 40.", parts: ["40", "÷", "10", "=", "4"], note: "Draw 4 pictures to show 40." },
     },
     {
       title: "Solve a problem with the key",
-      lines: ["Add the two rows to find the total.", "Then divide the total by the key.", "That tells you how many pictures to draw."],
+      lines: ["Add the two rows to find the total.", "Then divide by the number one picture stands for.", "That tells you how many pictures to draw."],
       example: { type: "steps", title: "Key: 1 picture = 2. Rows show 6 and 4.", steps: ["Add: 6 + 4 = 10.", "Divide: 10 ÷ 2 = 5."], note: "The total needs 5 pictures." },
     },
   ],
@@ -82,12 +82,12 @@ export const STATISTICS_LESSONS = {
     },
     {
       title: "Solve a two-step table question",
-      lines: ["Two-step questions need two sums.", "Find every box the question talks about.", "Add the boxes first, then subtract if it asks how many more."],
+      lines: ["These questions need more than one calculation.", "Find every box the question talks about.", "Add the boxes first, then subtract if it asks how many more."],
       example: { type: "table", title: "Cakes baked", headers: ["", "Monday", "Tuesday"], rows: [["Small", "8", "5"], ["Large", "9", "4"], ["Iced", "3", "2"]], note: "Monday 20, Tuesday 11. 20 − 11 = 9 more on Monday." },
     },
     {
       title: "Solve a two-step data question",
-      lines: ["The data might be a bar chart, pictogram or table.", "First add the two amounts together.", "Then take away the third to find how many more."],
+      lines: ["The numbers might be in a bar chart, pictogram or table.", "First add the two amounts together.", "Then take away the third to find how many more."],
       example: { type: "steps", title: "A shows 20, B shows 30, C shows 50.", steps: ["Add B and C: 30 + 50 = 80.", "Take away A: 80 − 20 = 60."], note: "B and C together show 60 more than A." },
     },
   ],

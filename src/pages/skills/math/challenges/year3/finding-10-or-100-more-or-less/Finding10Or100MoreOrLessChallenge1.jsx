@@ -35,8 +35,8 @@ function PickNeighbour({ question, submit, locked }) {
   return (
     <>
       <p className="challenge-prompt">
-        What is <strong>{question.jump > 0 ? "more" : "less"}</strong> than{" "}
-        <strong>{question.centre}</strong>? Find the missing neighbour.
+        What is <strong>{Math.abs(question.jump)} {question.jump > 0 ? "more" : "less"}</strong> than{" "}
+        <strong>{question.centre}</strong>? Choose the missing number.
       </p>
 
       <NumberLine

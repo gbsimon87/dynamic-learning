@@ -32,7 +32,7 @@ const TITLES = {
   numbers: ["Read the shaded fraction.", "Place a fraction on the line.", "Go past one whole.", "Write a fraction past one whole."],
   equivalent: ["Find the matching bar.", "Look for the same amount.", "Build an equal fraction.", "Write the missing top number."],
   arithmetic: ["Add fractions with the same bottom number.", "Build the sum.", "Build the difference.", "Solve a fraction story."],
-  comparing: ["Which unit fraction is larger?", "Compare fractions with the same bottom number.", "Order the fractions.", "Compare fractions in a story."],
+  comparing: ["Which fraction with 1 on top is larger?", "Compare fractions with the same bottom number.", "Order the fractions.", "Compare fractions in a story."],
   problems: ["Find a fraction of a group.", "Add parts of one whole.", "Find an equivalent fraction.", "Solve a two-step fraction story."],
 };
 
@@ -93,7 +93,7 @@ function FractionRound({ question, submit, locked }) {
   </>;
 
   if (question.type === "share-tenths") return <>
-    <p className="challenge-prompt">Share {question.numerator} cakes equally between 10 children. Each child gets how many tenths of a cake?</p>
+    <p className="challenge-prompt">Share {question.numerator} cakes equally between 10 children. Each child gets ?/10 of a cake. What is the missing top number?</p>
     {input("Top number, above 10")}
     {check(value !== "", numericAnswer(question.numerator))}
   </>;
@@ -119,8 +119,8 @@ function FractionRound({ question, submit, locked }) {
   </>;
 
   if (question.type === "mixed-number-story") return <>
-    <p className="challenge-prompt">A ribbon is 1 whole metre and {fractionText(question.numerator - question.denominator, question.denominator)} metre more. How many {question.denominator}ths of a metre is that altogether?</p>
-    {input("Number of equal parts")}
+    <p className="challenge-prompt">A ribbon is 1 metre long, plus {fractionText(question.numerator - question.denominator, question.denominator)} of a metre. Its length is ?/{question.denominator} metres. What is the missing top number?</p>
+    {input("Missing top number")}
     {check(value !== "", numericAnswer(question.numerator))}
   </>;
 
@@ -133,7 +133,7 @@ function FractionRound({ question, submit, locked }) {
   }
 
   if (question.type === "shade-equivalent" || question.type === "write-equivalent") return <>
-    <p className="challenge-prompt">{fractionText(question.target.numerator, question.target.denominator)} is the same as how many {question.answerDenominator}ths?</p>
+    <p className="challenge-prompt">Find the same amount as {fractionText(question.target.numerator, question.target.denominator)}. {question.type === "shade-equivalent" ? "Tap parts of the empty bar to shade the same amount." : `Fill in the missing top number: ?/${question.answerDenominator}.`}</p>
     <FractionBar parts={shadedParts(question.target.numerator, question.target.denominator)} label={`${question.target.numerator} of ${question.target.denominator} parts shaded`} />
     <FractionShadeBoard denominator={question.answerDenominator} selected={picked} onToggle={question.type === "shade-equivalent" ? toggle : undefined} disabled={locked} label={`Bar with ${question.answerDenominator} equal parts`} />
     {question.type === "write-equivalent" && input("Top number of the equivalent fraction")}
@@ -142,7 +142,7 @@ function FractionRound({ question, submit, locked }) {
 
   if (question.type === "equation-choice" || question.type === "equation-build") return <>
     <p className="challenge-prompt">{fractionText(question.first, question.denominator)} {question.operation === "add" ? "+" : "−"} {fractionText(question.second, question.denominator)} = ?</p>
-    <FractionEquationBoard denominator={question.denominator} first={question.first} second={question.second} operation={question.operation} selected={picked} onToggle={question.type === "equation-build" ? toggle : undefined} disabled={locked} />
+    <FractionEquationBoard denominator={question.denominator} first={question.first} second={question.second} operation={question.operation} caption={question.type === "equation-choice" ? "Choose the answer below." : "Tap parts of the answer bar to shade your answer."} selected={picked} onToggle={question.type === "equation-build" ? toggle : undefined} disabled={locked} />
     {question.type === "equation-choice" && <ChoiceGrid options={question.options} selected={choice} onSelect={setChoice} disabled={locked} />}
     {check(question.type === "equation-build" ? countPicked > 0 : choice !== null, question.type === "equation-build" ? countPicked === question.answer : choice === fractionText(question.answer, question.denominator))}
   </>;
@@ -174,7 +174,7 @@ function FractionRound({ question, submit, locked }) {
   </>;
 
   if (question.type === "compare-story") return <>
-    <p className="challenge-prompt">Mia has {fractionText(question.left.numerator, question.left.denominator)} of a cake. Sam has {fractionText(question.right.numerator, question.right.denominator)}. Who has more cake?</p>
+    <p className="challenge-prompt">Mia and Sam have cakes of the same size. Mia has {fractionText(question.left.numerator, question.left.denominator)} of her cake left. Sam has {fractionText(question.right.numerator, question.right.denominator)} of his cake left. Who has more cake left?</p>
     <ChoiceGrid options={["Mia", "Sam"]} selected={choice} onSelect={setChoice} disabled={locked} />
     {check(choice !== null, choice === (question.answer === "left" ? "Mia" : "Sam"))}
   </>;
@@ -187,21 +187,21 @@ function FractionRound({ question, submit, locked }) {
   </>;
 
   if (question.type === "problem-add") return <>
-    <p className="challenge-prompt">A path is {fractionText(question.first, question.denominator)} km long. Another part is {fractionText(question.second, question.denominator)} km. How many {question.denominator}ths of a kilometre altogether?</p>
-    {input("Number of equal parts")}
+    <p className="challenge-prompt">Two paths join together. One is {fractionText(question.first, question.denominator)} of a kilometre long. The other is {fractionText(question.second, question.denominator)} of a kilometre long. Together they are ?/{question.denominator} of a kilometre. What is the missing top number?</p>
+    {input("Missing top number")}
     {check(value !== "", numericAnswer(question.answer))}
   </>;
 
   if (question.type === "problem-equivalent") return <>
-    <p className="challenge-prompt">A picture has {fractionText(question.target.numerator, question.target.denominator)} coloured. How many {question.answerDenominator}ths is the same amount?</p>
+    <p className="challenge-prompt">{fractionText(question.target.numerator, question.target.denominator)} of a picture is coloured. The same amount is ?/{question.answerDenominator}. What is the missing top number?</p>
     <FractionBar parts={shadedParts(question.target.numerator, question.target.denominator)} label="Coloured part of the picture" />
-    {input("Number of equal parts")}
+    {input("Missing top number")}
     {check(value !== "", numericAnswer(question.answer))}
   </>;
 
   return <>
-    <p className="challenge-prompt">A ribbon is {fractionText(question.start, question.denominator)} metre long. First {fractionText(question.usedFirst, question.denominator)} metre is cut off, then {fractionText(question.usedSecond, question.denominator)} metre. How many {question.denominator}ths of a metre are left?</p>
-    {input("Parts left")}
+    <p className="challenge-prompt">A ribbon is {fractionText(question.start, question.denominator)} of a metre long. Cut off {fractionText(question.usedFirst, question.denominator)} of a metre, then {fractionText(question.usedSecond, question.denominator)} of a metre. There is ?/{question.denominator} of a metre left. What is the missing top number?</p>
+    {input("Missing top number")}
     {check(value !== "", numericAnswer(question.answer))}
   </>;
 }

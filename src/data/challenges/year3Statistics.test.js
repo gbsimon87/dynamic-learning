@@ -117,11 +117,12 @@ function problemTableExpected(round) {
   const colKey = (name) => round.columns.find((column) => column.label === name).key;
   const total = (key) => round.rows.reduce((sum, row) => sum + row.cells[key], 0);
   let m;
-  if ((m = round.prompt.match(/in (.+) than in (.+) altogether\?$/))) return total(colKey(m[1])) - total(colKey(m[2]));
-  if ((m = round.prompt.match(/did (.+) and (.+) have altogether/))) return ["column0", "column1"].reduce((s, k) => s + cell(m[1], k) + cell(m[2], k), 0);
-  m = round.prompt.match(/^In (.+), how many more \S+ did (.+) have than (.+) and (.+) put together\?$/);
+  if ((m = round.prompt.match(/are in (.+) than in (.+)\?$/))) return total(colKey(m[1])) - total(colKey(m[2]));
+  if ((m = round.prompt.match(/^Find the totals for (.+) and (.+) in both columns\./))) return ["column0", "column1"].reduce((s, k) => s + cell(m[1], k) + cell(m[2], k), 0);
+  m = round.prompt.match(/^Look only at (.+)\. Add the numbers for (.+) and (.+)\. How many more .+ are shown for (.+) than that total\?$/);
+  assert.ok(m, `Cannot independently read the question: ${round.prompt}`);
   const k = colKey(m[1]);
-  return cell(m[2], k) - cell(m[3], k) - cell(m[4], k);
+  return cell(m[4], k) - cell(m[2], k) - cell(m[3], k);
 }
 
 test("problem-table rounds are their own varied, randomised questions, not the Tables topic's", () => {
