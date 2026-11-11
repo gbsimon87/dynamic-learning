@@ -9,7 +9,7 @@ import NumberInput from "../../../../../components/challenge/NumberInput";
 import PerimeterShape from "../../../../../components/challenge/PerimeterShape";
 import ScaleReader from "../../../../../components/challenge/ScaleReader";
 import TimeSetter from "../../../../../components/challenge/TimeSetter";
-import { formatMoney, isValidCoinCombination } from "../../../../../data/challenges/measurement";
+import { isValidCoinCombination } from "../../../../../data/challenges/measurement";
 import { isCorrectNumber } from "../../../../../data/challenges/placeValue3Digit";
 import {
   buildLengthQuestions,
@@ -21,6 +21,7 @@ import {
   buildTimeToMinuteQuestions,
   buildRoman24Questions,
   buildDurationQuestions,
+  formatYear3Money,
   formatDigital12,
   formatDigital24,
   formatMixed,
@@ -48,7 +49,7 @@ const TITLES = {
   money: ["Add pounds and pence.", "Work out the change.", "Choose coins for the change.", "Solve a two-step money problem."],
   minuteTime: ["Read the clock to the minute.", "Say the time to the minute.", "Set the clock to the minute.", "Solve a time problem."],
   roman24: ["Read a Roman-numeral clock.", "Write an am or pm time in 24-hour time.", "Read 24-hour time as am or pm.", "Set a Roman-numeral clock from 24-hour time."],
-  durations: ["Recall time facts.", "Compare durations.", "Order durations.", "Calculate an elapsed time."],
+  durations: ["Recall time facts.", "Compare how long things last.", "Put lengths of time in order.", "Find how long it lasts."],
 };
 
 function Year3MeasurementGame({ topic, level, onComplete }) {
@@ -117,7 +118,7 @@ function MeasurementRound({ question, submit, locked }) {
   if (question.type === "read-scale" || question.type === "read-jug") return (
     <>
       <p className="challenge-prompt">
-        {question.type === "read-jug" ? `How much ${question.thing} is in the jug?` : `How long is the ${question.thing}?`}
+        {question.type === "read-jug" ? `How many millilitres of ${question.thing} are in the jug?` : question.unit === "g" ? "How many grams are shown on the scale?" : `How long is the ${question.thing} in millimetres?`}
       </p>
       <ScaleReader
         min={question.min}
@@ -137,7 +138,7 @@ function MeasurementRound({ question, submit, locked }) {
 
   if (question.type === "compare-measures" || question.type === "compare-durations") return (
     <>
-      <p className="challenge-prompt">Choose the symbol that makes this true.</p>
+      <p className="challenge-prompt">Choose &lt;, = or &gt; to fill the gap.</p>
       <MeasureCards question={question} />
       <ChoiceGrid options={["<", "=", ">"]} selected={choice} onSelect={setChoice} disabled={locked} />
       {check(choice !== null, choice === question.answer)}
@@ -177,7 +178,9 @@ function MeasurementRound({ question, submit, locked }) {
   if (["measure-story", "mixed-calculation", "money-change", "money-story", "time-story"].includes(question.type)) return (
     <>
       <p className="challenge-prompt">
-        {question.prompt ?? `${question.calculation} = ? Give the answer in ${question.unit}.`}
+        {question.type === "money-change"
+          ? `You pay ${formatYear3Money(question.paid)} for a toy costing ${formatYear3Money(question.cost)}. How much change do you get, in pence?`
+          : question.prompt ?? `${question.calculation} = ? Give the answer in ${question.unit}.`}
       </p>
       {input(question.type.startsWith("money") ? "My answer in pence" : "My answer is")}
       {check(value !== "", numericAnswer(question.answer))}
@@ -194,7 +197,7 @@ function MeasurementRound({ question, submit, locked }) {
 
   if (question.type === "perimeter-read") return (
     <>
-      <p className="challenge-prompt">What is the distance all the way around this shape?</p>
+      <p className="challenge-prompt">What is the perimeter: the distance all the way around this shape?</p>
       <PerimeterShape shape={question.shape} sides={question.sides} traced={question.sides.length} label="A shape with every side length labelled" />
       <ChoiceGrid options={question.options} selected={choice} onSelect={setChoice} disabled={locked} />
       {check(choice !== null, choice === `${question.answer} cm`)}
@@ -226,7 +229,7 @@ function MeasurementRound({ question, submit, locked }) {
 
   if (question.type === "money-add") return (
     <>
-      <p className="challenge-prompt">{formatMoney(question.first)} + {formatMoney(question.second)} = ?</p>
+      <p className="challenge-prompt">{formatYear3Money(question.first)} + {formatYear3Money(question.second)} = ?</p>
       <ChoiceGrid options={question.options} selected={choice} onSelect={setChoice} disabled={locked} />
       {check(choice !== null, choice === question.answerLabel)}
     </>
@@ -234,8 +237,9 @@ function MeasurementRound({ question, submit, locked }) {
 
   if (question.type === "money-coins") return (
     <>
-      <p className="challenge-prompt">An item costs {formatMoney(question.cost)}. The customer pays {formatMoney(question.paid)}. Tap coins to give the change.</p>
+      <p className="challenge-prompt">An item costs {formatYear3Money(question.cost)}. The customer pays {formatYear3Money(question.paid)}. Tap coins to give the change.</p>
       <CoinTray
+        formatAmount={formatYear3Money}
         picked={picked}
         disabled={locked}
         onPick={(coin) => setPicked((previous) => [...previous, coin])}
@@ -247,6 +251,7 @@ function MeasurementRound({ question, submit, locked }) {
 
   if (question.type === "read-clock-minute" || question.type === "clock-words" || question.type === "roman-clock-read") return (
     <>
+      <p className="challenge-prompt">{question.type === "clock-words" ? "Which words tell the time on this clock?" : "What time does this clock show?"}</p>
       <ClockFace
         hour={question.hour}
         minute={question.minute}
@@ -267,7 +272,7 @@ function MeasurementRound({ question, submit, locked }) {
     return (
       <>
         <p className="challenge-prompt">
-          Show <strong>{is24Hour ? formatDigital24(question.hour24, question.minute) : formatDigital12(question.hour, question.minute)}</strong>.
+          Use the hour and minute buttons to show <strong>{is24Hour ? formatDigital24(question.hour24, question.minute) : formatDigital12(question.hour, question.minute)}</strong>.
         </p>
         <ClockFace hour={time.hour} minute={time.minute} numeralStyle={is24Hour ? "roman" : "arabic"} label="The clock you are setting" />
         <TimeSetter hour={time.hour} minute={time.minute} minuteStep={1} onChange={setTime} disabled={locked} />
@@ -279,7 +284,7 @@ function MeasurementRound({ question, submit, locked }) {
 
   if (question.type === "to-24-hour") return (
     <>
-      <p className="challenge-prompt">Write {formatDigital12(question.hour, question.minute)} {question.period} in 24-hour time.</p>
+      <p className="challenge-prompt">Choose {formatDigital12(question.hour, question.minute)} {question.period} in 24-hour time.</p>
       <ChoiceGrid options={question.options} selected={choice} onSelect={setChoice} disabled={locked} />
       {check(choice !== null, choice === question.answer)}
     </>
@@ -303,7 +308,7 @@ function MeasurementRound({ question, submit, locked }) {
 
   if (question.type === "order-durations") return (
     <>
-      <p className="challenge-prompt">Move the durations from shortest to longest.</p>
+      <p className="challenge-prompt">These cards show how long things last. Put the shortest time first and the longest last.</p>
       <DragToOrder items={order} onReorder={setOrder} disabled={locked} />
       {check(true, order.map((item) => item.label).every((label, index) => label === question.ordered[index]))}
     </>

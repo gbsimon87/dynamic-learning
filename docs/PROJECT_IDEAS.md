@@ -40,6 +40,8 @@ Details: [planning roadmap](superpowers/plans/2026-11-08-teacher-planning-playli
 
 ## Learner experiences
 
+- **Year 3 wording review:** Maths source pass finished; English, History and Geography remain, in that order. [Plan and per-challenge progress tracker](superpowers/plans/2026-11-11-year3-wording-review.md). Work in the separate `review/year3-wording` worktree. Teacher/child and device review remain separate.
+
 | # | Idea | Upcoming work | Status |
 |---|---|---|---|
 | 9 | **Richer grown-up progress reports** | Show time spent and practice needs using a separate per-attempt record; define any reset scope carefully. | 🟡 |

@@ -37,7 +37,7 @@ function NameTheJump({ question, submit, locked }) {
   return (
     <>
       <p className="challenge-prompt">
-        Look at the two numbers. Which jump turned the first into the second?
+        Look at the two numbers. Which jump takes you from the first number to the second?
       </p>
 
       <p className="statement">

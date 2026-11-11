@@ -264,7 +264,7 @@ const PROBLEM_MAKERS = [
     const rows = randomInt(rng, 2, 8);
     const extra = randomInt(rng, 11, 19);
     return {
-      prompt: `A hall is set out with ${rows} rows of 100 chairs and ${extra} extra chairs. Then 10 chairs are taken away. How many chairs are left?`,
+      prompt: `A hall has ${rows} rows of chairs, with 100 chairs in each row. There are also ${extra} extra chairs. Then 10 chairs are taken away. How many chairs are left?`,
       working: `${rows} * 100 + ${extra} - 10`,
     };
   },
@@ -288,7 +288,7 @@ const PROBLEM_MAKERS = [
     const fewer = pick(rng, [10, 100]);
     const day = pick(rng, ["Tuesday", "Wednesday"]);
     return {
-      prompt: `A ferry carried ${monday} people on Monday and ${fewer} fewer on ${day}. How many people did it carry on ${day}?`,
+      prompt: `A ferry carried ${monday} people on Monday. On ${day}, it carried ${fewer} fewer people. How many people did it carry on ${day}?`,
       working: `${monday} - ${fewer}`,
     };
   },

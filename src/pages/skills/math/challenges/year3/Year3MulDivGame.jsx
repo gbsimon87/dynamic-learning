@@ -38,14 +38,14 @@ const TITLES = {
     "Solve an 8 times table story.",
   ],
   twoDigit: [
-    "Read a partitioned multiplication.",
-    "Build a multiplication or division partition.",
+    "Split a multiplication into easier parts.",
+    "Fill in the parts of a multiplication or division.",
     "Use short multiplication.",
     "Solve a two-digit multiplication or division story.",
   ],
   scaling: [
-    "Find a scaled amount.",
-    "Find the scale factor.",
+    "Find how long or high it is.",
+    "Find how many times as long or high.",
     "Connect every possible pair.",
     "Solve a scaling or matching story.",
   ],
@@ -214,7 +214,7 @@ function MulDivRound({ question, submit, locked }) {
     return (
       <>
         <p className="challenge-prompt">
-          {building ? "Fill both friendly parts of the calculation." : "The calculation has been split into friendly parts. What is the total?"}
+          {building ? "Tap each box and work out that part of the calculation." : "The calculation is split into easier parts. Add the two answers."}
         </p>
         <PartitionBoard
           heading={question.heading}
@@ -227,7 +227,7 @@ function MulDivRound({ question, submit, locked }) {
         />
         {building ? (
           <>
-            <p className="challenge-prompt">Enter the value of {question.cells.find((cell) => cell.key === activePart).label}.</p>
+            <p className="challenge-prompt">Work out {question.cells.find((cell) => cell.key === activePart).label}.</p>
             <NumberInput hideField value={partitionValues[activePart]} onChange={setActivePartValue} disabled={locked} />
             {check(Object.values(partitionValues).every((part) => part !== ""), partitionCorrect)}
           </>
@@ -253,8 +253,8 @@ function MulDivRound({ question, submit, locked }) {
     <>
       <p className="challenge-prompt">
         {question.type === "scale-read"
-          ? `${question.subject.tall} is ${question.factor} times ${question.subject.verb} ${question.subject.short}. How ${question.subject.verb.replace("as ", "")} is it?`
-          : `How many times ${question.subject.verb} ${question.subject.short} is ${question.subject.tall}?`}
+          ? `${question.subject.tall} is ${question.factor} times ${question.subject.verb} as ${question.subject.short}. How ${question.subject.verb.replace("as ", "")} is it, in ${question.subject.unit}?`
+          : `How many times ${question.subject.verb} as ${question.subject.short} is ${question.subject.tall}?`}
       </p>
       <ScaleComparison question={question} />
       {question.type === "scale-read" ? (

@@ -6,6 +6,12 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-11 — Year 3 Maths wording review
+
+- Reviewed all 44 Maths topics, 176 challenge slots and 176 Bix introductions/examples for language a seven-year-old can follow. Made jump counts, answer formats, equal-sized fraction wholes, row/column references and measurement units explicit; corrected missing change-question text, mass questions asking for length, malformed fraction-unit names, scaling grammar and noon/midnight guidance. Year 3 money now uses separate pounds and pence. Topic IDs, learner records and completion contracts are unchanged.
+- Created a separate `review/year3-wording` worktree and [four-subject plan with a per-challenge tracker](superpowers/plans/2026-11-11-year3-wording-review.md). English, History and Geography remain queued in that order. The original Ocean Explorer checkout stays on its branch.
+- Validation: full lint/build pass; all 1,018 component tests pass across 109 files, including 12 new regression tests and a mount check for all 176 Maths wrappers. Unit stage: 2,854 pass, four skipped and three existing failures in unchanged Year 6 English lesson/story-content checks. The structure-only course checker passes all 44 topics; bank adapters are unsupported, so no full course-checker pass is claimed. Final lesson text clarifications pass scoped ESLint/lesson checks. Teacher/child comprehension, real layout, both theme appearances, devices and narration were not verified; see the tracker for exact evidence and limits.
+
 ## 2026-11-11 — Keep every curriculum subject visible
 
 - `/curriculum` now keeps all 12 subjects in their usual order before and after choosing a year. Subjects without a course for that year use the existing dashed, muted-icon “Coming soon” state, expose `aria-disabled` and cannot open a course. Changing year updates availability and the child's “Your pick” tag in place.

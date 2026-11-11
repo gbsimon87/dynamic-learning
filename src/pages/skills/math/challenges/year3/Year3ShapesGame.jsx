@@ -113,9 +113,9 @@ function ShapeRound({ question, submit, locked }) {
       question={question}
       submit={submit}
       locked={locked}
-      prompt={question.prompt ?? "What is the name of this solid shape?"}
+      prompt={question.type === "solid-clue" ? `${question.prompt} Which solid shape am I?` : "What is the name of this solid shape?"}
     >
-      <SolidFigure solid={question.solid} rotation={question.rotation} label={`A ${question.solid.name} shown in a different orientation`} />
+      <SolidFigure solid={question.solid} rotation={question.rotation} label={`A ${question.solid.name} turned a different way`} />
     </PickAnswer>
   );
 
@@ -195,7 +195,7 @@ function ShapeRound({ question, submit, locked }) {
       question={question}
       submit={submit}
       locked={locked}
-      prompt={`The arrow starts facing ${question.from}. It turns clockwise through ${question.turns} right angles. Which way does it face?`}
+      prompt={`The arrow starts facing ${question.from}. It turns clockwise through ${question.turns} ${question.turns === 1 ? "right angle" : "right angles"}. Which way does it face?`}
     >
       <RotationDial heading={question.from} showControls={false} />
     </PickAnswer>
@@ -227,7 +227,7 @@ function ShapeRound({ question, submit, locked }) {
       { label: "Angle B", value: question.second },
     ];
     return (
-      <PickAnswer question={question} submit={submit} locked={locked} prompt="Which angle is larger?">
+      <PickAnswer question={question} submit={submit} locked={locked} prompt="Which angle is larger, or are they the same size?">
         <AngleGallery angles={angles} />
       </PickAnswer>
     );
@@ -238,7 +238,7 @@ function ShapeRound({ question, submit, locked }) {
       question={question}
       submit={submit}
       locked={locked}
-      prompt={question.type === "line-direction" ? "Is the highlighted line horizontal or vertical?" : question.prompt}
+      prompt={question.type === "line-direction" ? "Look at the marked line. Is it horizontal or vertical?" : question.prompt}
     >
       <ShapeFigure
         shape={question.shape}

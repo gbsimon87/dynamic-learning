@@ -12,7 +12,7 @@ export const PLACE_VALUE_LESSONS = {
     },
     {
       title: "Find the missing number",
-      lines: ["First find the step.", "Take one number away from the number next to it.", "Then add the step to the number before the gap."],
+      lines: ["First find the step.", "Take a number away from the next number to find the step.", "Then add the step to the number before the gap."],
       example: { type: "steps", title: "150, 200, ?, 300", steps: ["200 − 150 = 50, so the step is 50.", "200 + 50 = 250.", "Check: 250 + 50 = 300."], note: "The missing number is 250." },
     },
     {
@@ -22,15 +22,15 @@ export const PLACE_VALUE_LESSONS = {
     },
     {
       title: "Count it out",
-      lines: ["Start at 0, but do not say 0.", "The 1st number you say is the step itself.", "To check, multiply: the 5th number in 4s is 5 × 4."],
-      example: { type: "table", title: "Counting in 4s from 0", headers: ["Count", "1st", "2nd", "3rd", "4th", "5th"], rows: [["4s", "4", "8", "12", "16", "20"]], note: "5 × 4 = 20, so the 5th number is 20." },
+      lines: ["Start at 0. Each jump adds the same number.", "Count the jumps, not the starting number.", "To check 5 jumps of 4, work out 5 × 4."],
+      example: { type: "table", title: "Counting in 4s from 0", headers: ["Count", "1st", "2nd", "3rd", "4th", "5th"], rows: [["4s", "4", "8", "12", "16", "20"]], note: "5 × 4 = 20, so 5 jumps of 4 land on 20." },
     },
   ],
   "finding-10-or-100-more-or-less": [
     {
       title: "Fill the gap in the strip",
-      lines: ["10 more or 10 less changes the tens digit by 1.", "100 more or 100 less changes the hundreds digit by 1.", "Read the label above the gap to choose the jump."],
-      example: { type: "table", title: "The strip for 248", headers: ["Jump", "100 less", "10 less", "Start", "10 more", "100 more"], rows: [["Number", "148", "238", "248", "258", "348"]], note: "Only one digit moves, and the ones stay the same." },
+      lines: ["10 more means add 10. 10 less means take away 10.", "For 100 more or less, add or take away 100.", "Read the label above the gap to choose the jump."],
+      example: { type: "table", title: "The strip for 248", headers: ["Jump", "100 less", "10 less", "Start", "10 more", "100 more"], rows: [["Number", "148", "238", "248", "258", "348"]], note: "In this example, only the tens or hundreds digit changes." },
     },
     {
       title: "What jump was made?",
@@ -83,13 +83,13 @@ export const PLACE_VALUE_LESSONS = {
     },
     {
       title: "Put the numbers in order",
-      lines: ["Read whether the smallest or the largest goes first.", "A 2-digit number has no 100s, so it is the smallest.", "Sort by the 100s, then the 10s, then the 1s."],
+      lines: ["Read whether the smallest or the largest goes first.", "A 2-digit number is smaller than a 3-digit number.", "Sort by the 100s, then the 10s, then the 1s."],
       example: { type: "jumps", title: "Smallest first", terms: ["93", "239", "293", "329", "392"], note: "Each number is bigger than the one before it." },
     },
     {
       title: "Read the problem carefully",
       lines: ["Find all the numbers in the story.", "Look for the key word: most, largest, smallest or fewer.", "Compare the numbers, then type the one it asks for."],
-      example: { type: "steps", title: "Tom has 362 stickers. Ana has 326. Who has fewer?", steps: ["The key word is fewer, so find the smaller number.", "Both have 3 hundreds. 2 tens is less than 6 tens.", "326 < 362, so the answer is 326."] },
+      example: { type: "steps", title: "Tom has 362 stickers. Ana has 326. How many stickers does the person with fewer have?", steps: ["The key word is fewer, so find the smaller number.", "Both have 3 hundreds. 2 tens is less than 6 tens.", "326 < 362, so the answer is 326."] },
     },
   ],
   "representing-and-estimating-numbers": [
@@ -105,7 +105,7 @@ export const PLACE_VALUE_LESSONS = {
     },
     {
       title: "Build the number",
-      lines: ["Read the target number digit by digit.", "Add flats for hundreds, rods for tens and cubes for ones.", "A 0 digit means you add none of that piece."],
+      lines: ["Read the number you need to build, one digit at a time.", "Add flats for hundreds, rods for tens and cubes for ones.", "A 0 digit means you add none of that piece."],
       example: { type: "table", title: "Pieces for 640", headers: ["Target", "Flats (100)", "Rods (10)", "Cubes (1)"], rows: [["640", "6", "4", "0"]], note: "640 needs no cubes at all." },
     },
     {
@@ -117,11 +117,11 @@ export const PLACE_VALUE_LESSONS = {
   "reading-and-writing-numbers-to-1000": [
     {
       title: "Write the number in words",
-      lines: ["Look at the parts the number is made from.", "Say the hundreds, then the word and, then the rest.", "Tens and ones join with a dash, like forty-six."],
+      lines: ["Look at the parts the number is made from.", "Say the hundreds, then the word and, then the rest.", "Join tens and ones with a hyphen, like forty-six."],
       example: { type: "equation", title: "Using the parts of 508", parts: ["508", "=", "500", "+", "8"], note: "508 is five hundred and eight." },
     },
     {
-      title: "Write the number in numerals",
+      title: "Write the number using digits",
       lines: ["Write the hundreds digit first.", "If there are no tens, write 0 in the tens place.", "Check that your number has 3 digits."],
       example: { type: "table", title: "Two numbers that sound alike", headers: ["Words", "Hundreds", "Tens", "Ones"], rows: [["six hundred and four", "6", "0", "4"], ["six hundred and forty", "6", "4", "0"]], note: "604 and 640 are different. Listen for the tens word." },
     },
@@ -132,7 +132,7 @@ export const PLACE_VALUE_LESSONS = {
     },
     {
       title: "Read the problem, then answer",
-      lines: ["First write the number from the words in digits.", "Then check if the story asks for 10 or 100 more or less.", "Type your answer in numerals, not words."],
+      lines: ["First write the number from the words in digits.", "Then check if the story asks for 10 or 100 more or less.", "Type your answer using digits, like 245."],
       example: { type: "steps", title: "A farm has two hundred and thirty-five sheep. 10 more arrive.", steps: ["two hundred and thirty-five is 235.", "10 more changes the tens: 235 + 10 = 245.", "There are 245 sheep now."] },
     },
   ],

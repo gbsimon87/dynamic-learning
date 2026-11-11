@@ -107,22 +107,22 @@ const REPRESENT = [307, 450, 236, 520, 814, 609];
 const PROBLEMS = [
   {
     prompt:
-      "A shop packs pens in boxes of 100, packs of 10 and singles. It has 4 boxes, 7 packs and 3 single pens. How many pens is that?",
+      "Each box holds 100 pens. Each pack holds 10 pens. A shop has 4 full boxes, 7 full packs and 3 loose pens. How many pens is that?",
     pieces: { hundreds: 4, tens: 7, ones: 3 },
   },
   {
     prompt:
-      "A jar holds 6 bags of 100 beads and 5 loose beads. How many beads are in the jar?",
+      "A jar has 6 full bags of beads. Each bag holds 100 beads. There are also 5 loose beads. How many beads are in the jar?",
     pieces: { hundreds: 6, tens: 0, ones: 5 },
   },
   {
     prompt:
-      "A hall is set out with 1 block of 100 chairs, 9 rows of 10 chairs and 8 single chairs. How many chairs?",
+      "A hall has 100 chairs in one group, 9 rows of 10 chairs and 8 extra chairs. How many chairs are there?",
     pieces: { hundreds: 1, tens: 9, ones: 8 },
   },
   {
     prompt:
-      "A library shelves 7 crates of 100 books, no boxes of 10 and 6 single books. How many books?",
+      "A library has 7 full boxes of books. Each box holds 100 books. There are also 6 loose books. How many books are there?",
     pieces: { hundreds: 7, tens: 0, ones: 6 },
   },
   {

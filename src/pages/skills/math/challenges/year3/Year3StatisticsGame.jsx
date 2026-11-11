@@ -98,7 +98,7 @@ function StatisticsRound({ question, submit, locked }) {
   );
 
   if (question.type === "bar-read") return choose(
-    `The chart shows ${question.caption.toLowerCase()}. How many ${question.unit} for ${question.ask}?`,
+    `Look at ${question.ask} on the chart. How many ${question.unit} does it show?`,
     <Chart question={question} />,
   );
   if (question.type === "bar-difference") return choose(
@@ -113,7 +113,7 @@ function StatisticsRound({ question, submit, locked }) {
     }));
     return (
       <>
-        <p className="challenge-prompt">Use the table to make all three bars. Each line on the scale is worth {question.step}.</p>
+        <p className="challenge-prompt">Use the table to make all three bars. Each step up the scale adds {question.step}.</p>
         <Table question={{ ...question, columns: [{ key: "count", label: question.unit }], rows: question.rows.map((row) => ({ label: row.label, cells: { count: row.value } })) }} />
         <Chart question={question} rows={rows} editable onStep={onStep} locked={locked} />
         <CheckButton disabled={locked} onClick={() => submit(question.rows.every((row) => built[row.label] === row.value))}>Check my chart</CheckButton>
@@ -123,7 +123,7 @@ function StatisticsRound({ question, submit, locked }) {
   if (question.type === "bar-story") return typeAnswer(question.prompt, <Chart question={question} />);
 
   if (question.type === "pictogram-read") return choose(
-    `The pictogram shows ${question.caption.toLowerCase()}. How many ${question.unit} for ${question.ask}?`,
+    `Use the key. How many ${question.unit} does the row for ${question.ask} show?`,
     <Chart question={question} />,
   );
   if (question.type === "pictogram-difference") return choose(
@@ -138,7 +138,7 @@ function StatisticsRound({ question, submit, locked }) {
     }));
     return (
       <>
-        <p className="challenge-prompt">Use the table and key to draw all three picture rows.</p>
+        <p className="challenge-prompt">Use the table and key. Tap the + and − buttons to put the right number of pictures in each row.</p>
         <Table question={{ ...question, columns: [{ key: "count", label: question.unit }], rows: question.rows.map((row) => ({ label: row.label, cells: { count: row.value } })) }} />
         <Chart question={question} rows={rows} editable onStep={onStep} locked={locked} />
         <CheckButton disabled={locked} onClick={() => submit(question.rows.every((row) => built[row.label] === row.value))}>Check my pictogram</CheckButton>
@@ -148,11 +148,11 @@ function StatisticsRound({ question, submit, locked }) {
   if (question.type === "pictogram-story") return typeAnswer(question.prompt, <Chart question={question} />);
 
   if (question.type === "table-read") return choose(
-    `Find ${question.ask} and ${question.columnLabel}. How many ${question.unit} are there?`,
+    `Find the row for ${question.ask} and the column for ${question.columnLabel}. How many ${question.unit} are in that box?`,
     <Table question={question} highlight={{ row: question.ask }} />,
   );
   if (question.type === "table-row-total") return choose(
-    `How many ${question.unit} are recorded for ${question.ask} across both columns?`,
+    `Add the two numbers in the row for ${question.ask}. How many ${question.unit} is that altogether?`,
     <Table question={question} highlight={{ row: question.ask }} />,
   );
   if (question.type === "table-fill-from-bar") return (

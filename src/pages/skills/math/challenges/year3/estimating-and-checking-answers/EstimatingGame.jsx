@@ -8,8 +8,8 @@ import { isCorrectNumber } from "../../../../../../data/challenges/placeValue3Di
 const TITLES = {
   1: "Find a quick estimate.",
   2: "Round to the nearest hundred.",
-  3: "Check the answer with the inverse.",
-  4: "Estimate, then check with the inverse.",
+  3: "Check using the opposite calculation.",
+  4: "Estimate, then check using the opposite calculation.",
 };
 
 function EstimatingGame({ level, onComplete }) {
@@ -36,11 +36,11 @@ function EstimatingRound({ level, question, submit, locked }) {
     return (
       <>
         <p className="challenge-prompt">
-          About how much is {question.a} {sign} {question.b}?
+          Round both numbers to the nearest {question.place}. About how much is {question.a} {sign} {question.b}?
         </p>
         {level === 1 && (
           <p className="sequence-strip">
-            {question.roundedA} + {question.roundedB} ≈ ?
+            {question.roundedA} + {question.roundedB} = ?
           </p>
         )}
         <ChoiceGrid options={question.options} selected={selected} onSelect={setSelected} disabled={locked} />
@@ -65,7 +65,7 @@ function EstimatingRound({ level, question, submit, locked }) {
           Someone says {question.a} {sign} {question.b} = {question.reported}.
         </p>
         <p className="sequence-strip">
-          1. Round to the nearest 100. About how much is it?
+          1. Round both numbers to the nearest 100. Work out the estimate.
         </p>
         <ChoiceGrid options={question.estimateOptions} selected={estimate} onSelect={setEstimate} disabled={locked} />
         <p className="sequence-strip">

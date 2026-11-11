@@ -21,7 +21,7 @@ export const FRACTIONS_LESSONS = {
     },
     {
       title: "Share into ten equal parts",
-      lines: ["Sharing by 10 makes tenths.", "Each part is one tenth of the whole.", "Share 8 cakes between 10 children: each gets 8/10."],
+      lines: ["Sharing equally between 10 children makes tenths.", "Each part is one tenth of the whole.", "Share 8 cakes between 10 children: each gets 8/10."],
       example: { type: "equation", title: "Sharing by 10", parts: ["8", "÷", "10", "=", "8/10"], note: "Each child gets 8/10 of a cake." },
     },
   ],
@@ -38,7 +38,7 @@ export const FRACTIONS_LESSONS = {
     },
     {
       title: "Read a fraction of a set",
-      lines: ["Count how many groups the set is split into.", "Count how many groups are picked.", "Then count the objects in those groups."],
+      lines: ["Count the equal groups. This is the bottom number.", "Count the coloured groups. This is the top number.", "Write the top number in the gap."],
       example: { type: "groups", title: "3/4 of 16 stars", groups: [["⭐", "⭐", "⭐", "⭐"], ["⭐", "⭐", "⭐", "⭐"], ["⭐", "⭐", "⭐", "⭐"], ["☆", "☆", "☆", "☆"]], label: "16 stars in 4 groups of 4, 3 groups filled in", note: "3 groups of 4 is 12, so 3/4 of 16 is 12." },
     },
     {
@@ -65,7 +65,7 @@ export const FRACTIONS_LESSONS = {
     },
     {
       title: "Write a fraction past one whole",
-      lines: ["Count the equal parts in each whole.", "Count every shaded part across all the wholes.", "Write that total on top of the bottom number."],
+      lines: ["One metre has 4 quarters.", "One metre and 2 more quarters is 6 quarters.", "Write 6 on top: 6/4 metres."],
       example: { type: "bar", title: "Two wholes cut into quarters", bars: [{ parts: 4, shaded: 4, label: "4/4" }, { parts: 4, shaded: 2, label: "2/4" }], note: "4 + 2 = 6 quarters, so it is 6/4." },
     },
   ],
@@ -82,7 +82,7 @@ export const FRACTIONS_LESSONS = {
     },
     {
       title: "Build an equal fraction",
-      lines: ["Cut every piece into two.", "Now there are double the pieces and double the shading.", "Shade until it matches the first bar."],
+      lines: ["Look for the same shaded amount using different-sized pieces.", "The pieces may be bigger or smaller. The shaded amount stays the same.", "Shade until it matches the first bar."],
       example: { type: "bar", title: "Make 3/4 with eighths", bars: [{ parts: 4, shaded: 3 }, { parts: 8, shaded: 6 }], note: "3/4 is the same as 6/8." },
     },
     {
@@ -93,8 +93,8 @@ export const FRACTIONS_LESSONS = {
   ],
   "adding-and-subtracting-fractions": [
     {
-      title: "Add fractions with matching bottoms",
-      lines: ["When the bottom numbers match, the pieces are the same size.", "Add the top numbers.", "The bottom number stays the same."],
+      title: "Add fractions with the same denominator",
+      lines: ["The denominator is the bottom number. Matching denominators mean same-sized parts.", "Add the top numbers.", "The bottom number stays the same."],
       example: { type: "equation", title: "Adding fifths", parts: ["2/5", "+", "2/5", "=", "4/5"], note: "2 fifths and 2 more fifths make 4 fifths." },
     },
     {
@@ -110,13 +110,13 @@ export const FRACTIONS_LESSONS = {
     {
       title: "Solve a fraction story",
       lines: ["Find the two fractions in the story.", "Decide: is it adding or taking away?", "Work with the top numbers and keep the bottom."],
-      example: { type: "steps", title: "Pizza in eighths", steps: ["Sam eats 3/8 of a pizza.", "Ali eats 4/8 more.", "3/8 + 4/8 = 7/8 of the pizza."] },
+      example: { type: "steps", title: "Pizza in eighths", steps: ["Sam eats 3/8 of a pizza.", "Ali eats another 4/8 of the same pizza.", "3/8 + 4/8 = 7/8 of the pizza."] },
     },
   ],
   "comparing-and-ordering-fractions": [
     {
-      title: "Which unit fraction is larger?",
-      lines: ["A unit fraction has 1 on top.", "A bigger bottom number means more, smaller pieces.", "So 1/2 is larger than 1/3."],
+      title: "Compare fractions with 1 on top",
+      lines: ["A unit fraction has 1 on top. Compare wholes of the same size.", "A bigger bottom number means more, smaller pieces.", "So 1/2 is larger than 1/3."],
       example: { type: "bar", title: "One piece of each", bars: [{ parts: 2, shaded: 1 }, { parts: 3, shaded: 1 }], note: "Halves are bigger pieces than thirds." },
     },
     {

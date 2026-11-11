@@ -87,7 +87,7 @@ export const MEASUREMENT_LESSONS = {
     },
     {
       title: "Solve a measurement story",
-      lines: ["Find the amounts in the story.", "Change them into the small unit the question asks for.", "Then add or take away. Columns help with big numbers."],
+      lines: ["Find the amounts in the story.", "Change them into the small unit the question asks for.", "Then add or take away. Use columns to help."],
       example: { type: "column", title: "A jug has 1 l 250 ml. 400 ml is poured out.", top: "1250", op: "−", bottom: "400", answer: "850", note: "1 l 250 ml is 1250 ml, so 850 ml is left." },
     },
   ],
@@ -116,18 +116,18 @@ export const MEASUREMENT_LESSONS = {
   "money-and-giving-change": [
     {
       title: "Add pounds and pence",
-      lines: ["£3.75 means 3 pounds and 75 pence.", "Add the pounds, then add the pence.", "If the pence reach 100p, swap them for £1."],
-      example: { type: "steps", title: "£1.60 + £2.25", steps: ["Pounds: £1 + £2 = £3.", "Pence: 60p + 25p = 85p.", "Total: £3.85."] },
+      lines: ["£ means pounds. The p stands for pence.", "Add the pounds, then add the pence.", "If the pence reach 100p, swap them for £1."],
+      example: { type: "steps", title: "£1 and 60p + £2 and 25p", steps: ["Pounds: £1 + £2 = £3.", "Pence: 60p + 25p = 85p.", "Total: £3 and 85p."] },
     },
     {
       title: "Work out the change",
       lines: ["Change is the money you get back.", "Count on from the price to the money you paid.", "Write it in pence: £1 is 100p."],
-      example: { type: "jumps", title: "Something costs £2.70. You pay £5.", terms: ["£2.70", "£3", "£5"], note: "30p and then £2 makes 230p change." },
+      example: { type: "jumps", title: "Something costs £2 and 70p. You pay £5.", terms: ["£2 and 70p", "£3", "£5"], note: "30p and then £2 makes 230p change." },
     },
     {
       title: "Choose coins for the change",
-      lines: ["First work out how much change to give.", "Pick the biggest coin that fits.", "Keep adding coins until they make the change."],
-      example: { type: "steps", title: "Cost £3.40. Paid £5.", steps: ["Count on: 60p to £4, then £1.", "The change is 160p.", "Give £1, 50p and 10p."], note: "£1 + 50p + 10p = 160p." },
+      lines: ["First work out how much change to give.", "Tap coins to make the change. You can use different coins.", "Keep adding coins until they make the change."],
+      example: { type: "steps", title: "Cost £3 and 40p. Paid £5.", steps: ["Count on: 60p to £4, then £1.", "The change is 160p.", "Give £1, 50p and 10p."], note: "£1 + 50p + 10p = 160p." },
     },
     {
       title: "Solve a two-step money problem",
@@ -160,12 +160,12 @@ export const MEASUREMENT_LESSONS = {
   "roman-numerals-and-24-hour-clocks": [
     {
       title: "Read a Roman-numeral clock",
-      lines: ["Some clocks use Roman numerals instead of numbers.", "I is 1, V is 5 and X is 10.", "Read the hands just like a normal clock."],
+      lines: ["Roman numerals are another way to write numbers on a clock.", "I is 1, V is 5 and X is 10.", "Read the hands just like a normal clock."],
       example: { type: "steps", title: "Roman numerals on a clock", steps: ["I before V or X takes 1 away: IV is 4, IX is 9.", "I after adds 1: VI is 6, XI is 11.", "XII sits at the top, where 12 goes."] },
     },
     {
       title: "Change am or pm to 24-hour",
-      lines: ["am is morning, pm is afternoon and evening.", "For am, keep the hour and put a 0 in front if needed.", "For pm, add 12 to the hour."],
+      lines: ["am is from midnight to before noon. pm starts at noon.", "For hours 1 to 11, add 12 for pm. Keep am hours the same.", "12 am is 00 in 24-hour time. 12 pm stays 12."],
       example: { type: "table", title: "Morning and evening", headers: ["12-hour", "24-hour"], rows: [["8:20 am", "08:20"], ["8:20 pm", "20:20"]], note: "8 + 12 = 20, so 8:20 pm is 20:20." },
     },
     {
@@ -186,17 +186,17 @@ export const MEASUREMENT_LESSONS = {
       example: { type: "table", title: "Facts to remember", headers: ["Time", "How long"], rows: [["1 minute", "60 seconds"], ["1 year", "365 days"], ["Leap year", "366 days"], ["September, April, June, November", "30 days"], ["February", "28 days, or 29 in a leap year"], ["All the other months", "31 days"]] },
     },
     {
-      title: "Compare durations",
+      title: "Compare how long things last",
       lines: ["Change both times into the same unit.", "1 hour is 60 minutes. 1 minute is 60 seconds.", "Then compare the numbers and pick <, = or >."],
       example: { type: "equation", title: "1 hour 10 minutes or 65 minutes?", parts: ["70 minutes", ">", "65 minutes"], note: "1 hour 10 minutes is 70 minutes, so it is longer." },
     },
     {
-      title: "Order durations",
+      title: "Put lengths of time in order",
       lines: ["Change every time into the same unit.", "Find the shortest one and put it first.", "Keep going until the longest is last."],
       example: { type: "table", title: "2 minutes, 100 seconds, 1 minute", headers: ["Time", "In seconds"], rows: [["1 minute", "60"], ["100 seconds", "100"], ["2 minutes", "120"]], note: "Shortest to longest: 1 minute, 100 seconds, 2 minutes." },
     },
     {
-      title: "Calculate an elapsed time",
+      title: "Find how long it lasts",
       lines: ["Find the start and the end on the timeline.", "Count on to the next o'clock first.", "Then count on to the end and add the jumps."],
       example: { type: "jumps", title: "From 13:45 to 14:20", terms: ["13:45", "14:00", "14:20"], note: "15 minutes + 20 minutes = 35 minutes." },
     },

@@ -7,7 +7,7 @@ export const ADD_SUBTRACT_LESSONS = {
   "adding-and-subtracting-ones-tens-and-hundreds": [
     {
       title: "Change one place",
-      lines: ["Adding 1, 10 or 100 changes just one digit.", "Find the place: ones, tens or hundreds.", "Make that digit 1 more or 1 less."],
+      lines: ["Adding 1 adds one to the ones. Adding 10 adds one ten.", "Adding 100 adds one hundred.", "Taking away 1, 10 or 100 removes one of that unit."],
       example: { type: "table", title: "What is 10 more than 352?", headers: ["", "H", "T", "O"], rows: [["Start", "3", "5", "2"], ["10 more", "3", "6", "2"]], note: "Only the tens digit changes, so the answer is 362." },
     },
     {
@@ -22,7 +22,7 @@ export const ADD_SUBTRACT_LESSONS = {
     },
     {
       title: "Solve the number story",
-      lines: ["Find the start number in the story.", "More or less? Is it 1, 10 or 100?", "Change that one place."],
+      lines: ["Find the start number in the story.", "More or less? Is it 1, 10 or 100?", "Add or take away that amount."],
       example: { type: "equation", title: "A jar has 538 beads. 100 more go in", parts: ["538", "+", "100", "=", "638"], note: "The jar now has 638 beads." },
     },
   ],
@@ -44,7 +44,7 @@ export const ADD_SUBTRACT_LESSONS = {
     },
     {
       title: "Solve an adding story",
-      lines: ["Words like altogether and in all mean add.", "Write the two numbers in columns.", "Add from the ones, carrying when you need to."],
+      lines: ["This story joins two amounts. Add them to find the total.", "Write the two numbers in columns.", "Add from the ones, carrying when you need to."],
       example: { type: "steps", title: "There are 264 red cars and 318 blue cars", steps: ["How many cars in all?", "Ones: 4 + 8 = 12. Write 2, carry 1.", "Tens: 6 + 1 + 1 = 8. Hundreds: 2 + 3 = 5.", "There are 582 cars in all."] },
     },
   ],
@@ -66,7 +66,7 @@ export const ADD_SUBTRACT_LESSONS = {
     },
     {
       title: "Solve a taking away story",
-      lines: ["Words like left, remain and sold mean subtract.", "Put the starting number on top.", "Subtract in columns, exchanging when you need to."],
+      lines: ["This story takes some away. Subtract to find what is left.", "Put the starting number on top.", "Subtract in columns, exchanging when you need to."],
       example: { type: "column", title: "A farm had 645 eggs. It sold 278", top: "645", op: "−", bottom: "278", answer: "367", note: "The farm has 367 eggs left." },
     },
   ],
@@ -82,13 +82,13 @@ export const ADD_SUBTRACT_LESSONS = {
       example: { type: "table", title: "About how much is 784 − 315?", headers: ["Number", "Nearest 100"], rows: [["784", "800"], ["315", "300"]], note: "800 − 300 = 500, so the answer is about 500." },
     },
     {
-      title: "Check with the inverse",
-      lines: ["Adding and subtracting undo each other.", "Take the answer and do the opposite sum.", "If you get back to the start, it is right."],
+      title: "Check using the opposite calculation",
+      lines: ["Adding and subtracting undo each other.", "The opposite calculation is called the inverse.", "If you get back to the start, it is right."],
       example: { type: "equation", title: "Is 352 + 216 = 568 right?", parts: ["568", "−", "216", "=", "352"], note: "We got back to 352, so yes, it is right." },
     },
     {
       title: "Estimate, then check",
-      lines: ["Round both numbers to the nearest 100 for an estimate.", "An answer far from the estimate is not sensible.", "Then do the inverse to be sure."],
+      lines: ["Round both numbers to the nearest 100 for an estimate.", "An answer far from the estimate is not sensible.", "Use the opposite calculation to check the exact answer."],
       example: { type: "steps", title: "Someone says 412 + 279 = 891", steps: ["Estimate: 400 + 300 = 700.", "891 is far from 700, so it is not sensible.", "Check: 891 − 279 = 612.", "612 is not 412, so 891 is wrong."], note: "The right answer is 691, close to 700." },
     },
   ],
@@ -117,7 +117,7 @@ export const ADD_SUBTRACT_LESSONS = {
   "addition-and-subtraction-problems": [
     {
       title: "Choose the answer to the story",
-      lines: ["Read the story and find the two numbers.", "Altogether means add. Left means subtract.", "Work it out, then pick your answer."],
+      lines: ["Read the story and find the two numbers.", "Are you joining amounts or taking some away?", "Work it out, then pick your answer."],
       example: { type: "equation", title: "Sam has 356 stamps. Jo has 218. How many altogether?", parts: ["356", "+", "218", "=", "574"], note: "Altogether means add, so there are 574 stamps." },
     },
     {
@@ -127,7 +127,7 @@ export const ADD_SUBTRACT_LESSONS = {
     },
     {
       title: "Choose the number sentence",
-      lines: ["Each change in the story gets a + or a −.", "Getting more means +. Losing some means −.", "Pick the sentence, then work it out."],
+      lines: ["Each change in the story gets a + or a −.", "Use + when the amount grows. Use − when it gets smaller.", "Pick the sentence, then work it out."],
       example: { type: "table", title: "Which sign?", headers: ["Story words", "Sign"], rows: [["buys, gets, returned, more", "+"], ["sells, uses, borrowed, gives away", "−"]], note: "Put the signs in the same order as the story." },
     },
     {

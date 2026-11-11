@@ -337,7 +337,7 @@ const SCALE_SUBJECTS = [
   { short: "Red tower", tall: "Blue tower", unit: "cm", verb: "as high" },
   { short: "Green ribbon", tall: "Gold ribbon", unit: "cm", verb: "as long" },
   { short: "Short worm", tall: "Long worm", unit: "cm", verb: "as long" },
-  { short: "Small jump", tall: "Big jump", unit: "cm", verb: "as far" },
+  { short: "Short ribbon", tall: "Long ribbon", unit: "cm", verb: "as long" },
   { short: "Thin stick", tall: "Thick stick", unit: "cm", verb: "as long" },
   { short: "Baby plant", tall: "Tall plant", unit: "cm", verb: "as high" },
 ];
@@ -352,12 +352,12 @@ const CORRESPONDENCE_SETS = [
 ];
 
 const SCALING_STORIES = [
-  (a, k) => ({ prompt: `A toy car is ${a} cm long. A real car is ${k} times as long. How long is the real car, in cm?`, answer: a * k }),
-  (a, k) => ({ prompt: `Tom is ${a} years old. His grandad is ${k} times as old. How old is his grandad?`, answer: a * k }),
-  (a, k) => ({ prompt: `A puddle is ${a} cm wide. A pond is ${a * k} cm wide. How many times as wide as the puddle is the pond?`, answer: k }),
-  (a, k) => ({ prompt: `A ribbon is ${a} cm long. A rope is ${a * k} cm long. How many times as long as the ribbon is the rope?`, answer: k }),
-  (a, k) => ({ prompt: `There are ${a} shirts and ${k} pairs of shorts. How many different outfits can be made?`, answer: a * k }),
-  (a, k) => ({ prompt: `A cafe has ${a} kinds of bread and ${k} kinds of filling. How many different sandwiches can it make?`, answer: a * k }),
+  (a, k) => ({ prompt: `A red ribbon is ${a} cm long. A blue ribbon is ${k} times as long. How long is the blue ribbon, in cm?`, answer: a * k }),
+  (a, k) => ({ prompt: `Tom builds a tower ${a} cm high. Mia builds a tower ${k} times as high. How high is Mia’s tower, in cm?`, answer: a * k }),
+  (a, k) => ({ prompt: `A puddle is ${a} cm wide. A pond is ${a * k} cm wide. How many times as wide is the pond as the puddle?`, answer: k }),
+  (a, k) => ({ prompt: `A ribbon is ${a} cm long. A rope is ${a * k} cm long. How many times as long is the rope as the ribbon?`, answer: k }),
+  (a, k) => ({ prompt: `There are ${a} shirts and ${k} pairs of shorts. Choose one shirt and one pair of shorts. How many different outfits can you make?`, answer: a * k }),
+  (a, k) => ({ prompt: `A cafe has ${a} kinds of bread and ${k} kinds of filling. Each sandwich uses one kind of bread and one filling. How many different sandwiches can it make?`, answer: a * k }),
 ];
 
 export function buildScalingQuestions(level, rng) {
@@ -450,7 +450,7 @@ const TWO_STEP_STORIES = [
   (a, b, c) => ({ prompt: `There are ${b} tables with ${a} chairs at each. ${c} more ${c === 1 ? "chair is" : "chairs are"} carried in. How many chairs are there now?`, answer: a * b + c }),
   (a, b, c) => ({ prompt: `A book has ${a} pages in each chapter. Ali reads ${b} chapters and then ${c} more ${c === 1 ? "page" : "pages"}. How many pages has he read?`, answer: a * b + c }),
   (a, b, c) => ({ prompt: `${a * b} sweets are shared equally between ${b} children. Each child then eats ${c}. How many sweets does each child have left?`, answer: a - c }),
-  (a, b, c) => ({ prompt: `${a * b} pencils are put into ${b} pots. ${countOf(c, "pot")} ${c === 1 ? "is" : "are"} taken away. How many pencils are taken away?`, answer: a * c }),
+  (a, b, c) => ({ prompt: `${a * b} pencils are shared equally between ${b} pots. ${countOf(c, "pot")} ${c === 1 ? "is" : "are"} taken away. How many pencils are taken away?`, answer: a * c }),
   (a, b, c) => ({ prompt: `A pack holds ${a} stickers. Zoe has ${b} packs and gives ${c} whole ${c === 1 ? "pack" : "packs"} away. How many stickers does she keep?`, answer: a * (b - c) }),
 ];
 
