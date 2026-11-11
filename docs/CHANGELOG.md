@@ -6,6 +6,11 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-11 — Consolidate branches and workspaces into dev
+
+- Committed and merged the Ocean Explorer, curriculum subject-visibility and Year 3 Maths wording worktrees into local `dev`. The teacher-planning branch was already included. Preserved every changelog entry, source branch, worktree and existing stash; `main` is unchanged. No push or deployment.
+- Combined validation: lint and production build pass (70 pages prerendered). Node checks: 2,868 pass, four skip and the three previously documented content failures; component checks: 1,021 pass and the two previously documented Ocean geometry/framing failures, with no timeouts. All non-main branch tips are ancestors of `dev`; source changes and clean worktrees were verified. See the [integration record](superpowers/2026-11-11-dev-workspace-integration.md).
+
 ## 2026-11-11 — Year 3 Maths wording review
 
 - Reviewed all 44 Maths topics, 176 challenge slots and 176 Bix introductions/examples for language a seven-year-old can follow. Made jump counts, answer formats, equal-sized fraction wholes, row/column references and measurement units explicit; corrected missing change-question text, mass questions asking for length, malformed fraction-unit names, scaling grammar and noon/midnight guidance. Year 3 money now uses separate pounds and pence. Topic IDs, learner records and completion contracts are unchanged.
