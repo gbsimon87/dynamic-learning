@@ -6,7 +6,7 @@ import { AuthContext } from "../../src/context/auth-context";
 import CurriculumSelectPage from "../../src/pages/curriculum/CurriculumSelectPage";
 
 const CORE_SUBJECTS = ["Maths", "English", "Geography", "Science", "History"];
-const YEAR_5_SUBJECTS = [
+const ALL_SUBJECTS = [
   ...CORE_SUBJECTS,
   "Art & Design", "Computing", "Design & Technology", "French", "Music", "PE",
   "Relationships & Health",
@@ -34,15 +34,28 @@ function subjectNames() {
   );
 }
 
-it.each([1, 2, 3, 4, 5])("shows only courses available for saved Year %i", (yearGroup) => {
+it.each([1, 2, 3, 4, 5, 6])("shows every subject with availability for saved Year %i", (yearGroup) => {
   mount({ yearGroup });
-  expect(subjectNames()).toEqual(yearGroup === 5 ? YEAR_5_SUBJECTS : CORE_SUBJECTS);
+  expect(subjectNames()).toEqual(ALL_SUBJECTS);
+  const availableSubjects = yearGroup === 5
+    ? ALL_SUBJECTS
+    : yearGroup === 6
+      ? [...CORE_SUBJECTS, "Computing", "French"]
+      : CORE_SUBJECTS;
+
+  for (const name of ALL_SUBJECTS) {
+    const button = screen.getByRole("button", { name: new RegExp(name) });
+    const available = availableSubjects.includes(name);
+    expect(button.getAttribute("aria-disabled")).toBe(available ? null : "true");
+    expect(button.classList.contains("is-locked")).toBe(!available);
+    expect(within(button).getByText(available ? "Start →" : "Coming soon")).toBeTruthy();
+  }
 });
 
 it("shows Maths, English, Science, History, Geography, Computing and French for saved Year 6", async () => {
   const user = userEvent.setup();
   mount({ yearGroup: 6 });
-  expect(subjectNames()).toEqual(["Maths", "English", "Geography", "Science", "History", "Computing", "French"]);
+  expect(subjectNames()).toEqual(ALL_SUBJECTS);
   await user.click(screen.getByRole("button", { name: /Science/ }));
   expect(screen.getByText("Year 6 Science opened")).toBeTruthy();
 });
@@ -54,23 +67,33 @@ it("updates available courses when the learner changes year and opens the chosen
 
   for (const year of [1, 2, 3, 4]) {
     await user.click(screen.getByRole("button", { name: new RegExp(`^Year ${year}`) }));
-    expect(subjectNames()).toEqual(CORE_SUBJECTS);
+    expect(subjectNames()).toEqual(ALL_SUBJECTS);
+    const french = screen.getByRole("button", { name: /French/ });
+    expect(french.getAttribute("aria-disabled")).toBe("true");
+    expect(french.textContent).not.toContain("Your pick");
+    await user.click(french);
+    expect(screen.getByRole("heading", { name: "Pick your adventure" })).toBeTruthy();
+    french.focus();
+    await user.keyboard("{Enter} ");
+    expect(screen.getByRole("heading", { name: "Pick your adventure" })).toBeTruthy();
   }
 
   await user.click(screen.getByRole("button", { name: /^Year 5/ }));
-  expect(subjectNames()).toEqual(YEAR_5_SUBJECTS);
+  expect(subjectNames()).toEqual(ALL_SUBJECTS);
+  expect(screen.getByRole("button", { name: /French/ }).getAttribute("aria-disabled")).toBeNull();
+  expect(screen.getByRole("button", { name: /French/ }).textContent).toContain("Your pick");
   await user.click(screen.getByRole("button", { name: /French/ }));
   expect(screen.getByText("Course opened")).toBeTruthy();
 });
 
-it("keeps the year prompt before selection and filters after choosing a year", async () => {
+it("keeps all subjects before and after choosing a year", async () => {
   const user = userEvent.setup();
   mount();
-  expect(subjectNames()).toEqual(YEAR_5_SUBJECTS);
-  expect(screen.getAllByText("Pick a year first")).toHaveLength(YEAR_5_SUBJECTS.length);
+  expect(subjectNames()).toEqual(ALL_SUBJECTS);
+  expect(screen.getAllByText("Pick a year first")).toHaveLength(ALL_SUBJECTS.length);
 
   await user.click(screen.getByRole("button", { name: /^Year 1/ }));
-  expect(subjectNames()).toEqual(CORE_SUBJECTS);
+  expect(subjectNames()).toEqual(ALL_SUBJECTS);
   expect(screen.queryByText("Pick a year first")).toBeNull();
 });
 
