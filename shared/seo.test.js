@@ -20,7 +20,7 @@ test('private, utility, unknown and staging pages are excluded without blocking 
   assert.equal(getPageSeo('/teachers/planning').exists, true);
   assert.equal(getPageSeo('/teachers/planning').robots, 'noindex, follow');
   assert.equal(PUBLIC_PATHS.includes('/teachers/planning'), false);
-  for (const path of ['/teachers', '/teachers/briefings', '/teachers/briefings/3/math/column-addition', '/teachers/reports', '/parent-guides', '/parent-guides/phonics']) {
+  for (const path of ['/teachers', '/teachers/practice', '/teachers/briefings', '/teachers/briefings/3/math/column-addition', '/teachers/reports', '/parent-guides', '/parent-guides/phonics']) {
     assert.equal(getPageSeo(path).exists, true, path);
     assert.equal(getPageSeo(path).robots, 'noindex, follow', path);
     assert.equal(PUBLIC_PATHS.includes(path), false, path);

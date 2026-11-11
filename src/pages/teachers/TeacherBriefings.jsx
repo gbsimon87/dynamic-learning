@@ -7,6 +7,10 @@ import TeacherWorkspace, { TeacherHeader } from "./TeacherWorkspace";
 import { Icon } from "./TeacherIcons";
 import "../../components/challenge/lesson/lesson.css";
 import "./TeacherTools.css";
+import ReadingLayout from "./ReadingLayout";
+import { sectionId } from "./readingSections";
+import "./AdultResources.css";
+import { practiceTopic } from "../../data/teacherPractice/catalogue";
 
 const COURSES = briefingCourses();
 const briefingPath = (year, subject, topicId) => `/teachers/briefings/${year}/${subject}/${topicId}`;
@@ -23,7 +27,7 @@ function BriefingIndex() {
   const term = query.trim().toLowerCase();
   const shown = categories.map((category) => ({ ...category, topics: category.topics.filter((topic) => !term || `${topic.name} ${category.title}`.toLowerCase().includes(term)) })).filter((category) => category.topics.length);
   const chooseYear = (year) => setCourse((current) => ({ year, subject: COURSES.some((entry) => entry.year === year && entry.subject === current.subject) ? current.subject : COURSES.find((entry) => entry.year === year).subject }));
-  return <TeacherWorkspace className="teacher-tools">
+  return <TeacherWorkspace className="teacher-tools adult-resources">
     <TeacherHeader title="Topic briefings" />
     <div className="tw-panel tw-filters">
       <label>Year group<select value={course.year} onChange={(event) => chooseYear(Number(event.target.value))}>
@@ -47,16 +51,16 @@ function BriefingIndex() {
 }
 
 function Section({ title, children }) {
-  return <section className="tt-section"><h2>{title}</h2>{children}</section>;
+  return <section id={sectionId(title)} className="tt-section" aria-labelledby={`${sectionId(title)}-heading`}><h2 id={`${sectionId(title)}-heading`}>{title}</h2>{children}</section>;
 }
 
 function BriefingNotes({ notes }) {
   return <>
+    <Section title="In brief"><p className="tt-lead">{notes.inBrief}</p></Section>
     <Section title="What the curriculum says">
       <blockquote className="tt-quote">{notes.statutory.map((quote) => <p key={quote}>{quote}</p>)}</blockquote>
       <p className="tp-quiet">Statutory requirement, quoted from the National Curriculum in England.</p>
     </Section>
-    <Section title="In brief"><p className="tt-lead">{notes.inBrief}</p></Section>
     <Section title="Key ideas"><ul className="tt-list">{notes.keyFacts.map((fact) => <li key={fact}>{fact}</li>)}</ul></Section>
     <Section title="Common misconceptions">
       <ul className="tt-cards">{notes.misconceptions.map((item) => <li key={item.mistake} className="tt-card">
@@ -76,22 +80,25 @@ function BriefingNotes({ notes }) {
 
 function BriefingPage({ year, subject, topicId }) {
   const briefing = useMemo(() => getTopicBriefing(year, subject, topicId), [year, subject, topicId]);
-  if (!briefing) return <TeacherWorkspace className="teacher-tools">
+  if (!briefing) return <TeacherWorkspace className="teacher-tools adult-resources">
     <TeacherHeader title="Briefing not found" backTo="/teachers/briefings" backLabel="All topic briefings" />
     <p>This topic doesn't exist. Choose another from the <Link to="/teachers/briefings">topic list</Link>.</p>
   </TeacherWorkspace>;
   const lessons = briefing.challenges.filter((challenge) => challenge.lesson);
-  return <TeacherWorkspace as="article" className="teacher-tools tt-printable tw-reading">
+  return <TeacherWorkspace as="article" className="teacher-tools adult-resources ar-reading tt-printable tw-reading">
     <TeacherHeader title={briefing.name} backTo="/teachers/briefings" backLabel="All topic briefings"
       context={`Year ${briefing.year} ${briefing.subjectName} · ${briefing.categoryTitle}`}
       actions={<>
+        {practiceTopic(briefing.topicId, briefing.subject, briefing.year) && <Link className="tt-button-link" to={`/teachers/practice?year=${briefing.year}&subject=${briefing.subject}&topic=${briefing.topicId}`}>Make a practice sheet</Link>}
         <Link className="tt-button-link" to={`/teachers/planning?year=${briefing.year}&subject=${briefing.subject}&topic=${briefing.topicId}`}>Plan lessons for this topic</Link>
         <button type="button" onClick={() => window.print()}><Icon name="print" />Print briefing</button>
       </>} />
+    <ReadingLayout sections={[...(briefing.notes ? ["In brief", "What the curriculum says", "Key ideas", "Common misconceptions", "Vocabulary", "Where it fits"] : []), ...(lessons.length ? ["How Bix teaches it"] : []), "Try the challenges"]}>
     {briefing.notes ? <BriefingNotes notes={briefing.notes} /> : <p className="tp-notice">Detailed teacher notes for this topic aren't written yet. {lessons.length ? "Below are the worked examples Bix uses to introduce it." : "Open a challenge below to see how Bix teaches it."}</p>}
     {lessons.length > 0 && <Section title="How Bix teaches it">
       <ol className="tt-lessons">{lessons.map((challenge) => <li key={challenge.id} className="tt-card">
-        <h3>Challenge {challenge.id}: {challenge.lesson.title}</h3>
+        <span className="ar-card-label">Challenge {challenge.id}</span>
+        <h3>{challenge.lesson.title}</h3>
         <ul className="tt-list">{challenge.lesson.lines.map((line) => <li key={line}>{line}</li>)}</ul>
         {challenge.lesson.example && <LessonExample example={challenge.lesson.example} />}
       </li>)}</ol>
@@ -100,6 +107,7 @@ function BriefingPage({ year, subject, topicId }) {
       <p className="tp-quiet tt-no-print">Challenges open in Curriculum Mode, which asks for a learner profile and records that learner's progress.</p>
       <ul className="tt-link-row">{briefing.challenges.map((challenge) => <li key={challenge.id}><a href={challenge.to} target="_blank" rel="noopener noreferrer">Challenge {challenge.id}{challenge.lesson ? `: ${challenge.lesson.title}` : ""} <Icon name="external" /></a></li>)}</ul>
     </Section>
+    </ReadingLayout>
     <nav className="tt-pager tt-no-print" aria-label="Other topics">
       {briefing.previous ? <Link to={briefingPath(year, subject, briefing.previous.id)}><Icon name="back" />{briefing.previous.name}</Link> : <span />}
       {briefing.next && <Link to={briefingPath(year, subject, briefing.next.id)}>{briefing.next.name} →</Link>}

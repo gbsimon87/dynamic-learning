@@ -11,6 +11,7 @@ export const APP_PAGES = {
   '/reset-password': 'Choose a new password', '/profiles': 'Learner profiles', '/parent': 'Parent area',
   '/curriculum': 'Choose your curriculum', '/trophies': 'Trophy room', '/hello': 'Meet Bix',
   '/daily-puzzle': 'Daily puzzle', '/credits': 'Credits', '/privacy': 'Privacy',
+  '/teachers/practice': 'Practice sheet builder',
   '/teachers/planning': 'Teacher planning preview',
   '/teachers': 'Teacher tools', '/teachers/briefings': 'Topic briefings',
   '/teachers/reports': 'Report comment builder', '/parent-guides': 'Parent guides',

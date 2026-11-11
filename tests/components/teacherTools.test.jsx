@@ -18,7 +18,7 @@ function at(path, element, pattern) {
 
 it("links every teacher tool from the hub and the footer", () => {
   at("/teachers", <TeacherHub />);
-  for (const href of ["/teachers/planning", "/teachers/briefings", "/teachers/reports", "/parent-guides"]) {
+  for (const href of ["/teachers/practice", "/teachers/planning", "/teachers/briefings", "/teachers/reports", "/parent-guides"]) {
     expect(screen.getAllByRole("link").some((link) => link.getAttribute("href") === href)).toBe(true);
   }
   render(<MemoryRouter><AppFooter /></MemoryRouter>);
@@ -89,6 +89,11 @@ it("shows an explainer's teaching steps, worked example and practice links", asy
   const explainer = PARENT_EXPLAINERS.find((entry) => entry.slug === "column-subtraction");
   at("/parent-guides/column-subtraction", <ParentGuide />, "/parent-guides/:slug");
   expect(screen.getByRole("heading", { level: 1, name: explainer.title })).toBeTruthy();
+  for (const link of within(screen.getByRole("navigation", { name: "On this page" })).getAllByRole("link")) {
+    const target = document.getElementById(link.hash.slice(1));
+    expect(target).toBeTruthy();
+    expect(within(target).getByRole("heading", { level: 2 })).toBeTruthy();
+  }
   expect(screen.getByText(explainer.howWeTeach.steps[0])).toBeTruthy();
   expect(screen.getByText(explainer.howWeTeach.examples[0].title)).toBeTruthy();
   expect(screen.getByText(/Schools teach written methods/)).toBeTruthy();

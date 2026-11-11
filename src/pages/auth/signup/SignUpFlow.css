@@ -78,6 +78,7 @@
 .auth-page .sf-wheel {
   position: relative;
   box-sizing: border-box;
+  width: min(100%, 20rem);
   height: 15rem;
   overflow-y: auto;
   overscroll-behavior-y: contain;
@@ -85,7 +86,7 @@
   scroll-padding-block: 0.5rem;
   scrollbar-width: thin;
   scrollbar-color: var(--au-muted) var(--au-bg);
-  margin: 0;
+  margin: 0 auto;
   padding: 0.5rem 0.75rem;
   list-style: none;
   border: 2px solid var(--au-border);

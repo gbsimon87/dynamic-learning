@@ -1,0 +1,206 @@
+.teacher-practice { --pp-ink: #20252a; --pp-muted: #545b62; --pp-line: #c4c8cc; }
+.teacher-practice .pp-builder { display: grid; grid-template-columns: 310px minmax(0, 1fr); align-items: start; gap: 28px; }
+.teacher-practice .pp-setup { border: 1px solid var(--tp-edge); border-radius: 14px; background: var(--tp-paper); overflow: hidden; }
+.teacher-practice .pp-settings-section { padding: 22px; }
+.teacher-practice .pp-settings-section + .pp-settings-section { border-top: 1px solid var(--tp-edge); }
+.teacher-practice .pp-settings-section h2 { font-size: 1.05rem; margin-bottom: 12px; }
+.teacher-practice .pp-settings-section > .tp-quiet { font-size: .85rem; margin-bottom: 16px; }
+.teacher-practice .pp-search { position: relative; margin-bottom: 12px; }
+.teacher-practice .pp-search .tp-icon { position: absolute; top: 14px; left: 12px; color: var(--tp-muted); }
+.teacher-practice .pp-settings-section .pp-search input[type="search"] { padding-left: 40px; }
+.teacher-practice .pp-topic-results { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.teacher-practice .pp-topic-results button { width: 100%; text-align: left; justify-content: start; padding: 9px 10px; font-size: .85rem; border-color: transparent; line-height: 1.45; }
+.teacher-practice .pp-topic-results button[aria-pressed="true"] { color: var(--tp-green); background: var(--tp-green-bg); }
+.teacher-practice .pp-selected-summary { font-size: .8rem; color: var(--tp-muted); margin-top: 16px; }
+.teacher-practice .pp-selected-topics { list-style: none; padding: 12px 0 0; margin: 12px 0 0; border-top: 1px solid var(--tp-edge); }
+.teacher-practice .pp-selected-topics li { display: flex; align-items: center; gap: 6px; font-size: .8rem; line-height: 1.4; }
+.teacher-practice .pp-selected-topics li > span { flex: 1; }
+.teacher-practice .pp-selected-topics button { padding: 8px; min-width: 44px; min-height: 44px; border: 0; background: none; }
+.teacher-practice .pp-setting-hint { color: var(--tp-muted); font-size: .78rem; margin-top: 10px; }
+.teacher-practice .pp-setting-row { display: grid; gap: 12px; }
+.teacher-practice .pp-support { margin: 20px 0; padding: 0; border: 0; }
+.teacher-practice .pp-support legend { font-size: .85rem; font-weight: 650; margin-bottom: 8px; }
+.teacher-practice .pp-support label { display: flex; flex-direction: row; align-items: center; min-height: 44px; gap: 10px; font-weight: 400; }
+.teacher-practice .pp-support input { width: 18px; height: 18px; accent-color: var(--tp-green); }
+.teacher-practice .pp-settings-section > label { margin-bottom: 16px; }
+.teacher-practice .pp-new-set { width: 100%; }
+.teacher-practice .pp-unsaved { font-size: .78rem; line-height: 1.55; color: var(--tp-muted); margin-top: 14px; }
+.teacher-practice .pp-preview { min-width: 0; }
+.teacher-practice .pp-preview-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; }
+.teacher-practice .pp-preview-toolbar > span { font-size: .8rem; color: var(--tp-muted); }
+.teacher-practice .pp-preview-tabs { display: flex; gap: 4px; }
+.teacher-practice .pp-preview-tabs button { font-size: .85rem; padding: 8px 14px; border-radius: 8px; }
+.teacher-practice .pp-preview-tabs button[aria-pressed="true"] { background: var(--tp-ink); color: var(--tp-paper); border-color: var(--tp-ink); }
+.teacher-practice .pp-print-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.teacher-practice .pp-print-controls > label { flex: 1; min-width: 150px; }
+.teacher-practice .pp-print-controls button { font-size: .9rem; }
+.teacher-practice .pp-status { font-size: .85rem; color: var(--tp-green); margin-block: 12px; }
+.teacher-practice .pp-status:empty { margin-block: 8px; }
+.teacher-practice .pp-preview-hidden { display: none; }
+.teacher-practice .pp-empty { border: 1px dashed var(--tp-edge); padding: 60px 24px; text-align: center; border-radius: 14px; }
+.teacher-practice .pp-empty > .tp-icon { width: 36px; height: 36px; margin-bottom: 16px; color: var(--tp-muted); }
+.teacher-practice .pp-empty h2 { justify-content: center; }
+/* Paper stays monochrome in either app theme, matching its printed output. */
+.teacher-practice .pp-page { display: flex; flex-direction: column; gap: 22px; width: 100%; min-height: 900px; aspect-ratio: 210 / 297; margin-bottom: 24px; padding: clamp(20px, 3vw, 40px); background: #fff; color: var(--pp-ink); border: 1px solid #d5d7d9; box-shadow: 0 8px 24px rgb(0 0 0 / .06); font-size: 16px; line-height: 1.55; overflow-wrap: anywhere; }
+.teacher-practice .pp-paper-header { padding-bottom: 16px; border-bottom: 2px solid var(--pp-ink); }
+.teacher-practice .pp-paper-kicker { color: var(--pp-muted); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 12px; }
+.teacher-practice .pp-paper-header h2 { display: block; color: var(--pp-ink); font-size: 23px; font-weight: 650; line-height: 1.25; letter-spacing: -.025em; margin-bottom: 18px; }
+.teacher-practice .pp-name-line { display: flex; gap: 8px 20px; flex-wrap: wrap; font-size: 14px; margin-bottom: 12px; }
+.teacher-practice .pp-instructions { font-size: 14px; margin: 0; }
+.teacher-practice .pp-paper-body { flex: 1; min-width: 0; }
+.teacher-practice .pp-paper-footer { display: flex; justify-content: space-between; gap: 12px; border-top: 1px solid var(--pp-line); padding-top: 12px; font-size: 10px; color: var(--pp-muted); }
+.teacher-practice .pp-question { padding-block: 14px; border-bottom: 1px solid var(--pp-line); break-inside: avoid; }
+.teacher-practice .pp-question:first-child { padding-top: 0; }
+.teacher-practice .pp-question:last-child { border-bottom: 0; }
+.teacher-practice .pp-question-top { display: flex; gap: 12px; align-items: baseline; }
+.teacher-practice .pp-question-top p { margin: 0; }
+.teacher-practice .pp-question-number { font-weight: 650; min-width: 18px; }
+.teacher-practice .pp-working { height: 40px; margin: 8px 0 0 30px; background: repeating-linear-gradient(to bottom, transparent 0, transparent 19px, #dce0e3 19px, #dce0e3 20px); }
+.teacher-practice .pp-extra-space .pp-working { height: 90px; }
+.teacher-practice .pp-question-actions { display: flex; justify-content: end; align-items: center; flex-wrap: wrap; gap: 2px; padding-top: 8px; }
+.teacher-practice .pp-question-actions button { color: var(--pp-muted); background: #fff; border-color: transparent; min-height: 44px; min-width: 44px; padding: 6px; font-size: 12px; }
+.teacher-practice .pp-question-actions button:hover:not(:disabled) { border-color: var(--pp-muted); background: #f2f4f5; }
+.teacher-practice .pp-question-actions a { color: var(--pp-muted); font-size: 11px; margin-left: 8px; min-height: 44px; display: inline-flex; align-items: center; }
+.teacher-practice .pp-page :is(a, button):focus-visible { outline-color: #20252a; }
+.teacher-practice .pp-model { display: block; max-width: 100%; height: auto; margin: 12px 0 4px 30px; color: #20252a; }
+.teacher-practice .pp-bar, .teacher-practice .pp-sequence { width: 340px; max-width: calc(100% - 30px); }
+.teacher-practice .pp-blocks { width: 330px; max-width: calc(100% - 30px); }
+.teacher-practice .pp-counters { width: 300px; max-width: calc(100% - 30px); max-height: 140px; }
+.teacher-practice .pp-column { display: grid; grid-template-columns: repeat(3, 28px); position: relative; width: max-content; margin: 12px 0 4px 45px; text-align: center; font-variant-numeric: tabular-nums; }
+.teacher-practice .pp-column > span { font-size: 10px; }
+.teacher-practice .pp-column > b { font-size: 18px; font-weight: 500; }
+.teacher-practice .pp-column .pp-column-op { position: absolute; left: -16px; top: 43px; font-size: 18px; }
+.teacher-practice .pp-column-rule { grid-column: 1 / -1; border-top: 1px solid currentColor; height: 18px; }
+.teacher-practice .pp-vocabulary { background: #f5f6f7; border: 1px solid var(--pp-line); padding: 12px; font-size: 14px; }
+.teacher-practice .pp-vocabulary strong { display: block; margin-bottom: 4px; }
+.teacher-practice .pp-worked-example { border: 1px solid var(--pp-line); padding: 14px; margin-bottom: 18px; border-radius: 6px; break-inside: avoid; }
+.teacher-practice .pp-example-label { font-size: 10px; text-transform: uppercase; letter-spacing: .05em; color: var(--pp-muted); }
+.teacher-practice .pp-worked-example .lesson-example { --lesson-card: #fff; --lesson-ink: #20252a; --lesson-slot: #3c444b; --lesson-soft-ink: #c4c8cc; --lesson-sky: #f2f3f4; --lesson-grass: #e5e7e9; --lesson-sun: #f2f3f4; margin: 0; padding: 0; border-radius: 0; box-shadow: none; }
+.teacher-practice .pp-worked-example .lesson-example-title { font-size: 15px; font-weight: 650; margin-bottom: 10px; }
+.teacher-practice .pp-worked-example .lesson-example-title::before { display: none; }
+.teacher-practice .pp-worked-example .lesson-example-note { font-size: 14px; font-weight: 400; border-left: 2px solid #20252a; border-radius: 0; }
+.teacher-practice .pp-worked-example .lesson-steps { gap: 5px; }
+.teacher-practice .pp-worked-example .lesson-steps li { font-size: 14px; padding: 5px 8px; border-radius: 4px; box-shadow: none; }
+.teacher-practice .pp-worked-example .lesson-jump-term { font-size: 14px; padding: 6px; min-width: 32px; border-radius: 4px; box-shadow: none; }
+.teacher-practice .pp-worked-example .lesson-jump-step { font-size: 10px; }
+.teacher-practice .pp-worked-example .lesson-jumps { gap: 8px; }
+.teacher-practice .pp-worked-example .lesson-table { font-size: 14px; }
+.teacher-practice .pp-worked-example .lesson-table :is(th, td) { padding: 5px 7px; }
+.teacher-practice .pp-worked-example .lesson-col-cell { width: 28px; height: 30px; font-size: 18px; border-radius: 4px; }
+.teacher-practice .pp-worked-example .lesson-bar { height: 26px; }
+.teacher-practice .pp-worked-example .lesson-bar-label { font-size: 14px; }
+.teacher-practice .pp-answer-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 18px; }
+.teacher-practice .pp-answer-list li { display: flex; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--pp-line); break-inside: avoid; font-size: 12px; }
+.teacher-practice .pp-answer-list p { margin-bottom: 4px; }
+.teacher-practice .pp-answer-topic { color: var(--pp-muted); font-size: 10px; }
+.teacher-practice .pp-answer-number { min-width: 18px; font-weight: 650; }
+.teacher-practice .pp-answer-value { font-weight: 700; font-size: 15px; }
+.teacher-practice .pp-review-note { font-size: .8rem; color: var(--tp-muted); margin-top: 20px; }
+@media (min-width: 1450px) { .teacher-planning.teacher-practice { max-width: 1340px; } }
+@media (max-width: 950px) {
+  .teacher-practice .pp-builder { grid-template-columns: minmax(0, 1fr); }
+  .teacher-practice .pp-setup { display: grid; grid-template-columns: 1fr 1fr; }
+  .teacher-practice .pp-settings-section + .pp-settings-section { border-top: 0; border-left: 1px solid var(--tp-edge); }
+  .teacher-practice .pp-preview { max-width: 800px; width: 100%; margin-inline: auto; }
+}
+@media (max-width: 600px) {
+  .teacher-practice .pp-setup { display: block; }
+  .teacher-practice .pp-settings-section + .pp-settings-section { border-left: 0; border-top: 1px solid var(--tp-edge); }
+  .teacher-practice .pp-page { min-height: 0; padding: 20px 16px; }
+  .teacher-practice .pp-paper-header h2 { font-size: 20px; }
+  .teacher-practice .pp-print-controls > button { flex: 1; }
+}
+@page bixPractice { size: A4 portrait; margin: 12mm; }
+@media print {
+  body:has(.teacher-practice), body:has(.teacher-practice) .app-layout { background: #fff; }
+  body:has(.teacher-practice) :is(.navbar, .app-footer, .skip-link, .brain-break) { display: none !important; }
+  body:has(.teacher-practice) main { margin: 0; padding: 0; max-width: none; width: auto; }
+  .teacher-planning.teacher-practice { max-width: none; margin: 0; padding: 0; }
+  .teacher-practice :is(.pp-screen-header, .pp-setup, .pp-preview-toolbar, .pp-print-controls, .pp-status, .pp-question-actions, .pp-review-note, .pp-empty) { display: none !important; }
+  .teacher-practice .pp-builder, .teacher-practice .pp-preview { display: block; max-width: none; }
+  .teacher-practice .pp-pupil-pages, .teacher-practice .pp-answer-pages, .teacher-practice .pp-pupil-pages[hidden], .teacher-practice .pp-answer-pages[hidden] { display: block; }
+  .teacher-practice.pp-print-pupil .pp-answer-pages, .teacher-practice.pp-print-answers .pp-pupil-pages { display: none; }
+  .teacher-practice .pp-page { page: bixPractice; width: 186mm; height: 272mm; min-height: 0; margin: 0; padding: 0; border: 0; box-shadow: none; break-after: page; gap: 5mm; print-color-adjust: exact; }
+  .teacher-practice .pp-page:last-child { break-after: auto; }
+  .teacher-practice.pp-print-both .pp-pupil-pages { break-after: page; }
+  .teacher-practice .pp-paper-header { padding-bottom: 4mm; }
+  .teacher-practice .pp-paper-header h2 { font-size: 18pt; margin-bottom: 4mm; }
+  .teacher-practice .pp-paper-footer { padding-top: 3mm; }
+  .teacher-practice .pp-question { padding-block: 3mm; }
+  .teacher-practice .pp-working { height: 10mm; }
+  .teacher-practice .pp-extra-space .pp-working { height: 24mm; }
+  .teacher-practice .pp-model { max-height: 34mm; width: auto; max-width: calc(100% - 30px); }
+  .teacher-practice .pp-bar, .teacher-practice .pp-sequence { width: 85mm; }
+  .teacher-practice .pp-worked-example { margin-bottom: 4mm; padding: 3mm; }
+  .teacher-practice .pp-answer-list { gap: 4mm; }
+}
+/* Extended Year 3 paper models. Drawings use ink, outlines and hatching. */
+.teacher-practice .pp-model svg, .teacher-practice svg.pp-model { color: var(--pp-ink); }
+.teacher-practice svg:is(.pp-clock, .pp-axis, .pp-jug, .pp-polygon, .pp-angles, .pp-solid, .pp-turn, .pp-array, .pp-perimeter) { stroke: currentColor; fill: none; stroke-width: 1.3; }
+.teacher-practice svg.pp-model text { stroke: none; fill: currentColor; font-family: inherit; font-size: 13px; }
+.teacher-practice .pp-clock, .teacher-practice .pp-solid, .teacher-practice .pp-jug, .teacher-practice .pp-polygon { width: 180px; max-height: 160px; }
+.teacher-practice .pp-axis, .teacher-practice .pp-bar-chart { width: 440px; max-width: calc(100% - 30px); }
+.teacher-practice .pp-angles, .teacher-practice .pp-turn, .teacher-practice .pp-perimeter { width: 330px; max-width: calc(100% - 30px); }
+.teacher-practice .pp-array { width: 270px; max-height: 160px; }
+.teacher-practice .pp-drawing-grid { width: 360px; max-width: calc(100% - 30px); }
+.teacher-practice .pp-fraction-bars { width: 380px; max-width: calc(100% - 30px); }
+.teacher-practice .pp-data-table { max-width: 100%; width: auto; margin-inline: 30px 0; font-size: 14px; }
+.teacher-practice .pp-data-table table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.teacher-practice .pp-data-table caption { text-align: left; font-weight: 650; padding-bottom: 8px; }
+.teacher-practice .pp-data-table :is(td, th) { padding: 6px; border: 1px solid var(--pp-line); text-align: left; }
+.teacher-practice .pp-symbols { font-size: 20px; letter-spacing: .1em; }
+.teacher-practice .pp-reading-evidence, .teacher-practice .pp-source-model { margin: 14px 0 8px 30px; padding: 14px; border: 1px solid var(--pp-line); font-size: 14px; line-height: 1.55; }
+.teacher-practice .pp-reading-evidence p, .teacher-practice .pp-source-model p { margin-bottom: 7px; white-space: pre-wrap; }
+.teacher-practice .pp-evidence-title { font-weight: 650; font-size: 12px; }
+.teacher-practice .pp-source-model { --geo-paper: #fff; --geo-ink: #20252a; --geo-border: #777; --geo-water: #fff; --geo-land: #aaa; --geo-hot: #555; --geo-slot: #555; --geo-sky: #fff; --geo-grass: #ddd; --geo-hill: #ccc; --geo-sun: #bbb; --geo-sea: #ddd; --geo-leaf: #777; --geo-card: #fff; --geo-soft-ink: #bbb; --ck-muted: #eee; --ck-accent: #555; --ck-on-accent: #fff; --ck-panel: #fff; --ck-text: #20252a; --ck-border: #777; }
+.teacher-practice .pp-source-model :is(.geo-visual, .history-source) { padding: 0; margin: 0; border: 0; background: #fff; border-radius: 0; }
+.teacher-practice .pp-source-model :is(.geo-visual-heading h4, .geo-key, .geo-flow li, .geo-climate table) { font-size: 12px; }
+.teacher-practice .pp-source-model :is(.geo-evidence-line, .geo-credit, .history-source-credit) { font-size: 11px; line-height: 1.5; }
+.teacher-practice .pp-source-model :is(.geo-description, .geo-sources, .speak-btn, .speak-button, button) { display: none; }
+.teacher-practice .pp-source-model :is(svg, img) { max-height: 230px; width: 100%; object-fit: contain; filter: grayscale(1); }
+.teacher-practice .pp-source-model .geo-key { gap: 4px 12px; }
+.teacher-practice .pp-source-model .geo-key li { flex-basis: 110px; }
+.teacher-practice .pp-source-model .geo-paired-maps { gap: 8px; grid-template-columns: 1fr 1fr; }
+@media print {
+  .teacher-practice .pp-model.pp-data-table { max-height: none; width: auto; }
+  .teacher-practice :is(.pp-bar-chart, .pp-clock, .pp-solid, .pp-polygon, .pp-jug, .pp-angles, .pp-turn, .pp-perimeter, .pp-array) { max-height: 48mm; }
+  .teacher-practice .pp-reading-evidence, .teacher-practice .pp-source-model { font-size: 10.5pt; padding: 3mm; margin-top: 3mm; }
+  .teacher-practice .pp-source-model :is(img, svg) { max-height: 48mm; }
+  .teacher-practice .pp-source-model .history-source-credit { font-size: 7pt; }
+  .teacher-practice .pp-answer-page .pp-answer-list { font-size: 9pt; gap: 3mm; }
+}
+
+.teacher-practice .pp-source-model .history-timeline ol { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; padding: 0; overflow: visible; }
+.teacher-practice .pp-source-model .history-timeline li { min-width: 0; padding: 6px; font-size: 11px; }
+.teacher-practice .pp-source-model .history-timeline-help { display: none; }
+/* Pupil evidence stays legible on white paper in either workspace theme. */
+.teacher-practice .pp-curriculum-source {
+  --light-text: var(--pp-ink); --dark-text: var(--pp-ink);
+  --light-panel: #fff; --dark-panel: #fff;
+  --light-bg: #fff; --dark-bg: #fff;
+  --light-accent: #777; --dark-accent: #777;
+  --light-geo-ink: var(--pp-ink); --dark-geo-ink: var(--pp-ink);
+  --light-geo-paper: #fff; --dark-geo-paper: #fff;
+  --ck-text: var(--pp-ink); --ck-panel: #fff; --ck-muted: #eee;
+  --ck-border: #777; --ck-accent: #777; --ck-on-accent: #fff;
+  color: var(--pp-ink); font-size: 14px; line-height: 1.5;
+}
+.teacher-practice .pp-curriculum-source :is(svg, img) { max-width: 100%; max-height: 230px; object-fit: contain; filter: grayscale(1); }
+.teacher-practice .pp-curriculum-source :is(.year4-column, .year5-column) { font-size: 22px; }
+.teacher-practice .pp-curriculum-source :is(.year4-table, .year5-table, .data-table) { width: 100%; border-collapse: collapse; font-size: 12px; }
+.teacher-practice .pp-curriculum-source :is(th, td) { padding: 6px; border: 1px solid var(--pp-line); overflow-wrap: anywhere; }
+.teacher-practice .pp-curriculum-source .pp-shape-cards { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.teacher-practice .pp-shape-cards figure { flex: 0 1 95px; min-width: 0; margin: 0; text-align: center; }
+.teacher-practice .pp-shape-cards svg { width: 95px; height: 95px; }
+.teacher-practice .pp-shape-gap { display: grid; place-items: center; height: 95px; font-size: 28px; }
+.teacher-practice .pp-curriculum-source .pp-reflection { display: block; width: 240px; height: auto; margin: 12px auto; }
+.teacher-practice .pp-curriculum-source .y1-counter { font-size: 22px; }
+.teacher-practice .pp-curriculum-source :is(.year4-number-line-scroll, .year5-scroll, .scrollable-table) { min-width: 0; max-width: 100%; }
+.teacher-practice .pp-curriculum-source :is(.year4-coordinate-wrap, .year5-grid-wrap) { min-width: 0; width: 100%; }
+.teacher-practice .pp-curriculum-source button { pointer-events: none; }
+@media print {
+  .teacher-practice .pp-curriculum-source { font-size: 10pt; }
+  .teacher-practice .pp-curriculum-source :is(svg, img) { max-height: 52mm; }
+  .teacher-practice .pp-curriculum-source figcaption { font-size: 9pt; }
+}
+.teacher-practice .pp-picture-clue { display: block; font-size: 42px; text-align: center; line-height: 1.3; }

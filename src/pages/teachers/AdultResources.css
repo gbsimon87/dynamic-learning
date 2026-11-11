@@ -1,0 +1,118 @@
+/* Adult reading surfaces. Keep the planner and learner-facing pages independent. */
+.teacher-planning.adult-resources {
+  max-width: 1200px;
+  padding-block: 32px 72px;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.7;
+}
+.adult-resources .tp-header { margin-bottom: 32px; }
+.adult-resources h1 { font-size: clamp(2rem, 3.6vw, 3rem); line-height: 1.16; letter-spacing: -.035em; max-width: 27ch; }
+.adult-resources .tp-heading-row { align-items: start; gap: 24px; }
+.adult-resources .tp-heading-row > div:first-child { flex: 1 1 480px; min-width: 0; }
+.adult-resources .tw-context { font-size: .9rem; margin-top: 16px; }
+.adult-resources .tw-header-actions { margin-top: 8px; }
+.adult-resources .tp-back { margin-bottom: 24px; }
+.adult-resources .tp-lede { max-width: 65ch; font-size: 1.1rem; color: var(--tp-muted); }
+.adult-resources .tt-kicker, .adult-resources .ar-card-label { font-size: .75rem; font-weight: 650; letter-spacing: .09em; text-transform: uppercase; color: var(--tp-muted); }
+.adult-resources .ar-intro { font-size: clamp(1.25rem, 2.4vw, 1.8rem); letter-spacing: -.025em; margin-bottom: 8px; }
+.adult-resources .ar-description { color: var(--tp-muted); margin-bottom: 32px; max-width: 60ch; }
+.adult-resources.adult-hub .tt-hub { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.adult-resources.adult-hub .tt-hub > li { min-width: 0; }
+.adult-resources.adult-hub .tt-hub-card { position: relative; padding: 28px; gap: 12px; border-radius: 16px; border-color: var(--tp-edge); color: var(--tp-ink); }
+.adult-resources.adult-hub .tt-hub-card strong { font-size: 1.3rem; font-weight: 650; letter-spacing: -.025em; padding-right: 24px; }
+.adult-resources.adult-hub .tt-hub-card > span { font-size: .95rem; }
+.adult-resources.adult-hub .tt-hub-card:hover { border-color: var(--tp-green); background: color-mix(in srgb, var(--tp-green-bg) 25%, var(--tp-paper)); }
+.adult-resources .ar-tool-top { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.adult-resources .ar-tool-icon { display: inline-grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; background: var(--tp-green-bg); color: var(--tp-green); }
+.adult-resources .ar-arrow { margin-left: auto; font-size: 1.3rem; color: var(--tp-muted); }
+.adult-resources.parent-guides .tt-hub-card > .ar-arrow { position: absolute; right: 24px; top: 52px; }
+.adult-resources .tp-chips { gap: 8px; margin-top: 24px; }
+.adult-resources .tp-chips button { border-radius: 9px; }
+.adult-resources .ar-reading-layout { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: clamp(28px, 4vw, 56px); align-items: start; }
+.adult-resources .ar-contents { position: sticky; top: calc(var(--navbar-height, 76px) + 24px); padding-block: 12px; }
+.adult-resources .ar-contents .ar-card-label { margin-bottom: 16px; }
+.adult-resources .ar-contents a { display: flex; align-items: center; min-height: 44px; padding: 8px 0 8px 16px; border-left: 1px solid var(--tp-edge); color: var(--tp-muted); text-decoration: none; font-size: .875rem; line-height: 1.45; }
+.adult-resources .ar-contents a:hover { color: var(--tp-green); border-left-color: var(--tp-green); }
+.adult-resources .ar-reading-body { min-width: 0; }
+.adult-resources.ar-reading .tt-section { padding: 30px; margin: 0 0 24px; border: 1px solid var(--tp-edge); border-radius: 16px; background: var(--tp-paper); scroll-margin-top: calc(var(--navbar-height, 76px) + 24px); }
+.adult-resources.ar-reading .tt-section h2 { font-size: 1.3rem; letter-spacing: -.02em; margin-bottom: 20px; font-weight: 650; }
+.adult-resources.ar-reading .tt-section h3 { font-size: 1.06rem; font-weight: 650; margin-bottom: 12px; }
+.adult-resources.ar-reading .tt-section > :last-child { margin-bottom: 0; }
+.adult-resources.ar-reading .tt-section p { max-width: 67ch; }
+.adult-resources.ar-reading .tt-lead { font-size: 1.12rem; line-height: 1.8; }
+.adult-resources.ar-reading #in-brief { background: var(--tp-green-bg); border-color: transparent; }
+.adult-resources.ar-reading .tt-quote { background: var(--tp-soft); border-left: 3px solid var(--tp-green); border-radius: 0 10px 10px 0; padding: 20px; font-style: normal; font-size: .95rem; }
+.adult-resources.ar-reading .tt-section > .tp-quiet { margin-top: 12px; font-size: .85rem; }
+.adult-resources.ar-reading .tt-list { gap: 14px; padding-left: 1.3em; }
+.adult-resources.ar-reading .tt-list li::marker { color: var(--tp-green); }
+.adult-resources.ar-reading .tt-cards { gap: 16px; }
+.adult-resources.ar-reading .tt-card { border: 0; border-radius: 10px; padding: 22px; background: var(--tp-soft); }
+.adult-resources.ar-reading .tt-card p + p { margin-top: 12px; }
+.adult-resources.ar-reading .tt-lessons { gap: 24px; }
+.adult-resources.ar-reading .tt-lessons .tt-card { padding: 24px; border: 1px solid var(--tp-edge); background: none; }
+.adult-resources.ar-reading .tt-lessons .ar-card-label { display: block; margin-bottom: 8px; color: var(--tp-green); }
+.adult-resources.ar-reading .tt-lessons .lesson-example { margin-top: 24px; }
+.adult-resources.ar-reading .tt-glossary { gap: 0; }
+.adult-resources.ar-reading .tt-glossary > div { grid-template-columns: minmax(100px, 150px) minmax(0, 1fr); padding-block: 16px; border-bottom-style: solid; }
+.adult-resources.ar-reading .tt-glossary > div:first-child { padding-top: 0; }
+.adult-resources.ar-reading .tt-glossary > div:last-child { padding-bottom: 0; border-bottom: 0; }
+.adult-resources.ar-reading .tt-numbered { list-style: none; padding: 0; counter-reset: teaching; gap: 16px; margin-block: 24px; }
+.adult-resources.ar-reading .tt-numbered li { counter-increment: teaching; display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 14px; }
+.adult-resources.ar-reading .tt-numbered li::before { content: counter(teaching, decimal-leading-zero); font-size: .8rem; font-weight: 650; color: var(--tp-green); border-top: 2px solid var(--tp-edge); padding-top: 4px; }
+.adult-resources.ar-reading .tt-teacher-panel { max-width: 720px; margin-top: 24px; padding: 0 18px; border: 1px solid var(--tp-edge); border-radius: 10px; background: var(--tp-paper); }
+.adult-resources.ar-reading .tt-teacher-panel[open] { padding-bottom: 18px; }
+.adult-resources.ar-reading .tt-teacher-panel summary { min-height: 48px; padding-block: 10px; cursor: pointer; font-size: .9rem; font-weight: 600; }
+.adult-resources.ar-reading .tt-status:empty { display: none; }
+.adult-resources.ar-reading .tt-link-row { display: grid; gap: 8px; }
+.adult-resources.ar-reading .tt-link-row a { font-size: .95rem; font-weight: 600; }
+@media (max-width: 760px) {
+  .teacher-planning.adult-resources { padding-top: 24px; }
+  .adult-resources.adult-hub .tt-hub { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .adult-resources .ar-reading-layout { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .adult-resources .ar-contents { position: static; border-block: 1px solid var(--tp-edge); display: flex; flex-wrap: wrap; gap: 4px 16px; }
+  .adult-resources .ar-contents .ar-card-label { width: 100%; margin: 0; }
+  .adult-resources .ar-contents a { border: 0; padding: 6px 0; }
+  .adult-resources.ar-reading .tt-section { padding: 22px 18px; }
+  .adult-resources.ar-reading .tt-card, .adult-resources.ar-reading .tt-lessons .tt-card { padding: 18px; }
+}
+@media (max-width: 480px) {
+  .adult-resources.ar-reading .tt-glossary > div { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+}
+@media print {
+  .teacher-planning.adult-resources { max-width: none; padding: 0; color: #000; }
+  .adult-resources .ar-reading-layout { display: block; }
+  .adult-resources.ar-reading .tt-section { border: 0; padding: 12px 0; margin-bottom: 12px; background: none; break-inside: auto; }
+  .adult-resources.ar-reading .tt-section h2 { break-after: avoid; }
+  .adult-resources.ar-reading .tt-card, .adult-resources.ar-reading .tt-quote { background: none; border: 1px solid #aaa; }
+}
+/* Examples also appear outside the children's lesson shell; supply their tokens. */
+.adult-resources.ar-reading .lesson-example {
+  --lesson-card: var(--tp-paper);
+  --lesson-ink: var(--tp-ink);
+  --lesson-slot: var(--tp-green);
+  --lesson-sky: var(--tp-soft);
+  --lesson-grass: var(--tp-green-bg);
+  --lesson-sun: var(--tp-gold-bg);
+  --lesson-soft-ink: var(--tp-edge);
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 22px;
+  border: 1px solid var(--tp-edge);
+  border-radius: 12px;
+  box-shadow: none;
+}
+.adult-resources.ar-reading .lesson-example-title { font-size: .95rem; font-weight: 650; }
+.adult-resources.ar-reading .lesson-example-title::before { display: none; }
+.adult-resources.ar-reading .lesson-example-note { font-size: .95rem; font-weight: 400; border-left-width: 3px; border-radius: 0 8px 8px 0; }
+@media print {
+  body .teacher-planning.adult-resources {
+    --tp-paper: var(--light-panel);
+    --tp-ink: var(--light-text);
+    --tp-muted: var(--light-home-muted);
+    --tp-edge: var(--light-home-card-edge);
+    --tp-soft: var(--light-home-curriculum);
+    --tp-green: var(--light-home-practice-ink);
+    --tp-green-bg: var(--light-home-practice-label);
+    --tp-gold-bg: var(--light-home-bonds);
+  }
+}

@@ -178,9 +178,20 @@ rules: extend those layers instead of creating another store or counter.
 For feature detail, read the [architecture](ARCHITECTURE.md) and the source it
 links. Delivered outcomes belong in [CHANGELOG.md](CHANGELOG.md).
 
-**Teacher tools** at `/teachers` link the planning pilot to three
-account-free tools. All `/teachers` pages use `TeacherWorkspace.jsx` and its shared
-header, with the compact planner as the visual reference. Teacher-only layout
+**Teacher tools** at `/teachers` link the planning pilot to account-free tools. All `/teachers` pages use `TeacherWorkspace.jsx` and its shared
+header, with the compact planner as the visual reference. The **practice sheet builder**
+(`/teachers/practice`) offers 714 topics: Maths, English, Science and History
+in Years 1–6, plus the existing Year 3 Geography collection. Year and subject
+selectors scope the planner's fuzzy topic search. Up to three topics from the
+same year can be mixed across subjects. Switching year retains each year's draft
+in the current tab; switching subject retains the selected topics. Teachers can
+edit titles/instructions, replace/reorder/remove questions and add existing
+examples/reminders, vocabulary, essential source material and working space.
+Finite question pools report actual availability without padding with repeats.
+Pupil sheets and separate answer keys use A4 printing/PDF; dictation scripts stay
+in the key. Drafts remain in memory. Supported briefings link to a preselected
+year/subject/topic. See the [all-years implementation and validation record](superpowers/2026-11-11-all-years-practice-builder.md), including the Year 3 review fixes and remaining content/device review limits.
+Teacher-only layout
 rules in `TeacherWorkspace.css` keep parent guides independent. **Topic briefings** (`/teachers/briefings`) cover every
 Maths and English topic that has Bix introductions; Year 3 Maths also has
 authored teacher notes, which also supply the planning pilot's lesson text, vocabulary and briefing links for those topics. The **report comment builder** (`/teachers/reports`)

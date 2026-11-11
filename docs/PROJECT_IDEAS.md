@@ -4,7 +4,7 @@
 > Keep only work that remains. Move delivered outcomes to
 > [CHANGELOG.md](CHANGELOG.md); do not leave completed rows here.
 
-**Last reviewed:** 2026-11-09
+**Last reviewed:** 2026-11-11
 
 Before taking on a curriculum proposal, check the current scope in
 [PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md) and
@@ -69,22 +69,24 @@ new records; completion totals cannot diagnose learning gaps. See the
 
 ### More teacher tools: everyday workload
 
-Four proposals, each responsible for a different stage of a teacher's routine:
-prepare pupil work, explain it to the class, respond to mistakes, and organise
-the week's materials. Their value is a hypothesis to test with teachers.
+Three new proposals cover explaining to the class, responding to mistakes and
+organising the week's materials. The practice builder now spans the five existing Year 3 subjects;
+its remaining review and expansion work is retained below. Demand for the new
+tools remains a hypothesis to test with teachers.
 
 | # | Feature | When the teacher uses it | Precise first version and output | Scope boundary | Status |
 |---|---|---|---|---|---|
-| 46 | **Printable practice builder** | Preparing independent work, a short starter or homework; rewriting questions and making answer sheets. | Teacher selects year, topics and question count; chooses optional worked examples and vocabulary support; swaps unsuitable questions; then prints a pupil sheet and separate checked answer key. Pilot with Year 3 Maths and question types that work on paper, including diagrams and space for working. | Owns pupil practice materials. Starters and homework are layouts within this tool; task adaptation is an option on the same sheet. Lesson sequencing stays in the planner. | ⚪ Idea |
+| 46 | **Review Years 1–6 printable practice** | Teachers need trustworthy printable materials across the existing core courses. | Core-subject expansion is implemented for Years 1–6 (714 topics including existing Year 3 Geography), with the seven Year 3 review findings addressed. Obtain independent teacher/content review, classroom usability feedback and physical photocopy/device evidence. Assess demand for fixed-page presets, shorter source-based sheets and richer exports. See the [implementation record](superpowers/2026-11-11-all-years-practice-builder.md) for technical checks and remaining baseline test failures. | Extend the existing builder. Preserve source evidence and keep all learner progress independent. | 🟡 In progress |
 | 48 | **Whole-class teaching display** | Preparing the explanation and worked example that pupils will see on the classroom screen. | Teacher selects a Bix worked example, edits its explanation and reveals one step at a time, then shows a related question with its answer hidden until requested. Use large diagrams and text; keep teacher notes separate from the projected view. Start with existing illustrated Maths examples. | Owns live modelling and explanation. It reuses the selected lesson's content; worksheet creation belongs to #46 and lesson planning stays in the planner. Full slide-deck generation is outside the first version. | ⚪ Idea |
 | 51 | **Whole-class feedback sheet** | After looking through books, when the same mistake needs explaining to several pupils. | Teacher selects a topic and records up to three observed mistakes and one success. For supported misconceptions, offer an editable correction with a worked example and one follow-up question per mistake. Produce a single class feedback sheet with a separate answer key; accept teacher-written content where no reviewed explanation exists. | Owns feedback on work the teacher has already reviewed. The teacher supplies the findings; automatic marking, pupil diagnosis, general practice sheets and end-of-year report comments are outside this feature. | ⚪ Idea |
 | 57 | **Weekly preparation checklist** | Before the week starts or when setting up tomorrow's lessons; checking what to photocopy, gather or book. | Add structured equipment and printing requirements to selected planner lessons. Teacher confirms missing requirements, quantities and preparation dates; combine repeated items while retaining their lesson/day references. Output one editable checklist with tick boxes and print quantities. | Extends the existing planner with materials logistics. It consumes lesson/resource requirements and never invents a lesson or creates its worksheets. Quantities and equipment must be confirmed by the teacher. | ⚪ Idea |
 
-Build #46 first: it has the clearest recurring output and reuses Bix's question
-content. Test whether teachers can produce a usable sheet with less preparation
-and correction time than their usual method. Consider #48 next if teachers need
-to demonstrate Bix models to a whole class. Validate demand for #51 and #57
-before building them; the checklist also needs reliable resource metadata.
+Complete #46's teacher/content and physical print review before expanding beyond the agreed core subjects.
+Test whether teachers can
+produce a usable sheet with less preparation and correction time than their
+usual method. Consider #48 next if teachers need to demonstrate Bix models to a
+whole class. Validate demand for #51 and #57 before building them; the checklist
+also needs reliable resource metadata.
 
 Keep quick checks within the planned assessment workflow, and intervention or
 cover instructions within the lesson planner. Generic parent-message drafting

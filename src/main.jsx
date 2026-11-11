@@ -37,6 +37,7 @@ const router = createBrowserRouter([
       { path: "curriculum-guide/:slug", element: <CurriculumGuide /> },
       // Public descriptions are prerendered; existing play routes stay ungated.
       { path: "learn/:slug", element: <SkillGuide /> },
+      { path: "teachers/practice", lazy: () => import("./pages/teachers/TeacherPractice").then((m) => ({ Component: m.default })) },
       { path: "teachers/planning", lazy: () => import("./pages/teachers/TeacherPlanning").then((m) => ({ Component: m.default })) },
       { path: "teachers", lazy: () => import("./pages/teachers/TeacherHub").then((m) => ({ Component: m.default })) },
       { path: "teachers/briefings", lazy: () => import("./pages/teachers/TeacherBriefings").then((m) => ({ Component: m.default })) },

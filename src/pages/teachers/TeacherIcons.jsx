@@ -1,5 +1,6 @@
 // One stroke icon set for the teacher pages (24px grid, 2px stroke).
 const PATHS = {
+  home: <><path d="m3 10 9-7 9 7v10H3zM9 20v-7h6v7" /></>,
   list: <><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" /></>,
   calendar: <><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4M17 3v4M3 11h18M7 15h2M13 15h2" /></>,
   clock: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>,

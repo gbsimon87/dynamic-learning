@@ -54,6 +54,7 @@ it("links a briefing to a lesson plan that already has the topic, and the plan l
   const user = userEvent.setup();
   at("/teachers/briefings/3/math/column-subtraction");
   expect(screen.getByRole("link", { name: "Plan lessons for this topic" }).getAttribute("href")).toBe("/teachers/planning?year=3&subject=math&topic=column-subtraction");
+  expect(screen.getByRole("link", { name: "Make a practice sheet" }).getAttribute("href")).toBe("/teachers/practice?year=3&subject=math&topic=column-subtraction");
   cleanup();
 
   render(<MemoryRouter initialEntries={["/teachers/planning?year=3&subject=math&topic=column-subtraction"]}><Routes><Route path="/teachers/planning" element={<TeacherPlanning />} /></Routes></MemoryRouter>);
@@ -70,4 +71,21 @@ it("ignores an unknown topic in the planning link", () => {
   render(<MemoryRouter initialEntries={["/teachers/planning?year=9&subject=math&topic=nothing"]}><Routes><Route path="/teachers/planning" element={<TeacherPlanning />} /></Routes></MemoryRouter>);
   expect(screen.getByRole("combobox", { name: "Class year" }).value).toBe("3");
   expect(screen.getByRole("button", { name: "Create three-week plan" })).toBeTruthy();
+});
+
+// Long briefings must keep their section navigation usable as content varies.
+it("links every contents entry to a labelled section, across topics", () => {
+  for (const path of [
+    "/teachers/briefings/3/math/counting-in-multiples-of-4-8-50-and-100",
+    "/teachers/briefings/3/math/column-subtraction",
+  ]) {
+    at(path);
+    const contents = screen.getByRole("navigation", { name: "On this page" });
+    for (const link of within(contents).getAllByRole("link")) {
+      const target = document.getElementById(link.hash.slice(1));
+      expect(target).toBeTruthy();
+      expect(within(target).getByRole("heading", { level: 2 })).toBeTruthy();
+    }
+    cleanup();
+  }
 });
