@@ -123,7 +123,7 @@ export const algorithms = termTopic({
         const list = distinctList(rng, 5); const { swaps } = bubblePass(list);
         return nm("How many swaps does the algorithm make?", swaps, showing("Algorithm", bubbleLines(list)));
       }),
-      ...HALVES.map(([n, guesses]) => nm(`I think of a number from 1 to ${n}. Each guess cuts the choices in half. What is the most guesses you could need?`, guesses)),
+      ...HALVES.map(([n, guesses]) => nm(`I think of a number from 1 to ${n}. Each question cuts the choices in half. How many halvings until only one number is left?`, guesses)),
       ...times(4, () => (rng) => {
         const list = distinctList(rng, 6, 1, 15); const k = int(rng, 5, 9);
         return nm(`What does the algorithm say? (It adds up the numbers that are bigger than ${k}.)`, list.filter((n) => n > k).reduce((s, n) => s + n, 0), showing("Algorithm", [`list = [${list.join(", ")}]`, "total = 0", "for each number in the list", `  if number > ${k}`, "    add number to total", "say total"]));

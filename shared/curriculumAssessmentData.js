@@ -57,7 +57,8 @@ export function normaliseAssessmentResponse(item, response) {
       break;
     }
     case "text": valid = typeof value === "string" && value.trim().length > 0 && value.length <= input.maxLength;
-      if (valid) value = value.normalize("NFC"); break;
+      // Phone keyboards add trailing spaces; spacing never decides a typed answer.
+      if (valid) value = value.normalize("NFC").trim().replace(/\s+/g, " "); break;
     case "order": valid = Array.isArray(value) && value.length === input.cards.length && new Set(value).size === value.length
       && value.every((id) => input.cards.some((card) => card.id === id)); break;
     case "sort": valid = Array.isArray(value) && value.length === input.cards.length && new Set(value.map((v) => v?.cardId)).size === value.length

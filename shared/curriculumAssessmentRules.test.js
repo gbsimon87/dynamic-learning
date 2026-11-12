@@ -98,6 +98,14 @@ test("text punctuation/case policy is explicit and French accents survive", () =
   assert.equal(scoreAssessmentResponse(item, { kind: "answer", value: "lecole" }), "incorrect");
 });
 
+test("typed answers ignore outer and repeated spaces, as phone keyboards add them", () => {
+  const item = journeyFixtureBank().items[0]; item.public.input = { kind: "text", maxLength: 120 };
+  item.scoring = { kind: "text", accepted: ["je danse"], caseSensitive: false };
+  assert.equal(scoreAssessmentResponse(item, { kind: "answer", value: " Je  danse " }), "correct");
+  assert.deepEqual(normaliseAssessmentResponse(item.public, { kind: "answer", value: "je danse " }), { kind: "answer", value: "je danse" });
+  assert.equal(scoreAssessmentResponse(item, { kind: "answer", value: "jedanse" }), "incorrect");
+});
+
 test("sort/shade responses validate identities and scoring never depends on array order", () => {
   const item = journeyFixtureBank().items[0];
   item.public.input = { kind: "sort", cards: [{ id: "a", label: "A" }, { id: "b", label: "B" }], bins: [{ id: "x", label: "X" }, { id: "y", label: "Y" }] };

@@ -98,10 +98,12 @@ services:
         value: "false"
       - key: VITE_USE_API
         value: "true"
+      # Journey on for dev review (all 39 pathways pass check:journey, 2026-11-12).
+      # Production stays "false" until device/teacher review; flip both together.
       - key: VITE_ENABLE_CURRICULUM_JOURNEY
-        value: "false"
+        value: "true"
       - key: ENABLE_CURRICULUM_JOURNEY
-        value: "false"
+        value: "true"
       - key: MONGODB_DB
         value: dynamic_learning_dev
       - key: MONGODB_URI

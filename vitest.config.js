@@ -8,5 +8,7 @@ export default defineConfig({
     include: ["tests/components/**/*.test.jsx"],
     setupFiles: ["tests/components/setup.js"],
     restoreMocks: true,
+    // A local .env may switch the journey on; tests that need it mock the flag.
+    env: { VITE_ENABLE_CURRICULUM_JOURNEY: "false" },
   },
 });

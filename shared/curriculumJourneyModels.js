@@ -1,4 +1,5 @@
 import { assertJsonData, isRecord, isText, requireJourney } from "./curriculumJourneyData.js";
+import { isJourneyGeography } from "./curriculumJourneyGeography.js";
 
 const integers = (a, min = 0) => Array.isArray(a) && a.every((n) => Number.isSafeInteger(n) && n >= min);
 const fields = (data, allowed) => Object.keys(data).every((key) => allowed.includes(key));
@@ -41,10 +42,45 @@ const DIAGRAMS = {
     && Number.isInteger(d.shaded) && d.shaded >= 0 && d.shaded <= d.columns * d.rows,
 };
 const isLessonExample = (d) => Object.hasOwn(LESSON_SHAPES, d.type) && LESSON_SHAPES[d.type](d);
+const science = {
+  plant: (d) => fields(d, ["type", "point", "bulb"]) && (d.point === undefined || ["flower", "petal", "leaf", "stem", "roots", "bulb"].includes(d.point))
+    && (d.bulb === undefined || typeof d.bulb === "boolean") && (d.point !== "bulb" || d.bulb === true),
+  tree: (d) => fields(d, ["type", "point", "fruit", "season"]) && (d.point === undefined || ["trunk", "branch", "leaves", "roots", "fruit", "blossom"].includes(d.point))
+    && (d.fruit === undefined || typeof d.fruit === "boolean") && (d.season === undefined || ["spring", "summer"].includes(d.season))
+    && (d.point !== "fruit" || d.fruit === true) && (d.point !== "blossom" || d.season === "spring"),
+  treePair: (d) => fields(d, ["type", "evergreenFirst"]) && typeof d.evergreenFirst === "boolean",
+  body: (d) => fields(d, ["type", "point"]) && ["hair", "head", "eye", "ear", "nose", "mouth", "neck", "shoulder", "arm", "elbow", "hand", "leg", "knee", "foot"].includes(d.point),
+  days: (d) => fields(d, ["type", "rows"]) && Array.isArray(d.rows) && d.rows.length >= 1 && d.rows.length <= 4
+    && d.rows.every((r) => isRecord(r) && fields(r, ["label", "light"]) && isText(r.label, 60) && Number.isInteger(r.light) && r.light >= 0 && r.light <= 24),
+  growth: (d) => fields(d, ["type", "stage"]) && Number.isInteger(d.stage) && d.stage >= 0 && d.stage <= 3,
+  pots: (d) => fields(d, ["type", "plants"]) && Array.isArray(d.plants) && d.plants.length === 2 && d.plants.every((p) => ["healthy", "pale", "droopy"].includes(p)),
+  chain: (d) => fields(d, ["type", "links", "gap"]) && Array.isArray(d.links) && d.links.length >= 2 && d.links.length <= 5
+    && d.links.every((s) => isText(s, 30)) && (d.gap === undefined || Number.isInteger(d.gap) && d.gap >= 0 && d.gap < d.links.length && d.links[d.gap] === "?"),
+  waterTransport: (d) => fields(d, ["type", "model", "marks"]) && ["rooted", "flower", "leafy", "stem", "tree"].includes(d.model)
+    && Array.isArray(d.marks) && new Set(d.marks).size === d.marks.length && d.marks.every((s) => s === "stem"
+      || s === "flower" && ["rooted", "flower", "tree"].includes(d.model) || s === "leaves" && ["rooted", "leafy", "tree"].includes(d.model)),
+  seed: (d) => fields(d, ["type", "kind"]) && ["tuft", "wing", "hooks", "float", "pod", "fruit"].includes(d.kind),
+  skeleton: (d) => fields(d, ["type", "animal"]) && ["human", "dog"].includes(d.animal),
+  arm: (d) => fields(d, ["type", "pose"]) && ["straight", "half", "bent"].includes(d.pose),
+  fossil: (d) => fields(d, ["type", "kind", "phase"]) && ["shell", "bone", "leaf"].includes(d.kind)
+    && ["life", "burial", "preserved", "exposed"].includes(d.phase),
+  magnet: (d) => fields(d, ["type", "left", "right"]) && ["N", "S"].includes(d.left) && ["N", "S"].includes(d.right),
+  circuit: (d) => fields(d, ["type", "closed", "switch"]) && typeof d.closed === "boolean" && typeof d.switch === "boolean",
+  digestion: (d) => fields(d, ["type"]),
+  cycle: (d) => fields(d, ["type"]),
+  reflection: (d) => fields(d, ["type", "clear"]) && typeof d.clear === "boolean",
+  shadow: (d) => fields(d, ["type", "source", "object", "screen", "height", "on", "blocks"])
+    && [d.source, d.object, d.screen, d.height].every(Number.isFinite) && d.source >= 0 && d.screen <= 100
+    && d.source < d.object && d.object < d.screen && d.height > 0 && d.height <= 20
+    && d.height * (d.screen - d.source) / (d.object - d.source) <= 30
+    && typeof d.on === "boolean" && typeof d.blocks === "boolean",
+};
 
 // Every schema admits visible givens only. Neither answer nor scoring fields
 // can sneak into a nested public visual by object spreading a private question.
 export const JOURNEY_MODEL_VALIDATORS = {
+  geography: isJourneyGeography,
+  science: (d) => Object.hasOwn(science, d.type) && science[d.type](d),
   groups: (d) => fields(d, ["groups", "label"]) && Array.isArray(d.groups) && d.groups.length <= 12
     && d.groups.every((g) => Array.isArray(g) && g.length <= 30 && g.every((s) => isText(s, 50))),
   "fraction-bars": (d) => fields(d, ["bars"]) && Array.isArray(d.bars) && d.bars.length <= 6
@@ -70,6 +106,19 @@ export const JOURNEY_MODEL_VALIDATORS = {
     && Array.isArray(d.bars) && d.bars.length >= 2 && d.bars.length <= 8
     && d.bars.every((b) => isRecord(b) && fields(b, ["label", "value"]) && isText(b.label, 30) && Number.isFinite(b.value) && b.value >= 0)
     && Math.max(...d.bars.map((b) => b.value)) / d.step <= 20,
+  cartesian: (d) => fields(d, ["min", "max", "points"]) && Number.isInteger(d.min) && d.min < 0 && Number.isInteger(d.max) && d.max > 0
+    && d.max - d.min <= 20 && Array.isArray(d.points) && d.points.length >= 1 && d.points.length <= 12
+    && d.points.every((p) => isRecord(p) && fields(p, ["label", "x", "y"]) && isText(p.label, 12)
+      && [p.x, p.y].every((n) => Number.isInteger(n) && n >= d.min && n <= d.max))
+    && new Set(d.points.map((p) => p.label)).size === d.points.length,
+  circle: (d) => fields(d, ["given", "value", "unit"]) && ["radius", "diameter"].includes(d.given)
+    && positive(d.value) && isText(d.unit, 12),
+  "pie-chart": (d) => fields(d, ["sectors"]) && Array.isArray(d.sectors) && d.sectors.length >= 2 && d.sectors.length <= 8
+    && d.sectors.every((s) => isRecord(s) && fields(s, ["label", "value"]) && isText(s.label, 30) && positive(s.value))
+    && new Set(d.sectors.map((s) => s.label)).size === d.sectors.length,
+  net: (d) => fields(d, ["cells"]) && Array.isArray(d.cells) && d.cells.length === 6
+    && d.cells.every((cell) => Array.isArray(cell) && cell.length === 2 && cell.every((n) => Number.isInteger(n) && n >= 0 && n <= 5))
+    && new Set(d.cells.map((cell) => cell.join(","))).size === 6,
   timeline: (d) => fields(d, ["events"]) && Array.isArray(d.events) && d.events.length >= 2 && d.events.length <= 10
     && d.events.every((e) => isRecord(e) && fields(e, ["date", "label"]) && isText(e.date, 100) && isText(e.label, 300)),
 };

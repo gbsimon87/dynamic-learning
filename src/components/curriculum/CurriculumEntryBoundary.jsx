@@ -43,8 +43,12 @@ function Entry({ children, year, subject, scopes, target, replay }) {
   if (intro) { try { validateIntroduction(intro); } catch { valid = false; } }
   if (!finished) {
     if (journey.loading) overlay = <p className="cj-screen" role="status">Loading your introduction…</p>;
-    else if (journey.loadError || !intro || !valid) overlay = <div className="cj-screen" role="alert"><p>We couldn’t load this introduction. You can retry or continue for now.</p>
-      <button type="button" onClick={journey.retryLoad}>Try again</button><button type="button" onClick={journey.continueForNow}>Continue for now</button></div>;
+    else if (journey.loadError || !intro || !valid) overlay = <div className="cj-screen cj-load-error" role="alert">
+      <p className="cj-load-error-icon" aria-hidden="true">📖</p>
+      <h2>This introduction isn’t ready yet</h2>
+      <p>We couldn’t load it just now. You can try again, or carry on and come back to it later.</p>
+      <div className="cj-actions"><button type="button" className="cj-primary" onClick={journey.retryLoad}>Try again</button>
+        <button type="button" onClick={journey.continueForNow}>Continue for now</button></div></div>;
     else overlay = <CurriculumIntroduction key={journey.pending[0]} introduction={intro} saving={journey.saving} saveError={journey.saveError}
       onContinue={() => journey.acknowledge(journey.pending.slice(0, 1))} onSkip={() => journey.acknowledge(journey.pending.slice(0, 1))}
       onSkipAll={() => journey.acknowledge(journey.pending)} remaining={journey.pending.length} onRetry={journey.retrySave} onContinueForNow={journey.continueForNow} />;

@@ -65,7 +65,7 @@ export function scoreAssessmentResponse(item, rawResponse) {
       case "number": return scaledDecimal(value, item.public.input.decimalPlaces ?? 0) === scaledDecimal(expected, item.public.input.decimalPlaces ?? 0);
       case "text": {
         const normalise = (s) => {
-          let text = s.normalize("NFC");
+          let text = s.normalize("NFC").trim().replace(/\s+/g, " ");
           if (scoring.normaliseApostrophes) text = text.replace(/[’‘]/g, "'");
           return scoring.caseSensitive === false ? text.toLocaleLowerCase("en-GB") : text;
         };

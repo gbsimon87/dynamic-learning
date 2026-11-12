@@ -6,6 +6,12 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-12 — Curriculum journey: all 39 pathways authored
+
+- Introductions plus Quest Mastery and Subject Final Test banks now exist for every built year and subject (Maths, English, Science, Geography, History Y1–6; Year 5 Art, Computing, Design, French, Music, PE, Wellbeing; Year 6 Computing, French). `check:journey -- --all` passes. Independent model reviewers re-checked 23 pathways (History, Geography, Science Y5–6 and all additional subjects), re-mapping every practice slot to the challenge that teaches it and fixing or replacing weak facts, answers and distractors.
+- Fixes found along the way: typed quiz answers now ignore outer and repeated spaces (phone keyboards added a trailing space that marked correct answers wrong); journey geography maps rendered black (missing map colour tokens); latitude/longitude grid labels collided; the journey load-error screen is restyled; component tests no longer pick up a local `.env` journey flag. Pre-existing failures also fixed: stale story-count test and three short stories, eleven Year 6 English lesson-lint failures, a too-loose SEO heading match, and challenge-bank errors (Y5 Design fan threshold, Y6 French *sa chambre*, Y5 Computing halving wording).
+- Flags are on for the dev service and off for production until device/teacher review. Validation: lint, unit (2,902 pass), build, SEO and journey checks pass; components pass apart from the two documented Ocean failures. One batched browser pass covered all 1,428 journey models at phone/desktop sizes in both themes. Not verified: real devices, narration, teacher or child review. See the [handoff ledger](superpowers/2026-11-11-curriculum-journey-handoff.md).
+
 ## 2026-11-11 — Consolidate branches and workspaces into dev
 
 - Committed and merged the Ocean Explorer, curriculum subject-visibility and Year 3 Maths wording worktrees into local `dev`. The teacher-planning branch was already included. Preserved every changelog entry, source branch, worktree and existing stash; `main` is unchanged. No push or deployment.

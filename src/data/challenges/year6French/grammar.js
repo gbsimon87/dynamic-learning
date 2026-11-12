@@ -100,7 +100,7 @@ const possessives = {
       (rng) => bd("Build the French for: **Your bag is red.**", "Ton sac est rouge", { more: some(rng, ["Ta", "Tes", "Mon"], 2), ...fr("Ton sac est rouge") }),
       (rng) => bd("Build the French for: **My school is near the park.**", "Mon école est près du parc", { more: some(rng, ["Ma", "Mes", "Ton"], 2), ...fr("Mon école est près du parc") }),
       ch("Hugo says: **Voici ___ amie Léa.** (my friend Léa, a girl) Which word fits?", "mon", ["ma", "mes", "ton"], fr("Voici mon amie Léa")),
-      ch("Léa says: **J'aime ___ chambre.** (her bedroom) Which word fits?", "sa", ["son", "ses", "ta"], fr("J'aime sa chambre")),
+      ch("Talking about Léa: **Elle aime ___ chambre.** (her bedroom) Which word fits?", "sa", ["son", "ses", "ta"], fr("Elle aime sa chambre")),
       ch("Tom says: **Ce sont ___ livres.** (his books) Which word fits?", "ses", ["son", "sa", "mes"], fr("Ce sont ses livres")),
     ],
   },

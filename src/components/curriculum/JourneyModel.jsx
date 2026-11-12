@@ -1,7 +1,12 @@
 import FractionBar from "../challenge/FractionBar.jsx";
 import ScrollableTable from "../ui/ScrollableTable.jsx";
 import LessonExample from "../challenge/lesson/LessonExample.jsx";
+import JourneyGeometry from "./JourneyGeometry.jsx";
+import JourneyScience from "./JourneyScience.jsx";
+import GeographyVisual from "../challenge/geography/GeographyVisual.jsx";
 import "../challenge/lesson/lesson.css";
+// GeographyVisual's map fills live here; without it maps render black before any geography challenge loads.
+import "../challenge/geography/geography.css";
 import { validateJourneyModel } from "../../../shared/curriculumJourneyModels.js";
 
 /**
@@ -13,6 +18,8 @@ export default function JourneyModel({ model }) {
   if (!model) return null;
   try { validateJourneyModel(model); } catch { return <p className="cj-error" role="alert">This learning picture could not load.</p>; }
   const d = model.data;
+  // geo-challenge supplies the --geo-* colour tokens the map fills read (both themes).
+  if (model.renderer === "geography") return <div className="cj-model geo-challenge"><GeographyVisual visual={d.visual} sources={d.sources} /></div>;
   if (model.renderer === "lesson") {
     return <div className="lesson-rounds cj-lesson-model" role="group" aria-label={model.alt}>
       <LessonExample example={d} />
@@ -28,6 +35,8 @@ export default function JourneyModel({ model }) {
     {model.renderer === "timeline" && <ol className="cj-timeline">{d.events.map((e, i) => <li key={i}><strong>{e.date}</strong><span>{e.label}</span></li>)}</ol>}
     {model.renderer === "clock" && <Clock {...d} />}
     {model.renderer === "bar-chart" && <BarChart {...d} />}
+    {["cartesian", "circle", "pie-chart", "net"].includes(model.renderer) && <JourneyGeometry renderer={model.renderer} data={d} />}
+    {model.renderer === "science" && <JourneyScience data={d} />}
     {model.renderer === "pictures" && <>
       {d.title && <p className="cj-pictures-title">{d.title}</p>}
       <ul className="cj-pictures">{d.items.map((item, i) => <li key={i}><span className="cj-picture-icon" aria-hidden="true">{item.icon}</span><span>{item.label}</span></li>)}</ul>

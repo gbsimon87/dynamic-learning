@@ -190,51 +190,51 @@ Baseline was recomputed from source in both planning passes. `I` = introductions
 authored; `Q` = reviewed candidate pool/blueprints authored; `T` = technical checks;
 `C` = content review evidence; `D` = device/learner evidence. `—` means not done,
 not “not applicable”. `C partial` = author self-review plus a sampled
-coordinator check (see W09 evidence), not an independent full content review. Each pathway needs one subject intro plus Qs+Ts below,
-one quiz per quest and one final. No row is implemented at this handoff.
+coordinator check (see W09 evidence), not an independent full content review. `AI review` = an independent model reviewer re-checked every fact, answer, distractor and practice slot against the challenge banks (2026-11-12); no teacher, child or human subject-expert review. Each pathway needs one subject intro plus Qs+Ts below,
+one quiz per quest and one final. All 39 rows are authored and pass `check:journey -- --all` (2026-11-12).
 
 | Year | Subject ID | Quests | Topics | I | Q | T | C | D |
 |---|---|---:|---:|---|---|---|---|---|
 | 1 | math | 7 | 32 | ✓ | ✓ | ✓ | partial | — |
 | 1 | english | 8 | 38 | ✓ | ✓ | ✓ | partial | — |
-| 1 | geography | 4 | 12 | — | — | — | — | — |
-| 1 | science | 4 | 16 | — | — | — | — | — |
-| 1 | history | 5 | 14 | — | — | — | — | — |
+| 1 | geography | 4 | 12 | ✓ | ✓ | ✓ | AI review | — |
+| 1 | science | 4 | 16 | ✓ | ✓ | ✓ | partial | — |
+| 1 | history | 5 | 14 | ✓ | ✓ | ✓ | AI review | — |
 | 2 | math | 8 | 39 | ✓ | ✓ | ✓ | partial | — |
 | 2 | english | 9 | 39 | ✓ | ✓ | ✓ | partial | — |
-| 2 | geography | 5 | 14 | — | — | — | — | — |
-| 2 | science | 4 | 19 | — | — | — | — | — |
-| 2 | history | 6 | 17 | — | — | — | — | — |
+| 2 | geography | 5 | 14 | ✓ | ✓ | ✓ | AI review | — |
+| 2 | science | 4 | 19 | ✓ | ✓ | ✓ | partial | — |
+| 2 | history | 6 | 17 | ✓ | ✓ | ✓ | AI review | — |
 | 3 | math | 7 | 44 | ✓ | ✓ | ✓ | partial | — |
 | 3 | english | 8 | 32 | ✓ | ✓ | ✓ | partial | — |
-| 3 | geography | 5 | 16 | — | — | — | — | — |
-| 3 | science | 5 | 21 | — | — | — | — | — |
-| 3 | history | 3 | 22 | — | — | — | — | — |
+| 3 | geography | 5 | 16 | ✓ | ✓ | ✓ | AI review | — |
+| 3 | science | 5 | 21 | ✓ | ✓ | ✓ | partial | — |
+| 3 | history | 3 | 22 | ✓ | ✓ | ✓ | AI review | — |
 | 4 | math | 8 | 42 | ✓ | ✓ | ✓ | partial | — |
 | 4 | english | 8 | 33 | ✓ | ✓ | ✓ | partial | — |
-| 4 | geography | 5 | 16 | — | — | — | — | — |
-| 4 | science | 5 | 20 | — | — | — | — | — |
-| 4 | history | 2 | 18 | — | — | — | — | — |
-| 5 | math | 8 | 46 | — | — | — | — | — |
-| 5 | english | 9 | 36 | — | — | — | — | — |
-| 5 | geography | 5 | 16 | — | — | — | — | — |
-| 5 | science | 5 | 24 | — | — | — | — | — |
-| 5 | history | 6 | 22 | — | — | — | — | — |
-| 5 | art | 4 | 14 | — | — | — | — | — |
-| 5 | computing | 5 | 17 | — | — | — | — | — |
-| 5 | design | 4 | 14 | — | — | — | — | — |
-| 5 | french | 4 | 17 | — | — | — | — | — |
-| 5 | music | 4 | 14 | — | — | — | — | — |
-| 5 | pe | 4 | 12 | — | — | — | — | — |
-| 5 | wellbeing | 4 | 13 | — | — | — | — | — |
-| 6 | math | 9 | 49 | — | — | — | — | — |
-| 6 | english | 5 | 31 | — | — | — | — | — |
-| 6 | geography | 4 | 16 | — | — | — | — | — |
-| 6 | science | 5 | 24 | — | — | — | — | — |
-| 6 | history | 5 | 20 | — | — | — | — | — |
-| 6 | computing | 5 | 17 | — | — | — | — | — |
-| 6 | french | 5 | 17 | — | — | — | — | — |
-| **Total** | **39 pathways** | **216** | **923** | **8** | **8** | **8** | **0 full** | **0** |
+| 4 | geography | 5 | 16 | ✓ | ✓ | ✓ | AI review | — |
+| 4 | science | 5 | 20 | ✓ | ✓ | ✓ | partial | — |
+| 4 | history | 2 | 18 | ✓ | ✓ | ✓ | AI review | — |
+| 5 | math | 8 | 46 | ✓ | ✓ | ✓ | partial | — |
+| 5 | english | 9 | 36 | ✓ | ✓ | ✓ | partial | — |
+| 5 | geography | 5 | 16 | ✓ | ✓ | ✓ | AI review | — |
+| 5 | science | 5 | 24 | ✓ | ✓ | ✓ | AI review | — |
+| 5 | history | 6 | 22 | ✓ | ✓ | ✓ | AI review | — |
+| 5 | art | 4 | 14 | ✓ | ✓ | ✓ | AI review | — |
+| 5 | computing | 5 | 17 | ✓ | ✓ | ✓ | AI review | — |
+| 5 | design | 4 | 14 | ✓ | ✓ | ✓ | AI review | — |
+| 5 | french | 4 | 17 | ✓ | ✓ | ✓ | AI review | — |
+| 5 | music | 4 | 14 | ✓ | ✓ | ✓ | AI review | — |
+| 5 | pe | 4 | 12 | ✓ | ✓ | ✓ | AI review | — |
+| 5 | wellbeing | 4 | 13 | ✓ | ✓ | ✓ | AI review | — |
+| 6 | math | 9 | 49 | ✓ | ✓ | ✓ | partial | — |
+| 6 | english | 5 | 31 | ✓ | ✓ | ✓ | partial | — |
+| 6 | geography | 4 | 16 | ✓ | ✓ | ✓ | AI review | — |
+| 6 | science | 5 | 24 | ✓ | ✓ | ✓ | AI review | — |
+| 6 | history | 5 | 20 | ✓ | ✓ | ✓ | AI review | — |
+| 6 | computing | 5 | 17 | ✓ | ✓ | ✓ | AI review | — |
+| 6 | french | 5 | 17 | ✓ | ✓ | ✓ | AI review | — |
+| **Total** | **39 pathways** | **216** | **923** | **39** | **39** | **39** | **0 human** | **0** |
 
 Source/renderer discovery shortcuts:
 
@@ -280,14 +280,15 @@ full run merely to produce another handoff report.
 
 ## Handoff state and evidence
 
-| Field | Current state (2026-11-12, session paused by the owner) |
+| Field | Current state (2026-11-12, all pathways authored) |
 |---|---|
-| Current packet / next action | **W09 (part done) → W10 → W11 → W12.** Next: Maths Y5 + Y6 and English Y5 + Y6, then Science, History, Geography, then the Year 5/6 additional subjects. Use `docs/superpowers/journey-content-authoring.md` and the prompt pattern in "Content batch procedure" below. |
-| Timer | `curriculum-journey` **paused** at 1h 0m 59s recorded work (one work session). Resume with `npm run course:timer -- resume curriculum-journey`. |
-| Application changes | W01–W07 implemented behind both flags (default `"false"`). 8 of 39 pathways authored. Nothing committed; no deployment. |
-| Implementation checks | Focused suites below pass. Full `npm run lint` passes; one full `npm run build` passed mid-session (before the last content files). Full `npm test` and `npm run check:seo` not yet run: reserved for W12. |
-| Content/device/learner review | Partial content checks only (see W09). No device, teacher or child review. |
-| Blocking owner decisions | None. |
+| Current packet / next action | **W12 technically complete.** Next: owner/teacher device review on the dev service, then flip both production flags in `render.yaml` together. |
+| Timer | `curriculum-journey` **stopped** at 16h 8m 33s recorded wall time over two work sessions (unpaused time, including idle gaps and AI/tool waits; not token usage). |
+| Application changes | W01–W07 behind both flags. All 39 pathways authored (1,178 introductions, 3,001 candidates checked by `check:journey`). Flags **on for the dev service**, **off for production**. |
+| Implementation checks | 2026-11-12 final run: `npm run lint` pass; `npm run test:unit` 2,902 pass / 0 fail (5 skipped); `npm run test:components` 1,062 of 1,064 pass, the two failures being the previously documented Ocean porthole/starting-camera checks (load timeouts in other files pass on isolated rerun, 30/30); `npm run build` pass (70 pages prerendered); `npm run check:seo` pass; `check:journey -- --all` PASS; `journey:manifest -- --check` current. |
+| Browser evidence | One batched pass plus a confirmation pass at 390px and 1280px, light and dark: all 1,428 journey models render with no page errors and no page-level horizontal scroll. Fixed: geography maps rendered black in the journey (missing `--geo-*` tokens/stylesheet); latitude/longitude grid corner labels collided; two Y3 quiz points sat on the grid edge. Wide maths tables scroll inside their container on phones (intended). Not checked: real devices, narration, the full in-app quiz/final-test flow in a browser (covered by jsdom tests). |
+| Content/device/learner review | Independent model review (`AI review` in the ledger) of 23 pathways: every fact, answer, distractor and practice slot checked against the challenge banks. Maths/English Y1–6 and Science Y1–4 have partial review only. No teacher, child or device review. |
+| Blocking owner decisions | Production flag flip; Jarrow March distance (challenges say ~280 miles, many references ~300). |
 
 Append concise packet evidence here when implementation begins. Include actual
 commands, result totals, changed revision/scope, limitations and next unfinished

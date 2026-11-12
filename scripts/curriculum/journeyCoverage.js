@@ -17,8 +17,17 @@ export function modelProblem(model) {
 export function itemProblems(item, subject) {
   const problems = [];
   const answer = item.review.answerText.trim().toLowerCase();
-  const visible = JSON.stringify(item.public.model ?? null).toLowerCase();
-  if (answer.length >= 1 && visible.includes(`"${answer}"`)) problems.push("model shows the answer");
+  const model = item.public.model;
+  // Science point/type/state values select drawing geometry. They are not
+  // printed answer labels. Inspect the caption and displayed chain/day labels
+  // instead of mistaking an arrow selector such as "roots" for an answer key.
+  const visible = JSON.stringify(model?.renderer === "science" ? { alt: model.alt,
+    labels: model.data.type === "chain" ? model.data.links.filter((_, i) => i !== model.data.gap)
+      : model.data.type === "days" ? model.data.rows.map((r) => r.label) : [] } : model ?? null).toLowerCase();
+  // Named maps and keys legitimately contain every offered location: the task
+  // is to compare their positions, not to find the only printed choice.
+  const allChoicesGiven = item.public.input.kind === "choice" && item.public.input.options.every((o) => visible.includes(`"${o.label.toLowerCase()}"`));
+  if (answer.length >= 1 && visible.includes(`"${answer}"`) && !allChoicesGiven) problems.push("model shows the answer");
   if (modelProblem(item.public.model)) problems.push(modelProblem(item.public.model));
   const spoken = item.public.speech.mode === "prompt" ? item.public.speech.text.toLowerCase() : "";
   if (["english", "french"].includes(subject) && answer.length >= 3 && spoken.includes(answer)) problems.push("speech reads out the answer");

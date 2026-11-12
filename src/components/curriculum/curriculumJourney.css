@@ -68,6 +68,17 @@ body.dark .cj-page, body.dark .cj-screen, body.dark .cj-map-extras, body.dark .c
 .cj-table { border-collapse: collapse; width: 100%; }
 .cj-table th, .cj-table td { padding: .4rem .6rem; border: 1px solid var(--cj-soft); text-align: left; }
 .cj-text-card p { margin: .35rem 0 0; }
+.cj-geometry { display: block; width: min(100%, 350px); height: auto; margin: 0 auto; overflow: visible; }
+.cj-geometry text { fill: var(--cj-ink); font-family: inherit; font-size: 14px; text-anchor: middle; }
+.cj-geometry .cj-geo-tick { font-size: 10px; }
+.cj-geometry .cj-geo-label { font-weight: 800; }
+.cj-geo-grid { stroke: var(--cj-ink); stroke-opacity: .18; stroke-width: 1; fill: none; }
+.cj-geo-axis { stroke: var(--cj-ink); stroke-width: 2; fill: none; }
+.cj-geo-outline { fill: var(--cj-card); stroke: var(--cj-ink); stroke-width: 2; }
+.cj-geo-point { fill: var(--cj-ink); }
+.cj-geo-sector { fill: var(--cj-accent); stroke: var(--cj-ink); stroke-width: 1.5; }
+.cj-geo-net-square { fill: var(--cj-card); stroke: var(--cj-ink); stroke-width: 2; }
+.cj-pie-key { display: flex; flex-wrap: wrap; column-gap: 2.5rem; row-gap: .3rem; padding-left: 1.5rem; }
 
 /* Quiz */
 .cj-section, .cj-question-count { margin: 0; font-weight: 800; opacity: .85; }
@@ -149,3 +160,9 @@ body.dark .cj-page, body.dark .cj-screen, body.dark .cj-map-extras, body.dark .c
 .cj-chart-scale { fill: var(--cj-ink); font-size: 11px; text-anchor: end; }
 .cj-chart-label { fill: var(--cj-ink); font-size: 11px; font-weight: 700; text-anchor: middle; }
 .cj-chart-bar { fill: var(--cj-accent); stroke: var(--cj-ink); stroke-width: 1.5; }
+
+/* Introduction could not load */
+.cj-load-error { text-align: center; }
+.cj-load-error h2 { margin: .25rem 0 .5rem; font-size: clamp(1.3rem, 4.5vw, 1.7rem); }
+.cj-load-error-icon { margin: 0; font-size: 3rem; line-height: 1; }
+.cj-load-error .cj-actions { justify-content: center; }
