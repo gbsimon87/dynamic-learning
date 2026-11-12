@@ -13,19 +13,19 @@
   --sk-card: var(--light-panel);
   --sk-edge: #f0dde0;
   --sk-inset: #faf2f3;
-  --sk-sky-top: #ffe3e7;
+  --sk-sky-top: #fdeedf;
   --sk-sky-bottom: #f8ecee;
-  --sk-glyph: rgba(239, 98, 108, 0.26);
+  --sk-glyph: rgba(255, 169, 77, 0.3);
   --sk-accent: var(--light-accent);
   --sk-on-accent: var(--on-light-accent);
   --sk-on-deep: #ffffff;
   --sk-focus: #22181c;
 
-  --sk-hue-math: #ef626c;
+  --sk-hue-math: #ffa94d;
   --sk-hue-english: #9f91e8;
   --sk-hue-shapes: #56a9e0;
   --sk-hue-geography: #2fa898;
-  --sk-deep-math: #c33d47;
+  --sk-deep-math: #ad5a00;
   --sk-deep-english: #5e4eb8;
   --sk-deep-shapes: #1f6fa8;
   --sk-deep-geography: #1f7d70;
