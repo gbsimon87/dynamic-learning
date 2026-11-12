@@ -1,40 +1,40 @@
 import { sample, shuffle } from "../english/shared.js";
-export const GLOSS = "A skeleton is a body's supporting framework. Human bones form a skeleton inside the body. Support means holding the body up and giving it shape. Protection means shielding softer parts. The skull protects the brain; the rib cage protects the heart and lungs. A backbone is also called a spine. An exoskeleton is a hard supporting covering outside the body, as in insects and crabs. Not having a backbone does not mean having no support or protection.";
+export const GLOSS = "A skeleton is the frame of a body. Human bones make a skeleton inside the body. Support means holding the body up and giving it its shape. Protection means keeping soft parts safe. The skull protects the brain. The rib cage protects the heart and lungs. The backbone is also called the spine. An exoskeleton is a hard covering outside the body, like on a crab or a beetle. An animal with no backbone can still have support and protection.";
 export const PARTS = [{ id: "skull", label: "Skull" }, { id: "ribs", label: "Rib cage" }, { id: "spine", label: "Spine" }, { id: "legs", label: "Leg bones" }];
-export const FEATURES = { skull: "the rounded bony head", ribs: "the curved bones around the chest", spine: "the line of backbone bones down the centre", legs: "the long bones below the hips" };
+export const FEATURES = { skull: "the round bony head", ribs: "the curved bones around the chest", spine: "the line of bones down the middle", legs: "the long bones below the hips" };
 export const ANIMALS = [
-  ["human", "Human", "Humans have a backbone and a skeleton of bones inside the body. They do not have an outer shell or exoskeleton.", true, false],
-  ["dog", "Dog", "A dog has a backbone and bones inside its body. It does not have an outer shell or exoskeleton.", true, false],
-  ["bird", "Bird", "A bird has a backbone and bones inside its body. It does not have an outer shell or exoskeleton.", true, false],
-  ["fish", "Bony fish", "This bony fish has a backbone and an internal bony skeleton. Its scales are not a shell or exoskeleton.", true, false],
-  ["crab", "Crab", "A crab has no backbone. Its hard outer exoskeleton supports and protects its body.", false, true],
-  ["beetle", "Beetle", "A beetle has no backbone. Its hard outer exoskeleton supports and protects its body.", false, true],
-  ["snail", "Shelled snail", "This snail has no backbone. Its shell covers and protects soft parts.", false, true],
-  ["worm", "Earthworm", "An earthworm has no backbone and no hard outer shell or exoskeleton. Its soft body has other ways of being supported.", false, false],
+  ["human", "Human", "Humans have a backbone. Their skeleton is made of bones inside the body. They have no shell or exoskeleton.", true, false],
+  ["dog", "Dog", "A dog has a backbone and bones inside its body. It has no shell or exoskeleton.", true, false],
+  ["bird", "Bird", "A bird has a backbone and bones inside its body. It has no shell or exoskeleton.", true, false],
+  ["fish", "Bony fish", "This bony fish has a backbone and bones inside its body. Its scales are not a shell or exoskeleton.", true, false],
+  ["crab", "Crab", "A crab has no backbone. Its hard outer skeleton (exoskeleton) holds up and protects its body.", false, true],
+  ["beetle", "Beetle", "A beetle has no backbone. Its hard outer skeleton (exoskeleton) holds up and protects its body.", false, true],
+  ["snail", "Shelled snail", "This snail has no backbone. Its shell covers and protects its soft parts.", false, true],
+  ["worm", "Earthworm", "An earthworm has no backbone and no hard shell. Its soft body is held up in other ways.", false, false],
 ].map(([id, label, text, backbone, outer]) => ({ id, label, text, backbone, outer }));
 const rows = [
-  ["human", "skull", "A hard skull surrounds the softer brain.", "Protect the brain.", "Protect the heart inside the chest.", "Support the body with leg bones."],
-  ["human", "skull", "The brain lies inside the bony head case.", "Shield the brain with the skull.", "Shield the lungs with the skull.", "Hold the body up using the rib cage alone."],
-  ["human", "skull", "The brain is inside the hard skull in the head.", "The skull protects the brain inside it.", "The skull makes food for the body.", "The skull protects the heart inside it."],
-  ["human", "ribs", "The curved ribs form a cage around the chest's heart and lungs.", "Protect the heart and lungs.", "Protect the brain inside the head.", "Make food from sunlight."],
-  ["human", "ribs", "The heart is inside the bony chest cage.", "The rib cage helps shield the heart.", "The leg bones enclose the heart.", "The skull encloses the heart."],
-  ["human", "ribs", "The lungs sit inside the chest, behind the ribs.", "The ribs help protect the lungs.", "The ribs help protect the brain inside the head.", "The ribs are the body's only source of nutrition."],
-  ["human", "spine", "The backbone forms a supporting column down the body.", "Help support the body's weight.", "Make nutrients instead of eating.", "Surround the brain like the skull."],
-  ["human", "spine", "Bones in the back form part of the body's internal framework.", "Help hold up and support the body.", "Keep the lungs inside the head.", "Provide a hard covering outside the whole body."],
-  ["human", "legs", "Long leg bones form supports below the hips.", "Help support the body's weight.", "Enclose the brain inside the legs.", "Make all the food the body needs."],
-  ["human", "legs", "The standing person's leg bones support the body above them.", "Hold up the body as part of its skeleton.", "Act as a cage around the lungs.", "Act as a hard case around the brain."],
-  ["dog", "skull", "A dog's skull forms a bony case around its brain.", "Protect the dog's brain.", "Put a backbone outside the dog.", "Protect the dog's heart inside its head."],
-  ["dog", "ribs", "A dog's rib cage surrounds its heart and lungs.", "Help protect the dog's heart and lungs.", "Help protect the dog's brain inside its head.", "Make food for the dog from sunlight."],
-  ["dog", "spine", "A dog's backbone and other bones form an internal supporting framework.", "Help support the dog's body.", "Form an exoskeleton outside the dog.", "Remove the dog's need for food."],
-  ["crab", "outer", "A crab's hard covering is outside its softer body parts.", "Give support and protection from outside.", "Form a bony backbone inside the crab.", "Prove the crab has no support or protection."],
-  ["beetle", "outer", "A beetle's hard exoskeleton surrounds softer parts.", "Support and protect the beetle's body.", "Form a human-like bony rib cage inside the beetle.", "Make food instead of the beetle eating."],
+  ["human", "skull", "A hard skull surrounds the soft brain.", "Protect the brain", "Protect the heart", "Hold up the body"],
+  ["human", "skull", "The brain lies inside the bony head case.", "Shield the brain", "Shield the lungs", "Hold up the whole body"],
+  ["human", "skull", "The brain is inside the hard skull in the head.", "Keep the brain safe", "Make food for the body", "Protect the heart"],
+  ["human", "ribs", "The curved ribs make a cage around the heart and lungs.", "Protect the heart and lungs", "Protect the brain", "Make food from sunlight"],
+  ["human", "ribs", "The heart is inside the bony chest cage.", "Help shield the heart", "Help the legs hold up the body", "Help shield the brain"],
+  ["human", "ribs", "The lungs sit inside the chest, behind the ribs.", "Help protect the lungs", "Help protect the brain", "Give the body its food"],
+  ["human", "spine", "The backbone is a strong column down the body.", "Help hold up the body", "Make nutrients for the body", "Cover the brain like the skull"],
+  ["human", "spine", "The bones in the back are part of the body's frame inside.", "Help hold up and support the body", "Cover the whole body with a shell", "Protect the brain like the skull"],
+  ["human", "legs", "Long leg bones are below the hips.", "Help hold up the body's weight", "Cover the brain", "Make all the body's food"],
+  ["human", "legs", "A standing person's leg bones hold up the body above them.", "Hold up the body", "Make a cage around the lungs", "Make a hard case around the brain"],
+  ["dog", "skull", "A dog's skull is a bony case around its brain.", "Protect the dog's brain", "Hold up the dog's tail", "Protect the dog's heart"],
+  ["dog", "ribs", "A dog's rib cage is around its heart and lungs.", "Help protect the dog's heart and lungs", "Help protect the dog's brain", "Make food for the dog"],
+  ["dog", "spine", "A dog's backbone and other bones make a frame inside its body.", "Help hold up the dog's body", "Make a hard shell outside the dog", "Stop the dog needing food"],
+  ["crab", "outer", "A crab's hard covering is on the outside of its soft body.", "Support and protect the crab", "Make a backbone inside the crab", "Leave the crab with no protection"],
+  ["beetle", "outer", "A beetle's hard exoskeleton is around its soft parts.", "Support and protect the beetle", "Make a rib cage inside the beetle", "Make food for the beetle"],
 ];
 export const JOB_BANK = rows.map(([animal, part, text, answer, ...wrong], index) => ({ id: `job-${index}`, animal, part, text, answer, options: [answer, ...wrong] }));
-export const SORT_BANK = Array.from({ length: 15 }, (_, index) => ({ id: `sort-${index}`, criterion: index < 8 ? "backbone" : "outer", cards: [ANIMALS[index % 4], ANIMALS[4 + index % 3], ANIMALS[(index + 7) % 8]], })).map((q) => ({ ...q, cards: q.cards.filter((card, i, cards) => cards.findIndex((c) => c.id === card.id) === i), title: q.criterion === "backbone" ? "Group by whether the animal has a backbone." : "Group by whether the animal has a protective shell or exoskeleton." }));
+export const SORT_BANK = Array.from({ length: 15 }, (_, index) => ({ id: `sort-${index}`, criterion: index < 8 ? "backbone" : "outer", cards: [ANIMALS[index % 4], ANIMALS[4 + index % 3], ANIMALS[(index + 7) % 8]], })).map((q) => ({ ...q, cards: q.cards.filter((card, i, cards) => cards.findIndex((c) => c.id === card.id) === i), title: q.criterion === "backbone" ? "Sort the animals. Which have a backbone?" : "Sort the animals. Which have a shell or exoskeleton?" }));
 const poses = ["wide", "lowered", "raised"];
 const jobIndices = [0,3,6,8,5];
 export const LABEL_BANK = poses.flatMap((pose, poseIndex) => jobIndices.map((jobIndex, index) => ({ id: `label-${poseIndex}-${index}`, pose, job: JOB_BANK[jobIndex] })));
-export const EXPLANATION_BANK = JOB_BANK.map((q, index) => ({ ...q, id: `explanation-${index}`, prompt: "Use the supplied evidence to finish an explanation of this structure's job." }));
+export const EXPLANATION_BANK = JOB_BANK.map((q, index) => ({ ...q, id: `explanation-${index}`, prompt: "Finish the sentence about this part's job." }));
 export function buildSkeletonQuestions(level, rng) {
   if (![1,2,3,4].includes(level)) throw new RangeError("Unknown skeleton level");
   const bank = [JOB_BANK, SORT_BANK, LABEL_BANK, EXPLANATION_BANK][level - 1];

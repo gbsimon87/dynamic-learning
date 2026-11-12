@@ -50,7 +50,7 @@ export default function ArmMovementIllustration({ pose = "straight" }) {
   const back = { from: at("tricepsOrigin"), to: at("tricepsInsert") };
   const frontMid = { x: (front.from.x + front.to.x) / 2, y: (front.from.y + front.to.y) / 2 };
   const backMid = { x: (back.from.x + back.to.x) / 2, y: (back.from.y + back.to.y) / 2 };
-  const description = `${model.label}. The upper arm stays still. The lower arm meets it at the elbow joint. Front muscle: ${model.front}; back muscle: ${model.back}. Muscle lengths are schematic, not measurements.`;
+  const description = `${model.label}. The upper arm stays still. The lower arm moves at the elbow joint. The front muscle is ${model.front === "between" ? "in the middle" : model.front}. The back muscle is ${model.back === "between" ? "in the middle" : model.back}.`;
 
   return (
     <figure className="science-life-figure science-illustration">
@@ -74,7 +74,7 @@ export default function ArmMovementIllustration({ pose = "straight" }) {
         </g>
       </svg>
       <figcaption>
-        {description} The thin ends stand for tendons, which join each muscle to a bone. This simplified arm model shows one pair; real movement uses more muscles.
+        {description} The thin ends are tendons. They join each muscle to a bone. This picture shows one pair of muscles. Real arms use more.
         <ScienceCredit>{CREDITS.bones}</ScienceCredit>
       </figcaption>
     </figure>

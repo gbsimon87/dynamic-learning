@@ -131,7 +131,7 @@ it("all 64 real challenges fill the science layout, with a figure column only wh
       const { root, prompt, answer } = expectScienceLayout(container, { check: "Check my answer" });
       const stage = root.querySelector(".science-round-stage");
       expect(Boolean(stage)).toBe(root.classList.contains("has-figure"));
-      if (stage) expect(before(prompt, stage)).toBe(true);
+      if (stage) expect(before(stage, prompt)).toBe(true);
       expect(before(prompt, answer)).toBe(true);
     } catch (error) { failures.push(`${path.split("/").slice(-2).join("/")}: ${error.message.split("\n")[0]}`); }
     cleanup();

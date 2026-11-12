@@ -1,17 +1,17 @@
 import { sample, shuffle } from "../english/shared.js";
 import { exactRecord } from "./forcesShared.js";
-import { magnetOutcome, magnetObservation, oppositePole, MAGNET_OUTCOMES } from "./magnetModel.js";
+import { magnetOutcome, magnetObservation, oppositePole, outcomeWord, MAGNET_OUTCOMES } from "./magnetModel.js";
 import { PAIRS, COMPARE_BANK as POLE_COMPARISONS } from "./magnetsAndTheirPoles.js";
 
-export const RULE = "Read the facing ends nearest the gap: same poles repel; different poles attract.";
+export const RULE = "Look at the two ends that face each other. Same poles repel. Different poles attract.";
 export const PREDICT_BANK = PAIRS.flatMap((pair, i) => [0, 1, 2, 3].map(variant => ({ id: `predict-${i}-${variant}`, pair, variant })));
 export const COMPARE_BANK = POLE_COMPARISONS.map(q => ({ id: q.id.replace("compare-", "prediction-table-"), pairs: q.pairs }));
 const MISSIONS = [
-  { id: "join", target: "attract", prompt: "Arrange the two bar magnets so they pull together." },
-  { id: "apart", target: "repel", prompt: "Arrange the two bar magnets so they push apart." },
-  { id: "pull", target: "attract", prompt: "Make an attraction arrangement with these two bar magnets." },
-  { id: "push", target: "repel", prompt: "Make a repulsion arrangement with these two bar magnets." },
-  { id: "together", target: "attract", prompt: "Build an arrangement that moves these bar magnets towards each other." },
+  { id: "join", target: "attract", prompt: "Make the two magnets pull together." },
+  { id: "apart", target: "repel", prompt: "Make the two magnets push apart." },
+  { id: "pull", target: "attract", prompt: "Make the two magnets attract." },
+  { id: "push", target: "repel", prompt: "Make the two magnets repel." },
+  { id: "together", target: "attract", prompt: "Make the two magnets move towards each other." },
 ];
 export const BUILD_BANK = MISSIONS.flatMap(mission => [0, 1, 2].map(variant => {
   const left = variant === 1 ? "S" : "N", right = mission.target === "attract" ? left : oppositePole(left);
@@ -29,16 +29,16 @@ export function buildPredictionQuestions(level, rng) {
     if (level === 1) {
       const pair = proposedPair(q.pair, q.variant), answer = MAGNET_OUTCOMES.find(o => o.id === magnetOutcome(pair.left, pair.right)).label;
       return { ...q, level, stages: [magnetObservation(q.pair, "before", "Starting arrangement", false)], answer, options: shuffle(MAGNET_OUTCOMES.map(o => o.label), rng),
-        prompt: q.variant === 0 ? "Predict the outcome for the shown facing ends." : q.variant === 1 ? "Turn only the left magnet. Predict the new outcome." : q.variant === 2 ? "Turn only the right magnet. Predict the new outcome." : "Turn both magnets once. Predict the new outcome.", proposed: pair };
+        prompt: q.variant === 0 ? "What will happen with these facing ends?" : q.variant === 1 ? "Turn only the left magnet. What will happen now?" : q.variant === 2 ? "Turn only the right magnet. What will happen now?" : "Turn both magnets. What will happen now?", proposed: pair };
     }
     if (level === 3) return { ...q, level, stages: [magnetObservation(q.initialPair, "before", "Starting arrangement", false)] };
     const turned = !q.turn ? q.pair : { ...q.pair, [q.turn]: oppositePole(q.pair[q.turn]) };
-    const stages = level === 2 ? q.pairs.map((pair, i) => magnetObservation(pair, `test-${i}`, `Test ${String.fromCharCode(65 + i)}`, false)) : [magnetObservation(q.pair, "before", "Before testing", false), magnetObservation(q.pair, "first", "First model test"), magnetObservation(turned, "second", q.turn ? `Turn only the ${q.turn} magnet` : "Repeat without turning")];
+    const stages = level === 2 ? q.pairs.map((pair, i) => magnetObservation(pair, `test-${i}`, `Test ${String.fromCharCode(65 + i)}`, false)) : [magnetObservation(q.pair, "before", "Before testing", false), magnetObservation(q.pair, "first", "First test"), magnetObservation(turned, "second", q.turn ? `Turn only the ${q.turn} magnet` : "Repeat without turning")];
     const records = level === 2 ? stages : stages.slice(1);
     return { ...q, level, stages, recordCards: shuffle(records.map(s => ({ id: s.id, label: `${s.label}: facing ${s.pair.left} and ${s.pair.right}` })), rng), recordBins: MAGNET_OUTCOMES, recordExpected: Object.fromEntries(records.map(s => [s.id, magnetOutcome(s.pair.left, s.pair.right)])),
-      title: q.turn ? `What happens if only the ${q.turn} magnet turns?` : "What happens if this arrangement is tested again?", setup: q.turn ? `Predict without scoring, run the starting model, turn only the ${q.turn} magnet and run the second model test. The other magnet stays fixed in orientation.` : "Predict without scoring, run the model twice with exactly the same facing poles and compare the results.", nextLabel: "Run next model test",
-      predictionOptions: ["The second test may attract.", "The second test may repel.", "I am not sure yet."], recordPrompt: "Record what each model test showed. The untested starting arrangement is not a result.", recordHint: "Match each tested movement to its labelled facing ends. Turning one magnet changes which pole faces the gap.", conclusionHint: "Explain the turning/repeating instruction, both observed outcomes and the rule that fits those facing ends.",
-      tiles: level === 4 ? shuffle([{ id: "action", label: q.turn ? `First: turn only the ${q.turn} magnet between model tests.` : "First: repeat the same facing arrangement without turning either magnet." }, { id: "evidence", label: `Evidence: the first model test showed ${magnetOutcome(q.pair.left, q.pair.right)}; the second showed ${magnetOutcome(turned.left, turned.right)}.` }, { id: "rule", label: q.turn ? "So: changing one facing pole changed same poles to different, or different to same. Same poles repel; different poles attract." : `So: both tests kept ${q.pair.left === q.pair.right ? "the same" : "different"} facing poles and gave the same ${magnetOutcome(q.pair.left, q.pair.right)} result.` }, { id: "outer", label: "So: ignore the facing ends and use only the far ends." }, { id: "prediction", label: "So: the model must agree with my prediction, whatever poles face." }], rng) : [], correctConclusionIds: level === 4 ? ["action", "evidence", "rule"] : [],
+      title: q.turn ? `What happens if only the ${q.turn} magnet turns?` : "What happens if we run the same test again?", setup: q.turn ? `Predict, then run the first test. Turn only the ${q.turn} magnet and run the second test. The other magnet stays as it was.` : "Predict, then run the same test twice with the same facing poles. Compare the results.", nextLabel: "Run the next test",
+      predictionOptions: ["The second test will attract", "The second test will repel", "I am not sure yet"], recordPrompt: "Sort what each test showed. The picture before testing is not a result.", recordHint: "Match each test to the ends facing each other. Turning one magnet changes which pole faces the gap.", conclusionHint: "Say what you did, what each test showed, and the rule that fits.",
+      tiles: level === 4 ? shuffle([{ id: "action", label: q.turn ? `First: turn only the ${q.turn} magnet between the tests.` : "First: run the same test again without turning a magnet." }, { id: "evidence", label: `Evidence: the magnets ${outcomeWord(magnetOutcome(q.pair.left, q.pair.right))} in the first test and ${outcomeWord(magnetOutcome(turned.left, turned.right))} in the second test.` }, { id: "rule", label: q.turn ? "So: turning one magnet changed same poles to different, or different to same. Same poles repel. Different poles attract." : `So: both tests had ${q.pair.left === q.pair.right ? "the same" : "different"} facing poles, so the magnets ${outcomeWord(magnetOutcome(q.pair.left, q.pair.right))} both times.` }, { id: "outer", label: "So: use the far ends, not the ends that face each other." }, { id: "prediction", label: "So: the result must match my prediction, whatever poles face." }], rng) : [], correctConclusionIds: level === 4 ? ["action", "evidence", "rule"] : [],
     };
   });
 }

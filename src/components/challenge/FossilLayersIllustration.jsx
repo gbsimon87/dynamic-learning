@@ -115,7 +115,7 @@ export default function FossilLayersIllustration({ kind, phase, description }) {
         )}
       </svg>
       <figcaption>
-        {description} Simplified picture; buried details are shown in cutaway. No exact timescale or size is represented.
+        {description} A simple picture. The cutaway shows what is buried. It does not show real sizes or times.
         <ScienceCredit>{CREDITS.lithology}. {CREDITS.fluent}</ScienceCredit>
       </figcaption>
     </figure>

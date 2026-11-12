@@ -3,8 +3,8 @@ import { isWaterRecordCorrect } from "./waterTransportInPlants.js";
 export function initialWaterInvestigation(revision = 0, version = 0) {
   return { revision, version, stage: "prediction", prediction: null, observation: 0, seen: [], record: {}, recordChecked: false, conclusion: [] };
 }
-// Supplied setup: this enquiry observes a process, so there is no graded
-// experiment-factor setup. All assessed work is tied to this revision.
+// This enquiry observes a process, so there is no experiment-factor setup.
+// All checked work is tied to this revision.
 export function reduceWaterInvestigation(state, action, question) {
   if (state.stage === "done" || action.revision !== state.revision) return state;
   if (action.type === "reset") return action.version === state.version ? initialWaterInvestigation(state.revision + 1, state.version + 1) : state;

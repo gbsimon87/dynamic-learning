@@ -4,7 +4,7 @@ import { HUMAN_ANCHORS } from "../../data/skeletonDiagram.js";
 import "./science-kit.css";
 
 
-export default function SkeletonFigure({ animal = "human", pose = "wide", targets = [], named = false, caption = "Simplified body diagram. Some structures and details are omitted." }) {
+export default function SkeletonFigure({ animal = "human", pose = "wide", targets = [], named = false, caption = "A simple picture of the bones. Some small bones are left out." }) {
   const id = useId();
   const human = animal === "human";
   const dog = animal === "dog";

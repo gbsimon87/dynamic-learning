@@ -11,5 +11,5 @@ export default function SoilCompositionFigure({features,sampleId}){
  {c.id==="organic"&&<g className="science-line"><path d="M40 70 Q35 30 95 35 Q105 75 40 70 Z M40 70 L85 40 M58 57 L57 42 M70 49 L84 61"/></g>}
  {c.id==="air"&&<g className="science-line"><ellipse cx="73" cy="59" rx="36" ry="24" strokeDasharray="4 4"/><path d="M50 55 L92 55 M55 65 L85 65"/></g>}
  {c.id==="water"&&<path className="science-dye-marks" d="M73 32 Q45 65 55 78 Q73 93 92 78 Q101 64 73 32 Z"/>}
- </g>;})}</svg><figcaption>Sample {sampleId}: supplied magnified notes. This model shows selected components, not exact sizes or amounts. The leaf-like symbol stands for identified once-living remains; it is not a photograph.</figcaption><ul>{features.map(c=><li key={c.id}><strong>{c.letter}</strong>: {c.text}.</li>)}</ul></figure>;
+ </g>;})}</svg><figcaption>Sample {sampleId}: notes about what we see up close. The picture shows some parts of soil, not real sizes or amounts. The leaf shape stands for once-living remains.</figcaption><ul>{features.map(c=><li key={c.id}><strong>{c.letter}</strong>: {c.text}.</li>)}</ul></figure>;
 }

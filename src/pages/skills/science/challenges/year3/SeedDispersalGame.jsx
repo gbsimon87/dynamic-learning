@@ -13,7 +13,7 @@ import { useProcessEnquiry } from "../../../../../hooks/useProcessEnquiry.js";
 import { GLOSS, buildSeedDispersalQuestions, isSeedExplanationCorrect, isSeedRecordCorrect } from "../../../../../data/challenges/science/seedDispersal.js";
 
 const SeedPicture = isIllustrated() ? SeedDispersalIllustration : SeedDispersalFigure;
-const TITLES = ["How seeds move", "Sort dispersal observations", "Explain seed features", "Investigate seed dispersal"];
+const TITLES = ["How seeds move", "Sort how seeds move", "Why seeds are shaped that way", "Compare two seeds"];
 export default function SeedDispersalGame({ level, onComplete }) {
   const questions = useMemo(() => buildSeedDispersalQuestions(level, Math.random), [level]);
   return <ChallengeShell wide title={TITLES[level - 1]} questions={questions} onComplete={onComplete} render={({ question, submit, locked, index, misses, feedback }) => {
@@ -33,39 +33,39 @@ function ShortRound({ question, submit, locked, hint, feedback }) {
     if (correct) accepted.current = true;
     submit(correct);
   };
-  const prompt = question.level === 2 ? "Sort all three examples by the supplied movement evidence." : question.prompt;
+  const prompt = question.level === 2 ? "Sort the three examples by how each one moved." : question.prompt;
   return <ScienceRound
-    prompt={<p className="challenge-prompt">{prompt}</p>} speak={question.level === 2 ? question.recordCards.map((c) => c.label).join(" ") : `${question.feature} ${question.movement}`} speakLabel="Hear the observations" gloss={GLOSS}
+    prompt={<p className="challenge-prompt">{prompt}</p>} speak={question.level === 2 ? `${question.recordCards.map((c) => c.label).join(" ")} ${prompt}` : `${question.feature} ${question.movement} ${prompt}`} speakLabel="Hear the question" gloss={GLOSS}
     figure={question.level === 2 ? <div className="science-life-cards">{question.specimens.map((s) => <SeedPicture key={s.id} kind={s.kind} feature={s.feature} evidence={s.movement} />)}</div> : <SeedPicture kind={question.kind} feature={question.feature} evidence={question.movement} />}
-    reference={question.level === 1 ? <p className="science-rule">Wind carries light, hairy or winged examples. Animals can carry hooked cases or eat fruits and leave some seeds elsewhere. Water carries floating examples. Bursting pods throw seeds; gravity pulls released seeds or fruits down. Classify the movement shown.</p> : null}
-    answerLabel={question.level === 3 ? "This feature helps explain the supplied movement because… Choose one ending." : undefined}
-    hint={hint && <HintNote>Read what carried the example: air, an animal, water, a springing pod, or a straight downward fall. Moving away does not guarantee growth.</HintNote>}
+    reference={question.level === 1 ? <p className="science-rule">Wind carries light, hairy or winged seeds. Animals carry hooked seeds on their fur, or eat fruit and drop the seeds elsewhere. Water carries floating seeds. Bursting pods throw seeds out. Gravity pulls seeds and fruits down.</p> : null}
+    answerLabel={question.level === 3 ? "This feature helps because… Choose one ending." : undefined}
+    hint={hint && <HintNote>Ask what moved it: wind, an animal, water, a bursting pod, or a fall straight down.</HintNote>}
     check={{ label: "Check", disabled: locked || !ready, onClick: check }} feedback={feedback}>
     {question.level === 2 && <SortBins cards={question.recordCards} bins={question.recordBins} placement={record} disabled={locked} onPlace={(id, bin) => { if (locked || accepted.current) return; setRecord((previous) => { const next = { ...previous }; if (bin === null) delete next[id]; else next[id] = bin; return next; }); }} />}
     {question.level === 1 && <ChoiceGrid options={question.options} selected={selected} disabled={locked} onSelect={(value) => { if (!locked && !accepted.current) setSelected(value); }} />}
-    {question.level === 3 && <TileBuilder tiles={question.tiles} placed={placed} disabled={locked} label="Your explanation" onChange={(update) => { if (!locked && !accepted.current) setPlaced((previous) => update(previous)); }} />}
+    {question.level === 3 && <TileBuilder tiles={question.tiles} placed={placed} disabled={locked} label="Your ending" onChange={(update) => { if (!locked && !accepted.current) setPlaced((previous) => update(previous)); }} />}
   </ScienceRound>;
 }
 function EnquiryRound({ question, submit, locked, hint, feedback }) {
   const { state, dispatch, updateConclusion } = useProcessEnquiry({ question, validateRecord: isSeedRecordCorrect, submit, locked });
   const { stage } = state;
-  const hints = { prediction: "Any offered prediction is welcome; it is not graded.", observe: "Compare the visible features and then read the movement observations.", record: "Record what actually carried each example. Shape alone does not prove what happened.", conclusion: "Link each feature to its supplied movement. Dispersal does not guarantee growth." };
+  const hints = { prediction: "A prediction is a guess before you look. Any guess is fine.", observe: "Look at the shapes first. Then read how each one moved.", record: "Sort by what really carried each example. The shape alone does not tell us.", conclusion: "Match each shape to the way it moved." };
   const shown = state.seen.includes(state.observation) ? question.stages[state.observation] : null;
-  const action = stage === "prediction" ? { label: "Read the observations", disabled: locked || !state.prediction, onClick: () => dispatch({ type: "start" }) }
-    : stage === "observe" ? (state.seen.length === question.stages.length ? { label: "Record the evidence", disabled: locked, onClick: () => dispatch({ type: "recordStage" }) } : null)
-    : stage === "record" ? { label: "Check record", disabled: locked || Object.keys(state.record).length !== question.recordCards.length, onClick: () => dispatch({ type: "checkRecord" }, true) }
+  const action = stage === "prediction" ? { label: "Look at the examples", disabled: locked || !state.prediction, onClick: () => dispatch({ type: "start" }) }
+    : stage === "observe" ? (state.seen.length === question.stages.length ? { label: "Write down what I saw", disabled: locked, onClick: () => dispatch({ type: "recordStage" }) } : null)
+    : stage === "record" ? { label: "Check my sort", disabled: locked || Object.keys(state.record).length !== question.recordCards.length, onClick: () => dispatch({ type: "checkRecord" }, true) }
     : stage === "done" ? null
-    : { label: "Check explanation", disabled: locked || state.conclusion.length !== 1, onClick: () => dispatch({ type: "finish" }, true) };
+    : { label: "Check my ending", disabled: locked || state.conclusion.length !== 1, onClick: () => dispatch({ type: "finish" }, true) };
   return <ScienceRound
     prompt={<p className="challenge-prompt">{question.title}</p>} speak={`${question.setup} ${shown ? shown.label + ": " + shown.evidence : ""} ${hints[stage] ?? ""}`} speakLabel="Hear this stage" gloss={GLOSS}
-    evidence={<div className="science-observation"><strong>Supplied source observations</strong><p>{question.setup}</p><p>These are illustrated teaching examples, not a real-time experiment.</p></div>}
+    evidence={<div className="science-observation"><strong>Look and remember</strong><p>{question.setup}</p></div>}
     hint={hint && stage !== "done" && <HintNote>{hints[stage]}</HintNote>}
     check={action} feedback={feedback}
-    secondary={stage !== "prediction" && stage !== "done" && <button type="button" className="science-reset" disabled={locked} onClick={() => dispatch({ type: "reset" })}>Restart these observations</button>}>
+    secondary={stage !== "prediction" && stage !== "done" && <button type="button" className="science-reset" disabled={locked} onClick={() => dispatch({ type: "reset" })}>Start again</button>}>
     <p role="status">Stage: {stage === "prediction" ? "Predict" : stage === "observe" ? "Observe" : stage === "record" ? "Record" : "Explain"}</p>
-    {stage === "prediction" && <><div className="science-life-cards">{[question.stages[0], question.stages[2]].map((example, index) => <section key={example.id}><h4>Example {index === 0 ? "A" : "B"}</h4><SeedPicture kind={example.kind} feature={example.feature} /></section>)}</div><p>How might these two examples compare? Your idea is not marked right or wrong.</p><ChoiceGrid options={question.predictionOptions} selected={state.prediction} disabled={locked} variant="wordy" onSelect={(value) => dispatch({ type: "predict", value })} /></>}
-    {["observe", "record", "conclusion"].includes(stage) && <ObservationSequence stages={question.stages} index={state.observation} seen={state.seen} disabled={locked} label="Seed dispersal observations" onView={(index) => dispatch({ type: "view", index })} onNext={stage === "observe" ? () => dispatch({ type: "next" }) : null} renderObservation={(observation) => <SeedPicture kind={observation.kind} feature={observation.feature} evidence={observation.evidence} />} />}
-    {stage === "record" && <><p>Sort A and B by the movement actually observed. A seed may have other ways to move too.</p><SortBins cards={question.recordCards} bins={question.recordBins} placement={state.record} disabled={locked} onPlace={(id, bin) => dispatch({ type: "record", id, bin })} /></>}
-    {stage === "conclusion" && <><p>These observations support this explanation…</p><TileBuilder tiles={question.tiles} placed={state.conclusion} disabled={locked} label="Your explanation ending" onChange={updateConclusion} /><p>Use one ending. A further question: {question.followUp}</p></>}
+    {stage === "prediction" && <><div className="science-life-cards">{[question.stages[0], question.stages[2]].map((example, index) => <section key={example.id}><h4>Example {index === 0 ? "A" : "B"}</h4><SeedPicture kind={example.kind} feature={example.feature} /></section>)}</div><p>Will these two move in the same way? There is no wrong answer.</p><ChoiceGrid options={question.predictionOptions} selected={state.prediction} disabled={locked} variant="wordy" onSelect={(value) => dispatch({ type: "predict", value })} /></>}
+    {["observe", "record", "conclusion"].includes(stage) && <ObservationSequence stages={question.stages} index={state.observation} seen={state.seen} disabled={locked} label="What we saw" onView={(index) => dispatch({ type: "view", index })} onNext={stage === "observe" ? () => dispatch({ type: "next" }) : null} renderObservation={(observation) => <SeedPicture kind={observation.kind} feature={observation.feature} evidence={observation.evidence} />} />}
+    {stage === "record" && <><p>Sort A and B by how each one really moved. A seed may move in other ways too.</p><SortBins cards={question.recordCards} bins={question.recordBins} placement={state.record} disabled={locked} onPlace={(id, bin) => dispatch({ type: "record", id, bin })} /></>}
+    {stage === "conclusion" && <><p>What we saw tells us…</p><TileBuilder tiles={question.tiles} placed={state.conclusion} disabled={locked} label="Your ending" onChange={updateConclusion} /><p>Choose one ending. Then think about this: {question.followUp}</p></>}
   </ScienceRound>;
 }

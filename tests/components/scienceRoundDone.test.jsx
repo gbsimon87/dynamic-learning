@@ -20,6 +20,6 @@ it("a finished enquiry shows no leftover Check button during the success pause",
 
 it("the rocks investigation offers no restart button while the fair plan is still being chosen", () => {
   render(<ComparingAndGroupingRocksGame level={4} onComplete={() => {}} />);
-  expect(screen.getByRole("button", { name: "Check comparison plan" })).toBeTruthy();
-  expect(screen.queryByRole("button", { name: "Restart this investigation" })).toBeNull();
+  expect(screen.getByRole("button", { name: "Check my plan" })).toBeTruthy();
+  expect(screen.queryByRole("button", { name: "Start again" })).toBeNull();
 });

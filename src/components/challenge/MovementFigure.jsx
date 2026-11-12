@@ -6,7 +6,7 @@ export default function MovementFigure({ pose = "straight" }) {
   const id = useId();
   const model = MOVEMENT_POSES[pose];
   const { elbow, hand, frontHeight, backHeight } = movementGeometry(pose);
-  const description = `${model.label}. The upper arm stays still. The lower arm meets it at the elbow joint. Front muscle: ${model.front}; back muscle: ${model.back}. Muscle lengths are schematic, not measurements.`;
+  const description = `${model.label}. The upper arm stays still. The lower arm moves at the elbow joint. The front muscle is ${model.front === "between" ? "in the middle" : model.front}. The back muscle is ${model.back === "between" ? "in the middle" : model.back}.`;
   return <figure className="science-life-figure"><svg viewBox="0 0 360 310" role="img" aria-labelledby={`${id}-title ${id}-desc`}>
     <title id={`${id}-title`}>{model.label}</title><desc id={`${id}-desc`}>{description}</desc>
     <path className="science-movement-bone" d={`M160 45 L160 170 L${hand.x} ${hand.y}`} />
@@ -16,5 +16,5 @@ export default function MovementFigure({ pose = "straight" }) {
     <path className="science-line" d={`M185 ${110-frontHeight/2} L160 50 M185 ${110+frontHeight/2} L${160+(hand.x-160)*.2} ${170+(hand.y-170)*.2} M135 ${110-backHeight/2} L160 50 M135 ${110+backHeight/2} L150 180`} />
     <text className="science-svg-text" x="208" y="80">Front muscle</text><text className="science-svg-text" x="15" y="80">Back muscle</text>
     <text className="science-svg-text" x="15" y="225">Elbow joint</text><path className="science-line" d="M125 220 L151 179" />
-  </svg><figcaption>{description} The lines connecting muscles to bones stand for tendons. This simplified arm model shows one pair; real movement uses more muscles.</figcaption></figure>;
+  </svg><figcaption>{description} The lines joining muscles to bones are tendons. This picture shows one pair of muscles. Real arms use more.</figcaption></figure>;
 }

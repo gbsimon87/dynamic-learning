@@ -13,7 +13,7 @@ test("material banks have fifteen distinct samples, guaranteed metal/non-metal c
     for (const level of [2, 3, 4]) for (const q of buildMaterialsQuestions(level, seededRng(seed))) {
       assert.equal(q.samples.length, 3); assert.equal(new Set(q.samples.map(s => s.id)).size, 3);
       assert.ok(q.samples.some(s => s.attracted)); assert.ok(q.samples.some(s => s.metal && !s.attracted)); assert.ok(q.samples.some(s => !s.metal));
-      assert.ok(q.stages.every(s => s.text.includes("prepared equal-size piece") && s.text.includes("same classroom magnet, starting gap")));
+      assert.ok(q.stages.every(s => s.text.includes("cut to the same size") && s.text.includes("same magnet and the same start distance")));
     }
   }
 });

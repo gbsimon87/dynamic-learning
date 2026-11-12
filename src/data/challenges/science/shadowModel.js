@@ -9,8 +9,8 @@ export function shadowGeometry(input) {
   return { source, object, screen, height, sourceDistance: object - source, screenDistance: screen - object, exactHeight, shadowHeight: Math.round(exactHeight) };
 }
 export const SHADOW_SOURCE = { label: "BBC Teach light and shadow concepts (adapted)", url: "https://downloads.bbc.co.uk/learning/bbcteach/Light_teacher_resource.pdf" };
-export const SHADOW_GLOSS = "Opaque means light cannot pass through. A shadow is a darker area where an object blocks light from a source. The screen is where we look for the shadow. This simplified model has one small point source, one centred opaque object and a fixed screen. Lines show light paths, not visible strings. Shadow heights are shown to the nearest whole centimetre (cm). Real torches and outdoor shadows can behave differently.";
+export const SHADOW_GLOSS = "Opaque means light cannot pass through. A shadow is a dark patch where an object blocks light from a light source. The screen is where we look for the shadow. The lines show the paths of light. Shadow heights are in centimetres (cm), to the nearest whole number.";
 export const SHADOW_LABELS = [{ id: "source", label: "Light source" }, { id: "object", label: "Opaque object" }, { id: "shadow", label: "Shadow on screen" }];
 export function shadowTargets(variant = 0) {
-  return SHADOW_LABELS.map((t, i) => ({ ...t, letter: String.fromCharCode(65 + (i + variant) % 3), text: ["The lamp that gives out light", "The card that blocks light", "The darker patch on the screen behind the card"][i] }));
+  return SHADOW_LABELS.map((t, i) => ({ ...t, letter: String.fromCharCode(65 + (i + variant) % 3), text: ["The lamp that gives out light", "The card that blocks light", "The dark patch on the screen behind the card"][i] }));
 }

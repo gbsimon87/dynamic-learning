@@ -5,8 +5,8 @@ import { assertBankRuns, seededRng } from "./lightTestHelpers.js";
 test("sunlight banks provide fifteen authored situations, five tasks and all three protective principles", () => {
   assertBankRuns([FACT_BANK, SORT_BANK, MESSAGE_BANK, ADVICE_BANK], buildSunlightQuestions, false);
   for (let level = 1; level <= 4; level++) for (let seed = 1; seed <= 50; seed++) assert.deepEqual([...new Set(buildSunlightQuestions(level, seededRng(seed)).map(q => q.rule))].sort(), ["dark", "look", "uv"]);
-  assert.match(WARNING, /Never look directly at the Sun, even through dark glasses/);
-  assert.match(RULES.find(r => r.id === "uv").text, /99% or 100% of both UVA and UVB/);
+  assert.match(WARNING, /Never look straight at the Sun, even with dark glasses/);
+  assert.match(RULES.find(r => r.id === "uv").text, /block UV/);
   assert.match(RULES.find(r => r.id === "dark").text, /do not prove/);
   for (const action of ACTIONS.filter(a => a.safe)) assert.doesNotMatch(action.label, /^Look directly|^Stare|^Test sunglasses by looking/);
 });

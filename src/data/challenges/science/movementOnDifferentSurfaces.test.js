@@ -9,8 +9,8 @@ test("movement banks provide fifteen distinct tests and deterministic five/five/
   for (const s of SCENARIOS) { assert.ok(s.samples.every(x => Number.isInteger(x.distance) && x.distance > 0 && x.distance <= 60)); assert.notEqual(s.samples[0].distance, s.samples[1].distance); }
   for (const q of buildMovementQuestions(1, seededRng(1))) {
     const [a, b] = q.scenario.samples;
-    assert.equal(q.answer, a.distance > b.distance ? `Sample A: ${a.label}` : `Sample B: ${b.label}`);
-    assert.match(q.stages[0].text, /same ramp position with no extra push/);
+    assert.equal(q.answer, a.distance > b.distance ? `Surface A: ${a.label}` : `Surface B: ${b.label}`);
+    assert.match(q.stages[0].text, /same ramp each time. It is not pushed/);
   }
 });
 test("surface records reject missing, extra and incorrect comparisons and do not guess at ties", () => {

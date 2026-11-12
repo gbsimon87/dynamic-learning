@@ -5,33 +5,33 @@ export const CONDITIONS = [{ id: "blocked", on: true, blocks: true }, { id: "rem
 export function shadowObservation(object, condition, id = condition.id, label = condition.id) {
   const { on, blocks } = condition;
   return { id, label, on, blocks, geometry: { source: 0, object: 30, screen: 60, height: 4 },
-    text: `${on ? "The lamp is on" : "The lamp is off"}. ${blocks ? `The opaque ${object} is between lamp and screen` : `The ${object} has been removed from the light path`}. ${on && blocks ? "It blocks light, forming a darker patch on the screen behind it." : on ? "Light reaches the screen without this object blocking it. No shadow of this object is cast." : "The screen is unlit. This lamp casts no shadow because it gives out no light; an unlit screen is not a cast shadow."} The object is shown edge-on in this diagram; we compare shadow formation, not outline shapes.` };
+    text: `${on ? "The lamp is on." : "The lamp is off."} ${blocks ? `The opaque ${object} is between the lamp and the screen.` : `The ${object} has been taken away.`} ${on && blocks ? "It blocks the light, so a shadow forms on the screen." : on ? "Light reaches the screen, so there is no shadow." : "There is no light, so there is no shadow. The screen is just dark."}` };
 }
 const FACTS = [
-  ["Why does this darker patch form?", "The opaque object blocks light from the lamp.", "The object sends darkness to the screen.", "The screen makes its own shadow without blocked light."],
-  ["What does opaque mean here?", "Light cannot pass through the object.", "The object makes its own light.", "All light passes through the object."],
-  ["Where is this object's shadow?", "On the screen behind the object, away from the lamp.", "Inside the lamp before light reaches the object.", "Only inside the object, never on the screen."],
+  ["Why does this dark patch form on the screen?", "The opaque object blocks light from the lamp", "The object sends darkness to the screen", "The screen makes its own shadow"],
+  ["What does opaque mean?", "Light cannot pass through it", "It makes its own light", "All light passes through it"],
+  ["Where is the shadow of this object?", "On the screen, behind the object", "Inside the lamp, before the object", "Inside the object, not on the screen"],
 ];
 export const FACT_BANK = OBJECTS.flatMap(object => FACTS.map(([prompt, answer, ...wrong], variant) => ({ id: `fact-${OBJECTS.indexOf(object)}-${variant}`, object, prompt, answer, wrong, variant })));
 export const COMPARE_BANK = OBJECTS.flatMap((object, i) => [0, 1, 2].map(variant => ({ id: `compare-${i}-${variant}`, object, variant })));
 export const DIAGRAM_BANK = OBJECTS.flatMap((object, i) => [0, 1, 2].map(variant => ({ id: `diagram-${i}-${variant}`, object, variant })));
 export const ENQUIRY_BANK = ["remove", "switch", "return"].flatMap((group, i) => [0, 1, 2].map(variant => ({ id: `enquiry-${group}-${variant}`, group, object: OBJECTS[(i + variant) % OBJECTS.length], variant })));
-export const BINS = [{ id: "shadow", label: "This object casts a shadow" }, { id: "none", label: "No shadow cast by this lamp" }];
+export const BINS = [{ id: "shadow", label: "Shadow forms" }, { id: "none", label: "No shadow forms" }];
 export function buildShadowFormationQuestions(level, rng) {
   if (![1, 2, 3, 4].includes(level)) throw new RangeError("Unknown shadow formation level");
   const bank = [FACT_BANK, COMPARE_BANK, DIAGRAM_BANK, ENQUIRY_BANK][level - 1];
   const chosen = level === 4 ? ["remove", "switch", "return"].map(group => sample(bank.filter(q => q.group === group), 1, rng)[0]) : sample(bank, 5, rng);
   return shuffle(chosen, rng).map(q => {
     const conditions = level === 1 || level === 3 ? [CONDITIONS[0]] : q.group === "remove" || (level === 2 && q.variant === 1) ? [CONDITIONS[0], CONDITIONS[1], CONDITIONS[0]] : q.group === "switch" || (level === 2 && q.variant === 2) ? [CONDITIONS[0], CONDITIONS[2], CONDITIONS[0]] : q.group === "return" ? [CONDITIONS[1], CONDITIONS[0], CONDITIONS[1]] : CONDITIONS;
-    const stages = conditions.map((c, i) => shadowObservation(q.object, c, `observation-${i}`, `Observation ${i + 1}`));
+    const stages = conditions.map((c, i) => shadowObservation(q.object, c, `observation-${i}`, `Picture ${i + 1}`));
     const diagramTargets = shadowTargets(q.variant);
     return { ...q, level, stages, options: level === 1 ? shuffle([q.answer, ...q.wrong], rng) : [],
       labels: shuffle(SHADOW_LABELS, rng), diagramTargets, targets: diagramTargets.map(t => ({ id: t.letter, label: t.letter })),
-      recordCards: shuffle(stages.map(s => ({ id: s.id, label: `${s.label}: lamp ${s.on ? "on" : "off"}; object ${s.blocks ? "in place" : "removed"}` })), rng), recordBins: BINS,
+      recordCards: shuffle(stages.map(s => ({ id: s.id, label: `${s.label}: lamp ${s.on ? "on" : "off"}, object ${s.blocks ? "in place" : "taken away"}` })), rng), recordBins: BINS,
       recordExpected: Object.fromEntries(stages.map(s => [s.id, s.on && s.blocks ? "shadow" : "none"])),
-      title: "What must happen for this lamp to cast a shadow?", setup: q.group === "switch" ? "Only switch the lamp off and on. Keep the object and screen in place." : "Only remove or replace the same opaque object. Keep the lamp on and the screen in place.",
-      predictionOptions: ["The object will cast a shadow in every observation.", "The object will cast a shadow in some observations.", "This lamp will cast no shadow.", "I am not sure yet."],
-      tiles: shuffle([{ id: "source", label: "First: a light source must give out light." }, { id: "block", label: "Next: an opaque object blocks some of that light." }, { id: "patch", label: "So: a shadow forms on the screen behind the object." }, { id: "darkness", label: "Next: the object sends out darkness." }, { id: "off", label: "First: switch off the lamp to make it cast a shadow." }], rng), correctConclusionIds: ["source", "block", "patch"],
+      title: "What do we need for a shadow to form?", setup: q.group === "switch" ? "Only the lamp is turned off and on. The object and the screen stay in place." : "Only the same opaque object is taken away and put back. The lamp stays on and the screen stays in place.",
+      predictionOptions: ["The object will make a shadow every time", "The object will make a shadow some of the time", "There will be no shadow at all", "I am not sure yet"],
+      tiles: shuffle([{ id: "source", label: "First: a light source must give out light." }, { id: "block", label: "Next: an opaque object blocks some of that light." }, { id: "patch", label: "So: a shadow forms on the screen behind the object." }, { id: "darkness", label: "Next: the object sends out darkness." }, { id: "off", label: "First: turn off the lamp to make a shadow." }], rng), correctConclusionIds: ["source", "block", "patch"],
     };
   });
 }

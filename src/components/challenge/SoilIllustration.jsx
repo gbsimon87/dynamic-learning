@@ -34,7 +34,7 @@ export default function SoilIllustration({ features, sampleId }) {
         })}
       </svg>
       <figcaption>
-        Sample {sampleId}: supplied magnified notes. These pictures show selected components, not exact sizes or amounts.
+        Sample {sampleId}: notes about what we see up close. The pictures show some parts of soil, not real sizes or amounts.
         <ScienceCredit>{CREDITS.fluent}</ScienceCredit>
       </figcaption>
       <ul>{features.map((c) => <li key={c.id}><strong>{c.letter}</strong>: {c.text}.</li>)}</ul>

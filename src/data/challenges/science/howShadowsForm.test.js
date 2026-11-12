@@ -14,10 +14,10 @@ test("shadow formation banks and runs cover controlled object and lamp compariso
   }
 });
 test("no light and no blocker differ from a cast shadow; opaque means light cannot pass through", () => {
-  assert.match(shadowObservation("card", CONDITIONS[0]).text, /blocks light, forming a darker patch/);
-  assert.match(shadowObservation("card", CONDITIONS[1]).text, /without this object blocking/);
-  assert.match(shadowObservation("card", CONDITIONS[2]).text, /unlit screen is not a cast shadow/);
-  assert.ok(FACT_BANK.some(q => q.answer === "Light cannot pass through the object."));
+  assert.match(shadowObservation("card", CONDITIONS[0]).text, /blocks the light, so a shadow forms/);
+  assert.match(shadowObservation("card", CONDITIONS[1]).text, /so there is no shadow/);
+  assert.match(shadowObservation("card", CONDITIONS[2]).text, /The screen is just dark/);
+  assert.ok(FACT_BANK.some(q => q.answer === "Light cannot pass through it"));
 });
 test("shadow formation records reject partial, extra, unknown and incorrect observations", () => {
   for (const level of [2, 4]) for (const q of buildShadowFormationQuestions(level, seededRng(9))) {
