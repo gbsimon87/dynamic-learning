@@ -3,7 +3,7 @@ import { topicLessons as lesson, sentence as s, table as t, fix as f, steps } fr
 /** Bix lessons for the Year 6 "Grammar - Cohesion, Layout and Punctuation" topics. */
 export const YEAR6_COHESION_LAYOUT_PUNCTUATION_LESSONS = {
   "cohesive-devices-across-paragraphs": lesson("Link one paragraph to the next", [
-    "A **cohesive device** is a word or phrase that links ideas together. It tells the reader how a new paragraph connects to the one before.",
+    "A **cohesive device** is a word or phrase that links a new paragraph to the one before.",
     "Three ways to link: show a contrast, show a result, or repeat a key word or phrase.",
   ], [
     s("Link with a contrast", "Cats sleep most of the day. **In contrast,** dogs need long walks.", "In contrast tells the reader paragraph 2 says something different."),
@@ -11,7 +11,7 @@ export const YEAR6_COHESION_LAYOUT_PUNCTUATION_LESSONS = {
     f("Repair the link", "The river rose all night. On the other hand, several roads were closed.", "The river rose all night. As a consequence, several roads were closed.", "Closed roads are a result of the flooding, so a result link fits."),
     steps("Link by repeating", ["Find the key phrase in paragraph 1.", "Start paragraph 2 by repeating that phrase.", "Check the new paragraph is still about it."], "Repeating “the Roman road” links the paragraphs without needing a linking adverbial."),
   ]),
-  "ellipsis": lesson("Leave out what the reader can work out", [
+  "ellipsis": lesson("Leave out words readers can guess", [
     "**Ellipsis** means leaving words out because the reader can work them out from what came before.",
     "It stops writing repeating itself, and the gap links the two ideas.",
   ], [
@@ -29,8 +29,8 @@ export const YEAR6_COHESION_LAYOUT_PUNCTUATION_LESSONS = {
     f("Choose the better layout", "Torch, map, compass and water bottle written in one long paragraph.", "Pack: • a torch • a map • a compass • a water bottle", "Short items are easier to scan as bullet points."),
     steps("Choose a device", ["Say what the reader needs.", "Find a part? Use a sub-heading. Scan a list? Use bullets. Compare facts? Use a table.", "Check the layout makes the text clearer, not busier."], "A layout device should always help the reader."),
   ]),
-  "semicolons-colons-and-dashes": lesson("Join two clauses with the right mark", [
-    "An **independent clause** makes sense on its own. You can join two of them with a semi-colon, a colon or a dash. A comma alone is not enough.",
+  "semicolons-colons-and-dashes": lesson("Join clauses with the right mark", [
+    "An **independent clause** makes sense alone. Join two with a semi-colon, colon or dash, never just a comma.",
     "Semi-colon: two related ideas. Colon: the second explains the first. Dash: a pause or a surprise.",
   ], [
     s("Semi-colon", "It is raining**;** I am fed up.", "Both sides could be sentences; the semi-colon joins two related ideas."),
@@ -49,14 +49,14 @@ export const YEAR6_COHESION_LAYOUT_PUNCTUATION_LESSONS = {
   ]),
   "bullet-point-punctuation": lesson("Punctuate bullet points consistently", [
     "Bullet points list information. The line before them ends with a **colon**.",
-    "Short phrases start with a lower-case letter and have no full stop. Full sentences start with a capital letter and end with a full stop. Keep every bullet in the same style.",
+    "Phrases: lower-case start, no full stop. Sentences: capital letter and full stop. Keep every bullet the same.",
   ], [
-    s("Phrase bullets", "Bring these to the pool: • a towel • a swimming costume • a water bottle", "Phrases: lower-case, no full stop."),
+    s("Phrase bullets", "Bring these to the pool**:** • a towel • a swimming costume • a water bottle", "Phrases: lower-case, no full stop."),
     t("Compare the styles", ["Phrases", "Full sentences"], [["a towel", "Hand in your form."], ["sun cream", "Pack a lunch."], ["a packed lunch", "Wear sensible shoes."]], "Choose one style and use it for every bullet in the list."),
     f("Repair a bullet", "• Pack a lunch", "• Pack a lunch.", "In a list of sentences every bullet needs a capital letter and a full stop."),
     steps("Check the list", ["Does the lead-in end with a colon?", "Are the bullets phrases or sentences?", "Do all bullets follow the same style?"], "Different styles in one list look careless and confuse the reader."),
   ]),
-  "hyphens-to-avoid-ambiguity": lesson("Use a hyphen to make the meaning clear", [
+  "hyphens-to-avoid-ambiguity": lesson("Hyphens make the meaning clear", [
     "A hyphen can stop a phrase having two meanings. It joins words that work together, or separates a prefix.",
     "Say both meanings aloud, then decide which one you want.",
   ], [

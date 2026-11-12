@@ -20,20 +20,20 @@ export const YEAR6_SPELLING_ADVANCED_LESSONS = {
     f("Fix the wrong word", "The bridge was built from strong steal.", "The bridge was built from strong steel.", "Steel is the metal. Steal means to take something that is not yours."),
     steps("Pick the right word", ["Read the sentence and find what the gap needs to mean.", "Say the meaning of each word in the pair.", "Choose the one that fits, then read the sentence again."], "If both words seem to fit, read the meanings again more slowly."),
   ]),
-  "year-6-word-list-part-1": lesson("Chunk it, then check the tricky part", [
+  "year-6-word-list-part-1": lesson("Chunk it, check the tricky part", [
     "Long words are easier to spell when you say them in chunks.",
     "Then find the tricky part and learn it.",
   ], [
-    s("Say it in chunks", "nec · es · sa · ry → necessary", "Say each chunk, then spell it: one c and two s letters."),
+    s("Say it in chunks", "nec · es · sa · ry → **necessary**", "Say each chunk, then spell it: one c and two s letters."),
     t("Right or wrong?", ["Spelt correctly", "Spelt incorrectly"], [["necessary", "neccessary"], ["interrupt", "interupt"], ["neighbour", "nieghbour"]], "Compare each spelling with the chunks you know."),
     f("Repair the spelling", "It is rude to interupt.", "It is rude to interrupt.", "inter + rupt: there are two r letters in the middle."),
     steps("Spell it from a sentence", ["Read the sentence and the meaning clue.", "Say the word in chunks.", "Type each chunk in order, then check the tricky part."], "Use the first letter and the number of letters to check your answer."),
   ]),
-  "year-6-word-list-part-2": lesson("Chunk it, then check the tricky part", [
+  "year-6-word-list-part-2": lesson("Chunk it, check the tricky part", [
     "Long words are easier to spell when you say them in chunks.",
     "Then find the tricky part and learn it.",
   ], [
-    s("Say it in chunks", "veg · e · ta · ble → vegetable", "Say each chunk, then spell it: the word ends -able."),
+    s("Say it in chunks", "veg · e · ta · ble → **vegetable**", "Say each chunk, then spell it: the word ends -able."),
     t("Right or wrong?", ["Spelt correctly", "Spelt incorrectly"], [["restaurant", "resturant"], ["recommend", "reccomend"], ["rhythm", "rythm"]], "Compare each spelling with the chunks you know."),
     f("Repair the spelling", "Can you suggest a game? Yes: I sugest chess.", "Can you suggest a game? Yes: I suggest chess.", "sug + gest: there is a double g."),
     steps("Spell it from a sentence", ["Read the sentence and the meaning clue.", "Say the word in chunks.", "Type each chunk in order, then check the tricky part."], "Use the first letter and the number of letters to check your answer."),

@@ -78,7 +78,7 @@ try {
   await page.getByRole('link', { name: 'About Make Number Bonds', exact: true }).click();
   await page.getByRole('heading', { name: 'Make Number Bonds', level: 1 }).waitFor();
   await page.getByRole('link', { name: 'Play Make Number Bonds' }).click();
-  await page.getByRole('heading', { name: '🔢 Number Bonds' }).waitFor();
+  await page.getByRole('heading', { name: 'Number Bonds', exact: true, level: 1 }).waitFor();
   assert.equal(await page.locator('meta[name="robots"]').getAttribute('content'), 'noindex, follow');
   await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Skills', exact: true }).click();
   await page.getByRole('heading', { name: 'Pick a game' }).waitFor();
