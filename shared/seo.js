@@ -61,7 +61,9 @@ export function getPageSeo(pathname, { origin = PUBLIC_ORIGIN, indexable = true 
   } else if (/^\/curriculum\/year\/[^/]+\/[^/]+$/.test(path)) {
     const [, , , year, subject] = path.split('/');
     name = `Year ${year} ${subject} Curriculum`;
-  } else if (path.startsWith('/year/')) name = 'Curriculum challenge';
+  } else if (/^\/curriculum\/year\/[^/]+\/[^/]+\/quest\/[^/]+\/mastery$/.test(path)) name = 'Quest Mastery quiz';
+  else if (/^\/curriculum\/year\/[^/]+\/[^/]+\/final-test$/.test(path)) name = 'Subject final test';
+  else if (path.startsWith('/year/')) name = 'Curriculum challenge';
   else if (path.startsWith('/parent/trophies/')) name = 'Learner trophies';
   else if (/^\/teachers\/briefings\/[^/]+\/[^/]+\/[^/]+$/.test(path)) name = 'Topic briefing';
   const exists = Boolean(name);

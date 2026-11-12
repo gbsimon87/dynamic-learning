@@ -26,6 +26,8 @@ import { preloadSounds } from "../../components/celebration/sound/player";
 import { localDay, weekDots } from "../../data/streak";
 import { stickerKey } from "../../data/news";
 import ProgressError from "../../components/ProgressError";
+import CurriculumEntryBoundary from "../../components/curriculum/CurriculumEntryBoundary";
+import { CURRICULUM_JOURNEY_ENABLED, getCurriculumReviewActions } from "../../data/curriculumJourney";
 import "./ProblemView.css";
 
 function ProblemView() {
@@ -121,6 +123,13 @@ function ProblemView() {
       };
     }
 
+    // Quiz offers when this run newly finishes a quest/subject, in any order.
+    // Built-content completion (lock state), not the stricter award predicates.
+    const reviewActions = CURRICULUM_JOURNEY_ENABLED ? getCurriculumReviewActions({
+      curriculum, before: progress, after: withChallengeComplete(progress, categoryId, topicId, challengeId),
+      categoryId, isBuilt, year, subject,
+    }) : [];
+
     const stickerWon = wonSticker(result.earned, extras.sticker)
       ? stickerKey(year, subject, topicId)
       : null;
@@ -144,6 +153,7 @@ function ProblemView() {
     setCompletion({
       positionKey,
       result,
+      reviewActions,
       badges: gained?.awarded ?? [],
       ...extras,
       xp: gained && {
@@ -192,6 +202,7 @@ function ProblemView() {
         subjectName={getSubjectName(subject)}
         nextHref={next && `/year/${year}/${subject}/problem/${next.categoryId}/${next.topicId}/${next.challengeId}`}
         topicsHref={topicsHref}
+        reviewActions={completion.reviewActions}
       />
       </>
     );
@@ -217,6 +228,7 @@ function ProblemView() {
   }
 
   return (
+    <CurriculumEntryBoundary year={Number(year)} subject={subject} target="challenge" categoryId={categoryId} topicId={topicId}>
     <div className="problem-page">
       {saveError && <ProgressError retry={retrySave} />}
       <header className="problem-header">
@@ -239,6 +251,7 @@ function ProblemView() {
         />
       </ChallengeContext.Provider>
     </div>
+    </CurriculumEntryBoundary>
   );
 }
 

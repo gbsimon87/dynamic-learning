@@ -73,6 +73,8 @@ router.delete("/account", requireAuth, deleteThrottle, async (req, res, next) =>
     if (childIds.length) {
       await db.progress().deleteMany({ childId: { $in: childIds } });
       await db.rewards().deleteMany({ childId: { $in: childIds } });
+      await db.curriculumJourney().deleteMany({ childId: { $in: childIds } });
+      await db.curriculumAssessments().deleteMany({ childId: { $in: childIds } });
     }
     await db.children().deleteMany({ parentId: parent._id });
     await db.pendingSignups().deleteMany({ email: parent.email });

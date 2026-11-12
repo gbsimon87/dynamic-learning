@@ -69,6 +69,9 @@ export default function CompletionCelebration({
   childName,
   nextHref,
   topicsHref,
+  // Optional, explicitly labelled quiz offers ({ label, href }). Presentation
+  // only: "Next challenge" still points at the next challenge.
+  reviewActions = [],
 }) {
   const steps = useMemo(
     () => buildCelebrationSteps({
@@ -159,6 +162,11 @@ export default function CompletionCelebration({
                 Back to topics
               </Link>
             )}
+            {reviewActions.map((action) => (
+              <Link key={action.href} className="completion-celebration-secondary completion-celebration-review" to={action.href}>
+                <span aria-hidden="true">📝</span> {action.label}
+              </Link>
+            ))}
             {awardedSomething && (
               <Link className="completion-celebration-secondary" to="/trophies">
                 See your trophies <span aria-hidden="true">🏆</span>

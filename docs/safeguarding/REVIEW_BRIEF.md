@@ -64,6 +64,7 @@ and it does not claim that the app complies with any law.
 | Child profile | Nickname (≤20 chars; the form says "A nickname is fine!"), chosen avatar and colour, school year, subjects | Until a parent deletes the profile |
 | Progress | Which challenges each child completed, per year and subject | Until the profile is deleted |
 | Rewards | Badges, XP, streaks and activity-day stamps, stickers, practice counts, intro completion timestamp, coach-mark flags and daily puzzle dates/counts | Until the profile/account is deleted |
+| Curriculum journey (#69, behind flags) | Introduction scopes closed (scope ID, content version, time); quiz attempts: the fixed questions shown, each submitted answer or "not sure", server-scored outcome, timestamps and summary | Until the profile/account is deleted; no expiry policy implemented |
 | Pending sign-up | Email, HMAC of the 6-digit code, send counters | About 1 hour (automatic expiry) |
 | Request throttling | Hashed email/account/token keys and hashed client IP keys, held in server memory | Authentication buckets typically 15 minutes; email-request IP buckets up to 1 hour |
 | Email-send budget | Aggregate daily send count stored in MongoDB, without a per-person identifier | Scheduled for TTL deletion one day after the UTC send day ends; TTL cleanup is asynchronous |
@@ -74,7 +75,8 @@ full date of birth, photos, precise device location, voice recordings or contact
 lists. Birth year is used in memory for the age gate and excluded from the saved
 signup draft and API body. Games accept typed answers and Speed Reader accepts
 a pasted story; the app has no general
-messaging or free-text publishing feature and no separate attempt-history store.
+messaging or free-text publishing feature. When the curriculum-journey flags are
+enabled, quiz attempts form an attempt history (short typed answers included).
 IP addresses necessarily reach hosting/external services; app throttles use
 hashed IP keys. Supplier logging and retention must be checked separately.
 

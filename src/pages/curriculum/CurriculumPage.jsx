@@ -22,6 +22,22 @@ import { useReveal } from "../home/useReveal";
 import ProgressRing from "../../components/ProgressRing";
 import ProgressError from "../../components/ProgressError";
 import "./CurriculumPage.css";
+import CurriculumEntryBoundary from "../../components/curriculum/CurriculumEntryBoundary";
+import CurriculumQuizCard from "../../components/curriculum/CurriculumQuizCard";
+import { CURRICULUM_JOURNEY_ENABLED } from "../../data/curriculumJourney";
+import { useCurriculumAssessmentOverview } from "../../hooks/useCurriculumAssessment";
+import { getJourneyPathway } from "../../../shared/curriculumJourneyPathway.js";
+
+// The built-content manifest entry for this pathway, or null when the journey
+// is off or nothing here is built. Drives replay links and quiz cards only.
+function journeyPathway(year, subject) {
+  if (!CURRICULUM_JOURNEY_ENABLED) return null;
+  try { return getJourneyPathway(year, subject); } catch { return null; }
+}
+
+function ReplayLink({ params, label, name }) {
+  return <Link className="cj-replay" to={`?${new URLSearchParams(params)}`} replace aria-label={name}><span aria-hidden="true">💡</span> {label}</Link>;
+}
 
 /* ===== DECORATION =====
    The drifting layer behind the hero, same idea as the homepage sky. Fixed
@@ -335,6 +351,8 @@ function CurriculumPage() {
 
   const { progress, hydrated, loadError, retryLoad } = useProgress(year, subject);
   const revealRef = useReveal();
+  const journey = journeyPathway(year, subject);
+  const quizOverview = useCurriculumAssessmentOverview(year, subject, Boolean(journey));
 
   // Unknown or not-yet-built year/subject → back to the picker
   if (!isCurriculumAvailable(year, subject)) {
@@ -378,7 +396,12 @@ function CurriculumPage() {
     };
   });
 
+  const builtQuest = (categoryId) => journey?.categories.find((q) => q.id === categoryId) ?? null;
+  const builtCategories = lockState.filter((category) => builtQuest(category.id));
+  const subjectReady = builtCategories.length > 0 && builtCategories.every((category) => category.complete);
+
   return (
+    <CurriculumEntryBoundary year={year} subject={subject} target="map">
     <div className="curriculum-page" ref={revealRef}>
       {/* ===== HERO ===== */}
       <section className="cp-hero">
@@ -435,6 +458,7 @@ function CurriculumPage() {
               <p className="cp-bar-meta">
                 <span aria-hidden="true">⭐</span> {yearStats.completed} of{" "}
                 {yearStats.total} done
+                {journey && <> · <ReplayLink params={{ intro: "subject" }} label="About this subject" /></>}
                 {/* Most of the curriculum isn't built yet, so a bare 100%
                     would read as "Year finished". Three words, not a
                     paragraph. */}
@@ -514,6 +538,7 @@ function CurriculumPage() {
                     {kind ? ` · ${kind}` : ""}
                   </p>
                   <h2 className="cp-cat-title">{name}</h2>
+                  {builtQuest(category.id) && <ReplayLink params={{ intro: "quest", category: category.id }} label="What’s this quest about?" />}
                 </div>
 
                 {categoryLocks.complete && (
@@ -591,6 +616,9 @@ function CurriculumPage() {
                         )}
 
                         <h3 className="cp-topic-title">{topic.name}</h3>
+                        {builtQuest(category.id)?.topics.some((t) => t.id === topic.id) && (
+                          <ReplayLink params={{ intro: "topic", category: category.id, topic: topic.id }} label="About this topic" name={`About this topic: ${topic.name}`} />
+                        )}
 
                         {topicLocks.unbuilt && !topicLocks.locked && (
                           <span className="cp-chip is-soon">🚧 Coming soon</span>
@@ -667,11 +695,22 @@ function CurriculumPage() {
                   );
                 })}
               </div>
+              {builtQuest(category.id) && (
+                <CurriculumQuizCard year={year} subject={subject} kind="quest" categoryId={category.id}
+                  title={`Quest Mastery: ${name}`} complete={categoryLocks.complete} overview={quizOverview} />
+              )}
             </section>
           );
         })}
       </QuestRail>
+      {journey && (
+        <div className="cj-map-extras">
+          <CurriculumQuizCard year={year} subject={subject} kind="subject" title={`Year ${year} ${subjectName} Final Test`}
+            complete={subjectReady} overview={quizOverview} />
+        </div>
+      )}
     </div>
+    </CurriculumEntryBoundary>
   );
 }
 

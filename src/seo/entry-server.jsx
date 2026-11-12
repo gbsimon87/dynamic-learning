@@ -10,6 +10,7 @@ import SkillGuide from './SkillGuide';
 import CurriculumGuide, { CurriculumOverview } from './CurriculumGuide';
 import ParentGuide from './ParentGuides';
 import { CURRICULUM_SUBJECTS, loadCurriculum } from '../data/curriculumRegistry';
+import { CURRICULUM_JOURNEY_MANIFEST } from '../../shared/curriculumJourneyManifest.js';
 
 // Only public, anonymous content is rendered. No auth/store provider is mounted,
 // effects never run, and no private database/browser storage is read or written.
@@ -42,6 +43,11 @@ export function curriculumPaths() {
         paths.push(`/year/${year}/${subject}/problem/${category.id}/${topic.id}/${challenge.id}`);
       }
     }
+  }
+  // Quest Mastery and Subject Final Test pages exist only for built content.
+  for (const pathway of CURRICULUM_JOURNEY_MANIFEST) {
+    for (const quest of pathway.categories) paths.push(`/curriculum/year/${pathway.year}/${pathway.subject}/quest/${quest.id}/mastery`);
+    paths.push(`/curriculum/year/${pathway.year}/${pathway.subject}/final-test`);
   }
   return paths;
 }

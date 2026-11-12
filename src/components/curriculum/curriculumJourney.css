@@ -1,0 +1,151 @@
+/* Curriculum introductions, quest quizzes and results.
+   Colours come from the --light-* / --dark-* tokens in App.css; body.dark swaps
+   the set. Every answer state pairs colour with an icon or words. */
+.cj-page, .cj-screen, .cj-map-extras, .cj-quiz-card, .cj-replay {
+  --cj-card: var(--light-panel); --cj-ink: var(--light-text); --cj-accent: var(--light-accent);
+  --cj-on-accent: var(--on-light-accent); --cj-soft: color-mix(in srgb, var(--light-text) 12%, transparent);
+  --cj-tint: color-mix(in srgb, var(--light-accent) 12%, var(--light-panel));
+  --cj-good: var(--light-geo-leaf-dark); --cj-danger: var(--danger-text);
+}
+body.dark .cj-page, body.dark .cj-screen, body.dark .cj-map-extras, body.dark .cj-quiz-card, body.dark .cj-replay {
+  --cj-card: var(--dark-panel); --cj-ink: var(--dark-text); --cj-accent: var(--dark-accent);
+  --cj-on-accent: var(--on-dark-accent); --cj-soft: color-mix(in srgb, var(--dark-text) 16%, transparent);
+  --cj-tint: color-mix(in srgb, var(--dark-accent) 14%, var(--dark-panel));
+  --cj-good: var(--dark-geo-leaf-light, var(--dark-accent));
+}
+
+.cj-page { width: min(100%, 760px); margin: 0 auto; padding: 1rem 16px 3rem; color: var(--cj-ink); text-align: left; }
+.cj-page-head { margin-bottom: 1rem; }
+.cj-back { display: inline-flex; align-items: center; min-height: 48px; font-weight: 800; color: inherit; }
+.cj-screen {
+  position: relative; width: min(100%, 760px); margin: 1rem auto; padding: clamp(1rem, 4vw, 1.75rem);
+  border-radius: 24px; background: var(--cj-card); color: var(--cj-ink); text-align: left;
+  box-shadow: 0 0 0 2px var(--cj-soft), 0 8px 0 var(--cj-soft); overflow-wrap: anywhere;
+}
+.cj-heading { display: flex; align-items: center; gap: .75rem; }
+.cj-heading .mascot, .cj-heading svg { flex: none; width: 64px; height: auto; }
+.cj-heading h1 { margin: 0; font-size: clamp(1.5rem, 5vw, 2.1rem); line-height: 1.15; }
+.cj-heading h1:focus, .cj-prompt:focus, .cj-review h3:focus, .cj-break h2:focus, .cj-results h2:focus { outline: none; }
+.cj-eyebrow { margin: 0; font-size: .85rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; opacity: .85; }
+.cj-screen h2 { margin: 1.1rem 0 .4rem; font-size: 1.2rem; }
+.cj-screen ul { margin: 0; padding-left: 1.25rem; }
+.cj-screen li, .cj-screen p { font-size: 1.1rem; line-height: 1.5; }
+.cj-example { margin-top: .5rem; font-weight: 700; }
+
+.cj-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.25rem; }
+.cj-actions button, .cj-error button, .cj-link-button, .cj-results > button {
+  min-height: 48px; padding: .6rem 1.15rem; border-radius: 16px; border: 2px solid var(--cj-soft);
+  background: var(--cj-card); color: var(--cj-ink); font: inherit; font-weight: 800; cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.cj-actions .cj-primary { background: var(--cj-accent); color: var(--cj-on-accent); border-color: transparent; box-shadow: 0 4px 0 var(--cj-soft); }
+.cj-actions button:disabled { opacity: .55; cursor: not-allowed; }
+.cj-page button:focus-visible, .cj-screen button:focus-visible, .cj-page a:focus-visible, .cj-page input:focus-visible,
+.cj-map-extras a:focus-visible, .cj-quiz-card a:focus-visible, .cj-replay:focus-visible { outline: 3px solid var(--cj-ink); outline-offset: 3px; }
+.cj-inline { min-height: 44px; border: 0; background: none; color: inherit; font: inherit; font-weight: 800; text-decoration: underline; cursor: pointer; }
+.cj-error { margin: 1rem 0; padding: .75rem 1rem; border-radius: 16px; border: 2px solid var(--cj-danger); color: var(--cj-ink); background: var(--cj-card); }
+.cj-error p { margin: 0 0 .5rem; }
+.cj-error button { margin: .25rem .5rem 0 0; }
+.cj-note, .cj-coverage { font-size: .95rem; opacity: .9; }
+
+/* Models */
+.cj-model { margin: 1rem 0 0; padding: 1rem; border-radius: 20px; background: var(--cj-tint); }
+.cj-model-caption { margin-top: .6rem; font-size: .95rem; }
+.cj-lesson-model { margin-top: .5rem; }
+.cj-groups { display: flex; flex-wrap: wrap; gap: .6rem; font-size: 1.6rem; }
+.cj-group { display: flex; flex-wrap: wrap; gap: .2rem; padding: .35rem .6rem; border-radius: 14px; border: 2px dashed var(--cj-soft); }
+.cj-number-line, .cj-timeline { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0; padding: 0; list-style: none; }
+.cj-number-line li { min-width: 2.5rem; padding: .3rem .5rem; border-radius: 10px; background: var(--cj-card); text-align: center; font-weight: 800; }
+/* A timeline axis: a thin spine with a dot per event, not a card accent. */
+.cj-timeline { position: relative; flex-direction: column; gap: .6rem; padding-left: 1.4rem; }
+.cj-timeline::before { content: ""; position: absolute; left: .45rem; top: .4rem; bottom: .4rem; width: 2px; background: var(--cj-ink); opacity: .5; }
+.cj-timeline li { position: relative; display: flex; flex-direction: column; }
+.cj-timeline li::before { content: ""; position: absolute; left: -1.25rem; top: .35rem; width: .7rem; height: .7rem; border-radius: 50%; background: var(--cj-accent); box-shadow: 0 0 0 2px var(--cj-ink); }
+.cj-pictures { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: .6rem; margin: 0; padding: 0; list-style: none; }
+.cj-pictures li { display: flex; flex-direction: column; align-items: center; gap: .25rem; padding: .6rem; border-radius: 16px; background: var(--cj-card); text-align: center; font-weight: 700; }
+.cj-picture-icon { font-size: 2.1rem; line-height: 1; }
+.cj-pictures-title { margin: 0 0 .5rem; font-weight: 900; }
+.cj-table { border-collapse: collapse; width: 100%; }
+.cj-table th, .cj-table td { padding: .4rem .6rem; border: 1px solid var(--cj-soft); text-align: left; }
+.cj-text-card p { margin: .35rem 0 0; }
+
+/* Quiz */
+.cj-section, .cj-question-count { margin: 0; font-weight: 800; opacity: .85; }
+.cj-round { margin-top: .5rem; padding: clamp(1rem, 4vw, 1.5rem); border-radius: 24px; background: var(--cj-card); box-shadow: 0 0 0 2px var(--cj-soft), 0 8px 0 var(--cj-soft); }
+.cj-prompt { margin: .35rem 0 .75rem; font-size: clamp(1.25rem, 4.5vw, 1.6rem); line-height: 1.3; }
+.cj-evidence { margin: .75rem 0; padding: .75rem 1rem; border-radius: 16px; border: 2px solid var(--cj-soft); background: var(--cj-tint); }
+.cj-evidence h3 { margin: 0 0 .35rem; font-size: 1.05rem; }
+.cj-evidence p { margin: .25rem 0; font-size: 1.1rem; line-height: 1.55; }
+.cj-credit { font-size: .85rem !important; opacity: .85; }
+.cj-input-label { display: block; margin: 1rem 0 .4rem; font-weight: 800; }
+.cj-number-field, .cj-text-field {
+  width: min(100%, 320px); min-height: 56px; padding: .4rem .8rem; border-radius: 14px; border: 3px solid var(--cj-soft);
+  background: var(--cj-card); color: var(--cj-ink); font: inherit; font-size: 1.6rem; font-weight: 800;
+}
+.cj-keypad { display: grid; grid-template-columns: repeat(3, minmax(56px, 76px)); gap: .5rem; margin-top: .75rem; }
+.cj-keypad button, .cj-characters button {
+  min-height: 56px; border-radius: 14px; border: 2px solid var(--cj-soft); background: var(--cj-tint); color: var(--cj-ink);
+  font: inherit; font-size: 1.4rem; font-weight: 900; cursor: pointer;
+}
+.cj-characters { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .6rem; }
+.cj-characters button { min-width: 52px; }
+.cj-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: .6rem; margin-top: 1rem; }
+.cj-choices button, .cj-sort-bins button, .cj-track button {
+  min-height: 56px; padding: .6rem .9rem; border-radius: 16px; border: 3px solid var(--cj-soft); background: var(--cj-card);
+  color: var(--cj-ink); font: inherit; font-size: 1.15rem; font-weight: 800; cursor: pointer; text-align: left;
+}
+.cj-choices button.is-selected, .cj-sort-bins button.is-selected, .cj-track button.is-selected { border-color: var(--cj-accent); background: var(--cj-tint); }
+.cj-choices button.is-selected::before, .cj-sort-bins button.is-selected::before, .cj-track button.is-selected::before { content: "✔ "; }
+.cj-order { margin: 1rem 0 0; padding: 0; list-style: none; display: grid; gap: .5rem; }
+.cj-order li { display: flex; align-items: center; gap: .5rem; padding: .4rem .6rem; border-radius: 16px; border: 2px solid var(--cj-soft); }
+.cj-order-position { font-weight: 900; min-width: 1.5rem; }
+.cj-order-label { flex: 1; font-size: 1.15rem; font-weight: 700; }
+.cj-order button { min-width: 48px; min-height: 48px; border-radius: 12px; border: 2px solid var(--cj-soft); background: var(--cj-tint); color: var(--cj-ink); font-size: 1.2rem; cursor: pointer; }
+.cj-sort { margin: 1rem 0 0; padding: 0; list-style: none; display: grid; gap: .75rem; }
+.cj-sort li { display: grid; gap: .4rem; }
+.cj-sort-card { font-weight: 800; font-size: 1.15rem; }
+.cj-sort-bins { display: flex; flex-wrap: wrap; gap: .5rem; }
+.cj-shade { display: flex; gap: 4px; margin-top: 1rem; }
+.cj-shade button { flex: 1; min-height: 56px; border: 2px solid var(--cj-ink); background: var(--cj-card); cursor: pointer; }
+.cj-shade button.is-shaded { background: var(--cj-accent); }
+.cj-track { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: 1rem; }
+.cj-track button { min-width: 48px; text-align: center; }
+.cj-review { margin-top: 1rem; padding: 1rem; border-radius: 18px; border: 3px solid var(--cj-soft); background: var(--cj-tint); }
+.cj-round.is-correct .cj-review { border-color: var(--cj-good); }
+.cj-review h3 { margin: 0 0 .4rem; font-size: 1.25rem; }
+.cj-review p { margin: .3rem 0; font-size: 1.1rem; }
+
+.cj-break, .cj-results { padding: clamp(1rem, 4vw, 1.5rem); border-radius: 24px; background: var(--cj-card); box-shadow: 0 0 0 2px var(--cj-soft), 0 8px 0 var(--cj-soft); }
+.cj-score { font-size: 1.6rem; margin: .25rem 0; }
+.cj-score-parts { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; padding: 0; list-style: none; font-weight: 800; }
+.cj-topic-results summary { min-height: 44px; display: flex; align-items: center; font-weight: 800; cursor: pointer; }
+.cj-practice { padding-left: 1.25rem; }
+.cj-practice a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 800; color: inherit; }
+
+/* Map additions */
+.cj-replay { display: inline-flex; align-items: center; gap: .3rem; min-height: 44px; padding: .25rem .7rem; border-radius: 999px;
+  border: 2px solid var(--cj-soft); background: var(--cj-card); color: var(--cj-ink); font-size: .9rem; font-weight: 800; text-decoration: none; }
+.cj-quiz-card { display: grid; gap: .4rem; margin-top: 1rem; padding: 1rem; border-radius: 20px; border: 3px dashed var(--cj-accent); background: var(--cj-tint); color: var(--cj-ink); }
+.cj-quiz-card h3 { margin: 0; font-size: 1.15rem; }
+.cj-quiz-card p { margin: 0; }
+.cj-quiz-card .cj-actions { margin-top: .4rem; }
+.cj-map-extras { width: min(100%, 1100px); margin: 1rem auto 2rem; padding: 0 16px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cj-page *, .cj-screen * { transition: none !important; animation: none !important; }
+}
+
+/* Clock and bar chart models: drawn from givens only. */
+.cj-clock { display: block; width: min(100%, 220px); margin: 0 auto; }
+.cj-clock-face { fill: var(--cj-card); stroke: var(--cj-ink); stroke-width: 4; }
+.cj-clock-tick { stroke: var(--cj-ink); }
+.cj-clock text { fill: var(--cj-ink); font-size: 16px; font-weight: 800; text-anchor: middle; }
+.cj-clock-hour { stroke: var(--cj-ink); stroke-width: 8; stroke-linecap: round; }
+.cj-clock-minute { stroke: var(--cj-accent); stroke-width: 5; stroke-linecap: round; }
+.cj-clock-pin { fill: var(--cj-ink); }
+.cj-bar-chart { margin: 0; }
+.cj-bar-chart svg { display: block; width: min(100%, 420px); }
+.cj-chart-grid { stroke: var(--cj-soft); stroke-width: 1; }
+.cj-chart-scale { fill: var(--cj-ink); font-size: 11px; text-anchor: end; }
+.cj-chart-label { fill: var(--cj-ink); font-size: 11px; font-weight: 700; text-anchor: middle; }
+.cj-chart-bar { fill: var(--cj-accent); stroke: var(--cj-ink); stroke-width: 1.5; }

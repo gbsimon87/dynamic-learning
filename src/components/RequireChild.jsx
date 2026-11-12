@@ -3,6 +3,8 @@ import { Navigate, Outlet, useLocation } from "react-router";
 import { AuthContext } from "../context/auth-context";
 import { useRewards } from "../hooks/useRewards";
 import { introEligible } from "../data/intro";
+import CurriculumJourneySessionProvider from "./curriculum/CurriculumJourneySessionProvider";
+import { CURRICULUM_JOURNEY_ENABLED } from "../data/curriculumJourneyFlag";
 
 /**
  * Route guard for Curriculum Mode.
@@ -55,5 +57,10 @@ export default function RequireChild() {
     }
   }
 
+  // Curriculum-journey "Continue for now" choices live in memory per child;
+  // keying by child means they never leak to a sibling's profile.
+  if (CURRICULUM_JOURNEY_ENABLED) {
+    return <CurriculumJourneySessionProvider key={child?._id ?? "none"}><Outlet /></CurriculumJourneySessionProvider>;
+  }
   return <Outlet />;
 }
