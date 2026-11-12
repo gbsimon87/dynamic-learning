@@ -10,6 +10,7 @@ import WorldOrbitControl from '../../../components/worlds/WorldOrbitControl.jsx'
 import WorldInfoCard from '../../../components/worlds/WorldInfoCard.jsx';
 import { isMuted } from '../../../components/celebration/sound/player.js';
 import { speak, stopNarrationOf } from '../../../utils/speech.js';
+import BixLoader from '../../../components/mascot/BixLoader';
 import './OceanExplorer.css';
 
 // The Solar System free-flight keys, plus Space to move.
@@ -252,11 +253,13 @@ export default function OceanExplorer() {
               }} />
           </div>
         )}
-        {status !== 'ready' && (
+        {/* The scene keeps mounting underneath Bix's screen. */}
+        {status === 'loading' && <BixLoader message="Diving beneath the waves" />}
+        {status === 'unavailable' && (
           <div className="ocean-explorer__message" role="status">
             <span aria-hidden="true">🌊</span>
-            <p>{status === 'loading' ? 'Diving beneath the waves…' : 'The 3D ocean is unavailable on this device.'}</p>
-            {status === 'unavailable' && <p>You can use Back to Skills to choose another activity.</p>}
+            <p>The 3D ocean is unavailable on this device.</p>
+            <p>You can use Back to Skills to choose another activity.</p>
           </div>
         )}
       </div>

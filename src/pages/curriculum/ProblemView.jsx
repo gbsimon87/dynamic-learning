@@ -27,6 +27,7 @@ import { localDay, weekDots } from "../../data/streak";
 import { stickerKey } from "../../data/news";
 import ProgressError from "../../components/ProgressError";
 import "./ProblemView.css";
+import BixLoader from "../../components/mascot/BixLoader";
 
 function ProblemView() {
   const { year, subject, categoryId, topicId, challengeId } = useParams();
@@ -199,7 +200,7 @@ function ProblemView() {
 
   if (loadError) return <ProgressError loading retry={retryLoad} />;
   if (!hydrated) {
-    return <div className="problem-page" role="status">Loading your progress…</div>;
+    return <BixLoader message="Finding your progress" />;
   }
   if (!curriculum) return <Navigate to="/curriculum" replace />;
   if (!currentChallenge || currentChallenge.locked) return <Navigate to={topicsHref} replace />;

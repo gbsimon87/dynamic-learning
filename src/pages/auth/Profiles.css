@@ -57,11 +57,6 @@ body.dark .profiles-page {
   opacity: 0.9;
 }
 
-.profiles-page .profiles-loading {
-  font-size: 1.2rem;
-  padding: 3rem 1rem;
-}
-
 /* ---------- signed-out fallback ---------- */
 .profiles-page .profiles-signedout {
   max-width: 28rem;

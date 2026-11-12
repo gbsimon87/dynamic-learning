@@ -12,6 +12,7 @@ import { getBadge, heldBadgeIds } from "../../data/badges";
 import { INTRO_BADGE_ID } from "../../data/intro";
 import StarBasket from "./StarBasket";
 import "./BixIntro.css";
+import BixLoader from "../../components/mascot/BixLoader";
 
 /**
  * Bix's first-play intro: a 90-second hello where every step is something to
@@ -160,9 +161,7 @@ export default function BixIntro() {
 
   if (!hydrated) {
     return (
-      <div className="bix-intro" role="status">
-        <p className="bix-intro-loading">Getting Bix ready…</p>
-      </div>
+      <BixLoader message="Getting Bix ready" />
     );
   }
 

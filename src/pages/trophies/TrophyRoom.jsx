@@ -18,6 +18,7 @@ import CoachMark from "../../components/coach/CoachMark";
 import { curriculumCertificates, yearCertificate } from "../../data/certificates";
 import CertificateDialog from "../../components/certificate/CertificateDialog";
 import "./TrophyRoom.css";
+import BixLoader from "../../components/mascot/BixLoader";
 
 function earnedOn(rewards, badgeId) {
   const at = rewards.badges.find((entry) => entry.id === badgeId)?.earnedAt;
@@ -291,7 +292,7 @@ function TrophyCabinet({ viewed, grownUp = false }) {
           <button type="button" className="trophy-retry" onClick={retry}>Try again</button>
         </div>
       ) : loading ? (
-        <p role="status" className="trophy-loading">Opening the trophy cabinet…</p>
+        <BixLoader message="Opening the trophy cabinet" />
       ) : (
         <>
           {!grownUp && (
@@ -378,7 +379,7 @@ export default function TrophyRoom() {
 export function ChildTrophyRoom() {
   const { childId } = useParams();
   const { status, children = [] } = useContext(AuthContext);
-  if (status === "loading") return null;
+  if (status === "loading") return <BixLoader message="Opening the trophy cabinet" />;
   if (status === "signedOut") return <Navigate to="/login" replace />;
 
   const viewed = children.find((kid) => kid._id === childId);

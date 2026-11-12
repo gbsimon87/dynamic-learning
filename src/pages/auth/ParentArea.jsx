@@ -19,6 +19,7 @@ import FloatingGlyphBackground from "../../components/FloatingGlyphBackground";
 import { BREAK_CHOICES } from "../../data/brainBreaks";
 import { useBreakMinutes } from "../../components/brainBreak/breakSetting";
 import "./ParentArea.css";
+import BixLoader from "../../components/mascot/BixLoader";
 
 /**
  * The signed-in account: plain adult UI, no games.
@@ -523,10 +524,7 @@ function ParentArea() {
 
   if (status === "loading") {
     return (
-      <div className="parent-area-page floating-glyph-page">
-        <FloatingGlyphBackground />
-        <p className="parent-area-loading">Loading…</p>
-      </div>
+      <BixLoader message="Opening the grown-ups’ area" />
     );
   }
 

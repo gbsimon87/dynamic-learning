@@ -32,10 +32,6 @@ body.dark .bix-intro {
   --bi-border: #443b3f;
 }
 
-.bix-intro-loading {
-  font-size: 1.2rem;
-}
-
 /* Portrait / phone: one column, Bix on top, buttons at the bottom of the card
    where a thumb reaches them. */
 .bix-intro-card {

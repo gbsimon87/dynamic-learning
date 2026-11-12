@@ -8,7 +8,7 @@ import ProblemView from "../../src/pages/curriculum/ProblemView";
 const fake = vi.hoisted(() => ({ getProgress: vi.fn(), saveProgress: vi.fn(), award: vi.fn(), refresh: vi.fn() }));
 vi.mock("../../src/data/store", () => ({ store: fake }));
 vi.mock("../../src/hooks/useRewards", () => ({ useRewards: () => ({ award: fake.award, refresh: fake.refresh }) }));
-vi.mock("../../src/components/celebration/sound/player", () => ({ preloadSounds: () => {} }));
+vi.mock("../../src/components/celebration/sound/player", () => ({ preloadSounds: () => {}, isMuted: () => true, subscribe: () => () => {} }));
 // Exercise the real route, progress hook, subject reads and milestone handler.
 // Game correctness and exactly-once callbacks have their own full-run tests.
 vi.mock("../../src/pages/curriculum/Challenge", () => ({ default: ({ onComplete }) => <button onClick={() => onComplete({ combos: 1 })}>Finish run</button> }));

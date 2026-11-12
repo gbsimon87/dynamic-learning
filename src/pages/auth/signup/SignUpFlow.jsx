@@ -20,6 +20,7 @@ import {
 } from "./steps";
 import { useSignupDraft } from "./useSignupDraft";
 import "./SignUpFlow.css";
+import BixLoader from "../../../components/mascot/BixLoader";
 
 const reducedMotion = () => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
@@ -209,7 +210,7 @@ export default function SignUpFlow() {
     return () => window.removeEventListener("keydown", onKey);
   });
 
-  if (auth.status === "loading") return null;
+  if (auth.status === "loading") return <BixLoader />;
   // Completion signs in before the hand-over; let that in-flight signup finish.
   if (!created && !busy && (auth.status === "ready" || auth.status === "needsChild")) {
     return <Navigate to={auth.status === "ready" ? "/curriculum" : "/profiles"} replace />;

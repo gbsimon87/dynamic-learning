@@ -7,6 +7,8 @@ import { AuthProvider } from "./context/AuthContext";
 import { RewardsProvider } from "./context/RewardsContext";
 import RequireChild from "./components/RequireChild";
 import RootLayout from "./layouts/RootLayout";
+import RouteLoading from "./components/RouteLoading";
+import BixLoader from "./components/mascot/BixLoader";
 import SkillGameLayout from "./components/skills/SkillGameLayout";
 import Home from "./pages/home/Home";
 import SkillGuide from "./seo/SkillGuide";
@@ -26,7 +28,10 @@ import "leaflet/dist/leaflet.css";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootLayout />,
+    // Bix covers the screen while a lazy page's code loads: on the first visit
+    // (the hydrate fallback) and on later link clicks (RouteLoading).
+    element: <><RootLayout /><RouteLoading /></>,
+    hydrateFallbackElement: <BixLoader message="Bix is waking up" />,
     errorElement: <NotFound />,
     children: [
       { index: true, element: <Home /> },
