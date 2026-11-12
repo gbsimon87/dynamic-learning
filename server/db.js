@@ -41,6 +41,8 @@ export const parents = () => getDb().collection("parents");
 export const children = () => getDb().collection("children");
 export const progress = () => getDb().collection("progress");
 export const rewards = () => getDb().collection("rewards");
+export const curriculumJourney = () => getDb().collection("curriculumJourney");
+export const curriculumAssessments = () => getDb().collection("curriculumAssessments");
 
 export const pendingSignups = () => getDb().collection("pendingSignups");
 export const signupEmailBudgets = () => getDb().collection("signupEmailBudgets");
@@ -52,6 +54,9 @@ export const signupEmailBudgets = () => getDb().collection("signupEmailBudgets")
  */
 export async function ensureIndexes() {
   await ensureAccountIndexes(getDb());
+  await curriculumJourney().createIndex({ childId: 1, year: 1, subject: 1 }, { unique: true });
+  await curriculumAssessments().createIndex({ childId: 1, sessionId: 1 }, { unique: true });
+  await curriculumAssessments().createIndex({ childId: 1, year: 1, subject: 1, createdAt: -1, sessionId: -1 });
   await pendingSignups().createIndex({ email: 1 }, { unique: true });
   await pendingSignups().createIndex({ purgeAt: 1 }, { expireAfterSeconds: 0 });
   await signupEmailBudgets().createIndex({ purgeAt: 1 }, { expireAfterSeconds: 0 });

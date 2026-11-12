@@ -59,7 +59,7 @@ Details: [planning roadmap](superpowers/plans/2026-11-08-teacher-planning-playli
 | 31 | **Science notebook and geography passport** | Collect topic cards and exploration stamps with revision facts. Define earning rules. | ⚪ |
 | 32 | **Seasonal events** | Offer themed activity packs with permanent stickers; plan at least a term ahead. | ⚪ |
 | 33 | **Story adventure** | Turn each year's topics into a Bix storyline and map. Needs art, writing and completed read-aloud work (#8). | ⚪ |
-| 69 | **Curriculum introductions and mastery quizzes** | Introduce each subject on first use, explain each quest and topic on one screen, and add mixed-question quest reviews and a final subject test. Details below; related to #26. | ⚪ |
+| 69 | **Curriculum introductions and mastery quizzes** | Introduce each subject on first use, explain each quest and topic on one screen, and add mixed-question quest reviews and a final subject test. Details below; related to #26. | 🔵 |
 
 ### Curriculum introductions and mastery quizzes (#69)
 
@@ -80,6 +80,19 @@ be meeting for the first time, and how they can use that knowledge.
   topics' existing challenges and overlaps with the friendly finales in #26.
 - **At the end of each subject:** offer a final test sampling learning from
   every quest in that subject for the selected year.
+
+**Agreed scope (2026-11-11):** launch across all built subjects and years.
+Quizzes show results and practice suggestions, allow retries and have no pass
+mark. See the [implementation plan](superpowers/plans/2026-11-11-curriculum-introductions-mastery.md)
+for the introduction flow, independent quiz runner, persistence, full content
+coverage and validation milestones. The plan links an implementation contract
+and a work-packet handoff with a checklist for all 39 current pathways.
+
+**Progress (2026-11-12):** introductions, quiz runner, results, storage/API and
+map/celebration integration are built and tested behind two flags (on for dev,
+off for production). Content covers all 39 pathways. Device, narration, teacher
+and child review remain before release; see the
+[handoff ledger](superpowers/2026-11-11-curriculum-journey-handoff.md).
 
 **Skills game shortlist (#20):**
 

@@ -79,6 +79,10 @@ const router = createBrowserRouter([
             lazy: () => import("./pages/curriculum/ProblemView").then((m) => ({ Component: m.default })),
           },
 
+          // Quest Mastery and the Subject Final Test (curriculum journey).
+          { path: "curriculum/year/:year/:subject/quest/:categoryId/mastery", lazy: () => import("./pages/curriculum/AssessmentView").then((m) => ({ Component: m.default })) },
+          { path: "curriculum/year/:year/:subject/final-test", lazy: () => import("./pages/curriculum/AssessmentView").then((m) => ({ Component: m.default })) },
+
           // Trophy Room: badges + topic stickers. Gated like the curriculum,
           // since it shows a specific child's progress.
           { path: "trophies", lazy: () => import("./pages/trophies/TrophyRoom").then((m) => ({ Component: m.default })) },

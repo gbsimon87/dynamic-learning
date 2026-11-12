@@ -1,0 +1,150 @@
+// Year 6 Geography knowledge checks. Fieldwork is rehearsed from supplied example data, not assessed outdoors.
+import { defineAssessmentBank } from "../../curriculumJourneyAuthoring.js";
+const table = (caption, headings, rows, alt) => ({ renderer: "table", data: { caption, headings, rows }, alt });
+const evidence = (title, text) => [{ title, text, credit: "Learn with Bix — authored example evidence" }];
+const town = table("Example town population", ["Year", "People"], [["1991", "12,000"], ["2001", "14,500"], ["2011", "17,000"], ["2021", "20,000"]], "A table of example town population in four census years: 1991, 2001, 2011 and 2021.");
+const counts = table("Example people counted in 10 minutes", ["Site", "People"], [["Site 1", "9"], ["Site 2", "15"], ["Site 3", "24"]], "A table of example counts of people at three sites.");
+
+export default defineAssessmentBank({ year: 6, subject: "geography", quests: {
+  "regions-and-comparison": {
+    "belize-and-the-caribbean-coast": { objective: "Locates Belize and describes its coast, reef and tourism.", items: [
+      { q: "In which part of the world is Belize?", a: "Central America", d: ["South America", "Africa"], practice: 1,
+        why: "Belize is in Central America, on the Caribbean Sea." },
+      { q: "What lies offshore from Belize?", a: "The Belize Barrier Reef", d: ["The Cairngorms", "The Amazon River"], practice: 2,
+        why: "The Belize Barrier Reef lies off its Caribbean coast." },
+      { q: "Which trees grow along sheltered coasts and give wildlife homes?", t: ["mangroves", "mangrove", "mangrove trees"], practice: 2,
+        why: "Mangroves grow along sheltered coasts and shelter wildlife." },
+    ] },
+    "comparing-four-regions": { objective: "Chooses fair evidence and compares physical and human features.", items: [
+      { q: "What does a fair comparison of regions need?", a: "The same feature measured for each place", d: ["One photograph of each place", "Only the biggest city of each place"], practice: 1,
+        why: "Using the same evidence for each place keeps the comparison fair." },
+      { q: "Sort these features.", sort: { bins: ["Physical", "Human"], cards: [["Mountains", "Physical"], ["Rivers", "Physical"], ["Roads", "Human"], ["Farms", "Human"]] }, practice: 2,
+        why: "Mountains and rivers are natural. Roads and farms are made or used by people." },
+      { q: "Why can one photograph give a misleading picture of a region?", a: "It shows only one viewpoint", d: ["It always shows the whole region", "Photographs cannot show places"], practice: 1,
+        why: "A photograph shows one place at one moment, so use more evidence." },
+    ] },
+    "europe-the-americas-and-russia": { objective: "Locates large regions and uses reference lines and maps.", items: [
+      { q: "Russia stretches across which two continents?", a: "Europe and Asia", d: ["Europe and Africa", "Asia and Australia"], practice: 1,
+        why: "Russia lies in both Europe and Asia." },
+      { q: "Which line of longitude passes through Greenwich?", a: "The Prime Meridian", d: ["The Equator", "The Tropic of Cancer"], practice: 2,
+        why: "The Prime Meridian is 0 degrees longitude. The Equator and the Tropic of Cancer are lines of latitude." },
+      { q: "Which of these is a hot desert region?", a: "The Sahara", d: ["The Arctic", "The Amazon"], practice: 3,
+        why: "The Sahara is a hot desert. The Arctic is polar and the Amazon is a rainforest." },
+    ] },
+    "changing-uk-counties-and-cities": { objective: "Describes counties, cities and land-use change in the UK.", items: [
+      { q: "Why should a map of county boundaries show its date?", a: "Boundaries can change over time", d: ["Counties never change", "Dates make the map larger"], practice: 1,
+        why: "Boundaries may change, so you need to know when the map was made." },
+      { q: "Sort these land uses.", sort: { bins: ["Residential", "Commercial", "Industrial", "Recreational"], cards: [["Housing estate", "Residential"], ["Block of flats", "Residential"], ["Shopping centre", "Commercial"], ["Office block", "Commercial"], ["Warehouse", "Industrial"], ["Factory", "Industrial"], ["Park", "Recreational"], ["Sports field", "Recreational"]] }, practice: 2,
+        why: "Homes and flats are residential, shops and offices are commercial, factories and warehouses are industrial, and parks and sports fields are for recreation." },
+      { q: "What is a green belt?", a: "A ring of land where building is limited", d: ["A park in the middle of a city", "A farm that grows only vegetables"], practice: 3,
+        why: "Green belts limit how far a city can spread outwards." },
+    ] },
+  },
+  "environmental-change": {
+    "glaciers-and-mountain-environments": { objective: "Describes glaciers, glacial landforms and pressures on mountains.", items: [
+      { q: "What is a glacier?", a: "Moving ice on land", d: ["A frozen part of the sea", "A very fast river"], practice: 1,
+        why: "A glacier forms where snow builds up for many years and flows slowly downhill." },
+      { q: "Which landform is a bowl-shaped hollow made by ice?", a: "A corrie", d: ["An arête", "A moraine"], practice: 2,
+        why: "A corrie is a hollow. An arête is a sharp ridge and a moraine is rock left by ice." },
+      { q: "What usually happens to temperature as you climb a mountain?", a: "It falls", d: ["It rises", "It stays the same"], practice: 3,
+        why: "Air gets cooler with height above sea level." },
+    ] },
+    "managing-rivers": { objective: "Compares hard engineering and natural ways to manage floods.", items: [
+      { q: "Sort these flood methods.", sort: { bins: ["Hard engineering", "Natural approach"], cards: [["Flood wall", "Hard engineering"], ["Levee", "Hard engineering"], ["Planting trees", "Natural approach"], ["Wetlands", "Natural approach"]] }, practice: 2,
+        why: "Walls and levees are built. Trees and wetlands slow and store water naturally." },
+      { q: "What is a possible problem with a flood defence?", a: "It can push flood risk further downstream", d: ["It makes the river flow uphill", "It can never be seen"], practice: 2,
+        why: "Holding water back in one place can send more water to places further down the river." },
+      { q: "How can wetlands help reduce flooding?", a: "They can store floodwater", d: ["They make rain fall faster", "They stop all rain"], practice: 3,
+        why: "Wetlands soak up and hold water, and they give wildlife a home." },
+    ] },
+    "managing-coasts": { objective: "Compares hard and soft coastal management and its trade-offs.", items: [
+      { q: "What does longshore drift move?", a: "Sediment along a coast", d: ["Cliffs further inland", "Ships out to sea"], practice: 1,
+        why: "Waves push sand and shingle along the coast." },
+      { q: "Sort these coastal defences.", sort: { bins: ["Hard defence", "Soft defence"], cards: [["Sea wall", "Hard defence"], ["Groynes", "Hard defence"], ["Beach nourishment", "Soft defence"], ["Dune planting", "Soft defence"]] }, practice: 2,
+        why: "Walls and groynes are built structures. Adding sand and planting dunes work with nature." },
+      { q: "What is managed retreat?", a: "Allowing some land to flood on purpose", d: ["Building a taller sea wall", "Moving the sea further away"], practice: 3,
+        why: "Some coastal land is allowed to flood, which can support habitats such as salt marsh." },
+      { q: "Why might protecting one stretch of coast be a problem?", a: "It can change erosion elsewhere", d: ["It stops the tide for ever", "It makes cliffs taller"], practice: 4,
+        why: "Defences can change how sediment moves, which affects other places." },
+    ] },
+    "climate-change-responses": { objective: "Reads climate evidence and tells cutting emissions from adapting.", items: [
+      { q: "Climate is measured over...", a: "Many years", d: ["One day", "One week"], practice: 1,
+        why: "Weather changes daily. Climate is the long-term pattern." },
+      { q: "Which gas, released by burning fossil fuels, traps heat in the air?", a: "Carbon dioxide", d: ["Oxygen", "Nitrogen"], practice: 1,
+        why: "Carbon dioxide is a greenhouse gas." },
+      { q: "Sort these responses.", sort: { bins: ["Cutting emissions", "Adapting"], cards: [["Insulating homes", "Cutting emissions"], ["Cycling instead of driving", "Cutting emissions"], ["Building flood defences", "Adapting"], ["Planting shade trees in cities", "Adapting"]] }, practice: 2,
+        why: "Cutting emissions reduces the cause. Adapting reduces harm from changes already happening." },
+    ] },
+  },
+  "people-resources-and-connections": {
+    "energy-choices-and-trade-offs": { objective: "Compares energy sources and their advantages and disadvantages.", items: [
+      { q: "Sort these energy sources.", sort: { bins: ["Renewable", "Fossil fuel"], cards: [["Solar panels", "Renewable"], ["Hydroelectric power", "Renewable"], ["Coal", "Fossil fuel"], ["Gas", "Fossil fuel"]] }, practice: 1,
+        why: "Sun and moving water are replaced naturally. Coal and gas are fossil fuels." },
+      { q: "Which is a drawback of wind turbines?", a: "They can change a landscape view", d: ["They burn coal", "They release carbon dioxide when making electricity"], practice: 3,
+        why: "Turbines release no carbon dioxide when making electricity, but some people dislike the view." },
+      { q: "Why might a country use several energy sources?", a: "It can make supply more reliable", d: ["It makes electricity free", "It removes all demand"], practice: 4,
+        why: "Using several sources means there are more ways to keep the power on." },
+    ] },
+    "population-and-migration": { objective: "Reads population data and describes migration and its reasons.", items: [
+      { q: "What does population density mean?", a: "The number of people per unit of area", d: ["The total number of people in a country", "The number of people moving in"], practice: 1,
+        why: "Density compares people with the size of the area." },
+      { q: "Sort each move from the point of view of the UK.", sort: { bins: ["Immigration", "Emigration"], cards: [["A family moves from Spain to live in the UK", "Immigration"], ["A student arrives from India to study in the UK", "Immigration"], ["A family moves from the UK to Australia", "Emigration"], ["A nurse leaves the UK to work in Canada", "Emigration"]] }, practice: 2,
+        why: "Immigration is moving into a country. Emigration is moving out." },
+      { q: "By how many people did the town's population rise between 2001 and 2021?", n: 5500, practice: 1, model: town,
+        why: "20,000 - 14,500 = 5,500 more people." },
+    ] },
+    "global-trade-networks": { objective: "Describes supply chains and compares transport choices.", items: [
+      { q: "What is a supply chain?", a: "The linked stages from source to customer", d: ["A chain that holds a ship", "A list of shops in a town"], practice: 1,
+        why: "A supply chain links each stage, such as growing, shipping, making and selling." },
+      { q: "Put these supply chain stages in order.", order: ["Farmer grows cocoa", "Ship carries beans to a port", "Factory makes chocolate", "Shop sells the bar"], practice: 2,
+        why: "A product moves from its source to the customer." },
+      { q: "Which type of transport is fast but can have high emissions?", a: "Air freight", d: ["Container ship", "Walking"], practice: 4,
+        why: "Aeroplanes are quick but release more emissions. Ships carry large loads efficiently." },
+    ] },
+    "changing-uk-land-use": { objective: "Names land uses and reads evidence of change.", items: [
+      { q: "Sort these land uses.", sort: { bins: ["Agricultural", "Industrial", "Recreational"], cards: [["Wheat field", "Agricultural"], ["Dairy farm", "Agricultural"], ["Warehouse", "Industrial"], ["Factory", "Industrial"], ["Playing field", "Recreational"], ["Skate park", "Recreational"]] }, practice: 1,
+        why: "Farms produce food, factories and warehouses are industrial and playing fields are for recreation." },
+      { q: "Which land has been used before, for example by an old factory?", a: "Brownfield land", d: ["Greenfield land", "A national park"], practice: 4,
+        why: "Brownfield land has been built on before. Greenfield land has not." },
+      { q: "Online shopping can increase the demand for which land use?", a: "Warehouses", d: ["Cinemas", "Playgrounds"], practice: 2,
+        why: "More deliveries mean more warehouses to store goods." },
+    ] },
+  },
+  "maps-data-and-fieldwork": {
+    "six-figure-references-and-scale": { objective: "Reads six-figure references and uses map scale.", items: [
+      { q: "What is the easting in the six-figure reference 483297?", n: 483, practice: 1,
+        why: "The first three digits are the easting: 483." },
+      { q: "On a 1:50 000 map, 1 cm is 500 metres. How many kilometres is 3 cm?", n: "1.5", unit: "km", practice: 2,
+        why: "3 × 500 m = 1500 m, which is 1.5 km." },
+      { q: "On an OS map, what do contour lines that are close together show?", a: "A steep slope", d: ["A gentle slope", "A flat field"], practice: 3,
+        why: "Height changes quickly over a short distance." },
+    ] },
+    "digital-map-layers": { objective: "Describes map layers and how to use them with care.", items: [
+      { q: "What does a digital map layer do?", a: "Adds one kind of information to the map", d: ["Makes the map print larger", "Removes the place names"], practice: 1,
+        why: "Layers can be switched on and off, such as roads or land use." },
+      { q: "Which layer would show areas at risk of flooding?", a: "A flood layer", d: ["A roads layer", "A land-use layer"], practice: 1,
+        why: "A flood layer is made to show where floods may happen." },
+      { q: "Two layers show a pattern together. What should you remember?", a: "The pattern may need another source to explain it", d: ["One layer must have caused the other", "Layers can never be compared"], practice: 3,
+        why: "A map pattern can raise a question, but it does not prove a cause." },
+    ] },
+    "planning-a-fieldwork-enquiry": { objective: "Rehearses planning a fair, safe enquiry (not outdoor fieldwork).", items: [
+      { q: "Which is the best fieldwork question?", a: "Do more people walk along Park Road than Mill Road at 10 am?", d: ["Why is Park Road the busiest road in the world?", "What is a mountain?"], practice: 1,
+        why: "A good question names places and can be tested with a count. It does not assume its answer." },
+      { q: "Why should the same method be used at every site?", a: "So the results can be compared fairly", d: ["So the plan is shorter", "So no data is needed"], practice: 3,
+        why: "Different methods would make results hard to compare." },
+      { q: "Which information should children not collect in fieldwork?", a: "Names and addresses", d: ["A tally of cars", "The number of benches"], practice: 3,
+        why: "Personal details should stay private. Counts are safe to collect." },
+    ] },
+    "presenting-and-evaluating-fieldwork": { objective: "Rehearses presenting and evaluating results from supplied data (not outdoor fieldwork).", items: [
+      { q: "How many people were counted at Site 1 and Site 3 together?", n: 33, practice: 1, model: counts,
+        why: "9 + 24 = 33 people." },
+      { q: "What is an anomaly?", a: "A result that differs from the pattern", d: ["The title of a graph", "A key on a map"], practice: 2,
+        why: "An anomaly stands out from the rest of the results." },
+      { q: "Sort these tasks.", sort: { bins: ["Presenting", "Evaluating"], cards: [["Add a title and key to a map", "Presenting"], ["Label graph axes with units", "Presenting"], ["Say the sample was small", "Evaluating"], ["Suggest repeating the count", "Evaluating"]] }, practice: 4,
+        why: "Presenting shows results clearly. Evaluating judges how well the method worked." },
+      { q: "A class counted people at three sites. Which statement uses the evidence?", a: "Site 3 had the most people, with 24", d: ["Site 3 is the best place in town", "Everyone prefers Site 3"], practice: 2,
+        evidence: evidence("Example counts", "People counted in 10 minutes: Site 1, 9. Site 2, 15. Site 3, 24."),
+        why: "A conclusion should use specific results, not opinions." },
+    ] },
+  },
+} });

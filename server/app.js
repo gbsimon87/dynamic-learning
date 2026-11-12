@@ -10,6 +10,7 @@ import authRoutes from "./routes/auth.js";
 import childrenRoutes from "./routes/children.js";
 import progressRoutes from "./routes/progress.js";
 import rewardsRoutes from "./routes/rewards.js";
+import { createCurriculumJourneyRouter } from "./routes/curriculumJourney.js";
 import { createSignupRouter } from "./routes/signup.js";
 import { createRecoveryRouter } from "./routes/recovery.js";
 import { createMailerFromEnv } from "./email.js";
@@ -20,7 +21,7 @@ import { createSeoMiddleware, createNotFoundMiddleware } from "./seo.js";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.resolve(here, "..", "dist");
 
-export function createApp({ serveStatic = process.env.NODE_ENV === "production", signup = {}, recovery = {}, trustProxy = process.env.RENDER === "true" ? 1 : false, seo = {}, dist = DIST } = {}) {
+export function createApp({ serveStatic = process.env.NODE_ENV === "production", signup = {}, recovery = {}, journey = {}, trustProxy = process.env.RENDER === "true" ? 1 : false, seo = {}, dist = DIST } = {}) {
   const app = express();
   app.disable("x-powered-by");
   // Render is the single ingress proxy. Direct/local servers trust no headers.
@@ -46,6 +47,7 @@ export function createApp({ serveStatic = process.env.NODE_ENV === "production",
   app.use("/api/children", childrenRoutes);
   app.use("/api/progress", progressRoutes);
   app.use("/api/rewards", rewardsRoutes);
+  app.use("/api/curriculum-journey", createCurriculumJourneyRouter(journey));
 
   // Unknown API routes answer as JSON 404s. This sits BEFORE the SPA
   // catch-all so that a typo'd endpoint never silently returns index.html.

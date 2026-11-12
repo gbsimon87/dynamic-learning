@@ -205,6 +205,20 @@ Maths custom answer acceptance also needs its existing subject tests even when
 common question structure passes. Do not replace a working interaction to make
 it fit the generic checker.
 
+**Curriculum journey content (#69).** Every built topic also needs a purpose
+introduction and at least three quiz candidates, and every quest/subject an
+introduction. After building challenge files, regenerate the built-content
+manifest and check the pathway:
+
+```sh
+npm run journey:manifest -- --write
+npm run check:journey -- --year N --subject SUBJECT
+```
+
+Follow [the journey authoring guide](superpowers/journey-content-authoring.md);
+`npm run journey:brief -- --year N --subject SUBJECT` lists IDs, mapping rows and
+lesson titles. The checker does not check facts or answers.
+
 Use browser automation only for gaps jsdom cannot show: real layout/overlap, drag, canvas, WebGL, maps or comparable rendering. Follow `AGENTS.md`: one batched pass across required viewports and both themes, at most one confirmation pass after fixes. If tooling is unavailable, complete automated checks and report the missing visual verification. Never change the app to work around unavailable AI tooling.
 
 Production uses API + MongoDB; development defaults to the browser store unless built with `VITE_USE_API=true`. Use isolated test accounts and fixtures; never reset learner data. Read `curriculum-progress` before changing IDs, storage, completion, awards or access rules.

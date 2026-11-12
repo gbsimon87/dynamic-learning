@@ -161,10 +161,10 @@ function CoordinateDrawing({ visual: v }) {
       <line className={n ? "geo-grid-line" : "geo-reference"} x1="65" x2="415" y1={170 - n * 3.5} y2={170 - n * 3.5} />
       <line className={n ? "geo-grid-line" : "geo-reference"} x1={240 + n * 4.375} x2={240 + n * 4.375} y1="30" y2="310" />
       <text className="geo-label" x="55" y={176 - n * 3.5} textAnchor="end">{Math.abs(n)}{n > 0 ? "N" : n < 0 ? "S" : "°"}</text>
-      <text className="geo-label" x={240 + n * 4.375} y="337" textAnchor="middle">{Math.abs(n)}{n > 0 ? "E" : n < 0 ? "W" : "°"}</text>
+      <text className="geo-label" x={240 + n * 4.375} y="345" textAnchor="middle">{Math.abs(n)}{n > 0 ? "E" : n < 0 ? "W" : "°"}</text>
     </g>)}
     <circle className="geo-marker" cx={240 + lon * 4.375} cy={170 - lat * 3.5} r="12" /><text className="geo-marker-text" x={240 + lon * 4.375} y={175 - lat * 3.5} textAnchor="middle">P</text>
-    <text className="geo-label" x="240" y="370" textAnchor="middle">Practice latitude / longitude grid</text>
+    <text className="geo-label" x="240" y="380" textAnchor="middle">Practice latitude / longitude grid</text>
   </svg>;
 }
 

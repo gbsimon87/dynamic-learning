@@ -21,9 +21,12 @@
     "topic:context": "node scripts/topicContext.js",
     "check:topic": "node scripts/checkTopic.js",
     "check:course": "node scripts/checkTopic.js --all",
+    "journey:manifest": "node scripts/curriculum/journeyManifest.js",
+    "check:journey": "node scripts/checkCurriculumJourney.js",
     "scaffold:topic": "node scripts/scaffoldTopic.js",
     "course:timer": "node scripts/courseTimer.js",
-    "course:usage": "node scripts/courseUsage.js"
+    "course:usage": "node scripts/courseUsage.js",
+    "journey:brief": "node scripts/curriculum/journeyBrief.js"
   },
   "dependencies": {
     "@fontsource/abeezee": "^5.2.5",

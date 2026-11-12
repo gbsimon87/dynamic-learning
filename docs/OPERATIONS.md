@@ -113,6 +113,25 @@ unique indexes and refuses duplicates without deleting a winner. Existing-index
 conversion uses `collMod`; a dated production boot needed `dbAdmin` permission.
 Do not treat startup as a read-only audit or broaden database privileges blindly.
 
+### Curriculum introductions and quizzes (#69)
+
+Two flags, both default `"false"` in [render.yaml](../render.yaml) and
+[.env.example](../.env.example): `VITE_ENABLE_CURRICULUM_JOURNEY` (client, build
+time) and `ENABLE_CURRICULUM_JOURNEY` (server). Enable **both together**, and
+only after `npm run check:journey -- --all` passes for the full built catalogue.
+With the server flag off, `/api/curriculum-journey/*` authenticates and checks
+ownership, then answers `503 JOURNEY_DISABLED`.
+
+Startup adds two collections and new indexes only (`curriculumJourney` unique
+`(childId, year, subject)`; `curriculumAssessments` unique `(childId, sessionId)`
+plus a history index). Existing progress/reward documents and indexes are
+unchanged. Records are kept with the child until child or account deletion,
+which removes them; there is no automatic expiry and no approved retention
+period yet (see the review brief). **Rollback:** set both flags to `"false"`
+and redeploy. Never drop these collections or clear storage to roll back.
+Local development keeps them under `dl.curriculumJourney` and
+`dl.curriculumAssessments`.
+
 ## Outstanding work and evidence limits
 
 Use [PROJECT_IDEAS.md](PROJECT_IDEAS.md) for upcoming work and the

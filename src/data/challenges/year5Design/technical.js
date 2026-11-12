@@ -296,7 +296,7 @@ export const technical = {
       f("Which is the process step in input, process, output?", "The program deciding what to do", "The sensor reading", "The LED turning on"),
       n("A program flashes an LED 3 times and repeats this 4 times. How many flashes is that?", 12),
       n("A temperature sensor records every hour. How many readings in 8 hours?", 8),
-      n("A fan comes on above 25 degrees. The room is 22 degrees. How many degrees must it rise before the fan starts?", 3),
+      n("A fan comes on when the room reaches 25 degrees. The room is 22 degrees. How many degrees must it rise before the fan starts?", 3),
       o("Order Ravi's steps for an automatic door.", ["Motion sensor detects someone", "Program checks the sensor", "Motor opens the door", "Door closes after five seconds"]),
       s("Build Asha's note.", "If it is dark then turn on the light."),
       g("Sort Ben's parts.", ["Input", "Output"], [["Sensor", 0], ["Switch", 0], ["Button", 0], ["Motor", 1], ["LED", 1], ["Speaker", 1]]),

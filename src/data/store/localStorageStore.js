@@ -11,6 +11,7 @@ import {
   normaliseNewChildren,
 } from "../childFields.js";
 import { isRewardsData } from "../../../shared/rewardsData.js";
+import { createLocalCurriculumJourneyStore, JOURNEY_STORAGE_KEYS } from "./localCurriculumJourney.js";
 
 /**
  * localStorage-backed implementation of the app's data store.
@@ -248,6 +249,9 @@ export const store = {
     );
     writeCollection(KEYS.progress, readCollection(KEYS.progress).filter((doc) => !childIds.has(doc.childId)));
     writeCollection(KEYS.rewards, readCollection(KEYS.rewards).filter((doc) => !childIds.has(doc.childId)));
+    for (const key of Object.values(JOURNEY_STORAGE_KEYS)) {
+      if (!writeCollection(key, readCollection(key, true).filter((doc) => !childIds.has(doc.childId)))) throw new Error("JOURNEY_SAVE_FAILED");
+    }
     writeCollection(KEYS.children, readCollection(KEYS.children).filter((child) => child.parentId !== parentId));
     writeCollection(KEYS.parents, readCollection(KEYS.parents).filter((doc) => doc._id !== parentId));
   },
@@ -322,6 +326,11 @@ export const store = {
    */
   async deleteChild(childId) {
     if (!childId) return;
+    // Validate/read new collections before removing the profile, so corruption
+    // remains visible and cannot be replaced by an empty collection.
+    for (const key of Object.values(JOURNEY_STORAGE_KEYS)) {
+      if (!writeCollection(key, readCollection(key, true).filter((doc) => doc.childId !== childId))) throw new Error("JOURNEY_SAVE_FAILED");
+    }
     writeCollection(
       KEYS.children,
       readCollection(KEYS.children).filter((child) => child._id !== childId)
@@ -432,3 +441,5 @@ export const store = {
     });
   },
 };
+
+Object.assign(store, createLocalCurriculumJourneyStore({ readCollection, writeCollection, withCollectionLock }));

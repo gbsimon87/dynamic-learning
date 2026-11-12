@@ -37,6 +37,10 @@ export default function Privacy() {
             <dd>
               A nickname, the picture and colour chosen, school year and subjects, which challenges
               are finished, badges and stickers, and the days the learner played (for streaks).
+              Where curriculum introductions and quizzes are switched on, we also keep which
+              introduction screens were closed (so they are not shown again) and each quiz attempt:
+              the questions asked, the answers given and the results. These stay with the profile
+              until it, or the whole account, is deleted.
             </dd>
           </div>
         </dl>

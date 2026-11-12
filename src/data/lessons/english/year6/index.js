@@ -14,7 +14,7 @@ export const YEAR6_ENGLISH_LESSONS = {
     "A hyphen is a short joining line inside some words. It can show where a prefix joins a base word.",
     "Learn the prefix and the base word, then place the hyphen exactly at their join.",
   ], [
-    s("See the join", "co- + operate → co-operate", "The hyphen comes after co- and before operate."),
+    s("See the join", "co- + operate → co**-**operate", "The hyphen comes after co- and before operate."),
     t("Sort by prefix", ["co-", "re-", "Another prefix"], [["co-ordinate", "re-enter", "pre-existing"], ["co-own", "re-elect", "non-existent"]], "The letters before the hyphen tell you which prefix starts the word."),
     f("Repair a misplaced join", "re-en-ter", "re-enter", "The prefix is re-; enter is the base word, so there is only one hyphen."),
     steps("Build the spelling", ["Find the prefix.", "Find the base word.", "Put one hyphen between the two parts and read the whole word."], "Not every prefixed word has a hyphen, so learn the familiar spelling and look closely at its word parts."),

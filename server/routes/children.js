@@ -88,10 +88,13 @@ router.patch("/:childId", requireOwnedChild, async (req, res, next) => {
 // requireOwnedChild 404s for a child belonging to anyone else.
 router.delete("/:childId", requireOwnedChild, async (req, res, next) => {
   try {
-    await db.children().deleteOne({ _id: req.child._id, parentId: req.parent._id });
     // No orphaned progress or rewards left behind for a recycled id to inherit.
     await db.progress().deleteMany({ childId: req.child._id });
     await db.rewards().deleteMany({ childId: req.child._id });
+    await db.curriculumJourney().deleteMany({ childId: req.child._id });
+    await db.curriculumAssessments().deleteMany({ childId: req.child._id });
+    // Leave the profile available for a retry if any owned-record deletion fails.
+    await db.children().deleteOne({ _id: req.child._id, parentId: req.parent._id });
     return res.status(204).end();
   } catch (err) {
     return next(err);

@@ -50,6 +50,12 @@ services:
       # the API instead of localStorage.
       - key: VITE_USE_API
         value: "true"
+      # Curriculum introductions + quizzes (#69). Enable BOTH together only for
+      # the all-pathway release; rollback = set both "false" (records are kept).
+      - key: VITE_ENABLE_CURRICULUM_JOURNEY
+        value: "false"
+      - key: ENABLE_CURRICULUM_JOURNEY
+        value: "false"
 
       # sync: false = Render prompts for these in the dashboard and stores them
       # there. They are never committed to this repo.
@@ -91,6 +97,12 @@ services:
       - key: SEO_INDEXABLE
         value: "false"
       - key: VITE_USE_API
+        value: "true"
+      # Journey on for dev review (all 39 pathways pass check:journey, 2026-11-12).
+      # Production stays "false" until device/teacher review; flip both together.
+      - key: VITE_ENABLE_CURRICULUM_JOURNEY
+        value: "true"
+      - key: ENABLE_CURRICULUM_JOURNEY
         value: "true"
       - key: MONGODB_DB
         value: dynamic_learning_dev

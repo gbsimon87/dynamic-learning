@@ -30,6 +30,7 @@ import { normaliseEmail } from "../../../shared/emailAddress.js";
 import { normaliseChildPatch } from "../childFields.js";
 import { isProgressData } from "../../../shared/progressData.js";
 import { isRewardsData } from "../../../shared/rewardsData.js";
+import { createApiCurriculumJourneyStore } from "./apiCurriculumJourney.js";
 
 import { migrateProgressDocument } from "../../../shared/progressDocument.js";
 const BASE = "/api";
@@ -47,6 +48,7 @@ class ApiError extends Error {
     super(code);
     this.name = "ApiError";
     this.status = status;
+    this.code = code;
     this.details = details ?? null;
     if (cause) this.cause = cause;
   }
@@ -374,3 +376,5 @@ export const store = {
     return body.rewards;
   },
 };
+
+Object.assign(store, createApiCurriculumJourneyStore(request));

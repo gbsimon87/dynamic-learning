@@ -6,10 +6,10 @@ import { tokenize } from "../hooks/spritzTiming.js";
 const BANDS = ["easy", "medium", "longer"];
 const WORD_RANGES = { easy: [25, 55], medium: [56, 95], longer: [96, 140] };
 
-test("there are six stories, two per difficulty band", () => {
-  assert.equal(stories.length, 6);
+test("there are eighteen stories, six per difficulty band", () => {
+  assert.equal(stories.length, 18);
   for (const band of BANDS) {
-    assert.equal(stories.filter((story) => story.band === band).length, 2, band);
+    assert.equal(stories.filter((story) => story.band === band).length, 6, band);
   }
 });
 
