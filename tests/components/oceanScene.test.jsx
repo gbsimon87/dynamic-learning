@@ -9,6 +9,7 @@ import { FISH_ORBIT, REEF_ORBIT } from '../../src/pages/skills/geography/oceanDi
 import { FISH_LOOP, fishPose, loopPose } from '../../src/pages/skills/geography/oceanFish.js';
 import { ANIMALS } from '../../src/pages/skills/geography/oceanAnimals.js';
 import { OCEAN_SURFACE_HEIGHT } from '../../src/pages/skills/geography/oceanWater.js';
+import { OCEAN_TOUR_STOPS } from '../../src/pages/skills/geography/oceanTour.js';
 
 const harness = vi.hoisted(() => ({ renderers: [], observers: [], frames: new Map(), motion: null, fail: null }));
 // The real PMREM bake requires a GPU; camera/scene tests use a texture stand-in.
@@ -379,6 +380,37 @@ it('assists a tour to an existing discovery and freezes it when paused', () => {
   tick(1200);
   for (let time = 1300; time <= 2800; time += 100) tick(time);
   expect(onOrbitChange).toHaveBeenLastCalledWith({ id: 'coral-reef', name: 'Coral reef', steady: false });
+});
+it('tours every stop, choosing the nearest animal of each kind', () => {
+  const onOrbitChange = vi.fn();
+  api = createOceanScene({ canvas, container, onReady: vi.fn(), onUnavailable: vi.fn(), onOrbitChange });
+  const [scene] = harness.renderers.at(-1).render.mock.calls[0];
+  const submarine = scene.getObjectByName('ocean-submarine');
+  for (const stop of OCEAN_TOUR_STOPS) {
+    expect(api.tourTo(stop.id)).toBe(true);
+    expect(onOrbitChange).toHaveBeenLastCalledWith(expect.objectContaining({ id: stop.id }));
+  }
+  // From the whale, the nearest parrotfish is not the one beside the start.
+  expect(api.tourTo('parrotfish')).toBe(true);
+  expect(Math.hypot(submarine.position.x - FISH_LOOP.x, submarine.position.z - FISH_LOOP.z)).toBeGreaterThan(20);
+});
+
+it('takes longer over a long tour trip and rises over the reefs on the way', () => {
+  harness.motion.matches = false;
+  const onOrbitChange = vi.fn();
+  api = createOceanScene({ canvas, container, onReady: vi.fn(), onUnavailable: vi.fn(), onOrbitChange });
+  const [scene] = harness.renderers.at(-1).render.mock.calls[0];
+  const submarine = scene.getObjectByName('ocean-submarine');
+  const whale = ANIMALS.filter(({ id }) => id === 'humpback-whale').sort((a, b) => Math.hypot(a.loop.x, a.loop.z) - Math.hypot(b.loop.x, b.loop.z))[0];
+  expect(Math.hypot(whale.loop.x, whale.loop.z)).toBeGreaterThan(30);
+  expect(api.tourTo('humpback-whale')).toBe(true);
+  tick(0);
+  let highest = 0;
+  for (let time = 100; time <= 2000; time += 100) { tick(time); highest = Math.max(highest, submarine.position.y); }
+  expect(onOrbitChange).not.toHaveBeenCalled();
+  expect(highest).toBeGreaterThan(5);
+  for (let time = 2100; time <= 10000 && harness.frames.size; time += 100) tick(time);
+  expect(onOrbitChange).toHaveBeenLastCalledWith(expect.objectContaining({ id: 'humpback-whale' }));
 });
 const yawFrame = (camera, submarine) => camera.position.clone().sub(submarine.position).applyAxisAngle(new THREE.Vector3(0, 1, 0), -submarine.rotation.y);
 

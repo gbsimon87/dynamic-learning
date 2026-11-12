@@ -23,6 +23,7 @@ const GLYPHS = {
   6: '01110/10000/10000/11110/10001/10001/01110', 7: '11111/00001/00010/00100/01000/01000/01000',
   8: '01110/10001/10001/01110/10001/10001/01110', 9: '01110/10001/10001/01111/00001/00001/01110',
   '.': '0/0/0/0/0/1/1', '-': '000/000/000/111/000/000/000', '/': '00001/00010/00010/00100/01000/01000/10000',
+  '°': '010/101/010/000/000/000/000',
 };
 
 function display() {
@@ -144,9 +145,9 @@ export function createOceanCockpit(initialPalette) {
     for (const side of [-1, 1]) for (const end of [-1, 1]) bolt(housing, side * (width / 2 + 0.02), end * (height / 2 + 0.02), 0.065, 0.009);
     for (let i = 0; i < 6; i++) box(housing, i === 4 ? amber : steel, [(i - 2.5) * width / 7, -height / 2 - 0.018, 0.059], [width / 11, 0.009, 0.014]);
   }
-  screen(0, -1.02, -0.49, 0.68, 0.40);
+  screen(0, -1.02, -0.37, 0.68, 0.40);
   screen(1, 0, -0.46, 1.12, 0.47);
-  screen(2, 1.02, -0.49, 0.68, 0.40);
+  screen(2, 1.02, -0.37, 0.68, 0.40);
 
   function switchBank(parent, x, y, columns, rows) {
     for (let row = 0; row < rows; row++) for (let col = 0; col < columns; col++) {
@@ -199,7 +200,7 @@ export function createOceanCockpit(initialPalette) {
   for (const side of [-1, 1]) {
     const base = new THREE.Group();
     base.name = side < 0 ? 'ocean-cockpit-stick-left' : 'ocean-cockpit-stick-right';
-    base.position.set(side * 0.72, -0.55, -0.96);
+    base.position.set(side * 0.72, -0.84, -0.96);
     group.add(base);
     box(base, paint, [0, -0.055, 0], [0.33, 0.11, 0.34]);
     rod(base, steel, [0, 0.012, 0], 0.12, 0.035);
@@ -329,6 +330,26 @@ export function createOceanCockpit(initialPalette) {
     nav.text('NAVIGATION', 12, 9, ink, 2);
     nav.text('DEPTH', 15, 36, bright); nav.text(`${depth.toFixed(1)} M`, 15, 51, ink, 3);
     nav.text('HEADING', 15, 91, bright); nav.text(`${Math.round(heading) % 360}`.padStart(3, '0'), 15, 106, ink, 3);
+    nav.text('°', 72, 104, ink, 2);
+    // Compass dial: N stays up, the amber needle points where the sub is heading.
+    const cx = 190, cy = 86, r = 44, bearing = THREE.MathUtils.degToRad(heading);
+    for (let y = -r; y <= r; y++) { const w = Math.sqrt(r * r - y * y); nav.line(cx - w, cy + y, cx + w, cy + y, background); }
+    for (let i = 0; i < 120; i++) {
+      const a = i / 120 * TAU, b = (i + 1) / 120 * TAU;
+      nav.line(cx + Math.sin(a) * r, cy - Math.cos(a) * r, cx + Math.sin(b) * r, cy - Math.cos(b) * r, bright);
+    }
+    for (let i = 0; i < 12; i++) {
+      const a = i / 12 * TAU, inner = i % 3 ? r - 5 : r - 9;
+      nav.line(cx + Math.sin(a) * inner, cy - Math.cos(a) * inner, cx + Math.sin(a) * r, cy - Math.cos(a) * r, bright);
+    }
+    nav.text('N', cx - 4, cy - r + 12, warm, 2);
+    nav.text('S', cx - 4, cy + r - 25, ink, 2); nav.text('E', cx + r - 23, cy - 6, ink, 2); nav.text('W', cx - r + 13, cy - 6, ink, 2);
+    const tip = r - 13, sx = Math.sin(bearing), sy = -Math.cos(bearing);
+    for (let o = -4; o <= 4; o += 0.5) {
+      for (const t of [-0.5, 0, 0.5]) nav.line(cx - sy * o, cy + sx * o, cx + sx * tip - sy * t, cy + sy * tip + sx * t, warm);
+      nav.line(cx - sy * o, cy + sx * o, cx - sx * tip * 0.45, cy - sy * tip * 0.45, ink);
+    }
+    for (let y = -3; y <= 3; y++) nav.line(cx - 3, cy + y, cx + 3, cy + y, ink);
     nav.text(mode, 15, 147, warm);
     sonar.text('NEARBY / 30 M', 12, 9, ink, 2);
     for (const radius of [18, 36, 54]) {

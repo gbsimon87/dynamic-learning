@@ -7,6 +7,7 @@ import OceanExplorer from '../../src/pages/skills/geography/OceanExplorer';
 import SkillGameLayout from '../../src/components/skills/SkillGameLayout';
 import SkillsPage from '../../src/pages/skills/SkillsPage';
 import { OCEAN_DISCOVERIES } from '../../src/pages/skills/geography/oceanDiscoveries.js';
+import { OCEAN_TOUR_STOPS } from '../../src/pages/skills/geography/oceanTour.js';
 import { speak, stopNarrationOf } from '../../src/utils/speech.js';
 
 const scenes = vi.hoisted(() => []);
@@ -67,6 +68,8 @@ it('switches camera with C or the menu and ignores held keys, shortcuts and typi
   fireEvent.keyDown(document.body, { key: 'c' });
   expect(button().getAttribute('aria-pressed')).toBe('true');
   expect(container.querySelector('.ocean-cockpit')).toBeTruthy();
+  // The cockpit instruments replace the floating key hint.
+  expect(container.querySelector('.ocean-explorer__hint')).toBeNull();
   fireEvent.keyDown(document.body, { key: 'C', repeat: true });
   for (const modifier of ['ctrlKey', 'altKey', 'metaKey']) fireEvent.keyDown(document.body, { key: 'c', [modifier]: true });
   const input = document.createElement('input');
@@ -77,6 +80,7 @@ it('switches camera with C or the menu and ignores held keys, shortcuts and typi
   fireEvent.keyDown(screen.getByLabelText('Submarine viewing area'), { key: 'C' });
   expect(button().getAttribute('aria-pressed')).toBe('false');
   expect(container.querySelector('.ocean-cockpit')).toBeNull();
+  expect(container.querySelector('.ocean-explorer__hint')).toBeTruthy();
   fireEvent.click(button());
   expect(button().getAttribute('aria-pressed')).toBe('true');
   unmount();
@@ -153,12 +157,12 @@ it('sends the submarine back to the start once the scene is ready', () => {
 it('takes a pauseable guided tour through existing discoveries', () => {
   renderOcean();
   act(() => scenes[0].onReady());
-  fireEvent.click(screen.getByRole('button', { name: 'Start reef tour' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Start ocean tour' }));
   expect(scenes[0].tourTo).toHaveBeenCalledWith('coral-reef');
   expect(screen.getByRole('status').textContent).toMatch(/heading to Coral reef/i);
 
   act(() => scenes[0].onOrbitChange({ ...REEF, steady: false }));
-  expect(screen.getByText('Tour stop 1 of 3')).toBeTruthy();
+  expect(screen.getByText('Tour stop 1 of 13')).toBeTruthy();
   expect(speak).toHaveBeenCalledOnce();
 
   fireEvent.click(screen.getByRole('button', { name: 'Pause tour' }));
@@ -170,7 +174,24 @@ it('takes a pauseable guided tour through existing discoveries', () => {
   expect(scenes[0].tourTo).toHaveBeenLastCalledWith('parrotfish');
   fireEvent.click(screen.getByRole('button', { name: 'Skip tour' }));
   expect(scenes[0].leaveOrbit).toHaveBeenCalledOnce();
-  expect(screen.getByRole('button', { name: 'Start reef tour' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Start ocean tour' })).toBeTruthy();
+});
+
+it('tours the reef and every kind of animal, then ends after the last stop', () => {
+  expect(OCEAN_TOUR_STOPS.map(({ id }) => id).sort()).toEqual(OCEAN_DISCOVERIES.map(({ id }) => id).sort());
+  renderOcean();
+  act(() => scenes[0].onReady());
+  fireEvent.click(screen.getByRole('button', { name: 'Start ocean tour' }));
+  OCEAN_TOUR_STOPS.forEach((stop, index) => {
+    expect(scenes[0].tourTo).toHaveBeenLastCalledWith(stop.id);
+    act(() => scenes[0].onOrbitChange({ id: stop.id, name: stop.name, steady: false }));
+    expect(screen.getByText(`Tour stop ${index + 1} of ${OCEAN_TOUR_STOPS.length}`)).toBeTruthy();
+    expect(speak).toHaveBeenLastCalledWith(stop.narration);
+    const last = index === OCEAN_TOUR_STOPS.length - 1;
+    fireEvent.click(screen.getByRole('button', { name: last ? 'Finish tour' : 'Next' }));
+  });
+  expect(scenes[0].tourTo).toHaveBeenCalledTimes(OCEAN_TOUR_STOPS.length);
+  expect(screen.getByRole('button', { name: 'Start ocean tour' })).toBeTruthy();
 });
 
 it('opens from the real Skills catalogue and returns through its back link', async () => {
@@ -179,7 +200,7 @@ it('opens from the real Skills catalogue and returns through its back link', asy
     { element: <SkillGameLayout />, children: [{ path: '/skills/ocean-explorer', element: <OceanExplorer /> }] },
   ], { initialEntries: ['/skills'] });
   render(<RouterProvider router={router} />);
-  await userEvent.click(screen.getByRole('link', { name: 'Explore the Ocean (preview)', exact: true }));
+  await userEvent.click(screen.getByRole('link', { name: 'Explore the Ocean', exact: true }));
   expect(screen.getByRole('heading', { name: 'Ocean Explorer' })).toBeTruthy();
   await userEvent.click(within(screen.getByRole('region', { name: 'Ocean Explorer' })).getByRole('link', { name: 'Back to Skills' }));
   expect(screen.getByRole('heading', { name: 'Pick a game' })).toBeTruthy();

@@ -12,6 +12,8 @@ const VIEW_DIRECTION = new THREE.Vector3(9, 3.2, 12).normalize();
 const UP = new THREE.Vector3(0, 1, 0);
 const START = { x: 0, y: 3, z: 0 };
 const STILL = { turn: 0, throttle: 0, lift: 0 };
+// Tour trips cruise at a steady pace, within a sensible range of times.
+const TOUR_TRAVEL = { speed: 9, shortest: 1.6, longest: 9, riseOver: 20 };
 const ANGLE_STEP = 0.12;
 const ZOOM_FACTOR = 1.12;
 const MIN_POLAR_ANGLE = 0.18;
@@ -187,7 +189,8 @@ export function createOceanScene({ canvas, container, onReady, onUnavailable, on
   }
 
   // Tours travel to an existing discovery, then use the ordinary orbit view.
-  // The route is intentionally brief and can be paused or abandoned at any point.
+  // Longer trips take longer and rise over the reefs on the way; the journey
+  // can be paused or abandoned at any point.
   function travelTour(seconds) {
     const journey = tourTravel;
     if (!journey) return;
@@ -197,6 +200,7 @@ export function createOceanScene({ canvas, container, onReady, onUnavailable, on
     const progress = journey.duration === 0 ? 1 : journey.elapsed / journey.duration;
     const eased = progress * progress * (3 - 2 * progress);
     const position = journey.position.lerpVectors(journey.from, journey.destination, eased);
+    position.y += Math.max(0, STEERING.maxHeight - position.y) * journey.rise * Math.sin(Math.PI * progress);
     const direction = journey.direction.subVectors(journey.destination, journey.from).setY(0);
     const yaw = direction.lengthSq() > 1e-8 ? Math.atan2(-direction.x, -direction.z) : steering.yaw;
     steering = createSteeringState(position, yaw);
@@ -216,17 +220,26 @@ export function createOceanScene({ canvas, container, onReady, onUnavailable, on
     enterOrbit();
   }
 
+  // A key names one animal; a species id picks the nearest of that kind.
   function tourTo(id) {
-    const next = environment?.discoveries.find((discovery) => discovery.key === id || discovery.id === id);
-    if (disposed || !next) return false;
+    if (disposed || !environment) return false;
+    const center = new THREE.Vector3();
+    let next = null, nearest = Infinity;
+    for (const discovery of environment.discoveries) {
+      if (discovery.id !== id) continue;
+      const distance = discovery.object3d.getWorldPosition(center).distanceToSquared(submarine.position);
+      if (distance < nearest) { next = discovery; nearest = distance; }
+    }
+    next ??= environment.discoveries.find((discovery) => discovery.key === id);
+    if (!next) return false;
     if (orbiting()) pilot.stop();
     input = STILL;
     controls.enabled = false;
-    const center = new THREE.Vector3();
     next.object3d.getWorldPosition(center);
     const offset = submarine.position.clone().sub(center).setY(0);
     if (offset.lengthSq() < 1e-8) offset.set(0, 0, 1);
     offset.setLength(Math.max(next.orbit?.radius * 1.8, 3.5));
+    const distance = Math.hypot(center.x + offset.x - submarine.position.x, center.z + offset.z - submarine.position.z);
     tourTravel = {
       next,
       from: submarine.position.clone(),
@@ -236,7 +249,8 @@ export function createOceanScene({ canvas, container, onReady, onUnavailable, on
       position: new THREE.Vector3(),
       direction: new THREE.Vector3(),
       elapsed: 0,
-      duration: reduced ? 0 : 1.6,
+      duration: reduced ? 0 : Math.min(TOUR_TRAVEL.longest, Math.max(TOUR_TRAVEL.shortest, distance / TOUR_TRAVEL.speed)),
+      rise: Math.min(1, distance / TOUR_TRAVEL.riseOver),
     };
     tourPaused = false;
     if (reduced) {

@@ -6,6 +6,21 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-12 — Ocean Explorer tour visits every animal
+
+- The tour at `/skills/ocean-explorer` is now **Start ocean tour**: 13 stops, the coral reef and then every kind of animal (parrotfish, clownfish, green sea turtle, spotted eagle ray, seahorse, porcupinefish, octopus, moon jelly, reef shark, dolphin, swordfish, humpback whale). Each new narration repeats a fact already on that animal's card. For each kind the submarine goes to the nearest one, so trips stay short. Longer trips take longer (up to 9 seconds) and rise towards the surface on the way, so they pass over reefs. The last stop shows a **Finish tour** button. The Skills guide text is updated. No saved-data or progress changes.
+- Validation: lint on the changed files passes. New tests check that the tour covers every discovery, plays each narration and finishes on the last stop. They also check that the scene reaches every stop, picks the nearest animal of each kind, and makes a long trip slower and higher. All 17 Ocean page tests pass. `oceanScene` passes except its 2 already-documented failures (porthole rim, sea turtle). Not checked in a browser: how the longer trips look in WebGL. Not run yet: the full test suite and the build.
+
+## 2026-11-12 — Bix loading screen for curriculum introductions
+
+- Curriculum introductions, including topic replays opened from the subject map, now use the shared full-screen Bix loader in place of the plain “Loading your introduction…” line. The existing loader supplies both themes and reduced-motion support.
+- Validation: all 14 focused journey/loader checks, full lint and production build pass (70 public pages prerendered). The full unit run has 2,898 passes, five sandbox-blocked server checks (`listen EPERM`) and one unrelated teacher-practice source-regression failure. The full component run has 1,068 passes and the two documented Ocean scene failures. Browser appearance and physical devices were not checked for this component substitution.
+
+## 2026-11-12 — Ocean Explorer cockpit: clear navigation display
+
+- The left joystick no longer covers the NAVIGATION screen. The side screens sit a little higher and both sticks sit lower, so the stick heads appear below the screens. The navigation screen now has a compass dial with an amber needle that points the way the sub is heading, next to the depth and heading in degrees. In cockpit view, the floating key-hint bar is hidden; the Controls menu still lists the keys.
+- Validation: lint on the changed files passes. A new test checks that the stick heads never cover the side screens on 4:3, 16:9 or wide landscape screens. Another new test checks that the compass needle moves with the heading. All 7 cockpit tests and all 16 Ocean page tests pass. `oceanScene` has 2 failures that were already documented (porthole rim, sea turtle). The compass was checked as a rendered texture image. Not checked in a browser: the WebGL framing, both themes, and portrait phones, where the side screens still run past the edges as before.
+
 ## 2026-11-12 — Curriculum journey: all 39 pathways authored
 
 - Introductions plus Quest Mastery and Subject Final Test banks now exist for every built year and subject (Maths, English, Science, Geography, History Y1–6; Year 5 Art, Computing, Design, French, Music, PE, Wellbeing; Year 6 Computing, French). `check:journey -- --all` passes. Independent model reviewers re-checked 23 pathways (History, Geography, Science Y5–6 and all additional subjects), re-mapping every practice slot to the challenge that teaches it and fixing or replacing weak facts, answers and distractors.

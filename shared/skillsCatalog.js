@@ -52,7 +52,7 @@ export const SKILL_GROUPS = [
       { to: "/skills/find-the-city", icon: "📍", label: "Find Cities on a Map" },
       { to: "/skills/city-spotlight", icon: "🏙️", label: "Find Cities from Clues" },
       { to: "/skills/flag-finder", icon: "🚩", label: "Match Flags to Countries" },
-      { to: "/skills/ocean-explorer", icon: "🌊", label: "Explore the Ocean (preview)", preview: true },
+      { to: "/skills/ocean-explorer", icon: "🌊", label: "Explore the Ocean" },
     ],
   },
 ];
@@ -60,6 +60,7 @@ export const SKILL_GROUPS = [
 // Pinned to the top of the hub, in this order. Each must also be in a group.
 export const FEATURED_GAMES = [
   "/skills/solar-system",
-  "/skills/city-spotlight",
+  "/skills/ocean-explorer",
   "/skills/times-tables",
+  "/skills/speed-reader",
 ];

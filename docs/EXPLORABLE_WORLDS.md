@@ -76,10 +76,14 @@ at the owner's request. See the [implementation record](superpowers/2026-11-11-o
 This section supersedes the original preview's layout/model descriptions below;
 the discovery facts, routes and species distribution remain as previously authored.
 
-## Ocean Explorer — Reef neighbours tour (2026-11-09)
+## Ocean Explorer — Ocean animals tour (2026-11-09, extended 2026-11-12)
 
-**Start reef tour** takes the submarine on a short, optional assisted journey
-through three existing discoveries: coral reef, parrotfish and green sea turtle.
+**Start ocean tour** takes the submarine on an optional assisted journey through
+the coral reef and then every kind of animal (13 stops, `oceanTour.js`). For each
+kind the scene picks the swimmer nearest the submarine, so trips stay short;
+longer trips take proportionally longer (capped at 9 s) and rise towards the
+surface mid-journey so they pass over reefs. The first version (2026-11-09)
+visited only the coral reef, parrotfish and green sea turtle.
 Each arrival opens its normal orbit/card with a small age-appropriate narration.
 The tour can be paused (which also holds its orbit), resumed, replayed/muted at a
 stop, moved backward/forward and skipped without saving anything; free driving

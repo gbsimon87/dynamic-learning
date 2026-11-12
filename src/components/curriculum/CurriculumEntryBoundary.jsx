@@ -6,6 +6,7 @@ import { validateIntroduction } from "../../../shared/curriculumJourneyModels.js
 import { curriculumEntryScopes, CURRICULUM_JOURNEY_ENABLED, introductionForScope } from "../../data/curriculumJourney.js";
 import { useCurriculumJourney } from "../../hooks/useCurriculumJourney.js";
 import CurriculumIntroduction from "./CurriculumIntroduction.jsx";
+import BixLoader from "../mascot/BixLoader.jsx";
 import "./curriculumJourney.css";
 
 export default function CurriculumEntryBoundary(props) {
@@ -42,7 +43,7 @@ function Entry({ children, year, subject, scopes, target, replay }) {
   let valid = true;
   if (intro) { try { validateIntroduction(intro); } catch { valid = false; } }
   if (!finished) {
-    if (journey.loading) overlay = <p className="cj-screen" role="status">Loading your introduction…</p>;
+    if (journey.loading) overlay = <BixLoader />;
     else if (journey.loadError || !intro || !valid) overlay = <div className="cj-screen cj-load-error" role="alert">
       <p className="cj-load-error-icon" aria-hidden="true">📖</p>
       <h2>This introduction isn’t ready yet</h2>

@@ -176,7 +176,7 @@ export default function OceanExplorer() {
         </div>
         <div className="ocean-explorer__actions">
           {!tour.active && <button className="ocean-explorer__tour-launch" type="button" disabled={status !== 'ready'} onClick={startTour}>
-            <span aria-hidden="true">◎</span> Start reef tour
+            <span aria-hidden="true">◎</span> Start ocean tour
           </button>}
           <details className="ocean-explorer__tools">
             <summary><span aria-hidden="true">☷</span> Controls</summary>
@@ -234,7 +234,7 @@ export default function OceanExplorer() {
           />
         )}
         {tour.active && <div className="ocean-explorer__tour" role="status" aria-live="polite">
-          <strong>Reef neighbours tour · stop {tour.index + 1} of {OCEAN_TOUR_STOPS.length}</strong>
+          <strong>Ocean animals tour · stop {tour.index + 1} of {OCEAN_TOUR_STOPS.length}</strong>
           <span>{tour.travelling ? `Heading to ${tourStop.name}…` : tour.paused ? 'Tour paused' : `Exploring ${tourStop.name}`}</span>
           <div>
             <button type="button" onClick={toggleTourPause}>{tour.paused ? 'Resume tour' : 'Pause tour'}</button>
@@ -244,7 +244,7 @@ export default function OceanExplorer() {
         {discovery && cardOpen && !tour.travelling && (
           <div className="ocean-explorer__card">
             <WorldInfoCard key={`${discovery.id}:${tour.active ? tour.index : 'free'}`} discovery={discovery} orbiting
-              onClose={tour.active ? endTour : () => setCardOpen(false)} onRead={read} tour={tour}
+              onClose={tour.active ? endTour : () => setCardOpen(false)} onRead={read} tour={{ ...tour, total: OCEAN_TOUR_STOPS.length, finishLabel: 'Finish tour' }}
               tourActions={{
                 previous: () => travelToTourStop(tour.index - 1),
                 replay: () => read(tourStop?.narration),
@@ -263,10 +263,10 @@ export default function OceanExplorer() {
           </div>
         )}
       </div>
-      {status === 'ready' && !tour.active && <p className="ocean-explorer__hint">
+      {status === 'ready' && !tour.active && cameraView !== 'cockpit' && <p className="ocean-explorer__hint">
         {orbit ? <><kbd>Esc</kbd> to leave orbit</> : <><kbd>Space</kbd> to move <span aria-hidden="true">·</span> arrows to steer</>}
         <span aria-hidden="true">·</span> <kbd>C</kbd> camera
-        {cameraView === 'behind' && <><span aria-hidden="true">·</span> drag to look</>}
+        <span aria-hidden="true">·</span> drag to look
       </p>}
     </section>
   );

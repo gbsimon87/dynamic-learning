@@ -81,6 +81,46 @@ test('portrait and wide framing retain both joystick heads on screen', () => {
   cabin.disposeTextures();
 });
 
+test('landscape joystick grips never cover the side telemetry displays', () => {
+  const cabin = createOceanCockpit(palette());
+  const rect = (box, camera) => {
+    const xs = [], ys = [];
+    for (const x of [box.min.x, box.max.x]) for (const y of [box.min.y, box.max.y]) for (const z of [box.min.z, box.max.z]) {
+      const p = new THREE.Vector3(x, y, z).project(camera);
+      xs.push(p.x); ys.push(p.y);
+    }
+    return { left: Math.min(...xs), right: Math.max(...xs), bottom: Math.min(...ys), top: Math.max(...ys) };
+  };
+  const overlaps = (a, b) => a.left < b.right && b.left < a.right && a.bottom < b.top && b.bottom < a.top;
+  for (const aspect of [4 / 3, 16 / 9, 844 / 390]) {
+    cabin.resize(aspect);
+    cabin.group.updateMatrixWorld(true);
+    const camera = new THREE.PerspectiveCamera(65, aspect, 0.1, 180);
+    for (const [side, id] of [['left', 0], ['right', 2]]) {
+      const grip = cabin.group.getObjectByName(`ocean-cockpit-stick-${side}`).children.find((child) => child.isGroup);
+      const display = cabin.group.getObjectByName(`ocean-cockpit-display-${id}`);
+      const gripRect = rect(new THREE.Box3().setFromObject(grip), camera);
+      const displayRect = rect(new THREE.Box3().setFromObject(display), camera);
+      assert.ok(!overlaps(gripRect, displayRect), `${side} grip clears display ${id} at aspect ${aspect.toFixed(2)}`);
+      assert.ok(displayRect.bottom > -0.95 && displayRect.top < 0.95, `display ${id} fully in frame at aspect ${aspect.toFixed(2)}`);
+    }
+  }
+  cabin.disposeTextures();
+});
+
+test('the navigation display shows a compass needle for the heading', () => {
+  const cabin = createOceanCockpit(palette());
+  const map = cabin.group.getObjectByName('ocean-cockpit-display-0').material.map;
+  cabin.update(input({ yaw: 0 }));
+  const north = new Uint8Array(map.image.data);
+  cabin.update(input({ yaw: -Math.PI / 2, now: 250 }));
+  // The digits sit on the left; the dial occupies the right half of the 256px screen.
+  let dialChanges = 0;
+  for (let i = 0; i < north.length; i += 4) if ((i / 4) % 256 >= 146 && map.image.data[i] !== north[i]) dialChanges++;
+  assert.ok(dialChanges > 50, 'the compass needle moves with the heading');
+  cabin.disposeTextures();
+});
+
 test('theme refresh changes lit materials and screen pixels; owned textures release once', () => {
   const cabin = createOceanCockpit(palette());
   cabin.update(input());
