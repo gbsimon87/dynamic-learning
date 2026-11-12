@@ -34,11 +34,6 @@ body.dark .parent-area-page {
   --pa-on-accent: var(--on-dark-accent);
 }
 
-.parent-area-page .parent-area-loading {
-  position: relative;
-  padding: 3rem 1rem;
-}
-
 .parent-area-page .parent-area-card {
   position: relative;
   width: 100%;

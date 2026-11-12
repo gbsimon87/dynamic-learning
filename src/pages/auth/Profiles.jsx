@@ -7,6 +7,7 @@ import ProgressRing from "../../components/ProgressRing";
 import { useChildrenProgress } from "../../hooks/useChildrenProgress";
 import FloatingGlyphBackground from "../../components/FloatingGlyphBackground";
 import "./Profiles.css";
+import BixLoader from "../../components/mascot/BixLoader";
 
 const PICK_DELAY_MS = 700;
 
@@ -120,10 +121,7 @@ function Profiles() {
 
   if (status === "loading") {
     return (
-      <div className="profiles-page floating-glyph-page">
-        <FloatingGlyphBackground />
-        <p className="profiles-loading">Loading your profiles… ⏳</p>
-      </div>
+      <BixLoader message="Finding your profiles" />
     );
   }
 

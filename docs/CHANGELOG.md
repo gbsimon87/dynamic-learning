@@ -6,6 +6,11 @@ remaining review limits. Keep current architecture/scope in
 work belongs in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Implementation history before
 2026-11-03 is in git history (`docs/PROJECT_KNOWLEDGE.md` at commit `fd4bc37`).
 
+## 2026-11-12 — Bix loading screen
+
+- New shared `BixLoader` (`src/components/mascot/BixLoader.jsx`): a full-screen, themed screen with Bix in the middle zooming in and out, twinkling sparkles, a short child-friendly line and bouncing dots. It fades in after a short pause so very quick loads don't flash, keeps still for reduced motion, and the screen-reader message is a polite status. It replaces blank screens and bare "Loading…" lines in these places: lazy route chunks (first visit and link clicks), the account and progress checks in `RequireChild`, Login, Sign-up, Profiles, the Parent Area, the curriculum and problem pages, challenge modules, the Trophy Room, Bix's intro, Flag Finder, World Map and Ocean Explorer. Inline per-card progress notes and the Solar System's in-scene trip status are unchanged.
+- Validation: lint and production build pass. Three new loader tests pass. Three tests were updated for the new loading screen. The remaining component failures are in `oceanScene` geometry and timeouts, plus one Year 6 English test that passes alone but times out in a full run. None of these tests touch the changed code. Checked in one browser pass at 375px and 1280px, light and dark: Bix is centred, the screen covers the navbar and there is no sideways scroll. Not checked on physical devices.
+
 ## 2026-11-11 — Consolidate branches and workspaces into dev
 
 - Committed and merged the Ocean Explorer, curriculum subject-visibility and Year 3 Maths wording worktrees into local `dev`. The teacher-planning branch was already included. Preserved every changelog entry, source branch, worktree and existing stash; `main` is unchanged. No push or deployment.

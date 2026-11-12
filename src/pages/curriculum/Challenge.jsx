@@ -17,6 +17,7 @@ import "./Challenge.css";
  * ../skills/math/challenges/year2/numbers-and-counting/NumbersAndCountingChallenge1.jsx
  */
 import { challengeModules } from "./challengeModules";
+import BixLoader from "../../components/mascot/BixLoader";
 
 /** Turn "numbers-and-counting" → "NumbersAndCounting". */
 function capitalizeTopicId(id) {
@@ -135,16 +136,14 @@ function Challenge({ onComplete }) {
 
   if (!ChallengeComponent) {
     return (
-      <div className="challenge-loading">
-        <p>Loading challenge...</p>
-      </div>
+      <BixLoader message="Getting your challenge ready" />
     );
   }
 
   // Bix's lesson screen comes first wherever one is written for this slot.
   const lesson = getLesson(subject, year, topicId, challengeId);
   const challenge = (
-    <Suspense fallback={<p>Loading challenge...</p>}>
+    <Suspense fallback={<BixLoader message="Getting your challenge ready" />}>
       <ChallengeComponent onComplete={onComplete} />
     </Suspense>
   );

@@ -22,6 +22,7 @@ import { useReveal } from "../home/useReveal";
 import ProgressRing from "../../components/ProgressRing";
 import ProgressError from "../../components/ProgressError";
 import "./CurriculumPage.css";
+import BixLoader from "../../components/mascot/BixLoader";
 
 /* ===== DECORATION =====
    The drifting layer behind the hero, same idea as the homepage sky. Fixed
@@ -341,7 +342,7 @@ function CurriculumPage() {
     return <Navigate to="/curriculum" replace />;
   }
   if (loadError) return <ProgressError loading retry={retryLoad} />;
-  if (!hydrated) return <div className="curriculum-page" role="status">Loading your progress…</div>;
+  if (!hydrated) return <BixLoader message="Finding your progress" />;
 
   const curriculum = loadCurriculum(year, subject);
   const subjectName = getSubjectName(subject);

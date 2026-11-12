@@ -5,6 +5,7 @@ import { profileColour } from "../../data/avatars";
 import { clearLastAccount, readLastAccount } from "../../data/lastAccount";
 import AuthShell from "./AuthShell";
 import "./Login.css";
+import BixLoader from "../../components/mascot/BixLoader";
 
 /**
  * Sign in.
@@ -80,7 +81,7 @@ function Login() {
     }
   };
 
-  if (status === "loading") return null;
+  if (status === "loading") return <BixLoader />;
   if (!submitting && (status === "ready" || status === "needsChild")) {
     return <Navigate to={status === "ready" ? "/curriculum" : "/profiles"} replace />;
   }

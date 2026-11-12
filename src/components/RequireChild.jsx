@@ -3,13 +3,14 @@ import { Navigate, Outlet, useLocation } from "react-router";
 import { AuthContext } from "../context/auth-context";
 import { useRewards } from "../hooks/useRewards";
 import { introEligible } from "../data/intro";
+import BixLoader from "./mascot/BixLoader";
 
 /**
  * Route guard for Curriculum Mode.
  *
  * Curriculum progress belongs to a specific child profile, so nothing under
  * this guard may render until we know which child is active:
- *   loading    -> render nothing (the store read is still in flight)
+ *   loading    -> Bix's loading screen (the store read is still in flight)
  *   signedOut  -> /login
  *   needsChild -> /profiles
  *   ready      -> the routed page, except that a brand-new child (never
@@ -34,7 +35,7 @@ export default function RequireChild() {
   const rewards = useRewards();
   const location = useLocation();
 
-  if (status === "loading") return null;
+  if (status === "loading") return <BixLoader message="Finding your profile" />;
 
   if (status === "signedOut") {
     return <Navigate to="/login" replace state={{ from: location }} />;
@@ -47,7 +48,7 @@ export default function RequireChild() {
   if (!isLearner && location.pathname !== "/hello") {
     const childId = child?._id;
     if (!settled.has(childId)) {
-      if (rewards.status === "idle" || rewards.status === "loading") return null;
+      if (rewards.status === "idle" || rewards.status === "loading") return <BixLoader message="Finding your stars" />;
       settled.add(childId);
     }
     if (rewards.hydrated && introEligible(rewards.rewards, { pendingBackfill: rewards.pendingBackfill })) {

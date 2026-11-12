@@ -18,8 +18,12 @@ it.each([Login, SignUpFlow])('redirects existing accounts away from %s', (Page) 
 });
 
 it.each([Login, SignUpFlow])('waits for session restoration before displaying %s', (Page) => {
-  const { container } = render(<AuthContext.Provider value={{ status: 'loading' }}><MemoryRouter>{createElement(Page)}</MemoryRouter></AuthContext.Provider>);
-  expect(container.textContent).toBe('');
+  render(<AuthContext.Provider value={{ status: 'loading' }}><MemoryRouter>{createElement(Page)}</MemoryRouter></AuthContext.Provider>);
+  // Only Bix's loading screen: no form or links until the session is known.
+  expect(screen.getByRole('status').textContent).toMatch(/Bix is getting things ready/);
+  expect(screen.queryByRole('textbox')).toBeNull();
+  expect(screen.queryByRole('link')).toBeNull();
+  expect(screen.queryByRole('button')).toBeNull();
 });
 
 it.each(['signedOut', 'needsChild', 'ready', 'loading'])('shows curriculum actions appropriate for %s', (status) => {

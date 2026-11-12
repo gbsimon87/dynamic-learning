@@ -3,6 +3,7 @@ import FreePlayShell from '../../../components/skills/FreePlayShell';
 import { flagCountriesStore } from '../../../data/flagCountries';
 import { ALL_CONTINENTS, makeFlagQuestion, playableContinents } from '../../../data/freePlay/flagFinder';
 import './FlagFinder.css';
+import BixLoader from "../../../components/mascot/BixLoader";
 
 const TITLE = 'Flag Finder';
 const INTRO = 'Look at the flag, then tap the country it belongs to.';
@@ -37,7 +38,7 @@ export default function FlagFinder({ countryStore = flagCountriesStore }) {
             <button className="ff-retry" type="button" onClick={countryStore.retry}>Try again</button>
           </div>
         ) : (
-          <p className="ff-status" role="status">Loading flags...</p>
+          <BixLoader message="Collecting the flags" />
         )}
       </div>
     );

@@ -21,7 +21,7 @@ vi.mock('../../src/pages/skills/geography/oceanScene.js', () => ({
 }));
 
 vi.mock('../../src/utils/speech.js', () => speech);
-vi.mock('../../src/components/celebration/sound/player.js', () => ({ isMuted: () => false }));
+vi.mock('../../src/components/celebration/sound/player.js', () => ({ isMuted: () => false, subscribe: () => () => {} }));
 
 const renderOcean = (ui = <OceanExplorer />) => render(<MemoryRouter>{ui}</MemoryRouter>);
 

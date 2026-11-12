@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import MapGame from '../../../components/MapGame';
+import BixLoader from '../../../components/mascot/BixLoader';
 import './WorldMap.css';
 
 export default function WorldMap() {
@@ -26,15 +27,17 @@ export default function WorldMap() {
     })();
   }, []);
 
-  if (loading || error) {
+  if (loading && !error) return <BixLoader message="Unrolling the world map" />;
+
+  if (error) {
     return (
       <div className="worldmap-status">
         <Link to="/skills" className="mapgame-back">
           <span aria-hidden="true">←</span>
           <span className="mapgame-back-text">Back to Skills</span>
         </Link>
-        <p style={error ? { color: 'var(--danger-text)' } : undefined}>
-          {error || 'Loading map…'}
+        <p style={{ color: 'var(--danger-text)' }}>
+          {error}
         </p>
       </div>
     );
