@@ -26,7 +26,7 @@ test("image records accept both/neither and reject partial, unknown or duplicate
       assert.equal(isReflectionRecordCorrect(q, { ...q.recordExpected, [c.id]: q.recordExpected[c.id] === "clear" ? "not-clear" : "clear" }), false);
     }
     assert.equal(isReflectionRecordCorrect({ ...q, recordCards: q.recordCards.map(() => q.recordCards[0]) }, q.recordExpected), false);
-    assert.ok(q.stages.slice(1).every(s => s.text.includes("reflects light even")));
+    assert.ok(q.stages.slice(1).every(s => s.text.includes("reflects light")));
   }
 });
 test("reflection labelling accepts only the correct three distinct parts", () => {

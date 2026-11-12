@@ -83,7 +83,7 @@ export default function DogSkeleton() {
           <path d="M24 99 L58 108 Q86 112 100 101" fill="none" stroke="#f1e6cc" strokeWidth="4" strokeLinecap="round" />
         </g>
       </svg>
-      <figcaption>Simplified body diagram. Some structures and details are omitted.</figcaption>
+      <figcaption>A simple picture of the bones. Some small bones are left out.</figcaption>
     </figure>
   );
 }

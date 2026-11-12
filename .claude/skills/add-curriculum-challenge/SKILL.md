@@ -37,7 +37,7 @@ export default function MyTopicChallenge2({ onComplete }) {
 - Challenges never write progress/storage and need no new route. `ProblemView.jsx` owns completion persistence.
 - Pure banks accept `rng`; build once per mount. Keep answers unique, distractors plausible, ranges and wording inside the mapped requirement. Review visuals against independently recomputed answers.
 - Reuse shared interaction components and their styles. Add CSS only where needed, using `App.css` theme tokens and large touch targets in both themes. Accumulating controls emit steps and use functional state updates so rapid taps are not lost.
-- Science uses `DataChallenge layout="science"`, or `ChallengeShell wide` with `ScienceRound` for custom games. Preserve its DOM order: prompt → figure/reference → evidence → answer → hint → Check → feedback; the desktop grid places the figure to the left.
+- Science uses `DataChallenge layout="science"`, or `ChallengeShell wide` with `ScienceRound` for custom games. Preserve its DOM order: figure/reference → evidence (clue card) → prompt → answer → hint → Check → feedback, so the question always sits directly above its answers; the desktop grid places the figure to the left. Clue text must read as a short fact or setup before the question, and the question must stand on its own.
 - Update the matching Bix lesson where the subject supports lessons; its representation must match the challenge.
 
 All built challenges are open. Missing modules remain unavailable; completion controls awards, never access. Do not seed fake progress to unlock a new challenge.

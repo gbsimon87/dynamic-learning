@@ -19,9 +19,9 @@ const full = (props = {}) => (
   ><button type="button">ANSWER</button></ScienceRound>
 );
 
-it("renders slots in the spec's DOM order", () => {
+it("reads picture, clue, question, answers, Check in DOM order", () => {
   render(full());
-  const order = ["PROMPT", "FIGURE", "REFERENCE", "EVIDENCE", "ANSWER LABEL", "ANSWER", "HINT"].map((text) => screen.getByText(text));
+  const order = ["FIGURE", "REFERENCE", "EVIDENCE", "PROMPT", "ANSWER LABEL", "ANSWER", "HINT"].map((text) => screen.getByText(text));
   order.push(screen.getByRole("button", { name: "Check" }), screen.getByText("FEEDBACK"));
   order.slice(1).forEach((node, i) => expect(before(order[i], node), `${node.textContent} after ${order[i].textContent}`).toBe(true));
 });

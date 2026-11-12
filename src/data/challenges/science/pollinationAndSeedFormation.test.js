@@ -137,14 +137,14 @@ test("revisiting a stage preserves records and completed rounds remain immutable
   for (const type of ["reset", "finish", "record", "conclusion"]) assert.equal(act(done, { type }), done);
 });
 test("independent biology cases distinguish pollen, seeds, wind transfer and unobserved new seeds", () => {
-  assert.equal(ROLE_BANK[1].answer, "Pollen.");
-  assert.equal(ROLE_BANK[6].answer, "Wind.");
+  assert.equal(ROLE_BANK[1].answer, "Pollen");
+  assert.equal(ROLE_BANK[6].answer, "The wind");
   assert.ok(ROLE_BANK[12].answer.startsWith("No."));
   assert.deepEqual(ENQUIRY_BANK[0].recordExpected, { pollination: "shown", seeds: "shown" });
   assert.deepEqual(ENQUIRY_BANK[2].recordExpected, { pollination: "shown", seeds: "not-shown" });
   assert.deepEqual(ENQUIRY_BANK[8].recordExpected, { pollination: "not-shown", seeds: "not-shown" });
-  assert.ok(ENQUIRY_BANK[2].conclusion.includes("do not show that seeds formed"));
-  assert.ok(ENQUIRY_BANK[8].conclusion.includes("do not show new seeds"));
+  assert.ok(ENQUIRY_BANK[2].conclusion.includes("have not seen any seeds"));
+  assert.ok(ENQUIRY_BANK[8].conclusion.includes("have not seen new seeds"));
   assert.equal(SEQUENCE_BANK[0].steps.at(-1), "New seeds develop");
 });
 test("unknown levels and empty sequences cannot start or pass", () => {

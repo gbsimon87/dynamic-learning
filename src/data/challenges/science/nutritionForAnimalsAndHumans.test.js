@@ -70,8 +70,8 @@ test("claim checks have independently reviewed supported and unsupported pattern
     ["supported", "not-supported"], ["not-supported", "not-supported"], ["supported", "not-supported"],
   ]);
   assert.ok(ENQUIRY_BANK[3].stages.every((s) => /plant|Plant/.test(s.text)));
-  assert.ok(ENQUIRY_BANK[6].stages.some((s) => s.text.includes("no exact portion sizes")));
-  assert.ok(ENQUIRY_BANK[5].stages.some((s) => s.text.includes("day or week")));
+  assert.ok(ENQUIRY_BANK[6].stages.some((s) => s.text.includes("not give exact portion sizes")));
+  assert.ok(ENQUIRY_BANK[5].stages.some((s) => s.text.includes("day or a week")));
 });
 test("research cannot finish before every source, validated claims and a supported report", () => {
   const covered = new Set();

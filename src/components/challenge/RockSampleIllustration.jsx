@@ -87,7 +87,7 @@ export default function RockSampleIllustration({ specimen }) {
         <image href={fluent("magnifying_glass_tilted_left")} x="6" y="4" width="40" height="40" aria-hidden="true" />
       </svg>
       <figcaption>
-        {specimenText(specimen)} Magnified drawing; shapes are simplified. Features not shown may be too small to see. Appearance alone does not identify a rock or prove a test result.
+        {specimenText(specimen)} This is a magnified drawing. The shapes are simple. A picture alone cannot tell us what rock it is, or what a test will show.
         <ScienceCredit>{CREDITS.fluent}</ScienceCredit>
       </figcaption>
     </figure>

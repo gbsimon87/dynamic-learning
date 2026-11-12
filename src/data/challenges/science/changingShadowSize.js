@@ -16,14 +16,14 @@ export function sizeObservations(config, reverse = false, variant = 0) {
     const g = shadowGeometry(geometry);
     if (!g) throw new RangeError("Invalid shadow configuration");
     return { id: `position-${i}`, label: `Position ${i + 1}`, on: true, blocks: true, geometry,
-      text: `${config.objectLabel}; ${config.moving === "object" ? "only the object moves; source and screen stay fixed" : "only the source moves; object and screen stay fixed"}. Source → object: ${g.sourceDistance} cm. Object → screen: ${g.screenDistance} cm. Shadow height: ${g.shadowHeight} cm (nearest whole cm).` };
+      text: `${config.objectLabel}. ${config.moving === "object" ? "Only the object moves. The lamp and the screen stay still." : "Only the lamp moves. The object and the screen stay still."} Lamp to object: ${g.sourceDistance} cm. Object to screen: ${g.screenDistance} cm. Shadow height: ${g.shadowHeight} cm.` };
   });
 }
 export const COMPARE_BANK = CONFIGURATIONS.flatMap(config => [[0, 1], [1, 2], [0, 2]].map((pair, variant) => ({ id: `compare-${config.id}-${variant}`, config, pair, variant })));
 export const PATTERN_BANK = CONFIGURATIONS.flatMap(config => [0, 1, 2].map(variant => ({ id: `pattern-${config.id}-${variant}`, config, variant, reverse: variant === 1 })));
 export const TABLE_BANK = CONFIGURATIONS.flatMap(config => [0, 1, 2].map(variant => ({ id: `table-${config.id}-${variant}`, config, variant, reverse: variant === 1 })));
 export const ENQUIRY_BANK = ["object-nearer", "object-further", "source-nearer"].flatMap((group, i) => [0, 1, 2].map(variant => ({ id: `enquiry-${group}-${variant}`, group, config: CONFIGURATIONS[i < 2 ? variant : 3 + variant % 2], variant, reverse: group !== "object-further" })));
-const SETUP_FACTORS = [{ id: "object-position", label: "Object position" }, { id: "source-position", label: "Source position" }, { id: "screen-position", label: "Screen position" }, { id: "object-height", label: "Object height" }, { id: "lamp", label: "Lamp used and its brightness setting" }];
+const SETUP_FACTORS = [{ id: "object-position", label: "Where the object is" }, { id: "source-position", label: "Where the lamp is" }, { id: "screen-position", label: "Where the screen is" }, { id: "object-height", label: "How tall the object is" }, { id: "lamp", label: "The lamp and how bright it is" }];
 export function buildShadowSizeQuestions(level, rng) {
   if (![1, 2, 3, 4].includes(level)) throw new RangeError("Unknown shadow size level");
   const bank = [COMPARE_BANK, PATTERN_BANK, TABLE_BANK, ENQUIRY_BANK][level - 1];
@@ -34,17 +34,19 @@ export function buildShadowSizeQuestions(level, rng) {
     const g = stages.map(s => shadowGeometry(s.geometry));
     const closer = g.at(-1).sourceDistance < g[0].sourceDistance;
     const changed = q.config.moving === "object" ? "object-position" : "source-position";
-    const pattern = `In this fixed-screen model, the ${q.config.moving} moved ${closer ? "closer to" : "further from"} the ${q.config.moving === "object" ? "source" : "object"}, and the shadow became ${closer ? "larger" : "smaller"}.`;
-    return { ...q, level, stages, title: "How does one distance change affect shadow size?",
-      setup: `Compare positions of the same ${q.config.objectLabel}. Move only the ${q.config.moving}; keep the screen and other conditions fixed. Read shadow height to the nearest whole cm.`,
-      prompt: level === 1 ? "Which position has the taller shadow? Read the two model measurements." : "Compare all three positions. Choose the pattern supported by these measurements.",
+    const mover = q.config.moving === "object" ? "object" : "lamp", other = q.config.moving === "object" ? "lamp" : "object";
+    const pattern = `When the ${mover} moved ${closer ? "closer to" : "further from"} the ${other}, the shadow got ${closer ? "bigger" : "smaller"}`;
+    const reversed = `When the ${mover} moved ${closer ? "closer to" : "further from"} the ${other}, the shadow got ${closer ? "smaller" : "bigger"}`;
+    return { ...q, level, stages, title: "What happens to the shadow when one distance changes?",
+      setup: `The same ${q.config.objectLabel} is used each time. Only the ${mover} moves. The screen stays still. Shadow heights are in whole cm.`,
+      prompt: level === 1 ? "Which position has the taller shadow?" : "Look at all three positions. Which sentence matches the shadow heights?",
       answer: level === 1 ? stages[g[0].shadowHeight > g[1].shadowHeight ? 0 : 1].label : pattern,
-      options: level === 1 ? shuffle(stages.map(s => s.label), rng) : shuffle([pattern, "All three shadows have the same height.", `In this model, getting closer makes the shadow smaller; getting further away makes it larger.`], rng),
+      options: level === 1 ? shuffle(stages.map(s => s.label), rng) : shuffle([pattern, "The shadow was the same height every time", reversed], rng),
       setupCards: shuffle(SETUP_FACTORS, rng), setupExpected: Object.fromEntries(SETUP_FACTORS.map(f => [f.id, f.id === changed ? "change" : "keep"])),
-      predictionOptions: ["The shadow may get larger.", "The shadow may get smaller.", "The shadow may stay the same height.", "I am not sure yet."],
+      predictionOptions: ["The shadow will get bigger", "The shadow will get smaller", "The shadow will stay the same height", "I am not sure yet"],
       recordCards: shuffle(stages.map(s => ({ id: s.id, label: s.label })), rng), recordBins: [...new Set(g.map(m => m.shadowHeight))].map(h => ({ id: `cm-${h}`, label: `${h} cm` })),
       recordExpected: Object.fromEntries(stages.map((s, i) => [s.id, `cm-${g[i].shadowHeight}`])),
-      tiles: shuffle([{ id: "change", label: `First: only the ${q.config.moving} position changed; the screen stayed fixed.` }, { id: "evidence", label: `Evidence: shadow height changed from ${g[0].shadowHeight} cm to ${g.at(-1).shadowHeight} cm.` }, { id: "pattern", label: `So: ${pattern}` }, { id: "all", label: "So: every outdoor shadow follows this exact rule at every time of day." }, { id: "size", label: "First: the object's height changed to make the shadow change." }], rng), correctConclusionIds: ["change", "evidence", "pattern"],
+      tiles: shuffle([{ id: "change", label: `First: only the ${mover} moved. The screen stayed still.` }, { id: "evidence", label: `Evidence: the shadow height changed from ${g[0].shadowHeight} cm to ${g.at(-1).shadowHeight} cm.` }, { id: "pattern", label: `So: ${pattern[0].toLowerCase()}${pattern.slice(1)}.` }, { id: "all", label: "So: every shadow outdoors follows this rule at all times of day." }, { id: "size", label: "First: the height of the object changed." }], rng), correctConclusionIds: ["change", "evidence", "pattern"],
     };
   });
 }

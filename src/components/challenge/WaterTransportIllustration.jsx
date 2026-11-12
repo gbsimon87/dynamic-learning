@@ -88,9 +88,9 @@ export default function WaterTransportIllustration(props) {
       <svg viewBox="0 0 360 340" role="img" aria-labelledby={`${id}-title ${id}-desc`}>
         <title id={`${id}-title`}>{plan.rooted ? "Rooted plant" : "Cut stem in water"}</title>
         <desc id={`${id}-desc`}>
-          {plan.rooted ? "Roots below soil connect to the stem and parts above ground." : "The cut end of the stem is in the water. No roots are attached. The top is above the water line."}{" "}
-          {evidence || "The diagram labels the parts."} Dots mark visible dye in the supplied observation.
-          {shown.length > 0 && ` Dye dots are shown on the ${shown.map((part) => names[part].toLowerCase()).join(" and ")}.`}
+          {plan.rooted ? "Roots under the soil join the stem and the parts above the ground." : "The cut end of the stem is in the water. No roots are attached. The top is above the water."}{" "}
+          {evidence || "The diagram labels the parts."} Dots show where dye can be seen.
+          {shown.length > 0 && ` Dye dots are on the ${shown.map((part) => names[part].toLowerCase()).join(" and ")}.`}
         </desc>
         <PlantDefs id={id} />
         {plan.rooted ? (
@@ -113,7 +113,7 @@ export default function WaterTransportIllustration(props) {
         />
       </svg>
       <figcaption>
-        {plan.rooted ? "A rooted flowering plant. The soil is shown cut away." : "A cut stem with no roots. Stem sections are shown as an inside view; dots mark dye seen in the observation."} {evidence}
+        {plan.rooted ? "A flowering plant with roots. The soil is cut away." : "A cut stem standing in coloured water. Dots show where dye can be seen."} {evidence}
         <ScienceCredit>{plan.rooted ? `${CREDITS.bioicons}. ${model === "tree" ? CREDITS.tree : CREDITS.fluent}` : CREDITS.fluent}</ScienceCredit>
       </figcaption>
     </figure>

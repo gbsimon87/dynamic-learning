@@ -77,7 +77,7 @@ export default function SkeletonIllustration(props) {
         })}
       </svg>
       <figcaption>
-        Bones of a human body, seen from the front. Some small bones are hard to see at this size.
+        The bones of a human body, seen from the front.
         <ScienceCredit>{CREDITS.bones}</ScienceCredit>
       </figcaption>
     </figure>

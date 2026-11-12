@@ -124,7 +124,7 @@ body.dark .adv-challenge .science-observation { background: color-mix(in srgb, v
 }
 .adv-challenge .choice-btn:hover:not(:disabled) { transform: translateY(-2px); }
 .adv-challenge .choice-btn.selected { border-color: var(--adv-slot); background: color-mix(in srgb, var(--adv-slot) 22%, var(--adv-card)); color: var(--adv-ink); }
-.adv-challenge .science-round > .submit-btn { border-radius: 999px; min-height: 54px; padding: 0 2rem; font-weight: 900; box-shadow: 0 5px 0 color-mix(in srgb, var(--adv-ink) 30%, transparent); }
+.adv-challenge .science-round .submit-btn { border-radius: 999px; min-height: 54px; padding: 0 2rem; font-weight: 900; box-shadow: 0 5px 0 color-mix(in srgb, var(--adv-ink) 30%, transparent); }
 
 @media (max-width: 560px) {
   .adv-hero { flex-wrap: wrap; padding-bottom: 76px; }

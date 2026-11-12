@@ -142,12 +142,12 @@ test("viewing earlier observations preserves records; completed rounds cannot be
   for (const type of ["reset", "record", "finish", "conclusion"]) assert.equal(act(done, { type }), done);
 });
 test("independent science cases distinguish rooted uptake, cut-end uptake and limited evidence", () => {
-  assert.equal(ROUTE_BANK[0].answer, "Through its roots.");
-  assert.equal(ROUTE_BANK[10].answer, "At the cut end of its stem.");
+  assert.equal(ROUTE_BANK[0].answer, "Through its roots");
+  assert.equal(ROUTE_BANK[10].answer, "At the cut end of the stem");
   assert.deepEqual(INVESTIGATION_BANK[0].stages.at(-1).marks, ["stem", "flower"]);
   assert.deepEqual(INVESTIGATION_BANK[4].stages.at(-1).marks, ["leaves"]);
   assert.deepEqual(INVESTIGATION_BANK[8].stages.at(-1).marks, ["stem"]);
-  assert.ok(INVESTIGATION_BANK[8].conclusion.includes("does not show it reached a leaf"));
+  assert.ok(INVESTIGATION_BANK[8].conclusion.includes("do not know if it reached a leaf"));
   for (const q of INVESTIGATION_BANK) for (const stage of q.stages) {
     assert.equal(new Set(stage.marks).size, stage.marks.length);
     assert.ok(stage.marks.every((mark) => mark === "stem" || (q.model === "flower" && mark === "flower") || (q.model === "leafy" && mark === "leaves")));

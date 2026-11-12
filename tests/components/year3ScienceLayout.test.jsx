@@ -26,14 +26,14 @@ it("every Year 3 science game fills the science layout at every level", () => {
   expect(failures).toEqual([]);
 }, 60000);
 
-it("Parts of flowering plants challenge 4 puts the observation between the prompt and the tiles", () => {
+it("Parts of flowering plants challenge 4 puts the observation card before the question, and the question before the tiles", () => {
   const { container } = play(PartsOfFloweringPlantsGame, 4);
   const { prompt, check } = expectScienceLayout(container);
-  const observation = screen.getByText("Observation card");
+  const observation = screen.getByText("Look and remember");
   const tile = container.querySelector(".tile-tray-slot");
-  expect(before(prompt, observation)).toBe(true);
-  expect(before(observation, tile)).toBe(true);
+  expect(before(observation, prompt)).toBe(true);
+  expect(before(prompt, tile)).toBe(true);
   expect(screen.getByText("Science words").closest("details")).toBeTruthy();
   expect(check.disabled).toBe(true);
-  expect(screen.getByText("Use one ending. Tap a placed tile to take it back.")).toBeTruthy();
+  expect(screen.getByText("Tap one ending. Tap it again to take it back.")).toBeTruthy();
 });

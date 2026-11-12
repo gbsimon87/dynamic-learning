@@ -21,8 +21,8 @@ test("light banks have replay depth, deterministic unique runs and both lighting
 test("dark and lit observations independently explain seeing and the unchanged object's presence", () => {
   for (const object of OBJECTS) {
     const dark = lightingObservation(object, "lamp", false), lit = lightingObservation(object, "lamp", true);
-    assert.match(dark.text, /No light enters/); assert.match(dark.text, /still inside/); assert.match(dark.text, /cannot see/);
-    assert.match(lit.text, /gives out light/); assert.match(lit.text, /observer's eyes/); assert.match(lit.text, /can see/);
+    assert.match(dark.text, /No other light gets in/); assert.match(dark.text, /still inside/); assert.match(dark.text, /cannot see/);
+    assert.match(lit.text, /gives out light/); assert.match(lit.text, /Sam's eyes/); assert.match(lit.text, /can see/);
   }
   assert.deepEqual(ROUTES.map(r => r.states), [[false, false, true], [true, true, false], [true, false, true]]);
   for (const q of buildLightQuestions(3, rng(5))) {

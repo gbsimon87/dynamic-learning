@@ -24,7 +24,7 @@ export default function ShadowFigure({ observation, targets = [], measurement = 
     <g className="science-svg-text"><text x={sourceX - 5} y="273">{letter("source") || (observation.on ? "On" : "Off")}</text>{observation.blocks && <text x={objectX - 5} y="273">{letter("object")}</text>}<text x={screenX - 5} y="273">{blocked ? letter("shadow") : ""}</text>
       {measurement && blocked && <text x="327" y="145">{g.shadowHeight} cm</text>}
     </g>
-  </svg><figcaption>{observation.text}{measurement && <> Object height {g.height} cm; source → object {g.sourceDistance} cm; object → screen {g.screenDistance} cm. Shadow height: <strong>{blocked ? `${g.shadowHeight} cm` : "no cast shadow"}</strong>, to the nearest whole cm.</>}</figcaption>
+  </svg><figcaption>{observation.text}{measurement && <> Object height: {g.height} cm. Lamp to object: {g.sourceDistance} cm. Object to screen: {g.screenDistance} cm. Shadow height: <strong>{blocked ? `${g.shadowHeight} cm` : "no shadow"}</strong>.</>}</figcaption>
     {targets.length > 0 && <ul>{targets.map(t => <li key={t.id}><strong>{t.letter}</strong>: {t.text}.</li>)}</ul>}
   </figure>;
 }

@@ -27,7 +27,7 @@ test("compare answers describe the actual supplied pose sequences",()=>{
   for(const q of COMPARE_BANK) {
     const angles=q.poses.map(p=>MOVEMENT_POSES[p].angle);
     assert.equal(angles.length,3);
-    const independentlyDerived=angles[0]===angles[2] ? "The arm bends, then returns to straight." : angles[0]<angles[2] ? "The arm becomes more bent." : "The arm becomes straighter.";
+    const independentlyDerived=angles[0]===angles[2] ? "The arm bends, then goes back to straight." : angles[0]<angles[2] ? "The arm becomes more bent." : "The arm becomes straighter.";
     assert.equal(q.answer,independentlyDerived);
   }
 });

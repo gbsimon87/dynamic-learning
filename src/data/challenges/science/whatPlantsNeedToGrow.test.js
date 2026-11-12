@@ -154,8 +154,7 @@ test("independent observation cases include both directions and a tie; conclusio
     const last = question.stages.at(-1).heights;
     const aGrowth = last.A - first.A;
     const bGrowth = last.B - first.B;
-    assert.equal(question.conclusion, aGrowth === bGrowth ? "Both grew equally in this comparison." : aGrowth > bGrowth ? "A grew more than B in this comparison." : "B grew more than A in this comparison.");
-    assert.ok(question.conclusion.includes("in this comparison"));
+    assert.equal(question.conclusion, aGrowth === bGrowth ? "Both plants grew the same amount." : aGrowth > bGrowth ? "Plant A grew more than Plant B." : "Plant B grew more than Plant A.");
   }
   assert.deepEqual(NEEDS.map((need) => need.id), ["air", "light", "water", "nutrients", "room"]);
 });

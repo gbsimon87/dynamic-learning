@@ -1,9 +1,9 @@
 import { sample, shuffle } from "../english/shared.js";
 import { exactRecord } from "./forcesShared.js";
-export const GLOSS = "A magnetic material is noticeably attracted by an ordinary classroom magnet. Iron and ordinary carbon steel are examples. Not every metal is magnetic. These supplied tests use prepared equal-size pieces from named materials, the same magnet and starting gap, and the same observation method. No noticeable attraction in this test is the classroom description, not a measurement of tiny laboratory effects. A material sample need not itself be a magnet.";
+export const GLOSS = "A magnetic material is pulled towards a magnet. Iron and steel are magnetic. Not every metal is magnetic. A piece of iron is not a magnet itself, but a magnet can pull it. In a fair test, we use the same magnet and the same size of piece each time.";
 export const MATERIALS = [
   ["iron-washer", "iron from a washer", "iron", true, true], ["iron-strip", "iron from a strip", "iron", true, true], ["iron-bolt", "iron from a bolt", "iron", true, true],
-  ["steel-clip", "ordinary steel from a paperclip", "ordinary carbon steel", true, true], ["steel-nail", "ordinary steel from a nail", "ordinary carbon steel", true, true], ["steel-pin", "ordinary steel from a pin", "ordinary carbon steel", true, true], ["steel-screw", "ordinary steel from a screw", "ordinary carbon steel", true, true],
+  ["steel-clip", "steel from a paperclip", "ordinary carbon steel", true, true], ["steel-nail", "steel from a nail", "ordinary carbon steel", true, true], ["steel-pin", "steel from a pin", "ordinary carbon steel", true, true], ["steel-screw", "steel from a screw", "ordinary carbon steel", true, true],
   ["aluminium-foil", "aluminium from foil", "aluminium", false, true], ["aluminium-block", "aluminium from a block", "aluminium", false, true],
   ["copper-disc", "copper from a disc", "copper", false, true], ["copper-wire", "copper from wire", "copper", false, true],
   ["wood", "wood from a block", "wood", false, false], ["cotton", "cotton cloth", "cotton", false, false], ["plastic", "plastic from a cube", "plastic", false, false], ["card", "paper card", "paper", false, false],
@@ -18,12 +18,12 @@ export const ENQUIRY_BANK = [
   ["steel-clip", "aluminium-foil", "wood"], ["steel-nail", "copper-disc", "card"], ["steel-pin", "aluminium-block", "plastic"],
   ["steel-screw", "copper-wire", "wood"], ["iron-washer", "aluminium-foil", "cotton"], ["iron-strip", "copper-disc", "wood"],
 ].map((ids, i) => ({ id: `enquiry-${i}`, group: i % 3, samples: ids.map(find) }));
-export const OUTCOMES = [{ id: "attracted", label: "Noticeably attracted in this test" }, { id: "not-attracted", label: "No noticeable attraction in this test" }];
-export const SETUP_CARDS = [{ id: "material", label: "Material sample tested" }, { id: "size", label: "Prepared sample size" }, { id: "magnet", label: "Magnet used" }, { id: "gap", label: "Starting gap from the magnet" }, { id: "method", label: "Observation method and time" }];
+export const OUTCOMES = [{ id: "attracted", label: "Attracted to the magnet" }, { id: "not-attracted", label: "Not attracted to the magnet" }];
+export const SETUP_CARDS = [{ id: "material", label: "The material" }, { id: "size", label: "The size of each piece" }, { id: "magnet", label: "The magnet" }, { id: "gap", label: "How far the piece starts from the magnet" }, { id: "method", label: "How and how long we watch" }];
 const setupExpected = Object.fromEntries(SETUP_CARDS.map(c => [c.id, c.id === "material" ? "change" : "keep"]));
 export function materialObservation(s, i = 0) {
-  return { id: s.id, label: `Sample ${String.fromCharCode(65 + i)}`, sample: s,
-    text: `Sample ${String.fromCharCode(65 + i)} is a prepared equal-size piece of ${s.label}. Using the same classroom magnet, starting gap and observation method, ${s.attracted ? "noticeable movement towards the magnet was recorded" : "no noticeable attraction was recorded"}. This is a supplied test result, not something guessed from colour or shape.` };
+  return { id: s.id, label: `Piece ${String.fromCharCode(65 + i)}`, sample: s,
+    text: `Piece ${String.fromCharCode(65 + i)} is ${s.label}, cut to the same size as the others. The same magnet and the same start distance are used. The piece ${s.attracted ? "moved towards the magnet" : "did not move towards the magnet"}. This is a test result, not a guess from colour or shape.` };
 }
 export function buildMaterialsQuestions(level, rng) {
   if (![1, 2, 3, 4].includes(level)) throw new RangeError("Unknown magnetic materials level");
@@ -34,9 +34,9 @@ export function buildMaterialsQuestions(level, rng) {
     const stages = q.samples.map(materialObservation), expected = Object.fromEntries(q.samples.map(s => [s.id, s.attracted ? "attracted" : "not-attracted"]));
     return { ...q, level, stages, answer: q.samples[0].attracted ? OUTCOMES[0].label : OUTCOMES[1].label, options: shuffle(OUTCOMES.map(o => o.label), rng),
       recordCards: shuffle(stages.map(s => ({ id: s.id, label: `${s.label}: ${s.sample.label}` })), rng), recordBins: OUTCOMES, recordExpected: expected,
-      setupCards: shuffle(SETUP_CARDS, rng), setupExpected, setupPrompt: "Compare these material samples fairly.", title: "Are all these metals attracted by a magnet?", setup: "Test the prepared material pieces using the same size, magnet, starting gap and observation method. Inspect each supplied result before recording it.",
-      predictionOptions: ["All the metal samples may be attracted.", "Only some of these samples may be attracted.", "No sample may be noticeably attracted.", "I am not sure yet."], recordPrompt: "Record the observed attraction for each named sample, not whether it looks shiny or is a metal.", setupHint: "Change the material. Keep sample size, magnet, starting gap and method the same.", recordHint: "Read each sample's movement note. A metal label alone does not tell you its observed result.", conclusionHint: "Use the matched method and results, then compare the iron/steel and aluminium/copper examples.",
-      tiles: shuffle([{ id: "method", label: "First: test equal-size samples with the same magnet, starting gap and method." }, { id: "evidence", label: `Evidence: ${stages.map(s => `${s.label} ${s.sample.attracted ? "was attracted" : "showed no noticeable attraction"}`).join("; ")}.` }, { id: "metals", label: "So: some metals in this test were attracted and some were not. Not all metals are magnetic." }, { id: "all", label: "So: all metals must be attracted because they are shiny." }, { id: "magnet", label: "So: every attracted sample must already be a magnet with labelled poles." }], rng), correctConclusionIds: ["method", "evidence", "metals"],
+      setupCards: shuffle(SETUP_CARDS, rng), setupExpected, setupPrompt: "What changes and what stays the same?", title: "Which of these materials are attracted by a magnet?", setup: "We test pieces of different materials with the same magnet. Look at each result before you record it.",
+      predictionOptions: ["All of the pieces will be attracted", "Only some of the pieces will be attracted", "No piece will be attracted", "I am not sure yet"], recordPrompt: "Record what happened to each piece. Do not guess because it is shiny.", setupHint: "Change the material. Keep the size, the magnet, the start distance and how we watch the same.", recordHint: "Read the note for each piece. Being a metal does not tell you the result.", conclusionHint: "Say how the test was fair. Then say what happened. Then say what it shows about metals.",
+      tiles: shuffle([{ id: "method", label: "First: we tested same-size pieces with the same magnet and the same start distance." }, { id: "evidence", label: `Evidence: ${stages.map(s => `${s.label} ${s.sample.attracted ? "was attracted" : "was not attracted"}`).join(", ")}.` }, { id: "metals", label: "So: some metals were attracted and some were not. Not all metals are magnetic." }, { id: "all", label: "So: all metals must be attracted because they are shiny." }, { id: "magnet", label: "So: every attracted piece must already be a magnet with poles." }], rng), correctConclusionIds: ["method", "evidence", "metals"],
     };
   });
 }
