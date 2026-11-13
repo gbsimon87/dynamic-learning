@@ -2,7 +2,7 @@ import { lesson, detective, sort, order, year6Topic, LOCAL_TIMELINE } from "./au
 export const theJarrowMarch1936 = year6Topic(["https://www.nationalarchives.gov.uk/education/", "https://www.bbc.co.uk/bitesize/topics/zq2qhyc", "https://www.parliament.uk/about/living-heritage/"], [
   lesson("🚶", "Marching for work", [
     ["In October 1936, about 200 men set off from Jarrow.", "How many men set off from Jarrow?", "about 200", "about 20", "about 2,000"],
-    ["They marched about 280 miles to London.", "Where did the men march to?", "London", "Glasgow", "Cardiff"],
+    ["They marched about 300 miles to London.", "Where did the men march to?", "London", "Glasgow", "Cardiff"],
     ["They were asking for work, because the shipyard had closed.", "What were the men asking for?", "work", "holidays", "free ships"],
     ["Ellen Wilkinson, Jarrow's MP, walked part of the way.", "Who was Jarrow's MP in 1936?", "Ellen Wilkinson", "Winston Churchill", "Florence Nightingale"],
     ["A petition, signed by thousands of local people, was presented to Parliament.", "What was presented to Parliament?", "a petition", "a model ship", "a new law"],

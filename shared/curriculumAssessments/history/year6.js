@@ -88,7 +88,7 @@ export default defineAssessmentBank({ year: 6, subject: "history", quests: {
     ] },
     "the-jarrow-march-1936": { objective: "Explains why and how the marchers went to London and what it showed.", items: [
       { q: "About how many men set off from Jarrow in October 1936?", a: "About 200", d: ["About 20", "About 20,000"], practice: 1,
-        why: "About 200 men marched about 280 miles to London." },
+        why: "About 200 men marched about 300 miles to London." },
       { q: "Why did the men march to London?", a: "To ask for work after the shipyard closed", d: ["To join the army", "To celebrate the shipyard closing"], practice: 1,
         why: "They carried a petition, signed by thousands of local people, to Parliament." },
       { q: "Put these events in order, oldest first.", order: ["Jarrow's monastery is founded", "Palmer's shipyard opens", "The shipyard closes", "The Jarrow March"], practice: 2,

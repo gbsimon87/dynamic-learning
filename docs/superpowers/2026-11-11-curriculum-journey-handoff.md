@@ -206,12 +206,12 @@ one quiz per quest and one final. All 39 rows are authored and pass `check:journ
 | 2 | science | 4 | 19 | ✓ | ✓ | ✓ | partial | — |
 | 2 | history | 6 | 17 | ✓ | ✓ | ✓ | AI review | — |
 | 3 | math | 7 | 44 | ✓ | ✓ | ✓ | partial | — |
-| 3 | english | 8 | 32 | ✓ | ✓ | ✓ | partial | — |
+| 3 | english | 8 | 32 | ✓ | ✓ | ✓ | AI review | — |
 | 3 | geography | 5 | 16 | ✓ | ✓ | ✓ | AI review | — |
 | 3 | science | 5 | 21 | ✓ | ✓ | ✓ | partial | — |
 | 3 | history | 3 | 22 | ✓ | ✓ | ✓ | AI review | — |
 | 4 | math | 8 | 42 | ✓ | ✓ | ✓ | partial | — |
-| 4 | english | 8 | 33 | ✓ | ✓ | ✓ | partial | — |
+| 4 | english | 8 | 33 | ✓ | ✓ | ✓ | AI review | — |
 | 4 | geography | 5 | 16 | ✓ | ✓ | ✓ | AI review | — |
 | 4 | science | 5 | 20 | ✓ | ✓ | ✓ | partial | — |
 | 4 | history | 2 | 18 | ✓ | ✓ | ✓ | AI review | — |
@@ -287,8 +287,8 @@ full run merely to produce another handoff report.
 | Application changes | W01–W07 behind both flags. All 39 pathways authored (1,178 introductions, 3,001 candidates checked by `check:journey`). Flags **on for the dev service**, **off for production**. |
 | Implementation checks | 2026-11-12 final run: `npm run lint` pass; `npm run test:unit` 2,902 pass / 0 fail (5 skipped); `npm run test:components` 1,062 of 1,064 pass, the two failures being the previously documented Ocean porthole/starting-camera checks (load timeouts in other files pass on isolated rerun, 30/30); `npm run build` pass (70 pages prerendered); `npm run check:seo` pass; `check:journey -- --all` PASS; `journey:manifest -- --check` current. |
 | Browser evidence | One batched pass plus a confirmation pass at 390px and 1280px, light and dark: all 1,428 journey models render with no page errors and no page-level horizontal scroll. Fixed: geography maps rendered black in the journey (missing `--geo-*` tokens/stylesheet); latitude/longitude grid corner labels collided; two Y3 quiz points sat on the grid edge. Wide maths tables scroll inside their container on phones (intended). Not checked: real devices, narration, the full in-app quiz/final-test flow in a browser (covered by jsdom tests). |
-| Content/device/learner review | Independent model review (`AI review` in the ledger) of 23 pathways: every fact, answer, distractor and practice slot checked against the challenge banks. Maths/English Y1–6 and Science Y1–4 have partial review only. No teacher, child or device review. |
-| Blocking owner decisions | Production flag flip; Jarrow March distance (challenges say ~280 miles, many references ~300). |
+| Content/device/learner review | Independent model review (`AI review` in the ledger) of 23 pathways: every fact, answer, distractor and practice slot checked against the challenge banks. Maths Y1–6, English Y1–2 and Y5–6, and Science Y1–4 have partial review only; Y3/Y4 English had a full model answer review on 2026-11-13. No teacher, child or device review. |
+| Blocking owner decisions | Production flag flip. (Jarrow March distance resolved 2026-11-13: now "about 300 miles" everywhere.) |
 
 Append concise packet evidence here when implementation begins. Include actual
 commands, result totals, changed revision/scope, limitations and next unfinished
@@ -416,8 +416,8 @@ with 0 gaps (introductions/candidates):
 | Y4 Maths | 51 | 162 | Rhombus item slightly debatable (see agent note); 4-digit numbers without commas as in the lessons |
 | Y1 English | 47 | 153 | No speech; handwriting/phonics sounds/dictation sampled indirectly |
 | Y2 English | 49 | 172 | Practice slots set by input kind, not checked against each lesson: **spot-check needed** |
-| Y3 English | 41 | 146 | **Agent stopped during its second answer-verification pass** — needs a full answer review |
-| Y4 English | 42 | 156 | Same as Y3 English |
+| Y3 English | 41 | 146 | Full answer review done 2026-11-13 (see below) |
+| Y4 English | 42 | 156 | Full answer review done 2026-11-13 (see below) |
 
 Coordinator sampled ~40 random items across these pathways and found no wrong
 answers; one Y3 Maths rounding-to-100 item matches the existing Y3 lesson even
@@ -431,6 +431,10 @@ wait was raised to 5 s because the map stays hidden while larger content loads);
 `npm run journey:manifest -- --check` current; `npm run lint` clean.
 Earlier this session: 129 progress/account/store/SEO regressions and 47
 existing component tests passed after the shared-route/deletion changes.
+
+**Y3/Y4 English answer review (2026-11-13).** Every quiz question, answer, distractor and explanation in the Y3 and Y4 English banks (302 items), plus all 83 introductions, re-read by a model reviewer. Practice slots match the lesson titles. No wrong answers found. Fixed: an ordering question with more than one valid order (Y4 noun phrase, now in chunks); "Which word is spelt correctly?" questions whose distractors were real words (vain, vane, seen) or the US spelling neighbor; a sort card that contained its own answer (whether); a missing comma after the fronted adverbial "After lunch" in a Y4 question; a sort asking about an "underlined" idea when nothing was underlined; "said Zoe" vs "Zoe said"; a comma splice with "therefore" on a sort card; the Y3 "Six prefixes" table that listed four; and the Y3 grammar intro's "a unicorn" example, which contradicted the vowel-letter rule. The Y3 type-in question "It was icy, ___ the school closed." still accepts "therefore" so children are not marked wrong. Checks: scoped `check:journey` 0 gaps for both, `journey:manifest -- --check` current, eslint clean, journey unit tests 20 pass. No teacher or child review.
+
+**Jarrow March distance (2026-11-13).** Owner chose "about 300 miles". Updated the Y6 History challenge bank, introduction and quiz explanation.
 
 ### Content batch procedure (for the next session)
 

@@ -33,7 +33,7 @@ export default defineIntroductions({
           learn: ["A prefix goes at the start of a word and changes its meaning.", "dis, mis, in, re, sub and inter each have their own meaning."],
           use: "You will use these every day in words like redo, misspell and disagree.",
           ex: "mis and spell make misspell. It means spell wrongly.",
-          model: table("Six prefixes", ["Prefix", "Meaning", "Word"], [["dis", "not", "disagree"], ["mis", "wrongly", "misspell"], ["re", "again", "redo"], ["sub", "under", "submarine"]], "A table showing dis means not in disagree, mis means wrongly in misspell, re means again in redo and sub means under in submarine."),
+          model: table("Six prefixes", ["Prefix", "Meaning", "Word"], [["dis", "not", "disagree"], ["mis", "wrongly", "misspell"], ["in", "not", "incorrect"], ["re", "again", "redo"], ["sub", "under", "submarine"], ["inter", "between", "international"]], "A table showing dis means not in disagree, mis means wrongly in misspell, in means not in incorrect, re means again in redo, sub means under in submarine and inter means between in international."),
         },
         "the-prefixes-super-anti-and-auto": {
           title: "Super, anti and auto",
@@ -102,8 +102,8 @@ export default defineIntroductions({
         title: "Grammar: words",
         learn: ["Choose a or an.", "See how words in the same family are linked."],
         use: "Small words and word links make your writing sound right.",
-        ex: "An umbrella, but a unicorn.",
-        model: table("A or an", ["Word", "Example"], [["a", "a unicorn"], ["an", "an umbrella"]], "A table showing a goes with a unicorn and an goes with an umbrella."),
+        ex: "An umbrella, but a bus.",
+        model: table("A or an", ["Word", "Example"], [["a", "a bus"], ["an", "an umbrella"]], "A table showing a goes with a bus and an goes with an umbrella."),
       },
       topics: {
         "a-or-an": {

@@ -268,8 +268,8 @@ export default defineAssessmentBank({
       "time-and-cause-words": { objective: "Uses conjunctions, adverbs and prepositions to express time and cause.", items: [
         { q: "Which word fits? We washed our hands ___ we ate our lunch.", a: "before", d: ["because of", "therefore", "during"], practice: 1,
           why: "before tells us when. The other words do not fit the sentence." },
-        { q: "Sort each sentence by whether the underlined idea is about when or why.",
-          sort: { bins: ["When", "Why"], cards: [["We went home after the film.", "When"], ["The match stopped because of the rain.", "Why"], ["Dad was late, so we ate without him.", "Why"], ["Soon, the bell rang.", "When"], ["While Mum cooked, I set the table.", "When"], ["It was icy, therefore the school closed.", "Why"]] }, practice: 2,
+        { q: "Sort each sentence by whether its time or cause word tells you when or why.",
+          sort: { bins: ["When", "Why"], cards: [["We went home after the film.", "When"], ["The match stopped because of the rain.", "Why"], ["Dad was late, so we ate without him.", "Why"], ["Soon, the bell rang.", "When"], ["While Mum cooked, I set the table.", "When"], ["It was icy. Therefore, the school closed.", "Why"]] }, practice: 2,
           why: "after, soon and while tell us when. because of, so and therefore tell us why." },
         { q: "Put the story in order.", order: ["Ana put her bag on her back.", "Next, she locked the door.", "Then, she walked to the bus stop.", "At last, the bus arrived."], practice: 3,
           why: "The sentence with no time word starts the story, then next, then, and at last comes at the end." },
@@ -301,7 +301,7 @@ export default defineAssessmentBank({
           why: "The speech marks hug the spoken words I like pizza. Dev said stays outside." },
         { q: "How many words does Zoe say out loud?", n: 5, practice: 1,
           evidence: [{ title: "Read", text: "Zoe said, “It is time for tea.”" }],
-          why: "She says It, is, time, for and tea. said Zoe is not spoken." },
+          why: "She says It, is, time, for and tea. Zoe said is not spoken." },
       ] },
     },
     "reading---non-fiction-and-poetry": {
