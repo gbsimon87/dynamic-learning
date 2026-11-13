@@ -56,9 +56,9 @@ function draw(v) {
           <div className="y1-pans"><span aria-hidden="true">🎒</span>{units("y1-units")}</div>
           <div className="y1-beam" /><span className="y1-fulcrum" aria-hidden="true">▲</span>
         </div> : <div className="y1-cup-measure">
-          <span className="y1-jug-icon" aria-hidden="true">▱</span><span>holds</span>{units("y1-cups")}
+          <span className="y1-jug-icon" aria-hidden="true">▱</span><span data-read-aloud="skip">holds</span>{units("y1-cups")}
         </div>}
-        <small>{v.measure === "mass" ? "Balanced with equal cubes" : `Each ${unit} is the same size`}</small>
+        <small data-read-aloud="skip">{v.measure === "mass" ? "Balanced with equal cubes" : `Each ${unit} is the same size`}</small>
       </div>;
     })}</div>;
     // `jugs` draws several labelled jugs; the label never says how full a jug is.

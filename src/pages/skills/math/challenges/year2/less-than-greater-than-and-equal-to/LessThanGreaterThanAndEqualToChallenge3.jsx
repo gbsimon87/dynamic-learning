@@ -36,7 +36,7 @@ function BuildChain({ question, submit, locked }) {
         {question.symbol === "<" ? "less than" : "greater than"} the next.
       </p>
 
-      <p className="statement">
+      <p className="statement" data-read-aloud="skip">
         {items.map((item, i) => (
           <span key={item.id}>
             {item.label}

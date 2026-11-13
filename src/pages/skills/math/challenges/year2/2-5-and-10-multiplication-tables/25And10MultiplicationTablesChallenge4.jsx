@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import NumberInput from "../../../../../../components/challenge/NumberInput";
 import { isCorrectNumber } from "../../../../../../data/challenges/numbersAndCounting";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildMixedTableFacts } from "../../../../../../data/challenges/multiplicationAndDivision";
 
 /**
  * Challenge 4 - the division facts that come with each table.
@@ -12,21 +12,8 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * has to be usable in both directions.
  */
 
-const FACTS = [
-  { text: "6 × 5", answer: 30 },
-  { text: "40 ÷ 10", answer: 4 },
-  { text: "9 × 2", answer: 18 },
-  { text: "35 ÷ 5", answer: 7 },
-  { text: "7 × 10", answer: 70 },
-  { text: "16 ÷ 2", answer: 8 },
-  { text: "8 × 5", answer: 40 },
-  { text: "90 ÷ 10", answer: 9 },
-  { text: "45 ÷ 5", answer: 9 },
-  { text: "4 × 2", answer: 8 },
-];
-
 function MultiplicationTablesChallenge4({ onComplete }) {
-  const questions = useMemo(() => shuffle(FACTS, Math.random).slice(0, 6), []);
+  const questions = useMemo(() => buildMixedTableFacts(Math.random), []);
 
   return (
     <ChallengeShell

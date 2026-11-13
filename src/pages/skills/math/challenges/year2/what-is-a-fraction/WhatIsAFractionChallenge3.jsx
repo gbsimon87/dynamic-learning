@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import DragToOrder from "../../../../../../components/challenge/DragToOrder";
-import { fractionValue } from "../../../../../../data/challenges/fractions";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildFractionOrdering } from "../../../../../../data/challenges/fractions";
 
 /**
  * Challenge 3 - order fractions by size.
@@ -15,55 +14,8 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * ambiguous and a correct arrangement could be marked wrong.
  */
 
-const SETS = [
-  [
-    { numerator: 1, denominator: 4 },
-    { numerator: 1, denominator: 3 },
-    { numerator: 1, denominator: 2 },
-    { numerator: 3, denominator: 4 },
-  ],
-  [
-    { numerator: 1, denominator: 3 },
-    { numerator: 3, denominator: 4 },
-    { numerator: 1, denominator: 4 },
-  ],
-  [
-    { numerator: 2, denominator: 4 },
-    { numerator: 1, denominator: 4 },
-    { numerator: 3, denominator: 4 },
-  ],
-  [
-    { numerator: 1, denominator: 4 },
-    { numerator: 1, denominator: 2 },
-    { numerator: 3, denominator: 4 },
-  ],
-  [
-    { numerator: 1, denominator: 3 },
-    { numerator: 1, denominator: 2 },
-    { numerator: 3, denominator: 4 },
-  ],
-  [
-    { numerator: 1, denominator: 4 },
-    { numerator: 1, denominator: 3 },
-    { numerator: 2, denominator: 4 },
-  ],
-];
-
-function buildQuestions(rng) {
-  return shuffle(SETS, rng).map((set) => {
-    const labels = set.map((f) => `${f.numerator}/${f.denominator}`);
-    const ordered = [...set]
-      .sort((a, b) => fractionValue(a) - fractionValue(b))
-      .map((f) => `${f.numerator}/${f.denominator}`);
-
-    const cards = shuffle(labels.map((label) => ({ id: label, label })), rng);
-    const solved = cards.every((card, i) => card.id === ordered[i]);
-    return { ordered, cards: solved ? [...cards].reverse() : cards };
-  });
-}
-
 function WhatIsAFractionChallenge3({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildFractionOrdering(Math.random), []);
 
   return (
     <ChallengeShell

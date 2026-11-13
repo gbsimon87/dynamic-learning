@@ -93,9 +93,9 @@ test("Year 2 tables have correct products within the requested tables and writte
 });
 
 test("Year 3 source regressions retain observations, physical tests, word meanings and fossil letters", () => {
-  const seeds = questionsForTopic("science:seed-dispersal", "application").filter((q) => /Example A/.test(JSON.stringify(q.model)));
+  const seeds = questionsForTopic("science:seed-dispersal", "application").filter((q) => /A: look closely/.test(JSON.stringify(q.model)));
   assert.ok(seeds.length);
-  for (const q of seeds) { assert.match(JSON.stringify(q.model), /Example A: look closely/); assert.match(JSON.stringify(q.model), /Example B: feature and movement/); }
+  for (const q of seeds) { assert.match(JSON.stringify(q.model), /A: look closely/); assert.match(JSON.stringify(q.model), /B: shape and movement/); }
   const rocks = questionsForTopic("science:comparing-and-grouping-rocks").filter((q) => /criterion|columns/.test(q.prompt));
   assert.ok(rocks.length);
   for (const q of rocks) assert.match(q.model.lines.join(" "), /scratch|water/i);

@@ -531,3 +531,51 @@ export function buildFractionStories(rng) {
     };
   });
 }
+
+// Builds what-is-a-fraction, challenge 3.
+export const FRACTION_ORDER_SETS = [
+  [
+    { numerator: 1, denominator: 4 },
+    { numerator: 1, denominator: 3 },
+    { numerator: 1, denominator: 2 },
+    { numerator: 3, denominator: 4 },
+  ],
+  [
+    { numerator: 1, denominator: 3 },
+    { numerator: 3, denominator: 4 },
+    { numerator: 1, denominator: 4 },
+  ],
+  [
+    { numerator: 2, denominator: 4 },
+    { numerator: 1, denominator: 4 },
+    { numerator: 3, denominator: 4 },
+  ],
+  [
+    { numerator: 1, denominator: 4 },
+    { numerator: 1, denominator: 2 },
+    { numerator: 3, denominator: 4 },
+  ],
+  [
+    { numerator: 1, denominator: 3 },
+    { numerator: 1, denominator: 2 },
+    { numerator: 3, denominator: 4 },
+  ],
+  [
+    { numerator: 1, denominator: 4 },
+    { numerator: 1, denominator: 3 },
+    { numerator: 2, denominator: 4 },
+  ],
+];
+
+export function buildFractionOrdering(rng) {
+  return shuffle(FRACTION_ORDER_SETS, rng).map((set) => {
+    const labels = set.map((f) => `${f.numerator}/${f.denominator}`);
+    const ordered = [...set]
+      .sort((a, b) => fractionValue(a) - fractionValue(b))
+      .map((f) => `${f.numerator}/${f.denominator}`);
+
+    const cards = shuffle(labels.map((label) => ({ id: label, label })), rng);
+    const solved = cards.every((card, i) => card.id === ordered[i]);
+    return { ordered, cards: solved ? [...cards].reverse() : cards };
+  });
+}

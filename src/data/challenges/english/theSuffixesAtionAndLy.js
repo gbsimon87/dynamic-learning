@@ -234,3 +234,72 @@ export function isBuildCorrect(question, placed) {
 
 /** Appendix 1's examples for –ation and –ly (Year 3 half). */
 export const APPENDIX_EXAMPLES = [...PATTERNS.ation.words, ...PATTERNS.ly.words];
+
+/** What each rule says, for the hints. */
+export const SUFFIX_RULE_TEXT = {
+  "ation:add": "Just add ation: inform → information.",
+  "ation:drop-e": "The root ends in e, so drop the e, then add ation: admire → admiration.",
+  "ly:add": "Just add ly, and keep every letter of the root: usual → usually.",
+  "ly:y-to-i": "The root ends in a consonant + y, so change the y to i, then add ly: happy → happily.",
+};
+
+/** The rules card shown with every level 1 question. */
+export const SUFFIX_RULES = [
+  "**ation** turns a verb (doing word) into a noun (naming word). A final e is dropped: admire → admiration.",
+  "**ly** turns an adjective (describing word) into an adverb (how word). Just add it: sad → sadly.",
+  "Consonant + y at the end? Change the y to i: happy → happily.",
+];
+
+/**
+ * One bank question in the shared English format that `EnglishPracticeGame`
+ * draws. The bank itself is unchanged: teacher practice and the course checker
+ * read it directly.
+ */
+export function toPracticeQuestion(q) {
+  const rule = SUFFIX_RULE_TEXT[`${q.suffix}:${q.rule}`];
+  if (q.kind === "pick") {
+    const struck = q.options.find((option) => option !== q.answer);
+    return {
+      kind: "choice", options: q.options, answer: q.answer,
+      blocks: [
+        { type: "rule", lines: SUFFIX_RULES },
+        { type: "prompt", text: "Which spelling is right?" },
+        { type: "sum", parts: [q.root, q.suffix] },
+      ],
+      hint: `It is not “${struck}”. ${rule}`,
+    };
+  }
+  if (q.kind === "sort") {
+    return {
+      kind: "sort", bins: q.bins, cards: q.cards,
+      blocks: [{ type: "prompt", text: q.prompt }],
+      hint: q.sortKind === "suffix"
+        ? "Three words go in each box. A doing word (you can “inform” or “relax”) takes ation. A describing word (you can be “sad” or “brave”) takes ly."
+        : "Three words go in each box. Look at the last letter: is it a y?",
+    };
+  }
+  if (q.kind === "build") {
+    return {
+      kind: "build", tiles: q.tiles, letters: true, answer: q.answer, minTiles: 2, inputLabel: "Your word",
+      blocks: [
+        { type: "prompt", text: "Use the tiles to build the new word.", speakBuilt: "Hear your word" },
+        { type: "sum", parts: [q.root, q.suffix] },
+      ],
+      hint: `${rule.split(":")[0]}.`,
+    };
+  }
+  return {
+    kind: "type", answer: q.answer, inputLabel: "The missing word", maxLength: 16, apostrophe: false,
+    blocks: [
+      { type: "picture", emoji: q.emoji },
+      { type: "prompt", text: "Read the sentence, or listen to it.", speak: { text: q.spoken, label: "Hear the sentence" } },
+      { type: "sentence", text: q.sentence, fill: true },
+      { type: "note", text: `(${q.root})` },
+    ],
+    hint: `The word looks like this: **${q.hint}**`,
+  };
+}
+
+export function buildSuffixPractice(level, rng) {
+  return buildSuffixQuestions(level, rng).map(toPracticeQuestion);
+}

@@ -3,10 +3,9 @@ import ChallengeShell from "../../../../../../components/challenge/ChallengeShel
 import NumberInput from "../../../../../../components/challenge/NumberInput";
 import PlaceValueBlocks from "../../../../../../components/challenge/PlaceValueBlocks";
 import {
-  blockPicture3,
   isCorrectNumber,
-  shuffleValues,
 } from "../../../../../../data/challenges/placeValue3Digit";
+import { buildReadBlocksQuestions } from "../../../../../../data/challenges/placeValue3Digit";
 
 /**
  * Challenge 2 — the rule must be inferred.
@@ -18,17 +17,8 @@ import {
  * A typed answer rather than options, so there is nothing to eliminate.
  */
 
-const NUMBERS = [146, 208, 315, 427, 530, 692];
-
-function buildQuestions(rng) {
-  return shuffleValues(NUMBERS, rng).map((value) => ({
-    value,
-    picture: blockPicture3(value),
-  }));
-}
-
 function PlaceValueIn3DigitNumbersChallenge2({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildReadBlocksQuestions(Math.random), []);
 
   return (
     <ChallengeShell

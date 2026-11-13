@@ -2,11 +2,7 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import PlaceValueBlocks from "../../../../../../components/challenge/PlaceValueBlocks";
-import {
-  blockPicture3,
-  digitsOf,
-  shuffleValues,
-} from "../../../../../../data/challenges/placeValue3Digit";
+import { buildPlaceDigitQuestions } from "../../../../../../data/challenges/placeValue3Digit";
 
 /**
  * Challenge 1 — the gentlest slot: the number is drawn, and the question names
@@ -17,34 +13,8 @@ import {
  * at?" problem so the only skill being tested is recognising the place.
  */
 
-const NUMBERS = [146, 253, 372, 418, 507, 630];
-
-function buildQuestions(rng) {
-  return shuffleValues(NUMBERS, rng).map((value) => {
-    const digits = digitsOf(value);
-    // Never ask about a place with nothing in it — "how many tens?" over an
-    // empty column is a trick, not a question.
-    const places = ["hundreds", "tens", "ones"].filter((p) => digits[p] > 0);
-    const place = places[Math.floor(rng() * places.length)];
-    const answer = digits[place];
-
-    // Options are the three digits actually on screen plus a near miss, so a
-    // learner who counts the wrong column lands on a real option.
-    const options = shuffleValues(
-      Array.from(
-        new Set([answer, digits.hundreds, digits.tens, digits.ones, answer + 1])
-      )
-        .filter((n) => n >= 0)
-        .slice(0, 4),
-      rng
-    );
-
-    return { value, place, answer, options, picture: blockPicture3(value) };
-  });
-}
-
 function PlaceValueIn3DigitNumbersChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildPlaceDigitQuestions(Math.random), []);
 
   return (
     <ChallengeShell

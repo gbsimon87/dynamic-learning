@@ -175,3 +175,55 @@ export function isSortCorrect(question, placement) {
 export function builtWord(question, placed) {
   return placed.map((id) => question.tiles.find((tile) => tile.id === id)?.label ?? "").join("");
 }
+
+/**
+ * One bank question in the shared English format that `EnglishPracticeGame`
+ * draws. The bank itself is unchanged: teacher practice and the course checker
+ * read it directly.
+ */
+export function toPracticeQuestion(q) {
+  if (q.kind === "pick") {
+    const struck = q.options.find((option) => option !== q.answer);
+    return {
+      kind: "choice", options: q.options, answer: q.answer, optionVariant: "",
+      blocks: [
+        { type: "picture", emoji: q.emoji },
+        { type: "sentence", text: q.sentence, fill: true },
+        { type: "prompt", text: `It means **${q.meaning}**. Tip: ${q.tip}` },
+      ],
+      hint: `It is not “${struck}”. Read the tip again and check each letter.`,
+    };
+  }
+  if (q.kind === "sort") {
+    return {
+      kind: "sort", bins: q.bins, cards: q.cards,
+      blocks: [{ type: "prompt", text: "Look carefully at every letter. Sort each word into the right box." }],
+      hint: "Three are spelt right and three are spelt wrong. Look for a missing letter, a doubled letter, or two letters swapped.",
+    };
+  }
+  if (q.kind === "build") {
+    return {
+      kind: "build", tiles: q.tiles, letters: true, answer: q.answer, minTiles: "all", inputLabel: "Your word",
+      blocks: [
+        { type: "picture", emoji: q.emoji },
+        { type: "sentence", text: q.sentence },
+        { type: "prompt", text: `It means **${q.meaning}**. Use every tile.` },
+      ],
+      hint: `It starts with **${q.word[0]}**.`,
+    };
+  }
+  return {
+    kind: "type", answer: q.answer, inputLabel: "The missing word", maxLength: 16, apostrophe: false,
+    blocks: [
+      { type: "picture", emoji: q.emoji },
+      { type: "prompt", text: "Read the sentence, or listen to it.", speak: { text: q.spoken, label: "Hear the sentence" } },
+      { type: "sentence", text: q.sentence, fill: true },
+      { type: "prompt", text: `It means **${q.meaning}**.` },
+    ],
+    hint: `The word looks like this: **${q.hint}**`,
+  };
+}
+
+export function buildWordsOftenMisspeltPractice(level, rng) {
+  return buildWordsOftenMisspeltQuestions(level, rng).map(toPracticeQuestion);
+}

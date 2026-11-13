@@ -10,6 +10,8 @@ import { composeReadAloud } from "../../data/mathSpeech.js";
  *   - visible text, in screen order: side-by-side pieces (number-line cells,
  *     cards in a row, table cells) join with commas, separate lines as
  *     sentences;
+ *   - the cards to drag or tiles to build with, gathered into one list after
+ *     the question: "The cards are 15, 55, 51 and 11.";
  *   - answer options (`.choice-btn` and friends), gathered into one question
  *     at the end: "Is it 18, 20 or 16?".
  *
@@ -22,7 +24,10 @@ import { composeReadAloud } from "../../data/mathSpeech.js";
  *     that is not an option, form fields, `aria-hidden` and hidden content;
  *   - visual aids whose text is only tick labels, column digits or the
  *     child's own working (`SKIP` below): reading "0, 10, 20 … 100" off a
- *     ruler is noise, not the question.
+ *     ruler is noise, not the question. That includes the tiles already
+ *     placed and any live preview of the child's arrangement, which a
+ *     challenge marks `data-read-aloud="skip"`: "Your number: 926" or a sum
+ *     that rebuilds as the cards move is the child's answer, not the question.
  *
  * A challenge whose question would be meaningless this way passes
  * `speak={(question) => string}` to ChallengeShell instead. Any element can
@@ -43,10 +48,20 @@ const SKIP = [
   ".pictogram", ".tally-chart", ".block-diagram", ".bar-chart", ".survey-tray",
   ".fraction-number-track", ".fraction-set-board", ".fraction-shade-scroll",
   ".robot-grid", ".perimeter-shape",
+  // A picture of the givens (place-value table, bars) repeats the question's numbers.
+  ".math-question-visual",
+  // A tile builder's answer row: the child's working, or "Tap the tiles below".
+  ".tile-answer",
 ].join(", ");
 
 /** Answer options: read together as "Is it …?". */
 const OPTION = ".choice-btn, .equivalent-option, .orientation-option";
+
+/** Cards to drag into order and tiles to build with: read as one list. */
+const TILE_SETS = [
+  { set: ".drag-strip", item: ".drag-card", noun: "cards" },
+  { set: ".tile-tray", item: ".tile-tray-slot", noun: "tiles" },
+];
 
 /** Buttons that show part of the question (a gap in a strip), not a control. */
 const READABLE_BUTTON = ".number-cell, .partition-cell";
@@ -81,12 +96,23 @@ function skipElement(element) {
   return element.tagName === "BUTTON" && !element.matches(READABLE_BUTTON);
 }
 
+/** An element's words, leaving out pictures and anything else `SKIP` hides. */
+function visibleText(element) {
+  let text = "";
+  element.childNodes.forEach((node) => {
+    if (node.nodeType === Node.TEXT_NODE) text += node.nodeValue;
+    else if (node.nodeType === Node.ELEMENT_NODE && !node.matches(SKIP)) text += ` ${visibleText(node)} `;
+  });
+  return text.replace(/\s+/g, " ").trim();
+}
+
 /**
- * Walks `root` and returns `{ segments, options }` for `composeReadAloud`.
- * Exported for tests; ChallengeShell uses `readAloudText`.
+ * Walks `root` and returns `{ segments, tiles, options }` for
+ * `composeReadAloud`. Exported for tests; ChallengeShell uses `readAloudText`.
  */
 export function collectQuestion(root) {
   const segments = [];
+  const tiles = [];
   const options = [];
   let buffer = "";
   let bufferList = false;
@@ -112,6 +138,13 @@ export function collectQuestion(root) {
     if (skipElement(node)) return;
     const style = window.getComputedStyle(node);
     if (isHidden(node, style)) return;
+    const tileSet = TILE_SETS.find(({ set }) => node.matches(set));
+    if (tileSet) {
+      // Card pictures are not read, so a set of shapes adds nothing.
+      const items = [...node.querySelectorAll(tileSet.item)].map(visibleText).filter(Boolean);
+      if (items.length) tiles.push({ noun: tileSet.noun, items });
+      return;
+    }
 
     if (isInline(style)) {
       node.childNodes.forEach(visit);
@@ -130,7 +163,7 @@ export function collectQuestion(root) {
 
   root.childNodes.forEach(visit);
   flush();
-  return { segments, options };
+  return { segments, tiles, options };
 }
 
 /** The whole spoken text for a question: title, question, options. */

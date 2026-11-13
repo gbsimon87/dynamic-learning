@@ -140,3 +140,69 @@ export function shuffleValues(values, rng) {
   }
   return copy;
 }
+
+// Builds place-value-in-3-digit-numbers, challenge 1.
+export const PLACE_DIGIT_NUMBERS = [146, 253, 372, 418, 507, 630];
+
+export function buildPlaceDigitQuestions(rng) {
+  return shuffleValues(PLACE_DIGIT_NUMBERS, rng).map((value) => {
+    const digits = digitsOf(value);
+    // Never ask about a place with nothing in it — "how many tens?" over an
+    // empty column is a trick, not a question.
+    const places = ["hundreds", "tens", "ones"].filter((p) => digits[p] > 0);
+    const place = places[Math.floor(rng() * places.length)];
+    const answer = digits[place];
+
+    // Options are the three digits actually on screen plus a near miss, so a
+    // learner who counts the wrong column lands on a real option.
+    const options = shuffleValues(
+      Array.from(
+        new Set([answer, digits.hundreds, digits.tens, digits.ones, answer + 1])
+      )
+        .filter((n) => n >= 0)
+        .slice(0, 4),
+      rng
+    );
+
+    return { value, place, answer, options, picture: blockPicture3(value) };
+  });
+}
+
+// Builds place-value-in-3-digit-numbers, challenge 2.
+export const READ_BLOCKS_NUMBERS = [146, 208, 315, 427, 530, 692];
+
+export function buildReadBlocksQuestions(rng) {
+  return shuffleValues(READ_BLOCKS_NUMBERS, rng).map((value) => ({
+    value,
+    picture: blockPicture3(value),
+  }));
+}
+
+// Builds place-value-in-3-digit-numbers, challenge 3.
+export const MAKE_NUMBER_NUMBERS = [132, 245, 306, 420, 514, 263];
+
+export function buildMakeNumberQuestions(rng) {
+  return shuffleValues(MAKE_NUMBER_NUMBERS, rng).map((value) => ({ value }));
+}
+
+// Builds place-value-in-3-digit-numbers, challenge 4.
+export const PARTITION_GAP_NUMBERS = [146, 252, 371, 435, 528, 617];
+
+export function buildPartitionGapQuestions(rng) {
+  return shuffleValues(PARTITION_GAP_NUMBERS, rng).map((value) => {
+    const regrouped = partitionRegrouped(value);
+    // Alternate the two forms where the number supports both. partitionRegrouped
+    // returns null when there is no ten to move, so it is never assumed.
+    const useRegrouped = regrouped !== null && rng() < 0.5;
+    const parts = useRegrouped ? regrouped : partitionStandard(value);
+    const hiddenIndex = Math.floor(rng() * parts.length);
+
+    return {
+      value,
+      parts,
+      hiddenIndex,
+      answer: parts[hiddenIndex],
+      useRegrouped,
+    };
+  });
+}

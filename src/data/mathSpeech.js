@@ -258,6 +258,18 @@ export function optionsSentence(options) {
   return isLong ? `Choose from: ${spoken.join("; ")}.` : `Is it ${list}?`;
 }
 
+/**
+ * The cards or tiles a child moves, as one list: "The tiles are 3, plus, 4,
+ * equals and 7." Each is spoken alone, so "+" is "plus" and "3/5" is "three
+ * fifths". `noun` is "cards" or "tiles".
+ */
+export function tilesSentence({ noun, items }) {
+  const spoken = items.map((item) => mathToSpeech(item)).filter(Boolean);
+  if (!spoken.length) return "";
+  const list = spoken.length === 1 ? spoken[0] : `${spoken.slice(0, -1).join(", ")} and ${spoken.at(-1)}`;
+  return spoken.length === 1 ? `The ${noun.replace(/s$/, "")} is ${list}.` : `The ${noun} are ${list}.`;
+}
+
 const STARTS_WITH_OPERATOR = /^[+＋−×÷=<>≈→]/;
 const ENDS_WITH_OPERATOR = /[+＋−×÷=<>≈→]$/;
 
@@ -290,9 +302,9 @@ export function joinSegments(segments) {
   return out;
 }
 
-/** The whole read-aloud: title, question, then the options as a question. */
-export function composeReadAloud({ title = "", segments = [], options = [] }) {
-  const parts = [mathToSpeech(title), mathToSpeech(joinSegments(segments)), optionsSentence(options)]
+/** The whole read-aloud: title, question, the cards or tiles, then the options as a question. */
+export function composeReadAloud({ title = "", segments = [], tiles = [], options = [] }) {
+  const parts = [mathToSpeech(title), mathToSpeech(joinSegments(segments)), ...tiles.map(tilesSentence), optionsSentence(options)]
     .filter(Boolean)
     .map((part) => (/[.?!:]$/.test(part) ? part : `${part}.`));
   return parts.join(" ");

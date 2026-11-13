@@ -290,3 +290,55 @@ export function isBuildCorrect(question, placed) {
 export const APPENDIX_EXAMPLES = ["dis", "mis", "in", "re", "sub", "inter"].flatMap(
   (prefix) => PATTERNS.prefixes.words[prefix]
 );
+
+/** The prefix meanings card shown with every level 1 question. */
+export const PREFIX_TABLE = PREFIXES.map((prefix) => [`${prefix}–`, MEANINGS[PREFIX_MEANING[prefix]]]);
+
+/**
+ * One bank question in the shared English format that `EnglishPracticeGame`
+ * draws. The bank itself is unchanged: teacher practice and the course checker
+ * read it directly.
+ */
+export function toPracticeQuestion(q) {
+  if (q.kind === "pick") {
+    const struck = q.options.find((option) => option !== q.answer);
+    return {
+      kind: "choice", options: q.options, answer: q.answer, optionVariant: "",
+      blocks: [
+        { type: "rule", table: PREFIX_TABLE },
+        { type: "picture", emoji: q.emoji },
+        { type: "prompt", text: `Which prefix makes a word that means **${q.meaning}**?` },
+        { type: "sum", parts: [null, q.root] },
+      ],
+      hint: `It is not “${struck}”. Find the meaning in the table, then read the prefix next to it.`,
+    };
+  }
+  if (q.kind === "sort") {
+    return {
+      kind: "sort", bins: q.bins, cards: q.cards,
+      blocks: [{ type: "prompt", text: "What does the prefix at the start of each word mean?" }],
+      hint: "Each box gets two words. Cover the prefix and read the root word, then ask: is it “not”, “again”, “under”…?",
+    };
+  }
+  if (q.kind === "build") {
+    return {
+      kind: "build", tiles: q.tiles, letters: true, answer: q.answer, minTiles: 2, inputLabel: "Your word",
+      blocks: [{ type: "prompt", text: `Make a word that means **${q.meaning}**.`, speakBuilt: "Hear your word" }],
+      hint: `Use two tiles. The prefix is **${q.prefix}–**. Keep every letter of the root word, even if two letters end up the same.`,
+    };
+  }
+  return {
+    kind: "type", answer: q.answer, inputLabel: "The missing word", maxLength: 16, apostrophe: false,
+    blocks: [
+      { type: "picture", emoji: q.emoji },
+      { type: "prompt", text: "Read the sentence, or listen to it.", speak: { text: q.spoken, label: "Hear the sentence" } },
+      { type: "sentence", text: q.sentence, fill: true },
+      { type: "note", text: `(${q.root})` },
+    ],
+    hint: `The word looks like this: **${q.hint}**`,
+  };
+}
+
+export function buildAddingPrefixesPractice(level, rng) {
+  return buildAddingPrefixesQuestions(level, rng).map(toPracticeQuestion);
+}

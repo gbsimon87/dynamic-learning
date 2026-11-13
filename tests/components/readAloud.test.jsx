@@ -3,6 +3,8 @@ import { describe, expect, it, vi } from "vitest";
 import ChallengeShell from "../../src/components/challenge/ChallengeShell";
 import { ChallengeContext } from "../../src/components/challenge/challenge-context";
 import { readAloudText } from "../../src/components/challenge/readAloud";
+import DragToOrder from "../../src/components/challenge/DragToOrder";
+import TileBuilder from "../../src/components/challenge/TileBuilder";
 
 const spoken = vi.hoisted(() => []);
 vi.mock("../../src/utils/speech", () => ({
@@ -37,6 +39,36 @@ describe("reading a Maths question off the screen", () => {
       <p>Fill the gap.</p>
       <div class="number-line" style="display:flex"><span style="display:block">58</span><span style="display:block">59</span><span class="gap" style="display:block">?</span></div>`);
     expect(readAloudText(root, "")).toBe("Fill the gap. 58, 59, blank.");
+  });
+});
+
+describe("reading drag-and-build questions", () => {
+  it("reads the tiles to build with, never the placeholder or the tiles already placed", () => {
+    const tiles = [{ id: "a", label: "3/5" }, { id: "b", label: "+" }, { id: "c", label: "1/5" }];
+    const { container } = render(<div><p>Build the sum.</p><TileBuilder tiles={tiles} placed={[]} onChange={() => {}} /></div>);
+    expect(readAloudText(container, "Fractions")).toBe("Fractions. Build the sum. The tiles are three fifths, plus and one fifth.");
+    const placed = render(<div><p>Build the sum.</p><TileBuilder tiles={tiles} placed={["a"]} onChange={() => {}} /></div>);
+    expect(readAloudText(placed.container, "")).toBe("Build the sum. The tiles are three fifths, plus and one fifth.");
+  });
+
+  it("reads the cards to order once, as a list, and not a live preview of the child's arrangement", () => {
+    const items = [{ id: "a", label: "5" }, { id: "b", label: "16" }, { id: "c", label: "11" }];
+    const { container } = render(<div>
+      <p>Make a subtraction that is true.</p>
+      <p className="statement" data-read-aloud="skip">5 − 16 = 11</p>
+      <DragToOrder items={items} onReorder={() => {}} />
+    </div>);
+    expect(readAloudText(container, "")).toBe("Make a subtraction that is true. The cards are 5, 16 and 11.");
+  });
+
+  it("says nothing for cards that are only pictures, and skips a picture of the givens", () => {
+    const shapes = [{ id: "a", label: <svg role="img" aria-label="triangle" /> }, { id: "b", label: <svg role="img" aria-label="square" /> }];
+    const { container } = render(<div>
+      <p>Fewest sides first.</p>
+      <figure className="math-question-visual"><figcaption>A picture of the given numbers</figcaption><table><tbody><tr><td>8</td></tr></tbody></table></figure>
+      <DragToOrder items={shapes} onReorder={() => {}} />
+    </div>);
+    expect(readAloudText(container, "")).toBe("Fewest sides first.");
   });
 });
 

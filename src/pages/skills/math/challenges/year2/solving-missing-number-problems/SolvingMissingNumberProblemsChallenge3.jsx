@@ -36,7 +36,7 @@ function BuildSubtraction({ question, submit, locked }) {
         Drag the numbers to make this true. There is more than one right answer.
       </p>
 
-      <p className="statement">
+      <p className="statement" data-read-aloud="skip">
         <span>{values[0]}</span>
         <span>−</span>
         <span>{values[1]}</span>

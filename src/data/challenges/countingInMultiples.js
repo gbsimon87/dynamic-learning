@@ -129,3 +129,62 @@ export function multiplePicker(step, rng, { count = 6 } = {}) {
     correct: unique.filter((value) => isMultipleOf(value, step)),
   };
 }
+
+// Builds counting-in-multiples-of-4-8-50-and-100, challenge 1.
+export function buildNextMultipleQuestions(rng) {
+  // Two runs of each step, so all four are met.
+  const steps = shuffle([...STEPS, ...STEPS], rng).slice(0, 6);
+  return steps.map((step) => {
+    // reserve: 1 keeps the answer inside Year 3's range.
+    const sequence = sequenceWithin1000(step, 4, rng, { reserve: 1 });
+    return {
+      step,
+      sequence,
+      answer: sequence[sequence.length - 1] + step,
+      options: nextNumberOptions(sequence, step, rng),
+    };
+  });
+}
+
+// Builds counting-in-multiples-of-4-8-50-and-100, challenge 2.
+export function buildMissingMultipleQuestions(rng) {
+  const steps = shuffle([...STEPS, ...STEPS], rng).slice(0, 6);
+  return steps.map((step) => {
+    const sequence = sequenceWithin1000(step, 5, rng);
+    // Never the first or last term: an end gap is answerable without reading
+    // the whole run.
+    const gapIndex = 1 + Math.floor(rng() * (sequence.length - 2));
+    return { step, sequence, gapIndex, answer: sequence[gapIndex] };
+  });
+}
+
+// Builds counting-in-multiples-of-4-8-50-and-100, challenge 3.
+export function buildOrderMultiplesQuestions(rng) {
+  const steps = shuffle([...STEPS, ...STEPS], rng).slice(0, 6);
+  return steps.map((step) => {
+    const sequence = sequenceWithin1000(step, 5, rng);
+    // Shuffle until it is actually scrambled — handing back the answer already
+    // in order is not a question.
+    let scrambled = shuffle(sequence, rng);
+    let guard = 0;
+    while (scrambled.every((v, i) => v === sequence[i]) && guard++ < 10) {
+      scrambled = shuffle(sequence, rng);
+    }
+    return {
+      step,
+      sequence,
+      items: scrambled.map((value) => ({ id: String(value), label: String(value) })),
+    };
+  });
+}
+
+// Builds counting-in-multiples-of-4-8-50-and-100, challenge 4.
+export function buildNthMultipleQuestions(rng) {
+  const steps = shuffle([...STEPS, ...STEPS], rng).slice(0, 6);
+  return steps.map((step) => {
+    // Largest position whose answer is still inside Year 3's range.
+    const maxPosition = Math.min(12, Math.floor(1000 / step));
+    const position = 3 + Math.floor(rng() * Math.max(1, maxPosition - 3));
+    return { step, position, answer: step * position };
+  });
+}

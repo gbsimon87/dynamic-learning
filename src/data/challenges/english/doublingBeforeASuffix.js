@@ -258,3 +258,61 @@ export const EXCLUDED_ROOTS = [
   "pedal", "total", "fuel", "dial", "control", "patrol", "worship", "kidnap",
   "program", "focus", "benefit", "picnic", "panic", "gallop", "target",
 ];
+
+/** The stress rule card shown with every level 1 question. */
+export const DOUBLING_RULE = [
+  "Say the word. Is the **last** part said loudest (the stress)?",
+  "Yes, as in for·**GET**: double the last letter. forget → forgetting",
+  "No, as in **GAR**·den: just add the ending. garden → gardening",
+];
+
+/**
+ * One bank question in the shared English format that `EnglishPracticeGame`
+ * draws. The bank itself is unchanged: teacher practice and the course checker
+ * read it directly.
+ */
+export function toPracticeQuestion(q) {
+  const sayIt = ["Say it like this: ", { syllables: q.syllables ?? [] }];
+  if (q.kind === "pick") {
+    return {
+      kind: "choice", options: q.options, answer: q.answer,
+      blocks: [
+        { type: "rule", lines: DOUBLING_RULE },
+        { type: "sum", parts: [{ syllables: q.syllables }, q.suffix], speak: { text: q.root, label: "Hear the word", compact: true } },
+      ],
+      hint: "The loud part is the highlighted one. Is it at the end of the word, or at the start?",
+    };
+  }
+  if (q.kind === "sort") {
+    return {
+      kind: "sort", bins: q.bins, cards: q.cards,
+      blocks: [{ type: "prompt", text: "Say each root word aloud, then sort the cards.", speak: { text: q.cards.map((card) => card.root).join(". "), label: "Hear the words", compact: true } }],
+      hint: "Two words go in each box. Say each one, clapping the parts: which clap is loudest?",
+    };
+  }
+  if (q.kind === "build") {
+    return {
+      kind: "build", tiles: q.tiles, letters: true, answer: q.answer, minTiles: 2, inputLabel: "Your word",
+      blocks: [
+        { type: "sum", parts: [q.root, q.suffix], speak: { text: q.root, label: "Hear the root word", compact: true } },
+        { type: "speakBuilt", label: "Hear your word" },
+      ],
+      hint: [...sayIt, ". Is the loud part at the end?"],
+    };
+  }
+  return {
+    kind: "type", answer: q.answer, inputLabel: "The missing word", maxLength: 16, apostrophe: false,
+    blocks: [
+      { type: "picture", emoji: q.emoji },
+      { type: "prompt", text: "Read the sentence, or listen to it.", speak: { text: q.filled, label: "Hear the sentence" } },
+      { type: "sentence", text: q.sentence, fill: true },
+      { type: "note", text: `${q.root} + ${q.suffix}` },
+    ],
+    // No letter count here: it would tell the child whether it doubles.
+    hint: [...sayIt, `. Is the loud part at the end? Then double the last letter before ${q.suffix}.`],
+  };
+}
+
+export function buildDoublingPractice(level, rng) {
+  return buildDoublingQuestions(level, rng).map(toPracticeQuestion);
+}

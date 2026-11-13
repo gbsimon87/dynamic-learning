@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import NumberInput from "../../../../../../components/challenge/NumberInput";
 import { isCorrectNumber } from "../../../../../../data/challenges/numbersAndCounting";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildDoubleOrHalveProblems } from "../../../../../../data/challenges/multiplicationAndDivision";
 
 /**
  * Challenge 4 - doubling and halving inside stories, typed.
@@ -11,19 +11,9 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * problems use "half of" rather than "÷ 2" so the fraction language and the
  * division are the same move.
  */
-const PROBLEMS = [
-  { prompt: "A ribbon is 36 cm long. It is cut in half. How long is each piece?", answer: 18 },
-  { prompt: "Sam has 14 marbles. Ana has double that. How many has Ana?", answer: 28 },
-  { prompt: "There are 50 sweets. Half are eaten. How many are left?", answer: 25 },
-  { prompt: "A jug holds 30 ml. A bigger jug holds double. How much does it hold?", answer: 60 },
-  { prompt: "60 children are split into 2 equal teams. How many in each team?", answer: 30 },
-  { prompt: "A book has 24 pages. Tom has read half. How many pages has he read?", answer: 12 },
-  { prompt: "A plank is 45 cm. Another is double the length. How long is it?", answer: 90 },
-  { prompt: "There are 70 beads. Half are blue. How many are blue?", answer: 35 },
-];
 
 function DoublingAndHalvingUsingMultiplicationAndDivisionChallenge4({ onComplete }) {
-  const questions = useMemo(() => shuffle(PROBLEMS, Math.random).slice(0, 6), []);
+  const questions = useMemo(() => buildDoubleOrHalveProblems(Math.random), []);
 
   return (
     <ChallengeShell

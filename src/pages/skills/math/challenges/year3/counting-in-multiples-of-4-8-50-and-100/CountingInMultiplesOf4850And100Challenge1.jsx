@@ -4,10 +4,8 @@ import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
 import NumberLine from "../../../../../../components/challenge/NumberLine";
 import {
   STEPS,
-  nextNumberOptions,
-  sequenceWithin1000,
-  shuffle,
 } from "../../../../../../data/challenges/countingInMultiples";
+import { buildNextMultipleQuestions } from "../../../../../../data/challenges/countingInMultiples";
 
 /**
  * Challenge 1 — gentlest: the step is stated and the count is shown.
@@ -16,23 +14,8 @@ import {
  * above it. Nothing has to be worked out except the next term.
  */
 
-function buildQuestions(rng) {
-  // Two runs of each step, so all four are met.
-  const steps = shuffle([...STEPS, ...STEPS], rng).slice(0, 6);
-  return steps.map((step) => {
-    // reserve: 1 keeps the answer inside Year 3's range.
-    const sequence = sequenceWithin1000(step, 4, rng, { reserve: 1 });
-    return {
-      step,
-      sequence,
-      answer: sequence[sequence.length - 1] + step,
-      options: nextNumberOptions(sequence, step, rng),
-    };
-  });
-}
-
 function CountingInMultiplesOf4850And100Challenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildNextMultipleQuestions(Math.random), []);
 
   return (
     <ChallengeShell

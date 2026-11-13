@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { TABLES, multiply, nearMissDistractors } from "../../../../../../data/challenges/multiplicationAndDivision";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { TABLES } from "../../../../../../data/challenges/multiplicationAndDivision";
+import { buildTableRecall } from "../../../../../../data/challenges/multiplicationAndDivision";
 
 /**
  * NOTE ON THE NAME: the file must be 25And10MultiplicationTablesChallengeN.jsx
@@ -15,27 +15,8 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * near-miss is a plausible answer rather than an obvious throwaway.
  */
 
-function buildQuestions(rng) {
-  const facts = [];
-  for (const table of TABLES) {
-    for (const n of [2, 3, 4, 5, 6, 7, 8, 9, 10]) facts.push({ table, n });
-  }
-
-  return shuffle(facts, rng)
-    .slice(0, 6)
-    .map(({ table, n }) => {
-      const answer = multiply(n, table);
-      return {
-        table,
-        n,
-        answer,
-        options: shuffle([answer, ...nearMissDistractors(answer, table, 2, rng)], rng),
-      };
-    });
-}
-
 function MultiplicationTablesChallenge1({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildTableRecall(Math.random), []);
 
   return (
     <ChallengeShell

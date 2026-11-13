@@ -22,7 +22,8 @@ const SPECIES = [
     animate: animateFish,
   },
   { id: 'clownfish', discovery: CLOWNFISH_DISCOVERY, orbit: CLOWNFISH_ORBIT, radius: 0.9, home: { x: 12, z: 3, radius: 3, height: 3.1, lapSeconds: 24 }, count: 10, base: { radius: 3, height: 3.1, lapSeconds: 24 }, create: createOceanClownfish, animate: animateClownfish },
-  { id: 'sea-turtle', discovery: TURTLE_DISCOVERY, orbit: TURTLE_ORBIT, radius: 1.4, home: { x: 8, z: 20, radius: 4.5, height: 3.6, lapSeconds: 60 }, count: 7, base: { radius: 4.5, height: 3.6, lapSeconds: 60 }, create: createOceanTurtle, animate: animateTurtle },
+  // The turtle's loop sits off the starting camera's line of sight at every screen shape.
+  { id: 'sea-turtle', discovery: TURTLE_DISCOVERY, orbit: TURTLE_ORBIT, radius: 1.4, home: { x: 6, z: 22, radius: 4.5, height: 3.6, lapSeconds: 60 }, count: 7, base: { radius: 4.5, height: 3.6, lapSeconds: 60 }, create: createOceanTurtle, animate: animateTurtle },
   { id: 'eagle-ray', discovery: RAY_DISCOVERY, orbit: RAY_ORBIT, radius: 1.8, home: { x: -10, z: 10, radius: 3.5, height: 3.8, lapSeconds: 45 }, count: 7, base: { radius: 3.5, height: 3.8, lapSeconds: 45 }, create: createOceanRay, animate: animateRay },
   { id: 'seahorse', discovery: SEAHORSE_DISCOVERY, orbit: SEAHORSE_ORBIT, radius: 1.1, home: { x: -11, z: -13, radius: 2, height: 3.2, lapSeconds: 40 }, count: 8, base: { radius: 2, height: 3.2, lapSeconds: 40 }, create: createOceanSeahorse, animate: animateSeahorse },
   { id: 'reef-shark', discovery: SHARK_DISCOVERY, orbit: SHARK_ORBIT, radius: 1.7, count: 5, base: { radius: 6, height: 3.8, lapSeconds: 40 }, create: createOceanShark, animate: animateShark },

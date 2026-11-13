@@ -63,6 +63,7 @@ export function createOceanSubmarine(water) {
     }
     add(new THREE.BoxGeometry(0.85, 0.13, 0.85), 'metal', [side * 1.25, -0.4, 1.05]).rotation.y = side * 0.18;
   }
+  bolts.name = 'ocean-porthole-bolts';
   group.add(bolts);
 
   const lampMaterial = new THREE.MeshStandardMaterial({ color: '#e9f1dc', emissive: '#d6ebc7', emissiveIntensity: 1.2, roughness: 0.18 });

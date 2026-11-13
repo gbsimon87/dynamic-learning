@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { composeReadAloud, joinSegments, mathToSpeech, optionsSentence } from "./mathSpeech.js";
+import { composeReadAloud, joinSegments, mathToSpeech, optionsSentence, tilesSentence } from "./mathSpeech.js";
 
 const says = (pairs) => {
   for (const [shown, spoken] of pairs) assert.equal(mathToSpeech(shown), spoken, shown);
@@ -98,5 +98,15 @@ test("segments join as one sum, a row, or sentences", () => {
   assert.equal(
     composeReadAloud({ title: "Missing numbers", segments: [{ text: "12" }, { text: "+" }, { text: "?" }, { text: "= 20" }], options: ["6", "8", "10"] }),
     "Missing numbers. 12 plus what equals 20? Is it 6, 8 or 10?"
+  );
+});
+
+test("cards and tiles are one spoken list, each symbol read on its own", () => {
+  assert.equal(tilesSentence({ noun: "tiles", items: ["3/5", "+", "1/5", "=", "4/5"] }), "The tiles are three fifths, plus, one fifth, equals and four fifths.");
+  assert.equal(tilesSentence({ noun: "cards", items: ["£4"] }), "The card is 4 pounds.");
+  assert.equal(tilesSentence({ noun: "cards", items: [] }), "");
+  assert.equal(
+    composeReadAloud({ title: "Order", segments: [{ text: "Smallest first.", list: false }], tiles: [{ noun: "cards", items: ["15", "51"] }], options: [] }),
+    "Order. Smallest first. The cards are 15 and 51."
   );
 });

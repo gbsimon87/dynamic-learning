@@ -483,7 +483,7 @@ const COMBINE_STORIES = [
   { share: false, text: (a, b, s) => `A farmer collects ${a} eggs in the morning and ${b} eggs in the afternoon. He puts them all in boxes of ${s}. How many boxes does he fill?` },
   { share: false, text: (a, b, s) => `Class 2 has ${a} pencils and Class 3 has ${b} pencils. They put them all into pots of ${s}. How many pots are filled?` },
   { share: false, text: (a, b, s) => `There are ${a} children on one bus and ${b} children on another. They all make teams of ${s}. How many teams are there?` },
-  { share: true, text: (a, b, d) => `Sam bakes ${a} cookies and Zoe bakes ${b} cookies. They share all the cookies equally between ${d} plates. How many cookies go on each plate?` },
+  { share: true, text: (a, b, d) => `Sam bakes ${a} biscuits and Zoe bakes ${b} biscuits. They share all the biscuits equally between ${d} plates. How many biscuits go on each plate?` },
   { share: true, text: (a, b, d) => `There are ${a} books on one shelf and ${b} books on another. All the books are shared equally between ${d} tables. How many books go on each table?` },
 ];
 
@@ -735,4 +735,142 @@ export function buildArrayStories(rng) {
     }
     return { op: "÷", prompt: story.text(total, divisor), answer: other, options: numberOptions(other, 1, rng, [divisor]) };
   });
+}
+
+// Builds 2-5-and-10-multiplication-tables, challenge 1.
+export function buildTableRecall(rng) {
+  const facts = [];
+  for (const table of TABLES) {
+    for (const n of [2, 3, 4, 5, 6, 7, 8, 9, 10]) facts.push({ table, n });
+  }
+
+  return shuffle(facts, rng)
+    .slice(0, 6)
+    .map(({ table, n }) => {
+      const answer = multiply(n, table);
+      return {
+        table,
+        n,
+        answer,
+        options: shuffle([answer, ...nearMissDistractors(answer, table, 2, rng)], rng),
+      };
+    });
+}
+
+// Builds 2-5-and-10-multiplication-tables, challenge 2.
+export const ODD_EVEN_NUMBERS = [7, 14, 20, 33, 46, 51, 68, 75, 90, 13, 28, 100];
+
+export function buildOddOrEven(rng) {
+  return shuffle(ODD_EVEN_NUMBERS, rng)
+    .slice(0, 6)
+    .map((value) => ({
+      value,
+      answer: isEven(value) ? "even" : "odd",
+    }));
+}
+
+// Builds 2-5-and-10-multiplication-tables, challenge 3.
+export const TABLE_ORDER_SETS = [
+  ["3 × 5", "2 × 2", "10 × 10", "8 × 2"],
+  ["4 × 10", "6 × 5", "3 × 2", "9 × 2"],
+  ["7 × 5", "2 × 10", "5 × 2", "9 × 10"],
+  ["6 × 2", "8 × 5", "10 × 3", "4 × 2"],
+  ["9 × 5", "7 × 10", "2 × 6", "5 × 5"],
+  ["10 × 8", "4 × 5", "7 × 2", "6 × 10"],
+];
+
+export function productOf(expression) {
+  const [left, , right] = expression.split(" ");
+  return Number(left) * Number(right);
+}
+
+export function buildTableOrdering(rng) {
+  return shuffle(TABLE_ORDER_SETS, rng).map((set) => {
+    const ordered = [...set].sort((a, b) => productOf(a) - productOf(b));
+    const cards = shuffle(
+      set.map((expression) => ({ id: expression, label: expression })),
+      rng
+    );
+    const solved = cards.every((card, i) => card.id === ordered[i]);
+    return { ordered, cards: solved ? [...cards].reverse() : cards };
+  });
+}
+
+// Builds 2-5-and-10-multiplication-tables, challenge 4.
+export const MIXED_TABLE_FACTS = [
+  { text: "6 × 5", answer: 30 },
+  { text: "40 ÷ 10", answer: 4 },
+  { text: "9 × 2", answer: 18 },
+  { text: "35 ÷ 5", answer: 7 },
+  { text: "7 × 10", answer: 70 },
+  { text: "16 ÷ 2", answer: 8 },
+  { text: "8 × 5", answer: 40 },
+  { text: "90 ÷ 10", answer: 9 },
+  { text: "45 ÷ 5", answer: 9 },
+  { text: "4 × 2", answer: 8 },
+];
+
+export function buildMixedTableFacts(rng) {
+  return shuffle(MIXED_TABLE_FACTS, rng).slice(0, 6);
+}
+
+// Builds doubling-and-halving-using-multiplication-and-division, challenge 4.
+export const DOUBLE_OR_HALVE_PROBLEMS = [
+  { prompt: "A ribbon is 36 cm long. It is cut in half. How long is each piece?", answer: 18 },
+  { prompt: "Sam has 14 marbles. Ana has double that. How many has Ana?", answer: 28 },
+  { prompt: "There are 50 sweets. Half are eaten. How many are left?", answer: 25 },
+  { prompt: "A jug holds 30 ml. A bigger jug holds double. How much does it hold?", answer: 60 },
+  { prompt: "60 children are split into 2 equal teams. How many in each team?", answer: 30 },
+  { prompt: "A book has 24 pages. Tom has read half. How many pages has he read?", answer: 12 },
+  { prompt: "A plank is 45 cm. Another is double the length. How long is it?", answer: 90 },
+  { prompt: "There are 70 beads. Half are blue. How many are blue?", answer: 35 },
+];
+
+export function buildDoubleOrHalveProblems(rng) {
+  return shuffle(DOUBLE_OR_HALVE_PROBLEMS, rng).slice(0, 6);
+}
+
+// Builds solving-multiplication-and-division-problems, challenge 3.
+export const MIXED_FACT_ORDER_SETS = [
+  ["3 × 5", "40 ÷ 10", "6 ÷ 2", "50 ÷ 5"],
+  ["9 × 2", "30 ÷ 5", "4 × 10", "16 ÷ 2"],
+  ["100 ÷ 10", "6 × 5", "8 ÷ 2", "7 × 2"],
+  ["45 ÷ 5", "5 × 10", "12 ÷ 2", "4 × 2"],
+  ["8 × 10", "20 ÷ 5", "14 ÷ 2", "9 × 5"],
+  ["60 ÷ 10", "4 × 5", "18 ÷ 2", "10 × 10"],
+];
+
+export function valueOfFact(expression) {
+  const [left, operator, right] = expression.split(" ");
+  return operator === "×"
+    ? Number(left) * Number(right)
+    : Number(left) / Number(right);
+}
+
+export function buildMixedFactOrdering(rng) {
+  return shuffle(MIXED_FACT_ORDER_SETS, rng).map((set) => {
+    const ordered = [...set].sort((a, b) => valueOfFact(a) - valueOfFact(b));
+    const cards = shuffle(
+      set.map((expression) => ({ id: expression, label: expression })),
+      rng
+    );
+    const solved = cards.every((card, i) => card.id === ordered[i]);
+    return { ordered, cards: solved ? [...cards].reverse() : cards };
+  });
+}
+
+// Builds solving-multiplication-and-division-problems, challenge 4.
+export const TWO_STEP_PROBLEMS = [
+  { prompt: "There are 4 boxes with 5 cakes in each. The cakes are shared between 10 children. How many cakes each?", answer: 2 },
+  { prompt: "A shop has 3 shelves with 10 tins on each. 12 tins are sold. How many are left?", answer: 18 },
+  { prompt: "6 children each pick 5 apples. The apples are put into bags of 10. How many bags?", answer: 3 },
+  { prompt: "There are 2 rows of 10 chairs. Half the chairs are taken. How many are taken?", answer: 10 },
+  { prompt: "A tray holds 5 buns. There are 8 trays. The buns are shared equally between 10 shops. How many does each shop get?", answer: 4 },
+  { prompt: "9 bags hold 2 marbles each. 4 marbles are lost. How many marbles are left?", answer: 14 },
+  { prompt: "5 packs of 10 cards are shared between 5 children. How many cards each?", answer: 10 },
+  { prompt: "There are 7 pairs of shoes. 2 shoes are thrown away. How many shoes are left?", answer: 12 },
+];
+
+export function buildTwoStepProblems(rng) {
+  return shuffle(TWO_STEP_PROBLEMS, rng).slice(0, 6);
 }

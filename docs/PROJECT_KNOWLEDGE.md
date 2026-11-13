@@ -19,6 +19,7 @@ repository rules, then open only the reference your task needs. Source code and
 | Which checks to run | [VALIDATION.md](VALIDATION.md) |
 | Coding rules learned from past bugs | [ENGINEERING_RULES.md](ENGINEERING_RULES.md) |
 | Upcoming work | [PROJECT_IDEAS.md](PROJECT_IDEAS.md), [SOLAR_SYSTEM_IDEAS.md](SOLAR_SYSTEM_IDEAS.md) |
+| Reaching the first families | [OUTREACH.md](OUTREACH.md) |
 | Sounds | [sounds/README.md](sounds/README.md) |
 | Privacy and safeguarding questions | [safeguarding/REVIEW_BRIEF.md](safeguarding/REVIEW_BRIEF.md) |
 

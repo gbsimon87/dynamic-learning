@@ -2,6 +2,7 @@
 import { access, readFile, realpath } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import { resolveBespokeBank } from "./bespokeBanks.js";
 
 const cap = (value) => value[0].toUpperCase() + value.slice(1);
 const pascal = (value) => value.split("-").map(cap).join("");
@@ -57,9 +58,11 @@ export async function resolveBank({ root, year, subject, topicId, builder, expor
       return { build: questions(build), minQuestions: 5, paths, limitations };
     }
   }
+  // Years 2–3 Maths, Year 3 English/Science and dictation use their own
+  // question shapes; their registry lives in bespokeBanks.js.
+  const bespoke = await resolveBespokeBank({ year, subject, topicId, load, paths, limitations });
+  if (bespoke) return bespoke;
   if (subject === "english") {
-    // Dictation uses its memory-game response model, not DataChallenge kinds.
-    if (topicId === "dictation") return null;
     const relative = `src/data/challenges/english/year${year}${pascal(topicId)}.js`;
     if (!await exists(path.join(root, relative))) return null;
     const module = await load(relative);

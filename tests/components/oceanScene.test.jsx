@@ -232,7 +232,9 @@ it('keeps every side porthole rim visible outside the curved hull', () => {
     for (let i = 0; i < 12; i++) {
       const angle = i * Math.PI / 6;
       ray.set(new THREE.Vector3(side * 4, center.y + Math.sin(angle) * 0.3, center.z + Math.cos(angle) * 0.3), new THREE.Vector3(-side, 0, 0));
-      expect(ray.intersectObjects(submarine.children)[0]?.object.uuid).toBe(rim.uuid);
+      // The first thing hit is this porthole: its rim or the bolts on its face, never the hull.
+      const first = ray.intersectObjects(submarine.children)[0]?.object;
+      expect(first?.uuid === rim.uuid || first?.name === 'ocean-porthole-bolts').toBe(true);
     }
   }
 });

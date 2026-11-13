@@ -51,7 +51,7 @@ function ArrangeCards({ question, submit, locked }) {
       {/* What the cards currently spell, read straight off the strip. It is
           the learner's own arrangement rather than a hint, and seeing "047"
           is how the leading-zero rule stops being an abstraction. */}
-      <p className="challenge-running">
+      <p className="challenge-running" data-read-aloud="skip">
         Your number: <strong>{items.map((item) => item.label).join("")}</strong>
       </p>
 

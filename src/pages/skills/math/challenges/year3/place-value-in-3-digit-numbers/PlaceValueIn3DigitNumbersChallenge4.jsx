@@ -3,10 +3,8 @@ import ChallengeShell from "../../../../../../components/challenge/ChallengeShel
 import NumberInput from "../../../../../../components/challenge/NumberInput";
 import {
   isCorrectNumber,
-  partitionRegrouped,
-  partitionStandard,
-  shuffleValues,
 } from "../../../../../../data/challenges/placeValue3Digit";
+import { buildPartitionGapQuestions } from "../../../../../../data/challenges/placeValue3Digit";
 
 /**
  * Challenge 4 — applied, and the part that is genuinely new in Year 3.
@@ -20,29 +18,8 @@ import {
  * eliminate — the answer has to be worked out.
  */
 
-const NUMBERS = [146, 252, 371, 435, 528, 617];
-
-function buildQuestions(rng) {
-  return shuffleValues(NUMBERS, rng).map((value) => {
-    const regrouped = partitionRegrouped(value);
-    // Alternate the two forms where the number supports both. partitionRegrouped
-    // returns null when there is no ten to move, so it is never assumed.
-    const useRegrouped = regrouped !== null && rng() < 0.5;
-    const parts = useRegrouped ? regrouped : partitionStandard(value);
-    const hiddenIndex = Math.floor(rng() * parts.length);
-
-    return {
-      value,
-      parts,
-      hiddenIndex,
-      answer: parts[hiddenIndex],
-      useRegrouped,
-    };
-  });
-}
-
 function PlaceValueIn3DigitNumbersChallenge4({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildPartitionGapQuestions(Math.random), []);
 
   return (
     <ChallengeShell

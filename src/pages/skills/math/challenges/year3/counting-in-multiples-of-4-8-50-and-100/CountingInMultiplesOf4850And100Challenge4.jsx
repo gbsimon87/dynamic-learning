@@ -4,8 +4,8 @@ import NumberInput from "../../../../../../components/challenge/NumberInput";
 import {
   STEPS,
   isCorrectNumber,
-  shuffle,
 } from "../../../../../../data/challenges/countingInMultiples";
+import { buildNthMultipleQuestions } from "../../../../../../data/challenges/countingInMultiples";
 
 /**
  * Challenge 4 — applied, and nothing on screen to count.
@@ -15,18 +15,8 @@ import {
  * inside 1,000, which is what caps how far a question may ask.
  */
 
-function buildQuestions(rng) {
-  const steps = shuffle([...STEPS, ...STEPS], rng).slice(0, 6);
-  return steps.map((step) => {
-    // Largest position whose answer is still inside Year 3's range.
-    const maxPosition = Math.min(12, Math.floor(1000 / step));
-    const position = 3 + Math.floor(rng() * Math.max(1, maxPosition - 3));
-    return { step, position, answer: step * position };
-  });
-}
-
 function CountingInMultiplesOf4850And100Challenge4({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildNthMultipleQuestions(Math.random), []);
 
   return (
     <ChallengeShell

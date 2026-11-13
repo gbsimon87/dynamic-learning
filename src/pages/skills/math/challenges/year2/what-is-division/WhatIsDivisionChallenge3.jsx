@@ -36,7 +36,7 @@ function BuildDivision({ question, submit, locked }) {
         Move the cards to make the division true.
       </p>
 
-      <p className="statement">
+      <p className="statement" data-read-aloud="skip">
         <span>{values[0]}</span>
         <span>÷</span>
         <span>{values[1]}</span>

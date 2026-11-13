@@ -3,9 +3,8 @@ import ChallengeShell from "../../../../../../components/challenge/ChallengeShel
 import DragToOrder from "../../../../../../components/challenge/DragToOrder";
 import {
   STEPS,
-  sequenceWithin1000,
-  shuffle,
 } from "../../../../../../data/challenges/countingInMultiples";
+import { buildOrderMultiplesQuestions } from "../../../../../../data/challenges/countingInMultiples";
 
 /**
  * Challenge 3 — whole-structure work: put a scrambled count back in order.
@@ -16,27 +15,8 @@ import {
  * can never be marked wrong.
  */
 
-function buildQuestions(rng) {
-  const steps = shuffle([...STEPS, ...STEPS], rng).slice(0, 6);
-  return steps.map((step) => {
-    const sequence = sequenceWithin1000(step, 5, rng);
-    // Shuffle until it is actually scrambled — handing back the answer already
-    // in order is not a question.
-    let scrambled = shuffle(sequence, rng);
-    let guard = 0;
-    while (scrambled.every((v, i) => v === sequence[i]) && guard++ < 10) {
-      scrambled = shuffle(sequence, rng);
-    }
-    return {
-      step,
-      sequence,
-      items: scrambled.map((value) => ({ id: String(value), label: String(value) })),
-    };
-  });
-}
-
 function CountingInMultiplesOf4850And100Challenge3({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildOrderMultiplesQuestions(Math.random), []);
 
   return (
     <ChallengeShell

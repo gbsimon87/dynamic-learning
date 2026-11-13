@@ -53,7 +53,6 @@ test("unsupported and unregistered banks return null", async () => {
   assert.equal(await resolveBank({ root, year: 2, subject: "math", topicId: "unregistered" }), null);
   assert.equal(await resolveBank({ root, year: 5, subject: "science", topicId: "unregistered" }), null);
   assert.equal(await resolveBank({ root, year: 5, subject: "../science", topicId: "x" }), null);
-  for (const year of [1, 2, 3, 4, 5]) assert.equal(await resolveBank({ root, year, subject: "english", topicId: "dictation" }), null);
 });
 
 test("explicit module accepts arrays or envelopes and requires its selected export", async (t) => {

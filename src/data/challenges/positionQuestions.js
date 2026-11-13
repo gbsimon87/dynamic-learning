@@ -11,6 +11,7 @@
  */
 import { HEADINGS, TURNS, applyTurn, turnBetween, patternAt, describePosition, runProgram } from "./positionAndDirection.js";
 import { shuffle } from "./statistics.js";
+import { findShape } from "./shapes.js";
 
 export const QUESTION_COUNT = 6;
 
@@ -536,4 +537,9 @@ export function buildCornerRoute(rng) {
     (q) => `${q.start.x},${q.start.y},${q.start.heading}>${q.target.x},${q.target.y}`,
     rng
   );
+}
+
+// Builds patterns, challenge 3.
+export function buildTurnedShapes(rng) {
+  return buildOrientation(rng).map((q) => ({ ...q, shape: findShape(q.shapeId) }));
 }

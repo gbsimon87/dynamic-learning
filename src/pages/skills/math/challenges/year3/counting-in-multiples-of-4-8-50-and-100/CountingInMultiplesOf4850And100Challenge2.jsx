@@ -5,9 +5,8 @@ import NumberLine from "../../../../../../components/challenge/NumberLine";
 import {
   STEPS,
   isCorrectNumber,
-  sequenceWithin1000,
-  shuffle,
 } from "../../../../../../data/challenges/countingInMultiples";
+import { buildMissingMultipleQuestions } from "../../../../../../data/challenges/countingInMultiples";
 
 /**
  * Challenge 2 — the rule must be inferred.
@@ -17,19 +16,8 @@ import {
  * screen. The learner has to spot the step first, which is the actual skill.
  */
 
-function buildQuestions(rng) {
-  const steps = shuffle([...STEPS, ...STEPS], rng).slice(0, 6);
-  return steps.map((step) => {
-    const sequence = sequenceWithin1000(step, 5, rng);
-    // Never the first or last term: an end gap is answerable without reading
-    // the whole run.
-    const gapIndex = 1 + Math.floor(rng() * (sequence.length - 2));
-    return { step, sequence, gapIndex, answer: sequence[gapIndex] };
-  });
-}
-
 function CountingInMultiplesOf4850And100Challenge2({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildMissingMultipleQuestions(Math.random), []);
 
   return (
     <ChallengeShell

@@ -38,7 +38,7 @@ function BuildStatement({ question, submit, locked }) {
         label={`${question.rows} rows of ${question.columns} dots`}
       />
 
-      <p className="statement">
+      <p className="statement" data-read-aloud="skip">
         <span>{values[0]}</span>
         <span>×</span>
         <span>{values[1]}</span>

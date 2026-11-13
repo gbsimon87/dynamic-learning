@@ -4,6 +4,7 @@ import { isDeepStrictEqual } from "node:util";
 import { transformWithEsbuild } from "vite";
 import { lintBuild, seededRng } from "../../src/data/challenges/questionKinds.js";
 import { findMapping, repoPath } from "./topics.js";
+import { lintBespoke } from "./bespokeBanks.js";
 
 export async function checkWrappers(info) {
   const problems = [];
@@ -33,7 +34,9 @@ export async function checkBank(bank, { year, seeds = 50 }) {
     catch (error) { problems.push(`Subject validator failed: ${error.message}`); }
   }
   try {
-    const lintProblems = lintBuild(bank.build, { year, titles: bank.titles, seeds, minQuestions: bank.minQuestions ?? 3 });
+    const lintProblems = bank.model === "bespoke"
+      ? lintBespoke(bank.build, { year, seeds, minQuestions: bank.minQuestions })
+      : lintBuild(bank.build, { year, titles: bank.titles, seeds, minQuestions: bank.minQuestions ?? 3 });
     problems.push(...(bank.filterLintProblems ? bank.filterLintProblems(lintProblems) : lintProblems));
     for (const level of [1, 2, 3, 4]) {
       for (let seed = 1; seed <= seeds; seed += 1) {

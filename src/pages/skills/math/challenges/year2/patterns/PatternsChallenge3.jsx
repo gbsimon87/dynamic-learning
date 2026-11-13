@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import OrientationPicker from "../../../../../../components/challenge/OrientationPicker";
-import { findShape } from "../../../../../../data/challenges/shapes";
-import { buildOrientation } from "../../../../../../data/challenges/positionQuestions";
+import { buildTurnedShapes } from "../../../../../../data/challenges/positionQuestions";
 
 /**
  * Challenge 3 - the same shape, turned.
@@ -15,12 +14,8 @@ import { buildOrientation } from "../../../../../../data/challenges/positionQues
  * rotation is asked about at least once (see buildOrientation).
  */
 
-function buildQuestions(rng) {
-  return buildOrientation(rng).map((q) => ({ ...q, shape: findShape(q.shapeId) }));
-}
-
 function PatternsChallenge3({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildTurnedShapes(Math.random), []);
 
   return (
     <ChallengeShell

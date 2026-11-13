@@ -3,8 +3,8 @@ import ChallengeShell from "../../../../../../components/challenge/ChallengeShel
 import PlaceValueBlocks from "../../../../../../components/challenge/PlaceValueBlocks";
 import {
   buildNumberFromBlocks,
-  shuffleValues,
 } from "../../../../../../data/challenges/placeValue3Digit";
+import { buildMakeNumberQuestions } from "../../../../../../data/challenges/placeValue3Digit";
 
 /**
  * Challenge 3 — whole-structure work: build the number, don't read one.
@@ -14,14 +14,8 @@ import {
  * fifty to them. Reading challenges alone never expose that.
  */
 
-const NUMBERS = [132, 245, 306, 420, 514, 263];
-
-function buildQuestions(rng) {
-  return shuffleValues(NUMBERS, rng).map((value) => ({ value }));
-}
-
 function PlaceValueIn3DigitNumbersChallenge3({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildMakeNumberQuestions(Math.random), []);
 
   return (
     <ChallengeShell
@@ -61,7 +55,7 @@ function BuildNumber({ question, submit, locked }) {
         label={`Blocks you have placed, worth ${built}`}
       />
 
-      <p className="challenge-running" aria-live="polite">
+      <p className="challenge-running" aria-live="polite" data-read-aloud="skip">
         You have made <strong>{built}</strong>
       </p>
 

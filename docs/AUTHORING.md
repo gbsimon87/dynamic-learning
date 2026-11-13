@@ -174,7 +174,10 @@ one idea each; explicit actions ("Tap…", "Sort…"); British English. Keep the
 statutory demand and explain necessary vocabulary once rather than removing it.
 No double negatives or meta language ("supplied", "authored", "not graded").
 Options are similar in length and grammar with one clearly correct answer.
-`speak` matches the visible words. A clue card before a question reads as a fact
+`speak` matches the visible words. Maths "Read it to me" reads the screen
+(`src/components/challenge/readAloud.js`): it lists drag cards and build tiles
+for you, but mark any live preview of the child's arrangement
+`data-read-aloud="skip"`. A clue card before a question reads as a fact
 and the question stands alone. A wording pass never changes IDs, answer logic,
 counts or progress.
 
@@ -210,9 +213,13 @@ covered by its adapters; the course check runs it for every registered topic.
 Both accept `--json`, `--seeds N` (1–1000) and, for bespoke builders,
 `--builder PATH --export NAME`. An unsupported adapter is a limitation, not a
 pass; `--structure-only` narrows the check and must not be reported as a bank
-pass. Current adapter gaps: Year 2–3 Maths, Year 3 English/Science and
-dictation's memory-game model — use their subject suites. Maths custom answer
-acceptance needs its subject tests too. Do not replace a working interaction to
+pass. Years 2–3 Maths, Year 3 English/Science and dictation use their own
+question shapes: `scripts/curriculum/bespokeBanks.js` registers each topic's
+pure builder (a test keeps it in step with the wrappers) and checks replay,
+question count, readable text, UK spelling, Year 2 negatives and like-for-like
+answers among options. Keep builders in `src/data/challenges/`, not inside a
+wrapper. Their answer acceptance and shape-specific rules still need the
+builder's own test, as do Maths custom answers. Do not replace a working interaction to
 fit the checker. Extend jsdom playthroughs for retry, hints, full completion and
 the `{ combos }` payload.
 

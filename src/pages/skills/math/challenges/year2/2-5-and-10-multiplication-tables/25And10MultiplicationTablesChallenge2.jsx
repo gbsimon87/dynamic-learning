@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
 import ChallengeShell from "../../../../../../components/challenge/ChallengeShell";
 import ChoiceGrid from "../../../../../../components/challenge/ChoiceGrid";
-import { isEven } from "../../../../../../data/challenges/multiplicationAndDivision";
-import { shuffle } from "../../../../../../data/challenges/countingInSteps";
+import { buildOddOrEven } from "../../../../../../data/challenges/multiplicationAndDivision";
 
 /**
  * Challenge 2 - odd and even.
@@ -16,19 +15,8 @@ import { shuffle } from "../../../../../../data/challenges/countingInSteps";
  * numbers, so the rule has to be applied to the last digit rather than recalled.
  */
 
-const NUMBERS = [7, 14, 20, 33, 46, 51, 68, 75, 90, 13, 28, 100];
-
-function buildQuestions(rng) {
-  return shuffle(NUMBERS, rng)
-    .slice(0, 6)
-    .map((value) => ({
-      value,
-      answer: isEven(value) ? "even" : "odd",
-    }));
-}
-
 function MultiplicationTablesChallenge2({ onComplete }) {
-  const questions = useMemo(() => buildQuestions(Math.random), []);
+  const questions = useMemo(() => buildOddOrEven(Math.random), []);
 
   return (
     <ChallengeShell
