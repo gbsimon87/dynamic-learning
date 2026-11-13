@@ -142,16 +142,22 @@ export function mathToSpeech(text) {
   out = out.replace(/\b[A-Z]{3,}\b/g, (word) => (/^[IVXLCDM]+$/.test(word) ? word : word.toLowerCase()));
 
   // Money. "£3.50" → "3 pounds 50", "£1" → "1 pound", "45p" → "45 pence".
-  out = out.replace(/£(\d+)(?:\.(\d{2}))?/g, (_, pounds, pence) => {
+  // Thousands keep their commas ("£425,600" → "425,600 pounds"); "a £5 note" is a "5 pound note".
+  out = out.replace(/£(\d{1,3}(?:,\d{3})+|\d+)(?:\.(\d{2}))?/g, (_, pounds, pence) => {
     const p = pence && Number(pence) > 0 ? ` ${Number(pence)}` : "";
     if (pounds === "0" && p) return `${Number(pence)} pence`;
     return `${pounds} ${pounds === "1" ? "pound" : "pounds"}${p}`;
   });
+  out = out.replace(/\b(\d[\d,]*) pounds (note|coin)\b/g, "$1 pound $2");
   out = out.replace(/(^|[^\d.])(\d+)p\b/g, (_, before, n) => `${before}${n} ${n === "1" ? "penny" : "pence"}`);
 
   // "how many 4ths" → "quarters"; "Counting in 4s" → "fours".
   out = out.replace(/\b(\d+)(?:ths|rds|nds)\b/g, (whole, n) => FRACTION_NAMES[Number(n)]?.[1] ?? whole);
   out = out.replace(/\b(\d+)s\b/g, (whole, n) => PLURAL_NUMBERS[Number(n)] ?? whole);
+
+  // Mixed numbers: "2 5/6" → "2 and five sixths".
+  out = out.replace(/(^|[^\d/.,:])(\d+) (\d+)\/(\d+)(?![\d/])/g,
+    (_, before, whole, top, bottom) => `${before}${whole} and ${fractionWords(top, bottom)}`);
 
   // Fractions, with a unit straight after reading "of a kilometre".
   out = out.replace(
@@ -164,7 +170,11 @@ export function mathToSpeech(text) {
 
   // Units after a number (or a blank).
   out = out.replace(/(^|[^\d.:])(\d+(?:\.\d+)?|\?) ?°C/g, (_, before, n) => `${before}${n} ${unitName("°C", n)}`);
+  out = out.replace(/°C\b/g, "degrees Celsius");
   out = out.replace(/°/g, " degrees");
+  // Area and volume: "18 cm²" → "18 square centimetres".
+  out = out.replace(/(^|[^\d.:/])(\d+(?:\.\d+)?|\?) ?(mm|cm|km|m)([²³])/g,
+    (_, before, n, unit, power) => `${before}${n} ${power === "²" ? "square" : "cubic"} ${unitName(unit, n)}`);
   out = out.replace(
     /(^|[^\d.:/])(\d+(?:\.\d+)?|\?) ?(mm|cm|km|kg|ml|min|m|g|l)\b(?!['’])/g,
     (_, before, n, unit) => `${before}${n} ${unitName(unit, n)}`

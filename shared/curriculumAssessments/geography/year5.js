@@ -121,7 +121,7 @@ export default defineAssessmentBank({ year: 5, subject: "geography", quests: {
         why: "Latitude is read up the side. P is 20° north of the Equator." },
       { q: "What is point P's longitude?", a: "20° east", d: ["20° west", "40° east"], practice: 2, model: coords([20, -40]),
         why: "Longitude is read along the bottom. P is 20° east of the Prime Meridian." },
-      { q: "In a position such as 51°N, 0°, which number is written first?", a: "Latitude", d: ["Longitude", "The height above the sea"], practice: 1,
+      { q: "In a position such as 51°N, 0°, which number is written first?", say: "In a position such as 51 degrees north, 0 degrees, which number is written first?", a: "Latitude", d: ["Longitude", "The height above the sea"], practice: 1,
         why: "Latitude comes first, then longitude." },
     ] },
     "time-zones-and-journeys": { objective: "Explains time zones and works out local arrival times from supplied offsets.", items: [
@@ -140,7 +140,7 @@ export default defineAssessmentBank({ year: 5, subject: "geography", quests: {
         why: "Brown lines join places at the same height. Blue shows water." },
       { q: "What do contour lines very close together show?", a: "A steep slope", d: ["A flat area", "A river"], practice: 2,
         why: "Height changes quickly over a short distance on a steep slope." },
-      { q: "On a 1:50 000 map, 1 cm is 500 metres. How many kilometres is 6 cm?", n: 3, unit: "km", practice: 4,
+      { q: "On a 1:50 000 map, 1 cm is 500 metres. How many kilometres is 6 cm?", say: "On a one to fifty thousand map, 1 centimetre is 500 metres. How many kilometres is 6 centimetres?", n: 3, unit: "km", practice: 4,
         why: "6 × 500 m = 3000 m, which is 3 km." },
     ] },
     "designing-a-fieldwork-enquiry": { objective: "Rehearses planning an enquiry from supplied examples (not outdoor fieldwork).", items: [

@@ -25,12 +25,12 @@ export default defineAssessmentBank({ year: 6, subject: "english", version: 1, s
     "the-letter-string-ough": { objective: "Recognise familiar ough spellings and their varied pronunciations.", items: [
       { q: "Which of these words rhymes with rough?", a: "tough", d: ["through", "dough", "bough"], practice: 1, why: "Rough and tough share the uff sound, while the other ough words sound different." },
       { q: "Sort these words by the sound of their ough ending.", sort: { bins: ["Rhymes with blue", "Rhymes with go"], cards: [["through", "Rhymes with blue"], ["dough", "Rhymes with go"], ["though", "Rhymes with go"]] }, practice: 2, why: "Through has the oo sound; dough and though have the oh sound." },
-      { q: "Write the word meaning not smooth that begins r and contains ough.", t: "rough", practice: 4, why: "Rough is spelt r-o-u-g-h even though its ending sounds like uff." },
+      { q: "Write the word meaning not smooth. It rhymes with stuff.", t: "rough", practice: 4, why: "Rough is spelt r-o-u-g-h even though its ending sounds like uff." },
     ] },
     "confusing-word-pairs": { objective: "Choose similar words by their meaning and grammatical job.", items: [
       { q: "Which word completes Please buy paper from the ___ shop?", a: "stationery", d: ["stationary", "station"], practice: 1, why: "Stationery refers to writing materials; stationary means not moving." },
       { q: "Which word completes The ___ reason is that the bridge is unsafe?", a: "principal", d: ["principle", "principally"], practice: 2, why: "Principal means main here; a principle is a rule or belief." },
-      { q: "Complete with the word meaning a person who sells goods: The street ___ sold flowers.", t: "pedlar", practice: 4, why: "A pedlar sells goods; a pedal is part of a cycle and peddle is a verb." },
+      { q: "Complete with the word meaning a person who sells goods: The street ___ sold flowers.", t: ["pedlar", "peddler"], practice: 4, why: "A pedlar sells goods; a pedal is part of a cycle and peddle is a verb." },
     ] },
     "year-6-word-list-part-1": spell("Recall spellings in the saved identity-to-pronunciation word-list section.",
       ["necessary", "neccessary", "necesary"], ["privilege", "privelege", "priviledge"],
@@ -38,7 +38,7 @@ export default defineAssessmentBank({ year: 6, subject: "english", version: 1, s
       ["Necessary has one c and two s letters.", "Necessary and privilege are the correct spellings; privilege has no d.", "Pronunciation has pronun at the start, not pronoun."]),
     "year-6-word-list-part-2": spell("Recall spellings in the saved queue-to-yacht word-list section.",
       ["rhythm", "rythm", "rhythym"], ["restaurant", "restaraunt", "resturant"],
-      "Write the word for a sailing boat that begins y and ends cht.", "yacht",
+      "Write the five-letter word for a sailing boat. It begins y.", "yacht",
       ["Rhythm begins rh and uses y for its vowel sound.", "Rhythm and restaurant are the correct spellings.", "Yacht is spelt y-a-c-h-t; its letters are not predictable from the sound alone."]),
   },
   "reading---interpretation-and-comparison": {
@@ -63,7 +63,7 @@ export default defineAssessmentBank({ year: 6, subject: "english", version: 1, s
       { q: "Which description most strongly suggests an angry sea?", a: "Waves clawed at the harbour wall.", d: ["Water lay still beneath the moon.", "The surface was flat.", "Three boats were tied to the pier."], practice: 4, why: "Clawed gives the waves a forceful, threatening action like an angry creature." },
     ] },
     "comparing-accounts-and-viewpoints": { objective: "Compare shared events and differing emphasis in accounts.", items: [
-      { q: "What event do both reporters agree happened?", a: "The match ended early because of rain", d: ["The match continued normally", "There had been weeks of snow", "Nobody left the match"], evidence: RAIN, practice: 1, why: "Both accounts mention the rain bringing the match to an early end." },
+      { q: "What event do both reporters agree happened?", a: "Rain disrupted the match", d: ["The match continued normally", "There had been weeks of snow", "Nobody left the match"], evidence: RAIN, practice: 1, why: "A says the rain interrupted the match and B says it ended early, so both describe the rain disrupting it." },
       { q: "Which difference in emphasis is supported?", a: "A focuses on disappointment; B focuses on a benefit", d: ["A welcomes rain and B denies it rained", "Both discuss only gardening", "B says nobody was pleased"], evidence: RAIN, practice: 3, why: "A describes disappointed spectators, while B describes relief and delighted gardeners." },
       { q: "Why is reading both accounts useful?", a: "They reveal different effects of the same event", d: ["It proves one writer must be lying", "It removes the need to check evidence", "It means every opinion is a fact"], evidence: RAIN, practice: 4, why: "An event can cause both disappointment and relief for different people." },
     ] },
@@ -129,7 +129,7 @@ export default defineAssessmentBank({ year: 6, subject: "english", version: 1, s
     "punctuation-in-lists": { objective: "Use colons and semicolons to clarify lists.", items: [
       { q: "Which mark correctly introduces the list: We packed three essentials ___ water, food and a map?", a: "A colon", d: ["An apostrophe", "A question mark", "A hyphen"], practice: 1, why: "The complete introduction We packed three essentials can be followed by a colon and its list." },
       { q: "Each list item already contains a comma. Which separator best keeps the items distinct?", a: "A semicolon", d: ["An apostrophe", "No separator", "A speech mark"], practice: 3, why: "Semicolons can separate complex list items that already contain commas." },
-      { q: "Which list separates the two people and their descriptions clearly?", a: "Ava, our captain; and Ben, our goalkeeper", d: ["Ava our captain Ben our goalkeeper", "Ava; our; captain; Ben", "Ava our, captain Ben our"], practice: 4, why: "The semicolon separates the two list items, while commas attach each description to its person." },
+      { q: "Which list separates the three people and their descriptions clearly?", a: "Ava, our captain; Ben, our goalkeeper; and Cal, our coach", d: ["Ava our captain Ben our goalkeeper and Cal our coach", "Ava; our; captain; Ben; our; goalkeeper; and Cal", "Ava our, captain Ben our, goalkeeper and Cal, our coach"], practice: 4, why: "Semicolons separate the three list items, while commas attach each description to its person." },
     ] },
     "bullet-point-punctuation": { objective: "Apply a stated full-sentence bullet style consistently.", items: [
       { q: "A list uses complete sentences as bullets. Which item has suitable sentence punctuation?", a: "Bring a notebook.", d: ["Bring a notebook,", "Bring a notebook;"], practice: 1, why: "A complete sentence bullet can begin with a capital and finish with a full stop." },

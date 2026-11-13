@@ -81,7 +81,7 @@ export default defineAssessmentBank({ year: 6, subject: "computing", quests: {
       { q: "What does a filter do in a database?", a: "Shows only the records that match a rule", d: ["Deletes the whole database", "Adds up every number"], practice: 1, why: "Filtering hides records that do not match." },
       { q: "In a spreadsheet, what is the cell B3?", a: "Column B, row 3", d: ["Row B, column 3", "The third sheet"], practice: 1, why: "The letter is the column and the number is the row." },
       { q: "Put the steps in order to find who scored most in chess.", order: ["Open the club database", "Filter to show only chess", "Sort by points, highest first", "Read the top record"], practice: 3, why: "Filter first, then sort, then read the top record." },
-      { q: "B2 holds 6 and C2 holds 4. What does =B2*C2 show?", n: 24, practice: 4, why: "The formula multiplies the two cells: 6 x 4 = 24." },
+      { q: "B2 holds 6 and C2 holds 4. What does =B2*C2 show?", say: "B2 holds 6 and C2 holds 4. What does the formula equals B2 times C2 show?", n: 24, practice: 4, why: "The formula multiplies the two cells: 6 x 4 = 24." },
     ] },
     "presenting-data": { objective: "Chooses honest, suitable charts (knowledge check).", items: [
       { q: "Which chart is best to show a puppy's weight every month for a year?", a: "A line graph", d: ["A pie chart", "A tally"], practice: 1, why: "A line graph shows change over time." },

@@ -16,6 +16,8 @@ body.dark .cj-page, body.dark .cj-screen, body.dark .cj-map-extras, body.dark .c
 
 .cj-page { width: min(100%, 760px); margin: 0 auto; padding: 1rem 16px 3rem; color: var(--cj-ink); text-align: left; }
 .cj-page-head { margin-bottom: 1rem; }
+/* Bix's antennae rise ~1.5rem above his box: keep them clear of the back link. */
+.cj-page-head .cj-heading { margin-top: 1.5rem; }
 .cj-back { display: inline-flex; align-items: center; min-height: 48px; font-weight: 800; color: inherit; }
 .cj-screen {
   position: relative; width: min(100%, 760px); margin: 1rem auto; padding: clamp(1rem, 4vw, 1.75rem);

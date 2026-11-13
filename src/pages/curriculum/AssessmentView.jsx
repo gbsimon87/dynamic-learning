@@ -63,7 +63,7 @@ function Assessment({ year, subject, kind, categoryId, mapHref }) {
       body = <AssessmentResults session={quiz.session} curriculum={curriculum} isBuilt={isBuilt} year={year} subject={subject}
         mapHref={mapHref} onStartFresh={startNew} busy={quiz.busy} startError={quiz.actionError} />;
     } else {
-      body = <AssessmentRunner session={quiz.session} busy={quiz.busy} actionError={quiz.actionError} conflict={quiz.conflict}
+      body = <AssessmentRunner session={quiz.session} subject={subject} busy={quiz.busy} actionError={quiz.actionError} conflict={quiz.conflict}
         onSubmit={quiz.submit} onFinish={quiz.finish} onReload={quiz.reload} onLeave={() => navigate(mapHref)} />;
     }
   } else body = <Overview quiz={quiz} kind={kind} pathway={getJourneyPathway(year, subject)} categoryId={categoryId} onStart={startNew} onOpen={open} mapHref={mapHref} />;

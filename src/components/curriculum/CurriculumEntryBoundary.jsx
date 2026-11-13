@@ -50,7 +50,7 @@ function Entry({ children, year, subject, scopes, target, replay }) {
       <p>We couldn’t load it just now. You can try again, or carry on and come back to it later.</p>
       <div className="cj-actions"><button type="button" className="cj-primary" onClick={journey.retryLoad}>Try again</button>
         <button type="button" onClick={journey.continueForNow}>Continue for now</button></div></div>;
-    else overlay = <CurriculumIntroduction key={journey.pending[0]} introduction={intro} saving={journey.saving} saveError={journey.saveError}
+    else overlay = <CurriculumIntroduction key={journey.pending[0]} introduction={intro} subject={subject} saving={journey.saving} saveError={journey.saveError}
       onContinue={() => journey.acknowledge(journey.pending.slice(0, 1))} onSkip={() => journey.acknowledge(journey.pending.slice(0, 1))}
       onSkipAll={() => journey.acknowledge(journey.pending)} remaining={journey.pending.length} onRetry={journey.retrySave} onContinueForNow={journey.continueForNow} />;
   }

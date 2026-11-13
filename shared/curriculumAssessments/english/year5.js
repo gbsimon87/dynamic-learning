@@ -19,16 +19,16 @@ export default defineAssessmentBank({ year: 5, subject: "english", version: 1, s
   "spelling---word-endings": {
     "the-endings-cious-and-tious": spellings("Spell cious and tious endings using related words and learned examples.",
       [["spacious", "spatious", "spashous"], ["cautious", "caucious", "cautous"], ["delicious"]],
-      ["Space helps you remember the c in spacious.", "Cautious uses tious; spacious uses cious.", "Write a word ending in cious that means tasting very good. It begins del.", "Delicious means tasting very good and ends in cious."]),
+      ["Space helps you remember the c in spacious.", "Cautious uses tious; spacious uses cious.", "Write a word that means tasting very good. It begins del and ends ous.", "Delicious means tasting very good and ends in cious."]),
     "the-endings-cial-and-tial": spellings("Spell cial and tial endings and recognise useful exceptions.",
       [["special", "spetial", "spechial"], ["essential", "essencial", "esential"], ["official"]],
-      ["Special has cial after the vowel e.", "Special uses cial; essential uses tial.", "An o___ announcement is authorised by an organisation. Write the whole word, ending in cial.", "Official ends in cial: o-f-f-i-c-i-a-l."]),
+      ["Special has cial after the vowel e.", "Special uses cial; essential uses tial.", "An o___ announcement is authorised by an organisation. Write the whole word.", "Official ends in cial: o-f-f-i-c-i-a-l."]),
     "the-endings-ant-ance-ent-and-ence": spellings("Link ant/ent adjectives and ance/ence nouns.",
       [["tolerant", "tolerent", "tolerunt"], ["confidence", "confidance", "confidense"], ["obedient"]],
-      ["Tolerant uses ant; toleration is a related word.", "Tolerant ends in ant and confidence ends in ence.", "Write the word meaning willing to obey that begins ob and ends in ent.", "Obedient means willing to obey; its ending is ent."]),
+      ["Tolerant uses ant; toleration is a related word.", "Tolerant ends in ant and confidence ends in ence.", "Write the word meaning willing to obey. It begins ob.", "Obedient means willing to obey; its ending is ent."]),
     "the-endings-able-and-ible": spellings("Choose able/ible spellings rather than relying only on sound.",
       [["reliable", "relyable", "reliible"], ["possible", "possable", "posible"], ["visible"]],
-      ["Rely changes y to i before able: reliable.", "Reliable uses able and possible uses ible.", "Write a word ending in ible that means able to be seen. It begins vis.", "Visible means able to be seen; it ends in ible."]),
+      ["Rely changes y to i before able: reliable.", "Reliable uses able and possible uses ible.", "Write a word that means able to be seen. It begins vis.", "Visible means able to be seen; it ends in ible."]),
   },
   "reading---words-and-meanings": {
     "roots-and-origins": { objective: "Use familiar roots and affixes to explain unfamiliar words.", items: [
@@ -39,7 +39,7 @@ export default defineAssessmentBank({ year: 5, subject: "english", version: 1, s
     "using-a-dictionary-and-thesaurus": { objective: "Choose reference tools and apply alphabetical/contextual information.", items: [
       { q: "You need to check what an unfamiliar word means. Which tool is most useful?", a: "A dictionary", d: ["A timetable", "A contents page", "A calculator"], practice: 1, why: "A dictionary provides word meanings and spellings." },
       { q: "Put these words in dictionary order.", order: ["spring", "sprinkle", "sprint"], practice: 2, why: "Compare beyond sprin: g comes before k, and k before t." },
-      { q: "The bag was light enough to carry easily. Which synonym of light fits here?", a: "Not heavy", d: ["Bright", "Pale", "A lamp"], practice: 4, why: "Carry easily shows that light describes weight, not brightness or colour." },
+      { q: "The bag was light enough to carry easily. Which meaning of light fits here?", a: "Not heavy", d: ["Bright", "Pale", "A lamp"], practice: 4, why: "Carry easily shows that light describes weight, not brightness or colour." },
     ] },
     "similes-and-metaphors": { objective: "Identify figurative comparisons and explain their effect.", items: [
       { q: "Which sentence uses a simile?", a: "The moon shone like a silver coin.", d: ["The moon rose at eight.", "The moon was above the trees.", "We watched the moon."], practice: 1, why: "Like compares the moon with a silver coin." },
@@ -67,10 +67,10 @@ export default defineAssessmentBank({ year: 5, subject: "english", version: 1, s
   "spelling---silent-letters-and-tricky-words": {
     "silent-letters": spellings("Remember silent letters rather than relying only on pronunciation.",
       [["doubt", "dout", "dowt"], ["knight", "nite", "knite"], ["solemn"]],
-      ["Doubt includes a silent b.", "Doubt keeps b; knight keeps its silent k and gh letters.", "Write the word meaning serious and formal that begins sol and ends mn.", "Solemn ends in mn; the n is silent."]),
+      ["Doubt includes a silent b.", "Doubt keeps b; knight keeps its silent k and gh letters.", "Write the word meaning serious and formal. It begins sol.", "Solemn ends in mn; the n is silent."]),
     "the-letters-ei-after-c": spellings("Spell the long ee sound as ei after c in familiar words.",
       [["ceiling", "cieling", "ceeling"], ["deceive", "decieve", "deceeve"], ["receive"]],
-      ["Ceiling has ei after c.", "Ceiling and deceive both use ei after c for the ee sound.", "Write the word meaning get or accept a parcel. It begins rec and ends in eive.", "Receive has ei after c: r-e-c-e-i-v-e."]),
+      ["Ceiling has ei after c.", "Ceiling and deceive both use ei after c for the ee sound.", "Write the word meaning get or be given something, such as a parcel. It begins rec and ends ve.", "Receive has ei after c: r-e-c-e-i-v-e."]),
     "homophones-and-confusing-words": { objective: "Select easily confused words using meaning and word class.", items: [
       { q: "Please ___ me about the best route. Which word fits?", a: "advise", d: ["advice", "device"], practice: 1, why: "Advise is the verb meaning give advice." },
       { q: "The visitor was a welcome ___. Which word fits?", a: "guest", d: ["guessed", "guess"], practice: 2, why: "A guest is a visitor; guessed is a past-tense verb." },
@@ -92,7 +92,7 @@ export default defineAssessmentBank({ year: 5, subject: "english", version: 1, s
     "comparing-characters-and-settings": { objective: "Compare matching features using details from two descriptions.", items: [
       { q: "Which difference is supported by these descriptions?", a: "Ari speaks readily; Jo is hesitant to speak", d: ["Jo is older than Ari", "Ari dislikes everyone", "Both characters refuse to speak"], evidence: passage("Two arrivals", "Ari greeted everyone before sitting down. Jo whispered her name and waited for someone to show her a seat."), practice: 1, why: "Ari greets everyone while Jo whispers and waits; no age or dislike is stated." },
       { q: "What feature is shared by the two settings?", a: "Both have a river nearby", d: ["Both are noisy cities", "Both have a busy bridge", "Neither has any water"], evidence: passage("Two places", "A quiet village stood beside a narrow river. Far away, a crowded city spread around a wide river crossed by busy bridges."), practice: 2, why: "Both descriptions mention a river, though the places differ in size and activity." },
-      { q: "Which comparison uses evidence from both paragraphs?", a: "The greenhouse changes from neglected to cared for", d: ["The greenhouse is demolished", "The beans grow overnight", "The caretaker plants everything alone"], evidence: SCHOOL, practice: 4, why: "Dust and weeds at the start contrast with cleaned windows, planting and organised watering later." },
+      { q: "Which comparison uses evidence from the start and the end of the passage?", a: "The greenhouse changes from neglected to cared for", d: ["The greenhouse is demolished", "The beans grow overnight", "The caretaker plants everything alone"], evidence: SCHOOL, practice: 4, why: "Dust and weeds at the start contrast with cleaned windows, planting and organised watering later." },
     ] },
     "fact-or-opinion": { objective: "Distinguish checkable claims from personal judgements.", items: [
       { q: "Which statement is an opinion?", a: "Swimming is the most enjoyable sport.", d: ["The pool is 25 metres long.", "The centre opens at nine.", "The team has twelve members."], practice: 1, why: "Most enjoyable is a judgement that people can disagree about." },
@@ -128,7 +128,7 @@ export default defineAssessmentBank({ year: 5, subject: "english", version: 1, s
     ] },
     "commas-to-avoid-ambiguity": { objective: "Explain how commas clarify meaning.", items: [
       { q: "Which sentence clearly calls Mum to eat?", a: "Let's eat, Mum!", d: ["Let's eat Mum!", "Let's, eat Mum!"], practice: 1, why: "The comma before Mum shows that Mum is being addressed." },
-      { q: "In We packed sandwiches, apples and water, what do the commas help show?", a: "The separate items in a list", d: ["That apples is a person's name", "That the sentence is a question", "That water owns the sandwiches"], practice: 2, why: "The punctuation separates the things that were packed." },
+      { q: "In We packed sandwiches, apples and water, what does the comma help show?", a: "The separate items in a list", d: ["That apples is a person's name", "That the sentence is a question", "That water owns the sandwiches"], practice: 2, why: "The punctuation separates the things that were packed." },
       { q: "Which sentence clearly tells a dog called Max to stop running?", a: "Stop running, Max!", d: ["Stop, running Max!", "Stop running Max!"], practice: 4, why: "The comma separates the instruction from the name of the one being addressed." },
     ] },
   },

@@ -20,7 +20,7 @@ export default defineAssessmentBank({ year: 5, subject: "computing", quests: {
     "if-and-else-decisions": { objective: "Follows if and else decisions (knowledge check).", items: [
       { q: "If it is raining, take an umbrella. Else, wear sunglasses. It is sunny. What do you take?", a: "Wear sunglasses", d: ["Take an umbrella", "Stay inside"], practice: 1, why: "It is not raining, so the else part happens." },
       { q: "In an if and else, how many parts are chosen each time?", a: "One", d: ["Two", "None"], practice: 1, why: "The program does the if part or the else part, not both." },
-      { q: "The program says T-shirt if temperature > 25, else it says Coat. Sort the temperatures by what it says.", sort: { bins: ["Says T-shirt", "Says Coat"], cards: [["27", "Says T-shirt"], ["32", "Says T-shirt"], ["18", "Says Coat"], ["25", "Says Coat"]] }, practice: 3, why: "27 and 32 are more than 25. 25 is not more than 25, so it says Coat, like 18." },
+      { q: "The program says T-shirt if temperature > 25, else it says Coat. Sort the temperatures by what it says.", say: "The program says T-shirt if the temperature is greater than 25, else it says Coat. Sort the temperatures by what it says.", sort: { bins: ["Says T-shirt", "Says Coat"], cards: [["27", "Says T-shirt"], ["32", "Says T-shirt"], ["18", "Says Coat"], ["25", "Says Coat"]] }, practice: 3, why: "27 and 32 are more than 25. 25 is not more than 25, so it says Coat, like 18." },
     ] },
     "variables": { objective: "Understands variables that store and change values (knowledge check).", items: [
       { q: "What does a variable do?", a: "Stores a value that can change", d: ["Draws a picture", "Switches off the computer"], practice: 1, why: "A variable is like a labelled box that holds a value." },
@@ -55,7 +55,7 @@ export default defineAssessmentBank({ year: 5, subject: "computing", quests: {
     ] },
     "logic-with-and-or-and-not": { objective: "Uses and, or and not to decide if something is true (knowledge check).", items: [
       { q: "You can go out if it is dry AND you finished homework. It is dry but homework is not done. Can you go out?", a: "No", d: ["Yes"], practice: 4, why: "AND needs both parts to be true, and homework is not done." },
-      { q: "score is 40 and sunny is true. Is the condition **score > 50 OR sunny** true or false?", a: "True", d: ["False"], practice: 2, why: "score > 50 is false, but sunny is true. OR needs at least one part to be true." },
+      { q: "score is 40 and sunny is true. Is the condition **score > 50 OR sunny** true or false?", say: "score is 40 and sunny is true. Is the condition, score is greater than 50, or sunny, true or false?", a: "True", d: ["False"], practice: 2, why: "score > 50 is false, but sunny is true. OR needs at least one part to be true." },
       { q: "What is NOT true?", a: "False", d: ["True", "It depends"], practice: 1, why: "NOT flips true to false and false to true." },
     ] },
   },

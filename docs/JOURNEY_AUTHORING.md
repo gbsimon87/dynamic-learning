@@ -92,8 +92,12 @@ Rules:
   Exactly one option may be correct. Options are shuffled automatically.
 - Stay inside the topic's mapping row and the year. No trick questions.
 - `why` explains the reasoning in one or two short sentences, kindly.
-- Speech: Maths and most subjects read the prompt aloud by default; give `say`
-  with words when symbols read badly (e.g. `"2/7"` → "two sevenths"). English and
+- Speech: Maths and most subjects read the prompt aloud by default. Maths
+  prompts are read like Maths challenges (`mathToSpeech`: "2/7" → "two
+  sevenths", "£3.50", "cm²") with choice options as "Is it …?"; other subjects
+  read the prompt as written, so give `say` with words when symbols read badly
+  there (time signatures, map scales, "51°N", code). A Maths `say` replaces the
+  prompt and options and is read unchanged. `**word**` shows in bold. English and
   French default to **no speech**: never read out a reading passage's answer or a
   spelling. Give `say` only for an instruction that reveals nothing.
 - Spelling without dictation: use "Which word is spelt correctly?" choices or a
@@ -112,6 +116,7 @@ Rules:
 ```sh
 npm run check:journey -- --year N --subject ID   # must end with 0 gaps
 npx eslint <your two files>
+npm run journey:review -- --year N --subject ID  # printable answer-key pack for human review (--all for every pathway)
 ```
 
 The checker validates schemas, IDs, sources, pool sizes, quiz selection and

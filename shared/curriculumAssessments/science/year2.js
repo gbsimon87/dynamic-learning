@@ -31,7 +31,7 @@ export default defineAssessmentBank({
         { q: "Complete this food chain. Which animal eats lettuce and can be eaten by a thrush?", a: "The snail", d: ["The grass", "The fox"], practice: 2, model: science({ type: "chain", links: ["lettuce", "?", "thrush"], gap: 1 }, "A food chain shows lettuce, a missing middle box and a thrush, joined by arrows."), why: "The snail eats the lettuce and is eaten by the thrush, so it belongs in the middle." },
       ] },
       "where-food-comes-from": { objective: "Identify plant and animal food sources and order simple field-to-plate stages.", items: [
-        { q: "Which animal gives us the eggs shown here?", a: "Hen", d: ["Cow", "Sheep"], practice: 1, model: pictures("A food", [["🥚", "Eggs"]], "Hen-sized eggs used for food."), why: "Hens lay the eggs commonly used for food." },
+        { q: "Which animal gives us the eggs shown here?", a: "Hen", d: ["Cow", "Sheep"], practice: 1, model: pictures("A food", [["🥚", "Eggs"]], "Eggs used for food."), why: "Hens lay the eggs commonly used for food." },
         { q: "Sort these foods by their source.", sort: { bins: ["Plant", "Animal"], cards: [["Carrot", "Plant"], ["Rice", "Plant"], ["Milk", "Animal"], ["Fish", "Animal"]] }, practice: 2, why: "Carrots and rice come from plants. Milk and fish come from animals." },
         { q: "Put these steps for making bread in order.", order: ["Wheat grows", "Grain is collected", "Grain is ground into flour", "Flour is used to make bread"], practice: 3, why: "Wheat produces grain. The grain is made into flour, which is used to make bread." },
       ] },
@@ -72,7 +72,7 @@ export default defineAssessmentBank({
       "what-animals-need-to-survive": { objective: "Recognise animals' basic needs and apply them to simple care situations.", items: [
         { q: "Which set lists three things animals need to survive?", a: "Water, food and air", d: ["Toys, sweets and games", "Books, hats and pencils"], practice: 1, why: "Animals need water, food and air to survive." },
         { q: "Sort these things.", sort: { bins: ["Needed to survive", "Not needed to survive"], cards: [["Fresh water", "Needed to survive"], ["Suitable food", "Needed to survive"], ["Air", "Needed to survive"], ["A party hat", "Not needed to survive"]] }, practice: 2, why: "Water, food and air are basic needs. A party hat is a want rather than a need." },
-        { q: "A pet rabbit has food and air. Its water bowl is empty. What does it need now?", t: "water", practice: 4, why: "The rabbit needs fresh water as well as food and air." },
+        { q: "A pet rabbit has food and air. Its water bowl is empty. What does it need now?", t: ["water", "fresh water", "some water"], practice: 4, why: "The rabbit needs fresh water as well as food and air." },
       ] },
       exercise: { objective: "Explain simple effects and benefits of exercise and interpret supplied breathing observations.", items: [
         { q: "What usually happens to your heartbeat when you run?", a: "It gets faster", d: ["It stops", "It gets slower than when resting"], practice: 1, why: "Your heart usually beats faster during exercise." },

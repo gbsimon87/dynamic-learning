@@ -51,7 +51,7 @@ export const PLACE_VALUE_LESSONS = {
   "counting-backwards-through-zero": [
     {
       title: "Count past zero",
-      lines: ["Numbers carry on below 0: −1, −2, −3 and so on.", "Counting back goes left. Counting on goes right.", "Count every jump, including the jump to or from 0."],
+      lines: ["Numbers keep going below 0: −1, −2, −3 and so on.", "Counting back goes left. Counting on goes right.", "Count every jump, including the jump to or from 0."],
       example: { type: "jumps", title: "Count on 4 from −2", terms: ["−2", "−1", "0", "1", "2"], step: "+1", note: "4 jumps on from −2 lands on 2." },
     },
     {

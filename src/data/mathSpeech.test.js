@@ -40,6 +40,20 @@ test("money, fractions, plurals and units", () => {
   ]);
 });
 
+test("large sums of money, square and cubic units, bare °C and mixed numbers", () => {
+  says([
+    ["£425,600", "425,600 pounds"],
+    ["£8,500.50", "8,500 pounds 50"],
+    ["Leo pays with a £5 note.", "Leo pays with a 5 pound note."],
+    ["18 cm²", "18 square centimetres"],
+    ["1 m²", "1 square metre"],
+    ["24 m³", "24 cubic metres"],
+    ["What is the temperature in °C?", "What is the temperature in degrees Celsius?"],
+    ["2 5/6 pizzas", "2 and five sixths pizzas"],
+    ["1 1/2", "1 and one half"],
+  ]);
+});
+
 test("comparisons name the relation once", () => {
   says([
     ["24 < 30", "24 is less than 30"],

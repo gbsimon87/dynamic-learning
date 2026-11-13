@@ -45,7 +45,7 @@ export default defineIntroductions({
         "the-sounds-nk-and-tch": {
           title: "The sounds nk and tch",
           learn: ["The sound at the end of bank is spelt nk.", "The sound at the end of catch is spelt tch."],
-          use: "These endings turn up in everyday words like think, thank and kitchen.",
+          use: "These spellings turn up in everyday words like think, thank and kitchen.",
           ex: "We write bank and catch.",
           model: table("Two endings", ["Letters", "Word"], [["nk", "bank"], ["tch", "catch"]], "A table showing nk in bank and tch in catch."),
         },

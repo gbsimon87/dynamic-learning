@@ -114,7 +114,7 @@ export default defineAssessmentBank({ year: 6, subject: "geography", quests: {
     "six-figure-references-and-scale": { objective: "Reads six-figure references and uses map scale.", items: [
       { q: "What is the easting in the six-figure reference 483297?", n: 483, practice: 1,
         why: "The first three digits are the easting: 483." },
-      { q: "On a 1:50 000 map, 1 cm is 500 metres. How many kilometres is 3 cm?", n: "1.5", unit: "km", practice: 2,
+      { q: "On a 1:50 000 map, 1 cm is 500 metres. How many kilometres is 3 cm?", say: "On a one to fifty thousand map, 1 centimetre is 500 metres. How many kilometres is 3 centimetres?", n: "1.5", unit: "km", practice: 2,
         why: "3 × 500 m = 1500 m, which is 1.5 km." },
       { q: "On an OS map, what do contour lines that are close together show?", a: "A steep slope", d: ["A gentle slope", "A flat field"], practice: 3,
         why: "Height changes quickly over a short distance." },

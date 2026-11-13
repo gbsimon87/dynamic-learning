@@ -355,7 +355,7 @@ export default defineAssessmentBank({
           why: "The long hand points to 12, so it is o'clock. The short hand points to 4." },
         { q: "What time does the clock show?", a: "Half past 7", d: ["Half past 8", "7 o'clock", "6 o'clock"], practice: 2,
           model: clock("An analogue clock.", 7, 30), say: "What time does the clock show?",
-          why: "The long hand points to 6, so it is half past. The short hand is just after 7, so it is half past 7." },
+          why: "The long hand points to 6, so it is half past. The short hand is halfway between 7 and 8, so it is half past 7." },
         { q: "At half past the hour, where does the long hand point?", a: "6", d: ["12", "3", "9"], practice: 3,
           why: "At o'clock the long hand points to 12. At half past it points to 6." },
         { q: "This clock shows the start time. What time is it 1 hour later?", a: "3 o'clock", d: ["1 o'clock", "2 o'clock", "Half past 2"], practice: 4,

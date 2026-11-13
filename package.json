@@ -24,7 +24,8 @@
     "journey:manifest": "node scripts/curriculum/journeyManifest.js",
     "check:journey": "node scripts/checkCurriculumJourney.js",
     "scaffold:topic": "node scripts/scaffoldTopic.js",
-    "journey:brief": "node scripts/curriculum/journeyBrief.js"
+    "journey:brief": "node scripts/curriculum/journeyBrief.js",
+    "journey:review": "node scripts/curriculum/journeyReviewPack.js"
   },
   "dependencies": {
     "@fontsource/abeezee": "^5.2.5",

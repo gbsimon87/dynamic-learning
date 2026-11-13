@@ -2,16 +2,17 @@ import { useEffect, useRef } from "react";
 import Mascot from "../mascot/Mascot.jsx";
 import SpeakButton from "../challenge/SpeakButton.jsx";
 import JourneyModel from "./JourneyModel.jsx";
+import { introductionReadAloud } from "../../data/curriculumJourney.js";
 import "./curriculumJourney.css";
 
-export default function CurriculumIntroduction({ introduction, onContinue, onSkip, onSkipAll, saving, saveError, onRetry, onContinueForNow, remaining = 1 }) {
+export default function CurriculumIntroduction({ introduction, subject, onContinue, onSkip, onSkipAll, saving, saveError, onRetry, onContinueForNow, remaining = 1 }) {
   const heading = useRef(null);
   useEffect(() => {
     const previous = document.activeElement;
     heading.current?.focus();
     return () => { if (previous?.isConnected) previous.focus(); };
   }, [introduction]);
-  const text = [introduction.title, ...introduction.learning, introduction.usefulness, introduction.example.text, introduction.example.model.alt].join(" ");
+  const text = introductionReadAloud(introduction, subject);
   return <section className="cj-screen" aria-labelledby="cj-introduction-title">
     <div className="cj-heading"><Mascot decorative /><div><p className="cj-eyebrow">Your learning adventure</p>
       <h1 id="cj-introduction-title" ref={heading} tabIndex={-1}>{introduction.title}</h1></div></div>

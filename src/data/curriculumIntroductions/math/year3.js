@@ -386,7 +386,7 @@ export default defineIntroductions({
           title: "Bar charts",
           learn: ["Read how tall each bar is using the scale.", "Compare bars and draw your own."],
           use: "Find the most popular lunch in your class.",
-          ex: "If the scale goes up in 2s, a bar that reaches the third line is 6.",
+          ex: "If the scale goes up in 2s, a bar that reaches the third line above zero is 6.",
           model: { renderer: "lesson", alt: "Three bars made of squares. Each square is worth 2 children.", data: { type: "groups", title: "Each square is 2 children", groups: [["■", "■", "■", "■"], ["■", "■", "■"], ["■"]], label: "Three bars of 4, 3 and 1 squares. Each square is worth 2 children." } },
         },
         "scaled-pictograms": {

@@ -15,11 +15,11 @@ export const BUILDERS = {
     if (l === 1) {
       const q = digitsNumber(r, i < 3 ? 3 : 4, Math.floor(9 / d));
       return number(`Work out ${fmt(q * d)} ÷ ${d}.`, q, { visual: { type: 'busStop', divisor: d, dividend: q * d },
-        rule: 'Divide each digit in turn, starting on the left.', hint: 'Each digit divides exactly, so there is nothing to carry.' });
+        rule: 'Divide each digit in turn, starting on the left.', hint: 'Each digit divides exactly, so there is nothing to exchange.' });
     }
     const q = int(r, 100, Math.floor(9999 / d)), rem = int(r, 1, d - 1);
     if (l === 2) {
-      if (i < 3) return number(`Work out ${fmt(q * d)} ÷ ${d}.`, q, { visual: { type: 'busStop', divisor: d, dividend: q * d }, hint: 'If a digit is too small to divide, carry it to the next digit as extra ones, tens or hundreds.' });
+      if (i < 3) return number(`Work out ${fmt(q * d)} ÷ ${d}.`, q, { visual: { type: 'busStop', divisor: d, dividend: q * d }, hint: 'If a digit is too small to divide, exchange it into the next place as extra hundreds, tens or ones.' });
       return number(`${fmt(q * d + rem)} ÷ ${d}. What is the remainder?`, rem, { visual: { type: 'busStop', divisor: d, dividend: q * d + rem }, maxDigits: 1, hint: 'The remainder is what is left at the end of the last digit.' });
     }
     if (l === 3) {

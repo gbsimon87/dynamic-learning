@@ -7,7 +7,7 @@ import { ASSESSMENT_SECTION_SIZE } from "../../data/curriculumJourney.js";
  * answer just saved, a short break every four questions, then Finish. All
  * position comes from the stored session, so refresh/resume lands correctly.
  */
-export default function AssessmentRunner({ session, busy, actionError, conflict, onSubmit, onFinish, onReload, onLeave }) {
+export default function AssessmentRunner({ session, subject, busy, actionError, conflict, onSubmit, onFinish, onReload, onLeave }) {
   const saved = session.responses.length;
   // After a resume, show the last saved answer's review once before moving on.
   const [reviewing, setReviewing] = useState(() => saved > 0 && saved < session.items.length ? saved - 1 : null);
@@ -30,7 +30,7 @@ export default function AssessmentRunner({ session, busy, actionError, conflict,
       setReviewing(null);
       if (saved < session.items.length && saved % ASSESSMENT_SECTION_SIZE === 0) setBreakAt(saved);
     };
-    return <AssessmentRound key={`${item.itemInstanceId}-review`} item={item} response={session.responses[reviewing]}
+    return <AssessmentRound key={`${item.itemInstanceId}-review`} item={item} subject={subject} response={session.responses[reviewing]}
       number={reviewing + 1} total={session.items.length} onNext={next} nextLabel={allSaved ? "See how I did" : "Next question"} />;
   }
 
@@ -61,7 +61,7 @@ export default function AssessmentRunner({ session, busy, actionError, conflict,
   const item = session.items[saved];
   return <>
     <p className="cj-section">Part {Math.floor(saved / ASSESSMENT_SECTION_SIZE) + 1} of {sections}</p>
-    <AssessmentRound key={item.itemInstanceId} item={item} number={saved + 1} total={session.items.length}
+    <AssessmentRound key={item.itemInstanceId} item={item} subject={subject} number={saved + 1} total={session.items.length}
       busy={busy} error={actionError} conflict={conflict} onReload={onReload}
       onSubmit={(response) => onSubmit(item.itemInstanceId, response)} />
   </>;

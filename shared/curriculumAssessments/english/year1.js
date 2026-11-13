@@ -39,7 +39,7 @@ export default defineAssessmentBank({
         { q: "Which letters finish the word? You do this when someone throws you a ball: ca__", t: "tch", practice: 2,
           why: "The ch sound after a short vowel is often spelt tch. We write catch." },
         { q: SPELT, a: "kitchen", d: ["kichen", "kitchin", "kitchan"], practice: 4,
-          why: "kitchen has tch in the middle: kit-tch-en. We write kitchen." },
+          why: "kitchen has tch in the middle: ki-tch-en. We write kitchen." },
         { q: "Sort each word by the letters it ends with.",
           sort: { bins: ["nk", "tch"], cards: [["think", "nk"], ["honk", "nk"], ["match", "tch"], ["fetch", "tch"]] }, practice: 3,
           why: "think and honk end in nk. match and fetch end in tch." },
@@ -258,7 +258,7 @@ export default defineAssessmentBank({
           why: "The long i sound in night is spelt igh. We write night." },
         { q: "Which letters complete the word? It is big and salty: s__", t: "ea", practice: 4,
           why: "The ee sound in sea is spelt ea. We write sea." },
-        { q: SPELT, a: "pie", d: ["pi", "pye", "pigh"], practice: 3,
+        { q: SPELT, a: "pie", d: ["py", "pye", "pigh"], practice: 3,
           why: "The long i sound in pie is spelt ie. We write pie." },
       ] },
       "the-spellings-oo-oa-ow-and-ew": { objective: "Spells words with oo, oa, ow and ew.", items: [

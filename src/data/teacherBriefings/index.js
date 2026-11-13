@@ -3,6 +3,16 @@ import { LESSONS, getLesson } from "../lessons/index.js";
 import { YEAR3_MATH_BRIEFINGS } from "./year3Math.js";
 import { YEAR3_HISTORY_BRIEFINGS } from "./year3History.js";
 import { YEAR3_SCIENCE_BRIEFINGS } from "./year3Science.js";
+import { YEAR1_SCIENCE_BRIEFINGS } from "./year1Science.js";
+import { YEAR1_HISTORY_BRIEFINGS } from "./year1History.js";
+import { YEAR1_GEOGRAPHY_BRIEFINGS } from "./year1Geography.js";
+import { YEAR2_SCIENCE_BRIEFINGS } from "./year2Science.js";
+import { YEAR2_HISTORY_BRIEFINGS } from "./year2History.js";
+import { YEAR2_GEOGRAPHY_BRIEFINGS } from "./year2Geography.js";
+import { YEAR3_GEOGRAPHY_BRIEFINGS } from "./year3Geography.js";
+import { YEAR4_SCIENCE_BRIEFINGS } from "./year4Science.js";
+import { YEAR4_HISTORY_BRIEFINGS } from "./year4History.js";
+import { YEAR4_GEOGRAPHY_BRIEFINGS } from "./year4Geography.js";
 
 // Teacher topic briefings. Every topic with Bix introductions gets a briefing
 // built from them; authored teacher notes are registered below by year:subject.
@@ -10,9 +20,19 @@ import { YEAR3_SCIENCE_BRIEFINGS } from "./year3Science.js";
 // are being written for all of their topics (owner decision 2026-11-09).
 // Contract: docs/ARCHITECTURE.md (Teacher tools).
 const NOTES = {
+  "1:science": YEAR1_SCIENCE_BRIEFINGS,
+  "1:history": YEAR1_HISTORY_BRIEFINGS,
+  "1:geography": YEAR1_GEOGRAPHY_BRIEFINGS,
+  "2:science": YEAR2_SCIENCE_BRIEFINGS,
+  "2:history": YEAR2_HISTORY_BRIEFINGS,
+  "2:geography": YEAR2_GEOGRAPHY_BRIEFINGS,
   "3:math": YEAR3_MATH_BRIEFINGS,
   "3:science": YEAR3_SCIENCE_BRIEFINGS,
   "3:history": YEAR3_HISTORY_BRIEFINGS,
+  "3:geography": YEAR3_GEOGRAPHY_BRIEFINGS,
+  "4:science": YEAR4_SCIENCE_BRIEFINGS,
+  "4:history": YEAR4_HISTORY_BRIEFINGS,
+  "4:geography": YEAR4_GEOGRAPHY_BRIEFINGS,
 };
 const BRIEFING_SUBJECTS = ["math", "english", "science", "history", "geography"];
 const NOTES_FOR_EVERY_YEAR = new Set(["science", "history", "geography"]);

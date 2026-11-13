@@ -61,8 +61,8 @@ export const MUL_DIV_LESSONS = {
     },
     {
       title: "Use short multiplication",
-      lines: ["Write the 2-digit number on top, the 1-digit number below.", "Start with the ones. Write the ones digit and carry the tens.", "Multiply the tens, then add the number you carried."],
-      example: { type: "steps", title: "27 × 4", steps: ["Ones: 7 × 4 = 28. Write 8, carry 2.", "Tens: 2 × 4 = 8. Add the carried 2 to make 10.", "Write 10 in front of the 8."], note: "So 27 × 4 = 108." },
+      lines: ["Write the 2-digit number on top, the 1-digit number below.", "Start with the ones. Write the ones digit and exchange the tens into the tens column.", "Multiply the tens, then add the tens you exchanged."],
+      example: { type: "steps", title: "27 × 4", steps: ["Ones: 7 × 4 = 28. Write 8 and exchange 20 ones for 2 tens.", "Tens: 2 × 4 = 8. Add the 2 exchanged tens to make 10.", "Write 10 in front of the 8."], note: "So 27 × 4 = 108." },
     },
     {
       title: "Solve a two-digit story",

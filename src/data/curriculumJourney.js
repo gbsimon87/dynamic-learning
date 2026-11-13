@@ -1,5 +1,6 @@
 import { requireJourney, introductionForScope } from "../../shared/curriculumJourneyData.js";
 import { buildLockState } from "./curriculumLocks.js";
+import { composeReadAloud, joinSegments } from "./mathSpeech.js";
 
 export { CURRICULUM_JOURNEY_ENABLED } from "./curriculumJourneyFlag.js";
 export const curriculumAssessmentHref = (year, subject, kind, categoryId) => kind === "subject"
@@ -37,6 +38,31 @@ export function getCurriculumReviewActions({ curriculum, before, after, category
 }
 
 /** Child-readable text for a saved raw answer, using only public item data. */
+/** "**word**" in a prompt is emphasis on screen; read aloud, it is just the word. */
+export const unmarkPrompt = (text) => text.replace(/\*\*(.+?)\*\*/g, "$1");
+
+/**
+ * What a quiz item's "Read it to me" says, or null when it has no speech.
+ * Maths prompts are read as the Maths challenges read them: symbols as words
+ * (`mathToSpeech`) and the options as "Is it …?". An authored `say` is already
+ * spoken words and is read unchanged. Other subjects read the prompt as written:
+ * the maths rules would misread prose ("USA", "4/4 time").
+ */
+export function assessmentReadAloud(item, subject) {
+  const { prompt, speech, input } = item.public;
+  if (speech.mode !== "prompt") return null;
+  const text = unmarkPrompt(speech.text);
+  if (subject !== "math" || speech.text !== prompt) return text;
+  return composeReadAloud({ segments: [{ text }], options: input.kind === "choice" ? input.options.map((option) => option.label) : [] });
+}
+
+/** An introduction's "Read this introduction": every line in screen order as a sentence, Maths symbols as words. */
+export function introductionReadAloud(introduction, subject) {
+  const lines = [introduction.title, ...introduction.learning, introduction.usefulness, introduction.example.text, introduction.example.model.alt];
+  const segments = lines.map((text) => ({ text }));
+  return subject === "math" ? composeReadAloud({ segments }) : joinSegments(segments);
+}
+
 export function describeAssessmentResponse(input, value) {
   const label = (list, id) => list.find((entry) => entry.id === id)?.label ?? id;
   switch (input.kind) {

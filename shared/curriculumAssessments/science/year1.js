@@ -22,7 +22,7 @@ export default defineAssessmentBank({
       "parts-of-a-flowering-plant": { objective: "Name basic flowering-plant parts and describe their positions.", items: [
         { q: "Which part does the arrow point to?", a: "The roots", d: ["The stem", "The petals"], practice: 1, model: science({ type: "plant", point: "roots" }, "A flowering plant. The arrow points to the thin branching parts below the soil."), why: "The roots are the branching parts under the soil." },
         { q: "Put these parts in order from the top of a sunflower to the bottom.", order: ["Flower", "Stem", "Roots"], practice: 3, why: "The flower is at the top. The stem goes down to the roots under the soil." },
-        { q: "Bix finds a pip inside an apple. It can grow into a new plant. What is the pip?", t: "seed", practice: 4, why: "An apple pip is a seed. It can grow into a new apple tree." },
+        { q: "Bix finds a pip inside an apple. It can grow into a new plant. What is the pip?", t: ["seed", "a seed"], practice: 4, why: "An apple pip is a seed. It can grow into a new apple tree." },
       ] },
       "parts-of-a-tree": { objective: "Name tree parts and describe their positions, including roots, trunk and blossom.", items: [
         { q: "Which part does the arrow point to?", a: "The trunk", d: ["The roots", "The leaves"], practice: 1, model: science({ type: "tree", point: "trunk" }, "A tree. The arrow points to the thick upright woody part above the ground."), why: "The trunk is the thick woody part that the branches grow from." },
@@ -49,7 +49,7 @@ export default defineAssessmentBank({
       "parts-of-the-human-body": { objective: "Name and locate basic body parts (this screen does not assess drawing a body).", items: [
         { q: "Which part does the arrow point to?", a: "The elbow", d: ["The knee", "The shoulder"], practice: 1, model: science({ type: "body", point: "elbow" }, "A standing child. The arrow points to the bend halfway along the arm."), why: "The elbow is where the arm bends between the shoulder and hand." },
         { q: "Put these parts in order down an arm, starting nearest the body.", order: ["Shoulder", "Elbow", "Hand"], practice: 3, why: "The shoulder joins the arm to the body. The elbow is next, then the hand at the end." },
-        { q: "What is the part where your leg bends between your thigh and lower leg?", t: "knee", practice: 4, why: "Your knee is the joint where your leg bends." },
+        { q: "What is the part where your leg bends between your thigh and lower leg?", t: ["knee", "the knee", "your knee"], practice: 4, why: "Your knee is the joint where your leg bends." },
       ] },
       "our-five-senses": { objective: "Associate senses with body parts and apply them to everyday situations.", items: [
         { q: "Which sense uses this body part?", a: "Smell", d: ["Hearing", "Sight"], practice: 1, model: pictures("A body part", [["👃", "Nose"]], "A nose."), why: "Your nose helps you smell things." },

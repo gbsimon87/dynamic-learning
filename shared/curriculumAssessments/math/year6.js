@@ -447,7 +447,7 @@ export default defineAssessmentBank({
         { q: "A circle has radius 7 cm. What is its diameter in centimetres?", n: 14, practice: 2,
           model: { renderer: "circle", alt: "A circle with a centre-to-edge radius labelled seven centimetres.", data: { given: "radius", value: 7, unit: "cm" } },
           why: "A diameter is two radii. 2 × 7 = 14 cm." },
-        { q: "Which name means the distance all the way around a circle?", t: "circumference", practice: 3,
+        { q: "Which name means the distance all the way around a circle?", t: ["circumference", "the circumference"], practice: 3,
           why: "The circumference is the circle's boundary length. Radius and diameter measure straight distances." },
         { q: "A circular badge has diameter 18 mm. What is its radius in millimetres?", n: 9, practice: 4,
           model: { renderer: "circle", alt: "A circle with a diameter through the centre labelled eighteen millimetres.", data: { given: "diameter", value: 18, unit: "mm" } },

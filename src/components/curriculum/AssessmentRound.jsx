@@ -4,7 +4,7 @@ import JourneyModel from "./JourneyModel.jsx";
 import { AssessmentChoice, AssessmentFractionShade, AssessmentNumberInput, AssessmentNumberTrack, AssessmentOrder,
   AssessmentSort, AssessmentTextInput } from "./AssessmentInputs.jsx";
 import { isSubmittable } from "../../data/assessmentInputRules.js";
-import { describeAssessmentResponse } from "../../data/curriculumJourney.js";
+import { assessmentReadAloud, describeAssessmentResponse } from "../../data/curriculumJourney.js";
 
 const CONTROLS = { number: AssessmentNumberInput, text: AssessmentTextInput, choice: AssessmentChoice, order: AssessmentOrder,
   sort: AssessmentSort, fractionShade: AssessmentFractionShade, numberTrack: AssessmentNumberTrack };
@@ -18,13 +18,16 @@ const OUTCOME = {
   skipped: { icon: "🤔", heading: "You chose “I’m not sure”" },
 };
 
+/** "**word**" marks the word a prompt is about (often a French word). */
+const Marked = ({ text }) => text.split(/\*\*(.+?)\*\*/).map((part, i) => i % 2 ? <strong key={i}>{part}</strong> : part);
+
 /**
  * One quiz question. Before an acknowledged save it is a controlled form whose
  * draft resets by item (the parent keys it by itemInstanceId). After the save
  * it is read-only: the outcome comes from the stored response, never from the
  * client, and the explanation follows.
  */
-export default function AssessmentRound({ item, response, number, total, busy, error, conflict, onSubmit, onNext, onReload, nextLabel = "Next question" }) {
+export default function AssessmentRound({ item, subject, response, number, total, busy, error, conflict, onSubmit, onNext, onReload, nextLabel = "Next question" }) {
   const id = useId();
   const [value, setValue] = useState(() => initialValue(item.public.input));
   const heading = useRef(null);
@@ -32,11 +35,12 @@ export default function AssessmentRound({ item, response, number, total, busy, e
   useEffect(() => { (response ? reviewHeading : heading).current?.focus(); }, [response]);
   const Control = CONTROLS[item.public.input.kind];
   const { prompt, evidence, model, input, speech } = item.public;
+  const readAloud = assessmentReadAloud(item, subject);
 
   const question = <>
     <p className="cj-question-count">Question {number} of {total}</p>
-    <h2 id={`${id}-prompt`} className="cj-prompt" ref={heading} tabIndex={-1}>{prompt}</h2>
-    {speech.mode === "prompt" && !response && <SpeakButton text={speech.text} lang={speech.lang === "en-GB" ? undefined : speech.lang} label="Read it to me" />}
+    <h2 id={`${id}-prompt`} className="cj-prompt" ref={heading} tabIndex={-1}><Marked text={prompt} /></h2>
+    {readAloud && !response && <SpeakButton text={readAloud} lang={speech.lang === "en-GB" ? undefined : speech.lang} label="Read it to me" />}
     {evidence.map((card, i) => <section className="cj-evidence" key={i} aria-label={card.title ?? "Source"}>
       {card.title && <h3>{card.title}</h3>}
       {card.text.split("\n").map((line, n) => <p key={n}>{line}</p>)}

@@ -104,7 +104,7 @@ export default defineAssessmentBank({
     "number---addition-and-subtraction": {
       "column-addition-and-subtraction": { objective: "Add and subtract numbers with up to 4 digits using columns.", items: [
         { q: "What is 3456 + 2175?", n: 5631, practice: 2, say: "What is three thousand four hundred and fifty-six plus two thousand one hundred and seventy-five?",
-          why: "6 + 5 = 11 ones: write 1, carry 1 ten. 5 + 7 + 1 = 13 tens: write 3, carry 1 hundred. 4 + 1 + 1 = 6 hundreds. 3 + 2 = 5 thousands. The answer is 5631." },
+          why: "6 + 5 = 11 ones: write 1, exchange 10 ones for 1 ten. 5 + 7 + 1 = 13 tens: write 3, exchange 10 tens for 1 hundred. 4 + 1 + 1 = 6 hundreds. 3 + 2 = 5 thousands. The answer is 5631." },
         { q: "What is 5231 − 1478?", n: 3753, practice: 2, say: "What is five thousand two hundred and thirty-one take away one thousand four hundred and seventy-eight?",
           why: "Exchange where the top digit is too small. 5231 − 1478 = 3753. Check: 3753 + 1478 = 5231." },
         { q: "A stadium sold 4875 tickets on Saturday and 3968 on Sunday. How many tickets did it sell altogether?", n: 8843, unit: "tickets", practice: 4,
@@ -356,7 +356,7 @@ export default defineAssessmentBank({
         { q: "Which 12-hour time is 21:45?", a: "9:45 pm", d: ["9:45 am", "11:45 pm", "12:45 pm"], practice: 2,
           say: "Which 12-hour time is twenty-one forty-five?",
           why: "The hour is more than 12, so take away 12: 21 − 12 = 9. It is pm, so 9:45 pm." },
-        { q: "What is 00:15 in 12-hour time?", a: "12:15 am", d: ["12:15 pm", "1:15 am", "11:15 pm"], practice: 2,
+        { q: "What is 00:15 in 12-hour time?", a: "12:15 am", d: ["12:15 pm", "1:15 am", "11:15 pm"], practice: 3,
           say: "What is zero zero fifteen in 12-hour time?",
           why: "00 is midnight. Just after midnight is 12:15 am." },
         { q: "A train leaves at 3:20 pm and arrives at 17:05. How many minutes does the journey take?", n: 105, unit: "minutes", practice: 4,
@@ -466,11 +466,11 @@ export default defineAssessmentBank({
         { q: "By how many degrees did the temperature rise between 9 am and 11 am?", n: 4, unit: "degrees", practice: 4,
           model: graph("Temperature", [4, 8, 12, 10], ["9 am", "11 am", "1 pm", "3 pm"], 4, "A line graph of temperature at 9 am, 11 am, 1 pm and 3 pm."),
           why: "At 9 am it was 4°C and at 11 am it was 8°C. 8 − 4 = 4 degrees." },
-        { q: "The scale on a bar chart goes up in 5s. The bar for football reaches the 6th line. How many children chose football?", n: 30, unit: "children", practice: 1,
-          why: "6 lines of 5 each is 6 × 5 = 30." },
-        { q: "The scale goes up in 5s. Which line should the tennis bar reach?", n: 3, practice: 3,
+        { q: "The scale on a bar chart goes up in 5s. The bar for football reaches the 6th line above zero. How many children chose football?", n: 30, unit: "children", practice: 1,
+          why: "Count the lines above zero: 6 lines of 5 each is 6 × 5 = 30." },
+        { q: "The scale goes up in 5s. Which line above zero should the tennis bar reach?", n: 3, practice: 3,
           model: table("Votes", ["Sport", "Votes"], [["Swimming", 25], ["Tennis", 15], ["Golf", 5]], "Swimming 25, tennis 15 and golf 5."),
-          why: "Tennis has 15 votes. 15 ÷ 5 = 3, so the bar reaches the 3rd line." },
+          why: "Tennis has 15 votes. 15 ÷ 5 = 3, so the bar reaches the 3rd line above zero." },
       ] },
       "comparing-and-calculating-with-data": { objective: "Solve comparison, sum and difference problems using charts, pictograms and tables.", items: [
         { q: "The bars show Cats 15, Dogs 20 and Fish 10. How many pets are there altogether?", n: 45, unit: "pets", practice: 1,

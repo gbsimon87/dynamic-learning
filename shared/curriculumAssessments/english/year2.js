@@ -86,7 +86,7 @@ export default defineAssessmentBank({
           why: "garden, pencil and table have two beats. animal, hospital and yesterday have three beats." },
       ] },
       "reading-words-with-suffixes": { objective: "Reads words with common suffixes and knows what the suffix adds to the meaning.", items: [
-        { q: "What does less mean in hopeless?", a: "without hope", d: ["full of hope", "a little hope", "hope again"], practice: 1,
+        { q: "What does hopeless mean?", a: "without hope", d: ["full of hope", "a little hope", "hope again"], practice: 1,
           why: "The ending less means without, so hopeless means without hope." },
         { q: "Which word means full of care?", a: "careful", d: ["careless", "carement", "carely"], practice: 2,
           why: "The ending ful means full of, so careful means full of care." },
@@ -187,7 +187,7 @@ export default defineAssessmentBank({
         { q: "Why did Mia switch on her torch?", a: "The cave was dark.", d: ["The cave was loud.", "The cave was cold.", "The cave was big."], practice: 2,
           evidence: [{ title: "Read", text: "The cave was gloomy, so Mia switched on her torch." }],
           why: "gloomy means dark, and a torch gives light." },
-        { q: "Which word means the same as delighted?", a: "very pleased", d: ["very cross", "very sleepy", "very sorry"], practice: 3,
+        { q: "What does delighted mean?", a: "very pleased", d: ["very cross", "very sleepy", "very sorry"], practice: 3,
           evidence: [{ title: "Read", text: "Max felt delighted when he saw his present." }],
           why: "Max was happy to see his present, so delighted means very pleased." },
         { q: "What does vast mean?", a: "very big", d: ["very small", "very wet", "very green"], practice: 4,

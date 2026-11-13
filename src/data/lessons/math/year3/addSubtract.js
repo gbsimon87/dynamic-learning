@@ -34,18 +34,18 @@ export const ADD_SUBTRACT_LESSONS = {
     },
     {
       title: "Exchange ten ones for one ten",
-      lines: ["Sometimes the ones add up to 10 or more.", "Swap 10 ones for 1 ten.", "Carry that ten into the tens column."],
-      example: { type: "steps", title: "347 + 125", steps: ["Ones: 7 + 5 = 12. Write 2, carry 1 ten.", "Tens: 4 + 2 + 1 = 7.", "Hundreds: 3 + 1 = 4.", "So 347 + 125 = 472."] },
+      lines: ["Sometimes the ones add up to 10 or more.", "Exchange 10 ones for 1 ten.", "Put that ten in the tens column."],
+      example: { type: "steps", title: "347 + 125", steps: ["Ones: 7 + 5 = 12. Write 2 and exchange 10 ones for 1 ten.", "Tens: 4 + 2 + 1 = 7.", "Hundreds: 3 + 1 = 4.", "So 347 + 125 = 472."] },
     },
     {
       title: "Fill in the whole answer",
-      lines: ["Work from the ones to the hundreds.", "Carry a ten or a hundred when a column makes 10 or more.", "Add the carried digit into the next column."],
-      example: { type: "column", title: "276 + 158", top: "276", op: "+", bottom: "158", answer: "434", note: "Ones make 14 and tens make 13, so carry twice." },
+      lines: ["Work from the ones to the hundreds.", "A column makes 10 or more? Exchange 10 for 1 in the next column.", "Add the exchanged digit into the next column."],
+      example: { type: "column", title: "276 + 158", top: "276", op: "+", bottom: "158", answer: "434", note: "Ones make 14 and tens make 13, so exchange twice." },
     },
     {
       title: "Solve an adding story",
-      lines: ["This story joins two amounts. Add them to find the total.", "Write the two numbers in columns.", "Add from the ones, carrying when you need to."],
-      example: { type: "steps", title: "There are 264 red cars and 318 blue cars", steps: ["How many cars in all?", "Ones: 4 + 8 = 12. Write 2, carry 1.", "Tens: 6 + 1 + 1 = 8. Hundreds: 2 + 3 = 5.", "There are 582 cars in all."] },
+      lines: ["This story joins two amounts. Add them to find the total.", "Write the two numbers in columns.", "Add from the ones, exchanging when you need to."],
+      example: { type: "steps", title: "There are 264 red cars and 318 blue cars", steps: ["How many cars in all?", "Ones: 4 + 8 = 12. Write 2 and exchange 10 ones for 1 ten.", "Tens: 6 + 1 + 1 = 8. Hundreds: 2 + 3 = 5.", "There are 582 cars in all."] },
     },
   ],
   "column-subtraction": [

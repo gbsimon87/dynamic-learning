@@ -193,12 +193,12 @@ export const MEASUREMENT_LESSONS = {
     {
       title: "O'clock or half past",
       lines: ["Look at the long hand first.", "On 12? It is o'clock.", "On 6? It is half past."],
-      example: { type: "table", title: "Where is the long hand?", headers: ["Long hand on", "We say"], rows: [["12", "o'clock"], ["6", "half past"]], note: "At half past, the short hand is past the hour." },
+      example: { type: "table", title: "Where is the long hand?", headers: ["Long hand on", "We say"], rows: [["12", "o'clock"], ["6", "half past"]], note: "At half past, the short hand is between two numbers." },
     },
     {
       title: "Set the clock",
-      lines: ["O'clock? Put the long hand on 12.", "Half past? Put the long hand on 6.", "Then point the short hand to the hour."],
-      example: { type: "steps", title: "To show half past 2", steps: ["Put the long hand on 6.", "Put the short hand just past 2.", "Now it shows half past 2."] },
+      lines: ["O'clock? Put the long hand on 12.", "Half past? Put the long hand on 6.", "Then move the short hand to the hour."],
+      example: { type: "steps", title: "To show half past 2", steps: ["Put the long hand on 6.", "Put the short hand halfway between 2 and 3.", "Now it shows half past 2."] },
     },
     {
       title: "Later on the clock",

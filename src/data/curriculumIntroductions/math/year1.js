@@ -261,7 +261,7 @@ export default defineIntroductions({
           title: "Telling the time",
           learn: ["Read o'clock times.", "Read half past times."],
           use: "Know when it is time for lunch or for bed.",
-          ex: "The long hand on 6 and the short hand just after 7 is half past 7.",
+          ex: "The long hand on 6 and the short hand halfway between 7 and 8 is half past 7.",
           model: { renderer: "clock", alt: "An analogue clock showing half past 7.", data: { hour: 7, minute: 30 } },
         },
       },

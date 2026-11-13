@@ -81,7 +81,7 @@ export const NUMBER_LESSONS = {
     t("An important exception", ["Number", "Observation"], [["2", "The only even prime."], ["9", "Odd, but composite: 3 × 3."]], "Being odd does not guarantee that a number is prime."),
   ]),
   "written-multiplication": lesson("Multiply one column at a time", ["Start with the ones and work towards the largest place.", "Exchange tens into the next column when needed."], [
-    steps("Multiply 236 by 4", ["4 × 6 = 24: write 4 ones, carry 2 tens.", "4 × 3 tens + 2 tens = 14 tens.", "4 × 2 hundreds + 1 hundred = 9 hundreds."], "The product is 944."),
+    steps("Multiply 236 by 4", ["4 × 6 = 24: write 4 ones and exchange 20 ones for 2 tens.", "4 × 3 tens + 2 tens = 14 tens.", "4 × 2 hundreds + 1 hundred = 9 hundreds."], "The product is 944."),
     e("Partition to check", ["200", "×", "4", "+", "30", "×", "4", "+", "6", "×", "4", "=", "944"], "The partitioned products match the written multiplication."),
     steps("Keep a zero placeholder", ["Work out 2,304 × 3.", "Multiply each place, including the zero hundreds.", "The product is 6,912."], "A zero digit still has a place in the calculation."),
     e("Check with division", ["944", "÷", "4", "=", "236"], "Division can undo multiplication to check the result."),

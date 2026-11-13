@@ -111,6 +111,13 @@ describe("quiz answer controls submit the raw value the child entered", () => {
     expect(within(source).getByText("Line two")).toBeTruthy();
     expect(within(source).getByText("Bayeux Tapestry (public domain)")).toBeTruthy();
   });
+
+  it("a **marked** word in the prompt is shown in bold, not with asterisks", () => {
+    round({ kind: "text", maxLength: 20 }, { prompt: "Type the French word for **rabbit**." });
+    const prompt = screen.getByRole("heading", { level: 2 });
+    expect(prompt.textContent).toBe("Type the French word for rabbit.");
+    expect(within(prompt).getByText("rabbit").tagName).toBe("STRONG");
+  });
 });
 
 describe("journey models draw givens with a text equivalent", () => {

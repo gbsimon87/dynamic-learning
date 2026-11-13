@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { assessmentPracticeSuggestions, curriculumEntryScopes, describeAssessmentResponse, getCurriculumReviewActions,
+import { assessmentPracticeSuggestions, assessmentReadAloud, introductionReadAloud, curriculumEntryScopes, describeAssessmentResponse, getCurriculumReviewActions,
   pendingCurriculumIntroductions } from "./curriculumJourney.js";
 import { acceptsNumberDraft, isCompleteNumber, isSubmittable } from "./assessmentInputRules.js";
 import { journeyFixturePathway } from "../../shared/testing/curriculumJourneyFixtures.js";
@@ -90,4 +90,26 @@ test("saved answers are described from public data only", () => {
   assert.equal(describeAssessmentResponse(input, [{ cardId: "k1", binId: "b1" }]), "Cat: Living");
   assert.equal(describeAssessmentResponse({ kind: "choice", options: [{ id: "a", label: "7/10" }] }, "a"), "7/10");
   assert.equal(describeAssessmentResponse({ kind: "text" }, "élève"), "élève");
+});
+
+test("quiz read-aloud: maths reads symbols and options as words; other subjects and authored words are unchanged", () => {
+  const quiz = (prompt, speech, input = { kind: "number" }) => ({ public: { prompt, speech, input } });
+  const choice = { kind: "choice", options: [{ id: "a", label: "1/4" }, { id: "b", label: "3/4" }] };
+  assert.equal(assessmentReadAloud(quiz("What is 2/3 of 15?", { mode: "prompt", text: "What is 2/3 of 15?" }), "math"), "What is two thirds of 15?");
+  assert.equal(assessmentReadAloud(quiz("What fraction is shaded?", { mode: "prompt", text: "What fraction is shaded?" }, choice), "math"),
+    "What fraction is shaded? Is it one quarter or three quarters?");
+  assert.equal(assessmentReadAloud(quiz("Is 2/7 < 3/7?", { mode: "prompt", text: "Is two sevenths less than three sevenths?" }, choice), "math"),
+    "Is two sevenths less than three sevenths?");
+  assert.equal(assessmentReadAloud(quiz("In 4/4 time, which country is the USA?", { mode: "prompt", text: "In 4/4 time, which country is the USA?" }), "music"),
+    "In 4/4 time, which country is the USA?");
+  assert.equal(assessmentReadAloud(quiz("Which part is **Send the invitations**?", { mode: "prompt", text: "Which part is **Send the invitations**?" }), "computing"),
+    "Which part is Send the invitations?");
+  assert.equal(assessmentReadAloud(quiz("Type **rabbit**.", { mode: "none" }), "french"), null);
+});
+
+test("introduction read-aloud reads Maths symbols as words and pauses between lines in every subject", () => {
+  const intro = { title: "Fractions", learning: ["Find 1/4 of a set"], usefulness: "Share £12 fairly", example: { text: "1/4 of 8 = 2", model: { alt: "Eight counters in four groups." } } };
+  assert.equal(introductionReadAloud(intro, "math"),
+    "Fractions. Find one quarter of a set. Share 12 pounds fairly. one quarter of 8 equals 2. Eight counters in four groups.");
+  assert.equal(introductionReadAloud(intro, "science"), "Fractions. Find 1/4 of a set. Share £12 fairly. 1/4 of 8 = 2. Eight counters in four groups.");
 });

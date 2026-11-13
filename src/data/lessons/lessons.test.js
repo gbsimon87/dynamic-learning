@@ -67,3 +67,14 @@ test("teaching diagrams reject invalid data and keep their text in the narration
   assert.match(lint({ ...diagram, label: "" })[0], /text description/);
   assert.ok(exampleSpeech(diagram).includes("55 degrees"));
 });
+
+test("Maths lessons and quiz explanations use exchange language, never carry or borrow", async () => {
+  const banned = /\b(borrow|borrowing|carry|carried|carrying)\b/i;
+  const found = JSON.stringify(LESSONS.math).match(new RegExp(`.{0,50}${banned.source}.{0,30}`, "i"));
+  assert.equal(found?.[0] ?? null, null);
+  const { loadCurriculumAssessmentBank } = await import("../../../shared/curriculumAssessments/index.js");
+  for (let year = 1; year <= 6; year++) {
+    const bank = await loadCurriculumAssessmentBank(year, "math");
+    for (const item of bank.items) assert.doesNotMatch(`${item.public.prompt} ${item.review.explanation}`, banned, item.id);
+  }
+});

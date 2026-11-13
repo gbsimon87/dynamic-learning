@@ -38,7 +38,7 @@ export default defineAssessmentBank({ year: 5, subject: "pe", quests: {
     ] },
     "times-and-distances": { objective: "Reads times and distances to compare results (knowledge check).", items: [
       { q: "What is a sprint race usually measured in?", a: "Seconds", d: ["Metres", "Kilograms"], practice: 1, why: "Races are timed in seconds, minutes and hours for longer ones." },
-      { q: "Mia jumped 3.2 m last week and 3.5 m today. What is this?", a: "A new personal best", d: ["A worse result", "The same result"], practice: 4, why: "3.5 m is longer than 3.2 m, so she improved." },
+      { q: "Mia jumped 3.2 m last week and 3.5 m today. What is this?", say: "Mia jumped 3.2 metres last week and 3.5 metres today. What is this?", a: "A new personal best", d: ["A worse result", "The same result"], practice: 4, why: "3.5 m is longer than 3.2 m, so she improved." },
       { q: "Use the table. Who ran fastest?", a: "Sam", d: ["Ola", "Priya"], practice: 3,
         model: table("Example 60 m race times", ["Runner", "Time (seconds)"], [["Ola", "10.4"], ["Sam", "9.8"], ["Priya", "10.1"]], "A table of three runners and their race times in seconds."),
         why: "The smallest time is the fastest. 9.8 seconds is the smallest." },

@@ -12,7 +12,7 @@ export default defineAssessmentBank({ year: 4, subject: "science", quests: {
         why: "Feeding its young milk is evidence for the mammal group. Living in water alone does not make an animal a fish." },
       { q: "Sort these plants by whether they produce flowers.", sort: { bins: ["Flowering", "Non-flowering"], cards: [["Grass", "Flowering"], ["Daisy", "Flowering"], ["Fern", "Non-flowering"], ["Moss", "Non-flowering"]] }, practice: 2,
         why: "Grasses and daisies are flowering plants. Ferns and mosses do not produce flowers." },
-      { q: "What do we call an animal that has a backbone?", t: "vertebrate", practice: 1,
+      { q: "What do we call an animal that has a backbone?", t: ["vertebrate", "a vertebrate"], practice: 1,
         why: "A vertebrate has a backbone. An invertebrate does not have one." },
     ] },
     "classification-keys": { objective: "Follow a supplied identification key and choose observable yes/no features.", items: [
@@ -68,7 +68,7 @@ export default defineAssessmentBank({ year: 4, subject: "science", quests: {
     "solids-liquids-and-gases": { objective: "Classify states using observable behaviour and distinguish gas from visible droplets.", items: [
       { q: "Sort these materials in their stated forms.", sort: { bins: ["Solid", "Liquid", "Gas"], cards: [["Ice cube", "Solid"], ["Cooking oil", "Liquid"], ["Liquid water", "Liquid"], ["Air", "Gas"], ["Invisible water vapour", "Gas"]] }, practice: 2,
         why: "Ice keeps its own shape. Oil and liquid water flow; air and water vapour are gases." },
-      { q: "A material spreads throughout a sealed jar. Which state best fits?", t: "gas", practice: 1,
+      { q: "A material spreads throughout a sealed jar. Which state best fits?", t: ["gas", "a gas"], practice: 1,
         why: "A gas spreads to fill its available container. A liquid forms a pool and a solid keeps its own shape." },
       { q: "A white mist is made of tiny water droplets. What state are those droplets?", a: "Liquid", d: ["Invisible gas", "Solid glass"], practice: 4,
         why: "Droplets are liquid water. Water vapour itself is an invisible gas, different from visible mist." },
@@ -139,7 +139,7 @@ export default defineAssessmentBank({ year: 4, subject: "science", quests: {
       { q: "Which pattern is supported by the observations?", a: "The sound became fainter farther from the source", d: ["The pitch necessarily became higher", "The sound became louder farther away"], practice: 4,
         model: table("Supplied fixed-source observations", ["Distance (m)", "Observed volume"], [[1, "Loudest"], [3, "Quieter"], [5, "Faintest"]], "The same source keeps the same comfortable sound setting. At one metre it is loudest, three metres quieter, five metres faintest."),
         why: "The record compares volume at increasing distances. It does not report a pitch change." },
-      { q: "From 2 m away to 7 m away, how many metres farther from the source is the listener?", n: 5, unit: "m", practice: 4,
+      { q: "From 2 m away to 7 m away, how many metres farther from the source is the listener?", say: "From 2 metres away to 7 metres away, how many metres farther from the source is the listener?", n: 5, unit: "m", practice: 4,
         why: "7 − 2 = 5 metres farther away. Measuring distance helps make comparisons clear." },
       { q: "What should stay the same when a class investigates distance from a sound source?", a: "The source and its volume setting", d: ["The listener's distance", "Only the notebook colour"], practice: 2,
         why: "Change distance deliberately, while keeping the source strength and background conditions as similar as possible." },
