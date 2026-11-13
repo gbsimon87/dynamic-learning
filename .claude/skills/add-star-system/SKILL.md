@@ -113,6 +113,6 @@ both themes in one run. Look at the screenshots: the new system's overview, a
 planet card, the map card, a trip there and Home. Add a credits entry
 (`src/pages/credits/Credits.jsx`) only if you add a picture file.
 
-Record delivered scope and verification in `docs/CHANGELOG.md` and update the
-Solar System roadmap/current references as needed. Keep `PROJECT_KNOWLEDGE.md`
+Remove the system from `docs/SOLAR_SYSTEM_IDEAS.md` and update
+`docs/EXPLORABLE_WORLDS.md` if a contract changes. Keep `PROJECT_KNOWLEDGE.md`
 short.

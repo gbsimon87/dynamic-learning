@@ -161,7 +161,7 @@ Shared enquiry expectations are met across Years 3–4; no claim that each topic
 | Forces and magnets | Magnets and Their Poles | `magnets-and-their-poles` | Forces and magnets, requirements 3 and 5 | Make comparisons and fair tests, record results and predict from patterns. |
 | Forces and magnets | Predicting Attraction and Repulsion | `predicting-attraction-and-repulsion` | Forces and magnets, requirement 6 | Make comparisons and fair tests, record results and predict from patterns. |
 
-All Year 3 substantive requirements map to topics. Splits: the plant life-cycle requirement uses two topics; skeletons/muscles use two; magnetic attraction and classification use separate topics. Detailed four-slot designs and boundaries: [topic brief](../science-curriculum/TOPIC_BRIEF_YEAR3.md).
+All Year 3 substantive requirements map to topics. Splits: the plant life-cycle requirement uses two topics; skeletons/muscles use two; magnetic attraction and classification use separate topics. Detailed four-slot designs and boundaries: topic brief.
 
 ---
 

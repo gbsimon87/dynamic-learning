@@ -8,7 +8,7 @@ import { YEAR3_SCIENCE_BRIEFINGS } from "./year3Science.js";
 // built from them; authored teacher notes are registered below by year:subject.
 // Science, History and Geography are listed for every built year because notes
 // are being written for all of their topics (owner decision 2026-11-09).
-// Design record: docs/superpowers/2026-11-09-teacher-everyday-tools.md
+// Contract: docs/ARCHITECTURE.md (Teacher tools).
 const NOTES = {
   "3:math": YEAR3_MATH_BRIEFINGS,
   "3:science": YEAR3_SCIENCE_BRIEFINGS,

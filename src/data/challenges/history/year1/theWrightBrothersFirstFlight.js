@@ -1,6 +1,6 @@
 // Year 1 History, The Wright Brothers' First Flight (docs/curriculum/key-stage-1-history.md,
-// "events beyond living memory that are significant nationally or globally";
-// docs/history-curriculum/year-1-design-spec.md). No years in Year 1.
+// "events beyond living memory that are significant nationally or globally").
+// No years in Year 1.
 // Every template names the words on its story card or photo that answer it.
 
 const flightPhoto = { type: "source", image: "loc-wright-first-flight" };

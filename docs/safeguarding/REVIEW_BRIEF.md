@@ -1,20 +1,19 @@
 # Learn with Bix: brief for a children's privacy and safeguarding review
 
-**Prepared:** 2026-10-10. **Updated:** 2026-10-15 against the current repository.
 This is a factual description for a qualified reviewer. It is not legal advice,
 and it does not claim that the app complies with any law.
 
 ## 1. The service
 
 - Learn with Bix is a web learning app (learnwithbix.com) for children aged
-  6–8, with implemented curriculum paths for Years 1–4 in Maths, English,
-  Science, History and Geography, plus standalone Skills games. Public
-  overviews are available without signup at `/what-we-teach` and the 20
-  `/curriculum-guide/year-<year>-<subject>` pages. Topic counts are not a claim
+  6–8, with curriculum paths for Years 1–6 (Maths, English, Science, History
+  and Geography in every year, more subjects in Years 5–6), standalone Skills
+  games and account-free teacher tools. Public overviews are available without
+  signup at `/what-we-teach` and `/curriculum-guide/year-<year>-<subject>`. Topic counts are not a claim
   of full statutory coverage.
 - It is live now. It runs on Render in Frankfurt and stores data in MongoDB
-  Atlas on AWS Ireland (eu-west-1), a 3-node replica set. Atlas backups are
-  recorded as inactive in the 2026-10-10 project notes. Hosting regions, backup
+  Atlas on AWS Ireland (eu-west-1), a 3-node replica set. Atlas backups were
+  last recorded as inactive. Hosting regions, backup
   status, supplier agreements and platform-log retention need confirmation
   against the current supplier dashboards; this update did not inspect them.
 - There are no ads, no purchases, no chat, no messages between users and no
@@ -160,7 +159,7 @@ nothing, and adding PostHog (#36) is on hold until this review is done.
     wording, a prioritised implementation list and any unresolved assumptions.
     Identify required operational procedures as well as code changes.
 
-## 9. Engineering changes already made (2026-10-10)
+## 9. Safeguards already in place
 
 - Fonts are hosted by the app, so no page load contacts Google.
 - Server error logs record the error type and code only, never messages that

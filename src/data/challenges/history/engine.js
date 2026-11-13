@@ -3,7 +3,7 @@ import { shuffle } from "../year1Math/shared.js";
 
 /**
  * A History topic is a story card and a bank of question templates per level
- * (docs/history-curriculum/shared-design-spec.md §3–4):
+ * (docs/VISUAL_RECIPES.md):
  *
  *   { year, references, levels: { 1: { story, rounds: [bankName × n] }, … }, banks }
  *

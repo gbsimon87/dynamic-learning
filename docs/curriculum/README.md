@@ -51,10 +51,8 @@ checked on 2026-10-13. Key stages 1 and 2 retain the GOV.UK HTML page as a
 supporting reference and record its editorial differences. Key stage 3 is kept
 for reference only, beyond the app's primary years.
 
-[Geography specifications for Years 1–4](../geography-curriculum/README.md)
-are drafted, with an implementation tracker in each spec. The KS1/KS2 mapping
-sections record the proposed year split and all 58 planned topics; these are
-planning rows, not implemented datasets. Statutory text is unchanged.
+The KS1/KS2 Geography mapping sections record the year split and every topic;
+statutory text is unchanged.
 
 | File | Covers |
 |---|---|

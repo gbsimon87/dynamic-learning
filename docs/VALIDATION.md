@@ -44,7 +44,7 @@ For changes to public routes, catalogues, guides or SEO output, also run the
 required `npm run check:seo` before release, following the Skills/SEO guides.
 If tooling is unavailable, record that specific gap.
 
-Keep the results and checked revision/scope in the build record. Reuse a passing
+Report the results and checked scope. Reuse a passing
 result while the relevant code is unchanged. After a fix, rerun the failing check
 and other checks affected by that fix; repeat the full set only if shared changes,
 failures or unresolved risk warrant it. A later merge/rebase that changes tested

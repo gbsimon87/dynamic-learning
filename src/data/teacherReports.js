@@ -1,6 +1,5 @@
 // Report comment builder: pure, deterministic templates. Nothing here stores or
 // sends pupil data; the page keeps every input in memory only.
-// Design record: docs/superpowers/2026-11-09-teacher-everyday-tools.md
 
 export const BANDS = [
   { id: "none", label: "Not reported" },

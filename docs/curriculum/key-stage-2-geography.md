@@ -76,11 +76,9 @@ Pupils should be taught to:
 
 # Mapping to our curriculum dataset
 
-**Implementation status (2026-10-13):** The owner requested the Year 3 and Year 4 builds.
-Their 16 topics / 64 challenges each are implemented and verified locally; their IDs
-are now permanent. This crosswalk describes the
-introductory digital allocation, not full KS2 coverage or completed fieldwork. See [Geography specs and year trackers](../geography-curriculum/README.md)
-and [PROJECT_IDEAS.md](../PROJECT_IDEAS.md) #15.
+Years 3–6 Geography are built from these rows; the IDs are permanent. This
+crosswalk is an introductory digital allocation, not full KS2 coverage or
+completed fieldwork. Open review: [PROJECT_IDEAS.md](../PROJECT_IDEAS.md) #15.
 
 Geography is statutory by key stage: KS2 covers Years 3–6.
 The allocation below is our app design choice. Requirement codes are app
@@ -117,38 +115,38 @@ and briefs are in those specs. Title-derived IDs for both years are now permanen
 
 | Year | Category | Proposed topic | Proposed topic ID | Requirement codes |
 |---|---|---|---|---|
-| 3 | The UK and Europe | [Counties Cities and Regions](../geography-curriculum/year-3-design-spec.md#the-uk-and-europe) | `counties-cities-and-regions` | K2-L2, K2-S1 |
-| 3 | The UK and Europe | [UK Landscapes and Land Use](../geography-curriculum/year-3-design-spec.md#the-uk-and-europe) | `uk-landscapes-and-land-use` | K2-L2, K2-Hp, K2-Hh, K2-S1 |
-| 3 | The UK and Europe | [Europe and Russia](../geography-curriculum/year-3-design-spec.md#the-uk-and-europe) | `europe-and-russia` | K2-L1, K2-S1 |
-| 3 | Lines on the Globe | [The Equator and Hemispheres](../geography-curriculum/year-3-design-spec.md#lines-on-the-globe) | `the-equator-and-hemispheres` | K2-L3, K2-S1 |
-| 3 | Lines on the Globe | [Tropics and Polar Circles](../geography-curriculum/year-3-design-spec.md#lines-on-the-globe) | `tropics-and-polar-circles` | K2-L3, K2-Hp, K2-S1 |
-| 3 | Lines on the Globe | [Latitude and Longitude](../geography-curriculum/year-3-design-spec.md#lines-on-the-globe) | `latitude-and-longitude` | K2-L3, K2-S1 |
-| 3 | Physical Processes | [Mountains and Valleys](../geography-curriculum/year-3-design-spec.md#physical-processes) | `mountains-and-valleys` | K2-Hp, K2-L2, K2-S1 |
-| 3 | Physical Processes | [Volcanoes](../geography-curriculum/year-3-design-spec.md#physical-processes) | `volcanoes` | K2-Hp, K2-L1, K2-S1 |
-| 3 | Physical Processes | [Earthquakes](../geography-curriculum/year-3-design-spec.md#physical-processes) | `earthquakes` | K2-Hp, K2-S1 |
-| 3 | Physical Processes | [The Water Cycle](../geography-curriculum/year-3-design-spec.md#physical-processes) | `the-water-cycle` | K2-Hp |
-| 3 | Two European Regions | [The Lake District](../geography-curriculum/year-3-design-spec.md#two-european-regions) | `the-lake-district` | K2-P1, K2-L2, K2-Hp, K2-Hh, K2-S1 |
-| 3 | Two European Regions | [Campania](../geography-curriculum/year-3-design-spec.md#two-european-regions) | `campania` | K2-P1, K2-L1, K2-Hp, K2-Hh, K2-S1 |
-| 3 | Two European Regions | [Comparing Two Regions](../geography-curriculum/year-3-design-spec.md#two-european-regions) | `comparing-two-regions` | K2-P1, K2-Hp, K2-Hh, K2-S1 |
-| 3 | Maps and Local Surveys | [Eight Compass Points](../geography-curriculum/year-3-design-spec.md#maps-and-local-surveys) | `eight-compass-points` | K2-S2, K2-S1 |
-| 3 | Maps and Local Surveys | [Four Figure Grid References](../geography-curriculum/year-3-design-spec.md#maps-and-local-surveys) | `four-figure-grid-references` | K2-S2, K2-S1 |
-| 3 | Maps and Local Surveys | [Surveying Local Land Use](../geography-curriculum/year-3-design-spec.md#maps-and-local-surveys) | `surveying-local-land-use` | K2-S3, K2-Hh, K2-L2, K2-S1 |
-| 4 | North and South America | [North American Countries and Cities](../geography-curriculum/year-4-design-spec.md#north-and-south-america) | `north-american-countries-and-cities` | K2-L1, K2-S1 |
-| 4 | North and South America | [South American Countries and Cities](../geography-curriculum/year-4-design-spec.md#north-and-south-america) | `south-american-countries-and-cities` | K2-L1, K2-S1 |
-| 4 | North and South America | [Washington State](../geography-curriculum/year-4-design-spec.md#north-and-south-america) | `washington-state` | K2-P1, K2-L1, K2-Hp, K2-Hh, K2-S1 |
-| 4 | Climate and the Globe | [Climate Zones](../geography-curriculum/year-4-design-spec.md#climate-and-the-globe) | `climate-zones` | K2-Hp, K2-L3, K2-S1 |
-| 4 | Climate and the Globe | [Biomes and Vegetation Belts](../geography-curriculum/year-4-design-spec.md#climate-and-the-globe) | `biomes-and-vegetation-belts` | K2-Hp, K2-L1, K2-L3, K2-S1 |
-| 4 | Climate and the Globe | [Day Night and Time Zones](../geography-curriculum/year-4-design-spec.md#climate-and-the-globe) | `day-night-and-time-zones` | K2-L3, K2-S1 |
-| 4 | Rivers and Changing Landscapes | [River Journeys](../geography-curriculum/year-4-design-spec.md#rivers-and-changing-landscapes) | `river-journeys` | K2-Hp, K2-L2, K2-S1 |
-| 4 | Rivers and Changing Landscapes | [Rivers and People](../geography-curriculum/year-4-design-spec.md#rivers-and-changing-landscapes) | `rivers-and-people` | K2-Hp, K2-Hh, K2-L2, K2-P1 |
-| 4 | Rivers and Changing Landscapes | [Changing UK Landscapes](../geography-curriculum/year-4-design-spec.md#rivers-and-changing-landscapes) | `changing-uk-landscapes` | K2-L2, K2-Hp, K2-Hh, K2-S1 |
-| 4 | Settlements and Resources | [Settlements and Land Use](../geography-curriculum/year-4-design-spec.md#settlements-and-resources) | `settlements-and-land-use` | K2-Hh, K2-L2, K2-P1, K2-S1 |
-| 4 | Settlements and Resources | [Food and Trade Links](../geography-curriculum/year-4-design-spec.md#settlements-and-resources) | `food-and-trade-links` | K2-Hh, K2-L1, K2-P1, K2-S1 |
-| 4 | Settlements and Resources | [Energy Minerals and Water](../geography-curriculum/year-4-design-spec.md#settlements-and-resources) | `energy-minerals-and-water` | K2-Hh, K2-Hp, K2-L1, K2-S1 |
-| 4 | Settlements and Resources | [Comparing Three Regions](../geography-curriculum/year-4-design-spec.md#settlements-and-resources) | `comparing-three-regions` | K2-P1, K2-Hp, K2-Hh, K2-S1 |
-| 4 | Mapping and Fieldwork Enquiries | [Six Figure Grid References](../geography-curriculum/year-4-design-spec.md#mapping-and-fieldwork-enquiries) | `six-figure-grid-references` | K2-S2, K2-S1 |
-| 4 | Mapping and Fieldwork Enquiries | [Maps Atlases and Digital Mapping](../geography-curriculum/year-4-design-spec.md#mapping-and-fieldwork-enquiries) | `maps-atlases-and-digital-mapping` | K2-S1, K2-S2, K2-L1, K2-L2 |
-| 4 | Mapping and Fieldwork Enquiries | [Local Fieldwork Enquiry](../geography-curriculum/year-4-design-spec.md#mapping-and-fieldwork-enquiries) | `local-fieldwork-enquiry` | K2-S3, K2-Hh, K2-L2, K2-S1 |
+| 3 | The UK and Europe | Counties Cities and Regions | `counties-cities-and-regions` | K2-L2, K2-S1 |
+| 3 | The UK and Europe | UK Landscapes and Land Use | `uk-landscapes-and-land-use` | K2-L2, K2-Hp, K2-Hh, K2-S1 |
+| 3 | The UK and Europe | Europe and Russia | `europe-and-russia` | K2-L1, K2-S1 |
+| 3 | Lines on the Globe | The Equator and Hemispheres | `the-equator-and-hemispheres` | K2-L3, K2-S1 |
+| 3 | Lines on the Globe | Tropics and Polar Circles | `tropics-and-polar-circles` | K2-L3, K2-Hp, K2-S1 |
+| 3 | Lines on the Globe | Latitude and Longitude | `latitude-and-longitude` | K2-L3, K2-S1 |
+| 3 | Physical Processes | Mountains and Valleys | `mountains-and-valleys` | K2-Hp, K2-L2, K2-S1 |
+| 3 | Physical Processes | Volcanoes | `volcanoes` | K2-Hp, K2-L1, K2-S1 |
+| 3 | Physical Processes | Earthquakes | `earthquakes` | K2-Hp, K2-S1 |
+| 3 | Physical Processes | The Water Cycle | `the-water-cycle` | K2-Hp |
+| 3 | Two European Regions | The Lake District | `the-lake-district` | K2-P1, K2-L2, K2-Hp, K2-Hh, K2-S1 |
+| 3 | Two European Regions | Campania | `campania` | K2-P1, K2-L1, K2-Hp, K2-Hh, K2-S1 |
+| 3 | Two European Regions | Comparing Two Regions | `comparing-two-regions` | K2-P1, K2-Hp, K2-Hh, K2-S1 |
+| 3 | Maps and Local Surveys | Eight Compass Points | `eight-compass-points` | K2-S2, K2-S1 |
+| 3 | Maps and Local Surveys | Four Figure Grid References | `four-figure-grid-references` | K2-S2, K2-S1 |
+| 3 | Maps and Local Surveys | Surveying Local Land Use | `surveying-local-land-use` | K2-S3, K2-Hh, K2-L2, K2-S1 |
+| 4 | North and South America | North American Countries and Cities | `north-american-countries-and-cities` | K2-L1, K2-S1 |
+| 4 | North and South America | South American Countries and Cities | `south-american-countries-and-cities` | K2-L1, K2-S1 |
+| 4 | North and South America | Washington State | `washington-state` | K2-P1, K2-L1, K2-Hp, K2-Hh, K2-S1 |
+| 4 | Climate and the Globe | Climate Zones | `climate-zones` | K2-Hp, K2-L3, K2-S1 |
+| 4 | Climate and the Globe | Biomes and Vegetation Belts | `biomes-and-vegetation-belts` | K2-Hp, K2-L1, K2-L3, K2-S1 |
+| 4 | Climate and the Globe | Day Night and Time Zones | `day-night-and-time-zones` | K2-L3, K2-S1 |
+| 4 | Rivers and Changing Landscapes | River Journeys | `river-journeys` | K2-Hp, K2-L2, K2-S1 |
+| 4 | Rivers and Changing Landscapes | Rivers and People | `rivers-and-people` | K2-Hp, K2-Hh, K2-L2, K2-P1 |
+| 4 | Rivers and Changing Landscapes | Changing UK Landscapes | `changing-uk-landscapes` | K2-L2, K2-Hp, K2-Hh, K2-S1 |
+| 4 | Settlements and Resources | Settlements and Land Use | `settlements-and-land-use` | K2-Hh, K2-L2, K2-P1, K2-S1 |
+| 4 | Settlements and Resources | Food and Trade Links | `food-and-trade-links` | K2-Hh, K2-L1, K2-P1, K2-S1 |
+| 4 | Settlements and Resources | Energy Minerals and Water | `energy-minerals-and-water` | K2-Hh, K2-Hp, K2-L1, K2-S1 |
+| 4 | Settlements and Resources | Comparing Three Regions | `comparing-three-regions` | K2-P1, K2-Hp, K2-Hh, K2-S1 |
+| 4 | Mapping and Fieldwork Enquiries | Six Figure Grid References | `six-figure-grid-references` | K2-S2, K2-S1 |
+| 4 | Mapping and Fieldwork Enquiries | Maps Atlases and Digital Mapping | `maps-atlases-and-digital-mapping` | K2-S1, K2-S2, K2-L1, K2-L2 |
+| 4 | Mapping and Fieldwork Enquiries | Local Fieldwork Enquiry | `local-fieldwork-enquiry` | K2-S3, K2-Hh, K2-L2, K2-S1 |
 
 ## Year 5 topics mapped to statutory requirements
 

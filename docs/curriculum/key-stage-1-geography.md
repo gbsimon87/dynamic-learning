@@ -77,11 +77,9 @@ Pupils should be taught to:
 
 # Mapping to our curriculum dataset
 
-**Planning status (2026-10-13):** Geography specifications are drafted; no
-curriculum dataset or challenges have been implemented. This is a proposed
-topic-to-requirement mapping, not a statement of shipped coverage or owner
-approval. See [Geography specs and year trackers](../geography-curriculum/README.md)
-and [PROJECT_IDEAS.md](../PROJECT_IDEAS.md) #15.
+Years 1 and 2 Geography are built from these rows; the IDs are permanent. This
+mapping is a topic-to-requirement crosswalk, not a claim of full statutory
+coverage. Open review: [PROJECT_IDEAS.md](../PROJECT_IDEAS.md) #15.
 
 Geography is statutory by key stage: KS1 covers Years 1–2.
 The allocation below is our app design choice. Requirement codes are app
@@ -119,32 +117,32 @@ here are proposed title-derived IDs; they become permanent on first release.
 
 | Year | Category | Proposed topic | Proposed topic ID | Requirement codes |
 |---|---|---|---|---|
-| 1 | Our Place | [Around Our School](../geography-curriculum/year-1-design-spec.md#our-place) | `around-our-school` | K1-H2p, K1-H2h, K1-S4 |
-| 1 | Our Place | [Human and Physical Features](../geography-curriculum/year-1-design-spec.md#our-place) | `human-and-physical-features` | K1-H2p, K1-H2h, K1-P1 |
-| 1 | Our Place | [Maps from Above](../geography-curriculum/year-1-design-spec.md#our-place) | `maps-from-above` | K1-S3 |
-| 1 | The United Kingdom | [Four Countries of the UK](../geography-curriculum/year-1-design-spec.md#the-united-kingdom) | `four-countries-of-the-uk` | K1-L2, K1-S1 |
-| 1 | The United Kingdom | [UK Capital Cities](../geography-curriculum/year-1-design-spec.md#the-united-kingdom) | `uk-capital-cities` | K1-L2, K1-H2h, K1-S1 |
-| 1 | The United Kingdom | [Seas Around the UK](../geography-curriculum/year-1-design-spec.md#the-united-kingdom) | `seas-around-the-uk` | K1-L2, K1-H2p, K1-S1 |
-| 1 | The Wider World | [Seven Continents](../geography-curriculum/year-1-design-spec.md#the-wider-world) | `seven-continents` | K1-L1, K1-S1 |
-| 1 | The Wider World | [Five Oceans](../geography-curriculum/year-1-design-spec.md#the-wider-world) | `five-oceans` | K1-L1, K1-H2p, K1-S1 |
-| 1 | The Wider World | [Hot and Cold Places](../geography-curriculum/year-1-design-spec.md#the-wider-world) | `hot-and-cold-places` | K1-H1, K1-S1 |
-| 1 | Weather and Exploring | [Daily Weather](../geography-curriculum/year-1-design-spec.md#weather-and-exploring) | `daily-weather` | K1-H1, K1-H2p, K1-S4 |
-| 1 | Weather and Exploring | [Seasons in the UK](../geography-curriculum/year-1-design-spec.md#weather-and-exploring) | `seasons-in-the-uk` | K1-H1, K1-H2p, K1-S4 |
-| 1 | Weather and Exploring | [Routes and Simple Maps](../geography-curriculum/year-1-design-spec.md#weather-and-exploring) | `routes-and-simple-maps` | K1-S2, K1-S3 |
-| 2 | World and UK Knowledge | [Continents and Oceans Together](../geography-curriculum/year-2-design-spec.md#world-and-uk-knowledge) | `continents-and-oceans-together` | K1-L1, K1-S1 |
-| 2 | World and UK Knowledge | [UK Places and Landscapes](../geography-curriculum/year-2-design-spec.md#world-and-uk-knowledge) | `uk-places-and-landscapes` | K1-L2, K1-H2p, K1-H2h, K1-S1 |
-| 2 | World and UK Knowledge | [Compass Directions and Routes](../geography-curriculum/year-2-design-spec.md#world-and-uk-knowledge) | `compass-directions-and-routes` | K1-S2 |
-| 2 | Weather and World Patterns | [Weather Records](../geography-curriculum/year-2-design-spec.md#weather-and-world-patterns) | `weather-records` | K1-H1, K1-S4 |
-| 2 | Weather and World Patterns | [The Equator and the Poles](../geography-curriculum/year-2-design-spec.md#weather-and-world-patterns) | `the-equator-and-the-poles` | K1-H1, K1-S1 |
-| 2 | Two Small Places | [Whitby by the Sea](../geography-curriculum/year-2-design-spec.md#two-small-places) | `whitby-by-the-sea` | K1-P1, K1-H2p, K1-H2h, K1-S1, K1-S3 |
-| 2 | Two Small Places | [Kampong Ayer by the River](../geography-curriculum/year-2-design-spec.md#two-small-places) | `kampong-ayer-by-the-river` | K1-P1, K1-H2p, K1-H2h, K1-S1, K1-S3 |
-| 2 | Two Small Places | [Homes and Journeys in Two Places](../geography-curriculum/year-2-design-spec.md#two-small-places) | `homes-and-journeys-in-two-places` | K1-P1, K1-H2h, K1-S2 |
-| 2 | Two Small Places | [Comparing Two Small Places](../geography-curriculum/year-2-design-spec.md#two-small-places) | `comparing-two-small-places` | K1-P1, K1-H2p, K1-H2h, K1-H1 |
-| 2 | Making and Reading Maps | [Aerial Views and Landmarks](../geography-curriculum/year-2-design-spec.md#making-and-reading-maps) | `aerial-views-and-landmarks` | K1-S3 |
-| 2 | Making and Reading Maps | [Symbols and Map Keys](../geography-curriculum/year-2-design-spec.md#making-and-reading-maps) | `symbols-and-map-keys` | K1-S3, K1-S2 |
-| 2 | Making and Reading Maps | [Making a Simple Map](../geography-curriculum/year-2-design-spec.md#making-and-reading-maps) | `making-a-simple-map` | K1-S3, K1-S2 |
-| 2 | Local Fieldwork | [Observing Our School Grounds](../geography-curriculum/year-2-design-spec.md#local-fieldwork) | `observing-our-school-grounds` | K1-S4, K1-H2p, K1-H2h, K1-S3 |
-| 2 | Local Fieldwork | [Exploring Our Local Area](../geography-curriculum/year-2-design-spec.md#local-fieldwork) | `exploring-our-local-area` | K1-S4, K1-H2p, K1-H2h, K1-S2, K1-S3 |
+| 1 | Our Place | Around Our School | `around-our-school` | K1-H2p, K1-H2h, K1-S4 |
+| 1 | Our Place | Human and Physical Features | `human-and-physical-features` | K1-H2p, K1-H2h, K1-P1 |
+| 1 | Our Place | Maps from Above | `maps-from-above` | K1-S3 |
+| 1 | The United Kingdom | Four Countries of the UK | `four-countries-of-the-uk` | K1-L2, K1-S1 |
+| 1 | The United Kingdom | UK Capital Cities | `uk-capital-cities` | K1-L2, K1-H2h, K1-S1 |
+| 1 | The United Kingdom | Seas Around the UK | `seas-around-the-uk` | K1-L2, K1-H2p, K1-S1 |
+| 1 | The Wider World | Seven Continents | `seven-continents` | K1-L1, K1-S1 |
+| 1 | The Wider World | Five Oceans | `five-oceans` | K1-L1, K1-H2p, K1-S1 |
+| 1 | The Wider World | Hot and Cold Places | `hot-and-cold-places` | K1-H1, K1-S1 |
+| 1 | Weather and Exploring | Daily Weather | `daily-weather` | K1-H1, K1-H2p, K1-S4 |
+| 1 | Weather and Exploring | Seasons in the UK | `seasons-in-the-uk` | K1-H1, K1-H2p, K1-S4 |
+| 1 | Weather and Exploring | Routes and Simple Maps | `routes-and-simple-maps` | K1-S2, K1-S3 |
+| 2 | World and UK Knowledge | Continents and Oceans Together | `continents-and-oceans-together` | K1-L1, K1-S1 |
+| 2 | World and UK Knowledge | UK Places and Landscapes | `uk-places-and-landscapes` | K1-L2, K1-H2p, K1-H2h, K1-S1 |
+| 2 | World and UK Knowledge | Compass Directions and Routes | `compass-directions-and-routes` | K1-S2 |
+| 2 | Weather and World Patterns | Weather Records | `weather-records` | K1-H1, K1-S4 |
+| 2 | Weather and World Patterns | The Equator and the Poles | `the-equator-and-the-poles` | K1-H1, K1-S1 |
+| 2 | Two Small Places | Whitby by the Sea | `whitby-by-the-sea` | K1-P1, K1-H2p, K1-H2h, K1-S1, K1-S3 |
+| 2 | Two Small Places | Kampong Ayer by the River | `kampong-ayer-by-the-river` | K1-P1, K1-H2p, K1-H2h, K1-S1, K1-S3 |
+| 2 | Two Small Places | Homes and Journeys in Two Places | `homes-and-journeys-in-two-places` | K1-P1, K1-H2h, K1-S2 |
+| 2 | Two Small Places | Comparing Two Small Places | `comparing-two-small-places` | K1-P1, K1-H2p, K1-H2h, K1-H1 |
+| 2 | Making and Reading Maps | Aerial Views and Landmarks | `aerial-views-and-landmarks` | K1-S3 |
+| 2 | Making and Reading Maps | Symbols and Map Keys | `symbols-and-map-keys` | K1-S3, K1-S2 |
+| 2 | Making and Reading Maps | Making a Simple Map | `making-a-simple-map` | K1-S3, K1-S2 |
+| 2 | Local Fieldwork | Observing Our School Grounds | `observing-our-school-grounds` | K1-S4, K1-H2p, K1-H2h, K1-S3 |
+| 2 | Local Fieldwork | Exploring Our Local Area | `exploring-our-local-area` | K1-S4, K1-H2p, K1-H2h, K1-S2, K1-S3 |
 
 ## Coverage limits and follow-on work
 

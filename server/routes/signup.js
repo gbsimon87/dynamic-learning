@@ -4,7 +4,7 @@
  *   POST /complete  { email, code?, password, accountType, ageBand, children[] }
  *                   → checks the code, then creates the account and every
  *                     profile in one go, and signs in.
- * Spec: docs/superpowers/specs/2026-10-07-signup-onboarding-design.md §5
+ * Contract: docs/ARCHITECTURE.md (Sign-up).
  */
 import { errorSummary } from "../logError.js";
 import { Router } from "express";

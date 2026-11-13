@@ -1,5 +1,5 @@
 // Year 1 History, Queen Elizabeth I (docs/curriculum/key-stage-1-history.md,
-// "the lives of significant individuals"; docs/history-curriculum/year-1-design-spec.md).
+// "the lives of significant individuals").
 // Every template names the words on its story card or picture that answer it.
 // The Armada uses the approved sentence only; no fighting is described.
 

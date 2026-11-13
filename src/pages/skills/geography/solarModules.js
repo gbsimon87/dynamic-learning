@@ -1,7 +1,7 @@
 /**
  * The Solar System's module host.
  *
- * From Phase 0 of docs/SOLAR_SYSTEM_IDEAS.md on, each new scene feature is a
+ * Each new scene feature is a
  * module the animate loop drives, rather than more code inside the effect in
  * SolarSystem.jsx. A module is a plain object with any of `update(dt, frame)`,
  * `resize(size)` and `dispose()`, the same names meteorExperiment.js uses.

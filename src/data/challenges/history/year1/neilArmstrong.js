@@ -1,6 +1,5 @@
 // Year 1 History, Neil Armstrong (docs/curriculum/key-stage-1-history.md,
-// "the lives of significant individuals in the past"; docs/history-curriculum/
-// year-1-design-spec.md). Band: "when grandparents were little". No years.
+// "the lives of significant individuals in the past"). Band: "when grandparents were little". No years.
 // Every template names the words on its story card or photo that answer it.
 
 const portrait = { type: "source", image: "nasa-neil-armstrong" };

@@ -18,7 +18,7 @@ older questions unchanged.
 | Standalone Skills Mode | [Money Match](../src/pages/skills/math/MoneyMatch.jsx) combines visible coins and a tappable coin tray with [FreePlayShell](../src/components/skills/FreePlayShell.jsx). Reuse the relevant model for each round type/level; a custom map/explorer loop can keep its controls and share answer feedback. |
 | Maths | `math/challenges/year4/Year4MathGame.jsx` and `year5/Year5MathGame.jsx`: authored diagrams and manipulatives, column working, coordinate/angle controls; `MathQuestionVisual.jsx` adds source-quantity arrays, part–whole/sharing models, fraction bars, place-value charts and rounding number lines. Preserve custom interactions and answer checkers. |
 | English | `english/challenges/EnglishPracticeGame.jsx` and the current reading-topic games use `EnglishQuestionVisual.jsx`: visible word parts, literal picture references, building tiles and marked text. Keep passages and text that the child must actually read; never illustrate hidden dictation answers or infer a character's feelings/actions. |
-| Science | The current subject game and `YearNScienceVisual.jsx` render diagrams, apparatus, classification keys and numeric evidence charts. Years 4–5 use `AdventureChallenge` for illustrated Bix notes and `ScienceRound` for the wide layout: picture → clue card → question → equal-width answer rows → Check, with the question always directly above its answers. Year 3's bespoke enquiries retain their controls and specialised illustrations. |
+| Science | The current subject game and `YearNScienceVisual.jsx` render diagrams, apparatus, classification keys and numeric evidence charts. Years 4–5 use `AdventureChallenge` for illustrated Bix notes and `ScienceRound` for the wide layout: picture → clue card → question → equal-width answer rows → Check, with the question always directly above its answers. `ChallengeShell` `wide` gives the roomy card (~1120px) with feedback beside Check; two columns start at 1024px (`science-round.css`), the figure sticky only when it fits; a game with no figure keeps the 760px column. Year 3's bespoke enquiries retain their controls and specialised illustrations. |
 | History | `HistoryChallenge.jsx`, `HistoryVisual.jsx`, `SourceVisual.jsx` and `TimelineVisual.jsx`: illustrated story cards, source pictures with credits and chronology. Keep evidence and its provenance available during the round. |
 | Geography | `GeographyChallenge.jsx`, `GeographyVisual.jsx` and the current year game: illustrated notes, maps, source pictures, routes, compass/coordinate work and charts. Preserve map controls, keys, units and evidence. |
 | Art, Computing, D&T, French, Music, PE, Wellbeing | The built Year 5 `Year5<Subject>Game.jsx`/`Visual.jsx` pairs use `AdventureChallenge`: subject banner, Bix's illustrated notes, large start button and wide rounds. Retain the subject's own figure types, narration settings and interactions. |
@@ -28,6 +28,41 @@ Paths above are relative to `src/pages/skills/` for games and
 `src/components/challenge/` for shared components. Maths/English fallbacks live
 under `visual/`; model helpers are in `src/data/challenges/questionVisuals.js`
 and `literalPictures.js`. Use existing SVG/CSS assets and paired theme tokens.
+
+## Story/notes cards, maps and reading limits
+
+- Every History story card and Geography notes card is followed by a run of
+  rounds. Reopening the card never regenerates the bank or loses the round.
+- The bank asks only what the card or source shows: each History template names
+  an `answeredBy` phrase that `lintHistoryTopic` finds on the card; each
+  Geography question carries `evidence` and `sources`, checked by
+  `lintGeographyTopic`.
+- Reading limits live in code, not docs: `GEOGRAPHY_AGES`
+  (`geography/engine.js`), `HISTORY_AGE` (`history/engine.js`) and `LESSON_AGES`
+  (`lintLessons.js`).
+- Map questions are never memory tasks: keep the source visible. Use labelled
+  markers A/B/C with ordinary answer buttons; never grade a fingertip position.
+  Give every map, diagram and chart a text equivalent that does not reveal the
+  answer, and never rely on colour alone.
+- No timer, speed score or leaderboard. A wrong answer keeps the round open;
+  two misses reveal the hint.
+
+## Sources and images
+
+- History images are CC0-1.0 or PDM-1.0 only (`ALLOWED` in
+  `scripts/history-assets/fetch.mjs`); never CC BY, BY-SA or NC. Draw
+  in-copyright works and modern people. Each manifest entry needs id, title,
+  institution, objectUrl, fileUrl, licence, retrieved, sha256 and child-friendly
+  alt text.
+- Geography photos and aerials are CC0, public domain or OGL; an Ordnance Survey
+  extract must be licensed, and practice grids show the real OS key.
+- Science "illustrated" artwork is third-party, pinned to a commit with sha256
+  in `scripts/science-assets/sources.json`, fetched only by those scripts and
+  listed in `src/assets/science/manifest.json`. The hand-built SVG `*Figure`
+  components stay as the "classic" fallback, including when an image fails.
+- Bundle every image and list it on `/credits`. Never fetch third-party images or
+  map tiles at runtime, and never use geolocation.
+- Drawn maps, timelines and scenes are SVG on `--light-*`/`--dark-*` tokens.
 
 ## Match visuals to Curriculum slots or Skills rounds
 

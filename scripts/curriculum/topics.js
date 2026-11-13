@@ -151,7 +151,7 @@ export function renderContext(info, mapping, bank, lessons, visual) {
     "- .claude/skills/building-curriculum-topics/SKILL.md",
     "- docs/VISUAL_RECIPES.md",
     `- ${mapping.file ?? "docs/curriculum/README.md"}: the statutory bullet and relevant notes, not only its mapping row`,
-    "- docs/superpowers/templates/topic-brief.md (four teaching goals, boundaries, interactions and review evidence)", "",
+    "- docs/templates/topic-brief.md (four teaching goals, boundaries, interactions and review evidence)", "",
     "## Next checks",
     `npm run check:topic -- --year ${info.year} --subject ${info.subject} --topic ${info.topicId}`,
     "npm run lint && npm test && npm run build", "",

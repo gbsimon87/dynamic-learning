@@ -1,8 +1,7 @@
 import { toKebabCase } from "../utils/toKebabCase.js";
 
 // England key stage 1 History, Year 1 (DfE / OGL v3.0). Source and app
-// crosswalk: docs/curriculum/key-stage-1-history.md. Design:
-// docs/history-curriculum/year-1-design-spec.md. Titles are persistent
+// crosswalk: docs/curriculum/key-stage-1-history.md. Titles are persistent
 // identifiers (approved 2026-10-12); do not rename them without a progress migration.
 const rawCurriculum = [
   { title: "Then and Now", topics: [

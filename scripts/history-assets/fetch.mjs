@@ -7,7 +7,7 @@
  * Downloads each pinned file, checks its sha256, scales it to at most 800 px on
  * the long edge, encodes WebP (≤ 120 KB) in headless Chrome, writes
  * src/assets/history/images/<id>.webp and rebuilds src/assets/history/manifest.json.
- * Only CC0-1.0 and PDM-1.0 are accepted (docs/history-curriculum/shared-design-spec.md §6).
+ * Only CC0-1.0 and PDM-1.0 are accepted (docs/VISUAL_RECIPES.md, Sources and images).
  * Needs Chrome: set CHROME_PATH if it is not in /Applications.
  */
 import crypto from "node:crypto";

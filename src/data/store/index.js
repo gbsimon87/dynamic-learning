@@ -15,7 +15,7 @@
  * Set `VITE_USE_API=true` in `.env` (or in the hosting provider's environment)
  * and rebuild. Anything else — unset, "false", "0" — keeps the current
  * localStorage behaviour, so the default is always the one that works with no
- * backend running. See `.env.example` and `docs/DEPLOYMENT.md`.
+ * backend running. See `.env.example` and `docs/OPERATIONS.md`.
  *
  * Note this is a *build-time* switch: Vite inlines `import.meta.env.VITE_USE_API`
  * at build time, so flipping it requires a rebuild, not just a restart. Both

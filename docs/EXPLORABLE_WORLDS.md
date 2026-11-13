@@ -1,241 +1,162 @@
 # Explorable worlds: Solar System and Ocean Explorer
 
-How the 3D Skills Mode worlds are built, moved here from the Ocean Explorer
-branch's notes when it was merged (2026-11-04). The Solar System roadmap is
-[SOLAR_SYSTEM_IDEAS.md](SOLAR_SYSTEM_IDEAS.md); upcoming Ocean Explorer work is
-idea #44 in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Owner review of the sea-life
-facts and physical-device review are still pending.
+The two 3D Skills Mode worlds, both Three.js (no R3F, no physics engine),
+lazy-loaded and ungated. Upcoming work: [SOLAR_SYSTEM_IDEAS.md](SOLAR_SYSTEM_IDEAS.md)
+and [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Open device/playtest checks are in
+[OPERATIONS.md](OPERATIONS.md).
 
-## Ocean Explorer — animal surfaces and swimming (2026-11-11)
+## Rules for both worlds
 
-All twelve existing species now have more individual surface and motion detail:
-scales for reef fish, smooth mammal/adult swordfish skin, shark denticles, ray
-spots, bony seahorse/turtle skin ridges and octopus mottling. Fine relief and a
-subtle Fresnel rim use the existing standard material pass; thin tissue gets
-approximate sunlight backlighting. Caustics use the final morphed surface and
-its upward-facing normal.
+- Ages 6–8: forgiving play, 48px targets, read-aloud, both themes on overlays
+  (scenes have fixed palettes refreshed on theme change), no child analytics.
+  Nothing damages, times or scores the child harshly.
+- True science; label compressed scales/time and pretend content ("Sped up",
+  "drawn much smaller than real"). Leave out claims that cannot be verified.
+  Facts cite NASA/NOAA-grade sources in the data files.
+- Reduced motion and the pause control must hold every moving effect still.
+  Hidden tabs, zero-size containers and disposal stop the loop. Dispose every
+  owned geometry, material, texture, render target and listener.
+- No runtime downloads beyond bundled, credited assets (`/credits`). Pixel ratio
+  capped at 1.5. Test phone memory before adding large textures.
+- The navbar mute governs read-aloud. Curriculum progress is never touched.
+- No timers, fuel, damage or penalties; discoveries are session-only. Each
+  world's saved state, if any, uses its own storage key. Facts match the
+  animal or body shown.
 
-`oceanAnimalMotion.js` builds two relative position/normal morphs per flexible
-mesh, blending a travelling wave on the GPU. Fish/sharks sweep laterally;
-whales/dolphins flex vertically. Fin and tail roots follow the body. Rays flex
-along each wing, turtle/whale flipper tips bend, octopus suckers move with the
-arms, and jellyfish tentacles lag the bell pulse. Per-instance phases avoid
-synchronised schools; hover motion lives below the unchanged discovery anchors.
-The existing water pause/reduced-motion rules apply to all movement.
+## Shared world kit — `src/components/worlds/`
 
-Static anatomy batches by material within each pivot. Fine details hide beyond
-26 units and appendages update at most 15 Hz beyond 32 units; travel remains
-smooth and existing 85-unit visibility culling remains. Full-detail models use
-about 2,500–12,600 triangles, with no downloaded animal textures or extra
-rendering passes. Real phone performance and WebGL appearance remain unverified.
-See the [implementation and validation record](superpowers/2026-11-11-ocean-explorer-animal-realism.md).
+`discovery.js` (card data shape, `validateDiscovery`), `WorldSections.jsx`
+(fold-out sections), `WorldOrbitControl.jsx` (Orbit / Leave orbit),
+`orbitPilot.js` (`createOrbitPilot`, `nearestOrbitTarget`, `ORBIT_RATE`) and
+`WorldInfoCard.jsx`. A world passes its rules as data: an orbit
+`profile(target)` (entry distance, radius, camera rig, optional `level`), an
+`isSolid` obstacle filter, the model's `forward` axis and card slots. Extract
+the next shared piece (search, settings, tours, trips) when a second world needs
+it, moving Solar onto it in the same change. The kit holds no world-specific
+checks (`kind === 'moon'`, `name === 'Saturn'`); moving Solar onto a shared
+piece must not change what children see.
 
-## Ocean Explorer — camera views (2026-11-11)
+## Solar System — `src/pages/skills/geography/`
 
-Press **C** or use **Controls → Cockpit view** to toggle the outside camera and
-a forward-facing 3D cockpit. `oceanCockpit.js` builds its bevelled pressure frame,
-curved glass, lit metal consoles, twin articulated pilot sticks, throttle levers,
-gauges and switch banks. Three telemetry screens show scene-relative depth,
-heading, drive inputs and actual nearby discoveries; other hardware is decorative.
-The separate camera follows the submarine, including tours
-and orbits, while preserving the outside camera's viewing angle. Drag/zoom apply
-to the outside view; driving works in both. No camera preference is persisted.
-Fixed furniture is batched by material, screens refresh at most five times per
-second, and the cabin is created only on first use. See the
-[3D interior record](superpowers/2026-11-11-ocean-explorer-3d-cockpit.md) and
-[camera-toggle record](superpowers/2026-11-11-ocean-explorer-camera.md).
+**Scene.** `SolarSystemPage.jsx` mounts `SolarSystem.jsx`, which builds one scene
+from a **system definition** (`systems/home.js`, `systems/trappist1.js`, listed in
+`systems/registry.js`, checked by `validateSystem.js`) and remounts it when the
+child changes system. Home-only extras: meteor, missions, ISS, Halley's Comet,
+Earth effects, Moon phases, Pale Blue Dot, size line-up, Sun sneeze. Add a real
+star system with the [add-star-system skill](../.claude/skills/add-star-system/SKILL.md).
 
-## Ocean Explorer — full-screen world and natural detail (2026-11-11)
+**New effects are modules** ([solarModules.js](../src/pages/skills/geography/solarModules.js)):
+plain objects with `update(dt, frame)`, `resize(size)`, `dispose()`, driven from
+`animate()`. A throwing module is disposed and dropped. Use the shared world
+clock; low quality tier at width < 720 or coarse pointer; pool particles; hide
+effects in incompatible modes. [solarRenderPipeline.js](../src/pages/skills/geography/solarRenderPipeline.js)
+renders through bloom only when enabled; bloom stays off for children until a
+real-phone baseline (`?debug` vs `?debug&bloom=1`, low-tier p95 within ~2 ms)
+supports it.
 
-`/skills/ocean-explorer` now fills `100dvh`, with the navbar and shared Skills
-back bar hidden on this route. An overlaid Back to Skills link, title, reef-tour
-button and Controls menu replace the old page header and framed preview. The
-menu retains pause, reset, return-to-start and keyboard/touch help. Discovery
-cards, orbit controls, tour controls and touch steering have responsive overlay
-positions; touch steering is hidden during orbit. Theme colours remain paired
-in `App.css`.
+**Orbits and time.** `planetOrbits.js` supplies J2000 mean elements and a Kepler
+solver; `solarSimulation.js` uses the same positions as the drawn paths. Moons
+are circular and tidally locked. Distances and time are compressed, and the
+starting orientation is not today's sky. `paleBlueDot*.js` `holdsClock()` while
+looking back at Earth.
 
-`oceanModelDetail.js` supplies continuous tapered bodies, curved tapered tubes,
-sculpted fins and procedural skin/scale/coral detail. The existing animals have
-more natural colours and anatomy, including countershading, shark gills, whale
-grooves, turtle scutes, pointed ray wings, curled octopus arms with instanced
-suckers, and translucent jellyfish. Porcupinefish no longer inflate repeatedly
-while swimming. `oceanReef.js` builds branching coral, open sea fans, grooved
-brain coral and hollow sponges, baking stationary parts into material batches.
+**Flight.** `solarFreeFlight.js` + `flightControls.js` (joystick/keyboard; hold GO
+or Space; hold-to-boost/Shift up to 3× cruise). `flightClues.js` holds the clue
+deck and `FLIGHT_CHAPTERS`; arrival needs real proximity held 0.45 s, and wrong,
+stale or duplicate arrivals never award. Point/Help me steer unlock after 20 s
+of powered flying or 10 s after opening the hint. `beltRockField.js` pools belt
+rocks that only wobble the ship. `solarPlanetOrbit.js` is the optional orbit ride
+(illustrative speed; never satisfies clues). Cameras: behind rocket and cockpit,
+toggled with **C**.
 
-The submarine has reflective glass, painted and metallic materials, hull seams,
-ballast tanks, skids, instanced porthole bolts and lamps. `oceanLighting.js`
-bakes a small underwater reflection environment, disposed with the scene. Sand
-has broad colour variation, rocks have mottling, seagrass sways with the water
-clock, caustics soften with depth, and haze/light shafts have gentler falloff.
-Existing pause/reduced-motion handling also holds the grass still. The default
-camera sits farther back to show more habitat. No external assets are fetched.
+**Beyond and other systems.** Beyond warps to separate scenes (Space ripples:
+GW150914 merge). Flying past a system's edge warns for 3 s, then a trip of at
+most 10 s, labelled sped up, hands over to the next scene (20 s load cap, then
+home). Signposts point the real way to other systems. With two systems any
+direction leads to the other; choosing by heading (`systemAhead`) is needed
+when a third arrives. Galaxy map: Milky Way picture over three levels; real
+Milky Way systems only, other galaxies seen from outside. No flying inside
+Beyond yet (needs `createSolarFreeFlight` to accept another scene).
 
-Production build passed; tests, lint, browser and device checks were deferred
-at the owner's request. See the [implementation record](superpowers/2026-11-11-ocean-explorer-immersive.md).
-This section supersedes the original preview's layout/model descriptions below;
-the discovery facts, routes and species distribution remain as previously authored.
+**Toolbar.** Tour, Fly the rocket, **More** (`SolarToolbarMenu.jsx`) and, away
+from home, Home. Labels from 1280px. Planet cards (`SolarInfoCard`, ≤340×400px)
+keep local facts and play; My view holds preferences and Reset. Tweakpane is
+for adults only.
 
-## Ocean Explorer — Ocean animals tour (2026-11-09, extended 2026-11-12)
+**Meteor and reset.** `meteorExperiment.js` borrows Earth, its texture and the
+camera and owns one effect group marked `userData.isMeteorEffect` (excluded from
+picking and zoom). `resetSolarSystem()` restores all defaults even with no
+controller and skips OrbitControls `update()` while an experiment runs. The
+quality tier is fixed per mount. Device targets (never measured): median frame
+≤ 33 ms, p95 ≤ 50 ms, reset visible within 100 ms. The flight camera choice lives
+in React state; Reset restores Behind rocket.
 
-**Start ocean tour** takes the submarine on an optional assisted journey through
-the coral reef and then every kind of animal (13 stops, `oceanTour.js`). For each
-kind the scene picks the swimmer nearest the submarine, so trips stay short;
-longer trips take proportionally longer (capped at 9 s) and rise towards the
-surface mid-journey so they pass over reefs. The first version (2026-11-09)
-visited only the coral reef, parrotfish and green sea turtle.
-Each arrival opens its normal orbit/card with a small age-appropriate narration.
-The tour can be paused (which also holds its orbit), resumed, replayed/muted at a
-stop, moved backward/forward and skipped without saving anything; free driving
-and manual discovery remain unchanged. Reduced motion arrives straight at each
-stop instead of animating the travel. Owner review of the existing sea-life facts
-and physical-device review remain open.
+**Storage.** Only `dl.solarMissions` (version 1): browser-wide completed mission
+IDs, shared across profiles, kept through sign-out; storage failure leaves play
+available. Flight rewards, chapter progress and traced constellations last only
+for that visit. Read `curriculum-progress` before adding persistence.
 
-## Shared world kit (2026-10-29)
+**Checks.** `npm run build && node scripts/checkSolarUi.js [--systems]` — local
+Chrome pass at desktop/phone/landscape in both themes (`--systems` adds the
+More list, galaxy map, TRAPPIST-1 and trips). `checkSolarBaseline.js
+--capture/--compare` takes before/after screenshots for scene refactors.
 
-`src/components/worlds/` holds world-neutral pieces that Solar System and Ocean
-Explorer both use: `discovery.js` (the card's data shape and `validateDiscovery`),
-`WorldSections.jsx` (fold-out sections), `WorldOrbitControl.jsx` (Orbit / Leave
-orbit), `orbitPilot.js` (`createOrbitPilot`, `nearestOrbitTarget`, `ORBIT_RATE`)
-and `WorldInfoCard.jsx`. A world passes its rules as data: an orbit `profile(target)`
-(entry distance, radius, camera rig, optional `level`), an `isSolid` obstacle filter,
-the model's `forward` axis, and card slots. `solarPlanetOrbit.js` and `SolarInfoCard.jsx`
-are thin wrappers; Solar keeps its `solar-info-card` styles through the card's
-`baseClass`, so its DOM and tests are unchanged. Extract the next piece (search,
-settings, tours, missions, trips) when a world needs it, moving Solar onto it in
-the same change.
+**Teaching sources** (facts in `flightClues.js`, `namedAsteroids.js`,
+`spaceRipplesFacts.js` and cards were checked against these):
+[NASA planets](https://science.nasa.gov/solar-system/planets/),
+[Jupiter moons](https://science.nasa.gov/jupiter/jupiter-moons/),
+[Mars moons](https://science.nasa.gov/mars/moons/),
+[Saturn moons](https://science.nasa.gov/saturn/moons/),
+[Triton](https://science.nasa.gov/neptune/moons/triton/),
+[Charon](https://science.nasa.gov/dwarf-planets/pluto/moons/charon/),
+[asteroids](https://science.nasa.gov/solar-system/asteroids/),
+[Ceres](https://science.nasa.gov/dwarf-planets/ceres/facts/),
+[Vesta](https://science.nasa.gov/solar-system/asteroids/4-vesta/),
+[Psyche](https://science.nasa.gov/solar-system/asteroids/16-psyche/),
+[Bennu](https://science.nasa.gov/solar-system/asteroids/101955-bennu/),
+[ISS](https://www.nasa.gov/international-space-station/),
+[Halley](https://science.nasa.gov/solar-system/comets/1p-halley/),
+[GW150914 / LIGO](https://www.ligo.caltech.edu/news/ligo20160211),
+[IAU constellations](https://www.iau.org/IAU/IAU/Astronomy-FAQs/Constellations.aspx?hkey=bb9dc841-0618-41b5-ac70-149741062141).
+They support Skills exploration, not a claim of statutory coverage.
 
-## Ocean Explorer — more species (2026-10-29)
+## Ocean Explorer — `src/pages/skills/geography/ocean*`
 
-Seven more species join the five reef animals: Caribbean reef shark (5), giant Pacific octopus
-(6), humpback whale (3, drawn much smaller than real), swordfish (5), bottlenose dolphin (6),
-porcupinefish (6) and moon jelly (8), 85 animals in all. Their models are in
-`oceanMoreCreatures.js` (sharing `kit` from `oceanCreatures.js`); each has its own orbit profile
-sized to the animal. They have no home loop: every one is placed across the ocean. Facts come
-from NOAA, NOAA Fisheries, NPS, MBARI, the Florida Museum and Monterey Bay Aquarium pages listed
-in each card; unverifiable claims (octopus blue blood) were left out. Owner review pending.
+**Page.** `/skills/ocean-explorer` fills `100dvh` with the navbar and Skills back
+bar hidden; overlays carry Back to Skills, title, tour button and a Controls menu
+(pause, reset, return to start, help). `OceanExplorer.jsx` owns UI state;
+`oceanScene.js` owns renderer, camera, loop and disposal. No preference or
+discovery is saved.
 
-## Ocean Explorer — a busy ocean (2026-10-29)
+**Three.js upgrades:** the `onBeforeCompile` shader patches in
+`oceanModelDetail.js`, `oceanEnvironment.js` and `oceanWater.js` were written
+against r181 chunks; re-check them and the water reflection target on upgrade.
 
-`REEFS` (`oceanReef.js`) lists nine reefs: the original plus eight spread by best-candidate
-sampling (1 to 1.2 times its size). `ANIMALS` (`oceanAnimals.js`) now has one entry per animal: 46
-at first (parrotfish 14, clownfish 10, turtle 7, ray 7, seahorse 8). The first of each species keeps
-its old home loop; extras are placed across the ocean by the same sampling, clear of every reef,
-the start, the edge and each other, each with its own loop size, height, speed, direction and
-starting point. A discovery has a unique `key` (what is in the water) and an `id` (which card
-to show): the scene offers, orbits and tracks by `key`, while callbacks and the page still speak
-`id`. Animals beyond 85 units from the submarine are hidden and not animated; `environment.focus`
-shows them again, in the right place, as it nears. Not yet measured on real phones. See the
-[Phase 4c plan](superpowers/plans/2026-10-29-ocean-explorer-phase-4c-busy-ocean.md).
+**Modules.** `oceanWater.js` (Water addon, surface faces down), `oceanEnvironment.js` (terrain, rocks, seagrass, particles,
+moving animals; `obstacles`), `oceanLighting.js` (baked reflection environment),
+`oceanReef.js` (`REEFS`, nine reefs), `oceanSubmarine.js`, `oceanModelDetail.js`
+(procedural bodies, fins, skin), `oceanCreatures.js` / `oceanMoreCreatures.js`
+(models, shared `kit`), `oceanAnimalMotion.js` (GPU morph swimming),
+`oceanCockpit.js` + `OceanCockpit.jsx` (3D interior built on first use),
+`oceanTour.js`, `oceanDiscoveries.js`.
 
-## Ocean Explorer — bigger ocean (2026-10-29)
+**Steering.** `oceanSteering.js` is pure: eased speed/turn/climb within
+`STEERING.areaRadius` (100), seabed clearance, a height limit below the surface,
+soft rock bumps. Input reuses `flightControls.js`; touch controls
+(`OceanDriveControls.jsx`) show at ≤720px. Keys are read on the focused canvas
+only and released on blur/hidden tab. The camera keeps the child's chosen
+offset in the craft's yaw frame; **C** toggles the cockpit view.
 
-The drivable area is 20 times the first preview's: `STEERING.areaRadius` 22 → 100. The seabed
-runs 80 units past the edge so fog ends the view. About 440 rocks and 820 seagrass patches are
-spread evenly by area (`scatter` uses √random) out to 20 units past the edge and 28 light shafts are scattered across the
-ocean. The sun and its ±24 shadow box follow the submarine (`followSun`), and the suspended
-motes wrap in a 54-unit box around the camera in the vertex shader. Speed is unchanged, so the
-edge is about 25 s from the start. 
+**Animals.** `oceanAnimals.js` has one entry per animal (12 species, 85
+animals): discovery, orbit profile, loop and model. A new animal is data plus a
+model; `oceanAnimals.test.js` keeps loops clear of reefs, start, edge and each
+other. A discovery has a unique `key` (the object in the water) and an `id` (the
+card): the scene offers, orbits and tracks by `key`; callbacks and the page use
+`id`. Animals beyond 85 units are hidden and not animated; fine detail hides
+beyond 26 units and appendages update at ≤15 Hz beyond 32. Telemetry screens
+refresh ≤5 times a second. Water-only frames are capped at 30 fps and the loop
+stops when craft and water are still.
 
-## Ocean Explorer — Phase 4b more animals (2026-10-29)
-
-`oceanAnimals.js` lists the reef's swimming animals (parrotfish, a clownfish group, green sea
-turtle, spotted eagle ray, seahorse): each carries its discovery, orbit profile (with
-`faceTravel`), target radius, circular swim loop and model builder (`oceanCreatures.js`).
-`oceanEnvironment.js` builds and moves them all from that list, so a new animal is data plus a
-model. `oceanAnimals.test.js` keeps loops clear of the reef, the start, the area edge and each
-other. Facts are NOAA and Florida Museum sourced; owner review pending. See the
-[Phase 4b plan](superpowers/plans/2026-10-29-ocean-explorer-phase-4b-more-animals.md).
-
-## Ocean Explorer — Phase 4 parrotfish (2026-10-29)
-
-`oceanFish.js` builds an original stylised parrotfish (about 1.8 long, no shadow) and
-`fishPose(seconds)`, a 30-second circle of radius 5 around (−12, −3) at height 3.2,
-starting on the side nearest the submarine and clear of the reef, the start and the
-rocks. The environment moves it only while the water moves, so Pause ocean and
-reduced motion hold it still. Every discovery carries its own `orbit` profile
-(`FISH_ORBIT`: offered within 5.5, radius 3, a high camera so the hull never hides
-the fish); the scene re-checks the offer as the fish swims past a parked submarine,
-and the page picks the card by the orbited discovery's id. Facts come from NOAA and
-the Florida Museum; owner review pending.
-
-## Ocean Explorer — Phase 3 coral reef (2026-10-29)
-
-`oceanReef.js` builds a stylised reef (scaled ×1.45, radius about 4) at `REEF_SPOT`
-(0, −11), straight ahead of the start; rocks and seagrass are scattered clear of
-it and it is a steering obstacle. `oceanDiscoveries.js` holds `REEF_DISCOVERY`
-(NOAA-sourced facts, owner review pending) and `REEF_ORBIT`. `oceanScene.js`
-offers orbit within 11 units of an invisible anchor 4 above the reef base, circles
-level at radius 7.5 with a high chase camera, ignores steering while orbiting and
-hands steering back in place on leave; Back to start ends an orbit. The page shows
-the Orbit control top-left and the card top-right (full width under 720px); the
-card opens with each orbit, × keeps orbiting, and Escape leaves orbit.
-
-## Ocean Explorer — Phase 1 preview (2026-10-29)
-
-`/skills/ocean-explorer` is an ungated, lazy-loaded page using the shared Skills
-back bar and normal navbar. `OceanExplorer.jsx`/`.css` provide the preview label,
-viewing instructions, Reset view and loading/unavailable states.
-`oceanSubmarine.js` builds an original static model from simple Three.js shapes;
-`oceanScene.js` adds water-coloured fog, lighting, scenery and bounded
-OrbitControls. Drag/pinch/wheel and focused arrow/+/-/Home keys change only the
-view. The submarine stays stationary. Both themes refresh the scene palette
-without resetting its camera. Pixel ratio is capped at 1.5, and resources and
-listeners are released on unmount or context loss.
-
-Water appearance follow-up (2026-10-29): `oceanWater.js` integrates the Three.js
-Water addon with a 256×256 reflection target, original seamless DataTexture
-normal/caustic/sand maps and paired surface/seabed colours. Its surface faces down
-at scene height 9. The r181 fragment shader's normal is flipped for underside
-lighting/Fresnel shading, with reduced base reflectance and stylised transmitted
-daylight. Camera limits keep every view below the surface.
-Review this small shader adaptation and reflection-target ownership when
-upgrading Three.js. The seabed patterns are stylised light effects, not a
-physical caustics simulation.
-
-Environment detail follow-up (2026-10-29): `oceanEnvironment.js` adds a gently
-undulating 220-unit sand terrain with fine ripple/bump texture, 38 instanced
-rocks, 420 static seagrass blades and 150 faint suspended particles. Rocks and
-sand share two projected, differently scaled caustic layers generated from
-jittered cells, replacing the obvious repeating sine net. The scene uses a
-distance haze, faint sunlight volumes, hemisphere lighting and ACES tone
-mapping. One 1024×1024 directional shadow map updates once for the static
-geometry, rather than on every water frame. Instanced buffers and shadow maps
-are explicitly disposed alongside textures/materials/geometry. Decorations
-leave the craft’s immediate space clear; camera fitting still uses the
-submarine alone. These are visual details, with no new discoveries or controls.
-
-Screenshot corrections (2026-10-29): removed the separate unfogged gradient
-dome. Its different colour exposed the distant, fogged floor/surface boundaries
-as a bright horizontal strip; the background now shares the fog colour. Water
-normals now come from a seamless multi-scale noise height field, replacing
-parallel sine-wave stripes. Rock positions are welded before recalculating
-normals for rounded shading. Side porthole housings extend beyond the widest
-part of the hull, keeping the whole rim visible; raycast coverage checks all
-four rims. Appearance awaits the owner’s next screenshot; no browser checks.
-
-Water and suspended-particle motion render at up to 30 frames/second, with a Pause/Resume ocean
-control (it also stops the fish). Reduced motion forces a still ocean; changing the preference while
-running also stops the effect. Hidden tabs, zero-sized containers, pause and
-disposal cancel the animation; returning from a hidden tab does not jump time.
-Paused/reduced-motion scenes render only on view/size/theme changes. The helper
-explicitly disposes its generated textures and the addon's reflection target,
-in addition to scene geometry/material cleanup. No renderer migration or
-external texture download is required.
-
-Phase 2 steering (2026-10-29): the submarine drives with the Solar System
-free-flight scheme — `steerInput`/`stickVector` from `flightControls.js` and
-an adapted joystick/GO (`OceanDriveControls.jsx`, touch/≤720px only, like
-Solar). Arrows/WASD or the stick turn and rise/dive; hold GO or Space to move.
-Keys are read on the focused canvas only; blur, window blur and hidden tabs
-release them. Shift+arrows look around; +/−/Home still zoom/reset the view.
-`oceanSteering.js` is pure: eased speed/turn/climb, a 22-unit area, seabed
-clearance, a height limit below the surface and soft rock bumps (rock
-footprints come from `oceanEnvironment.js` `obstacles`). Nothing damages or
-times the child. `oceanScene.js` keeps the child's chosen camera offset in
-the craft's yaw frame, so the view follows rigidly with no automatic swing.
-Steering frames run at the display rate, water-only frames keep the 30 fps
-cap, and the loop stops when the craft is idle and water is still. The
-cached shadow map refreshes only while the craft moves. Back to start resets
-the pose and view. `solarFreeFlight.js`/`solarFlightCamera.js` were not
-reused: they are bound to planets/trips and replace drag-to-look.
+**Tour.** `oceanTour.js`: 13 stops (reef, then each species, picking the nearest
+individual); trips capped at 9 s and rise over reefs; pause, skip, back/forward,
+replay/mute narration; reduced motion arrives directly.

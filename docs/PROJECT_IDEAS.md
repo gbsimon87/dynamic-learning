@@ -1,6 +1,6 @@
 # 💡 Project Ideas — Learn with Bix
 
-**Last reviewed:** 2026-11-11 · Upcoming work only; delivered work belongs in [CHANGELOG.md](CHANGELOG.md).
+Upcoming work only: remove an item when it ships (git history keeps delivered work).
 
 🟡 In progress · 🔵 Planned · ⚪ Idea. IDs are stable references, not rankings.
 
@@ -30,17 +30,17 @@
 - **Saved plans:** add teacher access so plans can be saved and reopened.
 - **Class pre-tests:** collect separate assessment evidence to inform teacher-reviewed plans; completion totals cannot diagnose gaps.
 - **School sharing:** let authorised colleagues share and copy plans and resources privately.
-- **More teacher notes:** extend course coverage.
+- **More teacher notes:** `NOTES` registers only Year 3 Maths, Science and History. `teacherBriefings/year{1,2,4}{Science,History,Geography}.js` and `year3Geography.js` exist but are not imported, so they are untested and invisible: register them (the test then checks their quotes) or delete them. Years 5–6 and all English notes are unwritten.
 - **Practice sheet options:** consider page presets and better exports after #46's review.
 - **Shared topic picker:** reuse year/subject topic lists across guides, briefings and planning.
 
-Details: [planning roadmap](superpowers/plans/2026-11-08-teacher-planning-playlists.md), [assessment input limits](superpowers/2026-11-08-teacher-class-input.md), [practice review record](superpowers/2026-11-11-all-years-practice-builder.md).
+Constraint for accounts and sharing: a teacher must never reach family profiles by sharing an identifier. Teacher accounts need an explicit school/class membership model (none exists in `server/db.js`), and evidence records stay separate from progress and rewards. Current tool contracts: [ARCHITECTURE.md](ARCHITECTURE.md#teacher-tools).
 
 **Suggested next:** finish #46's review, then pilot #48. Test demand for #58, #60 and #65 as small extensions to existing tools. Keep preparation and handover outputs in the planner; prioritise saved plans if lost drafts prevent repeat use.
 
 ## Learner experiences
 
-- **Year 3 wording review:** Maths source pass finished; English, History and Geography remain, in that order. [Plan and per-challenge progress tracker](superpowers/plans/2026-11-11-year3-wording-review.md). Work in the separate `review/year3-wording` worktree. Teacher/child and device review remain separate.
+- **Year 3 wording review:** Maths and Science done; English (32 topics), History (22) and Geography (16) remain, in that order, against the learner-language standard in [AUTHORING.md](AUTHORING.md#review-content). Teacher/child and device review remain separate.
 
 | # | Idea | Upcoming work | Status |
 |---|---|---|---|
@@ -59,46 +59,37 @@ Details: [planning roadmap](superpowers/plans/2026-11-08-teacher-planning-playli
 | 31 | **Science notebook and geography passport** | Collect topic cards and exploration stamps with revision facts. Define earning rules. | ⚪ |
 | 32 | **Seasonal events** | Offer themed activity packs with permanent stickers; plan at least a term ahead. | ⚪ |
 | 33 | **Story adventure** | Turn each year's topics into a Bix storyline and map. Needs art, writing and completed read-aloud work (#8). | ⚪ |
-| 69 | **Curriculum introductions and mastery quizzes** | Introduce each subject on first use, explain each quest and topic on one screen, and add mixed-question quest reviews and a final subject test. Details below; related to #26. | 🔵 |
-
-### Curriculum introductions and mastery quizzes (#69)
-
-Follow the curriculum hierarchy: **year → subject → quest → topic → challenge → questions**.
-Help children understand what they are about to learn, including ideas they may
-be meeting for the first time, and how they can use that knowledge.
-
-- **First subject visit:** show an introduction when a child starts a subject
-  within a year for the first time, explaining what they will learn and why it
-  is useful.
-- **Before each quest:** show a single-screen explanation of what the quest
-  covers and how that learning can be used, with a concrete everyday example.
-- **Before each topic:** show a single-screen explanation of what the child is
-  about to learn and how it is useful. Use short, child-friendly wording and
-  illustrations suitable for a first encounter with the ideas.
-- **After every quest:** add an extra mixed-question quiz covering all topics
-  in that quest. Working name: **Quest Mastery**. This is additional to the
-  topics' existing challenges and overlaps with the friendly finales in #26.
-- **At the end of each subject:** offer a final test sampling learning from
-  every quest in that subject for the selected year.
-
-**Agreed scope (2026-11-11):** launch across all built subjects and years.
-Quizzes show results and practice suggestions, allow retries and have no pass
-mark. See the [implementation plan](superpowers/plans/2026-11-11-curriculum-introductions-mastery.md)
-for the introduction flow, independent quiz runner, persistence, full content
-coverage and validation milestones. The plan links an implementation contract
-and a work-packet handoff with a checklist for all 39 current pathways.
-
-**Progress (2026-11-12):** introductions, quiz runner, results, storage/API and
-map/celebration integration are built and tested behind two flags (on for dev,
-off for production). Content covers all 39 pathways. Device, narration, teacher
-and child review remain before release; see the
-[handoff ledger](superpowers/2026-11-11-curriculum-journey-handoff.md).
+| 69 | **Release curriculum introductions and quizzes** | Built behind flags (on in dev, off in production) with content for all 39 pathways. Release after the review gates in [OPERATIONS.md](OPERATIONS.md#outstanding-review-and-known-limits). | 🟡 |
 
 **Skills game shortlist (#20):**
 
 - **Maths:** Math Sentence Builder, Compare the Numbers, Math Maze, Clock Quiz, Skip Count Jump, Estimate It!, Magic Squares, Number Line Jump, Odd or Even Sort, Shape Sorter 3D, Pattern Play, Tally Marks Trainer, Math Bingo.
 - **English:** Sentence Fixer, Word Picture Puzzle, Riddle Time, Emoji Sentences, Picture Vocabulary, Alphabet Adventure, Listening & Repeat.
-- **Geography:** Country Puzzle.
+- **Geography:** Find the Ocean, Country Puzzle, Map Memory Match (country ↔ landmark), Find My Neighbour, Landform Adventure, Weather Around the World, Where Animals Live, Earth Layers Explorer, Natural Wonders Quest, Travel Routes, Around My Home, People & Languages, Seasons Around the World, Save Our Planet, Day & Night Map, Water vs Land Sort, Earth from Space.
+
+### Playful learning shortlist (future "Bix's Workshop")
+
+Prototype through Skills Mode, one at a time; playtest each before the next.
+Secret Rule Zoo (`/rule-zoo`, #43) is built and awaits a playtest.
+
+| Idea | Experience |
+|---|---|
+| Bix's Repair Shed | Choose lengths, supports and materials to repair a toy vehicle's crossing, test it and inspect what happened. Strongest product candidate. |
+| Word Wizard Theatre | Build a sentence from tiles; characters act it out; change a word or mark to change the scene. |
+| Monster Picnic | Portion food, fill cups and rearrange seats to meet creatures' visible needs; no timer. |
+| Bix Gets It Wrong | Bix makes one visible mistake; the child corrects it and Bix retries. Low-cost test of a responsive Bix. |
+| Balance Beasts | Balance weighted creatures on an equal-arm balance; swap equivalent groups. |
+| Parcel Pals | Rotate and pack grid-footprint gifts into a box. |
+| Fold-a-Friend | Decorate half a sheet, predict, unfold a symmetrical creature. Next small experiment. |
+| Secret Message Club | Decode a picture-symbol note with a visible key, then write one. |
+| Copycat Club | Describe a hidden arrangement for a partner to rebuild; test with pairs first. |
+
+Design rules: first meaningful action within 10–20 seconds; 2–5 minute activities
+with an obvious ending; nothing deteriorates while away (no expiring events,
+attendance rewards or loot); tap-to-place and keyboard alternatives to dragging;
+"show me / let me try / make it trickier" without secretly classifying the
+child; no automatic curriculum completions. Each idea's playtest targets its
+central action, not more animation.
 
 ## Technical improvements
 

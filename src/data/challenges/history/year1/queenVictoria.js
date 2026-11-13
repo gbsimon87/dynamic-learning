@@ -1,5 +1,5 @@
 // Year 1 History, Queen Victoria (docs/curriculum/key-stage-1-history.md,
-// "the lives of significant individuals"; docs/history-curriculum/year-1-design-spec.md).
+// "the lives of significant individuals").
 // Every template names the words on its story card or photo that answer it.
 
 const photo = { type: "source", image: "queen-victoria-bassano-1882" };

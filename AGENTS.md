@@ -25,13 +25,14 @@ deliberately does not repeat them.**
 | Touch progress, persistence, or unlock rules | `curriculum-progress` |
 
 To build a subject for a year, the owner pastes the prompt in
-`docs/superpowers/templates/course-start-prompt.md`. Project workflows for any AI
+`docs/templates/course-start-prompt.md`. Project workflows for any AI
 tool: Curriculum courses/challenges in `docs/AUTHORING.md`; standalone Skills Mode games in `docs/SKILLS_AUTHORING.md`.
 
 Start with `docs/PROJECT_KNOWLEDGE.md`, the short current guide. It links to
 architecture, commands, inventory, maintained examples and task-specific sources;
-load only the references needed. Delivered outcomes go in `docs/CHANGELOG.md`,
-upcoming work in `docs/PROJECT_IDEAS.md`. Deployment: `render.yaml` and
+load only the references needed. Docs hold only what is true now and what is
+still to do: no changelogs, dated build records or trackers (git keeps history).
+Upcoming work goes in `docs/PROJECT_IDEAS.md`. Deployment: `render.yaml` and
 `docs/OPERATIONS.md`. Coding rules from past bugs: `docs/ENGINEERING_RULES.md`.
 
 ## Non-negotiables
@@ -88,15 +89,11 @@ If visual verification is still needed, state that browser verification could no
 
 Do not repeatedly retry unavailable browser tooling unless explicitly asked.
 
-## Durable authoring records
+## Authoring records
 
-Use `docs/superpowers/templates/` for short topic briefs and course build records.
-Save reusable decisions and review evidence under `docs/superpowers/`; disposable
-`.superpowers/` and `.sdd/` runtime logs are not the source of truth. Record what
-was implemented, technically validated, content-reviewed and device-reviewed
+Use `docs/templates/` for topic briefs, strand-agent briefs and the working
+course record. Working notes for a build live in gitignored `.superpowers/` and
+are discarded when it finishes; anything lasting goes into the reference it
+belongs to (inventory, operations, architecture, authoring). Report what was
+implemented, technically validated, content-reviewed and device-reviewed
 separately. Automated checks cannot certify a child’s learning experience.
-
-For course builds, follow the timing workflow in `docs/AUTHORING.md`: the
-coordinating agent starts/resumes the course timer, pauses when yielding, and
-reports its duration after the requested build and verification finish. Keep
-the timer ID in the course record; never estimate unrecorded token usage.

@@ -1,5 +1,5 @@
 {
-  "$comment": "Every third-party file the Science diagrams use, pinned to a commit. Scripts in this folder fetch ONLY what is listed here; nothing is a runtime dependency. See docs/PROJECT_KNOWLEDGE.md (Year 3 Science, illustrated diagrams). sha256 holds the hash of every file fetched as downloaded (before any transform), checked on download and on cache reuse; bodyparts3d also lists the atlas chunks render-bones.mjs needs.",
+  "$comment": "Every third-party file the Science diagrams use, pinned to a commit. Scripts in this folder fetch ONLY what is listed here; nothing is a runtime dependency. See docs/VISUAL_RECIPES.md (Sources and images). sha256 holds the hash of every file fetched as downloaded (before any transform), checked on download and on cache reuse; bodyparts3d also lists the atlas chunks render-bones.mjs needs.",
   "bodyparts3d": {
     "repo": "ashemag/human-atlas",
     "commit": "1c38bf35c254a891200d3cedecfd57abebe83d8d",

@@ -60,8 +60,7 @@ all four statutory strands, Year 2 further back in time and deeper. The app cann
 know where a child lives, so the locality strand is taught as how to find history near
 you, with UK examples. Of the bracketed examples, Pieter Bruegel the Elder and LS Lowry
 are not used: Lowry's paintings are still in copyright, which breaks the app's
-open-licence image rule. Design: `docs/history-curriculum/year-1-design-spec.md` and
-`year-2-design-spec.md`. Titles are permanent URL and progress identifiers.
+open-licence image rule. Titles are permanent URL and progress identifiers.
 
 ### Year 1
 

@@ -9,7 +9,7 @@ export const briefingPath = (year, subject, topicId) => `/teachers/briefings/${N
 
 // One body of subject knowledge per topic: where a topic briefing has authored
 // notes, its plan text comes from them instead of a second hand-written copy.
-// Design record: docs/superpowers/2026-11-09-teacher-everyday-tools.md
+// Contract: docs/ARCHITECTURE.md (Teacher tools).
 export function teachingFromBriefing(name, notes) {
   const [watch, check = watch] = notes.misconceptions;
   const topic = name.toLowerCase();

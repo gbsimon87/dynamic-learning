@@ -111,7 +111,7 @@ const CURRICULA = [
   { year: 3, subject: "history", available: true, load: () => year3HistoryCurriculum },
   // All 17 topics built; preserve existing Year 2 awards until owner review.
   { year: 2, subject: "history", available: true, countsTowardYear: false, load: () => year2HistoryCurriculum },
-  // Approved 2026-10-12 (docs/history-curriculum/year-1-design-spec.md); all 14
+  // Approved 2026-10-12 (docs/curriculum/key-stage-1-history.md); all 14
   // topics built. Counts toward the Year 1 award (owner decision 2026-10-12).
   { year: 1, subject: "history", available: true, load: () => year1HistoryCurriculum },
   { year: 4, subject: "science", available: true, load: () => year4ScienceCurriculum },

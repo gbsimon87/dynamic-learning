@@ -1,6 +1,5 @@
 // Year 1 History, Seaside Holidays Then and Now (docs/curriculum/key-stage-1-history.md,
-// "changes within living memory … changes in national life";
-// docs/history-curriculum/year-1-design-spec.md).
+// "changes within living memory … changes in national life").
 // Every template names the words on its story card or photo that answer it.
 // Piers, Punch and Judy, donkey rides, buckets and spades are all still found
 // today, so none of them is ever called "long ago only".

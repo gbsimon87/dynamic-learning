@@ -1,10 +1,8 @@
 # Operations and outstanding review
 
-Updated **2026-11-03** by reading repository configuration and source. This is
-an operating reference, not evidence that the checked-out code is deployed.
-No hosting dashboards, live databases, DNS, email delivery or physical devices
-were inspected for this update. No runtime or persistence changes are required
-by this documentation work.
+Operating reference from repository configuration and source. Hosting
+dashboards, DNS and live databases are not visible from the repo: confirm them
+before acting.
 
 ## Deployment invariants
 
@@ -27,21 +25,17 @@ Both use Node `22.23.4`, `npm ci --include=dev && npm run build`,
 dev dependency but Render sets `NODE_ENV=production`. Render supplies `PORT`.
 The signed-out `/api/auth/me` returns 401 and is unsuitable as a health check.
 
-**Recorded hosting state, 2026-10-09/10; not rechecked:** Blueprint “DEV DL”
-auto-syncs configuration from **`dev`**, while production code deploys from
-**`main`**. Therefore pushing `render.yaml` to dev can change production's
-plan/branch. Preserve production **Starter + main**. Recorded dashboard
-services are `dynamic-learning-zkww` and `dynamic-learning-dev-zkww`; the
-old `dynamic-learning-n72m.onrender.com` static site is retired/suspended and
-must not receive new configuration. Its retained name historically caused a
-misleading Blueprint type/region validation warning. Confirm current dashboard
-state before acting on that warning.
+**Hosting (last recorded October 2026):** Blueprint “DEV DL” auto-syncs
+configuration from **`dev`**, while production code deploys from **`main`**, so
+pushing `render.yaml` to dev can change production's plan/branch. Preserve
+production **Starter + main**. Dashboard services are `dynamic-learning-zkww`
+and `dynamic-learning-dev-zkww`; the old `dynamic-learning-n72m` static site is
+retired and must not receive configuration.
 
-The same dated record identifies Namecheap DNS, apex A `216.24.57.1`, `www`
-CNAME `dynamic-learning-zkww.onrender.com`, and a Render www-to-apex redirect.
-Preserve website and Resend DNS records when editing DNS; validate current
-records rather than assuming this snapshot remains live. Infrastructure names
-deliberately retain “dynamic-learning” so accounts and progress do not move.
+DNS is at Namecheap: apex A `216.24.57.1`, `www` CNAME
+`dynamic-learning-zkww.onrender.com`, Render www-to-apex redirect. Preserve
+website and Resend records when editing DNS. Infrastructure names deliberately
+keep “dynamic-learning” so accounts and progress do not move.
 
 ## Environment and email
 
@@ -57,18 +51,15 @@ those values are public build inputs.
 URLs. Production recovery requires a valid HTTPS origin; never derive reset
 links from request hosts. Confirm the dev service uses its own origin.
 `SEO_INDEXABLE` and the public origin affect build/runtime output; rebuild
-after configuration changes. Follow [SEO_NEXT_STEPS.md](SEO_NEXT_STEPS.md) for
-indexing decisions, dev/production rollout, live HTTP checks, Search Console
-and phone performance evidence. Repository implementation alone closes none
-of those external checks.
+after configuration changes. See [SEO.md](SEO.md) for the indexing policy and
+open live checks.
 
 [server/email.js](../server/email.js) sends through Resend when both mail
 variables are set. With neither set outside production it logs codes/links;
 production without both configured skips verification. Incomplete mail
 configuration also disables sending. Do not interpret a successful signup as
-proof that verification ran. Real signup-code delivery was recorded on
-2026-10-09; delivery today was not tested. The dated record says keys are
-sending-only, so sent-mail inspection belongs in the Resend dashboard.
+proof that verification ran. Keys are sending-only; inspect sent mail in the
+Resend dashboard.
 
 `SIGNUP_EMAIL_DAILY_LIMIT` defaults to 90 attempts per UTC day per database,
 including failed sends. The example records production/dev budgets of 80/20
@@ -110,10 +101,10 @@ version-aware reader and reports failure counts without writing them.
 By contrast, server startup calls
 [ensureAccountIndexes](../server/accountIndexes.js), which creates/converts
 unique indexes and refuses duplicates without deleting a winner. Existing-index
-conversion uses `collMod`; a dated production boot needed `dbAdmin` permission.
+conversion uses `collMod`, which needs `dbAdmin` permission.
 Do not treat startup as a read-only audit or broaden database privileges blindly.
 
-### Curriculum introductions and quizzes (#69)
+### Curriculum introductions and quizzes
 
 Two flags, both default `"false"` in [render.yaml](../render.yaml) and
 [.env.example](../.env.example): `VITE_ENABLE_CURRICULUM_JOURNEY` (client, build
@@ -132,38 +123,51 @@ and redeploy. Never drop these collections or clear storage to roll back.
 Local development keeps them under `dl.curriculumJourney` and
 `dl.curriculumAssessments`.
 
-## Outstanding work and evidence limits
+## Outstanding review and known limits
 
-Use [PROJECT_IDEAS.md](PROJECT_IDEAS.md) for upcoming work and the
-[privacy/safeguarding review brief](safeguarding/REVIEW_BRIEF.md) for consent,
-age assurance, retention, supplier agreements and qualified-review questions.
-Its 2026-10-15 snapshot reports backups inactive in 2026-10-10 notes; backup
-status, regions and supplier settings need dashboard confirmation.
+Upcoming work is in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Delete a line here
+when it is resolved.
 
-Source-confirmed on **2026-11-03**:
+**Privacy and safeguarding.** The [review brief](safeguarding/REVIEW_BRIEF.md)
+holds the open consent, age-assurance, retention, supplier-agreement and
+qualified-review questions. Backup status, regions and supplier settings need
+dashboard confirmation.
 
+**Curriculum journey release.** Flags are off in production. All 39 pathways
+pass `check:journey --all`, but no human content review has been done; model
+answers are fully reviewed for 25 pathways, partly for 14 (Maths Y1–6, English
+Y1, Y2, Y5, Y6, Science Y1–4). Owner/teacher/device/learner review, narration
+and an in-browser quiz run are needed before enabling the flags.
+
+**Content and device review.** Owner/teacher content review is pending for Year 6
+History (Jarrow facts, sensitive topics, reference URLs never fetched), Year 6
+Geography, Year 6 Computing (Online World safety topics), Year 6 French (all
+banks, especially texts and dictionary entries), Year 5 History, the teacher
+notes, parent explainers and practice-sheet builder. Year 3 wording review: Maths
+and Science done; English, History and Geography not started. Physical-device, touch, speech,
+whole-app keyboard/screen-reader and both-theme contrast review has not been
+done for any course. Ocean Explorer sea-life facts await owner review. Meteor
+and constellation scenes have no phone/tablet benchmarks (targets in
+[EXPLORABLE_WORLDS.md](EXPLORABLE_WORLDS.md)).
+
+**Known limits in source:**
+
+- Auth throttling ([authThrottle.js](../server/authThrottle.js)) is an in-memory
+  map per process: not shared across instances or restarts. Coordinate it
+  before scaling out.
+- Database-dependent tests (ownership, signup, index conversion) skip when
+  `MONGODB_URI` is unset; a skip is not database coverage. Their cleanup needs
+  `dropDatabase` and index conversion needs `collMod`.
+- [Reward merging](../shared/mergeRewards.js) uses conservative maxima/unions;
+  simultaneous activity on two devices can undercount.
+- [localStorageStore.js](../src/data/store/localStorageStore.js) reads
+  progress/rewards and account creation strictly; some other collection reads
+  remain permissive.
 - Global selectors remain in [MathPractice.css](../src/pages/skills/math/MathPractice.css),
   [FindTheMissingNumber.css](../src/pages/skills/math/FindTheMissingNumber.css)
   and [SightWordPop.css](../src/pages/skills/english/SightWordPop.css), including
-  bare `select` rules in the two Maths files. Scope changes one file at a time
-  with visual checks.
-- [Reward merging](../shared/mergeRewards.js) uses conservative maxima/unions;
-  simultaneous distinct activity can undercount. It is not an exact
-  cross-device attempt ledger.
-- The old blanket claim that corrupt local collections always read empty and
-  overwrite is too broad: [localStorageStore.js](../src/data/store/localStorageStore.js)
-  now uses strict reads for progress/rewards and account creation. Some other
-  collection reads remain permissive; no complete corruption audit was run.
+  bare `select` rules. Scope one file at a time with visual checks.
 
-Previously reported, **not rechecked**: whole-app keyboard/screen-reader and
-both-theme contrast review; owner/content and physical-device teaching review;
-meteor/constellation phone/tablet benchmarks; real-device speech quality; the
-10-XP backfill/save-failure edge case; Reading Numbers' reported 775,840 cap;
-and the unreachable Skills-grid width rule. Consult the relevant backlog and
-subject trackers before treating implementation or automated checks as closure.
-
-The historical “account-protection rollout pending” item was superseded by a
-**2026-10-10 deployed** record confirming unique indexes and valid progress.
-That is historical deployment evidence, not a fresh live audit. Closed bugs
-and obsolete audit findings are in git history; do not reopen them without
-checking current source.
+**Reported, not rechecked:** the 10-XP backfill/save-failure edge case, Reading
+Numbers' reported 775,840 cap and an unreachable Skills-grid width rule. Check
+current source before working on them.

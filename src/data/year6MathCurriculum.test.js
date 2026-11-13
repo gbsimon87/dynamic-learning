@@ -22,9 +22,9 @@ test('Year 6 Maths registers the approved 49-topic tree with every slot built', 
   assert.equal(countsTowardYear(6, 'math'), true);
   assert.equal(countsTowardYear(6, 'science'), true);
   assert.deepEqual(TOPIC_KEYS, topics.map(t => t.id));
-  const proposal = readFileSync(new URL('../../docs/superpowers/2026-11-04-year6-math-course-build.md', import.meta.url), 'utf8');
+  const mapping = readFileSync(new URL('../../docs/curriculum/year-6-maths.md', import.meta.url), 'utf8');
   for (const topic of topics) {
-    assert.ok(proposal.includes(`\`${topic.id}\``), topic.id);
+    assert.ok(mapping.includes(`\`${topic.id}\``), topic.id);
     assert.deepEqual(topic.challenges.map(c => c.id), [1,2,3,4]);
     for (const level of [1,2,3,4]) {
       const pascal = topic.id.split('-').map(w => w[0].toUpperCase()+w.slice(1)).join('');

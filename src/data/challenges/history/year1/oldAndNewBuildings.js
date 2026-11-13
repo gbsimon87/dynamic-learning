@@ -1,6 +1,6 @@
 // Year 1 History, Old and New Buildings (docs/curriculum/key-stage-1-history.md,
-// "significant historical events, people and places in their own locality";
-// docs/history-curriculum/year-1-design-spec.md). Every template names the words
+// "significant historical events, people and places in their own locality").
+// Every template names the words
 // on its story card or photo that answer it. Clues are "can" and "often", never
 // "always": some new homes are thatched and some old ones have big windows.
 

@@ -1,6 +1,6 @@
 // Year 1 History, Flying Then and Now (docs/curriculum/key-stage-1-history.md,
-// "events beyond living memory that are significant nationally or globally";
-// docs/history-curriculum/year-1-design-spec.md). Compares the first aeroplane
+// "events beyond living memory that are significant nationally or globally").
+// Compares the first aeroplane
 // with planes today. There is no photo of a plane today, so "now" uses emoji.
 // Every template names the words on its story card or photo that answer it.
 

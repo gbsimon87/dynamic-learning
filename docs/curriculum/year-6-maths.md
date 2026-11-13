@@ -207,11 +207,8 @@ Pupils know when it is appropriate to find the mean of a data set.
 
 # Mapping to our curriculum dataset
 
-The complete 49-topic course tree is registered in `src/data/year6MathCurriculum.js`.
-The place-value strand is the implemented pilot (16 challenges); the remaining
-45 topics are planned and unavailable until their modules are built. Category
-and topic titles below were approved on 2026-11-04. Each requirement is quoted
-verbatim; no statutory bullet is excluded. See the [course record](../superpowers/2026-11-04-year6-math-course-build.md).
+All 49 topics are built in `src/data/year6MathCurriculum.js`; the IDs below are
+permanent. Each requirement is quoted verbatim; no statutory bullet is excluded.
 
 ### Number – number and place value
 

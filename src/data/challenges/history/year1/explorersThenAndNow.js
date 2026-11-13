@@ -1,6 +1,6 @@
 // Year 1 History, Explorers Then and Now (docs/curriculum/key-stage-1-history.md,
-// "Some should be used to compare aspects of life in different periods";
-// docs/history-curriculum/year-1-design-spec.md). Compares Christopher Columbus
+// "Some should be used to compare aspects of life in different periods").
+// Compares Christopher Columbus
 // with Neil Armstrong. Every template names the words on its story card or
 // photo that answer it.
 

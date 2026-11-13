@@ -5,7 +5,7 @@ import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPa
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 
 /**
- * Draws the Solar System, optionally through bloom (idea #5, Phase 0 spike in
+ * Draws the Solar System, optionally through bloom (idea #5 in
  * docs/SOLAR_SYSTEM_IDEAS.md).
  *
  * With bloom off this is exactly `renderer.render(scene, camera)`: no composer

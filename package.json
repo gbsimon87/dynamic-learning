@@ -24,8 +24,6 @@
     "journey:manifest": "node scripts/curriculum/journeyManifest.js",
     "check:journey": "node scripts/checkCurriculumJourney.js",
     "scaffold:topic": "node scripts/scaffoldTopic.js",
-    "course:timer": "node scripts/courseTimer.js",
-    "course:usage": "node scripts/courseUsage.js",
     "journey:brief": "node scripts/curriculum/journeyBrief.js"
   },
   "dependencies": {

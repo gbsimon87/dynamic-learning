@@ -1,4 +1,4 @@
-// Outcome lines from docs/geography-curriculum/year-1-design-spec.md §6. They describe the digital outcome only.
+// Outcome lines. They describe the digital outcome only.
 export const YEAR1_GEOGRAPHY_TOPIC_SKILLS = {
   "1/geography/around-our-school": "I can describe features around a familiar place.",
   "1/geography/human-and-physical-features": "I can name human and physical features.",

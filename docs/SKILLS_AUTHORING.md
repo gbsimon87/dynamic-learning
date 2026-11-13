@@ -98,15 +98,10 @@ also require `npm run check:seo` before release. Rerun only checks warranted by
 subsequent changes/failures, and report pending final checks at intermediate
 handoffs. Redirect verbose output to temporary logs; inspect failures/summaries.
 
-The SEO check uses the built Express app and local Chrome; consult
-[SEO_AUDIT.md](SEO_AUDIT.md) and [OPERATIONS.md](OPERATIONS.md). If required
-browser tooling is unavailable, complete the other checks and report that
-verification gap without modifying the app to work around the tool. Follow
-`AGENTS.md` for additional browser work only when layout, drag, maps, canvas or
-WebGL need it: batch relevant viewports and both themes, then at most one
-confirmation pass after fixes. Never use live learner accounts as fixtures.
+The SEO check uses the built Express app and local Chrome; see [SEO.md](SEO.md).
+Browser work beyond that follows `AGENTS.md`. Never use live learner accounts as
+fixtures.
 
-Record delivered scope and evidence in [CHANGELOG.md](CHANGELOG.md), remove
-finished backlog work, and update current architecture only when it changes.
-Keep the entry guide short. Physical-device touch/voice and a child's
-comprehension/enjoyment remain distinct from automated checks.
+Remove finished backlog work from [PROJECT_IDEAS.md](PROJECT_IDEAS.md) and update
+current architecture only when it changes. Physical-device touch/voice and a
+child's comprehension/enjoyment remain distinct from automated checks.

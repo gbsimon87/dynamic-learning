@@ -49,40 +49,23 @@ it does not certify full statutory coverage, teaching accuracy or device review.
 | 6 | Other subjects | 0 | 0 | Not registered yet |
 | **Total** | **39 complete pathways** | **923 planned / 923 built** | **3,692 planned / 3,692 built** | |
 
-Years 1–4 have Maths, English, Science, History and Geography. Year 5 adds Art &
-Design, Computing, Design & Technology, French, Music, PE and Relationships &
-Health (`wellbeing`). Year 6 has complete Science, Maths, English, History
-(a local history study and crime and punishment), Geography (environmental
-change, connected places, maps and fieldwork) and Computing (programming projects,
-physical systems, algorithms, data and the online world) and French (listening and
-sounds, conversations, describing, grammar, reading and writing). Other subjects are built one at a
-time. Saved statutory programmes and subject specs do not establish playable implementation.
+Year 5 adds Art & Design, Computing, Design & Technology, French, Music, PE
+and Relationships & Health (`wellbeing`). Saved statutory programmes do not
+establish playable implementation.
 
 ## Awards and introductions
 
-[The registry](../src/data/curriculumRegistry.js) decides `countsTowardYear` independently
-of playability. Geography stays outside overall year awards; Years 2 and 4 History
-also remain excluded. The Year 5 award uses Maths, English and Science (owner
-decision 2026-11-04: Year 5 History and the other Year 5 subjects are excluded).
-The Year 6 award uses Maths, English and Science (owner decision 2026-11-08: the
-staged exclusion was lifted once all three existed). Year 6 History, Geography,
-Computing and French are excluded. Preserve existing awards when adding pathways.
+[The registry](../src/data/curriculumRegistry.js) decides `countsTowardYear`
+independently of playability. Year awards for Years 5 and 6 use Maths, English
+and Science only (owner decisions). Geography in every year, History in Years 2,
+4, 5 and 6, and every other Year 5–6 subject are excluded. Preserve existing
+awards when adding pathways.
 
-Maths Years 1–6 and English Years 3–5 use separately registered Bix lesson screens.
-Other pathways can have illustrated introductions inside their subject games:
-History story cards, Geography notes and the Science/other-subject adventure frame.
-Read the [visual recipes](VISUAL_RECIPES.md)
-and [authoring guide](AUTHORING.md); a missing LessonFrame entry alone does not mean
-that a pathway has no introduction.
+Maths Years 1–6 and English Years 3–5 use separately registered Bix lesson
+screens. Other pathways have illustrated introductions inside their subject
+games: History story cards, Geography notes and the Science/other-subject
+adventure frame. A missing LessonFrame entry does not mean a pathway has no
+introduction.
 
-## Review evidence
-
-Use the subject trackers/source packs, plus [operations and outstanding review](OPERATIONS.md),
-for current follow-up. Implementation counts do not close owner, content,
-physical-device, speech or browser-layout checks.
-
-- [English tracker](english-curriculum/IMPLEMENTATION_TRACKER.md)
-- [Science tracker](science-curriculum/IMPLEMENTATION_PLAN.md)
-- [History tracker](history-curriculum/HISTORY_TRACKER.md)
-- [Geography specs and source packs](geography-curriculum/README.md)
-- [Current architecture](ARCHITECTURE.md) and [changelog](CHANGELOG.md)
+Outstanding content, device and owner review is listed in
+[OPERATIONS.md](OPERATIONS.md); implementation counts do not close it.

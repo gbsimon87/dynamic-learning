@@ -1,5 +1,5 @@
 // Year 1 History, Christopher Columbus (docs/curriculum/key-stage-1-history.md,
-// "the lives of significant individuals"; docs/history-curriculum/year-1-design-spec.md).
+// "the lives of significant individuals").
 // Every template names the words on its story card that answer it. No photo or
 // life portrait of Columbus exists, so the story cards use emoji pictures.
 

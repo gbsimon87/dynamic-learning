@@ -1,5 +1,5 @@
 // Year 1 History, Toys Then and Now (docs/curriculum/key-stage-1-history.md,
-// "changes within living memory"; docs/history-curriculum/year-1-design-spec.md).
+// "changes within living memory").
 // Every template names the words on its story card or photo that answer it.
 
 const photo1 = { type: "source", image: "cma-two-children-with-toys" };

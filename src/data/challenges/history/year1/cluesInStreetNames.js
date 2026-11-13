@@ -1,6 +1,6 @@
 // Year 1 History, Clues in Street Names (docs/curriculum/key-stage-1-history.md,
-// "significant historical events, people and places in their own locality";
-// docs/history-curriculum/year-1-design-spec.md). Every template names the words
+// "significant historical events, people and places in their own locality").
+// Every template names the words
 // on its story card that answer it. There is no photo for this topic, so the
 // cards use emoji pictures. A name is a clue, not proof, so cards say "often"
 // and "many", never "always".

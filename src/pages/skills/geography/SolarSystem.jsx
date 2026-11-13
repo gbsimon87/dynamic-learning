@@ -239,7 +239,7 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
             override: debugFlags.quality,
         });
         // New scene features are modules driven from animate() (see
-        // docs/SOLAR_SYSTEM_IDEAS.md §11); the code above them predates this.
+        // docs/EXPLORABLE_WORLDS.md); the code above them predates this.
         const modules = createModuleHost();
 
         // ================================================================

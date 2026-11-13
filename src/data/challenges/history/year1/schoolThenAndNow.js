@@ -1,5 +1,5 @@
 // Year 1 History, School Then and Now (docs/curriculum/key-stage-1-history.md,
-// "changes within living memory"; docs/history-curriculum/year-1-design-spec.md).
+// "changes within living memory").
 // Every template names the words on its story card that answer it.
 // Some things are the same (reading, writing, playtime, teachers), and school
 // milk still exists for young children, so it is never called "then only".

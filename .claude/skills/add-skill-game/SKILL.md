@@ -24,7 +24,7 @@ establish hub or public-guide integration:
 Also add its public description, instructions and skill list to
 `shared/skillGuides.js`. This creates `/learn/<game-slug>`, its metadata and its
 sitemap entry through the shared SEO catalogue; the build rejects missing guide
-content. See `docs/SEO_AUDIT.md` for public-page delivery and indexing policy.
+content. See `docs/SEO.md` for public-page delivery and indexing policy.
 
 Keep all three in the same change.
 
@@ -53,8 +53,8 @@ Current canonical routes are **`/skills/<kebab-case-name>`**, for example
 current `SkillGameLayout` route group in `src/main.jsx`.
 
 Keep the route short and child-guessable. Match the route to the name where
-reasonable, and check `docs/PROJECT_IDEAS.md` (row 20 and `docs/notes_geography.md`) —
-many games already have an intended route recorded there; reuse it rather than inventing a new one.
+reasonable, and check the shortlist in `docs/PROJECT_IDEAS.md` (#20) for the
+intended game name.
 
 ### 3. Register the link
 
@@ -74,7 +74,7 @@ statutory curriculum coverage.
 - **No `onComplete` prop** — that contract belongs to Curriculum challenges only.
 - **No `localStorage` progress writes.** Skills Mode is deliberately untracked;
   don't add persistence without an explicit in-scope decision recorded in the
-  feature brief/current architecture and `docs/CHANGELOG.md`.
+  current architecture (`docs/ARCHITECTURE.md`).
 - Self-contained state, including its own randomisation and score/streak display
   if the game has one.
 - Feedback pattern matches the rest of the app: ✅ correct, ❌ retry.
@@ -137,7 +137,7 @@ only when a test cannot show it.
 
 ## Finally
 
-Keep the source catalogue and guide current, record delivered scope/verification
-in `docs/CHANGELOG.md`, and remove finished work from `docs/PROJECT_IDEAS.md`.
+Keep the source catalogue and guide current and remove finished work from
+`docs/PROJECT_IDEAS.md`.
 Update the short `docs/PROJECT_KNOWLEDGE.md` entry point or focused references
 only when current contracts change.

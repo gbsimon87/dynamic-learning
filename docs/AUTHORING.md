@@ -1,12 +1,14 @@
 # Curriculum authoring
 
-Start with the requested year, subject and topic ID. The current registry covers years 1–6 (Year 6: Science and a Maths place-value pilot) and 12 subjects; check availability rather than assuming a registered course has every challenge. All built challenges are open. Completion tracks learning and awards; it does not gate access.
+Project workflow for Curriculum Mode, readable by any AI tool or developer. For
+standalone Skills Mode games use [SKILLS_AUTHORING.md](SKILLS_AUTHORING.md).
 
-This is the project workflow for Curriculum Mode, readable by any AI tool or
-developer. For standalone Skills Mode games use [SKILLS_AUTHORING.md](SKILLS_AUTHORING.md).
-For an existing topic, use the scoped context command below. For a new course
-(such as Year 6), complete integration first; context/scaffold commands cannot
-invent an unregistered dataset or its teaching boundary.
+The registry covers Years 1–6 and 12 subjects; check availability rather than
+assuming a registered course has every challenge. All built challenges are open.
+Completion tracks learning and awards; it does not gate access. For an existing
+topic, use the scoped context command below. For a new course, complete
+integration first: context/scaffold commands cannot invent an unregistered
+dataset or its teaching boundary.
 
 ## New course integration
 
@@ -18,15 +20,15 @@ invent an unregistered dataset or its teaching boundary.
 2. Add a dataset following [Year 5 Science](../src/data/year5ScienceCurriculum.js)
    or the matching subject. Categories/topics need permanent IDs and four slots.
    Many datasets derive IDs from titles with
-   [toKebabCase](../src/utils/toKebabCase.js), ignoring raw handwritten IDs.
-   Keep shipped IDs unchanged. Add registry/ID tests rather than relying on a
-   build to reveal spelling or missing-module mistakes.
+   [toKebabCase](../src/utils/toKebabCase.js), which deletes anything outside
+   a–z and 0–9 ("Æthelred" becomes "thelred"): use plain English letters in
+   titles and check the actual outputs. Keep shipped IDs unchanged. Add
+   registry/ID tests rather than relying on a build to reveal mistakes.
 3. Register the combination in [curriculumRegistry.js](../src/data/curriculumRegistry.js).
-   Update year/subject definitions there and the accepted profile fields in
-   [childFields.js](../src/data/childFields.js) when needed: both year lists now
-   include 6, so another Year 6 subject needs only its registry entry. A Year 7
-   would need both lists and the tests that use 7 as the unavailable year. A new subject also needs its child
-   whitelist, selector look/tokens in
+   Year lists there and in [childFields.js](../src/data/childFields.js) run to 6;
+   a Year 7 needs both lists and the tests that use 7 as the unavailable year.
+   A new subject also needs `CHILD_SUBJECTS` in step with `CURRICULUM_SUBJECTS`,
+   selector look/tokens in
    [CurriculumSelectPage](../src/pages/curriculum/CurriculumSelectPage.jsx), and
    hero/category visuals in [CurriculumPage](../src/pages/curriculum/CurriculumPage.jsx).
    Keep unknown combinations unavailable; preserve old profiles and progress.
@@ -40,92 +42,65 @@ invent an unregistered dataset or its teaching boundary.
    statements via [lessons/index.js](../src/data/lessons/index.js) and
    [certificateSkills.js](../src/data/certificateSkills.js). Add the public
    year/subject guide in [curriculumGuides.js](../shared/curriculumGuides.js).
-   Verify signup/profile choices, curriculum entry points and public guides use
-   the intended year/subject; update catalogue/count assertions where applicable.
 6. Set `countsTowardYear: false` for staged additions. Playability, completion
    and award inclusion are distinct; do not change earned year awards implicitly.
    Read the [progress contract](ARCHITECTURE.md#progress-stores-and-server)
    before ID/storage/award changes. Test legacy data, child/year/subject
    isolation and unavailable-module fallbacks alongside the new curriculum.
 
-The [course record](superpowers/templates/course-build.md) tracks scope, permanent
-IDs, visual baseline, pilot and technical/content/device evidence. Use current
-source tests such as [year5ScienceCurriculum.test.js](../src/data/year5ScienceCurriculum.test.js)
-and [curriculumIds.test.js](../src/data/curriculumIds.test.js) as integration models.
+Register the dataset first, build topics in order and release a topic's four
+wrappers together; add no placeholders. Use
+[year5ScienceCurriculum.test.js](../src/data/year5ScienceCurriculum.test.js) and
+[curriculumIds.test.js](../src/data/curriculumIds.test.js) as integration models.
+
+### Counts and fixtures to update for another pathway
+
+- its permanent IDs in `curriculumIds.test.js`;
+- guide totals in `shared/curriculumGuides.test.js`, the year's subjects in
+  `tests/components/curriculumSelect.test.jsx` and `subjectsForYear(N)` in
+  `src/data/signupFlow.test.js`;
+- public-guide assertions in `tests/components/curriculumGuides.test.jsx`
+  (staged topics remain unavailable and the guide must say so);
+- future-year recipe fixtures in `scripts/curriculum/authoring.test.js` when the
+  new subject game becomes the newest reference, and per-year reading limits in
+  `src/data/lessons/lintLessons.js` for a new lesson year.
+
+Check each displayed quest name starts with a capital, including after a
+Number/Geometry prefix. Use the subject's own bank contract and numeric/input
+limits rather than copying another subject's defaults. Tests that need a year
+with no curriculum use Year 7.
 
 ## Course builds with content agents
 
-This is the recipe that built Year 6 Science (24 topics) in 23 minutes of
-recorded work; see the [baseline](BUILD_MEASUREMENT.md#measured-builds). The
-coordinator's own turns cost far more per topic than the content agents', so
-the coordinator integrates, pilots and reviews, and the agents write the banks.
+The coordinator integrates, pilots and reviews; content agents write banks.
 
 1. **Start the course in a fresh session** with the
-   [start prompt](superpowers/templates/course-start-prompt.md), with the course timer running. A
-   session carrying earlier work re-sends that context on every turn.
+   [start prompt](templates/course-start-prompt.md).
 2. **Integrate and pilot first** (coordinator): dataset, registry, wrappers,
    certificate lines, the visual renderer and any new figure types, the subject
    test, and one complete strand as the model. Give each strand its own bank
    file exporting `<strand>`, `<strand>Visuals` and `<strand>Rules`, merged by
-   `index.js` and `figures.js`, as `src/data/challenges/year6Science/` does. Two
-   agents then never edit the same file.
+   `index.js` and `figures.js`, as `src/data/challenges/year6Science/` does, so
+   two agents never edit the same file (including tests and lessons).
 3. **Brief at most two content agents** with the
-   [strand agent brief](superpowers/templates/strand-agent-brief.md): the model
-   strand, the exact topic IDs, the statutory bullets with their line range, the
-   figure types, the content rules and the test to run. Sonnet was enough for
-   bank writing; keep the coordinator on the stronger model for review.
-4. **Keep the coordinator's context small while they work**: read files by line
-   range, avoid commands that print whole files or long test logs, batch
-   independent calls, and use focused checks for pilots and individual strands.
-   Follow [validation](VALIDATION.md): run the full set once before merge/release,
-   repeating only checks warranted by later changes or failures.
-5. **Review what comes back** before the full suite:
-   - safeguarding-sensitive topics in full;
-   - the facts each agent says it was unsure of;
-   - the answer-length cue: the share of choice questions whose answer is
-     clearly the longest option. Year 5 Science was 28% and Year 6 Science 30%;
-     a topic far above that needs rewording.
-6. **Check new hand-drawn figures in one batched browser pass**: render every
-   new figure type and topic picture to one static page, at desktop and phone
-   widths in both themes. This found crowded labels, a dark-theme colour and a
-   misdrawn diagram that jsdom tests could not show.
+   [strand agent brief](templates/strand-agent-brief.md): the model
+   strand, exact topic IDs, statutory bullets with their line range, figure
+   types, content rules and the test to run.
+4. **Keep the coordinator's context small**: read files by line range, avoid
+   printing whole files or long test logs, batch independent calls.
+5. **Review what comes back** before the full suite: safeguarding-sensitive
+   topics in full; facts each agent was unsure of; the answer-length cue (share
+   of choice questions whose answer is clearly the longest option — around 30%
+   is normal, far above needs rewording).
+6. **Check new hand-drawn figures in one batched browser pass**: every new
+   figure type on one static page, desktop and phone widths, both themes.
 
-Content slips the checks caught in the Year 6 build, so put them in every brief:
+Put these in every brief:
 
-- Prompts must be unique within each pool (facts, sorts, structures,
-  enquiries); a run of five must not repeat a task.
+- Prompts are unique within each pool; a run must not repeat a task.
 - The US-spelling check flags "meter" even for an instrument; say "sensor".
-- An order task needs one defensible order; drop steps whose order is a matter
-  of taste.
-- A sort's cards must fit its prompt's starting point. "Start with one bulb"
-  cannot include "remove the second bulb".
-
-### Adding another subject to a registered year
-
-A year that already has a subject needs no year-list changes. For Year 6, a
-further subject needs:
-
-- its dataset and registry entry, with `countsTowardYear: false` until Year 6
-  Maths, English and Science all exist;
-- certificate lines and the public guide;
-- its permanent IDs in `curriculumIds.test.js`;
-- the counts that list every pathway: the guide totals in
-  `shared/curriculumGuides.test.js`, the Year 6 subjects in
-  `tests/components/curriculumSelect.test.jsx` and `subjectsForYear(6)` in
-  `src/data/signupFlow.test.js`;
-- public-guide implementation assertions in `tests/components/curriculumGuides.test.jsx`:
-  staged topics remain unavailable and the guide must say so;
-- future-year recipe fixtures in `scripts/curriculum/authoring.test.js` when the
-  new subject game becomes the newest reference, and the per-year reading limits
-  in `src/data/lessons/lintLessons.js` when registering a new lesson year.
-
-Before the pilot, check that each displayed quest name starts with a capital,
-including after a Number/Geometry prefix. Use actual `toKebabCase` outputs and
-preserve existing IDs. Give parallel tasks exclusive file ownership, including
-test and lesson filenames. Use the subject's own bank contract and numeric/input
-limits in strand briefs, rather than copying Science's 0–999 default.
-
-Tests that need a year with no curriculum use Year 7.
+- An order task needs one defensible order.
+- A sort's cards must fit its prompt's starting point.
 
 ## Find just enough context
 
@@ -133,122 +108,143 @@ Tests that need a year with no curriculum use Year 7.
 npm run topic:context -- --year N --subject SUBJECT --topic TOPICID
 ```
 
-Use the output's exact registry entry, statutory mapping and file paths. Read the mapping row and its referenced requirement before writing questions. `docs/curriculum/` is the teaching boundary; preserve statutory text verbatim. Read one nearby bank/game, its wrappers, lesson and playthrough test. The matching `.claude/skills/` guide supplies implementation details; the whole project knowledge file is not required for an ordinary topic.
+Use the output's exact registry entry, statutory mapping and file paths. Read
+the mapping row and its requirement before writing questions; `docs/curriculum/`
+is the teaching boundary. Read one nearby bank/game, its wrappers, lesson and
+playthrough test, and the matching `.claude/skills/` guide.
 
-For a new year/subject, register its dataset and statutory mapping first using `add-curriculum-year`. Choose permanent titles/IDs before shipping. Titles-derived IDs are URL and progress keys; later renames require a migration. Set unfinished new curricula to `countsTowardYear: false` explicitly: adding content must not silently change year-award membership.
+## Brief and pilot
 
-## Make a compact brief and a pilot
+Copy [the topic brief](templates/topic-brief.md), or use the
+scaffold's generated working brief. Record the requirement, exclusions, four
+learning slots, misconceptions, interaction recipe and evidence needed.
 
-Copy [the topic brief](superpowers/templates/topic-brief.md), or use the scaffold's generated brief. Record the exact requirement, exclusions, four learning slots, misconceptions, interaction recipe and evidence needed. For a whole course, use [the course build record](superpowers/templates/course-build.md) and start with one representative topic.
+Read the [visual recipes](VISUAL_RECIPES.md) and the built-year renderers listed
+by `topic:context`. Use the subject's illustrated Bix introduction/notes,
+separately authored worked examples and question models/manipulatives as the
+baseline for all four slots. Prefer the existing subject game: it preserves
+diagrams, evidence, custom controls and answer checking. Supported data kinds
+live in `src/data/challenges/questionKinds.js`; rendering in
+`src/components/challenge/data/DataChallenge.jsx`.
 
-Read the [visual recipes](VISUAL_RECIPES.md) and the built-year renderers listed by `topic:context`. Use the existing subject's illustrated Bix introduction/notes, separately authored worked examples and question models/manipulatives as the baseline. Specify these for all four slots in the brief. Preserve the visual representation between explanation and task; extend shared visual components where a new topic needs a missing model. Text-only assessments such as hidden dictation can be appropriate when justified by the learning goal.
+Slots usually progress from supported introduction through reduced support and
+whole-structure work to application. Finish one representative slot, its lesson
+and playthrough first, then expand to all four.
 
-Prefer the existing subject game, which also preserves diagrams, evidence, custom controls and answer checking. Supported data kinds live in `src/data/challenges/questionKinds.js`; rendering lives in `src/components/challenge/data/DataChallenge.jsx`. A content bank and a generic answer control alone do not reproduce the built courses' visual teaching.
-
-The four slots usually progress from supported introduction through reduced support and whole-structure work to application. Use interactions that reveal understanding. Finish one representative slot, its lesson and playthrough first, then expand the proven recipe to all four. This is ordinary implementation work, not a new approval gate.
-
-## Generate the skeleton where it fits
-
-For an existing registered topic with a statutory mapping, preserve its subject game/visual frame:
+## Generate the skeleton
 
 ```sh
 npm run scaffold:topic -- --year N --subject SUBJECT --topic TOPICID --game src/path/to/SubjectGame.jsx
 npm run scaffold:topic -- --year N --subject SUBJECT --topic TOPICID --game src/path/to/SubjectGame.jsx --write
 ```
 
-Preview is the default; `--write` creates files without overwriting existing work. `--game` creates four wrappers and `docs/authoring/yearN-SUBJECT-TOPICID.md`, preserving the chosen renderer. Connect the game to the new topic's own banks; using an older game as a reference does not register new content.
+Preview is the default; `--write` creates files without overwriting. Every
+scaffold writes a working brief to `.superpowers/topic-briefs/` (gitignored).
 
-For compatible Maths/English data interactions, omitting `--game` creates wrappers with `MathQuestionVisual`/`EnglishQuestionVisual` and pictured controls, a pure bank under `src/data/challenges/authored/yearN/SUBJECT/`, its test and the brief. The bank test deliberately fails until teaching content is completed. These shared fallbacks may return null; inspect the rendered representation and add missing authored visuals. Other subjects require `--game` so their illustrated notes/story/map/evidence frame is preserved. Generated files are a skeleton, not reviewed teaching.
+- `--game` creates four wrappers around the subject game. The game must
+  default-export a component accepting `level`, `onComplete` and the topic prop
+  (`--topic-prop topic` if it uses `topic`; `--topic-key KEY` if its bank uses an
+  internal key, e.g. Year 5 Maths `place` for `place-value-to-a-million`).
+- Omitting `--game` (Maths/English only) creates wrappers with
+  `MathQuestionVisual`/`EnglishQuestionVisual`, a pure bank under
+  `src/data/challenges/authored/yearN/SUBJECT/` and a test that fails until
+  content is written. Those visual fallbacks may return null: add authored
+  visuals where needed.
+- `--builder PATH --export NAME` wraps an existing Maths/English pure builder.
+  Choose `--game` or `--builder`, not both.
 
-To wrap an existing compatible Maths/English pure builder with those shared visuals:
+Other subjects require `--game` so their notes/story/map/evidence frame is
+preserved. Generated files are a skeleton, not reviewed teaching.
 
-```sh
-npm run scaffold:topic -- --year N --subject SUBJECT --topic TOPICID --builder src/path/to/bank.js --export buildName
-```
+## Review content
 
-The supplied module must exist and export the function. This creates wrappers and a brief, not a bank/test. Review the preview before adding `--write`.
+Review every variant: recompute answers, require one defensible answer, remove
+tied orderings and alternative readings, check British spelling and
+age-appropriate ranges, and compare prompts with the visible drawing/evidence.
+Question pictures use visible givens or authored evidence, never hidden answers,
+hints or correct bin assignments; a worked example is authored separately and may
+show its solution. Wrong attempts retry; hints help without giving the answer.
+Bix's lesson teaches the same representation as its challenge. Builders accept a
+deterministic `rng` and randomise once per mount.
 
-To preserve an existing subject's story screen, diagrams or adventure layout, wrap its game instead:
+**Learner language** (every learner-facing string in all four slots and every
+generated branch: titles, prompts, options, clues, hints, feedback, glosses,
+`speak` text, captions, sort labels): short sentences of about 12 words or fewer,
+one idea each; explicit actions ("Tap…", "Sort…"); British English. Keep the
+statutory demand and explain necessary vocabulary once rather than removing it.
+No double negatives or meta language ("supplied", "authored", "not graded").
+Options are similar in length and grammar with one clearly correct answer.
+`speak` matches the visible words. A clue card before a question reads as a fact
+and the question stands alone. A wording pass never changes IDs, answer logic,
+counts or progress.
 
-```sh
-npm run scaffold:topic -- --year N --subject SUBJECT --topic TOPICID --game src/path/to/SubjectGame.jsx --topic-prop topicId
-```
+Subject accuracy:
 
-The game must have a default export accepting `level`, `onComplete` and the topic prop (`topicId` by default; use `--topic-prop topic` for games using `topic`). If its bank uses an internal key rather than the permanent curriculum ID, pass `--topic-key KEY` (for example Year 5 Maths uses `topic="place"` for `place-value-to-a-million`). This also creates wrappers and a brief only. Choose `--game` or `--builder`, not both. Verify the game supports the new topic in its own banks before shipping. Generic `--builder` scaffolds require arrays of shared-kind questions; story envelopes and custom answer/control models require `--game`. The generic scaffold cannot supply specialised maps, story cards, enquiry controls or figures automatically.
+- **Geography:** seven continents including Antarctica (Skills `MapGame` uses
+  Oceania and omits Antarctica). The UK, Great Britain and England are distinct;
+  Russia spans Europe and Asia. Avoid disputed-boundary questions. Name the
+  county convention used. Time zones use dated UTC offsets. Grid references read
+  eastings then northings; OS grid is not latitude/longitude. Show similarities
+  as well as contrasts between places; avoid stereotypes; draw natural hazards
+  calmly. Fieldwork cards are optional grown-up activities that never gate
+  completion or collect an address, school, GPS or photo.
+- **History:** name hard things plainly in one short sentence, with no gore and
+  no remains beyond wrapped mummies, coffins and masks. Use "how do we know?"
+  framing, never mock the past, and say plainly where a figure hurt others. Use
+  the dates schools teach; say "about" where historians disagree. Every topic
+  lists reputable `references`.
+- Practice data is labelled "example data"; facts need dated sources.
 
-## Review content and prove behaviour
+## Prove behaviour
 
-Review every variant: independently recompute answers, require one defensible answer, remove tied orderings and plausible alternative readings, check British spelling and age-appropriate ranges, and compare prompts with the visible drawing/evidence. Question pictures use visible givens or authored evidence, never hidden answers, hints or correct bin assignments; a worked introductory example is authored separately and may show its own solution. Preserve accessible labels, picture/card association, both themes and sound-off play. Wrong attempts must retry; hints should help without giving the answer. Bix's lesson must teach the same representation as its challenge. Shared builders should accept deterministic `rng` for tests and randomise once per mount in the game.
-
-Use [the shared validation policy](VALIDATION.md). During development and at
-pilot/strand handoffs, lint affected files, run the relevant bank/playthrough and
-integration tests, and use the applicable checker:
+Follow [validation](VALIDATION.md). During development lint affected files, run
+the relevant bank/playthrough and integration tests, and the checker:
 
 ```sh
 npm run check:topic -- --year N --subject SUBJECT --topic TOPICID
 npm run check:course -- --year N --subject SUBJECT
 ```
 
-Run the full `npm run lint`, `npm test` and `npm run build` once when the final
-implementation is ready for merge/release. Reuse passing results for unchanged
-code; rerun affected checks after fixes. Broaden immediately for progress,
-accounts, routing or shared-engine changes. Report any pending final checks at
-intermediate handoffs. Keep successful test listings in temporary logs and read
-only failures/summaries.
+The topic check validates wrapper JSX, immediate relative imports and banks
+covered by its adapters; the course check runs it for every registered topic.
+Both accept `--json`, `--seeds N` (1–1000) and, for bespoke builders,
+`--builder PATH --export NAME`. An unsupported adapter is a limitation, not a
+pass; `--structure-only` narrows the check and must not be reported as a bank
+pass. Current adapter gaps: Year 2–3 Maths, Year 3 English/Science and
+dictation's memory-game model — use their subject suites. Maths custom answer
+acceptance needs its subject tests too. Do not replace a working interaction to
+fit the checker. Extend jsdom playthroughs for retry, hints, full completion and
+the `{ combos }` payload.
 
-The topic check validates wrapper JSX, immediate relative imports and banks covered by its adapters. The course check applies it to every registered topic, continues after individual failures and exits nonzero if any fail. Both accept `--json` for complete machine-readable check results (context emits Markdown); `--seeds 50` selects the deterministic runs (1–1000). An unsupported adapter is a limitation, not a successful bank check; default validation exits nonzero. `--structure-only` deliberately narrows the check and reports that scope. For bespoke pure builders, context/topic checks also accept `--builder PATH --export NAME`. Keep subject-specific validators and tests where the generic checker cannot prove the interaction. Extend jsdom playthroughs for retry, hints where relevant, full completion and the `{ combos }` callback payload.
-
-Current adapter gaps include Year 2–3 Maths, Year 3 English/Science and dictation's
-memory-game response model. Use their subject-specific bank/playthrough suites;
-`--structure-only` can check loader files but must not be reported as a bank pass.
-Maths custom answer acceptance also needs its existing subject tests even when
-common question structure passes. Do not replace a working interaction to make
-it fit the generic checker.
-
-**Curriculum journey content (#69).** Every built topic also needs a purpose
-introduction and at least three quiz candidates, and every quest/subject an
-introduction. After building challenge files, regenerate the built-content
-manifest and check the pathway:
+**Curriculum journey content.** Every built topic needs a purpose introduction
+and at least three quiz candidates, and every quest/subject an introduction.
+After building challenge files:
 
 ```sh
+npm run journey:brief -- --year N --subject SUBJECT     # IDs, mapping rows, lesson titles
 npm run journey:manifest -- --write
 npm run check:journey -- --year N --subject SUBJECT
 ```
 
-Follow [the journey authoring guide](superpowers/journey-content-authoring.md);
-`npm run journey:brief -- --year N --subject SUBJECT` lists IDs, mapping rows and
-lesson titles. The checker does not check facts or answers.
+Follow [the journey authoring guide](JOURNEY_AUTHORING.md).
+The checker does not check facts or answers.
 
-Use browser automation only for gaps jsdom cannot show: real layout/overlap, drag, canvas, WebGL, maps or comparable rendering. Follow `AGENTS.md`: one batched pass across required viewports and both themes, at most one confirmation pass after fixes. If tooling is unavailable, complete automated checks and report the missing visual verification. Never change the app to work around unavailable AI tooling.
+Use browser automation only for what jsdom cannot show, as `AGENTS.md` says.
+Use isolated test accounts and fixtures; never reset learner data.
 
-Production uses API + MongoDB; development defaults to the browser store unless built with `VITE_USE_API=true`. Use isolated test accounts and fixtures; never reset learner data. Read `curriculum-progress` before changing IDs, storage, completion, awards or access rules.
+## Report evidence honestly
 
-## Report the evidence honestly
-
-Follow [build measurement](BUILD_MEASUREMENT.md) for timing and token
-recording. The coordinating agent starts/resumes the scope's timer,
-pauses when yielding, and stops after the requested work and verification finish.
-Keep the timer ID in the course record; never reset an old measurement or sum
-overlapping parent/subagent timers. Timing includes unpaused AI/tool/test waits,
-does not infer tokens and is not content approval. Keep unavailable token counts
-unknown, with their reporting gaps explicit. After stopping the timer, run
-`npm run course:usage -- --timer ID --branch BRANCH --record RECORD --topics N --write`
-when Claude JSONL logs are available. It deduplicates IDs, filters the recorded
-window and updates both measurement destinations. Use explicit session paths for
-ambiguous/resumed sessions; for other tools use their own counters or record
-unknown. Add a brief evidence-based retrospective and apply reusable improvements
-to the prompt/brief before finishing.
-
-Keep these statuses separate in the brief/course record:
+Report these separately:
 
 | Status | Evidence |
 |---|---|
 | Implemented | Exact topics/slots/lessons delivered, plus unavailable scope |
 | Technically validated | Commands/results, bank adapters, playthrough coverage and browser gaps |
-| Content reviewed | Which variants and statutory boundaries were checked; reviewer and remaining uncertainty |
-| Device reviewed | Actual viewports/themes/devices and interactions exercised |
-| Owner/learner review | Decisions requiring product knowledge, or observed child experience |
+| Content reviewed | Variants and statutory boundaries checked; reviewer and remaining uncertainty |
+| Device reviewed | Viewports/themes/devices and interactions exercised |
+| Owner/learner review | Product decisions, or observed child experience |
 
-Do all review and automation possible in the session. Remaining human work should be concrete: observe a child's comprehension, enjoyment and independence; try touch, speech/voices and ergonomics on physical devices; resolve product or teaching choices that available evidence cannot determine. Automated checks do not certify these experiences, and content review is not implied by lint passing.
-
-Keep durable briefs, specs and evidence under `docs/authoring/` or `docs/superpowers/`. Disposable `.superpowers/` and `.sdd/` runtime logs are not durable project guidance. Update the current inventory/architecture references when scope or contracts change; keep `PROJECT_KNOWLEDGE.md` as the short entry point. Record delivered outcomes and verification in `CHANGELOG.md`, remove completed work from the upcoming-only `PROJECT_IDEAS.md`.
+Automated checks do not certify a child's comprehension, enjoyment or physical
+device use. When scope or contracts change, update
+[CURRICULUM_INVENTORY.md](CURRICULUM_INVENTORY.md) and the affected reference;
+remove finished items from [PROJECT_IDEAS.md](PROJECT_IDEAS.md).

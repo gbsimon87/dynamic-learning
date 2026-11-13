@@ -15,7 +15,7 @@ import { oldAndNewBuildings } from "./oldAndNewBuildings.js";
 import { cluesInStreetNames } from "./cluesInStreetNames.js";
 
 // Year 1 History topics, keyed by dataset topic id, in dataset order. Add each
-// topic here when all four of its challenges ship (release order: shared-design-spec.md §8).
+// topic here when all four of its challenges ship (release order: docs/AUTHORING.md).
 export const YEAR1_HISTORY_TOPICS = {
   "toys-then-and-now": toysThenAndNow,
   "homes-then-and-now": homesThenAndNow,

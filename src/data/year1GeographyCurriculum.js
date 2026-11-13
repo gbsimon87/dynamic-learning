@@ -1,6 +1,6 @@
 import { toKebabCase } from "../utils/toKebabCase.js";
 
-// Titles locked on first implementation, 2026-10-13. Source: docs/geography-curriculum/year-1-design-spec.md.
+// Titles locked on first implementation, 2026-10-13. Source: docs/curriculum/key-stage-1-geography.md.
 // Titles derive the permanent IDs used in progress records; a rename is a migration.
 const raw = [
   { title: "Our Place", topics: [["Around Our School", "🏫"], ["Human and Physical Features", "🏞️"], ["Maps from Above", "🛩️"]] },

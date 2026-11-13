@@ -1,5 +1,5 @@
 // Year 1 History, Two Queens Long Ago (docs/curriculum/key-stage-1-history.md,
-// "compare aspects of life in different periods"; docs/history-curriculum/year-1-design-spec.md).
+// "compare aspects of life in different periods").
 // Compares Elizabeth I and Queen Victoria only; Year 1 does not teach Elizabeth II.
 // Every template names the words on its story card or picture that answer it.
 

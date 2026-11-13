@@ -5,7 +5,7 @@ import { FLIGHT_CLUES } from "./flightClues.js";
 // circle inside the scene's belt band (55–90 units); Bennu is a near-Earth
 // asteroid, so it travels just outside Earth's path (25.64). Sizes are
 // exaggerated so a child can find them; speeds follow the belt's own range.
-// Facts were checked against the NASA pages listed in docs/SOLAR_SYSTEM_IDEAS.md.
+// Facts were checked against the NASA pages listed in docs/EXPLORABLE_WORLDS.md.
 const clueFact = (id) => FLIGHT_CLUES.find((clue) => clue.target === id).fact;
 const PRETEND = "Its size here is made bigger so you can find it.";
 

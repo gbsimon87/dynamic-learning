@@ -94,7 +94,7 @@ export default function Challenge({ onComplete }) {
 `);
     }
   }
-  const brief = `docs/authoring/year${info.year}-${info.subject}-${info.topicId}.md`;
+  const brief = `.superpowers/topic-briefs/year${info.year}-${info.subject}-${info.topicId}.md`;
   files.set(brief, `# ${info.topic.name} — Year ${info.year} ${info.subject}
 
 Status: scaffold only; content, interactions, layout and device checks pending.

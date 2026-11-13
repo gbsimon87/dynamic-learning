@@ -20,8 +20,8 @@ import "../../../components/skills/FreePlayShell.css";
 import "./RuleZoo.css";
 
 /**
- * Secret Rule Zoo — a small detective game about sorting (idea #3 in
- * docs/PLAYFUL_LEARNING_EXPLORATION.md).
+ * Secret Rule Zoo — a small detective game about sorting (playful learning
+ * shortlist in docs/PROJECT_IDEAS.md).
  *
  * Find the rule: the keeper sorts invented creatures into the Sunny Pen and
  * the Moon Pen by one hidden feature. The child chooses which creature to

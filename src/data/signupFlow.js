@@ -2,7 +2,7 @@
  * The sign-up flow as data. Every rule the screens follow — which steps a
  * family sees, in what order, what Back does, what is sent — lives here, pure,
  * so node:test can pin it. The React side only renders a cursor and calls
- * these functions. Spec: docs/superpowers/specs/2026-10-07-signup-onboarding-design.md
+ * these functions. Contract: docs/ARCHITECTURE.md (Sign-up).
  */
 import { ACCOUNT_LEARNER, ACCOUNT_PARENT, AGE_BANDS } from "../../shared/accountTypes.js";
 import { isEmailShaped, normaliseEmail } from "../../shared/emailAddress.js";

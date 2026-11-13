@@ -1,5 +1,4 @@
-// Authored for the owner's separate-model validation pass. Not executed during
-// the expansion build: see docs/superpowers/2026-11-11-year3-practice-expansion.md.
+// Coverage guard: every Year 3 course topic has a paper practice topic.
 import test from "node:test";
 import assert from "node:assert/strict";
 import { loadCurriculum } from "../curriculumRegistry.js";

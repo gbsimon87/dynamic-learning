@@ -6,7 +6,7 @@ import HistoryVisual from "./HistoryVisual";
 import "./history.css";
 
 /**
- * Story first, then the rounds (docs/history-curriculum/shared-design-spec.md §4).
+ * Story first, then the rounds (docs/VISUAL_RECIPES.md).
  * The run is built once per mount; DataChallenge gets a stable builder that
  * returns that same run, so it never re-randomises. Progress is untouched:
  * DataChallenge → ChallengeShell calls onComplete exactly as everywhere else.
