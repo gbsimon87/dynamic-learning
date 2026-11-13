@@ -60,7 +60,8 @@ body.dark .skill-guide {
 .skill-guide-cards p { margin: 0; }
 .skill-guide-skills { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .skill-guide-skills li { padding: 0.4rem 0.9rem; border-radius: 2rem; background: var(--tone-bg); color: var(--tone-ink); font-weight: bold; }
-.skill-guide-fit { font-size: 1rem; }
+/* `.curriculum-guide p` would otherwise zero the gap above this panel. */
+.curriculum-guide p.skill-guide-fit { margin: 2.5rem 0 0; font-size: 1rem; }
 .curriculum-guide.skill-guide-game > section { margin-top: 3rem; }
 .skill-guide-game .curriculum-guide-games a { color: inherit; }
 .skill-guide-game .curriculum-guide-games strong { font-size: 1.15rem; }

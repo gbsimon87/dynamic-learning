@@ -154,17 +154,17 @@ it('plays an automatically mixed curriculum edition and switches back to the pre
 it('shows the home invitation on Friday for signed-out visitors and updates across midnight', () => {
   vi.setSystemTime(new Date('2027-06-03T22:59:50Z'));
   render(<MemoryRouter><AuthContext.Provider value={{ child: null, status: 'signedOut' }}><Home /></AuthContext.Provider></MemoryRouter>);
-  expect(screen.queryByRole('link', { name: /Play this week’s quiz/ })).toBeNull();
+  expect(screen.queryByRole('link', { name: /Play the quiz/ })).toBeNull();
   act(() => vi.advanceTimersByTime(30000));
-  expect(screen.getByRole('link', { name: /Play this week’s quiz/ }).getAttribute('href')).toBe('/skills/family-friday?week=2027-06-04');
+  expect(screen.getByRole('link', { name: /Play the quiz/ }).getAttribute('href')).toBe('/skills/family-friday?week=2027-06-04');
   vi.setSystemTime(new Date('2027-06-04T23:00:00Z'));
   act(() => window.dispatchEvent(new Event('focus')));
-  expect(screen.queryByRole('link', { name: /Play this week’s quiz/ })).toBeNull();
+  expect(screen.queryByRole('link', { name: /Play the quiz/ })).toBeNull();
 });
 
 it('keeps the Friday invitation independent of profile selection', () => {
   render(<MemoryRouter><AuthContext.Provider value={{ child: { name: 'Sam' }, status: 'signedIn' }}><FamilyFridayCard /></AuthContext.Provider></MemoryRouter>);
-  expect(screen.getByRole('link', { name: /Play this week’s quiz/ })).toBeTruthy();
+  expect(screen.getByRole('link', { name: /Play the quiz/ })).toBeTruthy();
 });
 
 it('copies an edition link and provides a selectable fallback when clipboard access fails', async () => {

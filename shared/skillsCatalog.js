@@ -1,16 +1,6 @@
 // Shared by the skills hub, public guides, prerenderer and sitemap.
 export const SKILL_GROUPS = [
   {
-    id: "family",
-    icon: "🎉",
-    name: "Play together",
-    hue: "--sk-hue-english",
-    deep: "--sk-deep-english",
-    games: [
-      { to: "/skills/family-friday", icon: "🎉", label: "Family Friday Quiz", badge: "New quiz every Friday" },
-    ],
-  },
-  {
     id: "math",
     icon: "🧮",
     name: "Maths",
@@ -63,6 +53,16 @@ export const SKILL_GROUPS = [
       { to: "/skills/city-spotlight", icon: "🏙️", label: "Find Cities from Clues" },
       { to: "/skills/flag-finder", icon: "🚩", label: "Match Flags to Countries" },
       { to: "/skills/ocean-explorer", icon: "🌊", label: "Explore the Ocean" },
+    ],
+  },
+  {
+    id: "family",
+    icon: "🎉",
+    name: "Play together",
+    hue: "--sk-hue-family",
+    deep: "--sk-deep-family",
+    games: [
+      { to: "/skills/family-friday", icon: "🎉", label: "Family Friday Quiz", badge: "New quiz every Friday" },
     ],
   },
 ];

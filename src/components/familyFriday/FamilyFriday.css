@@ -8,6 +8,7 @@
   --ff-gold-ink: var(--light-home-bonds-ink);
   --ff-lilac: var(--light-home-reading);
   --ff-lilac-ink: var(--light-home-reading-ink);
+  --ff-lilac-edge: var(--light-home-reading-edge);
   --ff-mint: var(--light-home-space);
   --ff-mint-ink: var(--light-home-space-ink);
   --ff-cta: var(--light-home-cta);
@@ -24,6 +25,7 @@ body.dark .ff-theme {
   --ff-gold-ink: var(--dark-home-bonds-ink);
   --ff-lilac: var(--dark-home-reading);
   --ff-lilac-ink: var(--dark-home-reading-ink);
+  --ff-lilac-edge: var(--dark-home-reading-edge);
   --ff-mint: var(--dark-home-space);
   --ff-mint-ink: var(--dark-home-space-ink);
   --ff-cta: var(--dark-home-cta);
@@ -52,6 +54,20 @@ body.dark .ff-theme {
 .family-friday-card p { max-width: 50ch; line-height: 1.6; }
 .family-friday-card .ff-tags { margin-bottom: 0; }
 .family-friday-card .ff-button { flex-shrink: 0; max-width: 230px; }
+/* A soft lilac pill: a different shape and colour from the hero's solid teal
+   "Keep going" / "Start my adventure" button, and quieter, so that button
+   stays the page's focal action. */
+.family-friday-card .ff-button {
+  min-height: 52px; padding-inline: 1.4rem; border-radius: 999px;
+  border-color: var(--ff-lilac-edge); background: var(--ff-lilac); color: var(--ff-lilac-ink);
+  transition: transform 140ms ease-out;
+}
+.family-friday-card .ff-button:hover { transform: translateY(-2px); }
+.family-friday-card .ff-button:active { transform: translateY(2px); }
+@media (prefers-reduced-motion: reduce) {
+  .family-friday-card .ff-button { transition: none; }
+  .family-friday-card .ff-button:hover { transform: none; }
+}
 .family-friday-card .ff-ticket { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 0 0 125px; min-height: 160px; padding: 1rem; border: 2px dashed var(--ff-gold-ink); border-radius: 20px; background: var(--ff-gold); color: var(--ff-gold-ink); transform: rotate(-5deg); text-align: center; font-size: .75rem; }
 .family-friday-card .ff-ticket strong { font-size: 4.5rem; line-height: 1.2; }
 .family-friday-page { max-width: 900px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }

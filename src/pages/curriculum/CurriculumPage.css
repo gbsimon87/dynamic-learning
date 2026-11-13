@@ -12,12 +12,12 @@
   --cp-card: var(--light-panel);
   --cp-edge: #f0dde0;
   --cp-inset: #faf2f3;
-  --cp-sky-top: #ffe3e7;
+  --cp-sky-top: #fdeedf;
   --cp-sky-bottom: #f8ecee;
-  --cp-glyph: rgba(239, 98, 108, 0.26);
+  --cp-glyph: rgba(255, 169, 77, 0.3);
   --cp-accent: var(--light-accent);
-  --cp-cta: #c33d47;
-  --cp-cta-shade: #92262f;
+  --cp-cta: var(--light-home-cta);
+  --cp-cta-shade: var(--light-home-cta-shade);
   --cp-on-deep: #ffffff;
   --cp-focus: #22181c;
 
@@ -138,27 +138,27 @@ body.dark .curriculum-page {
   gap: clamp(0.6rem, 2vw, 1rem);
 }
 
-.cp-back {
+/* Same tile as the Skills band: the subject at a glance. */
+.cp-bar-icon {
   display: grid;
   place-items: center;
   flex: none;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--cp-card);
-  box-shadow: 0 4px 12px var(--panel-shadow);
-  color: var(--cp-ink);
-  font-size: 1.2rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition:
-    transform 160ms ease-out,
-    background-color 200ms ease;
+  width: 52px;
+  height: 52px;
+  border-radius: 18px;
+  background: var(--cp-accent);
+  font-size: 1.7rem;
+  animation: cp-icon-idle 5s ease-in-out infinite;
 }
 
-.cp-back:hover,
-.cp-back:focus-visible {
-  transform: translateX(-3px);
+@keyframes cp-icon-idle {
+  0%, 88%, 100% { transform: translateY(0) rotate(0deg); }
+  92% { transform: translateY(-6px) rotate(-7deg); }
+  96% { transform: translateY(-3px) rotate(5deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cp-bar-icon { animation: none; }
 }
 
 .cp-bar-id {
@@ -183,6 +183,23 @@ body.dark .curriculum-page {
 .cp-bar-soon {
   font-weight: 400;
   opacity: 0.85;
+}
+
+/* The way back to the year/subject picker. Inline text, but padded to a
+   44px-tall target for small fingers. */
+.cp-switch {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.cp-switch:focus-visible {
+  outline: 3px solid var(--cp-focus);
+  outline-offset: 2px;
+  border-radius: 6px;
 }
 
 /* ===== KEEP GOING =====
@@ -245,37 +262,6 @@ body.dark .curriculum-page {
     align-items: center;
     text-align: center;
   }
-}
-
-/* ===== PROGRESS RING ===== */
-.cp-ring {
-  flex: none;
-  width: clamp(54px, 12vw, 68px);
-  height: auto;
-}
-
-.cp-ring-track {
-  fill: none;
-  stroke: var(--cp-edge);
-  stroke-width: 12;
-}
-
-.cp-ring-fill {
-  fill: none;
-  stroke: var(--cp-accent);
-  stroke-width: 12;
-  stroke-linecap: round;
-  transform: rotate(-90deg);
-  transform-origin: 50% 50%;
-  transition: stroke-dashoffset 1.1s cubic-bezier(0.2, 0.9, 0.3, 1);
-}
-
-.cp-ring-text {
-  fill: var(--cp-ink);
-  font-size: 2.1rem;
-  font-weight: 700;
-  text-anchor: middle;
-  dominant-baseline: central;
 }
 
 .dev-unlock-banner {
@@ -770,7 +756,6 @@ body.dark .curriculum-page {
 }
 
 /* ===== FOCUS ===== */
-.cp-back:focus-visible,
 .cp-cta:focus-visible,
 .cp-dot:focus-visible,
 .cp-arrow:focus-visible,
@@ -874,20 +859,16 @@ body.dark .curriculum-page {
     animation: none;
   }
 
-  .cp-back,
   .cp-cta,
   .cp-cat,
   .cp-dot,
   .cp-arrow,
   .cp-challenge,
   .cp-cat-bar-fill,
-  .cp-ring-fill,
   .curriculum-page .reveal-armed {
     transition: none;
   }
 
-  .cp-back:hover,
-  .cp-back:focus-visible,
   .cp-cta:hover,
   .cp-cta:focus-visible,
   .cp-cat:hover,

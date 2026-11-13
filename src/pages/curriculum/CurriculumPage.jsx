@@ -6,6 +6,8 @@ import CoachMark from "../../components/coach/CoachMark";
 import { TIPS } from "../../data/intro";
 import { Link, Navigate, useParams } from "react-router";
 import {
+  CURRICULUM_ICON,
+  CURRICULUM_SUBJECTS,
   getSubjectName,
   isCurriculumAvailable,
   loadCurriculum,
@@ -19,7 +21,6 @@ import {
   getYearStats,
 } from "../../data/curriculumProgressStats";
 import { useReveal } from "../home/useReveal";
-import ProgressRing from "../../components/ProgressRing";
 import ProgressError from "../../components/ProgressError";
 import "./CurriculumPage.css";
 import BixLoader from "../../components/mascot/BixLoader";
@@ -364,6 +365,7 @@ function CurriculumPage() {
 
   const curriculum = loadCurriculum(year, subject);
   const subjectName = getSubjectName(subject);
+  const subjectIcon = CURRICULUM_SUBJECTS.find((s) => s.id === subject)?.icon ?? CURRICULUM_ICON;
 
   // Only challenges with a component file count, so 100% stays reachable.
   const isBuilt = (topicId, challengeId) =>
@@ -430,44 +432,37 @@ function CurriculumPage() {
             pills — is gone, so the challenge cards start near the top of the
             screen instead of below a screenful of copy. */}
         <div className="cp-bar">
-          {/* `?pick=1` or this bounces straight back here: the picker skips
-              itself for a learner whose year is on their profile. */}
-          <Link
-            to="/curriculum?pick=1"
-            className="cp-back"
-            aria-label="Change year or subject"
-            title="Change year or subject"
-          >
-            <span aria-hidden="true">←</span>
-          </Link>
-
-          {/* Held back until hydration so it never flashes 0% at a learner
-              who has real progress saved. */}
-          {hydrated && yearStats.total > 0 && (
-            <ProgressRing
-              prefix="cp-ring"
-              percent={yearStats.percent}
-              label={`${yearStats.percent}% of Year ${year} ${subjectName} complete`}
-            />
-          )}
+          <span className="cp-bar-icon" aria-hidden="true">
+            {subjectIcon}
+          </span>
 
           <div className="cp-bar-id">
             <h1 className="cp-title">
               Year {year} {subjectName}
             </h1>
-            {hydrated && yearStats.total > 0 && (
-              <p className="cp-bar-meta">
-                <span aria-hidden="true">⭐</span> {yearStats.completed} of{" "}
-                {yearStats.total} done
-                {journey && <> · <ReplayLink params={{ intro: "subject" }} label="About this subject" /></>}
-                {/* Most of the curriculum isn't built yet, so a bare 100%
-                    would read as "Year finished". Three words, not a
-                    paragraph. */}
-                {yearStats.datasetTotal > yearStats.total && (
-                  <span className="cp-bar-soon"> · more coming soon</span>
-                )}
-              </p>
-            )}
+            <p className="cp-bar-meta">
+              {/* Held back until hydration so it never flashes 0 done at a
+                  learner who has real progress saved. */}
+              {hydrated && yearStats.total > 0 && (
+                <>
+                  <span aria-hidden="true">⭐</span> {yearStats.completed} of{" "}
+                  {yearStats.total} done
+                  {journey && <> · <ReplayLink params={{ intro: "subject" }} label="About this subject" /></>}
+                  {/* Most of the curriculum isn't built yet, so a bare total
+                      would read as "Year finished". Three words, not a
+                      paragraph. */}
+                  {yearStats.datasetTotal > yearStats.total && (
+                    <span className="cp-bar-soon"> · more coming soon</span>
+                  )}
+                  {" · "}
+                </>
+              )}
+              {/* `?pick=1` or this bounces straight back here: the picker
+                  skips itself for a learner whose year is on their profile. */}
+              <Link to="/curriculum?pick=1" className="cp-switch">
+                Switch subject
+              </Link>
+            </p>
           </div>
 
           {hydrated && nextUp && (

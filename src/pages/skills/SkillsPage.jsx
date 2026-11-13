@@ -135,7 +135,7 @@ function SkillsPage() {
       )}
 
       {/* ===== GAMES ===== */}
-      <div className="sk-grid">
+      <div className={`sk-grid ${shown.length === 1 ? "is-single" : ""}`}>
         {shown.map((group) => (
           <section
             key={group.id}

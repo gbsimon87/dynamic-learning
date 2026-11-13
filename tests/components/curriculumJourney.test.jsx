@@ -207,6 +207,8 @@ describe("subject map with the journey enabled", () => {
     renderAt("/curriculum/year/3/math", <CurriculumPage />, "/curriculum/year/:year/:subject");
     // The map stays hidden until the pathway content has loaded.
     expect(await screen.findByRole("link", { name: /About this subject/ }, { timeout: 5000 })).toBeTruthy();
+    // With the back arrow gone, this is the only way back to the year/subject picker.
+    expect(screen.getByRole("link", { name: "Switch subject" }).getAttribute("href")).toBe("/curriculum?pick=1");
     const card = await screen.findByRole("region", { name: "Quest Mastery: Fractions" });
     expect(within(card).getByRole("link", { name: "Try Quest Mastery" }).getAttribute("href")).toBe(`/curriculum/year/3/math/quest/${QUEST}/mastery`);
     expect(screen.getByRole("region", { name: "Year 3 Maths Final Test" })).toBeTruthy();

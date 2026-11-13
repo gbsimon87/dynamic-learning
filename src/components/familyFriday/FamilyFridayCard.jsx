@@ -15,7 +15,7 @@ export default function FamilyFridayCard() {
         <p>Gather round for this week’s Family Friday Quiz. Chat, choose and discover something new together.</p>
         <div className="ff-tags"><span>5 minutes or less</span><span>No account needed</span></div>
       </div>
-      <Link className="ff-button" to={editionPath(day)}>Play this week’s quiz <span aria-hidden="true">→</span></Link>
+      <Link className="ff-button" to={editionPath(day)}>Play the quiz <span aria-hidden="true">→</span></Link>
     </section>
   );
 }

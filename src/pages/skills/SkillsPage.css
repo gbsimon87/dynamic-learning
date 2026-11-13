@@ -25,10 +25,12 @@
   --sk-hue-english: #9f91e8;
   --sk-hue-shapes: #56a9e0;
   --sk-hue-geography: #2fa898;
+  --sk-hue-family: #e07bb8;
   --sk-deep-math: #ad5a00;
   --sk-deep-english: #5e4eb8;
   --sk-deep-shapes: #1f6fa8;
   --sk-deep-geography: #1f7d70;
+  --sk-deep-family: #a33b7a;
 
   max-width: 1200px;
   margin: 0 auto;
@@ -232,10 +234,16 @@ body.dark .skills-page {
   color: var(--sk-on-deep);
 }
 
-/* "All" has no subject colour, so its active state uses the page accent,
-   whose ink is the dark token rather than white. */
+/* "All" has no subject colour. It uses the neutral ink rather than the page
+   accent, so it doesn't compete with the coral icon tile in the band above. */
+.sk-filter:first-child {
+  border-color: var(--sk-ink);
+}
+
 .sk-filter:first-child.is-active {
-  color: var(--sk-on-accent);
+  background: var(--sk-ink);
+  border-color: var(--sk-ink);
+  color: var(--sk-card);
 }
 
 /* ===========================================================
@@ -384,6 +392,21 @@ body.dark .skills-page {
   display: grid;
   gap: 0.5rem;
   margin-top: 1rem;
+}
+
+/* One subject filtered: the card spans the page, so full-width rows would be
+   huge. Lay the games out two, then three, to a row. */
+@media (min-width: 640px) {
+  .sk-grid.is-single .sk-games {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem 1rem;
+  }
+}
+
+@media (min-width: 960px) {
+  .sk-grid.is-single .sk-games {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 .sk-game {

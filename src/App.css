@@ -45,10 +45,11 @@
   --light-home-sky-top: #ffe3e7;
   --light-home-sky-bottom: #f8ecee;
   --light-home-glyph: #d69099;
-  --light-home-cta: #c33d47;
+  /* Calm "go" teal: red read as a warning to a child about to start. */
+  --light-home-cta: #1f7d70;
   --light-home-on-cta: #ffffff;
-  --light-home-cta-edge: #c33d47;
-  --light-home-cta-shade: #92262f;
+  --light-home-cta-edge: #1f7d70;
+  --light-home-cta-shade: #13544b;
   --light-home-curriculum: #fff7f5;
   --light-home-curriculum-edge: #e8b8bc;
   --light-home-curriculum-label: #fbe1e4;
