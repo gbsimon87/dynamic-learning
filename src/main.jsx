@@ -103,6 +103,7 @@ const router = createBrowserRouter([
       {
         element: <SkillGameLayout />,
         children: [
+          { path: "skills/family-friday", lazy: () => import("./pages/skills/family/FamilyFridayQuiz").then((m) => ({ Component: m.default })) },
           { path: "skills/clock-generator", lazy: () => import("./pages/skills/math/ClockGenerator").then((m) => ({ Component: m.default })) },
           { path: "skills/reading-numbers", lazy: () => import("./pages/skills/math/ReadingNumbers").then((m) => ({ Component: m.default })) },
           { path: "skills/multiplication-table", lazy: () => import("./pages/skills/math/MultiplicationTable").then((m) => ({ Component: m.default })) },

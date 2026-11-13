@@ -9,6 +9,7 @@ repository rules, then open only the reference your task needs. Source code and
 | Build a Curriculum course, topic or challenge | [AUTHORING.md](AUTHORING.md), including [new course integration](AUTHORING.md#new-course-integration) |
 | Curriculum introductions and quizzes content | [JOURNEY_AUTHORING.md](JOURNEY_AUTHORING.md) |
 | Build a standalone Skills Mode game | [SKILLS_AUTHORING.md](SKILLS_AUTHORING.md) |
+| Family Friday Quiz, publication and content | [FAMILY_FRIDAY.md](FAMILY_FRIDAY.md) |
 | Visual teaching patterns, maps, image licensing | [VISUAL_RECIPES.md](VISUAL_RECIPES.md) |
 | Architecture, persistence, security, teacher tools | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | Implemented subjects, years, counts and awards | [CURRICULUM_INVENTORY.md](CURRICULUM_INVENTORY.md) |
