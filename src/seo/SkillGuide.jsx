@@ -27,7 +27,7 @@ export default function SkillGuide({ slug: suppliedSlug }) {
             <Link className="skill-guide-play" to={guide.to}>Play {guide.label} <span aria-hidden="true">→</span></Link>
           </div>
           <div className="curriculum-guide-badges">
-            <span>Free to play</span><span>No account needed</span><span>{guide.preview ? 'Prototype preview' : 'Choose your level'}</span>
+            <span>Free to play</span><span>No account needed</span><span>{guide.badge ?? (guide.preview ? 'Prototype preview' : 'Choose your level')}</span>
           </div>
         </div>
         <div className="skill-guide-icon" aria-hidden="true">{guide.icon}</div>

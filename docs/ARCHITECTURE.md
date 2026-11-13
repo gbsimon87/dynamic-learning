@@ -10,6 +10,12 @@ Skills Mode is standalone and ungated at `/skills` and `/skills/<game>`. Curricu
 
 [AuthContext](../src/context/AuthContext.jsx) owns account/profile state. Progress belongs to the active child, not the parent account or browser as a whole. Keep identity, gameplay, completion and persistence in their existing layers rather than calling a concrete storage driver from a game.
 
+**Family Friday Quiz** is a finite, account-free Skills game at
+`/skills/family-friday`, with a public guide and dated edition links. Its
+homepage invitation appears on UK Fridays only; editions remain playable all
+week. Publication, immutable bank versions and the separate ephemeral scoring
+contract are documented in [FAMILY_FRIDAY.md](FAMILY_FRIDAY.md).
+
 **Sign-up** is one question per screen; steps and skips are pure data in
 [signupFlow.js](../src/data/signupFlow.js). The draft lives in `sessionStorage`
 (`dl.signupDraft`) and never holds the password or birth year; only the age band

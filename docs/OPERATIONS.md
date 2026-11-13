@@ -144,6 +144,10 @@ full Year 3 Maths, Year 5 French and Year 5 Music final tests at 390px and
 needed; fix findings in content, or set both switches to `"false"` if a
 pathway must come down.
 
+**Family Friday Quiz.** Owner/parent content review, real-device touch/read-aloud
+checks and a family playtest of the five-minute target remain pending; see
+[FAMILY_FRIDAY.md](FAMILY_FRIDAY.md).
+
 **Content and device review.** Owner/teacher content review is pending for Year 6
 History (Jarrow facts, sensitive topics, reference URLs never fetched), Year 6
 Geography, Year 6 Computing (Online World safety topics), Year 6 French (all

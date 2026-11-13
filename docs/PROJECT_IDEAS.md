@@ -87,19 +87,11 @@ Build on that where suitable rather than introducing a second basic daily quiz.
 | 80 | **What Is It? — daily picture reveal** | Start with an extreme close-up of an everyday object or living thing. Inspect the picture, request up to three clues and make a guess; then zoom out to reveal the whole photograph and one surprising fact. Example: a mysterious patterned surface turns out to be a butterfly's wing. Each edition offers a quick shared guessing moment. | ⚪ |
 | 81 | **What Happens Next? — daily prediction** | Watch the beginning of a short illustrated sequence, choose a prediction and reveal what happens with a simple explanation. Example: predict which way a shadow moves when a torch moves around a toy. Use reviewed, unambiguous demonstrations; let children replay and change a condition where useful. The reveal should explain the result even after an incorrect prediction. | ⚪ |
 | 82 | **Creature of the Week — weekly discovery** | Meet a mystery animal through a sound-off-friendly silhouette and habitat clues, reveal it, then explore an illustrated scene with three discoveries. Example: an octopus edition lets children find camouflage, inspect its arms and discover how it moves. Keep a printable fact card available with the edition; start with a small, fact-reviewed set rather than a new 3D world. | ⚪ |
-| 83 | **Family Friday Quiz — five questions in five minutes or less** | A fresh five-question quiz every Friday for children and grown-ups to answer together on one device. Three answer choices per question, immediate reveals with one-sentence explanations, and one shared score out of five. Mix animals, space or the world, words or numbers and a picture puzzle; include a surprising discovery each week. Keep it easy to start without an account, with optional read-aloud and a public link families can share. | ⚪ |
 | 84 | **Bix's Weekend Make — weekly hands-on mission** | Publish one illustrated make-and-test activity with common household materials, an on-screen prediction and a printable instruction card. Example: fold a sheet of paper in different ways to make a bridge between two stacks of books, then compare what it supports. This is a recurring format for #27, with grown-up guidance and a clear explanation of what to notice. Families can participate without uploading photos or buying a kit. | ⚪ |
 
-**First pilot to develop:** #83, Family Friday Quiz. Keep the format to five
-questions, one shared screen and a result out of five; no setup beyond pressing
-"Start this week's quiz". Aim for 3–5 minutes including the answer reveals,
-without a countdown. Choose questions accessible to 6–8-year-olds that give
-grown-ups something interesting to discuss too. Prepare three reviewed editions
-of five questions before launch, then publish one each Friday. End with a warm
-result message and an optional invitation to share the edition link: "Can your
-family get five out of five?" Keep previous quizzes available and scores
-separate from curriculum progress. Try the first edition with families to check
-the duration, question clarity and whether they want another quiz next Friday.
+**Next review:** run the [Family Friday Quiz](FAMILY_FRIDAY.md) with families to
+check the real duration, question clarity and whether they want another quiz
+next Friday. Use that feedback before adding another recurring format.
 
 Keep the current edition playable without an account, with optional hints,
 read-aloud and a clear ending in roughly 2–5 minutes (longer for a Weekend Make).

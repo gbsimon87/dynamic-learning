@@ -1,6 +1,16 @@
 // Shared by the skills hub, public guides, prerenderer and sitemap.
 export const SKILL_GROUPS = [
   {
+    id: "family",
+    icon: "🎉",
+    name: "Play together",
+    hue: "--sk-hue-english",
+    deep: "--sk-deep-english",
+    games: [
+      { to: "/skills/family-friday", icon: "🎉", label: "Family Friday Quiz", badge: "New quiz every Friday" },
+    ],
+  },
+  {
     id: "math",
     icon: "🧮",
     name: "Maths",
