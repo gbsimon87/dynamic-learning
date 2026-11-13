@@ -30,7 +30,7 @@ Upcoming work only: remove an item when it ships (git history keeps delivered wo
 - **Saved plans:** add teacher access so plans can be saved and reopened.
 - **Class pre-tests:** collect separate assessment evidence to inform teacher-reviewed plans; completion totals cannot diagnose gaps.
 - **School sharing:** let authorised colleagues share and copy plans and resources privately.
-- **More teacher notes:** `NOTES` registers only Year 3 Maths, Science and History. `teacherBriefings/year{1,2,4}{Science,History,Geography}.js` and `year3Geography.js` exist but are not imported, so they are untested and invisible: register them (the test then checks their quotes) or delete them. Years 5–6 and all English notes are unwritten.
+- **More teacher notes:** Years 1–4 Science, History and Geography and Year 3 Maths have notes. Years 5–6, all English and Maths outside Year 3 are unwritten.
 - **Practice sheet options:** consider page presets and better exports after #46's review.
 - **Shared topic picker:** reuse year/subject topic lists across guides, briefings and planning.
 
@@ -59,7 +59,7 @@ Constraint for accounts and sharing: a teacher must never reach family profiles 
 | 31 | **Science notebook and geography passport** | Collect topic cards and exploration stamps with revision facts. Define earning rules. | ⚪ |
 | 32 | **Seasonal events** | Offer themed activity packs with permanent stickers; plan at least a term ahead. | ⚪ |
 | 33 | **Story adventure** | Turn each year's topics into a Bix storyline and map. Needs art, writing and completed read-aloud work (#8). | ⚪ |
-| 69 | **Release curriculum introductions and quizzes** | Built behind flags (on in dev, off in production) with content for all 39 pathways. Release after the review gates in [OPERATIONS.md](OPERATIONS.md#outstanding-review-and-known-limits). | 🟡 |
+| 69 | **Review curriculum introductions and quizzes** | Live for all 39 pathways (rollback switches in OPERATIONS.md). Awaits owner/teacher review (use `npm run journey:review`), device read-aloud checks and learner review; gates in [OPERATIONS.md](OPERATIONS.md#outstanding-review-and-known-limits). | 🟡 |
 
 **Skills game shortlist (#20):**
 
@@ -113,7 +113,7 @@ central action, not more animation.
 | 38 | **English and Science playthroughs** | Check answers, hints, saving, celebrations, touch, keyboard, themes and read-aloud using disposable profiles. | 🟡 |
 | 43 | **Secret Rule Zoo playtest** | Observe children before choosing two-feature rules or child-made creatures. | 🟡 |
 | 46 | **Printable practice** | Get teacher feedback on Years 1–6 content, classroom use and photocopy quality. | 🟡 |
-| — | **Teacher notes and parent guides** | Obtain teacher review of Year 3 Maths notes and each parent guide. | ⚪ |
+| — | **Teacher notes and parent guides** | Obtain teacher review of the teacher notes (Years 1–4 Science, History and Geography; Year 3 Maths) and each parent guide. | ⚪ |
 | — | **Read-aloud devices (#8)** | Verify voices on real phones and tablets. | 🟡 |
 | — | **Safeguarding (#11)** | Obtain qualified advice on sign-up, data handling and consent. | 🟡 |
 | — | **Geography (#15)** | Play Years 2 and 4 and review Years 1–4 on phones and tablets. | 🟡 |

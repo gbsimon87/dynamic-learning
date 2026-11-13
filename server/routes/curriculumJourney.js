@@ -5,7 +5,7 @@ import { createMongoCurriculumJourneyRepository } from "../curriculumJourneyRepo
 import { createCurriculumJourneyService } from "../../shared/curriculumJourneyService.js";
 import { getJourneyPathway } from "../../shared/curriculumJourneyPathway.js";
 
-export function createCurriculumJourneyRouter({ enabled = process.env.ENABLE_CURRICULUM_JOURNEY === "true", service: injectedService, ...dependencies } = {}) {
+export function createCurriculumJourneyRouter({ enabled = process.env.ENABLE_CURRICULUM_JOURNEY !== "false", service: injectedService, ...dependencies } = {}) {
   const router = Router();
   router.use(requireAuth);
   const base = "/:childId/:year/:subject";

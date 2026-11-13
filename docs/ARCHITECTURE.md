@@ -52,7 +52,7 @@ Shared subject games and pure banks provide reusable interactions. [DataChalleng
 
 Introductions and Quest Mastery / Subject Final Test quizzes sit beside
 challenges. They never call `completeChallenge`, award XP or stickers, or affect
-year awards. Both flags default off: `VITE_ENABLE_CURRICULUM_JOURNEY` (build time,
+year awards. On by default; set both switches to `"false"` to roll back: `VITE_ENABLE_CURRICULUM_JOURNEY` (build time,
 [curriculumJourneyFlag.js](../src/data/curriculumJourneyFlag.js)) and
 `ENABLE_CURRICULUM_JOURNEY` (server); release steps are in
 [OPERATIONS.md](OPERATIONS.md#curriculum-introductions-and-quizzes).

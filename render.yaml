@@ -50,12 +50,12 @@ services:
       # the API instead of localStorage.
       - key: VITE_USE_API
         value: "true"
-      # Curriculum introductions + quizzes (#69). Enable BOTH together only for
-      # the all-pathway release; rollback = set both "false" (records are kept).
+      # Curriculum introductions + quizzes (#69): on. Rollback = set BOTH
+      # "false" and redeploy (records are kept).
       - key: VITE_ENABLE_CURRICULUM_JOURNEY
-        value: "false"
+        value: "true"
       - key: ENABLE_CURRICULUM_JOURNEY
-        value: "false"
+        value: "true"
 
       # sync: false = Render prompts for these in the dashboard and stores them
       # there. They are never committed to this repo.
@@ -98,8 +98,7 @@ services:
         value: "false"
       - key: VITE_USE_API
         value: "true"
-      # Journey on for dev review (all 39 pathways pass check:journey, 2026-11-12).
-      # Production stays "false" until device/teacher review; flip both together.
+      # Curriculum introductions + quizzes (#69): on, as in production.
       - key: VITE_ENABLE_CURRICULUM_JOURNEY
         value: "true"
       - key: ENABLE_CURRICULUM_JOURNEY

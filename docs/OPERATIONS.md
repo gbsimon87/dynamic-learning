@@ -106,11 +106,12 @@ Do not treat startup as a read-only audit or broaden database privileges blindly
 
 ### Curriculum introductions and quizzes
 
-Two flags, both default `"false"` in [render.yaml](../render.yaml) and
-[.env.example](../.env.example): `VITE_ENABLE_CURRICULUM_JOURNEY` (client, build
-time) and `ENABLE_CURRICULUM_JOURNEY` (server). Enable **both together**, and
-only after `npm run check:journey -- --all` passes for the full built catalogue.
-With the server flag off, `/api/curriculum-journey/*` authenticates and checks
+Live in production. Two rollback switches, on unless set to `"false"` (both
+`"true"` in [render.yaml](../render.yaml) and [.env.example](../.env.example)):
+`VITE_ENABLE_CURRICULUM_JOURNEY` (client, build time) and
+`ENABLE_CURRICULUM_JOURNEY` (server). Change **both together**; keep
+`npm run check:journey -- --all` passing before each release.
+With the server switch off, `/api/curriculum-journey/*` authenticates and checks
 ownership, then answers `503 JOURNEY_DISABLED`.
 
 Startup adds two collections and new indexes only (`curriculumJourney` unique
@@ -133,11 +134,15 @@ holds the open consent, age-assurance, retention, supplier-agreement and
 qualified-review questions. Backup status, regions and supplier settings need
 dashboard confirmation.
 
-**Curriculum journey release.** Flags are off in production. All 39 pathways
-pass `check:journey --all`, but no human content review has been done; model
-answers are fully reviewed for 25 pathways, partly for 14 (Maths Y1–6, English
-Y1, Y2, Y5, Y6, Science Y1–4). Owner/teacher/device/learner review, narration
-and an in-browser quiz run are needed before enabling the flags.
+**Curriculum journey release.** Live in production. All 39 pathways
+pass `check:journey --all` and have had an independent model answer review; no
+human content review has been done. Print answer-key packs with
+`npm run journey:review -- --all`. Read-aloud text is generated (Maths through
+`mathToSpeech`) but has not been heard on real devices. One browser pass ran the
+full Year 3 Maths, Year 5 French and Year 5 Music final tests at 390px and
+1280px in both themes. Owner/teacher, device and learner review are still
+needed; fix findings in content, or set both switches to `"false"` if a
+pathway must come down.
 
 **Content and device review.** Owner/teacher content review is pending for Year 6
 History (Jarrow facts, sensitive topics, reference URLs never fetched), Year 6
