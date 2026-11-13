@@ -3,22 +3,26 @@ import { Link, useSearchParams } from 'react-router';
 import { editionLabel, editionPath, isPublishedEdition, latestFriday, publishedFridays } from '../../../../shared/familyFridaySchedule.js';
 import { familyFridayEdition } from '../../../data/familyFriday.js';
 import { useFamilyFridayDay } from '../../../hooks/useFamilyFridayDay.js';
-import { useAnswerFeedback } from '../../../components/skills/useAnswerFeedback.js';
 import SpeakButton from '../../../components/challenge/SpeakButton.jsx';
 import Mascot from '../../../components/mascot/Mascot.jsx';
 import '../../../components/familyFriday/FamilyFriday.css';
 
 const INITIAL = { phase: 'intro', index: 0, answers: [] };
-// The endless FreePlayShell retries misses. This finite family quiz deliberately
-// reveals each answer once and ends after five, keeping its own guarded loop.
+// Choices stay editable until the single final submission. Guard navigation by
+// its originating index so repeated taps cannot skip a question or submit twice.
 function reducer(state, action) {
   if (action.type === 'start' && state.phase === 'intro') return { ...state, phase: 'question' };
-  if (action.type === 'answer' && state.phase === 'question' && state.index === action.index && state.answers.length === state.index) {
-    return { ...state, answers: [...state.answers, action.value] };
+  if (action.type === 'answer' && state.phase === 'question' && state.index === action.index) {
+    const answers = [...state.answers];
+    answers[state.index] = action.value;
+    return { ...state, answers };
   }
-  if (action.type === 'next' && state.phase === 'question' && state.index === action.index && state.answers.length === state.index + 1) {
-    return state.index === 4 ? { ...state, phase: 'results' } : { ...state, index: state.index + 1 };
+  if (state.phase !== 'question' || state.index !== action.index) return state;
+  if (action.type === 'next' && state.index < 4 && state.answers[state.index] !== undefined) {
+    return { ...state, index: state.index + 1 };
   }
+  if (action.type === 'previous' && state.index > 0) return { ...state, index: state.index - 1 };
+  if (action.type === 'submit' && state.index === 4 && state.answers.length === 5 && state.answers.every(value => typeof value === 'string')) return { ...state, phase: 'results' };
   return state;
 }
 
@@ -70,21 +74,14 @@ function ShareQuiz({ edition, score }) {
 function QuizRun({ edition, onReplay }) {
   const [state, dispatch] = useReducer(reducer, INITIAL);
   const focus = useRef(null);
-  const answered = useRef(-1);
-  const nextButton = useRef(null);
-  const fb = useAnswerFeedback();
   const { index, answers, phase } = state;
   const question = edition.questions[index];
   const selected = answers[index];
-  const correct = selected === question.answer;
   const score = answers.reduce((total, value, i) => total + Number(value === edition.questions[i].answer), 0);
 
   useEffect(() => {
     focus.current?.focus();
   }, [phase, index]);
-  useEffect(() => {
-    if (selected !== undefined) nextButton.current?.focus();
-  }, [selected]);
 
   if (phase === 'intro') return <section className="ff-panel ff-intro" aria-labelledby="ff-intro-heading">
     <div className="ff-intro-mascot"><Mascot decorative /></div>
@@ -93,6 +90,8 @@ function QuizRun({ edition, onReplay }) {
       <h2 id="ff-intro-heading" ref={focus} tabIndex={-1}>{edition.title}</h2>
       <p>Grab a grown-up, a sibling or your favourite quiz buddy.</p>
       <p>Five little questions. Three choices each. Talk it over and pick your answer together.</p>
+      <p>You can go back and change your choices. Submit all five to see the answers and your score.</p>
+      {edition.questions.some(item => item.curriculum) && <p>A mix from Years 1–6, with something for little thinkers and grown-ups to tackle together.</p>}
       <div className="ff-tags"><span>5 minutes or less</span><span>One team, one score</span></div>
       <button type="button" className="ff-button" onClick={() => dispatch({ type: 'start' })}>Start the quiz <span aria-hidden="true">→</span></button>
       <p className="ff-small">Take your time — there’s no timer.</p>
@@ -109,14 +108,35 @@ function QuizRun({ edition, onReplay }) {
       <button type="button" className="ff-button" onClick={onReplay}>Play this quiz again</button>
       <ShareQuiz edition={edition} score={score} />
     </div>
-    <details className="ff-review">
-      <summary>Look back at the answers</summary>
-      <ol>{edition.questions.map((item, i) => <li key={item.id}>
-        <h3>{item.prompt}</h3>
-        <p>Your answer: {answers[i]} {answers[i] === item.answer ? '✓' : ''}</p>
-        <p><strong>{item.answer}.</strong> {item.explanation}</p>
-        {item.source && <a href={item.source} target="_blank" rel="noreferrer">Explore the source <span className="ff-small">(opens a new tab)</span></a>}
-      </li>)}</ol>
+    <details className="ff-review" open>
+      <summary>
+        <span className="ff-review-book" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M16 9C12 6 7 6 3 7v18c5-1 9-1 13 2 4-3 8-3 13-2V7c-4-1-9-1-13 2Zm0 0v18M7 12h5M7 16h5M20 12h5M20 16h5" /></svg></span>
+        <span className="ff-review-summary-copy"><span className="ff-review-title">Look back at the answers</span><span className="ff-review-subtitle">Five little discoveries to share together</span></span>
+        <svg className="ff-review-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+      </summary>
+      <p className="ff-review-welcome">Some you knew, some you discovered. That’s what makes a great quiz team!</p>
+      <ol className="ff-review-cards" role="list" aria-label="Your family’s quiz discoveries">{edition.questions.map((item, i) => {
+        const matched = answers[i] === item.answer;
+        return <li key={item.id} className="ff-review-card">
+          <div className="ff-review-card-top">
+            <span className="ff-review-number" aria-label={`Question ${i + 1}`}>{i + 1}</span>
+            <span className="ff-review-category">{item.category}</span>
+            <span className={`ff-review-badge ${matched ? 'is-match' : ''}`}><span aria-hidden="true">{matched ? '✓' : '✦'}</span> {matched ? 'You got it!' : 'A new discovery'}</span>
+          </div>
+          <h3>{item.prompt}</h3>
+          {item.picture && <Picture picture={item.picture} />}
+          <dl className="ff-review-picks">
+            <div className={`ff-review-pick ${matched ? 'is-match' : ''}`}><dt>Your family’s pick</dt><dd>{answers[i]}</dd></div>
+            {!matched && <div className="ff-review-pick is-match"><dt>The answer is</dt><dd>{item.answer}</dd></div>}
+          </dl>
+          <div className="ff-review-discovery"><p className="ff-review-discovery-label">A little discovery</p><p>{item.explanation}</p></div>
+          <div className="ff-review-tools">
+            <SpeakButton text={`The answer is ${item.answer}. ${item.explanation}`} label={`Hear answer ${i + 1}`} />
+            {item.source && <a href={item.source} target="_blank" rel="noreferrer">Explore together <span aria-hidden="true">↗</span><span className="ff-sr-only"> (opens a new tab)</span></a>}
+          </div>
+        </li>;
+      })}</ol>
+      <div className="ff-review-chat"><span aria-hidden="true">✦</span><div><h3>One more thing to chat about…</h3><p>Which discovery would you tell someone about?</p></div></div>
     </details>
     <p className="ff-small">Another quiz arrives on Friday. Past editions are below whenever you fancy one.</p>
   </section>;
@@ -125,30 +145,19 @@ function QuizRun({ edition, onReplay }) {
   const speech = `${question.prompt} Your choices are: ${spokenChoices.join('. ')}.${question.picture ? ` ${question.picture.description}` : ''}`;
   return <section className="ff-panel ff-question" aria-labelledby="ff-question-heading">
     <div className="ff-question-top"><p className="ff-eyebrow">{question.category}</p><span>Question {index + 1} of 5</span></div>
-    <ol className="ff-progress" aria-label="Quiz progress">{edition.questions.map((item, i) => <li key={item.id} className={i <= index ? 'is-current' : ''} aria-current={i === index ? 'step' : undefined}><span className="ff-sr-only">Question </span>{i + 1}</li>)}</ol>
+    <ol className="ff-progress" aria-label="Quiz progress">{edition.questions.map((item, i) => <li key={item.id} className={answers[i] !== undefined || i === index ? 'is-current' : ''} aria-current={i === index ? 'step' : undefined}><span className="ff-sr-only">Question </span>{i + 1}</li>)}</ol>
     <div className="ff-prompt-row"><h2 id="ff-question-heading" ref={focus} tabIndex={-1}>{question.prompt}</h2><SpeakButton text={speech} label="Hear the question and choices" compact /></div>
     {question.picture && <Picture picture={question.picture} />}
-    <p className="ff-small">Have a chat. Choose one answer together.</p>
-    <div className="ff-options" ref={fb.answerRef} role="group" aria-label="Choose your family’s answer">
-      {question.options.map((option, i) => <button key={option} type="button" disabled={selected !== undefined}
-        className={`ff-option ${selected !== undefined && option === question.answer ? 'is-correct' : ''} ${selected === option && !correct ? 'is-chosen' : ''}`}
-        onClick={() => {
-          if (answered.current === index) return;
-          answered.current = index;
-          dispatch({ type: 'answer', index, value: option });
-          fb.answer(option === question.answer);
-        }}><span className="ff-option-letter" aria-hidden="true">{'ABC'[i]}</span><span>{option}</span>{selected !== undefined && option === question.answer && <span className="ff-option-mark">✓<span className="ff-sr-only"> Correct answer</span></span>}</button>)}
+    <p className="ff-small">Have a chat. You can change your choice until you submit the quiz.</p>
+    <div className="ff-options" role="group" aria-label="Choose your family’s answer">
+      {question.options.map((option, i) => <button key={option} type="button" aria-pressed={selected === option}
+        className={`ff-option ${selected === option ? 'is-chosen' : ''}`}
+        onClick={() => dispatch({ type: 'answer', index, value: option })}><span className="ff-option-letter" aria-hidden="true">{'ABC'[i]}</span><span>{option}</span></button>)}
     </div>
-    <div className="ff-answer" role="status" aria-live="polite" ref={fb.feedbackRef}>
-      {selected !== undefined && <>
-        <p className="ff-answer-title">{correct ? 'You got it!' : `Now we know! The answer is ${question.answer}.`}</p>
-        <p>{question.explanation}</p>
-      </>}
+    <div className="ff-answer-actions">
+      <button type="button" className="ff-button ff-button-secondary" disabled={index === 0} onClick={() => dispatch({ type: 'previous', index })}>Previous question</button>
+      <button type="button" className="ff-button" disabled={selected === undefined} onClick={() => dispatch({ type: index === 4 ? 'submit' : 'next', index })}>{index === 4 ? 'Submit quiz' : 'Next question'} <span aria-hidden="true">→</span></button>
     </div>
-    {selected !== undefined && <div className="ff-answer-actions">
-      <SpeakButton text={question.explanation} label="Hear why" />
-      <button ref={nextButton} type="button" className="ff-button" onClick={() => { fb.clear(); dispatch({ type: 'next', index }); }}>{index === 4 ? 'See our score' : 'Next question'} <span aria-hidden="true">→</span></button>
-    </div>}
   </section>;
 }
 

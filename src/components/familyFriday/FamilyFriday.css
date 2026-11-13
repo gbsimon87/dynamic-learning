@@ -38,7 +38,8 @@ body.dark .ff-theme {
   border-radius: 16px; background: var(--ff-cta); color: var(--ff-on-cta);
   font: inherit; font-weight: 700; line-height: 1.4; text-align: center; text-decoration: none; cursor: pointer;
 }
-.ff-theme .ff-button:hover { text-decoration: underline; text-underline-offset: 4px; }
+.ff-theme a.ff-button:hover, .ff-theme .ff-button:enabled:hover { text-decoration: underline; text-underline-offset: 4px; }
+.ff-theme .ff-button:disabled { opacity: .55; cursor: default; }
 .ff-theme .ff-button-secondary { background: var(--ff-paper); color: var(--ff-ink); border-color: var(--ff-edge); }
 .ff-theme :is(button, a, input, summary):focus-visible { outline: 3px solid var(--ff-ink); outline-offset: 4px; }
 .ff-theme h2:focus { outline: none; }
@@ -71,15 +72,9 @@ body.dark .ff-theme {
 .family-friday-page .ff-options { display: grid; gap: .75rem; margin-top: 1rem; }
 .family-friday-page .ff-option { display: flex; align-items: center; gap: 1rem; min-height: 64px; width: 100%; padding: .8rem 1rem; border: 2px solid var(--ff-edge); border-radius: 18px; background: var(--ff-wash); color: var(--ff-ink); font: inherit; font-size: 1.1rem; text-align: left; cursor: pointer; }
 .family-friday-page .ff-option:enabled:hover { border-color: var(--ff-lilac-ink); background: var(--ff-lilac); }
-.family-friday-page .ff-option:disabled { cursor: default; opacity: 1; }
 .family-friday-page .ff-option-letter { display: grid; place-items: center; flex-shrink: 0; width: 32px; height: 32px; border-radius: 10px; background: var(--ff-paper); color: var(--ff-muted); font-size: .85rem; }
-.family-friday-page .ff-option.is-correct { background: var(--ff-mint); border-color: var(--ff-mint-ink); color: var(--ff-mint-ink); }
-.family-friday-page .ff-option.is-chosen { border-style: dashed; }
-.family-friday-page .ff-option-mark { margin-left: auto; font-weight: 700; }
-.family-friday-page .ff-answer:empty { display: none; }
-.family-friday-page .ff-answer { margin-top: 1.3rem; padding: .3rem 1.1rem; border-left: 4px solid var(--ff-lilac-ink); border-radius: 0 12px 12px 0; background: var(--ff-lilac); color: var(--ff-lilac-ink); }
-.family-friday-page .ff-answer-title { font-weight: 700; margin-bottom: 0; }
-.family-friday-page .ff-answer-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 1rem; margin-top: 1.2rem; }
+.family-friday-page .ff-option.is-chosen { background: var(--ff-lilac); border-color: var(--ff-lilac-ink); }
+.family-friday-page .ff-answer-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1.2rem; }
 .family-friday-page .ff-picture { display: block; width: 100%; max-width: 480px; margin: 1.2rem auto; padding: .5rem; border-radius: 18px; background: var(--ff-wash); }
 .family-friday-page .ff-shape { stroke-width: 2; }
 .family-friday-page .ff-shape-star { fill: var(--ff-gold); stroke: var(--ff-gold-ink); }
@@ -93,12 +88,40 @@ body.dark .ff-theme {
 .family-friday-page .ff-share p { max-width: 30ch; margin: .5rem auto 0; font-size: .85rem; }
 .family-friday-page .ff-share-link { display: grid; gap: .5rem; margin-top: .8rem; text-align: left; }
 .family-friday-page .ff-share-link input { max-width: 100%; min-width: 0; padding: .8rem; border: 1px solid var(--ff-edge); border-radius: 10px; background: var(--ff-paper); color: var(--ff-ink); font: inherit; }
-.family-friday-page .ff-review { margin: 1.5rem 0; text-align: left; border-top: 1px solid var(--ff-edge); }
-.family-friday-page .ff-review summary { padding: 1rem 0; min-height: 48px; cursor: pointer; font-weight: 700; }
-.family-friday-page .ff-review ol { padding-left: 1.5rem; }
-.family-friday-page .ff-review li { padding: .5rem 0; }
-.family-friday-page .ff-review h3 { font-size: 1rem; line-height: 1.5; }
-.family-friday-page .ff-review a { display: inline-block; min-height: 44px; padding: .5rem 0; color: inherit; text-underline-offset: 4px; }
+.family-friday-page .ff-review { margin: 2rem 0 1.5rem; text-align: left; border-top: 2px dashed var(--ff-edge); }
+.family-friday-page .ff-review summary { display: flex; align-items: center; gap: .85rem; padding: 1.4rem 0 .75rem; min-height: 64px; cursor: pointer; list-style: none; }
+.family-friday-page .ff-review summary::-webkit-details-marker { display: none; }
+.family-friday-page .ff-review-book { display: grid; place-items: center; flex: 0 0 52px; height: 52px; border-radius: 17px; background: var(--ff-gold); color: var(--ff-gold-ink); transform: rotate(-5deg); }
+.family-friday-page .ff-review-book svg { width: 32px; height: 32px; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; stroke-linecap: round; }
+.family-friday-page .ff-review-summary-copy { display: grid; gap: .3rem; min-width: 0; }
+.family-friday-page .ff-review-title { font-size: clamp(1.1rem, 3vw, 1.45rem); line-height: 1.35; font-weight: 700; }
+.family-friday-page .ff-review-subtitle { color: var(--ff-muted); font-size: .9rem; line-height: 1.5; }
+.family-friday-page .ff-review-chevron { flex: 0 0 22px; width: 22px; height: 22px; margin-left: auto; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.family-friday-page .ff-review[open] .ff-review-chevron { transform: rotate(180deg); }
+.family-friday-page .ff-review-welcome { margin: .3rem 0 1.2rem; color: var(--ff-muted); font-size: .95rem; }
+.family-friday-page .ff-review-cards { display: grid; gap: 1.15rem; padding: 0; margin: 0; list-style: none; }
+.family-friday-page .ff-review-card { min-width: 0; padding: clamp(1rem, 3vw, 1.5rem); border: 1px solid var(--ff-edge); border-radius: 23px; background: var(--ff-paper); box-shadow: 0 4px 0 var(--ff-edge); overflow-wrap: anywhere; }
+.family-friday-page .ff-review-card-top { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
+.family-friday-page .ff-review-number { display: grid; place-items: center; flex: 0 0 36px; height: 36px; border-radius: 12px; background: var(--ff-gold); color: var(--ff-gold-ink); font-weight: 700; }
+.family-friday-page .ff-review-category { flex: 1; color: var(--ff-muted); font-size: .85rem; }
+.family-friday-page .ff-review-badge { padding: .35rem .65rem; border-radius: 999px; background: var(--ff-lilac); color: var(--ff-lilac-ink); font-size: .8rem; font-weight: 700; line-height: 1.5; }
+.family-friday-page .ff-review-badge.is-match { background: var(--ff-mint); color: var(--ff-mint-ink); }
+.family-friday-page .ff-review-card h3 { margin: .9rem 0; font-size: 1.1rem; line-height: 1.5; }
+.family-friday-page .ff-review-picks { display: flex; flex-wrap: wrap; gap: .65rem; margin: 0; }
+.family-friday-page .ff-review-pick { flex: 1 1 180px; min-width: 0; padding: .8rem 1rem; border: 1px solid var(--ff-edge); border-radius: 15px; background: var(--ff-wash); }
+.family-friday-page .ff-review-pick.is-match { background: var(--ff-mint); }
+.family-friday-page .ff-review-pick dt { margin-bottom: .25rem; font-size: .8rem; color: var(--ff-muted); }
+.family-friday-page .ff-review-pick dd { margin: 0; font-size: 1.1rem; font-weight: 700; line-height: 1.5; }
+.family-friday-page .ff-review-discovery { margin: 1rem 0 .65rem; }
+.family-friday-page .ff-review-discovery p { margin: .25rem 0; }
+.family-friday-page .ff-review-discovery .ff-review-discovery-label { color: var(--ff-gold-ink); font-weight: 700; font-size: .85rem; }
+.family-friday-page .ff-review-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; }
+.family-friday-page .ff-review-tools .speak-btn, .family-friday-page .ff-review-tools a { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 48px; padding: .6rem .8rem; border: 1px solid var(--ff-edge); border-radius: 13px; background: var(--ff-wash); color: var(--ff-ink); font-size: .85rem; font-weight: 700; text-decoration: none; }
+.family-friday-page .ff-review-tools :is(a, button):hover { background: var(--ff-lilac); text-decoration: underline; text-underline-offset: 4px; }
+.family-friday-page .ff-review-chat { display: flex; align-items: flex-start; gap: .8rem; margin-top: 1.5rem; padding: 1.1rem 1.2rem; border-radius: 20px; background: var(--ff-lilac); color: var(--ff-lilac-ink); }
+.family-friday-page .ff-review-chat > span { font-size: 1.6rem; line-height: 1.2; }
+.family-friday-page .ff-review-chat h3 { margin: 0; font-size: 1rem; line-height: 1.5; }
+.family-friday-page .ff-review-chat p { margin: .35rem 0 0; font-size: .95rem; }
 .family-friday-page .ff-archive { margin: 3rem 0 0; }
 .family-friday-page .ff-archive h2 { font-size: 1.4rem; }
 .family-friday-page .ff-archive-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; margin: 1rem 0; }

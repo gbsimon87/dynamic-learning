@@ -142,12 +142,23 @@ try {
       if (question.picture) await capture('picture');
       const value = index === 0 ? question.options.find(option => option !== question.answer) : question.answer;
       await page.getByRole('group', { name: /Choose your family/ }).getByRole('button').filter({ hasText: value }).click();
-      await page.getByText(question.explanation, { exact: true }).waitFor();
-      if (index === 0) await capture('answer');
-      await page.getByRole('button', { name: index === 4 ? /See our score/ : /Next question/ }).click();
+      assert.equal(await page.getByText(question.explanation, { exact: true }).count(), 0, 'explanations stay hidden before submission');
+      assert.equal(await page.locator('.is-correct').count(), 0, 'choices do not reveal correctness');
+      if (index === 0) await capture('choice');
+      if (index === 1) {
+        await page.getByRole('button', { name: 'Previous question', exact: true }).click();
+        await page.getByRole('heading', { name: edition.questions[0].prompt, exact: true }).waitFor();
+        assert.equal(await page.locator('.ff-option[aria-pressed="true"]').count(), 1, 'previous choice is preserved');
+        await page.getByRole('button', { name: /Next question/ }).click();
+        await page.getByRole('heading', { name: question.prompt, exact: true }).waitFor();
+        assert.equal(await page.locator('.ff-option[aria-pressed="true"]').count(), 1, 'later choice is preserved');
+      }
+      await page.getByRole('button', { name: index === 4 ? /Submit quiz/ : /Next question/ }).click();
     }
     await page.getByLabel('Your family scored 4 out of 5').waitFor();
+    for (const question of edition.questions) await page.getByText(question.explanation, { exact: false }).waitFor();
     await capture('results');
+    await page.locator('.ff-review-card').first().screenshot({ path: path.join(screenshots, `family-friday-discovery-card-${width}-${theme}.png`) });
     // Test computed colour contrast on the new surfaces in each actual theme.
     const contrast = await page.locator('.ff-score').evaluate(element => {
       const rgb = value => value.match(/[\d.]+/g).slice(0, 3).map(Number).map(n => { const s = n / 255; return s <= .04045 ? s / 12.92 : ((s + .055) / 1.055) ** 2.4; });
@@ -157,6 +168,16 @@ try {
       return (Math.max(ink, paper) + .05) / (Math.min(ink, paper) + .05);
     });
     assert.ok(contrast >= 4.5, `Family Friday score contrast: ${contrast}/${theme}`);
+    const reviewContrasts = await page.locator('.ff-review-badge, .ff-review-pick dt, .ff-review-pick dd, .ff-review-category, .ff-review-discovery-label, .ff-review-chat').evaluateAll(elements => elements.map(element => {
+      const rgb = value => value.match(/[\d.]+/g).slice(0, 3).map(Number).map(n => { const s = n / 255; return s <= .04045 ? s / 12.92 : ((s + .055) / 1.055) ** 2.4; });
+      const luminance = values => .2126 * values[0] + .7152 * values[1] + .0722 * values[2];
+      let background = element;
+      while (background.parentElement && globalThis.getComputedStyle(background).backgroundColor === 'rgba(0, 0, 0, 0)') background = background.parentElement;
+      const ink = luminance(rgb(globalThis.getComputedStyle(element).color));
+      const paper = luminance(rgb(globalThis.getComputedStyle(background).backgroundColor));
+      return { label: element.className || element.tagName, ratio: (Math.max(ink, paper) + .05) / (Math.min(ink, paper) + .05) };
+    }));
+    for (const { label, ratio } of reviewContrasts) assert.ok(ratio >= 4.5, `Family Friday review contrast: ${label}/${ratio}/${theme}`);
     await page.getByRole('link', { name: '13 November 2026' }).click();
     await page.getByText('Edition 1 · 13 November 2026', { exact: true }).waitFor();
   }
@@ -170,7 +191,7 @@ try {
   await page.goto(`${base}/skills/family-friday?week=2026-11-27`);
   await page.getByRole('heading', { name: 'That quiz isn’t available' }).waitFor();
   assert.deepEqual(errors, [], 'no Family Friday client or CSP errors');
-  console.log('Family Friday passed: Friday-only homepage, actual route, five questions, wrong-answer reveal, score, archive and no overflow at 360/768/1280px in both themes.');
+  console.log('Family Friday passed: Friday-only homepage, five questions, editable previous choices, answers only after submission, score, archive and no overflow at 360/768/1280px in both themes.');
   console.log(`Browser verification passed: SPA navigation, gameplay, metadata, 404, no-JS pages and both themes at desktop/mobile sizes. Screenshots: ${screenshots}`);
 } finally {
   if (browser) await browser.close();
