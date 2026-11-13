@@ -4,6 +4,33 @@ Upcoming work only: remove an item when it ships (git history keeps delivered wo
 
 🟡 In progress · 🔵 Planned · ⚪ Idea. IDs are stable references, not rankings.
 
+## Reaching the first real users
+
+There are no teachers or learners using the app yet. Prioritise small trials
+with real families and a repeatable way to reach them. Use existing activities
+to learn who finds Bix useful before expanding the feature list.
+
+The [Poole outreach playbook](OUTREACH.md) gives local contact routes, messages
+to adapt, a first-two-weeks sequence and follow-up questions for #70–76.
+
+| # | Idea | First action and what to learn | Status |
+|---|---|---|---|
+| 70 | **First-family pilot** | Invite 5–10 families through the owner's existing contacts. Give each one relevant activity link, watch a first session where possible, and ask the grown-up a week later whether they chose to use Bix again and why. | ⚪ |
+| 71 | **Parent community introductions** | Ask moderators of local parent groups and school/PTA communities whether an introduction is welcome. Share a short explanation and one relevant activity; try one community at a time and ask interested parents what brought them in. | ⚪ |
+| 72 | **Home-education group trial** | Invite a local home-education group to try a small selection of existing activities. Ask which ages, subjects and situations they suit, and whether families use them again independently. | ⚪ |
+| 73 | **Tutor and teacher introductions** | Invite 2–3 tutors or teachers to try one existing resource for a specific lesson or practice need. Learn whether it fits their work and whether they would recommend it to families before building more teacher tools. | ⚪ |
+| 74 | **Library and community demonstrations** | Approach a local library, family centre or children's club about a short, adult-supported demonstration. Prepare a few activities and a take-home link or QR card; ask whether families try Bix at home afterwards. | ⚪ |
+| 75 | **Launch and sharing pack** | Prepare a plain-language introduction, accurate screenshots, a short captioned demonstration and a printable QR card linking to a relevant public page or activity. Explain who Bix is for, what can be tried without an account and when a profile is needed. Adapt the pack for parents, community organisers and educators. | ⚪ |
+| 76 | **Grown-up feedback route** | Provide an obvious way for a parent, carer or educator to report a problem or describe their experience, including from public Skills pages. Ask what they tried, what got in the way and what would bring them back; avoid requesting children's names or school details. | ⚪ |
+| 77 | **Search discovery for existing activities** | Complete the live indexing and search-engine checks in [SEO.md](SEO.md#open-owner-checks). Start with a small set of useful existing guides, inspect actual search queries and visits, and improve those pages before creating more search content. | ⚪ |
+
+**Suggested first steps:** prepare #75 and a simple #76 feedback route, then run
+#70. Use what those families say to choose one wider channel from #71–74;
+complete #77 alongside it. Judge each trial by whether families start an
+activity, can finish it and choose to return, using observation and voluntary
+grown-up follow-up initially. Keep recruitment and feedback adult-facing;
+consent work remains in #11 and any new analytics implementation remains in #36.
+
 ## Teacher tools
 
 ### Everyday classroom jobs
@@ -36,11 +63,47 @@ Upcoming work only: remove an item when it ships (git history keeps delivered wo
 
 Constraint for accounts and sharing: a teacher must never reach family profiles by sharing an identifier. Teacher accounts need an explicit school/class membership model (none exists in `server/db.js`), and evidence records stay separate from progress and rewards. Current tool contracts: [ARCHITECTURE.md](ARCHITECTURE.md#teacher-tools).
 
-**Suggested next:** finish #46's review, then pilot #48. Test demand for #58, #60 and #65 as small extensions to existing tools. Keep preparation and handover outputs in the planner; prioritise saved plans if lost drafts prevent repeat use.
+**When educator trials identify demand:** finish #46's review, then consider a small #48 pilot. Test demand for #58, #60 and #65 before building them. Keep preparation and handover outputs in the planner; prioritise saved plans if lost drafts prevent repeat use.
 
 ## Learner experiences
 
 - **Year 3 wording review:** Maths and Science done; English (32 topics), History (22) and Geography (16) remain, in that order, against the learner-language standard in [AUTHORING.md](AUTHORING.md#review-content). Teacher/child and device review remain separate.
+
+### Something to look forward to each day or week
+
+Give families a recognisable edition they can talk about and share: "Have you
+solved this week's mystery?" Each visit should deliver a discovery, a satisfying
+reveal or something to make together. These are alternatives to pilot, not a
+commitment to run every format at once.
+
+The source already includes an ungated [daily puzzle](../src/pages/puzzle/DailyPuzzle.jsx)
+at `/daily-puzzle`, rotating patterns, odd-one-out, riddles and missing numbers.
+Build on that where suitable rather than introducing a second basic daily quiz.
+
+| # | Idea and rhythm | What the family experiences | Status |
+|---|---|---|---|
+| 78 | **Today's Bix Challenge — daily** | Give the existing daily puzzle a prominent public entry, a useful hint and an illustrated explanation after solving. Pilot themed presentation and richer question types. Example: help Bix complete a broken stepping-stone pattern, then watch the route across the stream appear. A small, complete daily win using the existing foundation. | ⚪ |
+| 79 | **Bix's Mystery Club — weekly** | A new illustrated case with three short clue puzzles and a final reveal. In **The Case of the Missing Picnic**, read a note, follow a tiny map and compare clues to find where Bix left the basket. Finish a whole case in one sitting; preview the next case's title afterwards. Give each case its own link so families can invite another household to solve it. | ⚪ |
+| 80 | **What Is It? — daily picture reveal** | Start with an extreme close-up of an everyday object or living thing. Inspect the picture, request up to three clues and make a guess; then zoom out to reveal the whole photograph and one surprising fact. Example: a mysterious patterned surface turns out to be a butterfly's wing. Each edition offers a quick shared guessing moment. | ⚪ |
+| 81 | **What Happens Next? — daily prediction** | Watch the beginning of a short illustrated sequence, choose a prediction and reveal what happens with a simple explanation. Example: predict which way a shadow moves when a torch moves around a toy. Use reviewed, unambiguous demonstrations; let children replay and change a condition where useful. The reveal should explain the result even after an incorrect prediction. | ⚪ |
+| 82 | **Creature of the Week — weekly discovery** | Meet a mystery animal through a sound-off-friendly silhouette and habitat clues, reveal it, then explore an illustrated scene with three discoveries. Example: an octopus edition lets children find camouflage, inspect its arms and discover how it moves. Keep a printable fact card available with the edition; start with a small, fact-reviewed set rather than a new 3D world. | ⚪ |
+| 84 | **Bix's Weekend Make — weekly hands-on mission** | Publish one illustrated make-and-test activity with common household materials, an on-screen prediction and a printable instruction card. Example: fold a sheet of paper in different ways to make a bridge between two stacks of books, then compare what it supports. This is a recurring format for #27, with grown-up guidance and a clear explanation of what to notice. Families can participate without uploading photos or buying a kit. | ⚪ |
+
+**Next review:** run the [Family Friday Quiz](FAMILY_FRIDAY.md) with families to
+check the real duration, question clarity and whether they want another quiz
+next Friday. Use that feedback before adding another recurring format.
+
+Keep the current edition playable without an account, with optional hints,
+read-aloud and a clear ending in roughly 2–5 minutes (longer for a Weekend Make).
+Keep published editions available in an archive, including their explanations;
+there is no need to visit on consecutive days to catch up. Offer the same edition
+to families, with visible "help me" and "make it trickier" choices where useful.
+Recurring play stays separate from curriculum completion. Review facts, images
+and activities before publication, and use licensed images with useful text
+alternatives. Start with in-app discovery and shareable public links; any future
+reminders should be a grown-up's explicit choice.
+
+### Other learner ideas
 
 | # | Idea | Upcoming work | Status |
 |---|---|---|---|
@@ -96,13 +159,11 @@ central action, not more animation.
 | # | Idea | Upcoming work | Status |
 |---|---|---|---|
 | 6 | **Shared English question data** | Migrate earlier English games to shared formats and renderers, preserving interactions through side-by-side replay. | 🟡 |
-| 8 | **Read-aloud coverage** | Add missing Maths tile-list reading. | 🟡 |
 | 11 | **Safeguarding and parental consent** | Confirm hosting/supplier agreements and implement requirements from the qualified review. | 🟡 |
 | 15 | **Geography expansion** | Replace secondary Year 4 sources and agree further Years 5–6 depth after review. | 🟡 |
 | 36 | **Privacy-safe analytics** | After #11, configure PostHog EU with agreed consent, a signed DPA and named events; disable IP capture, autocapture and replay. | 🟡 |
 | 42 | **History awards** | Decide Year 2/4 award membership without changing earned awards. | 🟡 |
 | 44 | **Ocean Explorer expansion** | Scope travel to new areas after fact and device review. | 🟡 |
-| 45 | **Course-checker coverage** | Add bank adapters for Years 2–3 Maths, Year 3 English/Science and dictation in Years 1, 2, 4 and 5. | ⚪ |
 
 ## Manual reviews
 
@@ -120,4 +181,4 @@ central action, not more animation.
 | — | **History (#42)** | Review Years 2–4 on physical devices. | 🟡 |
 | — | **Ocean Explorer (#44)** | Review facts, controls and device performance before expanding travel. | 🟡 |
 
-**Suggested order:** safeguarding review (#11); accessibility and device reviews; authoring improvements (#6, #45); then a new Skills game. Design per-attempt records (#9) and analytics (#36) after the consent review.
+**Suggested order:** prepare the first-family pilot (#70, #75, #76) alongside safeguarding (#11), accessibility and device reviews. Continue authoring improvements (#6) already underway. Use pilot feedback to choose the next distribution channel and product change. Design per-attempt records (#9) and analytics (#36) after the consent review.

@@ -9,6 +9,7 @@ import { useHomeResume } from "./useHomeResume";
 import { useReveal } from "./useReveal";
 import { CURRICULUM_ICON } from "../../data/curriculumRegistry";
 import ProgressRing from "../../components/ProgressRing";
+import FamilyFridayCard from "../../components/familyFriday/FamilyFridayCard";
 import { SKILL_GROUPS } from "../../../shared/skillsCatalog.js";
 import "./Home.css";
 
@@ -291,6 +292,8 @@ function Home() {
           </div>
         </div>
       </section>
+
+      <FamilyFridayCard />
 
       <CurriculumAdventure overviewHref={status === "signedOut" ? "/what-we-teach" : curriculumHref} />
 

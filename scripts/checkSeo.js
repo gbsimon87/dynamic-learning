@@ -11,6 +11,7 @@ import { createApp } from '../server/app.js';
 import { PUBLIC_PATHS } from '../shared/seo.js';
 import { CURRICULUM_GUIDES } from '../shared/curriculumGuides.js';
 import { SKILL_GUIDES } from '../shared/skillGuides.js';
+import { familyFridayEdition } from '../src/data/familyFriday.js';
 
 const dist = path.resolve('dist');
 const screenshots = path.resolve('.seo-artifacts');
@@ -115,6 +116,61 @@ try {
   await staticPage.goto(`${base}/skills`);
   assert.equal(await staticPage.locator('a.sk-guide-link').count(), SKILL_GUIDES.length);
   assert.deepEqual(errors, [], 'no client errors or CSP errors');
+  // One batched layout/gameplay pass for the Friday invitation and finite quiz.
+  // Fixed browser Date changes publication without changing real app settings.
+  await page.clock.setFixedTime(new Date('2026-11-27T12:00:00Z'));
+  const friday = '2026-11-27';
+  const edition = familyFridayEdition(friday);
+  for (const width of [360, 768, 1280]) for (const theme of ['light', 'dark']) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.evaluate(theme => globalThis.localStorage.setItem('theme', theme), theme);
+    const capture = async name => {
+      assert.ok(await page.evaluate(() => globalThis.document.documentElement.scrollWidth <= globalThis.innerWidth + 1), `Family Friday overflow: ${name}/${width}/${theme}`);
+      await page.evaluate(() => globalThis.scrollTo(0, 0));
+      await page.screenshot({ path: path.join(screenshots, `family-friday-${name}-${width}-${theme}.png`), fullPage: true });
+    };
+    await page.goto(base);
+    await page.getByRole('link', { name: /Play this week’s quiz/ }).waitFor();
+    await capture('home');
+    await page.getByRole('link', { name: /Play this week’s quiz/ }).click();
+    await page.getByRole('button', { name: 'Start the quiz' }).waitFor();
+    assert.ok(page.url().includes(`week=${friday}`));
+    await capture('intro');
+    await page.getByRole('button', { name: 'Start the quiz' }).click();
+    for (const [index, question] of edition.questions.entries()) {
+      await page.getByRole('heading', { name: question.prompt, exact: true }).waitFor();
+      if (question.picture) await capture('picture');
+      const value = index === 0 ? question.options.find(option => option !== question.answer) : question.answer;
+      await page.getByRole('group', { name: /Choose your family/ }).getByRole('button').filter({ hasText: value }).click();
+      await page.getByText(question.explanation, { exact: true }).waitFor();
+      if (index === 0) await capture('answer');
+      await page.getByRole('button', { name: index === 4 ? /See our score/ : /Next question/ }).click();
+    }
+    await page.getByLabel('Your family scored 4 out of 5').waitFor();
+    await capture('results');
+    // Test computed colour contrast on the new surfaces in each actual theme.
+    const contrast = await page.locator('.ff-score').evaluate(element => {
+      const rgb = value => value.match(/[\d.]+/g).slice(0, 3).map(Number).map(n => { const s = n / 255; return s <= .04045 ? s / 12.92 : ((s + .055) / 1.055) ** 2.4; });
+      const luminance = values => .2126 * values[0] + .7152 * values[1] + .0722 * values[2];
+      const ink = luminance(rgb(globalThis.getComputedStyle(element).color));
+      const paper = luminance(rgb(globalThis.getComputedStyle(element.closest('.ff-panel')).backgroundColor));
+      return (Math.max(ink, paper) + .05) / (Math.min(ink, paper) + .05);
+    });
+    assert.ok(contrast >= 4.5, `Family Friday score contrast: ${contrast}/${theme}`);
+    await page.getByRole('link', { name: '13 November 2026' }).click();
+    await page.getByText('Edition 1 · 13 November 2026', { exact: true }).waitFor();
+  }
+  await page.clock.setFixedTime(new Date('2026-11-28T12:00:00Z'));
+  await page.goto(base);
+  await page.locator('body.light, body.dark').waitFor();
+  assert.equal(await page.getByRole('link', { name: /Play this week’s quiz/ }).count(), 0, 'Saturday has no homepage invitation');
+  await page.goto(`${base}/skills/family-friday`);
+  await page.getByRole('button', { name: 'Start the quiz' }).waitFor();
+  await page.clock.setFixedTime(new Date('2026-11-26T12:00:00Z'));
+  await page.goto(`${base}/skills/family-friday?week=2026-11-27`);
+  await page.getByRole('heading', { name: 'That quiz isn’t available' }).waitFor();
+  assert.deepEqual(errors, [], 'no Family Friday client or CSP errors');
+  console.log('Family Friday passed: Friday-only homepage, actual route, five questions, wrong-answer reveal, score, archive and no overflow at 360/768/1280px in both themes.');
   console.log(`Browser verification passed: SPA navigation, gameplay, metadata, 404, no-JS pages and both themes at desktop/mobile sizes. Screenshots: ${screenshots}`);
 } finally {
   if (browser) await browser.close();
