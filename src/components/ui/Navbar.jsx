@@ -1,24 +1,17 @@
 import BrandMark from "./BrandMark";
 import { useContext, useEffect, useRef, useState } from 'react';
-import { ThemeContext } from '../../context/theme-context';
 import { profileColour } from '../../data/avatars';
 import { AuthContext } from '../../context/auth-context';
 import { Link, useLocation } from 'react-router';
 import { CURRICULUM_ICON } from '../../data/curriculumRegistry';
-import { useSoundMuted } from '../celebration/sound/useSoundMuted';
 import { useRewards } from '../../hooks/useRewards';
-import { streakStatus, localDay } from '../../data/streak';
-import { levelFor } from '../../data/xp';
 import { hasNews } from '../../data/news';
 import './Navbar.css';
 
 function Navbar() {
-  const { theme, toggleTheme } = useContext(ThemeContext);
-  const { child, status } = useContext(AuthContext) ?? {};
-  const [muted, toggleMuted] = useSoundMuted();
-  const { rewards, hydrated, xp } = useRewards();
-  const streak = hydrated ? streakStatus(rewards.streak, localDay()) : null;
-  const level = hydrated ? levelFor(xp).level : null;
+  const { child, status, isLearner } = useContext(AuthContext) ?? {};
+  const accountLabel = isLearner ? 'My account' : 'Parent area';
+  const { rewards, hydrated } = useRewards();
   const news = hydrated && hasNews(rewards);
   const [hidden, setHidden] = useState(false);
   const prevScroll = useRef(typeof window === 'undefined' ? 0 : window.scrollY);
@@ -63,8 +56,7 @@ function Navbar() {
         <BrandMark className="logo-mark" />
       </Link>
 
-      {/* The theme toggle used to be the ONLY control here, so from any game the
-          only way back to a hub was the browser Back button. */}
+      {/* Hubs and account settings stay within reach from every game. */}
       <div className="navbar-links">
         {/* Icon-only: the labels crowded the bar on a phone. The name stays on
             the link for screen readers and as a pointer tooltip. */}
@@ -99,26 +91,15 @@ function Navbar() {
             {news && <span className="navbar-news-dot" aria-hidden="true" />}
           </Link>
         )}
-        {/* The one sound switch for every celebration. A device setting, kept
-            beside the theme toggle rather than on a profile. */}
-        <button
-          type="button"
-          onClick={toggleMuted}
-          className="theme-btn"
-          aria-pressed={muted}
-          aria-label="Mute sounds"
-          title={muted ? 'Sounds are off' : 'Sounds are on'}
+        <Link
+          to="/parent"
+          className={`navbar-link ${location.pathname.startsWith('/parent') ? 'active' : ''}`}
+          title={accountLabel}
+          aria-current={location.pathname === '/parent' ? 'page' : undefined}
         >
-          <span aria-hidden="true">{muted ? '🔇' : '🔊'}</span>
-        </button>
-        <button
-          onClick={toggleTheme}
-          className="theme-btn"
-          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-          title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-        >
-          {theme === 'light' ? '🌙' : '☀️'}
-        </button>
+          <span aria-hidden="true">👥</span>
+          <span className="navbar-link-label">{accountLabel}</span>
+        </Link>
 
         {/* Account slot. `status === 'loading'` renders nothing so the bar does
             not flicker between a sign-in link and a profile chip on first paint.
@@ -128,13 +109,6 @@ function Navbar() {
           <Link to="/login" className="navbar-auth-link">
             Sign in
           </Link>
-        )}
-
-        {status === 'ready' && hydrated && (
-          <span className="navbar-stats" aria-hidden="true">
-            <span>🔥 {streak.current}</span>
-            <span>Lv {level}</span>
-          </span>
         )}
 
         {status !== 'signedOut' && status !== 'loading' && (
@@ -147,21 +121,11 @@ function Navbar() {
             title={child ? `Playing as ${child.name} - tap to switch` : 'Pick a profile'}
           >
             <span className="navbar-avatar-emoji" aria-hidden="true">
-              {child ? child.avatar : '👤'}
+              {child ? child.avatar : '➕'}
             </span>
-            {child && streak?.current > 0 && (
-              <span className="navbar-streak-badge" aria-hidden="true">🔥{streak.current}</span>
-            )}
             <span className="navbar-avatar-name">
               {child ? child.name : 'Pick profile'}
             </span>
-            {child && hydrated && (
-              <span className="navbar-link-label">
-                {streak.current > 0
-                  ? `, ${streak.current}-day streak, level ${level}`
-                  : `, no streak yet, level ${level}`}
-              </span>
-            )}
           </Link>
         )}
       </div>

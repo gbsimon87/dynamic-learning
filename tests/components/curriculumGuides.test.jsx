@@ -27,7 +27,7 @@ it.each(CURRICULUM_GUIDES)('renders the full $label topic inventory without an a
     expect(screen.getByText(topic.name, { selector: 'li' })).toBeTruthy();
     const built = topic.challenges.every(challenge => isChallengeImplemented(guide.subject, guide.year, topic.id, challenge.id));
     if (built) expect(isChallengeImplemented(guide.subject, guide.year, topic.id, topic.challenges[0].id)).toBe(true);
-    else expect(screen.getByText(topic.name, { selector: 'li' }).textContent).toContain('Coming soon');
+    expect(screen.getByText(topic.name, { selector: 'li' }).textContent).not.toContain('Coming soon');
   }
   expect(screen.getAllByRole('link', { name: /Create an account/ }).every(link => link.getAttribute('href') === '/signup')).toBe(true);
   expect(screen.getByRole('navigation', { name: `More Year ${guide.year} subjects` }).querySelectorAll('a')).toHaveLength(CURRICULUM_GUIDES.filter(item => item.year === guide.year).length - 1);

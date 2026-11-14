@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { AuthContext } from "../../context/auth-context";
+import { ThemeContext } from "../../context/theme-context";
+import { useSoundMuted } from "../../components/celebration/sound/useSoundMuted";
 import { useChildrenProgress } from "../../hooks/useChildrenProgress";
 import { CHILD_NAME_MAX, CHILD_YEAR_GROUPS, readYearGroup } from "../../data/childFields";
 import { useChildrenRewards } from "../../hooks/useChildrenRewards";
@@ -15,14 +17,13 @@ import { grownUpXp, levelFor } from "../../data/xp";
 import { useTrophyData } from "../../hooks/useTrophyData";
 import { streakStatus, localDay } from "../../data/streak";
 import { isYearAvailable } from "../../data/curriculumRegistry";
-import FloatingGlyphBackground from "../../components/FloatingGlyphBackground";
 import { BREAK_CHOICES } from "../../data/brainBreaks";
 import { useBreakMinutes } from "../../components/brainBreak/breakSetting";
 import "./ParentArea.css";
 import BixLoader from "../../components/mascot/BixLoader";
 
 /**
- * The signed-in account: plain adult UI, no games.
+ * Account and device preferences, with profile management for signed-in families.
  *
  * A LEARNER account (an older child who signed up for themselves) sees the same
  * screen with first-person headings — it is their account, not a grown-up's, so
@@ -33,97 +34,58 @@ import BixLoader from "../../components/mascot/BixLoader";
  * naming the child before anything is removed.
  */
 /**
- * One child's progress, unfolded under their row.
+ * The curriculum half of a child's snapshot.
  *
- * Deliberately plain: bars and counts, no emoji and no rings. This is the
- * grown-up's screen, and the question it answers is "where is this child
- * stuck?", which wants the SHAPE of the progress — which categories have moved
- * and which have not — more than it wants a single headline figure.
- *
- * Categories with nothing built yet are dropped rather than listed at 0 of 0:
- * most of Year 3 is unbuilt, and a wall of empty rows would bury the real ones.
+ * A grown-up wants "what are they working on and how far through", not a list
+ * of every planned topic at 0. So only topics the child has finished at least
+ * one challenge in are listed; the rest are summed into one muted line.
  */
-function ChildProgress({ id, name, summary, loading }) {
+function ChildProgress({ name, summary, loading }) {
   if (loading) {
-    return (
-      <div className="parent-area-progress" id={id}>
-        <p className="parent-area-progress-note">Loading progress…</p>
-      </div>
-    );
+    return <p className="parent-area-progress-note">Loading progress…</p>;
   }
 
   if (!summary || summary.stats.total === 0) {
-    return (
-      <div className="parent-area-progress" id={id}>
-        <p className="parent-area-progress-note">
-          {name} has not started a curriculum yet.
-        </p>
-      </div>
-    );
+    return <p className="parent-area-progress-note">{name} has not started a curriculum yet.</p>;
   }
 
   const { stats, year, subjectName, categories } = summary;
-  const started = categories.filter((category) => category.total > 0);
+  const topics = categories.flatMap((category) => category.topics.filter((topic) => topic.total > 0));
+  const touched = topics.filter((topic) => topic.completed > 0);
+  const finished = touched.filter((topic) => topic.completed === topic.total).length;
+  const untouched = topics.length - touched.length;
 
   return (
-    <div className="parent-area-progress" id={id}>
-      <p className="parent-area-progress-head">
-        Year {year} {subjectName} — {stats.completed} of {stats.total} built
-        challenges done ({stats.percent}%)
-        {/* Most of the curriculum is not built yet, so a bare 100% would read
-            as "year finished". */}
-        {stats.datasetTotal > stats.total && (
-          <span className="parent-area-progress-note">
-            {" "}
-            · {stats.datasetTotal} planned in total
-          </span>
-        )}
-      </p>
+    <div className="parent-area-progress">
+      <div className="parent-area-progress-head">
+        <p className="parent-area-progress-title">Year {year} {subjectName}</p>
+        <p className="parent-area-progress-note">
+          {stats.completed} of {stats.total} challenges · {finished} {finished === 1 ? "topic" : "topics"} finished
+        </p>
+      </div>
+      <div className="parent-area-bar" role="progressbar" aria-valuenow={stats.percent} aria-valuemin={0} aria-valuemax={100} aria-label={`Year ${year} ${subjectName} progress`}>
+        <div className="parent-area-bar-fill" style={{ width: `${stats.percent}%` }} />
+      </div>
 
-      <ul className="parent-area-cats">
-        {started.map((category) => (
-          <li key={category.id} className="parent-area-cat">
-            <p className="parent-area-cat-head">
-              <span className="parent-area-cat-name">{category.title}</span>
-              <span className="parent-area-cat-count">
-                {category.completed}/{category.total}
-              </span>
-            </p>
-
-            <div
-              className="parent-area-bar"
-              role="progressbar"
-              aria-valuenow={category.percent}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-label={`${category.title} progress`}
-            >
-              <div
-                className="parent-area-bar-fill"
-                style={{ width: `${category.percent}%` }}
-              />
-            </div>
-
-            <ul className="parent-area-topics">
-              {category.topics
-                .filter((topic) => topic.total > 0)
-                .map((topic) => (
-                  <li
-                    key={topic.id}
-                    className={`parent-area-topic ${
-                      topic.completed === topic.total ? "is-done" : ""
-                    }`}
-                  >
-                    <span>{topic.name}</span>
-                    <span className="parent-area-topic-count">
-                      {topic.completed}/{topic.total}
-                    </span>
-                  </li>
-                ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
+      {touched.length > 0 ? (
+        <ul className="parent-area-topics">
+          {touched.map((topic) => {
+            const done = topic.completed === topic.total;
+            return (
+              <li key={topic.id} className={`parent-area-topic ${done ? "is-done" : ""}`}>
+                <span className="parent-area-topic-mark" aria-hidden="true">{done ? "✓" : "…"}</span>
+                <span className="parent-area-topic-name">{topic.name}</span>
+                <span className="parent-area-topic-count">{done ? "Done" : `${topic.completed}/${topic.total}`}</span>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <p className="parent-area-progress-note">No topics finished yet.</p>
+      )}
+      {untouched > 0 && touched.length > 0 && (
+        <p className="parent-area-progress-note">{untouched} more {untouched === 1 ? "topic" : "topics"} not started yet.</p>
+      )}
     </div>
   );
 }
@@ -280,15 +242,83 @@ function NameEditor({ child, onChange }) {
  *
  * Read-only for badges: a grown-up can see what was earned, never grant it.
  */
-function ChildRewards({ child, rewards, onChangeAvatar, onReplayIntro, isLearner }) {
-  const [saving, setSaving] = useState(false);
+function ChildRewards({ child, rewards, summary, loadingProgress, isLearner }) {
   const r = normaliseRewards(rewards);
   // Read-only back-fill for a child who has not played since XP began. Its
   // progress read is only waited on when there is a back-fill to show.
   const trophy = useTrophyData(child._id, { rewards: false });
   const shownXp = grownUpXp(r, trophy.candidates);
   const xpReady = r.xpBackfilled || !trophy.loading;
+  const level = levelFor(shownXp);
+  const streak = streakStatus(r.streak, localDay()).current;
   const held = heldBadgeIds(rewards);
+  const earned = BADGES.filter((badge) => held.has(badge.id));
+
+  return (
+    <div className="parent-area-snapshot">
+      <ul className="parent-area-tiles" aria-label={`${child.name}’s snapshot`}>
+        <li className="parent-area-tile">
+          <span className="parent-area-tile-icon" aria-hidden="true">⭐</span>
+          <span className="parent-area-tile-value">{xpReady ? `Level ${level.level}` : "Level …"}</span>
+          <span className="parent-area-tile-label">{xpReady ? `${level.needed - level.into} XP to next` : "\u00a0"}</span>
+        </li>
+        <li className="parent-area-tile">
+          <span className="parent-area-tile-icon" aria-hidden="true">✨</span>
+          <span className="parent-area-tile-value">{xpReady ? shownXp : "…"}</span>
+          <span className="parent-area-tile-label">XP earned</span>
+        </li>
+        <li className="parent-area-tile">
+          <span className="parent-area-tile-icon" aria-hidden="true">🔥</span>
+          <span className="parent-area-tile-value">{streak} {streak === 1 ? "day" : "days"}</span>
+          <span className="parent-area-tile-label">Streak · best {r.streak.best}</span>
+        </li>
+        <li className="parent-area-tile">
+          <span className="parent-area-tile-icon" aria-hidden="true">🏅</span>
+          <span className="parent-area-tile-value">{held.size} of {BADGES.length}</span>
+          <span className="parent-area-tile-label">Badges</span>
+        </li>
+      </ul>
+
+      <section className="parent-area-panel" aria-label="Curriculum">
+        <h4 className="parent-area-rewards-title">Curriculum</h4>
+        <ChildProgress name={child.name} summary={summary} loading={loadingProgress} />
+      </section>
+
+      <section className="parent-area-panel" aria-label="Badges earned">
+        <h4 className="parent-area-rewards-title">Badges earned</h4>
+        {earned.length > 0 ? (
+          <ul className="parent-area-badges">
+            {earned.map((badge) => (
+              <li key={badge.id} className="parent-area-badge is-held" title={badge.blurb}>
+                <span className="parent-area-badge-icon" aria-hidden="true">{badge.icon}</span>
+                <span className="parent-area-badge-name">{badge.name}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="parent-area-progress-note">No badges yet — the first one comes quickly.</p>
+        )}
+        {earned.length > 0 && earned.length < BADGES.length && (
+          <p className="parent-area-progress-note">{BADGES.length - earned.length} more to discover in the Trophy Room.</p>
+        )}
+      </section>
+
+      <div className="parent-area-actions">
+        <Link className="parent-area-action" to={`/parent/trophies/${child._id}`}>
+          <span aria-hidden="true">🏆</span> {isLearner ? "My Trophy Room" : `${child.name}’s Trophy Room`}
+        </Link>
+      </div>
+
+    </div>
+  );
+}
+
+/**
+ * The profile picture, chosen from the pictures this child has unlocked.
+ * Lives under "Edit profile": it is a profile setting, not progress.
+ */
+function PicturePicker({ child, rewards, onChangeAvatar }) {
+  const [saving, setSaving] = useState(false);
   const choices = unlockedAvatars(rewards, AVATARS);
 
   const pick = async (emoji) => {
@@ -304,52 +334,9 @@ function ChildRewards({ child, rewards, onChangeAvatar, onReplayIntro, isLearner
   };
 
   return (
-    <div className="parent-area-rewards">
-      <p className="parent-area-rewards-title">
-        Badges
-        <span className="parent-area-rewards-count">
-          {held.size} of {BADGES.length}
-        </span>
-      </p>
-
-      <ul className="parent-area-badges">
-        {BADGES.map((badge) => (
-          <li
-            key={badge.id}
-            className={`parent-area-badge ${held.has(badge.id) ? "is-held" : ""}`}
-            title={held.has(badge.id) ? badge.blurb : `Not earned yet — ${badge.blurb}`}
-          >
-            <span className="parent-area-badge-icon" aria-hidden="true">
-              {held.has(badge.id) ? badge.icon : "🔒"}
-            </span>
-            <span className="parent-area-badge-name">{badge.name}</span>
-          </li>
-        ))}
-      </ul>
-
-      <p className="parent-area-stats">
-        {xpReady ? `Level ${levelFor(shownXp).level} · ${shownXp} XP` : "Level …"} · 🔥{" "}
-        {streakStatus(r.streak, localDay()).current}-day streak (best {r.streak.best})
-      </p>
-
-      <Link className="parent-area-trophies-link" to={`/parent/trophies/${child._id}`}>
-        See {child.name}’s Trophy Room <span aria-hidden="true">🏆 →</span>
-      </Link>
-
-      {/* Bix's hello game, played together. Switches to this child, so it is
-          their badge and their intro flag. */}
-      <button type="button" className="parent-area-trophies-link parent-area-intro-replay" onClick={() => onReplayIntro(child._id)}>
-        {isLearner ? "Play Bix’s hello game" : `Play Bix’s hello game with ${child.name}`} <span aria-hidden="true">👋 →</span>
-      </button>
-
-      <p className="parent-area-rewards-title" id={`avatar-${child._id}`}>
-        Picture
-      </p>
-      <div
-        className="parent-area-avatars"
-        role="group"
-        aria-labelledby={`avatar-${child._id}`}
-      >
+    <div className="parent-area-picture">
+      <span className="parent-area-year-label" id={`avatar-${child._id}`}>Picture</span>
+      <div className="parent-area-avatars" role="group" aria-labelledby={`avatar-${child._id}`}>
         {choices.map((emoji) => (
           <button
             key={emoji}
@@ -455,13 +442,11 @@ function BrainBreakSetting({ isLearner }) {
   const options = [...BREAK_CHOICES.map((value) => ({ value, label: `${value} min` })), { value: null, label: "Off" }];
 
   return (
-    <section className="parent-area-section" aria-labelledby="parent-area-breaks">
-      <h2 className="parent-area-section-title" id="parent-area-breaks">Brain breaks</h2>
+    <div className="parent-area-setting-block">
+      <h3 className="parent-area-setting-title" id="parent-area-breaks">Brain breaks</h3>
       <p className="parent-area-note">
-        After a stretch of play, Bix suggests a one-minute movement break, like
-        hopping like a frog. {isLearner ? "You" : "Children"} can always say
-        “Not now”. Only active play counts: time on this page, or away from the
-        screen, does not. This setting is for this device.
+        Bix suggests a one-minute movement break after this much active play.
+        {isLearner ? " You" : " Children"} can always choose “Not now”.
       </p>
       <div className="parent-area-year-row" role="group" aria-labelledby="parent-area-breaks">
         {options.map((option) => (
@@ -476,7 +461,61 @@ function BrainBreakSetting({ isLearner }) {
           </button>
         ))}
       </div>
+    </div>
+  );
+}
+
+function DeviceSettings({ isLearner }) {
+  const { theme, toggleTheme } = useContext(ThemeContext);
+  const [muted, toggleMuted] = useSoundMuted();
+
+  return (
+    <section className="parent-area-section parent-area-settings" aria-labelledby="parent-area-settings">
+      <p className="parent-area-eyebrow">Make yourself at home</p>
+      <h2 className="parent-area-section-title" id="parent-area-settings">Device settings</h2>
+      <p className="parent-area-note">For everyone using this browser on this device.</p>
+      <div className="parent-area-setting-block">
+        <div className="parent-area-setting-row">
+          <div>
+            <h3 className="parent-area-setting-title" id="parent-area-theme">Dark mode</h3>
+            <p className="parent-area-setting-status">{theme === "dark" ? "Dark appearance" : "Light appearance"}</p>
+          </div>
+          <button type="button" role="switch" aria-checked={theme === "dark"} aria-labelledby="parent-area-theme" className="parent-area-switch" onClick={toggleTheme}>
+            <span className="parent-area-switch-thumb" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+      <div className="parent-area-setting-block">
+        <div className="parent-area-setting-row">
+          <div>
+            <h3 className="parent-area-setting-title" id="parent-area-sound">Learning sounds</h3>
+            <p className="parent-area-setting-status">{muted ? "Off · quiet play" : "On · answers and rewards"}</p>
+          </div>
+          <button type="button" role="switch" aria-checked={!muted} aria-labelledby="parent-area-sound" className="parent-area-switch" onClick={toggleMuted}>
+            <span className="parent-area-switch-thumb" aria-hidden="true" />
+          </button>
+        </div>
+        <p className="parent-area-note parent-area-sound-note">Includes spoken prompts and read-aloud.</p>
+        <details className="parent-area-sound-help">
+          <summary>No sound on an iPhone or iPad?</summary>
+          <p className="parent-area-note">The silent switch, or Silent Mode in Control Centre, mutes browser sounds too. Turn it off, then check your device’s volume.</p>
+        </details>
+      </div>
+      <BrainBreakSetting isLearner={isLearner} />
     </section>
+  );
+}
+
+function ParentHeader({ isLearner, signedIn }) {
+  return (
+    <header className="parent-area-header">
+      <div>
+        <p className="parent-area-eyebrow">Learn with Bix · {isLearner ? "Your space" : "For grown-ups"}</p>
+        <h1 className="parent-area-title">{isLearner ? "My account" : "Parent area"}</h1>
+        <p className="parent-area-intro">{isLearner ? "Your learning, your way. Manage your profile and get comfortable." : "Support their little steps. Manage profiles, follow progress and get comfortable."}</p>
+      </div>
+      <Link className="parent-area-back" to={signedIn ? "/curriculum" : "/skills"}>Back to learning <span aria-hidden="true">→</span></Link>
+    </header>
   );
 }
 
@@ -489,17 +528,10 @@ function ParentArea() {
   const [signingOut, setSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState("");
 
-  // Which child's progress is unfolded. One at a time: a grown-up with three
-
-  // children comparing them needs a short list, not three long ones at once.
-
+  // Keep one child's progress open at a time so a family can scan the list.
   const [openId, setOpenId] = useState(null);
 
-
-  // Read-only. A failed read yields null for that child, which renders as
-
-  // "nothing started yet" rather than blocking profile management.
-
+  // Read-only; unavailable progress never blocks profile management.
   const { summaries, loading: loadingProgress } = useChildrenProgress(children);
 
   // Bumped after a profile edit so the badge/avatar row re-reads without a
@@ -530,17 +562,20 @@ function ParentArea() {
 
   if (status === "signedOut") {
     return (
-      <div className="parent-area-page floating-glyph-page">
-        <FloatingGlyphBackground />
-        <main className="parent-area-card">
-          <h1 className="parent-area-title">Parent area</h1>
-          <p className="parent-area-intro">
-            You need to be signed in to manage child profiles.
-          </p>
-          <Link className="parent-area-primary-btn" to="/login">
-            Sign in
-          </Link>
-        </main>
+      <div className="parent-area-page">
+        <div className="parent-area-card">
+          <ParentHeader />
+          <div className="parent-area-layout">
+            <section className="parent-area-section parent-area-welcome" aria-labelledby="parent-area-welcome">
+              <span className="parent-area-welcome-icon" aria-hidden="true">🌱</span>
+              <h2 className="parent-area-section-title" id="parent-area-welcome">A space for your family</h2>
+              <p className="parent-area-note">Sign in to manage child profiles, see their curriculum progress and celebrate what they’ve learned.</p>
+              <Link className="parent-area-primary-btn" to="/login">Sign in</Link>
+              <Link className="parent-area-text-link" to="/signup">Create an account</Link>
+            </section>
+            <DeviceSettings />
+          </div>
+        </div>
       </div>
     );
   }
@@ -564,163 +599,116 @@ function ParentArea() {
   };
 
   return (
-    <div className="parent-area-page floating-glyph-page">
-      <FloatingGlyphBackground />
-      <main className="parent-area-card">
-        <h1 className="parent-area-title">
-          {isLearner ? "My account" : "Parent area"}
-        </h1>
+    <div className="parent-area-page">
+      <div className="parent-area-card">
+        <ParentHeader isLearner={isLearner} signedIn />
+        <div className="parent-area-layout">
+          <div className="parent-area-main-column">
+            <section className="parent-area-section" aria-labelledby="parent-area-profiles">
+              <div className="parent-area-section-heading">
+                <div>
+                  <p className="parent-area-eyebrow">{isLearner ? "Keep growing" : "Your little learners"}</p>
+                  <h2 className="parent-area-section-title" id="parent-area-profiles">{isLearner ? "My profiles" : "Child profiles"}</h2>
+                </div>
+                <span className="parent-area-profile-count">{list.length} {list.length === 1 ? "profile" : "profiles"}</span>
+              </div>
+              <p className="parent-area-note">{isLearner ? "Check your progress or update your profile below." : "See how they’re getting on, or update a profile below."}</p>
 
-        <p className="parent-area-account">
-          Signed in as <strong>{parent?.email}</strong>
-        </p>
-
-        <section className="parent-area-section">
-          <h2 className="parent-area-section-title">
-            {isLearner ? "My profiles" : "Child profiles"}
-          </h2>
-
-          {list.length === 0 ? (
-            <p className="parent-area-empty">
-              No profiles yet.{" "}
-              <Link to="/profiles">Add the first one</Link>.
-            </p>
-          ) : (
-            <ul className="parent-area-list">
-              {list.map((kid) => (
-                <li key={kid._id} className="parent-area-row">
-                  <span
-                    className="parent-area-chip"
-                    style={{ "--parent-chip-colour": profileColour(kid.colour) }}
-                  >
-                    <span aria-hidden="true">{kid.avatar}</span>
-                    <span className="parent-area-chip-name">{kid.name}</span>
-                  </span>
-
-                  {confirmingId === kid._id ? (
-                    <span className="parent-area-confirm">
-                      <span className="parent-area-confirm-text">
-                        Remove {kid.name} and delete their saved progress? This
-                        cannot be undone.
-                      </span>
-                      <span className="parent-area-confirm-actions">
-                        <button
-                          type="button"
-                          className="parent-area-danger-btn"
-                          onClick={() => {
-                            removeChild(kid._id);
-                            setConfirmingId(null);
-                          }}
-                        >
-                          Yes, remove
+              {list.length === 0 ? (
+                <p className="parent-area-empty">
+                  No profiles yet.{" "}
+                  <Link to="/profiles">Add the first one</Link>.
+                </p>
+              ) : (
+                <ul className="parent-area-list">
+                  {list.map((kid) => (
+                    <li key={kid._id} className="parent-area-row">
+                      <div className="parent-area-profile-heading">
+                        <div className="parent-area-profile-identity">
+                          <span className="parent-area-chip" style={{ "--parent-chip-colour": profileColour(kid.colour) }} aria-hidden="true">{kid.avatar}</span>
+                          <div>
+                            <h3 className="parent-area-chip-name">{kid.name}</h3>
+                            <p className="parent-area-setting-status">{readYearGroup(kid) ? `Year ${readYearGroup(kid)}` : "School year not set"}</p>
+                          </div>
+                        </div>
+                        <button type="button" className="parent-area-secondary-btn" aria-expanded={openId === kid._id} aria-controls={`progress-${kid._id}`} onClick={() => setOpenId((was) => (was === kid._id ? null : kid._id))}>
+                          {openId === kid._id ? "Hide progress" : "See progress"}
                         </button>
-                        <button
-                          type="button"
-                          className="parent-area-secondary-btn"
-                          onClick={() => setConfirmingId(null)}
-                        >
-                          Keep
+                      </div>
+                      <details className="parent-area-profile-settings">
+                        <summary>Edit profile</summary>
+                        <NameEditor child={kid} onChange={editChild} />
+                        <YearPicker child={kid} onChange={editChild} />
+                        <PicturePicker child={kid} rewards={rewards[kid._id]} onChangeAvatar={editChild} />
+                        {/* Bix's hello game, played together. Switches to this child, so it is
+                            their badge and their intro flag. */}
+                        <button type="button" className="parent-area-action parent-area-hello" onClick={() => replayIntro(kid._id)}>
+                          <span aria-hidden="true">👋</span> {isLearner ? "Play Bix’s hello game" : `Play Bix’s hello game with ${kid.name}`}
                         </button>
-                      </span>
-                    </span>
-                  ) : (
-                    <span className="parent-area-row-actions">
-                      <button
-                        type="button"
-                        className="parent-area-secondary-btn"
-                        aria-expanded={openId === kid._id}
-                        aria-controls={`progress-${kid._id}`}
-                        onClick={() =>
-                          setOpenId((was) => (was === kid._id ? null : kid._id))
-                        }
-                      >
-                        {openId === kid._id ? "Hide progress" : "See progress"}
-                      </button>
-                      <button
-                        type="button"
-                        className="parent-area-secondary-btn"
-                        onClick={() => setConfirmingId(kid._id)}
-                      >
-                        Remove
-                      </button>
-                    </span>
-                  )}
+                        <div className="parent-area-remove-zone">
+                        {confirmingId === kid._id ? (
+                          <div className="parent-area-confirm">
+                            <p className="parent-area-confirm-text">Remove {kid.name} and delete their saved progress? This cannot be undone.</p>
+                            <div className="parent-area-confirm-actions">
+                              <button type="button" className="parent-area-danger-btn" onClick={() => { removeChild(kid._id); setConfirmingId(null); }}>Yes, remove</button>
+                              <button type="button" className="parent-area-secondary-btn" onClick={() => setConfirmingId(null)}>Keep</button>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <p className="parent-area-remove-note">Removing {kid.name} deletes all their progress, badges and stickers.</p>
+                            <button type="button" className="parent-area-remove-btn" onClick={() => setConfirmingId(kid._id)}>Remove profile</button>
+                          </>
+                        )}
+                        </div>
+                      </details>
 
-                  <NameEditor child={kid} onChange={editChild} />
-                  <YearPicker child={kid} onChange={editChild} />
+                      <div id={`progress-${kid._id}`} className="parent-area-profile-detail" hidden={openId !== kid._id}>
+                        {openId === kid._id && (
+                          <>
+                            <ChildRewards child={kid} rewards={rewards[kid._id]} summary={summaries[kid._id]} loadingProgress={loadingProgress} isLearner={isLearner} />
+                          </>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
 
-                  {openId === kid._id && (
-                    <ChildRewards
-                      child={kid}
-                      rewards={rewards[kid._id]}
-                      onChangeAvatar={editChild}
-                      onReplayIntro={replayIntro}
-                      isLearner={isLearner}
-                    />
-                  )}
+              <Link className="parent-area-primary-btn" to="/profiles">
+                Add or switch profile
+              </Link>
+            </section>
 
-                  {openId === kid._id && (
-                    <ChildProgress
-                      id={`progress-${kid._id}`}
-                      name={kid.name}
-                      summary={summaries[kid._id]}
-                      loading={loadingProgress}
-                    />
-                  )}
-                </li>
-              ))}
-            </ul>
-          )}
-
-          <Link className="parent-area-primary-btn" to="/profiles">
-            Add or switch profile
-          </Link>
-        </section>
-
-        {/* iOS silences web audio with the silent switch / Silent Mode, and a
-            family iPad often lives in silent mode. Overriding a grown-up's
-            switch is not ours to do, so it is explained here instead. */}
-        <section className="parent-area-section" aria-labelledby="parent-area-sound">
-          <h2 className="parent-area-section-title" id="parent-area-sound">Sound</h2>
-          <p className="parent-area-note">
-            Challenges play short sounds for right answers and rewards. The{" "}
-            <span aria-hidden="true">🔊</span> button in the top bar turns them
-            off or on for this device.
-          </p>
-          <p className="parent-area-note">
-            <strong>No sound on an iPhone or iPad?</strong> The silent switch, or
-            Silent Mode in Control Centre, mutes sounds in the browser too. Turn
-            it off, then check the volume.
-          </p>
-        </section>
-
-        <BrainBreakSetting isLearner={isLearner} />
-
-        <section className="parent-area-section">
-          <h2 className="parent-area-section-title">Account</h2>
-          {signOutError && <p className="parent-area-name-error" role="alert">{signOutError}</p>}
-          <div className="parent-area-account-actions">
-            <button
-              type="button"
-              className="parent-area-signout-btn"
-              disabled={signingOut}
-              onClick={handleSignOut}
-            >
-              {signingOut ? "Signing out…" : "Sign out"}
-            </button>
-            <DeleteAccount
-              isLearner={isLearner}
-              onDelete={async (password) => {
-                await deleteAccount(password);
-                navigate("/", { replace: true });
-              }}
-            />
+            <section className="parent-area-section parent-area-account-section" aria-labelledby="parent-area-account">
+              <h2 className="parent-area-section-title" id="parent-area-account">Account</h2>
+              <p className="parent-area-account">Signed in as <strong>{parent?.email}</strong></p>
+              {signOutError && <p className="parent-area-name-error" role="alert">{signOutError}</p>}
+              <div className="parent-area-account-actions">
+                <button
+                  type="button"
+                  className="parent-area-signout-btn"
+                  disabled={signingOut}
+                  onClick={handleSignOut}
+                >
+                  {signingOut ? "Signing out…" : "Sign out"}
+                </button>
+                <DeleteAccount
+                  isLearner={isLearner}
+                  onDelete={async (password) => {
+                    await deleteAccount(password);
+                    navigate("/", { replace: true });
+                  }}
+                />
+              </div>
+              <p className="parent-area-note">
+                <Link to="/privacy">How we look after your information</Link>
+              </p>
+            </section>
           </div>
-          <p className="parent-area-note">
-            <Link to="/privacy">How we look after your information</Link>
-          </p>
-        </section>
-      </main>
+          <DeviceSettings isLearner={isLearner} />
+        </div>
+      </div>
     </div>
   );
 }

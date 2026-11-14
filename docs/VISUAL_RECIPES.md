@@ -11,6 +11,49 @@ year when the requested year has no shared game yet. Keep the new year's content
 age limits and banks; a reference is not a registration or permission to reuse
 older questions unchanged.
 
+## Interface icons and brand
+
+Children aged 6–8 are the primary audience; parent accounts and teacher tools
+support their learning. Favour recognisable objects, rounded forms and soft
+colour that sit comfortably beside Bix. Keep useful controls large, labelled
+for assistive technology and legible in both themes, including at small sizes.
+
+The navbar currently uses native emoji: 🎯 Skills, 🎒 Curriculum, 🏆 Trophies and
+👥 Parent area (account management). Their appearance follows the device's emoji
+font. The profile switcher keeps the active child's chosen avatar, name and
+colour: it identifies who is playing, while the parent link opens account
+management. The empty profile slot uses ➕ alongside “Pick profile”, linking to
+the profile picker; keep it distinct from the parent link.
+Show each learner's level and streak below their name in the `/profiles` cards;
+keep these indicators out of the navbar, including the small-screen avatar chip.
+
+### Icon families to consider
+
+These are researched options for a future selection, not an adopted replacement
+for the current navbar. Compare actual assets beside Bix at 24–32 px and at
+larger hub sizes, on both light and dark surfaces.
+
+| Option | Fit for Learn with Bix | Formats and licence |
+|---|---|---|
+| [Microsoft Fluent Emoji — 3D](https://github.com/microsoft/fluentui-emoji) | Preferred direction for child-facing navigation: soft, rounded, shaded objects closest to Bix. Samples include Bullseye, Backpack, Trophy, Identification card and Books. | PNG; [MIT](https://github.com/microsoft/fluentui-emoji/blob/main/LICENSE), retaining the copyright and licence notice. |
+| [Microsoft Fluent Emoji — Colour](https://github.com/microsoft/fluentui-emoji) | Vector alternative from the same family for comparison at smaller sizes. This variant is already used in Science illustrations. | SVG; the same MIT licence. Existing pinned sources and checksums are in [the Science asset manifest](../scripts/science-assets/sources.json). |
+| [Icons8 — 3D Fluency](https://icons8.com/icons/3d-fluency) | Alternative soft 3D family with learning objects and a circular account badge. Samples include Goal, School Backpack, Trophy, User Male Circle and Books. | Download formats and sizes depend on the asset and plan. [Free use requires credit links](https://icons8.com/license); paid licensing offers attribution-free use. |
+
+For any broader icon selection:
+
+- Use familiar learning and reward objects in the main child-facing navigation
+  and hubs. Preserve a consistent family across these destinations.
+- Give the parent account an administrative identity, such as an account card
+  or account badge, with an accessible “Parent area” label. A visible “Parents”
+  label is a candidate when layout permits.
+- Preserve children's chosen profile avatars. They are personal identity and
+  profile-switching cues, not an icon-library replacement opportunity.
+- Use quieter utility icons for printing, editing, search and similar actions
+  within teacher and parent tools; those tools should not set the tone of the
+  child-facing navigation.
+- Bundle selected assets locally, retain their source/licence information and
+  add required credits. Follow the image-source rules below.
+
 ## Choose the subject's established approach
 
 | Subject / task | Existing approach and source |

@@ -48,7 +48,8 @@ it.each([1, 2, 3, 4, 5, 6])("shows every subject with availability for saved Yea
     const available = availableSubjects.includes(name);
     expect(button.getAttribute("aria-disabled")).toBe(available ? null : "true");
     expect(button.classList.contains("is-locked")).toBe(!available);
-    expect(within(button).getByText(available ? "Start →" : "Coming soon")).toBeTruthy();
+    if (available) expect(within(button).getByText("Start →")).toBeTruthy();
+    expect(within(button).queryByText(/coming soon/i)).toBeNull();
   }
 });
 

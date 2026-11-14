@@ -78,18 +78,126 @@ function CertificateButton({ certificate, onOpen, children }) {
   );
 }
 
-function StickerBook({ candidate, open, fresh, yearCert, soleSubject, onOpenCertificate }) {
-  const { year, subjectName, curriculum, progress, isBuilt } = candidate;
-  const groups = topicStickers(curriculum, progress, isBuilt);
-  const count = countStickers(groups);
-  const stats = getYearStats(progress, curriculum, isBuilt);
-  // Derived from the same milestone rules as the celebration; read-only.
-  const certs = curriculumCertificates(candidate);
-  // A one-subject year's certificate already says everything the subject's would.
-  const subjectCert = yearCert && soleSubject ? null : certs.subject;
+/** One sticker tile. An earned sticker with a certificate opens it. */
+function StickerTile({ sticker, where, isNew, topicCert, onOpenCertificate }) {
+  const note = sticker.earned
+    ? "Collected!"
+    : !sticker.available
+      ? ""
+      : `${sticker.remaining} to go`;
+  const face = (
+    <>
+      <span className="trophy-sticker-disc" aria-hidden="true">{sticker.icon}</span>
+      <span className="trophy-sticker-name">{sticker.name}</span>
+      {where && <span className="trophy-sticker-where">{where}</span>}
+      <span className="trophy-sticker-note">
+        <span className="sr-only">{sticker.earned ? "Sticker collected." : "Sticker not collected yet."} </span>
+        {sticker.earned ? <span aria-hidden="true">{note}</span> : note}
+      </span>
+      {topicCert && (
+        <span className="trophy-sticker-cert">
+          <span aria-hidden="true">📜 </span>See certificate
+        </span>
+      )}
+    </>
+  );
+  return (
+    <li className={`trophy-sticker ${sticker.earned ? "is-earned" : "is-locked"}`}>
+      {isNew && <span className="trophy-new">NEW</span>}
+      {topicCert ? (
+        <button
+          type="button"
+          className="trophy-sticker-button"
+          onClick={() => onOpenCertificate(topicCert)}
+        >
+          {face}
+        </button>
+      ) : face}
+    </li>
+  );
+}
+
+/** Every book's stickers and certificates, derived once per render. Read-only. */
+function stickerBooks(candidates) {
+  return candidates.map((candidate, index) => {
+    const { year, curriculum, progress, isBuilt } = candidate;
+    const groups = topicStickers(curriculum, progress, isBuilt);
+    // Derived from the same milestone rules as the celebration; read-only.
+    const certs = curriculumCertificates(candidate);
+    // The year's certificate shows once, with its first subject.
+    const yearCert = candidates[index - 1]?.year === year ? null : yearCertificate(candidates, year);
+    // A one-subject year's certificate already says everything the subject's would.
+    const soleSubject = candidates.filter((entry) => entry.year === year).length === 1;
+    const subjectCert = yearCert && soleSubject ? null : certs.subject;
+    const stats = getYearStats(progress, curriculum, isBuilt);
+    return { candidate, groups, certs, yearCert, subjectCert, stats };
+  });
+}
+
+/** Courses with any work done first, then the rest; each part keeps year order. */
+function startedFirst(books) {
+  const started = (book) => book.stats.percent > 0 || countStickers(book.groups).earned > 0;
+  return [...books.filter(started), ...books.filter((book) => !started(book))];
+}
+
+/** Everything collected so far, across every year and subject, always open. */
+function CollectedStickers({ books, fresh, onOpenCertificate }) {
+  const certificates = books.flatMap(({ groups, certs, yearCert, subjectCert }) => [
+    yearCert,
+    subjectCert,
+    ...groups.map((group) => {
+      const cert = certs.categories.get(group.categoryId);
+      return cert && { ...cert, questTitle: group.title };
+    }),
+  ]).filter(Boolean);
+  const stickers = books.flatMap(({ candidate, groups, certs }) =>
+    groups.flatMap((group) => group.stickers)
+      .filter((sticker) => sticker.earned)
+      .map((sticker) => ({ sticker, candidate, topicCert: certs.topics.get(sticker.topicId) }))
+  );
 
   return (
-    <details className="trophy-year" open={open}>
+    <div className="trophy-collected">
+      <h3>My stickers</h3>
+      {stickers.length === 0 ? (
+        <p className="trophy-collected-empty">
+          <span aria-hidden="true">✨ </span>No stickers yet — finish a topic to collect your first one!
+        </p>
+      ) : (
+        <ul className="trophy-stickers">
+          {stickers.map(({ sticker, candidate, topicCert }) => (
+            <StickerTile
+              key={`${candidate.year}-${candidate.subject}-${sticker.topicId}`}
+              sticker={sticker}
+              where={`Year ${candidate.year} ${candidate.subjectName}`}
+              isNew={fresh?.stickers.has(stickerKey(candidate.year, candidate.subject, sticker.topicId))}
+              topicCert={topicCert}
+              onOpenCertificate={onOpenCertificate}
+            />
+          ))}
+        </ul>
+      )}
+      {certificates.length > 0 && (
+        <div className="trophy-certs">
+          {certificates.map((cert) => (
+            <CertificateButton key={cert.key} certificate={cert} onOpen={onOpenCertificate}>
+              {cert.questTitle ? <>{cert.questTitle} certificate</> : undefined}
+            </CertificateButton>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Every sticker in one year and subject, collected or not; always starts folded. */
+function StickerBook({ book, onOpenCertificate }) {
+  const { candidate, groups, certs, stats } = book;
+  const { year, subjectName } = candidate;
+  const count = countStickers(groups);
+
+  return (
+    <details className="trophy-year">
       <summary>
         <ProgressRing
           percent={stats.percent}
@@ -102,72 +210,21 @@ function StickerBook({ candidate, open, fresh, yearCert, soleSubject, onOpenCert
         </span>
       </summary>
 
-      {(yearCert || subjectCert) && (
-        <div className="trophy-certs">
-          {yearCert && <CertificateButton certificate={yearCert} onOpen={onOpenCertificate} />}
-          {subjectCert && <CertificateButton certificate={subjectCert} onOpen={onOpenCertificate} />}
+      {groups.map((group) => (
+        <div className="trophy-quest" key={group.categoryId}>
+          <h4>{group.title}</h4>
+          <ul className="trophy-stickers">
+            {group.stickers.map((sticker) => (
+              <StickerTile
+                key={sticker.topicId}
+                sticker={sticker}
+                topicCert={sticker.earned ? certs.topics.get(sticker.topicId) : null}
+                onOpenCertificate={onOpenCertificate}
+              />
+            ))}
+          </ul>
         </div>
-      )}
-
-      {groups.map((group) => {
-        const questCert = certs.categories.get(group.categoryId);
-        return (
-          <div className="trophy-quest" key={group.categoryId}>
-            <div className="trophy-quest-head">
-              <h3>{group.title}</h3>
-              {questCert && (
-                <CertificateButton certificate={questCert} onOpen={onOpenCertificate}>
-                  Quest certificate<span className="sr-only"> for {group.title}</span>
-                </CertificateButton>
-              )}
-            </div>
-            <ul className="trophy-stickers">
-              {group.stickers.map((sticker) => {
-                const note = sticker.earned
-                  ? "Collected!"
-                  : !sticker.available
-                    ? "Coming soon"
-                    : `${sticker.remaining} to go`;
-                const topicCert = sticker.earned ? certs.topics.get(sticker.topicId) : null;
-                const face = (
-                  <>
-                    <span className="trophy-sticker-disc" aria-hidden="true">{sticker.icon}</span>
-                    <span className="trophy-sticker-name">{sticker.name}</span>
-                    <span className="trophy-sticker-note">
-                      <span className="sr-only">{sticker.earned ? "Sticker collected." : "Sticker not collected yet."} </span>
-                      {sticker.earned ? <span aria-hidden="true">{note}</span> : note}
-                    </span>
-                    {topicCert && (
-                      <span className="trophy-sticker-cert">
-                        <span aria-hidden="true">📜 </span>See certificate
-                      </span>
-                    )}
-                  </>
-                );
-                return (
-                  <li
-                    key={sticker.topicId}
-                    className={`trophy-sticker ${sticker.earned ? "is-earned" : "is-locked"}`}
-                  >
-                    {fresh?.stickers.has(stickerKey(year, candidate.subject, sticker.topicId)) && (
-                      <span className="trophy-new">NEW</span>
-                    )}
-                    {topicCert ? (
-                      <button
-                        type="button"
-                        className="trophy-sticker-button"
-                        onClick={() => onOpenCertificate(topicCert)}
-                      >
-                        {face}
-                      </button>
-                    ) : face}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        );
-      })}
+      ))}
     </details>
   );
 }
@@ -268,8 +325,7 @@ function TrophyCabinet({ viewed, grownUp = false }) {
 
   const held = heldBadgeIds(rewards).size;
   const stickers = countAllStickers(candidates);
-  // Open the book at the year they are working in; the rest stay folded.
-  const openYear = resume?.year ?? (Number(viewed?.yearGroup) || candidates[0]?.year);
+  const books = useMemo(() => stickerBooks(candidates), [candidates]);
 
   return (
     <main className="trophy-room">
@@ -335,15 +391,12 @@ function TrophyCabinet({ viewed, grownUp = false }) {
           <section className="trophy-section" aria-labelledby="trophy-stickers">
             <h2 id="trophy-stickers">Sticker book</h2>
             <p className="trophy-section-note">Finish every challenge in a topic to collect its sticker — and its certificate.</p>
-            {candidates.map((candidate, index) => (
+            <CollectedStickers books={books} fresh={fresh} onOpenCertificate={setOpenCertificate} />
+            <h3 className="trophy-tocollect">Stickers to collect</h3>
+            {startedFirst(books).map((book) => (
               <StickerBook
-                key={`${candidate.year}-${candidate.subject}`}
-                candidate={candidate}
-                fresh={fresh}
-                open={candidate.year === openYear}
-                // The year's certificate shows once, in its first subject's book.
-                yearCert={candidates[index - 1]?.year === candidate.year ? null : yearCertificate(candidates, candidate.year)}
-                soleSubject={candidates.filter((entry) => entry.year === candidate.year).length === 1}
+                key={`${book.candidate.year}-${book.candidate.subject}`}
+                book={book}
                 onOpenCertificate={setOpenCertificate}
               />
             ))}

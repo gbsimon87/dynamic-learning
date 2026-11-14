@@ -7,7 +7,7 @@ import { speak, stopNarration } from "../../utils/speech";
  * One joke at a time, child-paced: `tell` shows (and says) the setup, and
  * nothing more happens until `reveal` — there is no timer.
  *
- * Spoken only while the app's sound is on (the navbar 🔊). Muted, the words on
+ * Spoken only while the app's sound is on (Learning sounds in /parent). Muted, the words on
  * screen carry the joke on their own, and muting mid-joke stops the voice.
  *
  * Which jokes have been told is kept for this tab only (sessionStorage, with

@@ -1,5 +1,5 @@
 /* ===========================================================
-   PARENT AREA — plain adult UI for the signed-in account
+   PARENT AREA — family dashboard and device preferences
 
    CSS is global in this project (PROJECT_KNOWLEDGE §9): every selector below is
    scoped under the unique root class `.parent-area-page`. Page colours carry a
@@ -15,6 +15,11 @@
   --pa-muted: var(--map-muted);
   --pa-danger: var(--danger-text);
   --pa-shadow: var(--panel-shadow);
+  --pa-bg: var(--light-bg);
+  --pa-soft: var(--light-home-curriculum);
+  --pa-edge: var(--light-home-card-edge);
+  --pa-welcome: var(--light-home-practice-label);
+  --pa-welcome-ink: var(--light-home-practice-ink);
 
   /* Every --profile-colour-* value clears AA with this dark ink in both themes
      (see the note in index.css), so one ink works for the chips. */
@@ -23,8 +28,10 @@
   min-height: calc(100dvh - var(--navbar-height));
   display: flex;
   justify-content: center;
-  padding: 2rem 1rem 3rem;
+  padding: clamp(1.5rem, 4vw, 3.5rem) clamp(0.75rem, 3vw, 2rem) 4rem;
+  background: linear-gradient(180deg, var(--pa-soft), var(--pa-bg) 32rem);
   color: var(--pa-text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 body.dark .parent-area-page {
@@ -32,23 +39,27 @@ body.dark .parent-area-page {
   --pa-panel: var(--dark-panel);
   --pa-accent: var(--dark-accent);
   --pa-on-accent: var(--on-dark-accent);
+  --pa-bg: var(--dark-bg);
+  --pa-soft: var(--dark-home-curriculum);
+  --pa-edge: var(--dark-home-card-edge);
+  --pa-welcome: var(--dark-home-practice-label);
+  --pa-welcome-ink: var(--dark-home-practice-ink);
 }
 
 .parent-area-page .parent-area-card {
   position: relative;
   width: 100%;
-  max-width: 38rem;
+  max-width: 72rem;
   min-width: 0;
-  background-color: var(--pa-panel);
-  border-radius: 16px;
-  padding: 2rem 1.5rem;
-  box-shadow: 0 4px 14px var(--pa-shadow);
+  align-self: flex-start;
   overflow-wrap: anywhere;
 }
 
 .parent-area-page .parent-area-title {
-  font-size: 1.6rem;
-  margin-bottom: 0.5rem;
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: -0.045em;
+  line-height: 1.15;
+  margin: 0.5rem 0 0.85rem;
 }
 
 .parent-area-page .parent-area-account {
@@ -58,22 +69,25 @@ body.dark .parent-area-page {
 }
 
 .parent-area-page .parent-area-section {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--pa-border);
+  min-width: 0;
+  padding: clamp(1.1rem, 2.5vw, 1.75rem);
+  border: 1px solid var(--pa-edge);
+  border-radius: 22px;
+  background: var(--pa-panel);
+  box-shadow: 0 5px 18px color-mix(in srgb, var(--pa-shadow) 18%, transparent);
 }
 
 .parent-area-page .parent-area-section-title {
-  font-size: 1.15rem;
-  margin-bottom: 1rem;
+  font-size: 1.35rem;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.35rem;
 }
 
 .parent-area-page .parent-area-note {
   font-size: 0.95rem;
   line-height: 1.5;
   color: var(--pa-muted);
-  margin-top: 1rem;
-  margin-bottom: 0.7rem;
+  margin: 0.5rem 0 1.1rem;
 }
 
 .parent-area-page .parent-area-note strong {
@@ -96,27 +110,19 @@ body.dark .parent-area-page {
   list-style: none;
   display: grid;
   min-width: 0;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
+  gap: 1rem;
+  padding: 0;
+  margin: 1.5rem 0 1.25rem;
 }
 
 .parent-area-page .parent-area-row {
-  display: flex;
+  display: grid;
   min-width: 0;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.75rem;
-  border: 1px solid var(--pa-border);
-  border-radius: 12px;
-}
-
-.parent-area-page .parent-area-row-actions {
-  display: flex;
-  flex-wrap: wrap;
-  min-width: 0;
-  gap: 0.5rem;
+  padding: clamp(0.85rem, 2vw, 1.25rem);
+  border: 1px solid var(--pa-edge);
+  border-radius: 16px;
+  background: var(--pa-soft);
 }
 
 /* ---------- profile name ---------- */
@@ -188,7 +194,7 @@ body.dark .parent-area-page {
 
 .parent-area-page .parent-area-year-btn {
   min-width: 44px;
-  min-height: 36px;
+  min-height: 44px;
   padding-inline: 0.55rem;
   border-radius: 9px;
   border: 1px solid var(--pa-border);
@@ -207,11 +213,13 @@ body.dark .parent-area-page {
   border-color: var(--pa-accent);
 }
 
-/* The accent as a FILL with --on-*-accent ink, never as coloured text (§9). */
+/* Selected reads through a strong ink ring and weight, not an accent fill:
+   the red accent is kept for the page's one primary action. */
 .parent-area-page .parent-area-year-btn.selected {
-  border-color: var(--pa-accent);
-  background-color: var(--pa-accent);
-  color: var(--pa-on-accent);
+  border: 2px solid var(--pa-text);
+  background-color: var(--pa-soft);
+  color: var(--pa-text);
+  font-weight: 800;
 }
 
 .parent-area-page .parent-area-year-btn:disabled {
@@ -269,7 +277,7 @@ body.dark .parent-area-page {
   border-radius: 999px;
   border: 1px solid var(--pa-border);
   font-size: 0.78rem;
-  opacity: 0.5;
+  color: var(--pa-muted);
 }
 
 .parent-area-page .parent-area-badge.is-held {
@@ -434,15 +442,19 @@ body.dark .parent-area-page {
   min-width: 0;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.4rem 0.9rem;
-  border-radius: 999px;
-  font-weight: 700;
+  flex: none;
+  width: 52px;
+  height: 52px;
+  justify-content: center;
+  border-radius: 16px;
+  font-size: 1.7rem;
   background-color: var(--parent-chip-colour);
   color: var(--pa-on-colour);
 }
 
 .parent-area-page .parent-area-chip-name {
   min-width: 0;
+  font-size: 1.15rem;
   overflow-wrap: anywhere;
 }
 
@@ -451,7 +463,7 @@ body.dark .parent-area-page {
   flex-direction: column;
   min-width: 0;
   gap: 0.6rem;
-  flex: 1 1 16rem;
+  margin-top: 0.75rem;
 }
 
 .parent-area-page .parent-area-confirm-text {
@@ -578,43 +590,6 @@ body.dark .parent-area-page {
   opacity: 0.55;
 }
 
-@media (max-width: 480px) {
-  .parent-area-page {
-    padding: 5.25rem 0.75rem 2rem;
-  }
-
-  .parent-area-page .parent-area-card {
-    padding: 1.5rem 1.1rem;
-  }
-
-  .parent-area-page .parent-area-row {
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-items: stretch;
-  }
-
-  .parent-area-page .parent-area-name,
-  .parent-area-page .parent-area-year,
-  .parent-area-page .parent-area-rewards,
-  .parent-area-page .parent-area-progress {
-    flex-basis: auto;
-    width: 100%;
-  }
-
-  .parent-area-page .parent-area-name-row > * {
-    width: 100%;
-  }
-
-  .parent-area-page .parent-area-name input {
-    flex-basis: auto;
-  }
-
-  .parent-area-page .parent-area-primary-btn {
-    width: 100%;
-    text-align: center;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .parent-area-page .parent-area-bar-fill,
   .parent-area-page .parent-area-year-btn,
@@ -627,25 +602,279 @@ body.dark .parent-area-page {
   }
 }
 
-.parent-area-page .parent-area-trophies-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  min-height: 44px;
-  margin: 0.2rem 0 0.6rem;
-  color: var(--pa-text);
-  font-weight: 700;
-  text-decoration: underline;
-}
 
-.parent-area-page .parent-area-intro-replay {
+/* Dashboard structure: profiles and account on the left, shared preferences on
+   the right. At smaller widths preferences precede account actions. */
+.parent-area-page .parent-area-header {
   display: flex;
-  padding: 0;
-  border: none;
-  background: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+.parent-area-page .parent-area-header > div { max-width: 39rem; }
+.parent-area-page .parent-area-eyebrow {
+  color: var(--pa-muted);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.parent-area-page .parent-area-intro { color: var(--pa-muted); line-height: 1.7; }
+.parent-area-page .parent-area-back {
+  display: inline-flex;
+  flex: none;
+  gap: 0.75rem;
+  align-items: center;
+  min-height: 48px;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--pa-edge);
+  border-radius: 12px;
+  background: var(--pa-panel);
+  font-weight: 650;
+  font-size: 0.9rem;
+}
+.parent-area-page .parent-area-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(19rem, 1fr);
+  align-items: start;
+  gap: 1.5rem;
+}
+.parent-area-page .parent-area-main-column { display: grid; gap: 1.5rem; min-width: 0; }
+.parent-area-page .parent-area-section-heading,
+.parent-area-page .parent-area-profile-heading,
+.parent-area-page .parent-area-setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-width: 0;
+}
+.parent-area-page .parent-area-profile-count {
+  flex: none;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 650;
+  background: var(--pa-welcome);
+  color: var(--pa-welcome-ink);
+}
+.parent-area-page .parent-area-section-heading .parent-area-eyebrow,
+.parent-area-page .parent-area-settings > .parent-area-eyebrow { margin-bottom: 0.45rem; }
+.parent-area-page .parent-area-profile-identity { display: flex; align-items: center; gap: 0.75rem; min-width: 0; }
+.parent-area-page .parent-area-profile-identity > div { min-width: 0; }
+.parent-area-page .parent-area-profile-heading > button { flex: none; }
+.parent-area-page .parent-area-profile-settings { border-top: 1px solid var(--pa-edge); }
+.parent-area-page summary {
+  cursor: pointer;
+  min-height: 44px;
+  align-content: center;
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+.parent-area-page .parent-area-profile-settings .parent-area-name { margin: 0.5rem 0 1rem; }
+.parent-area-page .parent-area-profile-settings .parent-area-year { display: grid; gap: 0.5rem; }
+.parent-area-page .parent-area-remove-zone {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin: 1.25rem 0 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--pa-edge);
+}
+.parent-area-page .parent-area-remove-zone .parent-area-confirm { flex-basis: 100%; margin-top: 0; }
+.parent-area-page .parent-area-remove-note {
+  flex: 1 1 14rem;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--pa-muted);
+}
+.parent-area-page .parent-area-remove-btn {
+  flex: none;
+  min-height: 44px;
+  padding: 0 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--pa-danger);
+  background-color: var(--pa-panel);
+  color: var(--pa-danger);
   font: inherit;
   font-weight: 700;
+  font-size: 0.9rem;
   cursor: pointer;
 }
+.parent-area-page .parent-area-remove-btn:hover,
+.parent-area-page .parent-area-remove-btn:focus-visible {
+  outline: 2px solid var(--pa-danger);
+  outline-offset: 2px;
+}
+.parent-area-page .parent-area-profile-detail { min-width: 0; }
+.parent-area-page .parent-area-setting-block { padding: 1.25rem 0; border-top: 1px solid var(--pa-edge); }
+.parent-area-page .parent-area-setting-block:last-child { padding-bottom: 0; }
+.parent-area-page .parent-area-setting-title { font-size: 1rem; font-weight: 700; }
+.parent-area-page .parent-area-setting-status { color: var(--pa-muted); font-size: 0.82rem; margin-top: 0.2rem; }
+.parent-area-page .parent-area-switch {
+  flex: none;
+  position: relative;
+  width: 58px;
+  height: 44px;
+  border: 1px solid var(--pa-muted);
+  border-radius: 999px;
+  background: var(--pa-panel);
+  cursor: pointer;
+}
+.parent-area-page .parent-area-switch[aria-checked="true"] { background: var(--pa-text); border-color: var(--pa-text); }
+.parent-area-page .parent-area-switch-thumb {
+  position: absolute;
+  left: 6px;
+  top: 9px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--pa-muted);
+}
+.parent-area-page .parent-area-switch[aria-checked="true"] .parent-area-switch-thumb { left: 26px; background: var(--pa-panel); }
+.parent-area-page .parent-area-sound-note { font-size: 0.82rem; margin: 0.75rem 0 0; }
+.parent-area-page .parent-area-sound-help { margin-top: 0.75rem; color: var(--pa-muted); }
+.parent-area-page .parent-area-sound-help summary { font-size: 0.8rem; }
+.parent-area-page .parent-area-sound-help .parent-area-note { margin-bottom: 0; font-size: 0.85rem; }
+.parent-area-page .parent-area-account-section .parent-area-account { margin: 0.5rem 0 1.25rem; }
+.parent-area-page .parent-area-account-section a { text-decoration: underline; text-underline-offset: 3px; }
+.parent-area-page .parent-area-welcome { padding-block: 2.5rem; }
+.parent-area-page .parent-area-welcome-icon {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 22px;
+  background: var(--pa-welcome);
+  font-size: 2.25rem;
+  margin-bottom: 1.5rem;
+}
+.parent-area-page .parent-area-text-link { display: inline-flex; min-height: 48px; align-items: center; margin: 0.5rem 0 0.5rem 1rem; text-decoration: underline; }
+.parent-area-page :is(button, a, input, summary):focus-visible { outline: 3px solid var(--pa-text); outline-offset: 3px; }
 
-.parent-area-page .parent-area-stats { font-size: 0.95rem; color: var(--pa-muted); margin: 0.2rem 0 0.6rem; }
+@media (max-width: 900px) {
+  .parent-area-page .parent-area-layout { grid-template-columns: minmax(0, 1fr); }
+  .parent-area-page .parent-area-main-column { display: contents; }
+  .parent-area-page .parent-area-settings { order: 2; }
+  .parent-area-page .parent-area-account-section { order: 3; }
+}
+@media (max-width: 580px) {
+  .parent-area-page .parent-area-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .parent-area-page .parent-area-layout { gap: 1rem; }
+  .parent-area-page .parent-area-name-row { flex-direction: column; }
+  .parent-area-page .parent-area-name input { flex-basis: auto; }
+}
+@media (max-width: 420px) {
+  .parent-area-page .parent-area-profile-heading { flex-wrap: wrap; }
+  .parent-area-page .parent-area-profile-heading > button { width: 100%; }
+  .parent-area-page .parent-area-primary-btn { width: 100%; text-align: center; }
+  .parent-area-page .parent-area-text-link { margin-left: 0; }
+}
+
+/* ---------- child snapshot ----------
+   Headline tiles first (level, XP, streak, badges), then only the curriculum
+   topics with real work in them, earned badges and two clear actions. */
+.parent-area-page .parent-area-snapshot {
+  flex-basis: 100%;
+  min-width: 0;
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 0.25rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--pa-border);
+}
+
+.parent-area-page .parent-area-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (max-width: 560px) {
+  .parent-area-page .parent-area-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.parent-area-page .parent-area-tile {
+  display: grid;
+  justify-items: start;
+  gap: 0.1rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: 14px;
+  background-color: var(--pa-soft);
+  border: 1px solid var(--pa-edge);
+  min-width: 0;
+}
+
+.parent-area-page .parent-area-tile-icon { font-size: 1.25rem; line-height: 1; margin-bottom: 0.2rem; }
+.parent-area-page .parent-area-tile-value { font-size: 1.15rem; font-weight: 800; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.parent-area-page .parent-area-tile-label { font-size: 0.78rem; color: var(--pa-muted); }
+
+.parent-area-page .parent-area-panel {
+  padding: 0.8rem 0.9rem;
+  border-radius: 14px;
+  border: 1px solid var(--pa-border);
+  background-color: var(--pa-panel);
+  min-width: 0;
+}
+
+.parent-area-page .parent-area-panel .parent-area-rewards-title { margin: 0 0 0.5rem; }
+.parent-area-page .parent-area-panel .parent-area-badges { margin-bottom: 0.4rem; }
+
+.parent-area-page .parent-area-progress-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
+  margin-bottom: 0.45rem;
+}
+
+.parent-area-page .parent-area-progress-title { font-weight: 700; font-size: 0.95rem; margin: 0; }
+.parent-area-page .parent-area-progress-head .parent-area-progress-note { margin: 0; }
+.parent-area-page .parent-area-progress .parent-area-topics { margin: 0.7rem 0 0.4rem; gap: 0.3rem; }
+.parent-area-page .parent-area-topic { align-items: center; color: var(--pa-text); }
+.parent-area-page .parent-area-topic-name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.parent-area-page .parent-area-topic-mark { flex: none; width: 1.2rem; text-align: center; color: var(--pa-muted); }
+.parent-area-page .parent-area-topic.is-done .parent-area-topic-mark { color: var(--pa-text); font-weight: 800; }
+
+.parent-area-page .parent-area-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: 0.6rem;
+}
+
+.parent-area-page .parent-area-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--pa-border);
+  background-color: var(--pa-panel);
+  color: var(--pa-text);
+  font: inherit;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.parent-area-page .parent-area-action:hover,
+.parent-area-page .parent-area-action:focus-visible {
+  outline: none;
+  border-color: var(--pa-accent);
+}
+
+
+.parent-area-page .parent-area-picture { margin-top: 1rem; }
+.parent-area-page .parent-area-picture .parent-area-year-label { display: block; margin-bottom: 0.4rem; }
+.parent-area-page .parent-area-hello { margin-top: 1rem; }

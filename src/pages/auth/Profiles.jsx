@@ -5,11 +5,36 @@ import { profileColour } from "../../data/avatars";
 import ProfileBuilder from "./ProfileBuilder";
 import ProgressRing from "../../components/ProgressRing";
 import { useChildrenProgress } from "../../hooks/useChildrenProgress";
+import { useChildrenRewards } from "../../hooks/useChildrenRewards";
+import { grownUpXp, levelFor } from "../../data/xp";
+import { streakStatus, localDay } from "../../data/streak";
 import FloatingGlyphBackground from "../../components/FloatingGlyphBackground";
 import "./Profiles.css";
 import BixLoader from "../../components/mascot/BixLoader";
 
 const PICK_DELAY_MS = 700;
+
+/** Per-child, read-only rewards. Missing reads never flash a default level. */
+function ProfileStats({ rewards, candidates, loading }) {
+  if (loading || !rewards) return null;
+
+  const levelReady = rewards.xpBackfilled || Array.isArray(candidates);
+  const streak = streakStatus(rewards.streak, localDay()).current;
+
+  return (
+    <span className="profiles-stats">
+      {levelReady && (
+        <span className="profiles-stat">
+          Level {levelFor(grownUpXp(rewards, candidates)).level}
+        </span>
+      )}
+      <span className="profiles-stat">
+        <span aria-hidden="true">🔥</span>{" "}
+        {streak > 0 ? `${streak}-day streak` : "No streak yet"}
+      </span>
+    </span>
+  );
+}
 
 /**
  * The progress line on a profile card.
@@ -78,7 +103,8 @@ function Profiles() {
 
   // Progress for EVERY child, since this screen renders before one is active.
   // Read-only, and a failed read simply shows no figure for that child.
-  const { summaries, loading: loadingProgress } = useChildrenProgress(children);
+  const { summaries, candidates, loading: loadingProgress } = useChildrenProgress(children);
+  const { rewards, loading: loadingRewards } = useChildrenRewards(children);
 
   const [adding, setAdding] = useState(false);
   const [formError, setFormError] = useState("");
@@ -172,6 +198,11 @@ function Profiles() {
                 {kid.avatar}
               </span>
               <span className="profiles-name">{kid.name}</span>
+              <ProfileStats
+                rewards={rewards[kid._id]}
+                candidates={candidates[kid._id]}
+                loading={loadingRewards}
+              />
               <ProfileProgress
                 summary={summaries[kid._id]}
                 loading={loadingProgress}

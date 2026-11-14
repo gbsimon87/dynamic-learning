@@ -448,12 +448,6 @@ function CurriculumPage() {
                   <span aria-hidden="true">⭐</span> {yearStats.completed} of{" "}
                   {yearStats.total} done
                   {journey && <> · <ReplayLink params={{ intro: "subject" }} label="About this subject" /></>}
-                  {/* Most of the curriculum isn't built yet, so a bare total
-                      would read as "Year finished". Three words, not a
-                      paragraph. */}
-                  {yearStats.datasetTotal > yearStats.total && (
-                    <span className="cp-bar-soon"> · more coming soon</span>
-                  )}
                   {" · "}
                 </>
               )}
@@ -614,10 +608,6 @@ function CurriculumPage() {
                         <h3 className="cp-topic-title">{topic.name}</h3>
                         {builtQuest(category.id)?.topics.some((t) => t.id === topic.id) && (
                           <ReplayLink params={{ intro: "topic", category: category.id, topic: topic.id }} label="About this topic" name={`About this topic: ${topic.name}`} />
-                        )}
-
-                        {topicLocks.unbuilt && !topicLocks.locked && (
-                          <span className="cp-chip is-soon">🚧 Coming soon</span>
                         )}
 
                         {hydrated && topicStats.total > 0 && (

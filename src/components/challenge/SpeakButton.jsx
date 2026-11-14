@@ -9,7 +9,7 @@ import "./english-kit.css";
  * Nothing ever plays on its own: reading is the skill being practised, so a
  * prompt is only spoken when a child asks for it.
  *
- * It follows the app-wide sound switch (the navbar 🔊). While muted the button
+ * It follows the app-wide sound switch (Learning sounds in /parent). While muted the button
  * says so, and tapping it turns sound back on and then speaks, because a child
  * who taps "hear it" wants to hear it. Muting while it speaks stops it.
  *

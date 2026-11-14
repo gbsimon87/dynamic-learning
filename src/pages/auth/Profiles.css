@@ -153,6 +153,24 @@ body.dark .profiles-page {
   overflow-wrap: anywhere;
 }
 
+.profiles-page .profiles-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem;
+  max-width: 100%;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.profiles-page .profiles-stat {
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  color: var(--pf-on-colour);
+  background: color-mix(in srgb, var(--pf-on-colour) 8%, transparent);
+}
+
 .profiles-page .profiles-go {
   font-size: 0.9rem;
   font-weight: 600;

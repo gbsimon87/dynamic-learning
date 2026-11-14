@@ -76,9 +76,9 @@ function YearButton({ year, available, selected, onPick }) {
         {available ? "🎒" : "🔒"}
       </span>
       <span className="cs-year-label">Year {year}</span>
-      <span className="cs-year-state">
-        {available ? (selected ? "✅ Picked" : "Tap to pick") : "Coming soon"}
-      </span>
+      {available && (
+        <span className="cs-year-state">{selected ? "✅ Picked" : "Tap to pick"}</span>
+      )}
     </button>
   );
 }
@@ -112,7 +112,7 @@ function SubjectCard({ subject, year, picked, onNeedYear }) {
     ? "Pick a year first"
     : available
       ? "Start →"
-      : "Coming soon";
+      : null;
 
   return (
     <button
@@ -136,7 +136,7 @@ function SubjectCard({ subject, year, picked, onNeedYear }) {
         {subject.icon}
       </span>
       <span className="cs-subject-name">{subject.name}</span>
-      <span className="cs-subject-state">{state}</span>
+      {state && <span className="cs-subject-state">{state}</span>}
     </button>
   );
 }

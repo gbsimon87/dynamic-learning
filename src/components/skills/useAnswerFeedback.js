@@ -23,7 +23,7 @@ import { wobble } from "../challenge/wobble";
  * line and the `correct` sound. Three right first time in a row: the 🔥 combo
  * line, a star burst and the `combo` sound. Every fifth right answer: the
  * "5 right! 🌟" milestone with a bigger burst. A miss: a kind line, a wobble
- * and the soft boop. Muting (the navbar 🔊) silences every cue, and reduced
+ * and the soft boop. Muting (Learning sounds in /parent) silences every cue, and reduced
  * motion drops the particles and the wobble — both handled where they live.
  *
  * Nothing is stored: no XP, streak days or badges (see data/freePlay/feedback).

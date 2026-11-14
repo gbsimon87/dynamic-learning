@@ -6,7 +6,9 @@ import { normaliseRewards } from "../data/rewardsShape";
  * Rewards for a LIST of children, keyed by child id.
  *
  * The sibling of `useChildrenProgress`, and for the same reason: `useRewards`
- * keys off the ACTIVE child, but the Parent Area shows every child at once.
+ * keys off the ACTIVE child, but Profiles and the Parent Area show every child
+ * at once. Failed reads return null for that child, distinct from a new
+ * learner's valid empty rewards.
  *
  * Read-only — awarding happens in `RewardsProvider` (src/context/RewardsContext.jsx),
  * at the one moment a challenge completes. Nothing here writes, so a grown-up opening this screen can never
@@ -40,7 +42,7 @@ export function useChildrenRewards(children, bump = 0) {
           return [childId, normaliseRewards(doc?.data)];
         } catch {
           // One unreadable document must not blank out the siblings'.
-          return [childId, normaliseRewards()];
+          return [childId, null];
         }
       })
     ).then((entries) => {

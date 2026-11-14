@@ -10,6 +10,21 @@ Skills Mode is standalone and ungated at `/skills` and `/skills/<game>`. Curricu
 
 [AuthContext](../src/context/AuthContext.jsx) owns account/profile state. Progress belongs to the active child, not the parent account or browser as a whole. Keep identity, gameplay, completion and persistence in their existing layers rather than calling a concrete storage driver from a game.
 
+`/parent` groups child profiles and account actions alongside device settings.
+Theme, learning sounds and brain-break timing are available there even when
+signed out; the navbar links directly to the page. These preferences use the
+existing device stores and apply to every profile in that browser.
+
+The parent link uses 👥 for account management. The separate profile-switching
+chip keeps the active child's chosen emoji and colour, or shows ➕ when no child
+is selected; the other navbar icons retain their original emoji.
+
+Streak and level appear beneath each child's name on `/profiles`. They use that
+child's saved rewards and the shared streak/XP rules, including read-only legacy
+XP backfill from the progress reads already needed by the profile cards. The
+navbar keeps the profile switcher and new-trophies indicator; it shows no streak
+or level counters, including on phones.
+
 **Family Friday Quiz** is a finite, account-free Skills game at
 `/skills/family-friday`, with a public guide and dated edition links. Its
 homepage invitation appears on UK Fridays only; editions remain playable all

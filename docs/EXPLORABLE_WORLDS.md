@@ -18,7 +18,7 @@ and [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Open device/playtest checks are in
   owned geometry, material, texture, render target and listener.
 - No runtime downloads beyond bundled, credited assets (`/credits`). Pixel ratio
   capped at 1.5. Test phone memory before adding large textures.
-- The navbar mute governs read-aloud. Curriculum progress is never touched.
+- Learning sounds in `/parent` governs read-aloud. Curriculum progress is never touched.
 - No timers, fuel, damage or penalties; discoveries are session-only. Each
   world's saved state, if any, uses its own storage key. Facts match the
   animal or body shown.

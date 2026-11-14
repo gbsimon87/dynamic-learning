@@ -128,7 +128,6 @@ function ProfileBuilder({
               aria-pressed={yearGroup === year}
             >
               <span className="pb-year-name">Year {year}</span>
-              {!ready && <span className="pb-year-note">coming soon</span>}
             </button>
           );
         })}

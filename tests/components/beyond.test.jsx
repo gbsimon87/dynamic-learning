@@ -95,7 +95,7 @@ test('ripples card shows the right action for each stage and the honesty labels'
   expect(props.onHome).toHaveBeenCalledOnce();
 });
 
-test('read-aloud respects the navbar mute', () => {
+test('read-aloud respects the device sound setting', () => {
   render(<SpaceRipplesCard stage="waiting" onBringTogether={noop} onReplay={noop} onHome={noop} />);
   const listen = screen.getByRole('button', { name: /Hear about space ripples/ });
   isMuted.mockReturnValue(true);

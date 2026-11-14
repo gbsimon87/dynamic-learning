@@ -48,15 +48,7 @@ body.dark .logo-mark {
   color: var(--on-dark-accent);
 }
 
-.theme-btn {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: inherit;
-}
-
-/* === Hub links + toggle (I24) === */
+/* Hub and settings links */
 .navbar-links {
   display: flex;
   align-items: center;
@@ -107,12 +99,6 @@ body.dark .navbar-link:focus-visible {
 
 body.dark .navbar-link.active {
   background-color: rgba(132, 220, 207, 0.26);
-}
-
-.theme-btn {
-  min-width: 46px;
-  min-height: 46px;
-  border-radius: 12px;
 }
 
 /* Keep the bar to a single row: wrapping made it 90px tall on a phone, which
@@ -223,8 +209,7 @@ body.dark .navbar-auth-link {
     font-size: 0.85rem;
   }
 }
-/* Streak, level and news. The dot and the phone badge are absolutely
-   positioned, so they add no width to a bar with ~30px spare at 360px. */
+/* New trophies stay visible without adding width to the navigation. */
 .navbar-link { position: relative; }
 .navbar-news-dot {
   position: absolute;
@@ -238,41 +223,6 @@ body.dark .navbar-auth-link {
 }
 body.dark .navbar-news-dot { border-color: var(--dark-bg); background: var(--dark-accent); }
 
-.navbar-stats {
-  display: inline-flex;
-  gap: 0.35rem;
-  font-size: 0.9rem;
-  font-weight: 800;
-  white-space: nowrap;
-}
-.navbar-stats > span {
-  padding: 0.35rem 0.6rem;
-  border-radius: 999px;
-  background: var(--map-chip);
-  color: var(--map-text);
-}
-
-.navbar-avatar-chip { position: relative; }
-.navbar-streak-badge {
-  display: none;
-  position: absolute;
-  bottom: -6px;
-  right: -4px; /* -6px pushed nav.scrollWidth 1px past clientWidth at 360px */
-  padding: 0 0.3rem;
-  border-radius: 999px;
-  background: var(--light-accent);
-  color: var(--on-light-accent);
-  font-size: 0.7rem;
-  font-weight: 800;
-  line-height: 1.5;
-}
-body.dark .navbar-streak-badge { background: var(--dark-accent); color: var(--on-dark-accent); }
-
-@media (max-width: 480px) {
-  .navbar-stats { display: none; }
-  .navbar-streak-badge { display: inline-block; }
-}
-
 /* The narrowest phones (320px): the signed-out bar ran 8px past the screen.
    Tighten the gaps and the sign-in pill rather than dropping a control. */
 @media (max-width: 360px) {
@@ -281,9 +231,8 @@ body.dark .navbar-streak-badge { background: var(--dark-accent); color: var(--on
   .navbar-auth-link { padding: 0.4rem 0.5rem; }
 }
 
-/* With a signed-in profile and its streak badge, 320px cannot fit every
-   control on one row at full touch size. The measured navbar height already
-   lets full-viewport pages account for a second row. */
+/* Allow wrapping on the narrowest screens when text or zoom needs more room.
+   The measured navbar height lets full-viewport pages account for it. */
 @media (max-width: 360px) {
   .navbar-links { min-width: 0; flex-wrap: wrap; justify-content: flex-end; }
   .navbar.hidden { top: calc(-1 * var(--navbar-height, 80px)); }
