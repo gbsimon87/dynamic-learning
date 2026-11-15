@@ -11,6 +11,7 @@ export const SKILL_GROUPS = [
       { to: "/skills/multiplication-table", icon: "✖️", label: "Explore Times Tables" },
       { to: "/skills/times-tables", icon: "🏁", label: "Practise Times Tables" },
       { to: "/skills/place-value", icon: "🧱", label: "Build Numbers with Place Value" },
+      { to: "/skills/space-arithmetic", icon: "🚀", label: "Space Arithmetic" },
       { to: "/skills/reading-numbers", icon: "🔢", label: "Read Big Numbers" },
       { to: "/skills/number-bonds", icon: "🔗", label: "Make Number Bonds" },
       { to: "/skills/missing-number", icon: "❓", label: "Complete Number Patterns" },

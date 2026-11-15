@@ -108,7 +108,7 @@ reminders should be a grown-up's explicit choice.
 | # | Idea | Upcoming work | Status |
 |---|---|---|---|
 | 9 | **Richer grown-up progress reports** | Show time spent and practice needs using a separate per-attempt record; define any reset scope carefully. | 🟡 |
-| 10 | **Adaptive questions** | Adjust difficulty within the child's year. Depends on #9 and tested difficulty controls. | ⚪ |
+| 10 | **Adaptive questions and support** | Pilot transparent, rule-based adjustments within one reviewed topic; start within the current session without new saved records. See the adaptive learning brainstorm below; persistent recommendations depend on #9 and #11. | ⚪ |
 | 12 | **Phonics and rhyming games** | Practise sounds, rhymes and syllables using suitable letter-sound recordings. | ⚪ |
 | 13 | **Story Maker and Story Sequencer** | Build silly stories or order picture cards, reusing suitable Year 3 English material. | ⚪ |
 | 14 | **Offline, installable app** | Support play without a connection after defining a safe progress queue and merge policy. | ⚪ |
@@ -121,8 +121,164 @@ reminders should be a grown-up's explicit choice.
 | 29 | **Pass-and-play for two** | Add cooperative or turn-taking Skills games on one device, independent of curriculum progress. | ⚪ |
 | 31 | **Science notebook and geography passport** | Collect topic cards and exploration stamps with revision facts. Define earning rules. | ⚪ |
 | 32 | **Seasonal events** | Offer themed activity packs with permanent stickers; plan at least a term ahead. | ⚪ |
-| 33 | **Story adventure** | Turn each year's topics into a Bix storyline and map. Needs art, writing and completed read-aloud work (#8). | ⚪ |
+| 33 | **Learning through story adventures** | Pilot one short, authored Bix adventure where solving a learning problem changes the scene. Offer support, stretch and a direct practice alternative; see the brainstorm below. Needs reviewed writing, art and device read-aloud checks (#8). | ⚪ |
 | 69 | **Review curriculum introductions and quizzes** | Live for all 39 pathways (rollback switches in OPERATIONS.md). Awaits owner/teacher review (use `npm run journey:review`), device read-aloud checks and learner review; gates in [OPERATIONS.md](OPERATIONS.md#outstanding-review-and-known-limits). | 🟡 |
+
+### Space Arithmetic extensions (#90)
+
+Space Arithmetic is an area inside Solar System with Arithmetic Practice's
+operations and options, reached by flying out of the system towards its
+signpost or using More. `/skills/space-arithmetic` and the Maths
+card open the same in-scene feature. Current behaviour
+and review boundaries: [Skills authoring](SKILLS_AUTHORING.md#space-arithmetic)
+and [Explorable worlds](EXPLORABLE_WORLDS.md). Teacher, family and physical-device
+review must inform further work.
+
+Next: review of all four operations and their help
+([next steps](SPACE_ARITHMETIC.md#next-steps)). Later ideas: optional fuel missions with a free safe
+refuel/retry; delivery adventures and cooperative play. Define fairness before
+adding fuel: thinking, help and pause stay free, and empty fuel must never block
+practice. Adaptive levels, persistence, rewards and stories need separate scope.
+Keep relaxed untimed flight, still view and answer-button autopilot available.
+
+### Adaptive learning, personal paths and storytelling
+
+**Brainstorm, not an implementation commitment.** Aim for Bix to respond to
+what a child needs today without assigning them a fixed ability label. Start
+with authored content and small, explainable rules; AI is not needed for these
+ideas. Personalisation should improve understanding, confidence and choice,
+rather than maximise time in the app. Validate demand through the family pilot
+before building a system across every subject.
+
+#### Different ways to adapt
+
+| # | Idea | What a child might experience | Status |
+|---|---|---|---|
+| 85 | **A suggested next step** | Choose from “Practise something familiar”, “Try something new” and “Explore a story”. Later, offer up to three relevant activities with a plain reason such as “Another way to practise sharing equally”. Keep the full curriculum available. | ⚪ |
+| 86 | **Support that responds** | Ask for a picture, counters, a read-aloud or a worked example at any point. After repeated difficulty, Bix offers one of these explicitly, then a fresh similar question. Removing support is also a choice. | ⚪ |
+| 87 | **Gentle revisiting** | Bring back a small amount of previously practised material in a later visit, mixed with a current goal. A missed revisit leads to a reminder and another opportunity, with no overdue work or lost rewards. | ⚪ |
+| 88 | **Preferences children can change** | Choose a story setting, familiar character or presentation option from a small reviewed set. A child can change their mind each session; themes never change the learning objective or hide other subjects. | ⚪ |
+| 89 | **A grown-up learning companion** | Explain a suggestion using specific, limited evidence: “Tried grouping with counters; could try another sharing problem together”. Let the grown-up choose a focus or turn suggestions off, without ranking siblings or claiming to diagnose needs. | ⚪ |
+
+These complement adaptive questions (#10) and story adventures (#33): a
+**personalised path** suggests what to try; **adaptive difficulty** adjusts the
+challenge within an objective; **adaptive support** changes the help available;
+**storytelling** gives the learning a purpose. They can be tried separately.
+
+#### Adaptive difficulty: change one thing at a time (#10)
+
+Start within the child's selected year and one curriculum objective, using
+reviewed question variants. For example, sharing equally could move from
+arranging six objects into two groups, to sharing twelve, to explaining which
+of two arrangements is fair. Stretch can mean reasoning or using a different
+representation, rather than simply larger numbers or a higher school year.
+
+A candidate rule to playtest: begin with the child's chosen level; after two
+unsuccessful attempts on different questions, offer a worked example or a
+simpler variant. After three independently correct answers across varied
+examples, offer a trickier version. These numbers are starting hypotheses,
+not validated mastery thresholds. Change one dimension at a time and avoid
+bouncing between levels after every answer. A correct retry of the same
+question is not independent evidence of understanding.
+
+Keep “Show me”, “Let me try” and “Make it trickier” visible. Accept “Not sure”
+without penalty. Hints and retries are legitimate learning, not failures;
+notice whether help was used when deciding what to suggest. Do not infer
+ability, attention or emotion from response speed, inactivity or a single
+mistake. A child may be reading, using assistive technology or talking with a
+grown-up. Reading and interaction demands should not accidentally become a
+Maths difficulty setting. Offer help and a clear stopping point without timers
+or pressure to continue.
+
+#### Personalised paths: invitations, not gates (#85–89)
+
+For a new child, use their selected year, chosen goal and optional short “try a
+few” activity; avoid a compulsory placement test. For a returning child,
+suggest a mix of familiar practice, a small next step and exploration. Keep
+prerequisite links authored and reviewable, with optional refreshers rather
+than locked topics. Never silently move a child into a different year.
+
+Treat the evidence as uncertain and specific to an objective. Completion,
+rewards and time spent do not establish mastery. Existing quiz evidence may
+be useful only where its questions actually assess the skill being suggested;
+check suitability and permitted use before reuse. Avoid a single permanent
+ability score, “learning age”, diagnostic label or fixed visual/auditory learner
+type. Preferences express current choices, not a classification of the child.
+
+#### Learning through storytelling (#33)
+
+Make the learning necessary to the action, rather than adding a paragraph
+before a quiz. Start with one complete 5–8 minute adventure, with a shorter
+practice route available. Possible pilots:
+
+- **The broken bridge:** compare illustrated lengths to choose a replacement
+  plank; test it, then see Bix cross. Support uses aligned objects or a ruler;
+  stretch asks the child to explain why another plank will not fit.
+- **The mixed-up invitation:** order picture events and choose connecting words
+  so Bix's friends can follow the picnic instructions. Replay changes the
+  invitation using reviewed alternatives, linking to Story Sequencer (#13).
+- **The thirsty garden:** inspect simple evidence about plants and choose a
+  sensible place and watering plan. Show a reviewed explanation of the outcome;
+  keep imaginary characters distinct from scientific claims.
+
+Use a small authored branching structure: an unexpected answer opens a helpful
+scene, demonstration or retry, and every branch reaches a satisfying ending.
+Offer the same story outcome with different support and reasoning opportunities;
+children should not lose the ending because they needed help. Keep text brief,
+illustrated and usable without sound, with optional read-aloud and reduced
+motion. Avoid distressing stakes or Bix becoming sad when the child leaves.
+Choose themes from reviewed options, with no need for personal disclosures,
+photos, open chat or generated stories. An optional story map must keep built
+curriculum activities open; story episodes must not automatically mark unrelated
+curriculum challenges complete.
+
+#### Safety, privacy and control
+
+Prefer a small local rules engine operating on the current activity: no model,
+remote inference or extra network requests. Session-only adaptation can be
+piloted without adding a persistent learner profile. Any later saved preferences
+or learning evidence need a defined purpose, minimum fields, retention/deletion
+rules, account isolation and safeguarding review (#11), aligned with #9.
+Browser-local storage is still child data on a shared device, not an account
+security boundary. Keep learning evidence separate from completion and rewards;
+clearing adaptation history must preserve earned progress.
+
+Explain to grown-ups what changes, why and what is saved. Let them disable
+personalised suggestions and clear only the associated evidence, with a clear
+scope. Children should retain simple control over help, challenge and activity
+choice. No sibling comparisons, leaderboards of ability, advertising profiles
+or experiments optimising children's engagement. Keep analytics (#36) separate
+from the evidence needed to help the individual child.
+
+**AI is outside the initial proposal.** If a concrete unmet need later justifies
+considering a model, assess a small on-device option separately. Local execution
+alone does not make outputs safe or accurate. Require a tightly bounded task,
+reviewed outputs/content constraints, no child-facing open conversation, no
+training on children's responses, no external transmission and a deterministic
+fallback. Agree safeguarding and educational review before a child-facing pilot;
+do not make basic learning or personalisation depend on a model.
+
+#### A small first experiment
+
+1. Choose one existing topic with a teacher-reviewed objective, a worked example
+   and supported/core/stretch variants. Define the rule table before coding.
+2. Pilot child-chosen support and challenge first, then offer session-only
+   adjustments (#10/#86). Add one short story version of the same objective
+   (#33) to explore whether the narrative helps explain the learning.
+3. Observe with families: can children explain their answer, use the help,
+   transfer the idea to a fresh example and leave comfortably? Ask which version
+   they prefer and why. Treat a small pilot as qualitative evidence, not proof
+   of learning gains; longer sessions are not the success measure.
+4. Only if useful, scope saved suggestions and revisiting (#85/#87/#89) after
+   privacy review. Test rule boundaries, mixed outcomes, missing evidence,
+   manual overrides and profile isolation before wider rollout. Keep a reviewed
+   fixed sequence available when adaptation is off or unavailable.
+
+Technical checks should prove predictable rules, unchanged completion/access
+and isolation. Teacher content review should check progression, misconceptions
+and story accuracy. Child/family review should assess clarity, confidence and
+choice; device/accessibility review should check both themes, touch, keyboard,
+read-aloud and reduced motion. These are separate checks, not substitutes.
 
 **Skills game shortlist (#20):**
 

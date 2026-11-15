@@ -1,0 +1,54 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createInitialSpaceRound, reduceSpaceRound as reduce } from './spaceArithmeticRound.js';
+const q = { key: 'q', prompt: '3 + 4 = ?', answer: 7, options: [6, 8, 7, 5] };
+const start = () => reduce(createInitialSpaceRound(), { type: 'START', question: q, settings: createInitialSpaceRound().settings });
+const act = (s, type, extra = {}) => reduce(s, { type, roundId: s.roundId, ...extra });
+test('wrong retry correct scores once and ignores duplicate/stale events', () => {
+  let s = start(); s = act(s, 'COMMIT', { lane: 0 });
+  assert.equal(act(s, 'COMMIT', { lane: 2 }), s);
+  s = act(s, 'COMPLETE'); assert.equal(s.solved, 0);
+  const old = s.roundId; s = act(s, 'RETRY'); assert.equal(s.question, q);
+  assert.equal(reduce(s, { type: 'TICK', roundId: old, dt: 1 }), s);
+  s = act(s, 'COMMIT', { lane: 2 }); s = act(s, 'COMPLETE');
+  assert.equal(s.solved, 1); assert.equal(s.outcome.firstTry, false);
+  assert.equal(act(s, 'COMPLETE'), s);
+  s = act(s, 'NEXT', { question: q }); assert.equal(s.hadMiss, false);
+});
+test('help, pause, invalid time and reset preserve authority', () => {
+  let s = start(); s = act(s, 'OPEN_HELP'); assert.equal(act(s, 'COMMIT', { lane: 2 }), s);
+  s = act(s, 'CLOSE_HELP'); s = act(s, 'COMMIT', { lane: 2 });
+  for (const dt of [-1, NaN, Infinity, 0]) assert.equal(act(s, 'TICK', { dt }), s);
+  s = act(s, 'TICK', { dt: 10000 }); assert.equal(s.elapsedSeconds, .05);
+  s = act(s, 'PAUSE'); assert.equal(act(s, 'COMPLETE'), s);
+  s = act(s, 'RESUME'); s = act(s, 'COMPLETE'); assert.equal(s.outcome.firstTry, false); assert.equal(s.solved, 1);
+  s = act(s, 'CHANGE_SETTINGS'); const id = s.roundId; s = reduce(s, { type: 'START', question: q, settings: s.settings });
+  assert.ok(s.roundId > id); assert.equal(s.solved, 0); assert.equal(s.assisted, false); assert.equal(s.paused, false);
+});
+test('clock completes through ticks; lane clamp, stale reset and feedback pause stay safe', () => {
+  let s = start(); s = act(s, 'SELECT_LANE', { lane: -10 }); assert.equal(s.selectedLane, 0);
+  s = act(s, 'SELECT_LANE', { lane: 20 }); assert.equal(s.selectedLane, 3);
+  for (const lane of [NaN, 1.5, -1, 4]) assert.equal(act(s, 'COMMIT', { lane }), s);
+  s = act(s, 'COMMIT', { lane: 2 });
+  const id = s.roundId;
+  for (let i = 0; i < 24; i++) s = act(s, 'TICK', { dt: .05 });
+  assert.equal(s.phase, 'feedback'); assert.equal(s.solved, 1); assert.equal(s.outcome.firstTry, true);
+  const outcome = s.outcome; s = act(s, 'PAUSE'); assert.equal(act(s, 'NEXT', { question: q }), s); assert.equal(s.outcome, outcome);
+  s = act(s, 'CHANGE_SETTINGS'); assert.equal(s.phase, 'setup'); assert.equal(s.paused, false);
+  for (const type of ['TICK', 'COMPLETE', 'COMMIT', 'RETRY', 'NEXT']) assert.equal(reduce(s, { type, roundId: id, dt: .05, lane: 2, question: q }), s);
+});
+test('PASS scores and flies straight into the next round, keeping the lane', () => {
+  const next = { key: 'n', answer: 4, options: [3, 4, 5, 6] };
+  let s = start(); s = act(s, 'SELECT_LANE', { lane: 0 });
+  const first = s.roundId; s = act(s, 'PASS', { lane: 0, question: next });
+  assert.equal(s.phase, 'choosing'); assert.equal(s.question, q); assert.ok(s.roundId > first);
+  assert.equal(s.selectedLane, 0); assert.equal(s.solved, 0); assert.equal(s.hadMiss, true); assert.equal(s.lastOutcome.correct, false);
+  assert.equal(reduce(s, { type: 'PASS', roundId: first, lane: 2, question: next }), s, 'stale pass ignored');
+  s = act(s, 'PASS', { lane: 2, question: next });
+  assert.equal(s.question, next); assert.equal(s.solved, 1); assert.equal(s.hadMiss, false); assert.equal(s.outcome, null);
+  assert.equal(s.lastOutcome.firstTry, false); assert.equal(s.lastOutcome.solvedText, '3 + 4 = 7');
+  s = reduce(s, { type: 'CLEAR_LAST', outcomeRoundId: s.lastOutcome.roundId - 1 }); assert.ok(s.lastOutcome);
+  s = reduce(s, { type: 'CLEAR_LAST', outcomeRoundId: s.lastOutcome.roundId }); assert.equal(s.lastOutcome, null);
+  s = act(s, 'OPEN_HELP'); assert.equal(act(s, 'PASS', { lane: 1, question: next }), s, 'help holds the flight');
+  s = act(s, 'CLOSE_HELP'); s = act(s, 'PAUSE'); assert.equal(act(s, 'PASS', { lane: 1, question: next }), s, 'pause holds the flight');
+});

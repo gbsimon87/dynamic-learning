@@ -1,39 +1,35 @@
 import { useState, useEffect, useRef } from 'react';
 import './MathPractice.css';
-import { generateQuestion, OPERATIONS } from './generateQuestion';
+import { generateQuestion, generateReverseQuestion } from './generateQuestion';
+import RangeSlider from '../../../components/skills/RangeSlider';
+import {
+  DEFAULT_PRACTICE_SETTINGS, FIND_CHOICES, OPERAND_CHOICES, OPERATIONS, OPERATION_LABELS, OPERATION_SIGNS, RANGE_PRESETS,
+  VALUE_CEILING, VALUE_FLOOR, withMax, withMin, withOperationToggled,
+} from './practiceSettings';
 import { mathToSpeech } from '../../../data/mathSpeech';
 import SpeakButton from '../../../components/challenge/SpeakButton';
 import AnswerFeedbackLine from '../../../components/skills/AnswerFeedbackLine';
 import { useAnswerFeedback } from '../../../components/skills/useAnswerFeedback';
 
-const VALUE_FLOOR = 1;
-const VALUE_CEILING = 100;
-
-const OPERATION_SIGNS = {
-  addition: '+',
-  subtraction: '−',
-  multiplication: '×',
-  division: '÷',
-};
-
-const OPERAND_CHOICES = [2, 3, 4];
-const RANGE_PRESETS = [10, 20, 50, 100];
-
-const OPERATION_LABELS = {
-  addition: 'Addition',
-  subtraction: 'Subtraction',
-  multiplication: 'Multiplication',
-  division: 'Division',
-};
+// One shape for both ways round: "3 + 4 = ?" (pick the answer) or
+// "? = 7" (pick the calculation that makes it).
+function makeQuestion(settings) {
+  if (settings.find === 'sum') {
+    const q = generateReverseQuestion(settings);
+    return {
+      text: `? = ${q.target}`, spoken: `Which sum makes ${q.target}?`, correctAnswer: q.correctAnswer, options: q.options,
+      reveal: `The right one was ${q.correctAnswer} = ${q.target}.`, sums: true,
+    };
+  }
+  const q = generateQuestion(settings);
+  return {
+    text: `${q.questionText} = ?`, spoken: mathToSpeech(`${q.questionText} = ?`), correctAnswer: q.correctAnswer, options: q.options,
+    reveal: `The answer was ${q.correctAnswer}.`, sums: false,
+  };
+}
 
 function MathPractice() {
-  const [settings, setSettings] = useState({
-    types: ['addition'],
-    mixOperations: false,
-    operands: 2,
-    min: 1,
-    max: 10,
-  });
+  const [settings, setSettings] = useState(DEFAULT_PRACTICE_SETTINGS);
 
   const [started, setStarted] = useState(false);
   const [question, setQuestion] = useState(null);
@@ -47,7 +43,7 @@ function MathPractice() {
   useEffect(() => {
     if (started && selected !== null) {
       const timer = setTimeout(() => {
-        setQuestion(generateQuestion(settings));
+        setQuestion(makeQuestion(settings));
         setSelected(null);
         selectedRef.current = false;
         clearFeedback();
@@ -58,38 +54,9 @@ function MathPractice() {
   }, [selected, started, settings, clearFeedback]);
 
   // Keep at least one operation selected.
-  function toggleOperation(operation) {
-    setSettings((prev) => {
-      const types = prev.types.includes(operation)
-        ? prev.types.filter((t) => t !== operation)
-        : [...prev.types, operation];
-      if (types.length === 0) return prev;
-      return {
-        ...prev,
-        types,
-        // Mixing needs two or more operations.
-        mixOperations: types.length < 2 ? false : prev.mixOperations,
-      };
-    });
-  }
-
-  // Both sliders share one track; clamp in state, never via a reactive DOM min.
-  function handleMinChange(nextMin) {
-    setSettings((prev) => ({
-      ...prev,
-      min: nextMin,
-      // Nudge Max only when Min would overtake it.
-      max: Math.max(prev.max, nextMin),
-    }));
-  }
-
-  function handleMaxChange(nextMax) {
-    setSettings((prev) => ({
-      ...prev,
-      max: nextMax,
-      min: Math.min(prev.min, nextMax),
-    }));
-  }
+  const toggleOperation = (operation) => setSettings((prev) => withOperationToggled(prev, operation));
+  const handleMinChange = (nextMin) => setSettings((prev) => withMin(prev, nextMin));
+  const handleMaxChange = (nextMax) => setSettings((prev) => withMax(prev, nextMax));
 
   function startPractice() {
     fb.reset();
@@ -97,7 +64,7 @@ function MathPractice() {
     setStarted(true);
     setScore(0);
     setTotal(0);
-    setQuestion(generateQuestion(settings));
+    setQuestion(makeQuestion(settings));
   }
 
   function handleSelect(option) {
@@ -129,6 +96,24 @@ function MathPractice() {
         </header>
 
         <div className="challenge-container ap-panel">
+          <section className="ap-group" aria-labelledby="ap-find-label">
+            <h2 id="ap-find-label" className="ap-label">What do you want to find?</h2>
+            <div className="free-play-levels" role="group" aria-labelledby="ap-find-label">
+              {FIND_CHOICES.map(({ id, label, example }) => (
+                <button
+                  key={id}
+                  type="button"
+                  className={`free-play-level ap-find${settings.find === id ? ' is-active' : ''}`}
+                  aria-pressed={settings.find === id}
+                  onClick={() => setSettings({ ...settings, find: id })}
+                >
+                  {label}
+                  <span className="ap-find-example" aria-hidden="true">{example}</span>
+                </button>
+              ))}
+            </div>
+          </section>
+
           <section className="ap-group" aria-labelledby="ap-ops-label">
             <h2 id="ap-ops-label" className="ap-label">What do you want to practise?</h2>
             <div className="ap-chips">
@@ -231,17 +216,17 @@ function MathPractice() {
           Score: {score} / {total}
         </p>
 
-        <h1 className="ap-solve">Solve:</h1>
+        <h1 className="ap-solve">{question?.sums ? 'Which sum makes it?' : 'Solve:'}</h1>
 
         <div className="ap-question" ref={fb.answerRef}>
-          <span className="ap-question-text">{question?.questionText} = ?</span>
-          <SpeakButton text={mathToSpeech(`${question?.questionText} = ?`)} label="Hear the question" compact />
+          <span className="ap-question-text">{question?.text}</span>
+          <SpeakButton text={question?.spoken} label="Hear the question" compact />
         </div>
 
-        {selected !== null && !isCorrect && <p className="ap-reveal">The answer was {question.correctAnswer}.</p>}
+        {selected !== null && !isCorrect && <p className="ap-reveal">{question.reveal}</p>}
         <AnswerFeedbackLine feedback={fb.feedback} ref={fb.feedbackRef} />
 
-        <div className="ap-options">
+        <div className={`ap-options${question?.sums ? ' is-sums' : ''}`}>
           {question?.options.map((option) => {
             const isThisCorrect = option === question.correctAnswer;
             const isThisSelected = option === selected;
@@ -270,51 +255,6 @@ function MathPractice() {
         <button type="button" className="ap-restart" onClick={handleRestart}>
           Change settings
         </button>
-      </div>
-    </div>
-  );
-}
-
-/**
- * Two thumbs on one track: two native range inputs laid over each other, so
- * keyboard, screen readers and touch all keep working. Only the thumbs take
- * pointer events; the track underneath is drawn here.
- */
-function RangeSlider({ min, max, floor, ceiling, onMinChange, onMaxChange }) {
-  const span = ceiling - floor;
-  const lo = (min - floor) / span;
-  const hi = (max - floor) / span;
-  // Near the top end the Min thumb must sit above Max, or it can't be dragged back.
-  const minOnTop = min > floor + span / 2;
-
-  return (
-    <div className="ap-slider" style={{ '--lo': lo, '--hi': hi }}>
-      <div className="ap-slider-track" aria-hidden="true">
-        <div className="ap-slider-fill" />
-      </div>
-      <input
-        type="range"
-        className="ap-slider-input"
-        style={{ zIndex: minOnTop ? 3 : 2 }}
-        aria-label="Smallest number"
-        min={floor}
-        max={ceiling}
-        value={min}
-        onChange={(e) => onMinChange(parseInt(e.target.value, 10))}
-      />
-      <input
-        type="range"
-        className="ap-slider-input"
-        style={{ zIndex: minOnTop ? 2 : 3 }}
-        aria-label="Biggest number"
-        min={floor}
-        max={ceiling}
-        value={max}
-        onChange={(e) => onMaxChange(parseInt(e.target.value, 10))}
-      />
-      <div className="ap-slider-ends" aria-hidden="true">
-        <span>{floor}</span>
-        <span>{ceiling}</span>
       </div>
     </div>
   );

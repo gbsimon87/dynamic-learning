@@ -1,3 +1,6 @@
+import { ARITHMETIC_AREA, arithmeticDirection, createSolarArithmeticArea } from './solarArithmeticArea.js';
+import { createArithmeticRunner, RUNNER } from './solarArithmeticRunner.js';
+import { createSolarLabel as createLabel } from "./solarLabel.js";
 import React, { useRef, useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -117,10 +120,17 @@ const MAP_CATALOGUE = mapCatalogue(SYSTEM_REGISTRY, availableDestinations());
  * a trip's hand-over; `onArrived` tells it the child has landed (it speaks
  * the welcome).
  */
-export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null, onPrepare = () => {}, onTravel = () => {}, onArrived = () => {} }) {
+export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null, onPrepare = () => {}, onTravel = () => {}, onArrived = () => {}, onOpenArithmetic = () => {}, onArithmeticAnswer = () => {}, initialActivity = false, onUnavailable = () => {} }) {
+    const onUnavailableRef = useRef(onUnavailable);
+    onUnavailableRef.current = onUnavailable;
+    const initialActivityRef = useRef(initialActivity);
     const arrivalRef = useRef(arrival);
     const onPrepareRef = useRef(onPrepare);
     const onTravelRef = useRef(onTravel);
+    const onOpenArithmeticRef = useRef(onOpenArithmetic);
+    onOpenArithmeticRef.current = onOpenArithmetic;
+    const onArithmeticAnswerRef = useRef(onArithmeticAnswer);
+    onArithmeticAnswerRef.current = onArithmeticAnswer;
     const onArrivedRef = useRef(onArrived);
     onPrepareRef.current = onPrepare;
     onTravelRef.current = onTravel;
@@ -138,7 +148,6 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
     const moreButtonRef = useRef(null);
     // Space explorer chapters and stars last while the child stays in this system.
     const flightSessionRef = useRef({});
-    const flyButtonRef = useRef(null);
     const resetButtonRef = useRef(null);
     const focusRequestRef = useRef(null);
     const [meteorPhase, setMeteorPhase] = useState("ready");
@@ -172,6 +181,7 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
     const [lineUpName, setLineUpName] = useState(null);
     // The Pale Blue Dot at the end of the tour (#47): null, "flying" or "looking".
     const [paleBlueDotPhase, setPaleBlueDotPhase] = useState(null);
+    const [arithmeticOpen, setArithmeticOpen] = useState(false);
     const [freeFlightOpen, setFreeFlightOpen] = useState(false);
     const [freeFlightView, setFreeFlightView] = useState(null);
     const [orbitOffer, setOrbitOffer] = useState(null);
@@ -222,6 +232,7 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
         let beyond = null; // Warp to Beyond (#113); built with the other modules below
         let disposed = false;
         let worldTime = createWorldTime();
+        let arithmeticMode = false, arithmeticRun = null, arithmeticJourney = false, arithmeticTurbo = false, arithmeticHot = false;
         const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
         // ================================================================
@@ -324,53 +335,6 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
             mesh.scale.setScalar(scale);
             mesh.position.x = x;
             return mesh;
-        }
-
-        // "sky" is the constellations' quieter, see-through badge.
-        function createLabel(text, fontSize = 64, color = "#ffffff", style = "planet") {
-            const canvas = document.createElement("canvas");
-            const context = canvas.getContext("2d");
-            const paddingX = 30;
-            const paddingY = 18;
-
-            context.font = `600 ${fontSize}px system-ui, sans-serif`;
-            const textWidth = context.measureText(text).width;
-
-            canvas.width = Math.ceil(textWidth + paddingX * 2);
-            canvas.height = fontSize + paddingY * 2;
-
-            // Reapply font after resizing the canvas
-            context.font = `600 ${fontSize}px system-ui, sans-serif`;
-            context.fillStyle = style === "sky" ? "rgba(5, 10, 24, 0.38)" : "rgba(5, 10, 24, 0.72)";
-            context.beginPath();
-            context.roundRect(1, 1, canvas.width - 2, canvas.height - 2, canvas.height / 2);
-            context.fill();
-            context.strokeStyle = style === "sky" ? "rgba(144, 201, 255, 0.4)" : "rgba(255, 255, 255, 0.22)";
-            context.lineWidth = 2;
-            context.stroke();
-            context.fillStyle = color;
-            context.textAlign = "center";
-            context.textBaseline = "middle";
-            context.fillText(text, canvas.width / 2, canvas.height / 2);
-
-            const texture = new THREE.CanvasTexture(canvas);
-            texture.minFilter = THREE.LinearFilter;
-
-            const material = new THREE.SpriteMaterial({
-                map: texture,
-                transparent: true,
-                depthTest: false,
-                depthWrite: false,
-            });
-            const sprite = new THREE.Sprite(material);
-            sprite.renderOrder = 20;
-            sprite.userData.isLabel = true;
-
-            const aspect = canvas.width / canvas.height;
-            sprite.userData.aspect = aspect;
-            sprite.scale.set(1.75 * aspect, 1.75, 1);
-
-            return sprite;
         }
 
         function createSaturnRings(radius) {
@@ -756,7 +720,23 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
         camera.position.fromArray(system.scene.camera.position);
         scene.add(camera);
 
-        const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current, antialias: true });
+        let renderer;
+        try { renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current, antialias: true }); }
+        catch {
+            modules.dispose();
+            const resources = new Set();
+            scene.traverse(object => {
+                if (object.geometry) resources.add(object.geometry);
+                for (const material of Array.isArray(object.material) ? object.material : object.material ? [object.material] : []) {
+                    resources.add(material);
+                    for (const value of Object.values(material)) if (value?.isTexture) resources.add(value);
+                }
+            });
+            resources.forEach(resource => resource.dispose()); textures.forEach(texture => texture.dispose());
+            onUnavailableRef.current(); return undefined;
+        }
+        const lostContext = event => { event.preventDefault(); onUnavailableRef.current(); };
+        renderer.domElement.addEventListener('webglcontextlost', lostContext);
         const maxAniso = renderer.capabilities.getMaxAnisotropy?.() ?? 0;
         if (maxAniso > 0 && starTexture) starTexture.anisotropy = maxAniso;
         renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
@@ -1812,7 +1792,14 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
         }));
 
         // Signposts past the edge to every other system, seen in flight (#108/#109).
-        const signList = signpostsFor(system.id, SYSTEM_REGISTRY, system.flight.edgeRadius);
+        const realSigns = signpostsFor(system.id, SYSTEM_REGISTRY, system.flight.edgeRadius);
+        // At home, one more sign: the pretend Space Arithmetic area, reached the same way.
+        const arithmeticTrip = system.home ? (() => {
+            const direction = arithmeticDirection(realSigns), r = system.flight.edgeRadius + SIGN_OFFSET;
+            return { id: 'activity:space-arithmetic', activity: 'arithmetic', phrase: 'Space Arithmetic', spokenName: 'Space Arithmetic', direction, distanceLy: 0, arrivalPosition: ARITHMETIC_AREA.spawn,
+                sign: { id: 'sign:space-arithmetic', label: 'Space Arithmetic — pretend practice space this way', direction, position: { x: direction.x * r, y: direction.y * r, z: direction.z * r } } };
+        })() : null;
+        const signList = arithmeticTrip ? [...realSigns, arithmeticTrip.sign] : realSigns;
         const signposts = modules.add("signposts", createSystemSignposts({
             scene, camera, edgeRadius: system.flight.edgeRadius, quality: currentQuality(),
             signposts: signList,
@@ -1826,6 +1813,39 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
         // Free flight drives the rocks each frame; the module host only frees them.
         const beltRocks = extras.asteroidBelt ? createBeltRockField({ scene, getRegion: beltRegion, quality: currentQuality() }) : null;
         if (beltRocks) modules.add("beltRocks", { dispose: () => beltRocks.dispose() });
+        const arithmeticAllowed = () => !arithmeticMode && !arithmeticJourney && system.home && !paused && !tourActive && !liftOff.isCounting() && !experiment?.isActive()
+            && !lineUp.isActive() && !paleBlueDot.isActive() && !constellationSky.isActive()
+            && !beyond.isActive() && !galaxyMap.isActive() && !freeFlight.isTravelling();
+        const arithmeticArea = modules.add('arithmeticArea', createSolarArithmeticArea({ scene, isVisible: () => arithmeticMode }));
+        const runner = createArithmeticRunner();
+        const leaveArithmetic = () => {
+            arithmeticMode = arithmeticJourney = arithmeticTurbo = arithmeticHot = false; arithmeticRun = null;
+            setArithmeticOpen(false); tripModeRef.current = null; setTripMode(null);
+            freeFlight.home(); sceneApiRef.current.stopFreeFlight(); setFreeFlightOpen(false); stopNarration();
+        };
+        const areaApi = {
+            prepareRound(question, roundId) {
+                arithmeticRun = { question, roundId, blocked: false, phase: 'choosing' };
+                arithmeticArea.setQuestion(question); runner.reset({ grid: Boolean(question.reverse) }); arithmeticArea.place(runner.distance, runner.trailDistance);
+            },
+            setLane(lane) { runner.setLane(lane); },
+            // Shift or the Turbo button: the rings close in faster, like Turbo in free flight.
+            setTurbo(on) { arithmeticTurbo = Boolean(on); },
+            // A hot streak: the flame burns big (looks only; the speed never changes).
+            setHot(on) { arithmeticHot = Boolean(on); },
+            setState({ blocked, phase }) {
+                if (arithmeticRun) { arithmeticRun.blocked = blocked; arithmeticRun.phase = phase; }
+            },
+            leave: leaveArithmetic,
+        };
+        const openArithmetic = () => {
+            if (!arithmeticAllowed()) return false;
+            stopNarration(); arithmeticJourney = true; onOpenArithmeticRef.current({ stage: 'departing' });
+            sceneApiRef.current.startFreeFlight(); setFreeFlightOpen(false);
+            tripModeRef.current = 'autopilot'; setTripMode('autopilot');
+            return freeFlight.startAutopilotTrip(arithmeticTrip);
+        };
+        sceneApiRef.current.openArithmetic = openArithmetic;
         const freeFlight = modules.add("freeFlight", createSolarFreeFlight({
             scene, camera, controls, quality: currentQuality(), reducedMotion: () => reducedQuery.matches,
             getCameraView: () => cameraViewRef.current,
@@ -1837,13 +1857,29 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
                 ...(extras.iss ? [{ id: "ISS", name: "International Space Station", parentName: extras.iss.body, radius: .12, object3d: iss.object3d, kind: "satellite" }] : []),
                 ...(extras.asteroidBelt ? [{ id: "asteroid-belt", name: "Asteroid belt", radius: 0, kind: "belt", getRegion: beltRegion }] : []),
             ],
+            // Flying out towards the Space Arithmetic sign travels there (home only).
+            activityTrips: arithmeticTrip ? [arithmeticTrip] : [],
+            // In the area the runner below flies the rocket; manual steering is off.
+            isMovementBlocked: () => arithmeticMode,
+            allowManualInput: () => !arithmeticMode,
+            allowSystemTravel: () => !arithmeticMode,
             onChange: setFreeFlightView,
             tripTo: tripDestination(system.id),
             systemPhrase: system.phrase, systemSpokenName: system.spokenName ?? system.phrase,
             onTripStart: (to) => onPrepareRef.current(to.id),
             rocks: beltRocks,
             onHandoff: (request) => onTravelRef.current(request),
-            onTripDone: ({ mode, turnedBack = false }) => {
+            onTripDone: ({ mode, turnedBack = false, activity }) => {
+                if (activity === 'arithmetic' && !turnedBack) {
+                    arithmeticMode = true; arithmeticJourney = false; arithmeticRun = null;
+                    stopNarration(); onOpenArithmeticRef.current({ stage: 'departing' });
+                    sceneApiRef.current.startFreeFlight(); setFreeFlightOpen(false);
+                    freeFlight.placeInActivity(ARITHMETIC_AREA.spawn, ARITHMETIC_AREA.heading);
+                    tripModeRef.current = null; setTripMode(null); setArithmeticOpen(true);
+                    onOpenArithmeticRef.current({ api: areaApi }); return;
+                }
+                if (arithmeticJourney) onOpenArithmeticRef.current({ stage: 'cancelled' });
+                arithmeticJourney = false;
                 // An autopilot trip outside the flight HUD ends at the overview.
                 if (mode === "autopilot" && tripModeRef.current) {
                     tripModeRef.current = null; setTripMode(null);
@@ -1852,6 +1888,30 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
                 if (!turnedBack) onArrivedRef.current();
             },
         }));
+
+        // The Arithmetic Area's flight: forward on its own, the child picks the lane.
+        // The rings close in and, when they reach the rocket, its lane answers once.
+        modules.add('arithmeticRunner', { update(dt) {
+            if (!arithmeticMode) return;
+            const turbo = arithmeticTurbo && arithmeticRun?.phase === 'choosing';
+            const lane = arithmeticRun ? runner.step(dt, turbo ? RUNNER.turbo : 1) : null;
+            if (arithmeticRun) arithmeticArea.place(runner.distance, runner.trailDistance);
+            const grid = arithmeticRun?.question.reverse;
+            // Read the whole grid while it is far away, then follow the chosen
+            // opening as it reaches the rocket. The camera still rides the ship.
+            const centre = grid ? Math.min(1, Math.max(0, runner.distance / 35)) : 0;
+            freeFlight.holdActivityLane(runner.x, dt, Boolean(arithmeticRun), turbo || arithmeticHot, {
+                y: ARITHMETIC_AREA.spawn.y + runner.y,
+                lookAt: grid ? { x: runner.x * (1 - centre), y: ARITHMETIC_AREA.spawn.y + runner.y * (1 - centre) + 6 * centre, z: -Math.max(5, runner.distance) } : null,
+                frame: grid ? { halfWidth: 26, halfHeight: 20 } : null,
+            });
+            if (lane !== null && arithmeticRun?.phase === 'choosing') {
+                // The ring flown through reacts at once: gold and growing if right, dimmed if not.
+                const { question } = arithmeticRun;
+                arithmeticArea.markPassed(lane, question.options[lane] === question.answer);
+                onArithmeticAnswerRef.current({ lane, roundId: arithmeticRun.roundId });
+            }
+        }, dispose() {} });
 
         // The asteroid belt's neighbours: Trojans, Hildas and the Kuiper belt (home extra).
         const smallBodyRegions = extras.asteroidBelt ? modules.add("smallBodyRegions", createSmallBodyRegions({
@@ -1897,10 +1957,10 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
             const now = frameStart / 1000;
             let dt = now - prevTime;
             prevTime = now;
-            dt = document.hidden ? 0 : Math.min(Math.max(dt, 0), 0.1);
+            dt = document.hidden || (arithmeticMode && (!arithmeticRun || arithmeticRun.blocked)) ? 0 : Math.min(Math.max(dt, 0), 0.1);
             const active = experiment?.isActive() ?? false;
             if (!active) {
-                worldTime = advanceWorldTime(worldTime, dt, simulation, paused || paleBlueDot.holdsClock() || beyond.isActive());
+                worldTime = advanceWorldTime(worldTime, dt, simulation, paused || arithmeticMode || paleBlueDot.holdsClock() || beyond.isActive());
                 applyWorldPoses();
             } else {
                 try { experiment.update(dt); }
@@ -1914,7 +1974,7 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
             }
 
             // The Pale Blue Dot's zoomed view is just the Sun, Earth and the stars.
-            const quiet = active || paleBlueDot.hidesScenery() || constellationSky.isActive();
+            const quiet = arithmeticMode || active || paleBlueDot.hidesScenery() || constellationSky.isActive();
             orbitPaths.forEach((orbit) => (orbit.visible = !quiet && simulation.showOrbits));
             asteroidBelt.mesh.visible = !quiet && (beltSettings.enabled || (freeFlight.isActive() && Boolean(extras.asteroidBelt)));
 
@@ -2050,7 +2110,13 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
                 from: landing.from, fromDirection: landing.fromDirection, mode: landing.mode,
                 fromPhrase: origin?.phrase, fromSpoken: origin?.spokenName, distanceLy: tripDestination(system.id, landing.from)?.distanceLy,
             });
-        } else onArrivedRef.current();
+        } else if (initialActivityRef.current) openArithmetic();
+        else {
+            // Opening the page starts in the rocket; its back button leads to the overview.
+            sceneApiRef.current.startFreeFlight();
+            setFreeFlightOpen(true);
+            onArrivedRef.current();
+        }
 
         // ================================================================
         // Resize Handling (ResizeObserver for container)
@@ -2080,6 +2146,7 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
             ro.disconnect();
             document.removeEventListener("visibilitychange", onVisibilityChange);
             reducedQuery.removeEventListener("change", onReducedMotionChange);
+            renderer.domElement.removeEventListener("webglcontextlost", lostContext);
             renderer.domElement.removeEventListener("click", onClick, true);
             renderer.domElement.removeEventListener("pointerdown", onBeyondPointerDown);
             renderer.domElement.removeEventListener("pointerup", onBeyondPointerUp);
@@ -2144,11 +2211,11 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
         moreButtonRef.current?.focus();
     }, [beyondState.phase]);
 
-    // Closing the rocket game hands focus back to the button that opened it.
+    // Closing the rocket game hands focus to More, which holds "Fly rocket".
     useEffect(() => {
         if (freeFlightOpen || focusRequestRef.current !== "fly") return;
         focusRequestRef.current = null;
-        flyButtonRef.current?.focus();
+        moreButtonRef.current?.focus();
     }, [freeFlightOpen]);
 
     const matches = useMemo(() => matchBodies(searchBodies, query), [searchBodies, query]);
@@ -2199,7 +2266,8 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
     // Derived, never stored: meteorPhase, tourState and constellationState are
     // the sources of truth, so these four modes cannot drift out of sync.
     let mode = "idle";
-    if (meteorActive) mode = "meteor";
+    if (arithmeticOpen) mode = "arithmetic";
+    else if (meteorActive) mode = "meteor";
     else if (beyondState.phase !== "off") mode = "beyond";
     else if (tripMode) mode = "trip";
     else if (mapLevel) mode = "map";
@@ -2248,7 +2316,7 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
                 aria-label={`Interactive model of ${system.phrase}`}
                 style={{ display: "block", width: "100%", height: "100%", cursor: meteorActive ? "default" : "grab" }}
             />
-            {cameraView === "cockpit" && (freeFlightOpen || autopilotViewVisible) && <SolarCockpit />}
+            {cameraView === "cockpit" && (freeFlightOpen || arithmeticOpen || autopilotViewVisible) && <SolarCockpit />}
             {autopilotViewVisible && !autopilotOrbit && <SolarCameraChoices
                 className="solar-camera-choices--floating"
                 value={cameraView}
@@ -2354,33 +2422,16 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
                 onStart={() => { setMissionArrival(null); setSelectedPlanet(null); sceneApiRef.current?.resetView(); }} />}
             {mode === "idle" && !selectedPlanet && !shipFlying && (
                 <div className="solar-launch-buttons">
-                    <button
-                        type="button"
-                        className="solar-tour-launch"
-                        aria-label={`Tour ${system.phrase}`}
-                        onClick={() => sceneApiRef.current?.start()}
-                    >
-                        <span className="solar-tour-launch__icon" aria-hidden="true">▶</span>
-                        <span className="solar-action-label">Tour {system.phrase}</span>
-                    </button>
-                    <button
-                        type="button"
-                        className="solar-tour-launch"
-                        ref={flyButtonRef}
-                        aria-label="Fly the rocket"
-                        disabled={!sceneReady}
-                        onClick={() => {
-                            sceneApiRef.current?.startFreeFlight();
-                            setFreeFlightOpen(true);
-                        }}
-                    >
-                        <span className="solar-tour-launch__icon" aria-hidden="true">🕹</span>
-                        <span className="solar-action-label">Fly the rocket</span>
-                    </button>
                     <SolarToolbarMenu
                         buttonRef={moreButtonRef}
                         disabled={!sceneReady}
                         items={[
+                            { id: "fly", icon: "🕹", label: "Fly rocket", ariaLabel: "Fly the rocket", onSelect: () => {
+                                sceneApiRef.current?.startFreeFlight();
+                                setFreeFlightOpen(true);
+                            } },
+                            { id: "tour", icon: "▶", label: `Tour ${system.phrase}`, onSelect: () => sceneApiRef.current?.start() },
+                            ...(system.home ? [{ id: 'arithmetic', icon: '🚀', label: 'Space Arithmetic', ariaLabel: 'Fly to Space Arithmetic', onSelect: () => sceneApiRef.current?.openArithmetic() }] : []),
                             { id: "constellations", icon: "✦", label: "Constellations", ariaLabel: "Explore constellations", onSelect: () => {
                                 sceneApiRef.current?.collapsePane?.();
                                 setConstellationState({ active: true, index: 0, muted: false });
@@ -2447,7 +2498,7 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
                     </button>
                 </aside>
             )}
-            {freeFlightOpen && <SolarFlightControls api={sceneApiRef.current?.freeFlight} bodies={sceneApiRef.current?.freeFlight.getTargets() ?? []} view={freeFlightView}
+            {freeFlightOpen && !arithmeticOpen && <SolarFlightControls api={sceneApiRef.current?.freeFlight} bodies={sceneApiRef.current?.freeFlight.getTargets() ?? []} view={freeFlightView}
                 clues={system.flight.clues} chapters={system.flight.chapters} badges={system.flight.badges} session={flightSessionRef.current} systemName={system.name} systemPhrase={system.phrase}
                 startName={system.planets.find((planet) => planet.id === system.flight.startBodyId)?.name ?? system.flight.startBodyId}
                 cameraView={cameraView} onCameraViewChange={selectCameraView}
@@ -2456,6 +2507,9 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
                     sceneApiRef.current?.stopFreeFlight(); focusRequestRef.current = "fly"; setFreeFlightOpen(false);
                 }}
             />}
+            {arithmeticOpen && <div className="solar-arithmetic-flight">
+                <SolarCameraChoices value={cameraView} onChange={selectCameraView} compact />
+            </div>}
             {beyondPickerOpen && (mode === "idle" || mode === "freeflight") && <BeyondPicker
                 destinations={availableDestinations()}
                 onClose={() => setBeyondPickerOpen(false)}

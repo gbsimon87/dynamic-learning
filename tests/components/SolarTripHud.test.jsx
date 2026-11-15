@@ -49,3 +49,10 @@ test('switching to reduced motion mid-trip keeps the trip and shows progress', (
   expect(screen.getByRole('progressbar').getAttribute('aria-valuenow')).toBe('80');
   expect(screen.getByRole('status').textContent).toBe('Arriving at TRAPPIST-1');
 });
+
+test('fictional arithmetic journey uses the same HUD without invented light-year facts', () => {
+  render(<SolarTripHud trip={trip({ phase: 'departing', activity: true, toPhrase: 'the Arithmetic Area', distanceLy: 0 })} onTurnBack={() => {}} />);
+  expect(screen.getByRole('status').textContent).toBe('Flying to the Arithmetic Area');
+  expect(screen.getByText('A pretend journey to our maths practice area.')).toBeTruthy();
+  expect(screen.queryByText(/even light takes/)).toBeNull();
+});

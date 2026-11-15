@@ -129,6 +129,14 @@ Local development keeps them under `dl.curriculumJourney` and
 Upcoming work is in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Delete a line here
 when it is resolved.
 
+**Space Arithmetic pilot.** Teacher review of the four operations' ranges, help pictures and
+feedback; family review of flight/retry/stop controls; physical phone/tablet,
+keyboard/screen-reader and voice checks remain pending. Interactive WebGL/layout
+verification (360×800, 768×1024, 1280×800; both themes, reduced motion, ring fit,
+pause/resize and physical Solar entry/return) could not run in the implementation
+session because browser-control tooling was unavailable. In-scene arrival without a renderer rebuild, physical answer crossings, return
+and original real-system travel have automated controller/page regression tests.
+
 **Privacy and safeguarding.** The [review brief](safeguarding/REVIEW_BRIEF.md)
 holds the open consent, age-assurance, retention, supplier-agreement and
 qualified-review questions. Backup status, regions and supplier settings need

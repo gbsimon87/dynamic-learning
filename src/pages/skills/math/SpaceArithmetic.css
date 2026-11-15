@@ -1,0 +1,129 @@
+/* The Space Arithmetic card over the existing Solar scene (not a second canvas). */
+.space-arithmetic, .space-arithmetic-steer {
+  --space-panel: var(--light-panel); --space-accent: var(--light-accent); --space-on-accent: var(--on-light-accent);
+  color: var(--light-text); text-align: center;
+}
+body.dark .space-arithmetic, body.dark .space-arithmetic-steer {
+  --space-panel: var(--dark-panel); --space-accent: var(--dark-accent); --space-on-accent: var(--on-dark-accent);
+  color: var(--dark-text);
+}
+.space-arithmetic p { margin: .4rem 0; line-height: 1.35; }
+.space-arithmetic .skill-btn, .space-arithmetic-steer .skill-btn {
+  font: inherit; font-weight: 700; min-height: 48px; min-width: 48px; padding: .45rem .9rem;
+  border: 2px solid currentColor; border-radius: 999px; color: inherit; background: var(--space-panel); cursor: pointer;
+}
+.space-arithmetic .skill-btn[aria-pressed="true"] { background: var(--space-accent); color: var(--space-on-accent); border-color: var(--space-accent); }
+.space-arithmetic button:disabled, .space-arithmetic-steer button:disabled { opacity: .45; cursor: default; }
+.space-arithmetic :focus-visible, .space-arithmetic-steer :focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+
+/* The card: a narrow column on the left, clear of the rings in the middle. */
+.solar-system-page > .solar-arithmetic-panel {
+  position: absolute; z-index: 70; top: 12px; left: 12px;
+  width: min(300px, calc(100% - 24px)); box-sizing: border-box; max-height: calc(100% - 130px); overflow-y: auto;
+  background: var(--space-panel); border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  border-radius: 1.25rem; padding: .75rem; box-shadow: 0 8px 24px rgb(0 0 0 / .3);
+}
+.space-arithmetic-bar { display: grid; grid-template-columns: 48px 1fr 48px; align-items: center; gap: .5rem; }
+.space-arithmetic-bar h1 { font-size: 1.2rem; margin: 0; }
+.space-arithmetic-bar .space-arithmetic-back { padding: 0; width: 48px; font-size: 1.3rem; }
+.space-arithmetic-bar .speak-btn { justify-self: end; }
+.space-arithmetic-count { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .4rem; font-size: 1rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+/* Session-only fun: a streak chip and the planet tour. Nothing is stored. */
+.space-arithmetic-streak { padding: .05rem .5rem; border-radius: 999px; border: 2px solid var(--space-accent); font-size: .95rem; }
+.space-arithmetic-streak.is-hot { background: var(--space-accent); color: var(--space-on-accent); }
+.space-arithmetic-journey { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .3rem .6rem; margin: .4rem 0 0; font-size: .95rem; font-weight: 700; }
+.space-arithmetic-journey.is-reached { color: var(--space-accent); }
+.space-arithmetic-pips { display: inline-flex; gap: .3rem; }
+.space-arithmetic-pips > span { width: .7rem; height: .7rem; border-radius: 50%; border: 2px solid currentColor; opacity: .55; }
+.space-arithmetic-pips > span.is-done { background: var(--space-accent); border-color: var(--space-accent); opacity: 1; }
+
+.space-arithmetic-sum {
+  margin: .6rem 0 .2rem; padding: .5rem .25rem; border-radius: 1rem;
+  background: color-mix(in srgb, currentColor 6%, transparent);
+  font-size: clamp(2rem, 9vw, 2.6rem); line-height: 1.15; text-wrap: balance; font-variant-numeric: tabular-nums;
+}
+.space-arithmetic-sum.is-long { font-size: clamp(1.4rem, 6vw, 1.75rem); }
+.space-arithmetic-sum.is-solved { background: var(--space-accent); color: var(--space-on-accent); }
+.space-arithmetic-find { display: grid; justify-items: center; gap: .1rem; }
+.space-arithmetic-example { font-size: .9rem; font-weight: 600; opacity: .8; font-variant-numeric: tabular-nums; }
+.space-arithmetic-last {
+  margin: .2rem auto 0; padding: .15rem .7rem; width: fit-content; border-radius: 999px;
+  background: var(--space-accent); color: var(--space-on-accent); font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.space-arithmetic-sum:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
+/* The feedback line keeps its live region but takes no room while empty. */
+.space-arithmetic .free-play-feedback { margin: .35rem 0 0; min-height: 0; font-size: 1rem; }
+.space-arithmetic .free-play-feedback:empty { margin: 0; }
+.space-arithmetic-tools { display: grid; grid-template-columns: repeat(3, 1fr); gap: .4rem; margin-top: .6rem; }
+.space-arithmetic-tools .skill-btn { min-height: 44px; padding: .3rem .4rem; font-size: .9rem; }
+
+/* Setup: the same choices as Arithmetic Practice. A little wider while no rings fly. */
+.solar-system-page > .solar-arithmetic-panel.is-setup { width: min(360px, calc(100% - 24px)); }
+.space-arithmetic .space-arithmetic-label { font-size: .95rem; margin: .8rem 0 .35rem; text-align: left; }
+.space-arithmetic-ops { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; }
+.space-arithmetic-ops .skill-btn { display: flex; align-items: center; justify-content: center; gap: .35rem; padding-inline: .5rem; font-size: .92rem; }
+.space-arithmetic-sign { font-size: 1.2rem; line-height: 1; }
+.space-arithmetic .space-arithmetic-mix { width: 100%; margin-top: .45rem; font-size: .92rem; }
+.space-arithmetic-choices .skill-btn { flex: 1 1 0; padding-inline: .4rem; }
+.space-arithmetic .space-arithmetic-readout { margin: .3rem 0 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+.space-arithmetic .ap-slider { margin: 0 auto .4rem; }
+.space-arithmetic .space-arithmetic-lead { font-size: 1.02rem; margin-top: .6rem; }
+.space-arithmetic-choices { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin: .4rem 0; }
+.space-arithmetic-example { font-size: .92rem; opacity: .85; }
+.space-arithmetic .space-arithmetic-start { width: 100%; margin-top: .6rem; background: var(--space-accent); color: var(--space-on-accent); border-color: var(--space-accent); font-size: 1.1rem; }
+.space-arithmetic-note { font-size: .82rem; opacity: .7; }
+
+/* Help and still answers */
+.space-arithmetic-help { background: color-mix(in srgb, currentColor 6%, transparent); border-radius: 1rem; padding: .5rem; margin-top: .6rem; }
+.space-arithmetic-dots { padding: .5rem; border: 1px solid currentColor; border-radius: .6rem; }
+.space-arithmetic-dots { margin-top: .4rem; }
+.space-arithmetic-dots span { display: inline-block; margin: .1rem; }
+.space-arithmetic-dots .is-gone { opacity: .3; text-decoration: line-through; }
+.space-arithmetic-answers { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; margin-top: .6rem; }
+.space-arithmetic .space-arithmetic-ring { aspect-ratio: 1; border-width: 4px; font-size: 1.5rem; padding: 0; }
+.space-arithmetic-answers.has-equations { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.space-arithmetic-answers.has-equations .space-arithmetic-ring { aspect-ratio: auto; min-height: 80px; border-radius: .9rem; padding: .6rem; font-size: 1.1rem; line-height: 1.4; }
+
+/* Lane steering and Turbo: big buttons at the bottom centre, over the scene. */
+.solar-system-page > .space-arithmetic-steer {
+  position: absolute; z-index: 70; left: 50%; bottom: max(16px, env(safe-area-inset-bottom)); transform: translateX(-50%);
+  display: flex; align-items: center; gap: .75rem;
+}
+.space-arithmetic-steer .skill-btn { width: 76px; height: 76px; padding: 0; font-size: 1.8rem; box-shadow: 0 6px 18px rgb(0 0 0 / .3); }
+.space-arithmetic-steer .space-arithmetic-turbo { font-size: 1rem; touch-action: none; user-select: none; -webkit-user-select: none; }
+.space-arithmetic-steer .space-arithmetic-turbo.is-on { background: var(--space-accent); color: var(--space-on-accent); border-color: var(--space-accent); }
+.space-arithmetic-lane { min-width: 5.5rem; padding: .35rem .6rem; border-radius: 999px; background: var(--space-panel); font-weight: 700; }
+.solar-arithmetic-flight > .solar-camera-choices { position: absolute; z-index: 69; pointer-events: auto; right: 10px; bottom: max(16px, env(safe-area-inset-bottom)); }
+
+/* Wide screens: the camera choices fit beside the steering. Phones: the card
+   spans the top and the steering takes the full bottom row. */
+@media (max-width: 600px) {
+  .solar-system-page > .solar-arithmetic-panel { left: 10px; width: calc(100% - 20px); padding: .6rem; }
+  .space-arithmetic-sum { margin-top: .4rem; padding: .35rem; }
+  .solar-system-page > .space-arithmetic-steer { gap: .5rem; }
+  .space-arithmetic-steer .skill-btn { width: 64px; height: 64px; }
+  /* Too narrow for the pill: keep it for screen readers only. */
+  .space-arithmetic-lane { position: absolute; width: 1px; height: 1px; min-width: 0; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+
+/* Four-way flight controls for the two rows of equation rings. */
+.solar-system-page > .space-arithmetic-steer.is-grid {
+  left: 12px; transform: none; display: grid; grid-template-columns: repeat(4, 56px); gap: 4px;
+}
+.space-arithmetic-steer.is-grid .skill-btn { width: 56px; height: 56px; }
+.space-arithmetic-steer.is-grid .space-arithmetic-up { grid-column: 2; grid-row: 1; }
+.space-arithmetic-steer.is-grid .space-arithmetic-left { grid-column: 1; grid-row: 2; }
+.space-arithmetic-steer.is-grid .space-arithmetic-right { grid-column: 3; grid-row: 2; }
+.space-arithmetic-steer.is-grid .space-arithmetic-down { grid-column: 2; grid-row: 3; }
+.space-arithmetic-steer.is-grid .space-arithmetic-turbo { grid-column: 4; grid-row: 2; }
+.space-arithmetic-steer.is-grid .space-arithmetic-lane { position: absolute; width: 1px; height: 1px; min-width: 0; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (max-height: 500px) {
+  .solar-system-page > .space-arithmetic-steer.is-grid { grid-template-columns: repeat(4, 48px); left: auto; right: 76px; }
+  .space-arithmetic-steer.is-grid .skill-btn { width: 48px; height: 48px; }
+}
+@media (min-width: 501px) and (max-height: 500px) {
+  .solar-system-page > .solar-arithmetic-panel.is-playing { width: min(300px, calc(100% - 248px)); }
+}
+@media (max-width: 500px) and (max-height: 500px) {
+  .solar-system-page > .space-arithmetic-steer.is-grid { display: flex; left: 12px; right: auto; }
+}

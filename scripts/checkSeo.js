@@ -130,9 +130,9 @@ try {
       await page.screenshot({ path: path.join(screenshots, `family-friday-${name}-${width}-${theme}.png`), fullPage: true });
     };
     await page.goto(base);
-    await page.getByRole('link', { name: /Play this week’s quiz/ }).waitFor();
+    await page.getByRole('link', { name: /Play the quiz/ }).waitFor();
     await capture('home');
-    await page.getByRole('link', { name: /Play this week’s quiz/ }).click();
+    await page.getByRole('link', { name: /Play the quiz/ }).click();
     await page.getByRole('button', { name: 'Start the quiz' }).waitFor();
     assert.ok(page.url().includes(`week=${friday}`));
     await capture('intro');
@@ -184,7 +184,7 @@ try {
   await page.clock.setFixedTime(new Date('2026-11-28T12:00:00Z'));
   await page.goto(base);
   await page.locator('body.light, body.dark').waitFor();
-  assert.equal(await page.getByRole('link', { name: /Play this week’s quiz/ }).count(), 0, 'Saturday has no homepage invitation');
+  assert.equal(await page.getByRole('link', { name: /Play the quiz/ }).count(), 0, 'Saturday has no homepage invitation');
   await page.goto(`${base}/skills/family-friday`);
   await page.getByRole('button', { name: 'Start the quiz' }).waitFor();
   await page.clock.setFixedTime(new Date('2026-11-26T12:00:00Z'));

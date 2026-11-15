@@ -1,3 +1,4 @@
+import { spaceArithmeticRoute } from './routes/spaceArithmeticRoute.js';
 import "./pointerModality";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
@@ -112,6 +113,7 @@ const router = createBrowserRouter([
           { path: "skills/missing-number", lazy: () => import("./pages/skills/math/FindTheMissingNumber").then((m) => ({ Component: m.default })) },
           { path: "skills/number-bonds", lazy: () => import("./pages/skills/math/NumberBonds").then((m) => ({ Component: m.default })) },
           { path: "skills/fraction-fun", lazy: () => import("./pages/skills/math/FractionFun").then((m) => ({ Component: m.default })) },
+          spaceArithmeticRoute,
           { path: "skills/money", lazy: () => import("./pages/skills/math/MoneyMatch").then((m) => ({ Component: m.default })) },
           { path: "skills/measure", lazy: () => import("./pages/skills/math/MeasureIt").then((m) => ({ Component: m.default })) },
           { path: "skills/robot-moves", lazy: () => import("./pages/skills/math/RobotMoves").then((m) => ({ Component: m.default })) },

@@ -7,6 +7,8 @@ import { createPlanetOrbit, nearestOrbitBody } from './solarPlanetOrbit.js';
 import { ARRIVE_INSET, EDGE_OFFER_MARGIN, WARNING_SECONDS, arrivalPose, createTurnBackIntent, dashSecondsFor, shouldWarn, tripFrame, warningCancelled } from './systems/tripTimeline.js';
 
 const UP = new THREE.Vector3(0, 1, 0);
+// How closely the rocket must head along an activity's direction to fly there.
+const ACTIVITY_ALIGNMENT = .8;
 const clamp = THREE.MathUtils.clamp;
 // `edgeRadius` (from the system definition) is the edge of travel: at home
 // just past Pluto's furthest point (about 1,250). With a `tripTo`, flying out
@@ -26,7 +28,7 @@ export function flightSpeed(clearance, boost) {
 
 /** Manual flight in the existing scene; no renderer, world clock or storage of its own. */
 export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRadius, startBodyId, quality, reducedMotion = () => false, onChange = () => {}, getCameraView = () => 'behind',
-  tripTo = null, systemPhrase = '', systemSpokenName = systemPhrase, onTripStart = () => {}, onHandoff = () => {}, onTripDone = () => {}, rocks = null }) {
+  tripTo = null, systemPhrase = '', systemSpokenName = systemPhrase, onTripStart = () => {}, onHandoff = () => {}, onTripDone = () => {}, rocks = null, activityTrips = [], isMovementBlocked = () => false, allowManualInput = () => true, allowSystemTravel = () => true }) {
   const model = buildShip(quality);
   const ship = model.ship;
   ship.name = 'solar-free-flight'; ship.visible = false; ship.scale.setScalar(.3); scene.add(ship);
@@ -34,6 +36,11 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRad
   const velocity = new THREE.Vector3(), forward = new THREE.Vector3(), scratch = new THREE.Vector3();
   const center = new THREE.Vector3();
   let active = false, saved = null, yaw = 0, pitch = 0, stickX = 0, stickY = 0, thrust = false, boost = false, boostStrength = 0;
+  let activityFov = null;
+  function restoreActivityFov() {
+    if (activityFov === null) return;
+    camera.fov = activityFov; camera.updateProjectionMatrix(); activityFov = null;
+  }
   let nearest = null, lastName = '', age = 0, engineTime = 0, wobble = 0, bumps = 0;
   let goal = null, goalToken = null, arrival = null, insideSeconds = 0, goalArmed = false, travelled = 0, navigation = null;
   const previous = new THREE.Vector3(), destinationPoint = new THREE.Vector3();
@@ -69,7 +76,7 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRad
     const warning = frame.phase === 'warning';
     return { phase: frame.phase, mode: trip.mode, progress: frame.progress, calm: reducedMotion(), distanceLy: trip.distanceLy,
       secondsLeft: Math.max(0, (warning ? WARNING_SECONDS : tripEnd()) - trip.elapsed),
-      toPhrase: trip.toPhrase, fromPhrase: trip.fromPhrase, toSpoken: trip.toSpoken, fromSpoken: trip.fromSpoken, toHome: trip.toHome, waiting: trip.waiting };
+      toPhrase: trip.toPhrase, fromPhrase: trip.fromPhrase, toSpoken: trip.toSpoken, fromSpoken: trip.fromSpoken, toHome: trip.toHome, waiting: trip.waiting, activity: Boolean(trip.to?.activity || trip.activity) };
   }
   const vector = ({ x, y, z }) => new THREE.Vector3(x, y, z);
   function aimAlong(direction) {
@@ -99,9 +106,10 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRad
   }
   function finishArrival() {
     const { mode } = trip;
+    const activity = trip.to?.activity || trip.activity;
     ship.position.copy(trip.anchor).addScaledVector(trip.carry, reach);
     trip = null; velocity.set(0, 0, 0); emit();
-    onTripDone({ mode });
+    onTripDone({ mode, ...(activity ? { activity } : {}) });
   }
   // Back inside the edge, facing the star: never stranded between systems.
   function glideBack(point) {
@@ -132,8 +140,17 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRad
       if (trip.side === 'arriving' && frame.phase === 'done') { finishArrival(); updateCamera(dt); return; }
       if (frame.handoff && trip.side === 'leaving') {
         // Hold at full speed while the other system loads; it plays the second half.
-        trip.elapsed = tripHalf(); trip.waiting = true; placeOnTrip();
-        onHandoff({ to: trip.to.id, mode: trip.mode, direction: trip.to.direction, turnedBack: false });
+        trip.elapsed = tripHalf();
+        if (trip.to.activity) {
+          // An activity is another area of this scene: reuse both halves of the
+          // journey without a registry load, route change or renderer rebuild.
+          trip.side = 'arriving'; trip.activity = trip.to.activity;
+          trip.anchor = vector(trip.to.arrivalPosition).addScaledVector(trip.carry, -reach);
+          placeOnTrip();
+        } else {
+          trip.waiting = true; placeOnTrip();
+          onHandoff({ to: trip.to.id, mode: trip.mode, direction: trip.to.direction, turnedBack: false });
+        }
       } else placeOnTrip();
       if (trip && !trip.waiting && trip.mode === 'flown' && turnIntent.update(rawDt, forward.dot(trip.carry))) api.turnBack();
     }
@@ -186,7 +203,7 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRad
   }
   const editable = e => e.target?.closest?.('input, textarea, select, [contenteditable="true"]');
   const keydown = e => {
-    if (!active) return;
+    if (!active || !allowManualInput() || trip?.mode === 'autopilot') return;
     const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
     if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd', ' ', 'Shift'].includes(key)) return;
     // Keep Space available for activating a focused HUD button; steering keys still work from the HUD.
@@ -209,6 +226,7 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRad
     },
     exit() {
       if (!active) return;
+      restoreActivityFov();
       rocks?.update({ position: ship.position, forward, steering: false });
       if (trip?.side === 'arriving' && !trip.waiting) { const { mode } = trip; trip = null; onTripDone({ mode }); }
       else if (trip && !trip.waiting) trip = null;
@@ -239,6 +257,7 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRad
     /** Turn back: from the warning or the first half, glide back inside; from the second half, hand back. */
     turnBack() {
       if (!trip || trip.waiting) return;
+      if (trip.to?.activity || trip.activity) { glideBack(trip.back); return; }
       if (trip.side === 'arriving') {
         trip.waiting = true; emit();
         onHandoff({ to: trip.from, mode: trip.mode, direction: trip.fromDirection, turnedBack: true });
@@ -253,6 +272,35 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRad
       orbit.stop(); returning = null; clearInput();
       startTrip('autopilot', to); updateCamera(0, true);
       return true;
+    },
+    /** Reposition between activity rounds; resets are never crossing checks. */
+    placeInActivity(position, heading) {
+      if (!active) api.enter();
+      orbit.stop(); trip = returning = null; arrival = goal = navigation = null;
+      clearInput(); ship.position.copy(position); aimAlong(vector(heading));
+      flightCamera.reset(ship); updateCamera(0, true); emit();
+    },
+    /** The Arithmetic Area flies forward itself, gliding between answer openings in x/y. */
+    holdActivityLane(x, dt, moving, turbo = false, { y = ship.position.y, lookAt = null, frame = null } = {}) {
+      if (!active || trip || returning) return;
+      ship.visible = getCameraView() === 'behind';
+      ship.position.x = x;
+      ship.position.y = y;
+      model.flame.visible = moving; model.flame.scale.y = turbo ? 2.4 : 1.3; model.flameMaterial.opacity = turbo ? 1 : .8;
+      updateCamera(clamp(dt, 0, .05));
+      if (lookAt) {
+        controls.target.set(lookAt.x, lookAt.y, lookAt.z);
+        camera.lookAt(controls.target);
+      }
+      if (frame && lookAt) {
+        activityFov ??= camera.fov;
+        const depth = Math.max(5, Math.abs(camera.position.z - lookAt.z));
+        const height = Math.max(frame.halfHeight, frame.halfWidth / camera.aspect);
+        // Keep the group readable for the approach, then let the chosen ring
+        // fill the view. The cap avoids an extreme wide-angle cockpit.
+        camera.fov = Math.min(85, Math.max(activityFov, 2 * Math.atan(height / depth) * 180 / Math.PI));
+        camera.updateProjectionMatrix();
+      } else restoreActivityFov();
     },
     /** Called by the arriving system on mount: the second half of the dash, ending just inside its edge. */
     beginArrival({ from, fromDirection, mode = 'flown', fromPhrase = tripTo?.phrase ?? '', fromSpoken = tripTo?.spokenName ?? fromPhrase, distanceLy = tripTo?.distanceLy ?? 1 }) {
@@ -282,7 +330,7 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRad
     brake: clearInput,
     update(dt, { active: otherMode = false } = {}) {
       if (!active) return;
-      if (otherMode) { clearInput(); return; }
+      if (otherMode || isMovementBlocked() || document.hidden || dt <= 0) { clearInput(); return; }
       ship.visible = getCameraView() === 'behind';
       const rawDt = clamp(dt, 0, .25);
       // Belt rocks appear only while the child steers (not on trips, warps home or orbit rides).
@@ -346,7 +394,7 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRad
       if (bumped) { wobble = .6; bumps += 1; emit(); }
       const distance = ship.position.length();
       if (!armed && distance < edgeRadius - 50) armed = true;
-      if (tripTo) {
+      if ((tripTo || activityTrips.length) && allowSystemTravel()) {
         const outward = scratch.copy(ship.position).normalize();
         if (trip) {
           // The warning: steering back towards the star, or dropping back inside, cancels it.
@@ -356,7 +404,11 @@ export function createSolarFreeFlight({ scene, camera, controls, bodies, edgeRad
             if (last < WARNING_SECONDS && trip.elapsed >= WARNING_SECONDS) startDash();
             tripAge += rawDt; if (tripAge >= .1) { tripAge = 0; emit(); }
           }
-        } else if (shouldWarn({ distance, edgeRadius, radialSpeed: velocity.dot(outward), alignmentWithOutward: forward.dot(outward), orbiting: orbit.isActive(), autopilot: Boolean(arrival), armed })) startTrip('flown', tripTo);
+        } else if (shouldWarn({ distance, edgeRadius, radialSpeed: velocity.dot(outward), alignmentWithOutward: forward.dot(outward), orbiting: orbit.isActive(), autopilot: Boolean(arrival), armed })) {
+          // Flying out towards an activity's signpost goes there; anywhere else, to `tripTo`.
+          const to = activityTrips.find(t => forward.dot(vector(t.direction).normalize()) > ACTIVITY_ALIGNMENT) ?? tripTo;
+          if (to) startTrip('flown', to);
+        }
       }
       if (distance > edgeRadius) { ship.position.setLength(edgeRadius); velocity.set(0, 0, 0); }
       travelled += ship.position.distanceTo(previous);

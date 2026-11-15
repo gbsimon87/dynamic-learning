@@ -1,9 +1,11 @@
+import SolarSceneBoundary from './SolarSceneBoundary.jsx';
+import SpaceArithmeticPanel from '../math/SpaceArithmeticPanel.jsx';
 import { useCallback, useEffect, useRef, useState } from "react";
 import ThreeSolarSystem from "./SolarSystem.jsx";
 import { HOME_SYSTEM } from "./systems/home.js";
 import { loadSystem, registryEntry } from "./systems/registry.js";
 import { readDebugFlags } from "./solarQuality.js";
-import { speak } from "../../../utils/speech.js";
+import { speak, stopNarration } from "../../../utils/speech.js";
 import { isMuted } from "../../../components/celebration/sound/player.js";
 
 // Page messages sit above the scene's hand-over fade (60) and trip panel (65).
@@ -26,7 +28,16 @@ const reverse = (d) => d && { x: 0 - d.x, y: 0 - d.y, z: 0 - d.z };
  * load that never finishes gives up and lands home. The page also speaks the new system's welcome once the
  * scene says the child has arrived — never after turning back, never muted.
  */
-export default function SolarSystemPage() {
+export default function SolarSystemPage({ initialActivity = false }) {
+    const mounted = useRef(true), arithmeticPanel = useRef(null);
+    const activityTransition = useRef(false);
+    const [arithmetic, setArithmetic] = useState(null);
+    const [sceneUnavailable, setSceneUnavailable] = useState(false);
+    const unavailable = useCallback(() => {
+        setSceneUnavailable(true); activityTransition.current = true; stopNarration();
+        setArithmetic({ api: { prepareRound() {}, setState() {}, setLane() {}, setTurbo() {}, setHot() {}, leave() { activityTransition.current = false; setArithmetic(null); } } });
+    }, []);
+    useEffect(() => { mounted.current = true; return () => { mounted.current = false; stopNarration(); }; }, []);
     const [state, setState] = useState({ system: HOME_SYSTEM, arrival: null, visit: 0 });
     const [loading, setLoading] = useState(null);
     const [notice, setNotice] = useState(null);
@@ -47,15 +58,17 @@ export default function SolarSystemPage() {
 
     const travel = useCallback(({ to, mode, direction = null, turnedBack = false }) => {
         const entry = registryEntry(to);
-        if (loadingRef.current || !entry) return;
+        if (activityTransition.current || loadingRef.current || !entry) return;
         loadingRef.current = true;
         setLoading(entry.phrase);
         setNotice(null);
         let timer;
         const timeout = new Promise((resolve, reject) => { timer = window.setTimeout(() => reject(new Error("timed out")), LOAD_TIMEOUT_MS); });
         Promise.race([prepare(to), timeout]).then((system) => {
+            if (!mounted.current || activityTransition.current) return;
             setState((current) => ({ system, visit: current.visit + 1, arrival: { from: current.system.id, mode, fromDirection: reverse(direction), turnedBack } }));
         }, () => {
+            if (!mounted.current || activityTransition.current) return;
             prepared.current.delete(to);
             // Never a blank scene: back home, rebuilt even if home is where the trip began.
             setState((current) => ({ system: HOME_SYSTEM, visit: current.visit + 1, arrival: null }));
@@ -63,11 +76,21 @@ export default function SolarSystemPage() {
         }).finally(() => {
             window.clearTimeout(timer);
             loadingRef.current = false;
-            setLoading(null);
+            if (mounted.current && !activityTransition.current) setLoading(null);
         });
     }, [prepare]);
 
+    const openArithmetic = useCallback(({ api, stage } = {}) => {
+        if (!mounted.current || loadingRef.current || stateRef.current.system.id !== HOME_SYSTEM.id) return;
+        if (stage === 'cancelled') { activityTransition.current = false; return; }
+        activityTransition.current = true; setNotice(null); stopNarration();
+        if (!api) return;
+        setArithmetic({ api: { ...api, leave() { api.leave(); activityTransition.current = false; setArithmetic(null); } } });
+    }, []);
+    const arithmeticAnswer = useCallback(event => arithmeticPanel.current?.crossing(event), []);
+
     const arrived = useCallback(() => {
+        if (activityTransition.current) return;
         const { system, arrival, visit } = stateRef.current;
         if (welcomedVisit.current === visit || arrival?.turnedBack || !system.welcome) return;
         welcomedVisit.current = visit;
@@ -90,7 +113,11 @@ export default function SolarSystemPage() {
     }, [travel]);
 
     return <div className="solar-system-page" style={{ position: "relative" }}>
-        <ThreeSolarSystem key={`${state.system.id}:${state.visit}`} system={state.system} arrival={state.arrival} onPrepare={prepare} onTravel={travel} onArrived={arrived} />
+        <SolarSceneBoundary onUnavailable={unavailable}>
+            {!sceneUnavailable && <ThreeSolarSystem key={`${state.system.id}:${state.visit}`} system={state.system} arrival={state.arrival} onPrepare={prepare} onTravel={travel} onArrived={arrived} onOpenArithmetic={openArithmetic} onArithmeticAnswer={arithmeticAnswer} initialActivity={initialActivity} onUnavailable={unavailable} />}
+        </SolarSceneBoundary>
+        {sceneUnavailable && <div className="solar-unavailable"><p>Moving space is unavailable. Space Arithmetic still works in Still space.</p></div>}
+        {arithmetic && <SpaceArithmeticPanel ref={arithmeticPanel} flightApi={arithmetic.api} forceStill={sceneUnavailable} />}
         {loading && <p className="solar-meteor-status" role="status" style={ABOVE_TRIP}>Getting {loading} ready…</p>}
         {!loading && notice?.kind === "alert" && <p className="solar-meteor-status" role="alert" style={ABOVE_TRIP}>{notice.text}</p>}
         {!loading && notice?.kind === "welcome" && <p className="solar-meteor-status solar-tap-message" role="status" style={{ ...ABOVE_TRIP, pointerEvents: "none" }}>

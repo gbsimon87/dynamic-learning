@@ -1,8 +1,8 @@
 import { useEffect, useId, useRef, useState } from "react";
 
 /**
- * The toolbar's More menu: the less-used modes (constellations, meteor,
- * Beyond, galaxy map) in one labelled list, so the toolbar keeps a few big
+ * The toolbar's More menu: the overview's modes (fly the rocket, tour,
+ * constellations, meteor, Beyond, galaxy map) in one labelled list, so the toolbar keeps a few big
  * buttons at every width. A disclosure, not an ARIA menu: Tab moves through
  * the choices, Escape or a tap outside closes it, and choosing one closes it
  * before running it. Focus returns to More when the list closes.

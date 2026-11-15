@@ -220,3 +220,70 @@ export function generateQuestion({
     options: buildOptions(built.value),
   };
 }
+
+// --- Find the sum (the reverse question) --------------------------------------
+// The answer is shown ("? = 7") and the learner picks which of four
+// calculations makes it. Wrong choices are near misses - the right calculation
+// with one number nudged - so each has to be worked out, not spotted.
+
+const NUDGES = [-2, -1, 1, 2];
+const NEAR_MISS_TRIES = 40;
+const FRESH_TRIES = 12;
+
+/** Value of a generated calculation (+ − × ÷ and brackets), or NaN. Never eval. */
+export function evaluateCalculation(text) {
+  if (!/^[\d\s+\-×÷()]+$/.test(String(text))) return NaN;
+  const tokens = String(text).match(/\d+|[+\-×÷()]/g) ?? [];
+  let i = 0;
+  const factor = () => {
+    const t = tokens[i++];
+    if (t === '(') { const v = sum(); return tokens[i++] === ')' ? v : NaN; }
+    return /^\d+$/.test(t ?? '') ? Number(t) : NaN;
+  };
+  const product = () => {
+    let v = factor();
+    while (tokens[i] === '×' || tokens[i] === '÷') v = tokens[i++] === '×' ? v * factor() : v / factor();
+    return v;
+  };
+  const sum = () => {
+    let v = product();
+    while (tokens[i] === '+' || tokens[i] === '-') v = tokens[i++] === '+' ? v + product() : v - product();
+    return v;
+  };
+  const value = sum();
+  return i === tokens.length ? value : NaN;
+}
+
+function nearMiss(text) {
+  const numbers = [...text.matchAll(/\d+/g)];
+  const { index, 0: digits } = pick(numbers);
+  const nudged = Number(digits) + pick(NUDGES);
+  if (nudged < 1) return null;
+  return text.slice(0, index) + nudged + text.slice(index + digits.length);
+}
+
+/**
+ * Same settings as `generateQuestion`. Returns `{ target, correctAnswer, options }`:
+ * `target` is the number shown, `correctAnswer` the calculation that makes it,
+ * `options` four different calculations (exactly one makes `target`), in
+ * display order. Bounded tries, then a simple guaranteed fallback.
+ */
+export function generateReverseQuestion(settings) {
+  const { questionText, correctAnswer: target } = generateQuestion(settings);
+  const wrong = new Set();
+  const fits = (text) => {
+    if (!text || text === questionText || wrong.has(text)) return false;
+    const value = evaluateCalculation(text);
+    return Number.isInteger(value) && value >= 0 && value !== target;
+  };
+  for (let t = 0; t < NEAR_MISS_TRIES && wrong.size < 3; t++) {
+    const text = nearMiss(questionText);
+    if (fits(text)) wrong.add(text);
+  }
+  for (let t = 0; t < FRESH_TRIES && wrong.size < 3; t++) {
+    const text = generateQuestion(settings).questionText;
+    if (fits(text)) wrong.add(text);
+  }
+  for (let k = 1; wrong.size < 3; k++) if (fits(`${target} + ${k}`)) wrong.add(`${target} + ${k}`);
+  return { target, correctAnswer: questionText, options: shuffleArray([...wrong, questionText]) };
+}

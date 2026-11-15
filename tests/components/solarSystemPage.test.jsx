@@ -1,3 +1,4 @@
+import { MemoryRouter } from 'react-router';
 import React from 'react';
 import { act, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
@@ -17,8 +18,9 @@ vi.mock('../../src/pages/skills/geography/SolarSystem.jsx', async () => {
     },
   };
 });
-vi.mock('../../src/utils/speech.js', () => ({ speak: vi.fn(), stopNarration: vi.fn() }));
-vi.mock('../../src/components/celebration/sound/player.js', () => ({ isMuted: vi.fn(() => false) }));
+vi.mock('../../src/utils/speech.js', async original => ({ ...await original(), speak: vi.fn(), stopNarration: vi.fn() }));
+vi.mock('../../src/components/celebration/fx/effects.js', () => ({ playEffect: vi.fn() }));
+vi.mock('../../src/components/celebration/sound/player.js', async original => ({ ...await original(), isMuted: vi.fn(() => false), preloadSounds: vi.fn() }));
 // Loads wait for the test to release them, so a request can arrive mid-load.
 const pending = [];
 vi.mock('../../src/pages/skills/geography/systems/registry.js', async (original) => {
@@ -41,7 +43,7 @@ const TO_TEST = { to: 'test-system', mode: 'flown', direction: { x: 1, y: 0, z: 
 afterEach(() => { window.history.replaceState(null, '', '/'); });
 
 test('renders the home system by default', () => {
-  render(<SolarSystemPage />);
+  render(<MemoryRouter><SolarSystemPage /></MemoryRouter>);
   expect(screen.getByTestId('scene').textContent).toBe(HOME_SYSTEM.name);
   expect(sceneProps.at(-1).system).toBe(HOME_SYSTEM);
   expect(sceneProps.at(-1).arrival).toBeNull();
@@ -49,20 +51,20 @@ test('renders the home system by default', () => {
 
 test('the ?system= switch is ignored without the adult debug flag', async () => {
   window.history.replaceState(null, '', '/skills/solar-system?system=test-system');
-  render(<SolarSystemPage />);
+  render(<MemoryRouter><SolarSystemPage /></MemoryRouter>);
   await act(async () => {});
   expect(sceneProps.at(-1).system).toBe(HOME_SYSTEM);
 });
 
 test('with the debug flag, ?system= opens that system', async () => {
   window.history.replaceState(null, '', '/skills/solar-system?debug&system=test-system');
-  render(<SolarSystemPage />);
+  render(<MemoryRouter><SolarSystemPage /></MemoryRouter>);
   await finishLoads();
   expect(sceneProps.at(-1).system).toBe(TEST_SYSTEM);
 });
 
 test('handoff remounts into the other system with arrival details', async () => {
-  render(<SolarSystemPage />);
+  render(<MemoryRouter><SolarSystemPage /></MemoryRouter>);
   await travel(TO_TEST);
   expect(screen.getByTestId('scene').textContent).toBe(TEST_SYSTEM.name);
   expect(mounts).toEqual([HOME_SYSTEM.id, TEST_SYSTEM.id]);
@@ -70,7 +72,7 @@ test('handoff remounts into the other system with arrival details', async () => 
 });
 
 test('travel requests while a trip is running are ignored', async () => {
-  render(<SolarSystemPage />);
+  render(<MemoryRouter><SolarSystemPage /></MemoryRouter>);
   const { onTravel } = sceneProps.at(-1);
   await act(async () => { onTravel(TO_TEST); onTravel(TO_TEST); onTravel({ ...TO_TEST, to: 'broken-system' }); });
   expect(pending.length).toBe(1);
@@ -84,7 +86,7 @@ test('travel requests while a trip is running are ignored', async () => {
 });
 
 test('a failed system load lands the child home with a message', async () => {
-  render(<SolarSystemPage />);
+  render(<MemoryRouter><SolarSystemPage /></MemoryRouter>);
   await travel(TO_TEST);
   await travel({ ...TO_TEST, to: 'broken-system' });
   expect(sceneProps.at(-1).system).toBe(HOME_SYSTEM);
@@ -95,14 +97,14 @@ test('a failed system load lands the child home with a message', async () => {
 });
 
 test('a failed load from home still rebuilds home, so no trip is left hanging', async () => {
-  render(<SolarSystemPage />);
+  render(<MemoryRouter><SolarSystemPage /></MemoryRouter>);
   await travel({ ...TO_TEST, to: 'broken-system' });
   expect(mounts).toEqual([HOME_SYSTEM.id, HOME_SYSTEM.id]);
   expect(screen.getByRole('alert')).toBeTruthy();
 });
 
 test('arrival welcome speaks once, never when muted, not after turn back', async () => {
-  render(<SolarSystemPage />);
+  render(<MemoryRouter><SolarSystemPage /></MemoryRouter>);
   act(() => { sceneProps.at(-1).onArrived(); });
   expect(speak).not.toHaveBeenCalled(); // home has no welcome
   await travel(TO_TEST);
@@ -128,7 +130,7 @@ test('arrival welcome speaks once, never when muted, not after turn back', async
 test('the "couldn\'t reach" message clears on its own', async () => {
   vi.useFakeTimers();
   try {
-    render(<SolarSystemPage />);
+    render(<MemoryRouter><SolarSystemPage /></MemoryRouter>);
     await travel({ ...TO_TEST, to: 'broken-system' });
     expect(screen.getByRole('alert')).toBeTruthy();
     act(() => { vi.advanceTimersByTime(10000); });
@@ -139,7 +141,7 @@ test('the "couldn\'t reach" message clears on its own', async () => {
 test('a load that never finishes gives up and lands home with a message', async () => {
   vi.useFakeTimers();
   try {
-    render(<SolarSystemPage />);
+    render(<MemoryRouter><SolarSystemPage /></MemoryRouter>);
     await act(async () => { sceneProps.at(-1).onTravel(TO_TEST); });
     expect(screen.getByRole('status').textContent).toContain('Getting the Test System ready');
     await act(async () => { vi.advanceTimersByTime(20000); });
@@ -158,7 +160,7 @@ test('a load that never finishes gives up and lands home with a message', async 
 });
 
 test('onPrepare starts loading the next system early, and the trip reuses it', async () => {
-  render(<SolarSystemPage />);
+  render(<MemoryRouter><SolarSystemPage /></MemoryRouter>);
   await act(async () => { sceneProps.at(-1).onPrepare('test-system'); sceneProps.at(-1).onPrepare('test-system'); });
   expect(pending.length).toBe(1);
   await act(async () => { sceneProps.at(-1).onTravel(TO_TEST); });
@@ -170,4 +172,37 @@ test('onPrepare starts loading the next system early, and the trip reuses it', a
   await finishLoads();
   await act(async () => { sceneProps.at(-1).onTravel({ ...TO_TEST, to: 'broken-system' }); });
   expect(pending.length).toBe(1);
+});
+
+test('activity journey and game stay in the mounted Solar scene, with no star-system load', async () => {
+  const view = render(<MemoryRouter><SolarSystemPage /></MemoryRouter>);
+  const props = sceneProps.at(-1); const api = { prepareRound: vi.fn(), setState: vi.fn(), setLane: vi.fn(), leave: vi.fn() };
+  act(() => { props.onOpenArithmetic({ stage: 'departing' }); props.onTravel(TO_TEST); });
+  expect(pending).toHaveLength(0);
+  act(() => props.onOpenArithmetic({ api }));
+  expect(screen.getByRole('heading', { name: 'Space Arithmetic' })).toBeTruthy(); expect(screen.getByTestId('scene')).toBeTruthy();
+  expect(mounts).toEqual([HOME_SYSTEM.id]);
+  const { fireEvent } = await import('@testing-library/react');
+  fireEvent.click(screen.getByRole('button', { name: /Back to Solar System/ }));
+  expect(api.leave).toHaveBeenCalledOnce(); expect(screen.queryByRole('heading', { name: 'Space Arithmetic' })).toBeNull();
+  expect(mounts).toEqual([HOME_SYSTEM.id]); view.unmount();
+});
+test('cancelled activity journey releases the page travel guard', async () => {
+  render(<MemoryRouter><SolarSystemPage /></MemoryRouter>);
+  const props = sceneProps.at(-1);
+  act(() => { props.onOpenArithmetic({ stage: 'departing' }); props.onOpenArithmetic({ stage: 'cancelled' }); });
+  await travel(TO_TEST); expect(sceneProps.at(-1).system).toBe(TEST_SYSTEM);
+});
+
+test('scene loss keeps the game and switches to tapping rings in still view', async () => {
+  render(<MemoryRouter><SolarSystemPage /></MemoryRouter>);
+  const props = sceneProps.at(-1), api = { prepareRound: vi.fn(), setState: vi.fn(), setLane: vi.fn(), leave: vi.fn() };
+  act(() => props.onOpenArithmetic({ api }));
+  const { fireEvent } = await import('@testing-library/react');
+  fireEvent.click(screen.getByRole('button', { name: 'Start flight' }));
+  const [question] = api.prepareRound.mock.calls.at(-1);
+  act(() => props.onUnavailable());
+  expect(screen.queryByTestId('scene')).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: `Answer ${question.answer}` }));
+  expect(screen.getByText('Sums solved: 1')).toBeTruthy();
 });

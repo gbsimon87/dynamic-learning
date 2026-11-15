@@ -1,0 +1,111 @@
+/* Two thumbs on one track (Arithmetic Practice, Space Arithmetic). Colours
+   are the challenge kit's --ck-* tokens, so both themes work. */
+.ap-slider {
+  --ap-thumb: 44px;
+  position: relative;
+  width: 100%;
+  max-width: 26rem;
+  height: calc(var(--ap-thumb) + 1.6rem);
+}
+
+.ap-slider-track {
+  position: absolute;
+  top: calc(var(--ap-thumb) / 2 - 6px);
+  left: calc(var(--ap-thumb) / 2);
+  right: calc(var(--ap-thumb) / 2);
+  height: 12px;
+  border-radius: 999px;
+  background: var(--ck-muted);
+  box-shadow: inset 0 0 0 2px var(--ck-border);
+}
+
+.ap-slider-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--lo) * 100%);
+  right: calc((1 - var(--hi)) * 100%);
+  border-radius: 999px;
+  background: var(--ck-accent);
+}
+
+.ap-slider-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--ap-thumb);
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  pointer-events: none;
+  -webkit-appearance: none;
+  appearance: none;
+  touch-action: pan-y;
+}
+
+.ap-slider-input:focus {
+  outline: none;
+}
+
+.ap-slider-input::-webkit-slider-runnable-track {
+  height: var(--ap-thumb);
+  background: transparent;
+}
+
+.ap-slider-input::-moz-range-track {
+  height: var(--ap-thumb);
+  background: transparent;
+}
+
+.ap-slider-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: var(--ap-thumb);
+  height: var(--ap-thumb);
+  border-radius: 50%;
+  background: var(--ck-accent);
+  border: 5px solid var(--ck-panel);
+  box-shadow: 0 0 0 2px var(--ck-border), 0 2px 4px var(--panel-shadow), 0 6px 12px -2px var(--panel-shadow);
+  box-sizing: border-box;
+  pointer-events: auto;
+  cursor: grab;
+}
+
+.ap-slider-input::-moz-range-thumb {
+  width: var(--ap-thumb);
+  height: var(--ap-thumb);
+  border-radius: 50%;
+  background: var(--ck-accent);
+  border: 5px solid var(--ck-panel);
+  box-shadow: 0 0 0 2px var(--ck-border), 0 2px 4px var(--panel-shadow), 0 6px 12px -2px var(--panel-shadow);
+  box-sizing: border-box;
+  pointer-events: auto;
+  cursor: grab;
+}
+
+.ap-slider-input:active::-webkit-slider-thumb { cursor: grabbing; }
+.ap-slider-input:active::-moz-range-thumb { cursor: grabbing; }
+
+.ap-slider-input:focus-visible::-webkit-slider-thumb {
+  outline: 3px solid var(--ck-text);
+  outline-offset: 3px;
+}
+
+.ap-slider-input:focus-visible::-moz-range-thumb {
+  outline: 3px solid var(--ck-text);
+  outline-offset: 3px;
+}
+
+.ap-slider-ends {
+  position: absolute;
+  left: calc(var(--ap-thumb) / 2);
+  right: calc(var(--ap-thumb) / 2);
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
+}

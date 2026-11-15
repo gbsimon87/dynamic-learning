@@ -581,3 +581,86 @@ test('engineTime counts real seconds even when frames are slow', () => {
     assert.ok(flown > 1.5, `slow frames still count: ${flown}`);
   } finally { t.clean(); }
 });
+
+const ACTIVITY = { id: 'activity:space-arithmetic', activity: 'arithmetic', phrase: 'Space Arithmetic', direction: { x: 0, y: 0, z: -1 }, distanceLy: 0, arrivalPosition: { x: 0, y: 180, z: 0 } };
+test('flying out towards an activity sign travels there, in the scene, like a real trip', () => {
+  const done = [];
+  const t = tripSetup({ activityTrips: [ACTIVITY], onTripDone: info => done.push({ info, at: t.ship.position.clone() }) });
+  try {
+    t.flyOut(); assert.equal(t.trip()?.phase, 'warning'); assert.equal(t.trip().toPhrase, 'Space Arithmetic'); assert.equal(t.trip().activity, true);
+    t.flight.setThrust(false); t.run(30);
+    assert.equal(t.handoffs.length, 0, 'no star-system load');
+    assert.deepEqual(done.map(d => d.info), [{ mode: 'flown', activity: 'arithmetic' }]);
+    assert.ok(done[0].at.distanceTo(new THREE.Vector3(0, 180, 0)) < 1e-6, 'arrives at the area');
+  } finally { t.clean(); }
+});
+test('flying out any other way still goes to the real system', () => {
+  const t = tripSetup({ activityTrips: [{ ...ACTIVITY, direction: { x: 1, y: 0, z: 0 } }] });
+  try { t.flyOut(); assert.equal(t.trip()?.toPhrase, 'TRAPPIST-1'); } finally { t.clean(); }
+});
+test('activity destination reuses both halves of travel without handoff or replacing the rocket', () => {
+  const handoffs = [], done = [];
+  const t = setup({ reduced: false, onHandoff: event => handoffs.push(event), onTripDone: event => done.push(event) });
+  try {
+    const ship = t.ship;
+    t.flight.enter();
+    t.flight.startAutopilotTrip({ id: 'activity:space-arithmetic', activity: 'arithmetic', phrase: 'the Arithmetic Area', direction: { x: 0, y: 1, z: 0 }, distanceLy: 0, arrivalPosition: { x: 0, y: 180, z: 0 } });
+    assert.equal(t.changes.at(-1).trip.activity, true);
+    t.tick(54); assert.equal(handoffs.length, 0); assert.equal(t.changes.at(-1).trip.phase, 'arriving');
+    t.tick(55); assert.deepEqual(done, [{ mode: 'autopilot', activity: 'arithmetic' }]);
+    assert.equal(t.scene.getObjectByName('solar-free-flight'), ship); assert.ok(ship.position.distanceTo(new THREE.Vector3(0, 180, 0)) < 1e-6);
+    assert.equal(handoffs.length, 0); assert.equal(t.flight.isActive(), true);
+  } finally { t.clean(); }
+});
+for (const ticks of [10, 65]) test(`turn back from activity trip after ${ticks} frames stays in Solar`, () => {
+  const handoffs = [], done = [];
+  const t = setup({ onHandoff: e => handoffs.push(e), onTripDone: e => done.push(e) });
+  try {
+    t.flight.enter(); const start = t.ship.position.clone();
+    t.flight.startAutopilotTrip({ id: 'activity:space-arithmetic', activity: 'arithmetic', phrase: 'the Arithmetic Area', direction: { x: 0, y: 1, z: 0 }, distanceLy: 0, arrivalPosition: { x: 0, y: 180, z: 0 } });
+    t.tick(ticks); t.flight.turnBack(); t.tick(30);
+    assert.equal(handoffs.length, 0); assert.ok(t.ship.position.distanceTo(start) < 1e-6);
+    assert.deepEqual(done, [{ mode: 'autopilot', turnedBack: true }]);
+  } finally { t.clean(); }
+});
+test('the activity lane hold flies the rocket itself and ignores manual input', () => {
+  let inArea = true;
+  const t = setup({ isMovementBlocked: () => inArea, allowManualInput: () => !inArea, allowSystemTravel: () => !inArea });
+  try {
+    t.flight.placeInActivity({ x: -6, y: 180, z: 0 }, { x: 0, y: 0, z: -1 });
+    t.key('keydown', ' '); t.flight.setThrust(true); t.tick(20);
+    assert.ok(t.ship.position.equals(new THREE.Vector3(-6, 180, 0)), 'manual flight is off');
+    t.flight.holdActivityLane(6, .05, true);
+    assert.equal(t.ship.position.x, 6); assert.equal(t.ship.position.z, 0);
+    const lookAt = { x: 0, y: 180, z: -110 };
+    t.flight.holdActivityLane(-12, .05, true, false, { y: 187, lookAt });
+    assert.equal(t.ship.position.x, -12); assert.equal(t.ship.position.y, 187);
+    t.flight.holdActivityLane(-12, .05, true, false, { y: 173, lookAt });
+    assert.equal(t.ship.position.y, 173, 'flies between the upper and lower equation rings');
+    assert.equal(t.ship.position.z, 0);
+    assert.ok(new THREE.Vector3(0, 1, 0).applyQuaternion(t.ship.quaternion).z < -.99, 'still facing the rings');
+  } finally { t.clean(); }
+});
+
+test('the equation flight camera fits both rows during the reading approach, then restores the original field of view', () => {
+  for (const view of ['behind', 'cockpit']) for (const [width, height] of [[360, 800], [768, 1024], [1280, 800]]) {
+    const t = setup({ getCameraView: () => view });
+    try {
+      t.camera.aspect = width / height; t.camera.updateProjectionMatrix();
+      const originalFov = t.camera.fov;
+      t.flight.placeInActivity({ x: 12, y: 187, z: 0 }, { x: 0, y: 0, z: -1 });
+      for (const distance of [110, 85, 65]) {
+        t.flight.holdActivityLane(12, .05, true, false, { y: 187, lookAt: { x: 0, y: 186, z: -distance }, frame: { halfWidth: 26, halfHeight: 20 } });
+        t.camera.updateMatrixWorld(true);
+        for (const x of [-22.4, 22.4]) for (const y of [167.4, 192.6]) {
+          const p = new THREE.Vector3(x, y, -distance).project(t.camera);
+          assert.ok(Math.abs(p.x) < 1 && Math.abs(p.y) < 1, `${view} ${width}×${height}: both rows fit ${distance} units ahead`);
+        }
+      }
+      t.flight.holdActivityLane(-6, .05, true, false, { y: 180 });
+      assert.equal(t.camera.fov, originalFov, 'number answers use the original camera');
+      t.flight.holdActivityLane(12, .05, true, false, { y: 187, lookAt: { x: 0, y: 186, z: -65 }, frame: { halfWidth: 26, halfHeight: 20 } });
+      t.flight.exit(); assert.equal(t.camera.fov, originalFov, 'leaving restores the original camera');
+    } finally { t.clean(); }
+  }
+});

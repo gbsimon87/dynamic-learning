@@ -56,3 +56,20 @@ it("Start Practice shows a question; Change settings returns to setup", () => {
   fireEvent.click(screen.getByRole("button", { name: "Change settings" }));
   expect(readout()).toBe("From 1 to 10");
 });
+
+it("Find the sum shows the answer and four calculations, exactly one of which makes it", async () => {
+  const { evaluateCalculation } = await import("../../src/pages/skills/math/generateQuestion");
+  setup();
+  expect(screen.getByRole("button", { name: /Find the answer/ }).getAttribute("aria-pressed")).toBe("true");
+  fireEvent.click(screen.getByRole("button", { name: /Find the sum/ }));
+  expect(screen.getByRole("button", { name: /Find the sum/ }).getAttribute("aria-pressed")).toBe("true");
+  fireEvent.click(screen.getByRole("button", { name: "Start Practice" }));
+  const target = Number(document.querySelector(".ap-question-text").textContent.match(/^\? = (\d+)$/)[1]);
+  const options = [...document.querySelectorAll(".ap-option")];
+  expect(options).toHaveLength(4);
+  const right = options.filter((o) => evaluateCalculation(o.textContent) === target);
+  expect(right).toHaveLength(1);
+  fireEvent.click(right[0]);
+  expect(screen.getByText("Score: 1 / 1")).toBeTruthy();
+  expect(right[0].className).toContain("is-correct");
+});

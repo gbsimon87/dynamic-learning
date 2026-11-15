@@ -78,7 +78,32 @@ when a third arrives. Galaxy map: Milky Way picture over three levels; real
 Milky Way systems only, other galaxies seen from outside. No flying inside
 Beyond yet (needs `createSolarFreeFlight` to accept another scene).
 
-**Toolbar.** Tour, Fly the rocket, **More** (`SolarToolbarMenu.jsx`) and, away
+**Arithmetic Area.** A feature inside the same Solar scene, reached like a
+real-system trip: a gold “Space Arithmetic” signpost stands past the home edge,
+about 35° above the planets' plane and opposite the first real-system sign
+(`arithmeticDirection`). Flying out towards it (heading within ~37°) picks it
+via `activityTrips` instead of `tripTo`; More → Space Arithmetic flies there by
+autopilot. Entry reuses both halves of `solarFreeFlight` travel, warp streaks,
+cameras and `SolarTripHud`, with a pretend-journey label instead of light-years.
+No routing, system load, new renderer or rocket replacement occurs on entry.
+
+In the area the rocket flies itself. `solarArithmeticRunner.js` (pure) closes
+the four answer rings in from 110 units: number answers use one row over 12 s;
+calculations use two rows of wide rings over 20 s. The child steers left/right
+for numbers, or up/down/left/right for calculations (arrows, WASD or direction
+controls; Shift or Turbo brings the rings faster) and the lane the rocket is in
+when the rings arrive answers once. `solarArithmeticArea.js` draws the rings;
+`holdActivityLane` places the explorer rocket and camera. Manual flight is off.
+`SpaceArithmeticPanel.jsx` owns questions, help, pause and scoring; feedback
+moves on by itself (next sum, or the same sum again). Help, pause and
+backgrounding freeze the runner; Resume is explicit. Back returns to overview.
+The direct Skills route opens this same feature. It is not a real star system
+and never enters the real-system registry, map or light-year calculations.
+WebGL failure preserves the HUD and enables still play.
+
+**Opening and toolbar.** The page opens in the rocket (free flight); its ←
+button leads to the overview. The overview toolbar is **More**
+(`SolarToolbarMenu.jsx`: Fly rocket, Tour, then the other modes) and, away
 from home, Home. Labels from 1280px. Planet cards (`SolarInfoCard`, ≤340×400px)
 keep local facts and play; My view holds preferences and Reset. Tweakpane is
 for adults only.

@@ -16,13 +16,13 @@ intended age. Check [PROJECT_IDEAS.md](PROJECT_IDEAS.md) for the requested scope
 
 Read this working vertical slice before creating another quiz-style game:
 
-| Part | Maintained source |
-|---|---|
-| Game and visual interaction | [MoneyMatch.jsx](../src/pages/skills/math/MoneyMatch.jsx) |
-| Pure question generator | [money.js](../src/data/freePlay/money.js), [tests](../src/data/freePlay/money.test.js) |
-| Endless round/level/feedback loop | [FreePlayShell.jsx](../src/components/skills/FreePlayShell.jsx) |
-| Interaction/playthrough checks | [freePlay.test.jsx](../tests/components/freePlay.test.jsx) |
-| Route, hub and public guide | [main.jsx](../src/main.jsx), [skillsCatalog.js](../shared/skillsCatalog.js), [skillGuides.js](../shared/skillGuides.js) |
+| Part                              | Maintained source                                                                                                       |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Game and visual interaction       | [MoneyMatch.jsx](../src/pages/skills/math/MoneyMatch.jsx)                                                               |
+| Pure question generator           | [money.js](../src/data/freePlay/money.js), [tests](../src/data/freePlay/money.test.js)                                  |
+| Endless round/level/feedback loop | [FreePlayShell.jsx](../src/components/skills/FreePlayShell.jsx)                                                         |
+| Interaction/playthrough checks    | [freePlay.test.jsx](../tests/components/freePlay.test.jsx)                                                              |
+| Route, hub and public guide       | [main.jsx](../src/main.jsx), [skillsCatalog.js](../shared/skillsCatalog.js), [skillGuides.js](../shared/skillGuides.js) |
 
 ## Build on the shared loop
 
@@ -105,3 +105,31 @@ fixtures.
 Remove finished backlog work from [PROJECT_IDEAS.md](PROJECT_IDEAS.md) and update
 current architecture only when it changes. Physical-device touch/voice and a
 child's comprehension/enjoyment remain distinct from automated checks.
+
+## Space Arithmetic
+
+The Arithmetic Area is a feature within the existing Solar System scene. Fly
+out past the planets towards its signpost (like the trip to TRAPPIST-1) or use
+More → Space Arithmetic: the existing rocket makes the same departure/arrival
+journey used for star-system travel, then the game opens in that scene. No
+route or renderer change occurs. `/skills/space-arithmetic` is a direct entry
+into this same feature, with a Maths card and `/learn/space-arithmetic` guide.
+Back returns to Solar overview.
+
+Setup offers Arithmetic Practice's choices (operations, mixing, 2–4 numbers,
+range 1–100, Find the answer or Find the sum) from the shared
+`math/practiceSettings.js`, and questions come from its `generateQuestion` (or
+`generateReverseQuestion` for Find the sum) through `makeSpaceQuestion`. The
+flight never stops between sums. The round reducer owns
+question state, retries, help, pause and solved count; stale round IDs are ignored.
+
+`SpaceArithmeticPanel.jsx` overlays the existing scene with a compact card at
+the top left (the sum, Sums solved, Show me, Pause, Settings) and large direction controls. Equations fly in a two-by-two grid, with
+up/down/left/right steering (arrows or WASD); number answers keep left/right lanes. The rocket flies forward on its own; the answer rings close in
+(`solarArithmeticRunner.js`) and the lane the rocket is in when they arrive is
+the answer. Feedback moves on by itself after a moment. Reduced motion or a lost
+renderer switches to tapping the rings in the card, using the same reducer.
+Results remain session-only, without fuel, new rewards or storage.
+
+Teacher review of ranges/question models, family comprehension, interactive
+WebGL/layout and physical-device/accessibility checks remain separate from tests.
