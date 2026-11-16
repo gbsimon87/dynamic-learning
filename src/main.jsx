@@ -97,6 +97,8 @@ const router = createBrowserRouter([
       // World Map draws its own back link inside its header so the map can fill
       // the viewport without a separate back bar pushing the page into a scroll.
       { path: "skills/world-map", lazy: () => import("./pages/skills/geography/WorldMap").then((m) => ({ Component: m.default })) },
+      // Space Arithmetic is a full-screen flight: the navbar and its card are the way out.
+      spaceArithmeticRoute,
       // Find the City is the same: one viewport, its own back link.
       { path: "skills/find-the-city", lazy: () => import("./pages/skills/geography/FindTheCity").then((m) => ({ Component: m.default })) },
 
@@ -113,7 +115,6 @@ const router = createBrowserRouter([
           { path: "skills/missing-number", lazy: () => import("./pages/skills/math/FindTheMissingNumber").then((m) => ({ Component: m.default })) },
           { path: "skills/number-bonds", lazy: () => import("./pages/skills/math/NumberBonds").then((m) => ({ Component: m.default })) },
           { path: "skills/fraction-fun", lazy: () => import("./pages/skills/math/FractionFun").then((m) => ({ Component: m.default })) },
-          spaceArithmeticRoute,
           { path: "skills/money", lazy: () => import("./pages/skills/math/MoneyMatch").then((m) => ({ Component: m.default })) },
           { path: "skills/measure", lazy: () => import("./pages/skills/math/MeasureIt").then((m) => ({ Component: m.default })) },
           { path: "skills/robot-moves", lazy: () => import("./pages/skills/math/RobotMoves").then((m) => ({ Component: m.default })) },

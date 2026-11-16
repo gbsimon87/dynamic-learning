@@ -2,11 +2,30 @@
 // forward on its own; the child only moves between four lanes. The answer
 // rings start far ahead and close in slowly; when they reach the rocket, the
 // lane it is in is its answer. There is no way to miss all four rings.
-export const RUNNER = { laneX: [-18, -6, 6, 18], startDistance: 110, approachSeconds: 12, laneSpeed: 6, passDistance: -30, turbo: 3 };
+export const RUNNER = { laneX: [-18, -6, 6, 18], startDistance: 110, approachSeconds: 12, laneSpeed: 6, passDistance: -30, turbo: 3, fireAfter: 12 };
 export const EQUATION_GRID = { laneX: [-12, 12, -12, 12], laneY: [7, 7, -7, -7], approachSeconds: 20 };
 
 export function arithmeticLanePoint(lane, grid = false, config = RUNNER) {
   return { x: grid ? EQUATION_GRID.laneX[lane] : config.laneX[lane], y: grid ? EQUATION_GRID.laneY[lane] : 0 };
+}
+
+/**
+ * How much the camera aims at the middle of the ring group: 1 while it is far,
+ * so the rings start centred on screen whichever lane the rocket is in, then 0
+ * as it arrives, so the chosen opening fills the view.
+ */
+export function arithmeticAimCentre(distance, followDistance = 35) {
+  return Math.min(1, Math.max(0, distance / followDistance));
+}
+/**
+ * The camera's look-at point, relative to the area (`y` above `spawn.y`). The
+ * grid looks a little higher to clear the card. `maxTurn` (tangent of the
+ * largest sideways turn) keeps the rocket on a narrow phone screen.
+ */
+export function arithmeticCameraAim({ x, y, distance, grid = false, centre, maxTurn = Infinity }) {
+  const z = -Math.max(5, distance), reach = maxTurn * (-z + 2);
+  const aimX = x + Math.max(-reach, Math.min(reach, -x * centre));
+  return { x: aimX, y: y * (1 - centre) + (grid ? 6 * centre : 0), z };
 }
 
 /** Four-way steering stops at a grid edge; it never wraps to another row. */
@@ -24,6 +43,15 @@ export function createArithmeticRunner(config = RUNNER) {
      * rings it just flew through carry on behind it (`trailDistance`).
      */
     reset({ grid: nextGrid = false } = {}) { grid = nextGrid; trail = distance <= 0 ? distance : config.passDistance; distance = config.startDistance; armed = true; },
+    /**
+     * Laser Blast: answer early with the lane the rocket is heading for. Only
+     * once per wave, and only while the rings are still ahead and showing.
+     */
+    fire() {
+      if (!armed || distance <= 0 || distance > config.startDistance - (config.fireAfter ?? 0)) return null;
+      armed = false;
+      return lane;
+    },
     setLane(next) { if (Number.isInteger(next)) lane = Math.max(0, Math.min(config.laneX.length - 1, next)); },
     /**
      * Advance; returns the answered lane once, the moment the rings reach the rocket.

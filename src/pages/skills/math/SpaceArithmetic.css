@@ -28,9 +28,17 @@ body.dark .space-arithmetic, body.dark .space-arithmetic-steer {
 .space-arithmetic-bar .space-arithmetic-back { padding: 0; width: 48px; font-size: 1.3rem; }
 .space-arithmetic-bar .speak-btn { justify-self: end; }
 .space-arithmetic-count { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .4rem; font-size: 1rem; font-weight: 700; font-variant-numeric: tabular-nums; }
-/* Session-only fun: a streak chip and the planet tour. Nothing is stored. */
+/* The streak chip powers up with the rocket; the trophy is this browser's best
+   streak for the mission, gold while this flight beats it. */
 .space-arithmetic-streak { padding: .05rem .5rem; border-radius: 999px; border: 2px solid var(--space-accent); font-size: .95rem; }
 .space-arithmetic-streak.is-hot { background: var(--space-accent); color: var(--space-on-accent); }
+.space-arithmetic-streak.is-lightning { background: #6c45c9; border-color: #6c45c9; color: #fff; }
+.space-arithmetic-streak.is-rainbow { background: linear-gradient(90deg, #c2304f, #b35a00, #2f7d32, #1f63b8, #6c45c9); border-color: transparent; color: #fff; }
+.space-arithmetic-best { padding: .05rem .5rem; border-radius: 999px; border: 2px solid #c99a1a; font-size: .95rem; }
+.space-arithmetic-best.is-new { background: #ffd166; color: #3a2a00; border-color: #ffd166; }
+.space-arithmetic .space-arithmetic-moment { font-size: 1.1rem; font-weight: 800; animation: space-arithmetic-pop .45s ease-out; }
+@keyframes space-arithmetic-pop { from { transform: scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .space-arithmetic .space-arithmetic-moment { animation: none; } }
 .space-arithmetic-journey { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .3rem .6rem; margin: .4rem 0 0; font-size: .95rem; font-weight: 700; }
 .space-arithmetic-journey.is-reached { color: var(--space-accent); }
 .space-arithmetic-pips { display: inline-flex; gap: .3rem; }
@@ -54,24 +62,118 @@ body.dark .space-arithmetic, body.dark .space-arithmetic-steer {
 /* The feedback line keeps its live region but takes no room while empty. */
 .space-arithmetic .free-play-feedback { margin: .35rem 0 0; min-height: 0; font-size: 1rem; }
 .space-arithmetic .free-play-feedback:empty { margin: 0; }
+.space-arithmetic-count .space-arithmetic-solved { font-size: 1.05rem; }
+/* The play card's two groups only matter in the wide still view (landscape). */
+.space-arithmetic-main, .space-arithmetic-side { display: contents; }
+@media (max-height: 500px) and (min-width: 600px) {
+  .is-playing.is-still > .space-arithmetic-main, .is-playing.is-still > .space-arithmetic-side { display: block; min-width: 0; }
+}
+/* Show me, Pause and Settings: three icon buttons in one row. */
 .space-arithmetic-tools { display: grid; grid-template-columns: repeat(3, 1fr); gap: .4rem; margin-top: .6rem; }
-.space-arithmetic-tools .skill-btn { min-height: 44px; padding: .3rem .4rem; font-size: .9rem; }
+.space-arithmetic .space-arithmetic-tools .space-tool { min-height: 48px; padding: 0; font-size: 1.35rem; line-height: 1; }
+.space-arithmetic .space-arithmetic-tools .space-tool.is-resume, .space-arithmetic .space-arithmetic-tools .space-tool.is-on { background: var(--space-accent); color: var(--space-on-accent); border-color: var(--space-accent); }
+.space-arithmetic .space-arithmetic-paused { margin: .4rem 0 0; font-weight: 800; }
 
-/* Setup: the same choices as Arithmetic Practice. A little wider while no rings fly. */
-.solar-system-page > .solar-arithmetic-panel.is-setup { width: min(360px, calc(100% - 24px)); }
-.space-arithmetic .space-arithmetic-label { font-size: .95rem; margin: .8rem 0 .35rem; text-align: left; }
-.space-arithmetic-ops { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; }
-.space-arithmetic-ops .skill-btn { display: flex; align-items: center; justify-content: center; gap: .35rem; padding-inline: .5rem; font-size: .92rem; }
-.space-arithmetic-sign { font-size: 1.2rem; line-height: 1; }
-.space-arithmetic .space-arithmetic-mix { width: 100%; margin-top: .45rem; font-size: .92rem; }
-.space-arithmetic-choices .skill-btn { flex: 1 1 0; padding-inline: .4rem; }
-.space-arithmetic .space-arithmetic-readout { margin: .3rem 0 0; font-weight: 600; font-variant-numeric: tabular-nums; }
-.space-arithmetic .ap-slider { margin: 0 auto .4rem; }
-.space-arithmetic .space-arithmetic-lead { font-size: 1.02rem; margin-top: .6rem; }
+/* Setup: one screen, not a long form. A fixed header and Start button with the
+   choices between: four mode tiles, then each setting on one line, a short
+   label then its segmented buttons. Hear reads how to play. */
+.solar-system-page > .solar-arithmetic-panel.is-setup {
+  width: min(400px, calc(100% - 24px)); max-height: calc(100% - 24px); padding: 0;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.solar-arithmetic-panel.is-setup > .space-arithmetic-bar { padding: .7rem .85rem .5rem; grid-template-columns: 48px minmax(0, 1fr) auto auto; text-align: left; }
+.space-arithmetic .space-setup-title { font-size: 1.15rem; line-height: 1.15; margin: 0; text-wrap: balance; }
+.space-arithmetic-setup-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: .1rem .85rem .6rem; text-align: left; }
+.space-arithmetic-setup-foot { padding: .6rem .85rem .8rem; border-top: 1px solid color-mix(in srgb, currentColor 14%, transparent); }
+.space-arithmetic .space-arithmetic-start { width: 100%; min-height: 56px; background: var(--space-accent); color: var(--space-on-accent); border-color: var(--space-accent); font-size: 1.15rem; }
+.space-arithmetic-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; margin: 0; }
+
+/* Mode tiles: four big buttons, an icon over one short word, on their own
+   row under the setup header's title. */
+.space-mode-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .4rem; }
+.space-arithmetic-bar > .space-mode-tiles { grid-column: 1 / -1; margin-top: .2rem; }
+.space-arithmetic .space-mode-tile {
+  display: grid; justify-items: center; align-content: center; gap: .15rem; min-width: 0; min-height: 68px; padding: .35rem .1rem;
+  border-radius: 16px; border-color: color-mix(in srgb, currentColor 22%, transparent);
+}
+.space-mode-icon { font-size: 1.6rem; line-height: 1; }
+.space-mode-name { font-size: .8rem; line-height: 1.1; }
+.space-arithmetic .space-mode-tile[aria-pressed="true"] { box-shadow: 0 4px 0 color-mix(in srgb, var(--space-accent) 55%, black); transform: translateY(-2px); }
+@media (prefers-reduced-motion: reduce) { .space-arithmetic .space-mode-tile[aria-pressed="true"] { transform: none; } }
+/* Laser Blast's question sets: an icon and a word, in the segmented style. */
+.space-arithmetic .space-arithmetic-segmented .space-arithmetic-set { display: inline-flex; align-items: center; justify-content: center; gap: .25rem; font-size: .9rem; }
+.space-arithmetic-set > span:first-child { font-size: 1.15rem; }
+
+.space-arithmetic-row { display: grid; grid-template-columns: 4.6rem minmax(0, 1fr); align-items: center; gap: .5rem; margin-top: .55rem; }
+.space-arithmetic .space-arithmetic-label { font-size: .9rem; margin: 0; line-height: 1.2; }
+.space-arithmetic-segmented {
+  display: flex; padding: 3px; gap: 3px; border-radius: 999px;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+}
+.space-arithmetic .space-arithmetic-segmented .skill-btn {
+  flex: 1 1 0; min-width: 0; min-height: 44px; padding: .2rem .3rem; border: 0; background: transparent; color: inherit; font-size: 1rem;
+}
+.space-arithmetic .space-arithmetic-segmented .skill-btn[aria-pressed="true"] { background: var(--space-accent); color: var(--space-on-accent); box-shadow: 0 2px 6px rgb(0 0 0 / .18); }
+.space-arithmetic .space-arithmetic-segmented .space-arithmetic-op { font-size: 1.7rem; font-weight: 800; line-height: 1; }
+.space-arithmetic-find { display: grid; justify-items: center; line-height: 1.1; }
+.space-arithmetic-example { font-size: .78rem; font-weight: 600; opacity: .8; font-variant-numeric: tabular-nums; }
+
+/* Mix: a switch, with its hint underneath the words. */
+.space-arithmetic .space-arithmetic-switch {
+  display: flex; align-items: center; justify-content: space-between; gap: .6rem; width: 100%; min-height: 48px; margin-top: .45rem;
+  padding: .3rem .4rem .3rem calc(4.6rem + .5rem); border: 0; background: none; color: inherit; font: inherit; font-weight: 700; font-size: .9rem; text-align: left; cursor: pointer;
+}
+.space-arithmetic-switch-text { display: grid; }
+.space-arithmetic-switch .space-arithmetic-note { font-weight: 500; font-size: .78rem; }
+.space-arithmetic-switch-knob {
+  flex: 0 0 auto; width: 46px; height: 28px; border-radius: 999px; position: relative;
+  background: color-mix(in srgb, currentColor 22%, transparent); transition: background .15s;
+}
+.space-arithmetic-switch-knob::after {
+  content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--space-panel); box-shadow: 0 1px 3px rgb(0 0 0 / .3); transition: transform .15s;
+}
+.space-arithmetic-switch[aria-pressed="true"] .space-arithmetic-switch-knob { background: var(--space-accent); }
+.space-arithmetic-switch[aria-pressed="true"] .space-arithmetic-switch-knob::after { transform: translateX(18px); }
+@media (prefers-reduced-motion: reduce) { .space-arithmetic-switch-knob, .space-arithmetic-switch-knob::after { transition: none; } }
+
+.space-arithmetic-range { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .5rem; margin-top: .35rem; padding-left: calc(4.6rem + .5rem); }
+.space-arithmetic .space-arithmetic-range .ap-slider { height: var(--ap-thumb); margin: 0; }
+.space-arithmetic-range .ap-slider-ends { display: none; }
+.space-arithmetic .space-arithmetic-readout { margin: 0; font-size: .85rem; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.space-arithmetic-setup-body > .space-arithmetic-note { margin: .25rem 0 0 calc(4.6rem + .5rem); }
+
 .space-arithmetic-choices { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin: .4rem 0; }
-.space-arithmetic-example { font-size: .92rem; opacity: .85; }
-.space-arithmetic .space-arithmetic-start { width: 100%; margin-top: .6rem; background: var(--space-accent); color: var(--space-on-accent); border-color: var(--space-accent); font-size: 1.1rem; }
+.space-arithmetic-choices .skill-btn { flex: 1 1 0; padding-inline: .4rem; }
 .space-arithmetic-note { font-size: .82rem; opacity: .7; }
+@media (max-width: 380px) {
+  .space-arithmetic-setup-body { padding-inline: .6rem; }
+  .space-mode-icon { font-size: 1.4rem; }
+  .space-arithmetic-row { grid-template-columns: 3.9rem minmax(0, 1fr); }
+  .space-arithmetic .space-arithmetic-switch, .space-arithmetic-range { padding-left: calc(3.9rem + .5rem); }
+  .space-arithmetic-setup-body > .space-arithmetic-note { margin-left: calc(3.9rem + .5rem); }
+}
+.space-arithmetic-dust { padding: .05rem .5rem; border-radius: 999px; border: 2px solid #c99a1a; font-size: .95rem; }
+.space-arithmetic-dots .is-empty { opacity: .6; }
+.space-arithmetic-jumps { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* Landing: the flight log, one row per thing done this flight. */
+.solar-system-page > .solar-arithmetic-panel.is-landed { width: min(360px, calc(100% - 24px)); }
+.space-arithmetic .space-arithmetic-landed-title { margin: 0; font-size: 1.35rem; text-align: left; }
+.space-arithmetic-log { list-style: none; margin: .7rem 0 0; padding: 0; display: grid; gap: .3rem; text-align: left; }
+.space-arithmetic-log li {
+  display: grid; grid-template-columns: 1.6rem 1fr auto; align-items: center; gap: .4rem; padding: .4rem .6rem; border-radius: 12px;
+  background: color-mix(in srgb, currentColor 6%, transparent); font-weight: 600;
+}
+.space-arithmetic-log strong { display: inline-flex; align-items: center; gap: .4rem; font-size: 1.2rem; font-variant-numeric: tabular-nums; }
+.space-arithmetic-log .space-arithmetic-best { font-size: .8rem; }
+.space-arithmetic-cracked { margin-top: .6rem; padding: .5rem .7rem; border-radius: 12px; border-left: 4px solid var(--space-accent); background: color-mix(in srgb, var(--space-accent) 12%, transparent); text-align: left; }
+.space-arithmetic .space-arithmetic-cracked p { margin: 0 0 .25rem; font-weight: 700; }
+.space-arithmetic-cracked ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: .3rem .8rem; font-variant-numeric: tabular-nums; font-weight: 700; }
+.space-arithmetic-landed-actions { display: grid; gap: .45rem; margin-top: .8rem; }
+.space-arithmetic-landed-actions .space-arithmetic-start { min-height: 56px; }
+.space-arithmetic .space-arithmetic-comeback { margin: .35rem auto 0; width: fit-content; padding: .1rem .7rem; border-radius: 999px; border: 2px dashed var(--space-accent); font-weight: 700; font-size: .9rem; }
+.space-arithmetic .space-arithmetic-help-lead { font-weight: 800; }
 
 /* Help and still answers */
 .space-arithmetic-help { background: color-mix(in srgb, currentColor 6%, transparent); border-radius: 1rem; padding: .5rem; margin-top: .6rem; }
@@ -90,7 +192,9 @@ body.dark .space-arithmetic, body.dark .space-arithmetic-steer {
   display: flex; align-items: center; gap: .75rem;
 }
 .space-arithmetic-steer .skill-btn { width: 76px; height: 76px; padding: 0; font-size: 1.8rem; box-shadow: 0 6px 18px rgb(0 0 0 / .3); }
-.space-arithmetic-steer .space-arithmetic-turbo { font-size: 1rem; touch-action: none; user-select: none; -webkit-user-select: none; }
+.space-arithmetic-steer .space-arithmetic-turbo { display: grid; place-content: center; justify-items: center; gap: 0; font-size: 1.5rem; line-height: 1; touch-action: none; user-select: none; -webkit-user-select: none; }
+.space-arithmetic-steer .space-turbo-word { font-size: .72rem; font-weight: 800; }
+.space-arithmetic-steer .space-arithmetic-fire { font-size: 1.9rem; background: #c2304f; color: #fff; border-color: #c2304f; }
 .space-arithmetic-steer .space-arithmetic-turbo.is-on { background: var(--space-accent); color: var(--space-on-accent); border-color: var(--space-accent); }
 .space-arithmetic-lane { min-width: 5.5rem; padding: .35rem .6rem; border-radius: 999px; background: var(--space-panel); font-weight: 700; }
 .solar-arithmetic-flight > .solar-camera-choices { position: absolute; z-index: 69; pointer-events: auto; right: 10px; bottom: max(16px, env(safe-area-inset-bottom)); }
@@ -102,6 +206,8 @@ body.dark .space-arithmetic, body.dark .space-arithmetic-steer {
   .space-arithmetic-sum { margin-top: .4rem; padding: .35rem; }
   .solar-system-page > .space-arithmetic-steer { gap: .5rem; }
   .space-arithmetic-steer .skill-btn { width: 64px; height: 64px; }
+  /* Four buttons with Fire: start at the left so Turbo clears the camera choice. */
+  .solar-system-page > .space-arithmetic-steer.has-fire:not(.is-grid) { left: 10px; transform: none; }
   /* Too narrow for the pill: keep it for screen readers only. */
   .space-arithmetic-lane { position: absolute; width: 1px; height: 1px; min-width: 0; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 }
@@ -116,6 +222,7 @@ body.dark .space-arithmetic, body.dark .space-arithmetic-steer {
 .space-arithmetic-steer.is-grid .space-arithmetic-right { grid-column: 3; grid-row: 2; }
 .space-arithmetic-steer.is-grid .space-arithmetic-down { grid-column: 2; grid-row: 3; }
 .space-arithmetic-steer.is-grid .space-arithmetic-turbo { grid-column: 4; grid-row: 2; }
+.space-arithmetic-steer.is-grid .space-arithmetic-fire { grid-column: 4; grid-row: 3; }
 .space-arithmetic-steer.is-grid .space-arithmetic-lane { position: absolute; width: 1px; height: 1px; min-width: 0; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 @media (max-height: 500px) {
   .solar-system-page > .space-arithmetic-steer.is-grid { grid-template-columns: repeat(4, 48px); left: auto; right: 76px; }
@@ -126,4 +233,71 @@ body.dark .space-arithmetic, body.dark .space-arithmetic-steer {
 }
 @media (max-width: 500px) and (max-height: 500px) {
   .solar-system-page > .space-arithmetic-steer.is-grid { display: flex; left: 12px; right: auto; }
+}
+
+/* Short screens (landscape phones): the setup still fits without scrolling. */
+@media (max-height: 560px) {
+  .solar-arithmetic-panel.is-setup > .space-arithmetic-bar { padding-block: .4rem .3rem; }
+  .space-arithmetic .space-mode-tile { min-height: 48px; grid-auto-flow: column; gap: .3rem; }
+  .space-mode-icon { font-size: 1.25rem; }
+  .space-arithmetic-setup-foot { padding-block: .4rem .5rem; }
+  .space-arithmetic .space-arithmetic-start { min-height: 48px; }
+  .space-arithmetic-row { margin-top: .35rem; }
+}
+.space-arithmetic .space-arithmetic-segmented .space-arithmetic-find .space-arithmetic-example { font-size: 1rem; font-weight: 700; opacity: 1; }
+
+/* Landscape phones: setup splits into two columns so it fits without
+   scrolling, and the steering moves right, clear of the card. */
+@media (max-height: 500px) and (min-width: 600px) {
+  /* One header row: back, the mode tiles, Hear and Start; the title stays for
+     screen readers (the pressed tile names the mode). Choices below in columns. */
+  .solar-system-page > .solar-arithmetic-panel.is-setup {
+    width: min(900px, calc(100% - 24px)); display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto minmax(0, 1fr);
+  }
+  .solar-arithmetic-panel.is-setup > .space-arithmetic-bar { grid-column: 1; grid-row: 1; grid-template-columns: 48px minmax(0, 1fr) auto auto; padding-bottom: .4rem; }
+  .solar-arithmetic-panel.is-setup .space-setup-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .solar-arithmetic-panel.is-setup .space-arithmetic-bar > .space-mode-tiles { grid-column: 2; grid-row: 1; margin: 0; }
+  .solar-arithmetic-panel.is-setup .space-arithmetic-bar > .space-arithmetic-best { grid-column: 3; grid-row: 1; }
+  .solar-arithmetic-panel.is-setup .space-arithmetic-bar > .speak-btn { grid-column: 4; grid-row: 1; }
+  .solar-arithmetic-panel.is-setup > .space-arithmetic-setup-foot { grid-column: 2; grid-row: 1; align-self: start; border-top: 0; padding: .4rem .85rem .4rem 0; }
+  .solar-arithmetic-panel.is-setup .space-arithmetic-start { width: auto; padding-inline: 1.1rem; font-size: 1.05rem; }
+  .solar-arithmetic-panel.is-setup > .space-arithmetic-setup-body { grid-column: 1 / -1; grid-row: 2; padding-top: .2rem; }
+  .solar-arithmetic-panel.is-setup .space-arithmetic-setup-body { columns: 2; column-gap: 1rem; }
+  .solar-arithmetic-panel.is-setup .space-arithmetic-setup-body > * { break-inside: avoid; }
+  .solar-arithmetic-panel.is-setup .space-arithmetic-setup-body > :first-child { margin-top: 0; }
+  .solar-system-page > .solar-arithmetic-panel.is-playing { max-height: calc(100% - 24px); }
+  /* A 2×2 pad at the bottom right (◀ ▶ over Fire/Turbo or Fly through). */
+  .solar-system-page > .space-arithmetic-steer:not(.is-grid) { left: auto; right: 72px; transform: none; display: grid; grid-template-columns: repeat(2, 56px); gap: .5rem; }
+  .space-arithmetic-steer:not(.is-grid) .skill-btn { width: 56px; height: 56px; }
+  .space-arithmetic-steer:not(.is-grid) .space-math-advance { grid-column: 1 / -1; width: auto; font-size: .95rem; }
+  .space-arithmetic-steer:not(.is-grid) .space-arithmetic-lane { position: absolute; width: 1px; height: 1px; min-width: 0; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  /* Still view has no steering bar: a wider card, the sum on the left and the
+     tools and answer buttons on the right. */
+  .solar-system-page > .solar-arithmetic-panel.is-playing.is-still {
+    width: min(680px, calc(100% - 24px)); display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); column-gap: .9rem; align-items: start;
+  }
+  .is-playing.is-still > .space-arithmetic-bar, .is-playing.is-still > .space-arithmetic-main { grid-column: 1; }
+  .is-playing.is-still > .space-arithmetic-side { grid-column: 2; grid-row: 1 / span 2; }
+  .is-playing.is-still .space-arithmetic-tools { margin-top: 0; }
+  .is-playing.is-still .space-arithmetic-help { margin-top: .4rem; padding: .4rem; }
+  /* Answers are locked while help is open: help takes their place. */
+  .is-playing.is-still .space-arithmetic-help ~ .space-arithmetic-answers { display: none; }
+  .is-playing.is-still .space-arithmetic-help .space-arithmetic-choices { flex-wrap: nowrap; margin: .2rem 0; }
+  .is-playing.is-still .space-arithmetic-help .space-arithmetic-dots { margin-top: 0; padding: .3rem; }
+  .is-playing.is-still .space-arithmetic-help p { margin: .25rem 0; }
+}
+/* Three columns of choices, so Laser Blast's setup fits too. */
+@media (max-height: 500px) and (min-width: 600px) {
+  .solar-arithmetic-panel.is-setup .space-arithmetic-setup-body { columns: 3; column-gap: .9rem; }
+  .solar-arithmetic-panel.is-setup .space-arithmetic-segmented .skill-btn { font-size: .92rem; }
+  .solar-arithmetic-panel.is-setup .space-arithmetic-segmented .space-arithmetic-find .space-arithmetic-example { font-size: .88rem; }
+  .solar-arithmetic-panel.is-setup .space-arithmetic-row { grid-template-columns: 3.7rem minmax(0, 1fr); gap: .35rem; }
+  .solar-arithmetic-panel.is-setup .space-arithmetic-set-name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .solar-arithmetic-panel.is-setup .space-arithmetic-switch { padding-left: calc(3.7rem + .35rem); }
+  .solar-arithmetic-panel.is-setup .space-arithmetic-range { padding-left: 0; }
+  .solar-arithmetic-panel.is-setup .space-arithmetic-setup-body > .space-arithmetic-note { margin-left: calc(3.7rem + .35rem); }
+}
+/* Narrow landscape: mode tiles show only their icons (the name stays their label). */
+@media (max-height: 500px) and (min-width: 600px) and (max-width: 719px) {
+  .solar-arithmetic-panel.is-setup .space-mode-name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 }

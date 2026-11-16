@@ -118,7 +118,8 @@ in React state; Reset restores Behind rocket.
 
 **Storage.** Only `dl.solarMissions` (version 1): browser-wide completed mission
 IDs, shared across profiles, kept through sign-out; storage failure leaves play
-available. Flight rewards, chapter progress and traced constellations last only
+available. Space Arithmetic keeps `dl.spaceArithmeticRecords` (version 1, best
+streak per mission) the same way. Flight rewards, chapter progress and traced constellations last only
 for that visit. Read `curriculum-progress` before adding persistence.
 
 **Checks.** `npm run build && node scripts/checkSolarUi.js [--systems]` — local

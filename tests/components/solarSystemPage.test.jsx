@@ -180,11 +180,11 @@ test('activity journey and game stay in the mounted Solar scene, with no star-sy
   act(() => { props.onOpenArithmetic({ stage: 'departing' }); props.onTravel(TO_TEST); });
   expect(pending).toHaveLength(0);
   act(() => props.onOpenArithmetic({ api }));
-  expect(screen.getByRole('heading', { name: 'Space Arithmetic' })).toBeTruthy(); expect(screen.getByTestId('scene')).toBeTruthy();
+  expect(screen.getByRole('region', { name: 'Space Arithmetic' })).toBeTruthy(); expect(screen.getByTestId('scene')).toBeTruthy();
   expect(mounts).toEqual([HOME_SYSTEM.id]);
   const { fireEvent } = await import('@testing-library/react');
   fireEvent.click(screen.getByRole('button', { name: /Back to Solar System/ }));
-  expect(api.leave).toHaveBeenCalledOnce(); expect(screen.queryByRole('heading', { name: 'Space Arithmetic' })).toBeNull();
+  expect(api.leave).toHaveBeenCalledOnce(); expect(screen.queryByRole('region', { name: 'Space Arithmetic' })).toBeNull();
   expect(mounts).toEqual([HOME_SYSTEM.id]); view.unmount();
 });
 test('cancelled activity journey releases the page travel guard', async () => {
@@ -204,5 +204,5 @@ test('scene loss keeps the game and switches to tapping rings in still view', as
   act(() => props.onUnavailable());
   expect(screen.queryByTestId('scene')).toBeNull();
   fireEvent.click(screen.getByRole('button', { name: `Answer ${question.answer}` }));
-  expect(screen.getByText('Sums solved: 1')).toBeTruthy();
+  expect(screen.getByLabelText('Sums solved: 1')).toBeTruthy();
 });

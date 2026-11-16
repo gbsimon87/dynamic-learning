@@ -24,7 +24,7 @@ test('real questions and answer rings remain numeric after repeated correct cros
     expect(new Set(question.options).size).toBe(4);
     expect(screen.getByRole('heading', { name: question.prompt })).toBeTruthy();
     act(() => ref.current.crossing({ lane: question.options.indexOf(question.answer), roundId }));
-    expect(screen.getByText(`Sums solved: ${solved + 1}`)).toBeTruthy();
+    expect(screen.getByLabelText(`Sums solved: ${solved + 1}`)).toBeTruthy();
     act(() => vi.advanceTimersByTime(SPACE_FEEDBACK_MS.correct));
   }
 });
@@ -52,7 +52,7 @@ test('Find the sum: four-way steering reaches every equation ring and scoring wa
     for (const [key, lane] of [['ArrowDown', 3], ['ArrowLeft', 2], ['w', 0], ['d', 1]]) {
       fireEvent.keyDown(window, { key });
       expect(flightApi.setLane).toHaveBeenLastCalledWith(lane);
-      expect(screen.getByText(`Sums solved: ${solved}`)).toBeTruthy();
+      expect(screen.getByLabelText(`Sums solved: ${solved}`)).toBeTruthy();
     }
     fireEvent.keyDown(window, { key: 'ArrowUp' });
     expect(flightApi.setLane).toHaveBeenLastCalledWith(1);
@@ -73,7 +73,7 @@ test('Find the sum: four-way steering reaches every equation ring and scoring wa
     expect(screen.getByText(`Work out each sum, one at a time. Which one makes ${question.target}?`)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: 'Close help' }));
     act(() => ref.current.crossing({ lane: question.options.indexOf(question.answer), roundId }));
-    expect(screen.getByText(`Sums solved: ${solved + 1}`)).toBeTruthy();
+    expect(screen.getByLabelText(`Sums solved: ${solved + 1}`)).toBeTruthy();
     expect(screen.getByText(`${question.answer} = ${question.target}`)).toBeTruthy();
   }
 });

@@ -116,7 +116,22 @@ route or renderer change occurs. `/skills/space-arithmetic` is a direct entry
 into this same feature, with a Maths card and `/learn/space-arithmetic` guide.
 Back returns to Solar overview.
 
-Setup offers Arithmetic Practice's choices (operations, mixing, 2–4 numbers,
+Setup is one card that fits without scrolling, starting with four mode tiles:
+Laser Blast, Target Collector, Balance the Space Station and Alien Sharing
+Station (`SpaceControls.jsx`). Keep its text minimal: icons, one-word labels and
+pictures, with Hear reading the instructions. Every mode has Turbo (`useSpaceTurbo`). The three manipulative modes use
+`SpaceMathActivities.jsx` with pure generators/state in `spaceMathActivities.js`;
+they keep results in session memory. All three use spaceship flight through
+world-space stars, cargo gates or alien bays. Reduced motion/no WebGL keeps
+the spaceship and gates in the world area, with explicit Fly through controls. See [maths modes](SPACE_ARITHMETIC.md#maths-modes).
+
+Laser Blast is the only answer flight. Its question sets (`data/freePlay/spaceMissions.js`;
+details in [SPACE_ARITHMETIC.md](SPACE_ARITHMETIC.md#modes-and-laser-blasts-question-sets))
+are Sums, Number bonds and Count in steps. A new set is a registry entry
+(questions, dressing); it never gets its own flight, reducer or renderer, and a
+mode that only re-dresses existing questions is a duplicate, not a new mode.
+
+Sums offers Arithmetic Practice's choices (operations, mixing, 2–4 numbers,
 range 1–100, Find the answer or Find the sum) from the shared
 `math/practiceSettings.js`, and questions come from its `generateQuestion` (or
 `generateReverseQuestion` for Find the sum) through `makeSpaceQuestion`. The
@@ -124,7 +139,7 @@ flight never stops between sums. The round reducer owns
 question state, retries, help, pause and solved count; stale round IDs are ignored.
 
 `SpaceArithmeticPanel.jsx` overlays the existing scene with a compact card at
-the top left (the sum, Sums solved, Show me, Pause, Settings) and large direction controls. Equations fly in a two-by-two grid, with
+the top left (the sum, ✅ count, icon tools for Show me, Pause, Settings) and large direction controls. Equations fly in a two-by-two grid, with
 up/down/left/right steering (arrows or WASD); number answers keep left/right lanes. The rocket flies forward on its own; the answer rings close in
 (`solarArithmeticRunner.js`) and the lane the rocket is in when they arrive is
 the answer. Feedback moves on by itself after a moment. Reduced motion or a lost

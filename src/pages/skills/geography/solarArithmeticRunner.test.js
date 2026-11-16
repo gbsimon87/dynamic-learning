@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { RUNNER, EQUATION_GRID, arithmeticLanePoint, steerArithmeticLane, createArithmeticRunner } from './solarArithmeticRunner.js';
+import { RUNNER, EQUATION_GRID, arithmeticLanePoint, steerArithmeticLane, createArithmeticRunner, arithmeticAimCentre, arithmeticCameraAim } from './solarArithmeticRunner.js';
 
 const run = (r, seconds, dt = 1 / 30) => { const hits = []; for (let t = 0; t < seconds; t += dt) { const lane = r.step(dt); if (lane !== null) hits.push(lane); } return hits; };
 
@@ -72,4 +72,30 @@ test('every equation ring is reached by gliding in two dimensions, with a longer
     assert.deepEqual(run(r, 3), [], 'one crossing only');
     r.reset({ grid: true }); assert.equal(r.lane, lane, 'keep row and column into the next round');
   }
+});
+
+test('the camera aims at the middle of the far rings, then follows the chosen lane', () => {
+  assert.equal(arithmeticAimCentre(RUNNER.startDistance), 1, 'far: the whole group');
+  assert.equal(arithmeticAimCentre(0), 0, 'arriving: the chosen opening');
+  const far = arithmeticCameraAim({ x: RUNNER.laneX[1], y: 0, distance: RUNNER.startDistance, centre: 1 });
+  assert.deepEqual({ x: far.x + 0, y: far.y + 0 }, { x: 0, y: 0 }, 'number rings start centred on screen, whichever lane the rocket is in');
+  assert.equal(far.z, -RUNNER.startDistance);
+  const near = arithmeticCameraAim({ x: RUNNER.laneX[0], y: 0, distance: 1, centre: 0 });
+  assert.equal(near.x, RUNNER.laneX[0]);
+  assert.equal(arithmeticCameraAim({ x: 12, y: 7, distance: 100, grid: true, centre: 1 }).y, 6, 'the grid keeps its lift');
+  const phone = arithmeticCameraAim({ x: RUNNER.laneX[0], y: 0, distance: RUNNER.startDistance, centre: 1, maxTurn: .1 });
+  assert.ok(phone.x > RUNNER.laneX[0] && phone.x < 0, 'a narrow screen turns only part way, keeping the rocket in view');
+  assert.ok(Math.abs((phone.x - RUNNER.laneX[0]) / (RUNNER.startDistance + 2) - .1) < 1e-9);
+});
+
+test('Laser Blast: firing answers early with the chosen lane, once per wave, never before the rings show', () => {
+  const r = createArithmeticRunner(); r.reset(); r.setLane(2);
+  assert.equal(r.fire(), null, 'rings still fading in far ahead');
+  run(r, 3);
+  assert.equal(r.fire(), 2);
+  assert.equal(r.fire(), null, 'one shot per wave');
+  assert.deepEqual(run(r, RUNNER.approachSeconds), [], 'a shot wave never answers again when it arrives');
+  r.reset(); run(r, 3);
+  assert.equal(r.fire(), 2, 'the next wave re-arms');
+  assert.equal(r.trailDistance, RUNNER.passDistance);
 });

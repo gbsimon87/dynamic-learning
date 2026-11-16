@@ -1,5 +1,8 @@
 import { ARITHMETIC_AREA, arithmeticDirection, createSolarArithmeticArea } from './solarArithmeticArea.js';
-import { createArithmeticRunner, RUNNER } from './solarArithmeticRunner.js';
+import { activityFlightAccepts, collectionAccepts } from '../../../data/freePlay/spaceMathActivities.js';
+import { createSolarMathStation } from './solarMathStation.js';
+import { arithmeticAimCentre, arithmeticCameraAim, createArithmeticRunner, RUNNER } from './solarArithmeticRunner.js';
+import { createSolarArithmeticFx } from './solarArithmeticFx.js';
 import { createSolarLabel as createLabel } from "./solarLabel.js";
 import React, { useRef, useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
@@ -232,7 +235,7 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
         let beyond = null; // Warp to Beyond (#113); built with the other modules below
         let disposed = false;
         let worldTime = createWorldTime();
-        let arithmeticMode = false, arithmeticRun = null, arithmeticJourney = false, arithmeticTurbo = false, arithmeticHot = false;
+        let arithmeticMode = false, arithmeticRun = null, arithmeticJourney = false, arithmeticTurbo = false, arithmeticHot = false, arithmeticAim = 0;
         const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
         // ================================================================
@@ -1817,15 +1820,33 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
             && !lineUp.isActive() && !paleBlueDot.isActive() && !constellationSky.isActive()
             && !beyond.isActive() && !galaxyMap.isActive() && !freeFlight.isTravelling();
         const arithmeticArea = modules.add('arithmeticArea', createSolarArithmeticArea({ scene, isVisible: () => arithmeticMode }));
+        const arithmeticFx = modules.add('arithmeticFx', createSolarArithmeticFx({ scene, isVisible: () => arithmeticMode }));
+        const mathStation = modules.add('mathStation', createSolarMathStation({ scene, isVisible: () => arithmeticMode }));
         const runner = createArithmeticRunner();
         const leaveArithmetic = () => {
-            arithmeticMode = arithmeticJourney = arithmeticTurbo = arithmeticHot = false; arithmeticRun = null;
+            arithmeticMode = arithmeticJourney = arithmeticTurbo = arithmeticHot = false; arithmeticRun = null; arithmeticAim = 0;
+            arithmeticFx.reset(); mathStation.setQuestion(null);
             setArithmeticOpen(false); tripModeRef.current = null; setTripMode(null);
             freeFlight.home(); sceneApiRef.current.stopFreeFlight(); setFreeFlightOpen(false); stopNarration();
+        };
+        // An answer, flown through or (Laser Blast) shot: the ring reacts at
+        // once, gold and growing if right, dimmed if not, and the card scores it.
+        const answerArithmeticLane = (lane, shot = false) => {
+            const { question, roundId } = arithmeticRun;
+            const correct = question.flightActions ? activityFlightAccepts(question, lane)
+                : question.collection ? collectionAccepts(question, question.options[lane]) : question.options[lane] === question.answer;
+            const hit = arithmeticArea.markPassed(lane, correct);
+            if (hit) {
+                if (shot) arithmeticFx.laser({ x: runner.x, y: ARITHMETIC_AREA.spawn.y + runner.y }, hit, correct);
+                arithmeticFx.pass(hit, { correct, dressing: hit.dressing, shot });
+                if (shot && correct) arithmeticFx.pop(arithmeticArea.clearOthers(lane));
+            }
+            onArithmeticAnswerRef.current({ lane, roundId });
         };
         const areaApi = {
             prepareRound(question, roundId) {
                 arithmeticRun = { question, roundId, blocked: false, phase: 'choosing' };
+                mathStation.setQuestion(question);
                 arithmeticArea.setQuestion(question); runner.reset({ grid: Boolean(question.reverse) }); arithmeticArea.place(runner.distance, runner.trailDistance);
             },
             setLane(lane) { runner.setLane(lane); },
@@ -1833,8 +1854,28 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
             setTurbo(on) { arithmeticTurbo = Boolean(on); },
             // A hot streak: the flame burns big (looks only; the speed never changes).
             setHot(on) { arithmeticHot = Boolean(on); },
+            // Laser Blast: fire at the answer ahead in the rocket's lane. False if it can't fire yet.
+            fire() {
+                if (!arithmeticRun || arithmeticRun.blocked || arithmeticRun.phase !== 'choosing') return false;
+                const lane = runner.fire();
+                if (lane === null) return false;
+                answerArithmeticLane(lane, true);
+                return true;
+            },
+            // Streak power-ups recolour the warp lines (looks only).
+            setTier(id) { arithmeticFx.setTier(id); },
             setState({ blocked, phase }) {
                 if (arithmeticRun) { arithmeticRun.blocked = blocked; arithmeticRun.phase = phase; }
+            },
+            // No mission (back at setup): clear sparks and fly-bys, so none hang frozen.
+            setMission(id) {
+                if (!id) { arithmeticFx.reset(); mathStation.setQuestion(null); }
+            },
+            // Moments, looks only: a planet sweeping past, or fireworks for a
+            // record, a landing or a finished station activity.
+            celebrate({ kind, planet } = {}) {
+                if (kind === 'planet') arithmeticFx.flyby(planet);
+                else if (kind === 'record' || kind === 'landing' || kind === 'activity') arithmeticFx.record();
             },
             leave: leaveArithmetic,
         };
@@ -1896,21 +1937,33 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
             const turbo = arithmeticTurbo && arithmeticRun?.phase === 'choosing';
             const lane = arithmeticRun ? runner.step(dt, turbo ? RUNNER.turbo : 1) : null;
             if (arithmeticRun) arithmeticArea.place(runner.distance, runner.trailDistance);
-            const grid = arithmeticRun?.question.reverse;
-            // Read the whole grid while it is far away, then follow the chosen
-            // opening as it reaches the rocket. The camera still rides the ship.
-            const centre = grid ? Math.min(1, Math.max(0, runner.distance / 35)) : 0;
+            const grid = Boolean(arithmeticRun?.question.reverse);
+            if (arithmeticRun) arithmeticArea.highlight(runner.lane);
+            // Look at the middle of the far rings, so they start centred on
+            // screen whichever lane the rocket is in, then follow the chosen
+            // opening as it reaches the rocket. The camera still rides the ship;
+            // the aim eases so a new wave never snaps the view across.
+            arithmeticAim += (arithmeticAimCentre(runner.distance) - arithmeticAim) * (1 - Math.exp(-4 * dt));
+            mathStation.follow(runner.x * (1 - arithmeticAim));
+            // Turn at most 40% of the half-width of view, so a phone keeps the rocket in frame.
+            const maxTurn = Math.tan(.4 * Math.atan(Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.aspect));
+            const aim = arithmeticRun ? arithmeticCameraAim({ x: runner.x, y: runner.y, distance: runner.distance, grid, centre: arithmeticAim, maxTurn }) : null;
             freeFlight.holdActivityLane(runner.x, dt, Boolean(arithmeticRun), turbo || arithmeticHot, {
                 y: ARITHMETIC_AREA.spawn.y + runner.y,
-                lookAt: grid ? { x: runner.x * (1 - centre), y: ARITHMETIC_AREA.spawn.y + runner.y * (1 - centre) + 6 * centre, z: -Math.max(5, runner.distance) } : null,
+                lookAt: aim && { ...aim, y: ARITHMETIC_AREA.spawn.y + aim.y },
                 frame: grid ? { halfWidth: 26, halfHeight: 20 } : null,
             });
-            if (lane !== null && arithmeticRun?.phase === 'choosing') {
-                // The ring flown through reacts at once: gold and growing if right, dimmed if not.
-                const { question } = arithmeticRun;
-                arithmeticArea.markPassed(lane, question.options[lane] === question.answer);
-                onArithmeticAnswerRef.current({ lane, roundId: arithmeticRun.roundId });
+            // Warp lines stream faster on Turbo and on a hot streak.
+            const flying = Boolean(arithmeticRun) && arithmeticRun.phase === 'choosing';
+            arithmeticFx.setIntensity(!flying ? 0 : (turbo ? .55 : .12) + (arithmeticHot ? .45 : 0));
+            if (flying && !grid) {
+                const taken = arithmeticArea.collectDust(runner.lane);
+                if (taken) {
+                    arithmeticFx.sparkle({ x: runner.x, y: ARITHMETIC_AREA.spawn.y + runner.y });
+                    onArithmeticAnswerRef.current({ kind: 'dust', count: taken });
+                }
             }
+            if (lane !== null && arithmeticRun?.phase === 'choosing') answerArithmeticLane(lane);
         }, dispose() {} });
 
         // The asteroid belt's neighbours: Trojans, Hildas and the Kuiper belt (home extra).
@@ -2304,7 +2357,7 @@ export default function ThreeSolarSystem({ system = HOME_SYSTEM, arrival = null,
             className="solar-system"
             style={{
                 width: "100%",
-                height: "calc(100dvh - var(--navbar-height))",
+                height: "var(--solar-scene-height, calc(100dvh - var(--navbar-height)))",
                 position: "relative",
                 overflow: "hidden",
                 background: "#02040a",

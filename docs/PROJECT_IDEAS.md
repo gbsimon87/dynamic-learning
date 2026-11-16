@@ -134,9 +134,12 @@ and review boundaries: [Skills authoring](SKILLS_AUTHORING.md#space-arithmetic)
 and [Explorable worlds](EXPLORABLE_WORLDS.md). Teacher, family and physical-device
 review must inform further work.
 
-Next: review of all four operations and their help
-([next steps](SPACE_ARITHMETIC.md#next-steps)). Later ideas: optional fuel missions with a free safe
-refuel/retry; delivery adventures and cooperative play. Define fairness before
+Four modes are live: Laser Blast (Sums, Number bonds, Count in steps) and the
+Target Collector, Balance and Alien Sharing stations, all with Turbo, with
+streak power-ups and a best streak per set kept in the browser. Next: review of
+the operations, the question sets, the stations and their help ([next steps](SPACE_ARITHMETIC.md#next-steps)). Later
+ideas: counting back on the runway, a rocket colour choice, optional fuel
+missions with a free safe refuel/retry, and cooperative play. Define fairness before
 adding fuel: thinking, help and pause stay free, and empty fuel must never block
 practice. Adaptive levels, persistence, rewards and stories need separate scope.
 Keep relaxed untimed flight, still view and answer-button autopilot available.

@@ -13,7 +13,7 @@ function resolve(s) {
   // Right first time, back to back (the shared curriculum rule); any miss resets it.
   const { streak } = nextStreak(s.streak, correct, firstTry);
   return { ...s, phase: 'feedback', elapsedSeconds: F.durationSeconds, solved: s.solved + Number(correct), streak, hadMiss: s.hadMiss || !correct,
-    outcome: { correct, firstTry, roundId: s.roundId, lane: s.committedLane } };
+    outcome: { correct, firstTry, roundId: s.roundId, lane: s.committedLane, comeback: Boolean(s.question.comeback), solvedText: s.question.prompt.replace('?', s.question.answer) } };
 }
 export function reduceSpaceRound(s, a) {
   if (a.type === 'CHANGE_SETTINGS') return { ...createInitialSpaceRound(), settings: s.settings, roundId: s.roundId + 1 };
@@ -37,7 +37,7 @@ export function reduceSpaceRound(s, a) {
     case 'PASS': {
       if (s.phase !== 'choosing' || s.helpOpen || !Number.isInteger(a.lane) || a.lane < 0 || a.lane >= F.optionCount) return s;
       const r = resolve({ ...s, committedLane: a.lane });
-      const lastOutcome = { ...r.outcome, solvedText: s.question.prompt.replace('?', s.question.answer) };
+      const lastOutcome = r.outcome;
       return r.outcome.correct
         ? round({ ...r, hadMiss: false, assisted: false, lastOutcome }, a.question ?? s.question)
         : round({ ...r, lastOutcome }, s.question);

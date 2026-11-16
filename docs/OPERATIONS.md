@@ -129,8 +129,13 @@ Local development keeps them under `dl.curriculumJourney` and
 Upcoming work is in [PROJECT_IDEAS.md](PROJECT_IDEAS.md). Delete a line here
 when it is resolved.
 
-**Space Arithmetic pilot.** Teacher review of the four operations' ranges, help pictures and
-feedback; family review of flight/retry/stop controls; physical phone/tablet,
+**Space Arithmetic pilot.** Target Collector, Balance the Space Station and Alien
+Sharing Station need teacher/family review of their worked examples, quantities,
+controls and feedback; their world-space teaching models, cargo/delivery flight, calm spaceship fallback and mode selector
+need both-theme viewport, physical-device, keyboard/screen-reader and voice review.
+Teacher review of the four operations' ranges, help pictures and
+feedback, Make 10 (bonds to 10, 20 and tens to 100) and Skip-Count (2s, 3s, 4s, 5s, 10s) options and help, and the planet friends' facts;
+family review of whether stardust, fireworks, fly-bys, Turbo, streak power-ups or the saved best streak distract from the maths or encourage rushing (Laser Blast's Fire included); teacher review of the ten-answer flight length, comeback sums and Show me opening after two misses; family review of flight/retry/stop controls; physical phone/tablet,
 keyboard/screen-reader and voice checks remain pending. Interactive WebGL/layout
 verification (360×800, 768×1024, 1280×800; both themes, reduced motion, ring fit,
 pause/resize and physical Solar entry/return) could not run in the implementation

@@ -87,7 +87,8 @@ export default function SolarSystemPage({ initialActivity = false }) {
         if (!api) return;
         setArithmetic({ api: { ...api, leave() { api.leave(); activityTransition.current = false; setArithmetic(null); } } });
     }, []);
-    const arithmeticAnswer = useCallback(event => arithmeticPanel.current?.crossing(event), []);
+    // The scene reports answers flown through and stardust collected.
+    const arithmeticAnswer = useCallback(event => (event?.kind === 'dust' ? arithmeticPanel.current?.stardust(event.count) : arithmeticPanel.current?.crossing(event)), []);
 
     const arrived = useCallback(() => {
         if (activityTransition.current) return;

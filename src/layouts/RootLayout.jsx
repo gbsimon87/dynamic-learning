@@ -12,8 +12,9 @@ function RootLayout() {
   const showFooter = FOOTER_PAGES.has(pathname.replace(/\/+$/, '') || '/') || pathname.startsWith('/learn/') || pathname.startsWith('/curriculum-guide/');
   const isSolarSystem = pathname === '/skills/solar-system';
   const isOceanExplorer = pathname.replace(/\/+$/, '') === '/skills/ocean-explorer';
+  const isSpaceArithmetic = pathname.replace(/\/+$/, '') === '/skills/space-arithmetic';
   return (
-    <div className={`app-layout${showFooter ? ' app-layout--with-footer' : ''}${isSolarSystem ? ' app-layout--solar-system' : ''}${isOceanExplorer ? ' app-layout--ocean-explorer' : ''}`}>
+    <div className={`app-layout${showFooter ? ' app-layout--with-footer' : ''}${isSolarSystem ? ' app-layout--solar-system' : ''}${isOceanExplorer ? ' app-layout--ocean-explorer' : ''}${isSpaceArithmetic ? ' app-layout--space-arithmetic' : ''}`}>
       <PageMetadata />
       <a className="skip-link" href="#main-content">Skip to content</a>
       <Navbar />

@@ -14,6 +14,12 @@
 
 .app-layout-main { flex: 1; min-width: 0; }
 
+/* Space Arithmetic fills exactly the screen under the navbar, whatever height
+   the navbar wraps to, so the flight controls never need a page scroll. */
+.app-layout--space-arithmetic { height: 100dvh; min-height: 0; --solar-scene-height: 100%; }
+.app-layout--space-arithmetic > .app-layout-main { display: flex; flex-direction: column; min-height: 0; }
+.app-layout--space-arithmetic .solar-system-page { flex: 1; min-height: 0; }
+
 .skip-link {
   position: fixed;
   top: 0.5rem;

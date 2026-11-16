@@ -1,0 +1,75 @@
+/* Station modes. Setup shares the Laser Blast setup card (.is-setup): mode
+   tiles, a picture example, the gates and the range, then Start. In flight the
+   card is a small HUD: goal, a picture of progress and the icon tools. */
+.space-activity-example {
+  margin: .7rem 0 .2rem; padding: .7rem .5rem; border-radius: 14px; text-align: center;
+  background: color-mix(in srgb, var(--space-accent) 13%, transparent);
+  font-size: 1.35rem; font-weight: 800; line-height: 1.2; font-variant-numeric: tabular-nums; text-wrap: balance;
+}
+.space-activity-example b { color: var(--space-accent); padding-inline: .15rem; }
+.space-activity-gates { display: flex; flex-wrap: wrap; gap: .3rem; margin: 0; padding: 0; list-style: none; }
+.space-activity-gates li {
+  min-width: 2.6rem; padding: .25rem .55rem; border-radius: 999px; text-align: center; font-weight: 800; font-size: .95rem;
+  border: 2px solid color-mix(in srgb, var(--space-accent) 70%, transparent);
+}
+.solar-system-page > .space-activities.is-flying { width: min(300px, calc(100% - 24px)); max-height: none; overflow: visible; }
+.space-activities.is-flying .space-arithmetic-sum { margin-top: .45rem; }
+.space-activity-progress {
+  display: grid; gap: .35rem; margin-top: .5rem; padding: .5rem .6rem; border-radius: 14px;
+  background: color-mix(in srgb, currentColor 6%, transparent); font-size: 1.15rem; font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.space-activity-progress strong { font-size: 1.4rem; }
+.space-activity-progress small { font-size: .85rem; opacity: .8; }
+.space-activity-meter { display: block; height: 12px; border-radius: 999px; overflow: hidden; background: color-mix(in srgb, currentColor 14%, transparent); }
+.space-activity-meter > span { display: block; height: 100%; border-radius: inherit; background: var(--space-accent); transition: width .25s ease-out; }
+@media (prefers-reduced-motion: reduce) { .space-activity-meter > span { transition: none; } }
+.space-activity-progress.is-balance, .space-activity-progress.is-share { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .35rem; }
+.space-activity-pan { padding: .15rem .55rem; border-radius: 999px; border: 2px solid color-mix(in srgb, currentColor 25%, transparent); white-space: nowrap; }
+.space-activity-progress.is-share .space-activity-pan { font-size: 1rem; }
+.space-activity-progress.is-share .space-activity-pan strong { font-size: 1.15rem; }
+.space-arithmetic .space-activity-miss { margin: .4rem auto 0; width: fit-content; padding: .1rem .7rem; border-radius: 999px; border: 2px dashed var(--space-accent); font-weight: 700; font-size: .95rem; }
+.space-activities-help .space-activity-example { font-size: 1.15rem; }
+.space-math-flight-controls { flex-wrap: wrap; }
+.space-arithmetic-steer.space-math-flight-controls .space-math-advance { width: 112px; font-size: 1rem; padding: .4rem; }
+.space-math-flight-view {
+  position: absolute; z-index: 60; top: 12px; bottom: 115px; left: 340px; right: 12px;
+  --math-ink: var(--light-text); --math-panel: var(--light-panel); --math-accent: var(--light-accent);
+  --math-water: var(--light-ocean-water); --math-grass: var(--light-ocean-grass); --math-flame: var(--light-ocean-amber);
+  color: var(--math-ink); background: var(--math-panel); border-radius: 1.5rem; border: 1px solid currentColor; pointer-events: none;
+}
+body.dark .space-math-flight-view {
+  --math-ink: var(--dark-text); --math-panel: var(--dark-panel); --math-accent: var(--dark-accent);
+  --math-water: var(--dark-ocean-water); --math-grass: var(--dark-ocean-grass); --math-flame: var(--dark-ocean-amber);
+}
+.space-math-flight-view svg { width: 100%; height: 100%; }
+.space-math-flight-view text { fill: var(--math-ink); font: 700 16px sans-serif; }
+.space-math-flight-view .space-math-gate ellipse, .space-math-flight-view .space-math-dock { fill: none; stroke: var(--math-ink); stroke-width: 2; }
+.space-math-flight-view .space-math-gate.is-selected ellipse { stroke-width: 6; }
+.space-math-flight-view .space-math-lane-path { stroke: var(--math-ink); stroke-dasharray: 6 7; opacity: .4; }
+.space-math-flight-view .space-math-gate.is-selected .space-math-lane-path { stroke-width: 4; opacity: 1; }
+.space-math-flight-view .space-math-beam { fill: none; stroke: var(--math-ink); stroke-width: 4; }
+.space-math-flight-view .space-math-support, .space-math-flight-view .space-math-fin { fill: var(--math-accent); stroke: var(--math-ink); }
+.space-math-flight-view .space-math-crystal { fill: var(--math-water); stroke: var(--math-ink); }
+.space-math-flight-view .space-math-alien { fill: var(--math-grass); stroke: var(--math-ink); }
+.space-math-flight-view .space-math-eye, .space-math-flight-view .space-math-window { fill: var(--math-panel); stroke: var(--math-ink); }
+.space-math-flight-view .space-math-hull { fill: var(--math-panel); stroke: var(--math-ink); stroke-width: 2; }
+.space-math-flight-view .space-math-flame { fill: var(--math-flame); }
+@media (max-width: 720px) {
+  .space-math-flight-view { top: 40%; left: 12px; bottom: 110px; }
+  .space-math-flight-view text { font-size: 18px; }
+}
+@media (max-width: 600px) {
+  .solar-system-page > .space-arithmetic-steer.space-math-flight-controls { left: 12px; transform: none; max-width: calc(100% - 100px); flex-wrap: nowrap; }
+  .space-arithmetic-steer.space-math-flight-controls .skill-btn { flex-shrink: 0; }
+}
+@media (max-height: 500px) {
+  .space-activities .space-activity-example { margin: .3rem 0 0; padding-block: .25rem; font-size: 1.05rem; }
+  .space-activity-gates li { padding-block: .15rem; }
+  .space-activities.is-activity-setup .space-arithmetic-row { margin-top: .3rem; }
+  .space-activities-help p { margin: .2rem 0; font-size: .92rem; line-height: 1.25; }
+  .space-activities-help .space-activity-example { display: none; }
+  .space-activities.is-flying .space-arithmetic-sum { margin-block: .3rem 0; padding-block: .2rem; }
+  .space-activity-progress { margin-top: .35rem; padding-block: .35rem; }
+  /* The calm view sits between the card and the steering pad, full height. */
+  .space-math-flight-view { left: 324px; right: 204px; bottom: 12px; }
+}
